@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "drum-bus"
+version = "1.0.0"
+description = "Deterministic offline percussion bus renderer"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.scripts]
+drum-bus = "drum_bus.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["drum_bus*"]
+
