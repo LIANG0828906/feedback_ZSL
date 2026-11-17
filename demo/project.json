@@ -1,0 +1,74 @@
+{
+  "allowed_false_positives": 1,
+  "block_size": 48000,
+  "channels": [
+    {
+      "channels": 1,
+      "file": "audio/kick.wav",
+      "instrument": "drums",
+      "name": "kick",
+      "role": "direct"
+    },
+    {
+      "channels": 1,
+      "file": "audio/bass.wav",
+      "instrument": "bass",
+      "name": "bass",
+      "role": "direct"
+    },
+    {
+      "channels": 1,
+      "file": "audio/keys.wav",
+      "instrument": "melody",
+      "name": "keys",
+      "role": "direct"
+    },
+    {
+      "channels": 1,
+      "file": "audio/pad.wav",
+      "instrument": "pad",
+      "name": "pad",
+      "role": "direct"
+    },
+    {
+      "channels": 1,
+      "file": "audio/gtr.wav",
+      "instrument": "melody",
+      "name": "gtr",
+      "role": "feedback"
+    },
+    {
+      "channels": 1,
+      "file": "audio/vox.wav",
+      "instrument": "melody",
+      "name": "vox",
+      "role": "feedback"
+    },
+    {
+      "channels": 1,
+      "file": "audio/ref_monitor.wav",
+      "instrument": "reference",
+      "name": "ref_monitor",
+      "role": "reference"
+    }
+  ],
+  "downmix": {
+    "compensation": "normalize",
+    "weights": {
+      "bass": 0.2,
+      "gtr": 0.08,
+      "keys": 0.16,
+      "kick": 0.18,
+      "pad": 0.12,
+      "vox": 0.06
+    }
+  },
+  "duration_seconds": 6.0,
+  "loudness_target_lufs": -16.0,
+  "loudness_tolerance_lu": 0.5,
+  "min_attenuation_db": 20.0,
+  "sample_rate": 48000,
+  "seed": 7,
+  "song_segment": 2,
+  "true_peak_ceiling_dbtp": -1.0
+}
