@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bangzi-align"
+version = "0.1.0"
+description = "Deterministic multi-track bangzi opera alignment and mastering"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+]
+
+[project.scripts]
+bangzi-align = "bangzi_align.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["bangzi_align*"]
+
