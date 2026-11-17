@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "drum-align"
+version = "1.0.0"
+description = "Deterministic offline multi-camera drum stem alignment"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.scripts]
+drum-align = "drum_align.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["drum_align*"]
