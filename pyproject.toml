@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "canopy-render"
+version = "1.0.0"
+description = "Deterministic offline software rasterizer for a backlit cave-shrine fabric canopy"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "pillow>=10"]
+
+[project.scripts]
+canopy-render = "canopy_render.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["canopy_render*"]
+
