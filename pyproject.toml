@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "theatre-binaural"
+version = "1.0.0"
+description = "Deterministic offline binaural mastering for theatre recordings"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "scipy>=1.10", "soundfile>=0.12"]
+
+[project.scripts]
+theatre-binaural = "theatre_binaural.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["theatre_binaural*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
