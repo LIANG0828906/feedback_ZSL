@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stringmaster"
+version = "1.0.0"
+description = "Deterministic string-quartet transition repair and mastering"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.scripts]
+stringmaster = "stringmaster.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["stringmaster*"]
