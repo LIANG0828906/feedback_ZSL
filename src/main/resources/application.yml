@@ -1,0 +1,62 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+spring:
+  application:
+    name: subscription-delivery
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/eventbus}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:4}
+      minimum-idle: 1
+      connection-timeout: 3000
+      validation-timeout: 1000
+      idle-timeout: 30000
+      max-lifetime: 300000
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 500ms
+      connect-timeout: 500ms
+      lettuce:
+        pool:
+          max-active: 4
+          max-idle: 2
+          min-idle: 0
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+eventbus:
+  topic: ${KAFKA_TOPIC:order-events}
+  partitions: ${TOPIC_PARTITIONS:6}
+  max-events-per-partition: ${MAX_EVENTS_PER_PARTITION:100}
+  max-scan-per-partition: ${MAX_SCAN_PER_PARTITION:50000}
+  confirm-timeout: ${CONFIRM_TIMEOUT:PT60S}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    client-id: ${KAFKA_CLIENT_ID:subscription-delivery}
+    poll-timeout: ${KAFKA_POLL_TIMEOUT:250ms}
+    request-timeout: ${KAFKA_REQUEST_TIMEOUT:PT5S}
+    max-poll-records: ${KAFKA_MAX_POLL_RECORDS:500}
+    max-partition-fetch-bytes: ${KAFKA_MAX_PARTITION_FETCH_BYTES:1048576}
+    fetch-max-bytes: ${KAFKA_FETCH_MAX_BYTES:4194304}
+
+logging:
+  level:
+    root: INFO
+    com.eventbus: INFO
+    org.apache.kafka: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
