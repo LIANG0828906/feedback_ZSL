@@ -1,0 +1,36 @@
+{
+  "data_dir": "data",
+  "output_dir": "out",
+  "state_dir": "state",
+  "seed": 20261119,
+  "generator": {
+    "fleets": ["A", "B"],
+    "vehicles_per_fleet": 100,
+    "skew_vehicles_per_fleet": 5,
+    "skew_share": 0.4,
+    "batch_records": 50000,
+    "batch_duplicate_records": 500,
+    "stream_batches": 48,
+    "stream_avg_appearances": 9.6,
+    "day": "2026-11-18",
+    "hours": 24
+  },
+  "engine": {
+    "worker_processes": 2,
+    "units_per_tenant": 8,
+    "window_seconds": 3600,
+    "allowed_lateness_seconds": 0,
+    "skew_threshold_rows": 1000,
+    "max_retries": 3,
+    "row_bytes": 128,
+    "mem_factor": 2
+  },
+  "tenants": [
+    {"tenant_id": "fleet_a", "fleet": "A", "memory_quota_bytes": 268435456, "max_units": 4},
+    {"tenant_id": "fleet_b", "fleet": "B", "memory_quota_bytes": 268435456, "max_units": 4}
+  ],
+  "fault_injection": {
+    "crash": [],
+    "always_fail": []
+  }
+}
