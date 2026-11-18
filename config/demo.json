@@ -1,0 +1,45 @@
+{
+  "run": {
+    "seed": 2672026,
+    "host": "127.0.0.1",
+    "port": 29617,
+    "run_dir": "artifacts/demo"
+  },
+  "model": {
+    "input_dim": 16,
+    "hidden_dim": 32,
+    "output_dim": 4
+  },
+  "training": {
+    "sample_count": 25600,
+    "eval_samples": 4096,
+    "batch_size": 128,
+    "total_steps": 200,
+    "learning_rate": 0.005,
+    "momentum": 0.9
+  },
+  "fault": {
+    "enabled": true,
+    "shard_id": 2,
+    "after_step": 100,
+    "outage_steps": 70,
+    "stall_tolerance_steps": 90,
+    "replacement_id": "worker-2-recovery",
+    "replacement_delay_ms": 100
+  },
+  "checkpoint": {
+    "steps": [0, 50, 100, 150, 200],
+    "bandwidth_mbps": 20.0,
+    "padding_bytes": 2097152,
+    "max_pending": 2
+  },
+  "network": {
+    "registration_timeout_s": 60.0,
+    "step_timeout_s": 5.0,
+    "abort_timeout_s": 2.0,
+    "max_frame_bytes": 67108864
+  },
+  "runtime": {
+    "step_pace_ms": 50
+  }
+}
