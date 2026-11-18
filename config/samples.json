@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "samples": [
+    {
+      "query_id": "HDR_PAGE_DETAIL",
+      "category": "index_hit",
+      "fallback": "reject",
+      "dialects": {
+        "mssql-current": "SELECT TOP (5) h.OrderNo, CAST(h.OrderDate AS date) AS OrderDay, h.Amount, h.CustomerName, 'DROP TABLE dbo.OrderHeader' AS SafetyText FROM dbo.OrderHeader AS h WHERE h.TenantId = 1 AND h.Status = 'PAID' AND h.OrderDate >= CONVERT(datetime2(0), '2025-01-02T00:00:00') ORDER BY h.OrderDate ASC, h.OrderId ASC;",
+        "mssql-legacy": "SELECT h.OrderNo, CONVERT(date, h.OrderDate) AS OrderDay, h.Amount, h.CustomerName, 'DROP TABLE dbo.OrderHeader' AS SafetyText FROM dbo.OrderHeader AS h WHERE h.TenantId = 1 AND h.Status = 'PAID' AND h.OrderDate >= CONVERT(datetime2(0), '2025-01-02T00:00:00') ORDER BY h.OrderDate ASC, h.OrderId ASC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY OPTION (MAXDOP 1, FORCESEEK); -- UPDATE dbo.OrderHeader SET Amount = 0"
+      }
+    },
+    {
+      "query_id": "NULL_ORDER_DETAIL",
+      "category": "index_hit",
+      "fallback": "reject",
+      "dialects": {
+        "mssql-current": "SELECT h.OrderNo, h.CustomerName FROM dbo.OrderHeader AS h WHERE h.TenantId = 2 AND h.Status = 'NEW' ORDER BY CASE WHEN h.CustomerName IS NULL THEN 0 ELSE 1 END, h.CustomerName ASC, h.OrderId ASC OFFSET 0 ROWS FETCH NEXT 6 ROWS ONLY;",
+        "mssql-legacy": "SELECT h.OrderNo, h.CustomerName FROM dbo.OrderHeader AS h WHERE h.TenantId = 2 AND h.Status = 'NEW' ORDER BY h.CustomerName ASC, h.OrderId ASC OFFSET 0 ROWS FETCH NEXT 6 ROWS ONLY OPTION (MAXDOP 1);"
+      }
+    },
+    {
+      "query_id": "DATE_TRUNC_DETAIL",
+      "category": "index_hit",
+      "fallback": "reject",
+      "dialects": {
+        "mssql-current": "SELECT h.OrderNo, DATETRUNC(day, h.OrderDate) AS DayValue, DATETRUNC(second, h.OrderDate) AS SecondValue FROM dbo.OrderHeader AS h WHERE h.TenantId = 3 AND h.Status = 'SHIPPED' AND h.OrderDate >= CONVERT(datetime2(0), '2025-03-01T00:00:00') ORDER BY h.OrderDate ASC, h.OrderId ASC OFFSET 0 ROWS FETCH NEXT 6 ROWS ONLY;",
+        "mssql-legacy": "SELECT h.OrderNo, DATEADD(day, DATEDIFF(day, 0, h.OrderDate), 0) AS DayValue, DATEADD(second, DATEDIFF(second, 0, h.OrderDate), 0) AS SecondValue FROM dbo.OrderHeader AS h WHERE h.TenantId = 3 AND h.Status = 'SHIPPED' AND h.OrderDate >= CONVERT(datetime2(0), '2025-03-01T00:00:00') ORDER BY h.OrderDate ASC, h.OrderId ASC OFFSET 0 ROWS FETCH NEXT 6 ROWS ONLY OPTION (MAXDOP 1);"
+      }
+    },
+    {
+      "query_id": "STRING_NUM_DETAIL",
+      "category": "index_hit",
+      "fallback": "reject",
+      "dialects": {
+        "mssql-current": "SELECT l.OrderId, l.LineNum, l.Sku, l.Quantity FROM dbo.OrderLine AS l WHERE l.TenantId = 3 AND l.Status = 'SHIPPED' AND TRY_CONVERT(bigint, l.Sku) = 1001 ORDER BY l.OrderId ASC, l.LineNum ASC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY;",
+        "mssql-legacy": "SELECT l.OrderId, l.LineNum, l.Sku, l.Quantity FROM dbo.OrderLine AS l WHERE l.TenantId = 3 AND l.Status = 'SHIPPED' AND l.Sku = 1001 ORDER BY l.OrderId ASC, l.LineNum ASC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY OPTION (MAXDOP 1);"
+      }
+    },
+    {
+      "query_id": "LINE_JOIN_DETAIL",
+      "category": "index_hit",
+      "fallback": "reject",
+      "dialects": {
+        "mssql-current": "SELECT h.OrderNo, l.LineNum, l.Sku, l.Quantity, l.LineAmount FROM dbo.OrderHeader AS h JOIN dbo.OrderLine AS l ON l.TenantId = h.TenantId AND l.OrderId = h.OrderId WHERE h.TenantId = 2 AND h.Status = 'PAID' AND l.TenantId = 2 AND l.Status = 'PAID' AND l.LineNum <= 2 ORDER BY h.OrderNo ASC, l.LineNum ASC OFFSET 0 ROWS FETCH NEXT 8 ROWS ONLY;",
+        "mssql-legacy": "SELECT h.OrderNo, x.LineNum, x.Sku, x.Quantity, x.LineAmount FROM dbo.OrderHeader AS h CROSS APPLY (SELECT TOP (2) l.LineNum, l.Sku, l.Quantity, l.LineAmount FROM dbo.OrderLine AS l WHERE l.TenantId = 2 AND l.Status = 'PAID' AND l.OrderId = h.OrderId ORDER BY l.LineNum ASC) AS x WHERE h.TenantId = 2 AND h.Status = 'PAID' ORDER BY h.OrderNo ASC, x.LineNum ASC OFFSET 0 ROWS FETCH NEXT 8 ROWS ONLY OPTION (MAXDOP 1);"
+      }
+    },
+    {
+      "query_id": "HDR_UNCOVERED_REJECT",
+      "category": "uncovered",
+      "fallback": "reject",
+      "dialects": {
+        "mssql-current": "SELECT h.OrderNo, h.ShipAddress FROM dbo.OrderHeader AS h WHERE h.TenantId = 4 AND h.Status = 'CANCELLED' ORDER BY h.OrderNo ASC OFFSET 0 ROWS FETCH NEXT 3 ROWS ONLY;",
+        "mssql-legacy": "SELECT TOP (3) h.OrderNo, h.ShipAddress FROM dbo.OrderHeader AS h WHERE h.TenantId = 4 AND h.Status = 'CANCELLED' ORDER BY h.OrderNo ASC OPTION (MAXDOP 1);"
+      }
+    },
+    {
+      "query_id": "SUMMARY_FALLBACK",
+      "category": "degrade",
+      "fallback": "summary",
+      "dialects": {
+        "mssql-current": "SELECT h.OrderNo, h.ShipAddress, h.UpdatedAt FROM dbo.OrderHeader AS h WHERE h.TenantId = 4 AND h.Status = 'CANCELLED' ORDER BY h.UpdatedAt DESC OFFSET 0 ROWS FETCH NEXT 4 ROWS ONLY;",
+        "mssql-legacy": "SELECT TOP (4) h.OrderNo, h.ShipAddress, h.UpdatedAt FROM dbo.OrderHeader AS h WHERE h.TenantId = 4 AND h.Status = 'CANCELLED' ORDER BY h.UpdatedAt DESC OPTION (MAXDOP 1);"
+      }
+    },
+    {
+      "query_id": "ILLEGAL_DELETE",
+      "category": "illegal_write",
+      "fallback": "reject",
+      "dialects": {
+        "mssql-current": "DELETE FROM dbo.OrderHeader WHERE TenantId = 1;",
+        "mssql-legacy": "DELETE FROM dbo.OrderHeader WHERE TenantId = 1;"
+      }
+    }
+  ]
+}

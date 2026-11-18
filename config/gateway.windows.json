@@ -1,0 +1,82 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8780
+  },
+  "database": {
+    "driver": "ODBC Driver 18 for SQL Server",
+    "server": "(localdb)\\MSSQLLocalDB",
+    "database": "OrderGateway280",
+    "auth": "windows",
+    "trusted_connection": true,
+    "encrypt": "yes",
+    "trust_server_certificate": true,
+    "login_timeout_s": 3
+  },
+  "admin": {
+    "driver": "ODBC Driver 18 for SQL Server",
+    "server": "(localdb)\\MSSQLLocalDB",
+    "database": "master",
+    "auth": "windows",
+    "trusted_connection": true,
+    "encrypt": "yes",
+    "trust_server_certificate": true,
+    "login_timeout_s": 3
+  },
+  "limits": {
+    "max_connections": 4,
+    "per_tenant_connections": 2,
+    "acquire_timeout_ms": 250,
+    "query_timeout_s": 8,
+    "summary_max_rows": 6
+  },
+  "fallback": {
+    "default": "summary",
+    "allowed": ["summary", "reject"]
+  },
+  "replay": {
+    "samples_path": "config/samples.json",
+    "concurrency": 2,
+    "max_concurrency": 2
+  },
+  "string_columns": ["Sku", "OrderNo", "Status", "Currency"],
+  "nullable_columns": ["CustomerName", "ShipAddress", "ProductNote"],
+  "tables": [
+    {
+      "name": "OrderHeader",
+      "columns": ["TenantId", "OrderId", "OrderNo", "CustomerName", "Status", "OrderDate", "Amount", "Currency", "ShipAddress", "UpdatedAt"],
+      "nullable_columns": ["CustomerName", "ShipAddress"]
+    },
+    {
+      "name": "OrderLine",
+      "columns": ["TenantId", "OrderLineId", "OrderId", "Status", "LineNum", "Sku", "Quantity", "UnitPrice", "LineAmount", "ProductNote", "UpdatedAt"],
+      "nullable_columns": ["Sku", "ProductNote"]
+    }
+  ],
+  "indexes": [
+    {
+      "name": "IX_OrderHeader_Tenant_Status_OrderDate",
+      "table": "OrderHeader",
+      "key_columns": ["TenantId", "Status", "OrderDate", "OrderId"],
+      "include_columns": ["OrderNo", "CustomerName", "Amount", "Currency", "UpdatedAt"]
+    },
+    {
+      "name": "IX_OrderHeader_Tenant_Status_OrderNo",
+      "table": "OrderHeader",
+      "key_columns": ["TenantId", "Status", "OrderNo"],
+      "include_columns": ["OrderDate", "OrderId", "CustomerName", "Amount", "Currency", "UpdatedAt"]
+    },
+    {
+      "name": "IX_OrderLine_Tenant_Status_OrderId",
+      "table": "OrderLine",
+      "key_columns": ["TenantId", "Status", "OrderId", "LineNum"],
+      "include_columns": ["Sku", "Quantity", "UnitPrice", "LineAmount", "UpdatedAt"]
+    },
+    {
+      "name": "IX_OrderLine_Tenant_Status_Sku",
+      "table": "OrderLine",
+      "key_columns": ["TenantId", "Status", "Sku"],
+      "include_columns": ["OrderId", "LineNum", "Quantity", "UnitPrice", "LineAmount", "UpdatedAt"]
+    }
+  ]
+}
