@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package inference;
+
+message CallRecord {
+  string layer_id = 1;
+  string replica_id = 2;
+  string session_id = 3;
+  double latency_ms = 4;
+  bool timed_out = 5;
+  int32 attempt = 6;
+  string outcome = 7;
+  string error_code = 8;
+}
+
+message InferRequest {
+  string request_id = 1;
+  string session_id = 2;
+  repeated float features = 3;
+}
+
+message InferReply {
+  bool ok = 1;
+  string request_id = 2;
+  string session_id = 3;
+  repeated float output = 4;
+  string l1_replica_id = 5;
+  string l2_replica_id = 6;
+  repeated string attempted_replicas = 7;
+  repeated CallRecord calls = 8;
+  double e2e_ms = 9;
+  string error_code = 10;
+  bool deduplicated = 11;
+  string error_message = 12;
+  int32 retry_switches = 13;
+}
+
+message WorkerInferRequest {
+  string request_id = 1;
+  string session_id = 2;
+  repeated float features = 3;
+}
+
+message WorkerInferReply {
+  bool ok = 1;
+  string request_id = 2;
+  string session_id = 3;
+  repeated float output = 4;
+  string replica_id = 5;
+  string layer_id = 6;
+  double compute_ms = 7;
+  string error_code = 8;
+  string error_message = 9;
+}
+
+message HealthRequest {}
+
+message HealthReply {
+  bool ok = 1;
+  string replica_id = 2;
+  string layer_id = 3;
+  string replica_group = 4;
+  string status = 5;
+}
+
+message FaultRequest {
+  int32 delay_ms = 1;
+}
+
+message FaultReply {
+  bool ok = 1;
+  int32 delay_ms = 2;
+}
+
+service RouterInference {
+  rpc Infer(InferRequest) returns (InferReply);
+}
+
+service WorkerInference {
+  rpc Infer(WorkerInferRequest) returns (WorkerInferReply);
+  rpc Health(HealthRequest) returns (HealthReply);
+  rpc SetFault(FaultRequest) returns (FaultReply);
+}

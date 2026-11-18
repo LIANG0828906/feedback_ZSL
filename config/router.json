@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "service": {
+    "router_grpc": "127.0.0.1:18080",
+    "http": "127.0.0.1:18081",
+    "db_path": "../data/router.sqlite3",
+    "request_timeout_ms": 120,
+    "l2_attempts": 2,
+    "thread_pool_size": 32
+  },
+  "health": {
+    "window_size": 64,
+    "min_samples": 8,
+    "probe_interval_ms": 500,
+    "probe_timeout_ms": 100,
+    "probe_failures_to_evict": 2,
+    "probe_successes_to_recover": 2
+  },
+  "stats": {
+    "window_size": 600,
+    "p99_threshold_ms": 120
+  },
+  "layers": [
+    {
+      "layer_id": "l1",
+      "name": "embedding",
+      "p95_threshold_ms": 25,
+      "call_timeout_ms": 70,
+      "depends_on": []
+    },
+    {
+      "layer_id": "l2",
+      "name": "ranking",
+      "p95_threshold_ms": 70,
+      "call_timeout_ms": 45,
+      "depends_on": [
+        "l1"
+      ]
+    }
+  ],
+  "shards": [
+    {
+      "layer": "l1",
+      "replica_group": "embedding",
+      "replica_id": "l1-a",
+      "model_path": "../models/l1-a.onnx",
+      "listen_address": "127.0.0.1:18101",
+      "input_dim": 64,
+      "output_dim": 64
+    },
+    {
+      "layer": "l1",
+      "replica_group": "embedding",
+      "replica_id": "l1-b",
+      "model_path": "../models/l1-b.onnx",
+      "listen_address": "127.0.0.1:18102",
+      "input_dim": 64,
+      "output_dim": 64
+    },
+    {
+      "layer": "l1",
+      "replica_group": "embedding",
+      "replica_id": "l1-c",
+      "model_path": "../models/l1-c.onnx",
+      "listen_address": "127.0.0.1:18103",
+      "input_dim": 64,
+      "output_dim": 64
+    },
+    {
+      "layer": "l2",
+      "replica_group": "ranking",
+      "replica_id": "l2-a",
+      "model_path": "../models/l2-a.onnx",
+      "listen_address": "127.0.0.1:18111",
+      "input_dim": 64,
+      "output_dim": 64
+    },
+    {
+      "layer": "l2",
+      "replica_group": "ranking",
+      "replica_id": "l2-b",
+      "model_path": "../models/l2-b.onnx",
+      "listen_address": "127.0.0.1:18112",
+      "input_dim": 64,
+      "output_dim": 64
+    }
+  ]
+}
