@@ -1,0 +1,88 @@
+{
+  "burn": {
+    "burst_ratio": 2.0,
+    "long_trigger": 1.0,
+    "short_trigger": 2.0
+  },
+  "policy_version": "2026.11.1",
+  "replay": {
+    "max_points": 20000
+  },
+  "schema_version": "1.0",
+  "severity": {
+    "affected_services": {
+      "P1": 3,
+      "P2": 2,
+      "P3": 1
+    },
+    "budget_remaining_pct": {
+      "P1": 10.0,
+      "P2": 25.0,
+      "P3": 50.0
+    },
+    "change_risk": {
+      "critical": "P1",
+      "high": "P2",
+      "low": "P4",
+      "medium": "P3",
+      "none": "P4"
+    },
+    "combination_rules": [
+      {
+        "id": "multi_service_high_change",
+        "minimum_grade": "P2",
+        "when": {
+          "affected_services_gte": 2,
+          "change_risk_at_least": "high"
+        }
+      },
+      {
+        "id": "low_budget_burst",
+        "minimum_grade": "P2",
+        "when": {
+          "budget_remaining_pct_lte": 25.0,
+          "burn_state": "burst"
+        }
+      },
+      {
+        "id": "wide_impact_critical_burn",
+        "minimum_grade": "P1",
+        "when": {
+          "affected_services_gte": 3,
+          "short_burn_gte": 6.0
+        }
+      }
+    ],
+    "long_burn": {
+      "P1": 6.0,
+      "P2": 3.0,
+      "P3": 1.0
+    },
+    "short_burn": {
+      "P1": 14.4,
+      "P2": 6.0,
+      "P3": 2.0
+    },
+    "trigger_priority": [
+      "short_burn_rate",
+      "long_burn_rate",
+      "error_budget_remaining_pct",
+      "affected_services",
+      "change_risk"
+    ]
+  },
+  "silence": {
+    "change_risk_active_minutes": 240,
+    "min_remaining_minutes": {
+      "P1": 180,
+      "P2": 120,
+      "P3": 60,
+      "P4": 30
+    },
+    "overbroad_service_count": 3
+  },
+  "windows": {
+    "long_minutes": 360,
+    "short_minutes": 30
+  }
+}

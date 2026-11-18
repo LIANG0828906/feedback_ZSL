@@ -1,0 +1,31 @@
+{
+  "anomaly_windows": {
+    "order-api_p99_exceedance": {
+      "end": "2026-11-18T16:49:00Z",
+      "minutes": 20,
+      "start": "2026-11-18T16:30:00Z"
+    },
+    "payment-gateway_availability_degradation": {
+      "end": "2026-11-18T15:59:00Z",
+      "minutes": 30,
+      "start": "2026-11-18T15:30:00Z"
+    }
+  },
+  "handover_files": [
+    "handover.json",
+    "handover_duplicate_id.json",
+    "handover_duplicate_timestamp.json",
+    "handover_late.json"
+  ],
+  "minutes_per_service": 1440,
+  "primary_handover": "handover.json",
+  "sample_rows": 4320,
+  "samples_sha256": "ee3fbe6d555fbd5812ef41cb76212f52615e27dd3b9d1f256efdd34dd78cd127",
+  "seed": 304,
+  "services": [
+    "payment-gateway",
+    "order-api",
+    "checkout-ui"
+  ],
+  "start": "2026-11-18T00:00:00Z"
+}

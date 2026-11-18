@@ -1,0 +1,74 @@
+{
+  "actual_alert_level": "P2",
+  "from_operator": "oncall-a",
+  "handover_at": "2026-11-18T15:00:00Z",
+  "handover_id": "HO-2026-1118-1500-DUP",
+  "notes": "上一班备注：支付链路 SLI 有点抖；未附预算快照。",
+  "open_incidents": [
+    {
+      "incident_id": "INC-2026-1118-01",
+      "service": "payment-gateway",
+      "services": [
+        "payment-gateway"
+      ],
+      "severity": "P2",
+      "started_at": "2026-11-18T14:30:00Z",
+      "status": "open",
+      "summary": "支付链路 SLI 有点抖",
+      "title": "支付链路 SLI 抖动"
+    }
+  ],
+  "recent_changes": [
+    {
+      "change_id": "CHG-2026-1118-01",
+      "changed_at": "2026-11-18T14:42:00Z",
+      "description": "支付网关发布",
+      "risk": "high",
+      "services": [
+        "payment-gateway"
+      ]
+    },
+    {
+      "change_id": "CHG-2026-1118-02",
+      "changed_at": "2026-11-18T13:50:00Z",
+      "description": "订单路由参数调整",
+      "risk": "medium",
+      "services": [
+        "order-api"
+      ]
+    }
+  ],
+  "silences": [
+    {
+      "created_by": "oncall-a",
+      "ends_at": "2026-11-18T15:30:00Z",
+      "reason": "支付接口临时降噪",
+      "services": [
+        "payment-gateway"
+      ],
+      "severity_scope": [
+        "P2",
+        "P3"
+      ],
+      "silence_id": "SIL-2026-1118-PAY-01",
+      "starts_at": "2026-11-18T14:30:00Z"
+    },
+    {
+      "created_by": "oncall-a",
+      "ends_at": "2026-11-18T18:00:00Z",
+      "reason": "计划维护窗口",
+      "services": [
+        "*"
+      ],
+      "severity_scope": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "silence_id": "SIL-2026-1118-GLOBAL-01",
+      "starts_at": "2026-11-18T14:00:00Z"
+    }
+  ],
+  "to_operator": "oncall-b"
+}
