@@ -1,0 +1,47 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8090
+  },
+  "storage": {
+    "path": "../data/coordinator.sqlite3"
+  },
+  "kafka": {
+    "bootstrap_servers": "127.0.0.1:9092",
+    "topic": "order-events",
+    "partitions": 12,
+    "client_id": "order-group-coordinator",
+    "request_timeout_ms": 5000,
+    "metadata_refresh_ms": 5000
+  },
+  "backend": {
+    "kind": "kafka",
+    "simulator_dir": "../data/simulated"
+  },
+  "group": {
+    "group_id": "order-events-consumers",
+    "default_session_timeout_ms": 10000,
+    "default_heartbeat_interval_ms": 1000,
+    "max_fetch_records": 250,
+    "max_fetch_bytes": 1048576,
+    "sweep_interval_ms": 50
+  },
+  "rebalance": {
+    "max_partitions_per_rebalance": 6,
+    "cooldown_ms": 5000,
+    "partition_threshold_delay_ms": 1500,
+    "suppression_max_delay_ms": 8000,
+    "revoke_ack_timeout_ms": 2500,
+    "initial_assignment_immediate": true
+  },
+  "metrics": {
+    "lag_refresh_ms": 1000
+  },
+  "worker": {
+    "batch_size": 250,
+    "heartbeat_interval_ms": 1000,
+    "session_timeout_ms": 10000,
+    "consume_delay_ms": 0
+  }
+}
+

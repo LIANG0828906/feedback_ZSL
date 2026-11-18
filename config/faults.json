@@ -1,0 +1,28 @@
+{
+  "members": {
+    "worker-1": {
+      "pause_after_records": 500,
+      "pause_duration_ms": 2000,
+      "consume_delay_ms": 1,
+      "session_timeout_ms": 10000,
+      "heartbeat_interval_ms": 1000
+    },
+    "worker-2": {
+      "stall_after_records": 500,
+      "stall_duration_ms": 2000,
+      "consume_delay_ms": 1,
+      "session_timeout_ms": 10000,
+      "heartbeat_interval_ms": 1000
+    },
+    "worker-3": {
+      "stop_heartbeat_after_ms": 5000,
+      "consume_delay_ms": 1,
+      "session_timeout_ms": 3000,
+      "heartbeat_interval_ms": 500
+    },
+    "*": {
+      "batch_size": 250
+    }
+  }
+}
+
