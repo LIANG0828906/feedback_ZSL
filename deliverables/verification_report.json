@@ -1,0 +1,289 @@
+{
+  "caustics": {
+    "lights": [
+      {
+        "inactive_sample_count": 200,
+        "landing_count": 102,
+        "noncontributing_count": 218,
+        "out_of_bounds_count": 18,
+        "penumbra_width_max": 0.05534715455243314,
+        "penumbra_width_median": 0.04972689335767977,
+        "penumbra_width_min": 0.03927692514760281,
+        "source_id": "L1",
+        "surface_sample_count": 320
+      },
+      {
+        "inactive_sample_count": 195,
+        "landing_count": 125,
+        "noncontributing_count": 195,
+        "out_of_bounds_count": 0,
+        "penumbra_width_max": 0.05601912153198017,
+        "penumbra_width_median": 0.052212657512258634,
+        "penumbra_width_min": 0.04254333073046698,
+        "source_id": "L2",
+        "surface_sample_count": 320
+      },
+      {
+        "inactive_sample_count": 206,
+        "landing_count": 104,
+        "noncontributing_count": 216,
+        "out_of_bounds_count": 10,
+        "penumbra_width_max": 0.05133657040584752,
+        "penumbra_width_median": 0.04787303092587065,
+        "penumbra_width_min": 0.04024145318409758,
+        "source_id": "L3",
+        "surface_sample_count": 320
+      }
+    ],
+    "penumbra_trend_pass": true,
+    "probes": [
+      {
+        "center_local_brightness": 0.1287946055124878,
+        "distance_product_over_sum": 0.43156563381622925,
+        "half_width_local_brightness": 0.07811787704891761,
+        "penumbra_half_width": 0.0433674225362172,
+        "source_id": "L1"
+      },
+      {
+        "center_local_brightness": 0.12622752185450503,
+        "distance_product_over_sum": 0.5160067507909056,
+        "half_width_local_brightness": 0.0765608621043038,
+        "penumbra_half_width": 0.049700506309317924,
+        "source_id": "L1"
+      },
+      {
+        "center_local_brightness": 0.05885393909691371,
+        "distance_product_over_sum": 0.5807379247487738,
+        "half_width_local_brightness": 0.03569671850713822,
+        "penumbra_half_width": 0.05455534435615804,
+        "source_id": "L1"
+      },
+      {
+        "center_local_brightness": 0.039726401411535286,
+        "distance_product_over_sum": 0.45614460253043654,
+        "half_width_local_brightness": 0.024095280456147387,
+        "penumbra_half_width": 0.045210845189782745,
+        "source_id": "L2"
+      },
+      {
+        "center_local_brightness": 0.1375662489445762,
+        "distance_product_over_sum": 0.5495021001634485,
+        "half_width_local_brightness": 0.08343814772654616,
+        "penumbra_half_width": 0.052212657512258634,
+        "source_id": "L2"
+      },
+      {
+        "center_local_brightness": 0.09390386569241237,
+        "distance_product_over_sum": 0.5910416691430299,
+        "half_width_local_brightness": 0.0569555736079854,
+        "penumbra_half_width": 0.055328125185727245,
+        "source_id": "L2"
+      },
+      {
+        "center_local_brightness": 0.014984204102140788,
+        "distance_product_over_sum": 0.4274970709909845,
+        "half_width_local_brightness": 0.0090883791993402,
+        "penumbra_half_width": 0.04306228032432384,
+        "source_id": "L3"
+      },
+      {
+        "center_local_brightness": 0.1342668971239258,
+        "distance_product_over_sum": 0.49317074294083263,
+        "half_width_local_brightness": 0.081436989690143,
+        "penumbra_half_width": 0.04798780572056245,
+        "source_id": "L3"
+      },
+      {
+        "center_local_brightness": 0.05699165543242696,
+        "distance_product_over_sum": 0.5285944749519472,
+        "half_width_local_brightness": 0.03456718636754501,
+        "penumbra_half_width": 0.05064458562139604,
+        "source_id": "L3"
+      }
+    ]
+  },
+  "energy_consistency": {
+    "acceptance_tolerance": 1e-12,
+    "active_sample_count": 25,
+    "all_three_light_sample_count": 23,
+    "max_combined_vs_sum_excess": 5.551115123125783e-17,
+    "max_light_order_delta": 2.7755575615628914e-17,
+    "max_ratio_error": 0.0,
+    "multi_light_sample_count": 25,
+    "pass": true,
+    "pixel_audit": {
+      "camera_id": "C00",
+      "leaf_pixel_count": 14405,
+      "max_combined_vs_sum_excess": 5.551115123125783e-17
+    },
+    "two_light_sample_count": 2
+  },
+  "environment": {
+    "gpu_required": false,
+    "network_required": false,
+    "numpy": "2.5.5",
+    "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "python": "3.14.4"
+  },
+  "generated_utc": "2026-11-18T07:22:13.133985+00:00",
+  "hue_continuity": {
+    "camera_sequence": [
+      "C00",
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06"
+    ],
+    "max_adjacent_jump_deg": 2.307692308,
+    "pass": true,
+    "saturation_gate": 0.1,
+    "threshold_deg": 8.0
+  },
+  "overall_pass": true,
+  "reference": {
+    "block_count": 112,
+    "block_size": [
+      48,
+      36
+    ],
+    "camera_count": 7,
+    "cameras": [
+      {
+        "camera_id": "C00",
+        "face_id_npy_sha256": "31f6af205da94f9737c22f463d88ec5e825d4440715d808927c528b4248ebceb",
+        "face_id_png_sha256": "ec5db1fcda11229443e00ccd6b86d5ac236b0057cc522bcfe2fb4b96a7a4acaa",
+        "height": 144,
+        "mean_thickness_nm": 486.4301474690897,
+        "rgba_npy_sha256": "53a29a23b39f577d62e5e409bbebf2ac0bc4cfe6f10460c9b7ebf7d89cfa2f97",
+        "rgba_png_sha256": "7749469af7527cee8fdc532cefb40657f6d1fedffbc271cf7a114b484c9cdbf0",
+        "visible_face_count": 131,
+        "width": 192
+      },
+      {
+        "camera_id": "C01",
+        "face_id_npy_sha256": "5c00bdc8bd9c8ef5d284a51c9ed29129867a3515aff5ccb7af16964c6e2bea61",
+        "face_id_png_sha256": "2431b8afd49b0ae3108b8e1ce9ec3183c2b5f4b7bc8ca9d2b7332ef1b5c5691f",
+        "height": 144,
+        "mean_thickness_nm": 488.0098850128179,
+        "rgba_npy_sha256": "472b858e66446dfa75797a5d682bcc84cf6be15f68ef1e80f02fe861b87c3c9d",
+        "rgba_png_sha256": "713b6402f39b8e74c43eefaf309c5d41e9e83e975cadd1247c275c9b17ea58db",
+        "visible_face_count": 129,
+        "width": 192
+      },
+      {
+        "camera_id": "C02",
+        "face_id_npy_sha256": "582ea10510f84f25ca1b0e876aad4232c2dc37dcd9e88d642b426d0bd8b5f385",
+        "face_id_png_sha256": "ea0fd82879975d65756e61a5a2a46552d579e898d9aa70cb05f1af6759b360a7",
+        "height": 144,
+        "mean_thickness_nm": 489.4690838105664,
+        "rgba_npy_sha256": "9a82b142e618371f8f2247d407ec92f7d139979322f1a7a9667b332830886084",
+        "rgba_png_sha256": "7a48127b48df8d83d7df7c0644f37a5733f8bbec757ccbb12692607a38bf321a",
+        "visible_face_count": 129,
+        "width": 192
+      },
+      {
+        "camera_id": "C03",
+        "face_id_npy_sha256": "8de584816aa696217b07e353acc7c6e7e04c2e6fc9f5ee36fc386e029c1b2910",
+        "face_id_png_sha256": "2353ddd3a103aa50810f9cab8abdf593f454fbcfe26133165f97017d69b88b32",
+        "height": 144,
+        "mean_thickness_nm": 490.93051475846863,
+        "rgba_npy_sha256": "b6249436ca518e65d9f456e60dac987e351f8855877b9f7b1bf816320b86a799",
+        "rgba_png_sha256": "4633e8fefce18928ba3a4eb50e19ac8ccc7fba68e2d5f990f50fa44f80d12671",
+        "visible_face_count": 128,
+        "width": 192
+      },
+      {
+        "camera_id": "C04",
+        "face_id_npy_sha256": "ef43350f2dd8b1107e23f8ca3bbb563315f9e87293b947accaac2d50e4e57c07",
+        "face_id_png_sha256": "28d84ea888fbf24dec4c156a5e520fa411a8d8b1d2c6ec9588bdbcac0183dd95",
+        "height": 144,
+        "mean_thickness_nm": 492.2947894873634,
+        "rgba_npy_sha256": "455ee927613a939f436ab914c5b06eea1cdc89cd7c3f6fdd4490442bdc139df4",
+        "rgba_png_sha256": "0f3a094d2ccc1935f8e1b027e66ad2ff3e7653c0cdb5b8823a7bbe0325f0dc32",
+        "visible_face_count": 128,
+        "width": 192
+      },
+      {
+        "camera_id": "C05",
+        "face_id_npy_sha256": "9ad20db9ec395a4be9c5cb1ac3dc7236983dc99963b1b5cebc440a18b2cddcf7",
+        "face_id_png_sha256": "1798d8f50943118a571d884e5f3e65cf551646ce89f45b82997223d1d5e2145e",
+        "height": 144,
+        "mean_thickness_nm": 493.58521790619784,
+        "rgba_npy_sha256": "8783994eaa42794a19c3ed3bd88fed9289da898601007c0cce8a408042f356c6",
+        "rgba_png_sha256": "7b25c1655ff014607f8ebde5b61e033c9171e1ae33db7b4fb70309dd83e84912",
+        "visible_face_count": 129,
+        "width": 192
+      },
+      {
+        "camera_id": "C06",
+        "face_id_npy_sha256": "cab33ca7e683e7136c9ca7817fc61e2ec98c490bdc057f3429a47a94df37582a",
+        "face_id_png_sha256": "be166f57ba9f1dcf3f2dcc0dc335b9f94286a0848559db4ef7f227d96924c0b1",
+        "height": 144,
+        "mean_thickness_nm": 494.895217385818,
+        "rgba_npy_sha256": "3a4a86c667a27d009a2eaa2da89fb83d3ca116ae9d5fce1aca17a9d51ecc3260",
+        "rgba_png_sha256": "01b610fa5db5ad7ca176adec08041d9114219e5266e41faeb84229a79816189e",
+        "visible_face_count": 132,
+        "width": 192
+      }
+    ],
+    "combined_rgba_face_sha256": "436e91d89e424166a4cff1c063c5151eb000327413f1bf4210303913107b73c3",
+    "film_signature": "09aee5497d6a7f8e4624253cd911a7990887389853e5615174317b6920058cbe",
+    "image_size": [
+      192,
+      144
+    ],
+    "report_sha256": "50a18cc9a6004b6267c294fa0b1ec1e95fc1cee90af525f226b52ca46560a7a2",
+    "scene_digest": "700d0a5e2616b69ae8109982382e678b8f3afab340952db7938cd818448547b7",
+    "scene_file": "deliverables/scene.json"
+  },
+  "resume_demo": {
+    "baseline_difference_count": 0,
+    "baseline_difference_status": "identical",
+    "completed_blocks_at_interrupt": 5,
+    "interrupt_exit_code": 0,
+    "interrupt_signals": "SIGINT",
+    "partial_images_at_interrupt": 0,
+    "recovery_file": "deliverables/resume_demo_interrupt.json",
+    "restored_blocks": 5,
+    "resume_action": "resumed",
+    "resume_exit_code": 0
+  },
+  "schema": "elytron-delivery-verification/v1",
+  "test_suite": {
+    "command": "python -m unittest discover -s tests -v",
+    "log": "deliverables/test_results.txt",
+    "log_sha256": "51f076ac4a64b00a0c3db54c904929a33965c4bcfd7509891643fca11f1ab37e",
+    "seconds": 44.269,
+    "status": "OK",
+    "tests_failed": 0,
+    "tests_run": 32,
+    "verified_behaviors": [
+      "JSON validation and structured business-code aborts",
+      "no image files on validation failure",
+      "byte-identical scene and table regeneration",
+      "triangle traversal-order independence",
+      "face-seed dependence and thickness-to-color modulation",
+      "hue continuity below declared threshold",
+      "caustic projection recomputation and leaf-bound clipping",
+      "penumbra monotonicity and smooth edge profile",
+      "additive energy and ratio sums within 1e-6",
+      "light-order-independent tile output",
+      "one uninterrupted run equals another byte-for-byte",
+      "forced-kill resume equals baseline",
+      "SIGINT exits 0 after a committed snapshot",
+      "baseline mismatch writes pixel/block/channel differences and exits 3"
+    ]
+  },
+  "validation_codes_covered": [
+    "E_MESH_INDEX_OOB",
+    "E_DEGENERATE_TRIANGLE",
+    "E_FILM_THICKNESS_RANGE",
+    "E_FILM_REFRACTIVE_RANGE",
+    "E_FACE_ID_MISSING",
+    "E_FACE_ID_DUPLICATE",
+    "E_LIGHT_INSIDE_ELYTROM",
+    "E_CAMERA_INVALID"
+  ]
+}
