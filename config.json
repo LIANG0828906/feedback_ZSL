@@ -1,0 +1,49 @@
+{
+  "seed": 20261119,
+  "poll_interval_seconds": 0.05,
+  "request_timeout_seconds": 0.5,
+  "retries": 2,
+  "chunk_size": 32,
+  "dedup_window_cycles": 5,
+  "failure_cooldown_threshold": 3,
+  "cooldown_cycles": 5,
+  "database": "snmpmon.db",
+  "state_dir": "sim_state",
+  "report_file": "report.json",
+  "devices": [
+    {
+      "name": "sw1",
+      "host": "127.0.0.1",
+      "port": 16101,
+      "interfaces": 16,
+      "latency_ms": 0,
+      "loss_percent": 0.0,
+      "admin_down_interfaces": [16],
+      "high_rate_interfaces": [5],
+      "flaps": [
+        {"if_index": 3, "down_tick": 20, "up_tick": 25},
+        {"if_index": 3, "down_tick": 27, "up_tick": 40},
+        {"if_index": 7, "down_tick": 50, "up_tick": 55}
+      ]
+    },
+    {
+      "name": "sw2",
+      "host": "127.0.0.1",
+      "port": 16102,
+      "interfaces": 16,
+      "latency_ms": 15,
+      "loss_percent": 5.0,
+      "dead_request_windows": [[150, 165]]
+    },
+    {
+      "name": "sw3",
+      "host": "127.0.0.1",
+      "port": 16103,
+      "interfaces": 16,
+      "latency_ms": 0,
+      "loss_percent": 0.0,
+      "restart_at_ticks": [60],
+      "high_rate_interfaces": [9]
+    }
+  ]
+}
