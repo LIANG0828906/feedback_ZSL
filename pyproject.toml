@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uid211-mastering"
+version = "1.0.0"
+description = "Deterministic offline multilingual mastering and resumable WAV delivery"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.21"]
+
+[project.scripts]
+mastering = "mastering.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["mastering*"]
+
