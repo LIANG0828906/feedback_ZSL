@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leather-shadow-raster"
+version = "1.0.0"
+description = "Deterministic offline soft rasterizer for layered leather shadow puppets"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3"]
+
+[project.scripts]
+leather-raster = "leather_raster.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["leather_raster*"]
+
