@@ -1,0 +1,47 @@
+{
+  "manifest_version": 1,
+  "dataset": "minute-backfill-example",
+  "seed": 42,
+  "timezone": "UTC",
+  "payments": {
+    "format": "parquet",
+    "manifest": "payments/shards.json",
+    "partition": "day=YYYY-MM-DD",
+    "fields": {
+      "payment_id": {"type": "string", "nullable": false},
+      "merchant_id": {"type": "string", "nullable": false},
+      "event_time": {"type": "timestamp_us_utc", "nullable": false},
+      "amount": {"type": "decimal(18,2)", "nullable": false},
+      "currency": {"type": "string", "nullable": false},
+      "event_type": {
+        "type": "string",
+        "nullable": false,
+        "allowed_values": ["PAYMENT"]
+      }
+    }
+  },
+  "refunds": {
+    "format": "jsonl",
+    "manifest": "refunds/batches.json",
+    "fields": {
+      "refund_id": {"type": "string", "nullable": false},
+      "payment_id": {"type": "string", "nullable": false},
+      "merchant_id": {"type": "string", "nullable": false},
+      "event_time": {"type": "timestamp_us_utc", "nullable": false},
+      "amount": {"type": "decimal(18,2)", "nullable": false},
+      "currency": {"type": "string", "nullable": false},
+      "event_type": {
+        "type": "string",
+        "nullable": false,
+        "allowed_values": ["REFUND"]
+      }
+    }
+  },
+  "semantics": {
+    "dedup": "per side/payment_id/event_minute; earliest event_time wins, first arrival breaks ties",
+    "window": "UTC tumbling minute [start, start+60s)",
+    "join": "same payment_id and minute; refund must be at or after payment",
+    "watermark": "max(declared_event_time) - allowed_lateness",
+    "late": "events arriving after their minute window has closed"
+  }
+}

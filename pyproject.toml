@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minute-backfill"
+version = "1.0.0"
+description = "Offline minute-window payment/refund backfill engine"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "duckdb==2.0.0",
+  "pyarrow==26.0.1",
+  "prometheus-client==0.26.0",
+  "psutil==7.2.2",
+]
+
+[project.optional-dependencies]
+test = ["pytest==9.2.0"]
+
+[project.scripts]
+minute-backfill = "minute_backfill.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["minute_backfill*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+  "integration: end-to-end tests that spawn the CLI",
+  "slow: full-scale or process-pool tests",
+]
