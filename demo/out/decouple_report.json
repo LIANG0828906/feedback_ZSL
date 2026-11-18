@@ -1,0 +1,261 @@
+{
+  "alignment": {
+    "details": [
+      {
+        "channel": "板鼓",
+        "detected_onsets": [
+          38144,
+          95744,
+          153344,
+          210944,
+          258944
+        ],
+        "max_abs_residual": 0,
+        "outlier_onsets_corrected": 0,
+        "raw_residual_error_samples": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "reference_samples": [
+          38400,
+          96000,
+          153600,
+          211200,
+          259200
+        ],
+        "residual_error_samples": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_samples": 256
+      },
+      {
+        "channel": "大锣",
+        "detected_onsets": [
+          38592,
+          96192,
+          153792,
+          211392,
+          259392
+        ],
+        "max_abs_residual": 0,
+        "outlier_onsets_corrected": 1,
+        "raw_residual_error_samples": [
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        "reference_samples": [
+          38400,
+          96000,
+          153600,
+          211200,
+          259200
+        ],
+        "residual_error_samples": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_samples": -192
+      },
+      {
+        "channel": "小锣",
+        "detected_onsets": [
+          38144,
+          95744,
+          153344,
+          210944,
+          258944
+        ],
+        "max_abs_residual": 0,
+        "outlier_onsets_corrected": 0,
+        "raw_residual_error_samples": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "reference_samples": [
+          38400,
+          96000,
+          153600,
+          211200,
+          259200
+        ],
+        "residual_error_samples": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "shift_samples": 256
+      }
+    ],
+    "micro_shifts": {
+      "大锣": [
+        [
+          38528,
+          -64
+        ]
+      ],
+      "小锣": [],
+      "板鼓": []
+    },
+    "offsets_samples": {
+      "大锣": -192,
+      "小锣": 256,
+      "帮腔": 0,
+      "底噪参考": 0,
+      "月琴": 0,
+      "板鼓": 256
+    },
+    "warnings": []
+  },
+  "bit_depth": 16,
+  "block_samples": 24000,
+  "completed_blocks": 12,
+  "cue_digest": "684090fb1d768467bd84850b90d3a39d28da077c45ed98bc6acb9ec2e3ca9355",
+  "decoupling": {
+    "channels": [
+      {
+        "attenuation_db": 10.200786,
+        "band_hz": [
+          700.0,
+          4000.0
+        ],
+        "channel": "板鼓",
+        "correlation": 0.990546,
+        "crosstalk_attenuation_db": 18.528491,
+        "crosstalk_energy_after_db": 14.921997,
+        "crosstalk_energy_before_db": 25.122783,
+        "crosstalk_projection_after": 0.033378,
+        "crosstalk_projection_before": 0.281761,
+        "crosstalk_source": "小锣",
+        "declared_gain_db": -11.0,
+        "detected": true,
+        "estimated_gain_linear": 0.281776,
+        "max_modification": 0.202048,
+        "modified": true,
+        "modified_interval_count": 287997,
+        "residual_detected": true,
+        "residual_ratio_to_bed": 3.289369,
+        "window_end_sample": 288000,
+        "window_start_sample": 0
+      },
+      {
+        "attenuation_db": 0.882258,
+        "band_hz": [
+          150.0,
+          900.0
+        ],
+        "channel": "帮腔",
+        "correlation": 0.428766,
+        "crosstalk_attenuation_db": 98.161305,
+        "crosstalk_energy_after_db": 36.83561,
+        "crosstalk_energy_before_db": 37.717868,
+        "crosstalk_projection_after": 2e-06,
+        "crosstalk_projection_before": 0.193809,
+        "crosstalk_source": "大锣",
+        "declared_gain_db": -14.0,
+        "detected": true,
+        "estimated_gain_linear": 0.193859,
+        "max_modification": 0.222331,
+        "modified": true,
+        "modified_interval_count": 287998,
+        "residual_detected": true,
+        "residual_ratio_to_bed": 41.000881,
+        "window_end_sample": 288000,
+        "window_start_sample": 0
+      }
+    ],
+    "injury_budgets": {
+      "大锣": {
+        "transient_peak_loss_db": 0.0
+      },
+      "帮腔": {
+        "tail_energy_loss_db": 0.820698
+      },
+      "板鼓": {
+        "transient_peak_loss_db": -0.8
+      }
+    }
+  },
+  "elapsed_seconds": 4.070796,
+  "interrupted_cleanly": false,
+  "mastering": {
+    "limiter_iterations": [
+      {
+        "ceiling_db": -1.2,
+        "max_attenuation_db": 6.175058,
+        "triggered_samples": 212334,
+        "true_peak_db": -1.043408
+      },
+      {
+        "ceiling_db": -1.2,
+        "max_attenuation_db": 0.0,
+        "triggered_samples": 0,
+        "true_peak_db": -8.947402
+      },
+      {
+        "ceiling_db": -1.2,
+        "max_attenuation_db": 0.0,
+        "triggered_samples": 0,
+        "true_peak_db": -8.947402
+      }
+    ],
+    "limiter_max_attenuation_db": 6.175058,
+    "limiter_triggered_samples": 212334,
+    "loudness_after_limiter_db": -10.096007,
+    "loudness_before_db": -9.151769,
+    "loudness_compliant": true,
+    "loudness_error_lu": 0.0,
+    "loudness_final_lufs": -18.0,
+    "static_trim_db": -7.903993,
+    "target_lufs": -18.0,
+    "tp_compliant": true,
+    "true_peak_final_db": -8.947402,
+    "true_peak_limit_db": -1.0
+  },
+  "overall_integrated_lufs": -18.0,
+  "resumed_from_snapshot": false,
+  "sample_rate": 48000,
+  "schema_version": 1,
+  "section_metrics": [
+    {
+      "end_sample": 124800,
+      "integrated_lufs": -17.668462,
+      "name": "起·锣鼓段",
+      "start_sample": 0,
+      "true_peak_db": -8.947402
+    },
+    {
+      "end_sample": 220800,
+      "integrated_lufs": -19.190381,
+      "name": "承·帮腔段",
+      "start_sample": 124800,
+      "true_peak_db": -9.031765
+    },
+    {
+      "end_sample": 288000,
+      "integrated_lufs": -17.305121,
+      "name": "合·收束段",
+      "start_sample": 220800,
+      "true_peak_db": -9.016816
+    }
+  ],
+  "total_blocks": 12,
+  "total_samples": 288000
+}

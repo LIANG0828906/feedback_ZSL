@@ -1,0 +1,96 @@
+{
+  "sample_rate": 48000,
+  "bit_depth": 16,
+  "duration_seconds": 6.0,
+  "seed": 20261118,
+  "reference_times": [
+    0.8,
+    2.0,
+    3.2,
+    4.4,
+    5.4
+  ],
+  "channels": [
+    {
+      "part": "板鼓",
+      "path": "sources/板鼓.wav",
+      "jitter_samples": 5,
+      "crosstalk_source": "小锣",
+      "crosstalk_gain_db": -11.0,
+      "crosstalk_window": [
+        0.0,
+        6.0
+      ]
+    },
+    {
+      "part": "大锣",
+      "path": "sources/大锣.wav",
+      "jitter_samples": 9
+    },
+    {
+      "part": "小锣",
+      "path": "sources/小锣.wav",
+      "jitter_samples": -7
+    },
+    {
+      "part": "帮腔",
+      "path": "sources/帮腔.wav",
+      "jitter_samples": 0,
+      "crosstalk_source": "大锣",
+      "crosstalk_gain_db": -14.0,
+      "crosstalk_window": [
+        0.0,
+        6.0
+      ]
+    },
+    {
+      "part": "月琴",
+      "path": "sources/月琴.wav",
+      "jitter_samples": 0
+    },
+    {
+      "part": "底噪参考",
+      "path": "sources/底噪参考.wav",
+      "jitter_samples": 0
+    }
+  ],
+  "sections": [
+    {
+      "name": "起·锣鼓段",
+      "start": 0.0,
+      "end": 2.6,
+      "group_gains_db": {
+        "打击乐组": 0.0,
+        "帮腔组": -3.0,
+        "月琴组": -2.0
+      }
+    },
+    {
+      "name": "承·帮腔段",
+      "start": 2.6,
+      "end": 4.6,
+      "group_gains_db": {
+        "打击乐组": -2.5,
+        "帮腔组": 0.5,
+        "月琴组": -1.0
+      }
+    },
+    {
+      "name": "合·收束段",
+      "start": 4.6,
+      "end": 6.0,
+      "group_gains_db": {
+        "打击乐组": 0.5,
+        "帮腔组": -1.0,
+        "月琴组": 0.0
+      }
+    }
+  ],
+  "target_lufs": -18.0,
+  "true_peak_limit_db": -1.0,
+  "crossfade_seconds": 0.01,
+  "block_samples": 24000,
+  "output_master": "out/master.wav",
+  "output_report": "out/decouple_report.json",
+  "snapshot_dir": "out/snapshots"
+}
