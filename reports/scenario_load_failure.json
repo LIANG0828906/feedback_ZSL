@@ -1,0 +1,63 @@
+{
+  "column_mismatch_rejections": 0,
+  "errors_by_code": {},
+  "errors_total": 0,
+  "feature_validation_rejections": 0,
+  "final_weights": {
+    "tenant-a": 0.0,
+    "tenant-b": 0.0,
+    "tenant-c": 1.0,
+    "tenant-d": 0.0
+  },
+  "latency_ms_by_target_version": {
+    "v3": {
+      "max": 2.339,
+      "mean": 1.783,
+      "p50": 1.784,
+      "p95": 2.174,
+      "p99": 2.339
+    }
+  },
+  "protocol_mismatch_rejections": 0,
+  "requests_by_declared_protocol": {
+    "v3": 50
+  },
+  "requests_by_target_version": {
+    "v3": 50
+  },
+  "responses_by_served_version": {
+    "v3": 50
+  },
+  "rollback_events": [],
+  "scenario": {
+    "achieved_rate_per_second": 202.429,
+    "configured_rate_per_second": 200.0,
+    "duration_seconds": 0.247,
+    "feature_misalignment_rate": 0.0,
+    "finished_at": "2026-11-18T21:43:42.977Z",
+    "inference_delay_ms": 0.0,
+    "inference_delay_rate": 0.0,
+    "load_failure_injected": true,
+    "protocol_version": "v3",
+    "request_count": 50,
+    "seed": 294,
+    "started_at": "2026-11-18T21:43:42.728Z",
+    "tenant_id": "tenant-c"
+  },
+  "schema_version": 1,
+  "timeouts_total": 0,
+  "version_states": {
+    "v3": {
+      "error_code": null,
+      "feature_dimension": 48,
+      "protocol_version": "v3",
+      "status": "ready"
+    },
+    "v4": {
+      "error_code": "MANIFEST_DIMENSION_MISMATCH",
+      "feature_dimension": null,
+      "protocol_version": "v4",
+      "status": "failed"
+    }
+  }
+}

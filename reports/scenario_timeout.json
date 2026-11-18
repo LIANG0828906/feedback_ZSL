@@ -1,0 +1,96 @@
+{
+  "column_mismatch_rejections": 0,
+  "errors_by_code": {
+    "FEATURE_PROTOCOL_MISMATCH": 5,
+    "INFERENCE_TIMEOUT": 40
+  },
+  "errors_total": 45,
+  "feature_validation_rejections": 5,
+  "final_weights": {
+    "tenant-a": 0.0,
+    "tenant-b": 0.0,
+    "tenant-c": 0.0,
+    "tenant-d": 0.0
+  },
+  "latency_ms_by_target_version": {
+    "v3": {
+      "max": 1.445,
+      "mean": 1.202,
+      "p50": 1.153,
+      "p95": 1.445,
+      "p99": 1.445
+    },
+    "v4": {
+      "max": 702.844,
+      "mean": 702.194,
+      "p50": 702.108,
+      "p95": 702.598,
+      "p99": 702.844
+    }
+  },
+  "protocol_mismatch_rejections": 5,
+  "requests_by_declared_protocol": {
+    "v4": 45
+  },
+  "requests_by_target_version": {
+    "v3": 5,
+    "v4": 40
+  },
+  "responses_by_served_version": {},
+  "rollback_events": [
+    {
+      "id": 1,
+      "metric": "p99_latency_ms",
+      "observed": 700.382,
+      "previous_weights": {
+        "tenant-a": 0.0,
+        "tenant-b": 0.0,
+        "tenant-c": 0.0,
+        "tenant-d": 1.0
+      },
+      "reason": "p99_latency_exceeded",
+      "tenant_id": "tenant-d",
+      "threshold": 120.0,
+      "triggered_at": "2026-11-18T21:44:18.845Z",
+      "version": "v4",
+      "weights_after": {
+        "tenant-a": 0.0,
+        "tenant-b": 0.0,
+        "tenant-c": 0.0,
+        "tenant-d": 0.0
+      },
+      "window_samples": 40
+    }
+  ],
+  "scenario": {
+    "achieved_rate_per_second": 1.602,
+    "configured_rate_per_second": 100.0,
+    "duration_seconds": 28.095,
+    "feature_misalignment_rate": 0.0,
+    "finished_at": "2026-11-18T21:44:18.854Z",
+    "inference_delay_ms": 700.0,
+    "inference_delay_rate": 1.0,
+    "load_failure_injected": false,
+    "protocol_version": "v4",
+    "request_count": 45,
+    "seed": 294,
+    "started_at": "2026-11-18T21:43:50.758Z",
+    "tenant_id": "tenant-d"
+  },
+  "schema_version": 1,
+  "timeouts_total": 40,
+  "version_states": {
+    "v3": {
+      "error_code": null,
+      "feature_dimension": 48,
+      "protocol_version": "v3",
+      "status": "ready"
+    },
+    "v4": {
+      "error_code": null,
+      "feature_dimension": 56,
+      "protocol_version": "v4",
+      "status": "ready"
+    }
+  }
+}
