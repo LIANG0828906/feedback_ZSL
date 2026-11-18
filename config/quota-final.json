@@ -1,0 +1,19 @@
+{
+  "listen_addr": "127.0.0.1:18089",
+  "data_root": "./var/quota-final",
+  "redis_addr": "127.0.0.1:6379",
+  "redis_db": 9,
+  "redis_namespace": "archive:quota-final",
+  "sqlite_path": "./var/quota-final/quota.db",
+  "stripe_size": 1048576,
+  "data_blocks": 4,
+  "parity_blocks": 2,
+  "writeback_quota_bytes": 1048576,
+  "repair_concurrency": 2,
+  "auto_repair": false,
+  "repair_poll_ms": 500,
+  "repair_delay_ms": 0,
+  "max_object_bytes": 67108864,
+  "timezone": "Asia/Shanghai",
+  "gomaxprocs": 2
+}

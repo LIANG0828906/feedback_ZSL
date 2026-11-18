@@ -1,0 +1,19 @@
+{
+  "listen_addr": "127.0.0.1:18080",
+  "data_root": "./var/archive",
+  "redis_addr": "127.0.0.1:6379",
+  "redis_db": 0,
+  "redis_namespace": "archive:main",
+  "sqlite_path": "./var/archive/archive.db",
+  "stripe_size": 1048576,
+  "data_blocks": 4,
+  "parity_blocks": 2,
+  "writeback_quota_bytes": 1073741824,
+  "repair_concurrency": 2,
+  "auto_repair": true,
+  "repair_poll_ms": 1000,
+  "repair_delay_ms": 0,
+  "max_object_bytes": 67108864,
+  "timezone": "Asia/Shanghai",
+  "gomaxprocs": 2
+}

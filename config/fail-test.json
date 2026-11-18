@@ -1,0 +1,19 @@
+{
+  "listen_addr": "127.0.0.1:18085",
+  "data_root": "./var/fail",
+  "redis_addr": "127.0.0.1:6379",
+  "redis_db": 5,
+  "redis_namespace": "archive:fail",
+  "sqlite_path": "./var/fail/fail.db",
+  "stripe_size": 1048576,
+  "data_blocks": 4,
+  "parity_blocks": 2,
+  "writeback_quota_bytes": 10485760,
+  "repair_concurrency": 2,
+  "auto_repair": false,
+  "repair_poll_ms": 500,
+  "repair_delay_ms": 0,
+  "max_object_bytes": 67108864,
+  "timezone": "Asia/Shanghai",
+  "gomaxprocs": 2
+}
