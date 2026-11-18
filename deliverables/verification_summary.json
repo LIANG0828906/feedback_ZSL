@@ -1,0 +1,64 @@
+{
+  "all_compliant": true,
+  "automated_tests": {
+    "command": "python -m unittest discover -v",
+    "passed": 9,
+    "total": 9
+  },
+  "business_code": "OK",
+  "decoupling": [
+    {
+      "attenuation_db": 266.98417348336596,
+      "residual_dbfs": -300.0,
+      "target": "ch2_D2",
+      "unrelated_peak_loss_db": 0.0
+    },
+    {
+      "attenuation_db": 265.1431503195695,
+      "residual_dbfs": -300.0,
+      "target": "ch3_E2",
+      "unrelated_peak_loss_db": 0.0
+    },
+    {
+      "attenuation_db": 265.896727081914,
+      "residual_dbfs": -300.0,
+      "target": "ch4_G2",
+      "unrelated_peak_loss_db": 0.0
+    }
+  ],
+  "integrated_lufs": -16.04928791747576,
+  "interrupt_verification": {
+    "resumed_master_byte_identical": true,
+    "sigint_exit_code": 0,
+    "sigkill_exit_code": -9
+  },
+  "limiter_triggered_samples": 44,
+  "loudness_delta_lu": -0.049287917475759,
+  "manifest_sha256": "df291d8d5cb2f84562ba04f9ab2a5f527cdfa5112e45d19c345023aecb38d19c",
+  "master_bit_depth": 24,
+  "master_channels": 2,
+  "master_samples": 480000,
+  "master_sha256": "1d0896f8f3a03a8a4b90d47525c1d2cc501e09c5d3d344cac7eb00d4dbbfb315",
+  "max_alignment_residual_samples": 1,
+  "report_sha256": "c25eb968c9990c85af3a5504db9121840c031417ae16e09195bc745dc4ec25b8",
+  "segments": [
+    {
+      "loudness_lufs": -16.715489014465728,
+      "name": "intro",
+      "true_peak_dbtp": -2.0217100424092465
+    },
+    {
+      "loudness_lufs": -15.359981139787164,
+      "name": "development",
+      "true_peak_dbtp": -1.0499999154539095
+    },
+    {
+      "loudness_lufs": -16.602855850406144,
+      "name": "coda",
+      "true_peak_dbtp": -2.155339317348198
+    }
+  ],
+  "status": "DELIVERABLE_VERIFIED",
+  "true_peak_dbtp": -1.0499999154539095,
+  "true_peak_limit_dbtp": -1.0
+}

@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "project_id": "deterministic_guqin_six_channel",
+  "seed": 20261118,
+  "sample_rate": 48000,
+  "bit_depth": 24,
+  "duration_seconds": 10.0,
+  "reference_times_seconds": [
+    0.9,
+    2.1,
+    3.3,
+    4.7,
+    6.0,
+    7.2,
+    8.5
+  ],
+  "target_loudness_lufs": -16.0,
+  "true_peak_limit_dbtp": -1.0,
+  "block_size": 4096,
+  "crossfade_seconds": 0.06,
+  "channels": [
+    {
+      "name": "ch1_C2",
+      "path": "audio/ch1_C2.wav",
+      "string": 1,
+      "pitch": "C2",
+      "pan": -0.78,
+      "start_offset_samples": 0,
+      "reference": false
+    },
+    {
+      "name": "ch2_D2",
+      "path": "audio/ch2_D2.wav",
+      "string": 2,
+      "pitch": "D2",
+      "pan": -0.48,
+      "start_offset_samples": 960,
+      "reference": false
+    },
+    {
+      "name": "ch3_E2",
+      "path": "audio/ch3_E2.wav",
+      "string": 3,
+      "pitch": "E2",
+      "pan": -0.18,
+      "start_offset_samples": 1680,
+      "reference": false
+    },
+    {
+      "name": "ch4_G2",
+      "path": "audio/ch4_G2.wav",
+      "string": 4,
+      "pitch": "G2",
+      "pan": 0.2,
+      "start_offset_samples": 480,
+      "reference": false
+    },
+    {
+      "name": "ch5_A2",
+      "path": "audio/ch5_A2.wav",
+      "string": 5,
+      "pitch": "A2",
+      "pan": 0.49,
+      "start_offset_samples": 2400,
+      "reference": false
+    },
+    {
+      "name": "ch6_C3_ref",
+      "path": "audio/ch6_C3_ref.wav",
+      "string": 6,
+      "pitch": "C3",
+      "pan": 0.76,
+      "start_offset_samples": 1200,
+      "reference": true
+    }
+  ],
+  "crosstalk": [
+    {
+      "source": "ch1_C2",
+      "target": "ch2_D2",
+      "window_seconds": [
+        0.86,
+        1.66
+      ],
+      "gain": 0.135
+    },
+    {
+      "source": "ch2_D2",
+      "target": "ch3_E2",
+      "window_seconds": [
+        2.06,
+        2.72
+      ],
+      "gain": 0.125
+    },
+    {
+      "source": "ch3_E2",
+      "target": "ch4_G2",
+      "window_seconds": [
+        4.66,
+        5.34
+      ],
+      "gain": 0.12
+    }
+  ],
+  "decoupling": {
+    "residual_threshold_db": -50.0,
+    "minimum_attenuation_db": 18.0,
+    "detection_margin_db": 12.0,
+    "max_unrelated_peak_loss_db": 1.0
+  },
+  "segments": [
+    {
+      "name": "intro",
+      "start_seconds": 0.0,
+      "end_seconds": 3.4,
+      "gains": {
+        "ch1_C2": 0.78,
+        "ch2_D2": 0.8,
+        "ch3_E2": 0.74,
+        "ch4_G2": 0.84,
+        "ch5_A2": 0.72,
+        "ch6_C3_ref": 0.64
+      }
+    },
+    {
+      "name": "development",
+      "start_seconds": 3.4,
+      "end_seconds": 6.7,
+      "gains": {
+        "ch1_C2": 0.88,
+        "ch2_D2": 0.86,
+        "ch3_E2": 0.82,
+        "ch4_G2": 0.93,
+        "ch5_A2": 0.82,
+        "ch6_C3_ref": 0.75
+      }
+    },
+    {
+      "name": "coda",
+      "start_seconds": 6.7,
+      "end_seconds": 10.0,
+      "gains": {
+        "ch1_C2": 0.72,
+        "ch2_D2": 0.75,
+        "ch3_E2": 0.8,
+        "ch4_G2": 0.86,
+        "ch5_A2": 0.78,
+        "ch6_C3_ref": 0.7
+      }
+    }
+  ]
+}

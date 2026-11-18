@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guqin-master"
+version = "1.0.0"
+description = "Deterministic offline mastering for multi-track guqin recordings"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+]
+
+[project.scripts]
+guqin-master = "guqin_master.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["guqin_master*"]
