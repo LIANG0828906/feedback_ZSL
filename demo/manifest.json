@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "sample_rate": 48000,
+  "bit_depth": 24,
+  "duration_seconds": 8.8,
+  "block_frames": 4096,
+  "target_loudness_lufs": -16.0,
+  "true_peak_limit_dbtp": -1.0,
+  "channel_search_ms": {
+    "before": 120.0,
+    "after": 120.0
+  },
+  "channels": [
+    {
+      "name": "bangu",
+      "instrument": "板鼓",
+      "file": "audio/bangu.wav",
+      "seed": 1103,
+      "start_offset_samples": 731,
+      "fallback_alignment_samples": -731,
+      "cues": [
+        0.55,
+        0.9,
+        1.25,
+        1.65,
+        2.05,
+        2.45,
+        2.9,
+        3.35,
+        3.85,
+        4.35,
+        4.9,
+        5.45,
+        6.05,
+        6.65,
+        7.25
+      ],
+      "mix_weights": [
+        0.95,
+        0.88
+      ],
+      "early_reflection": {
+        "enabled": true,
+        "delay_ms": 28.5,
+        "gain_db": -7.5,
+        "window_ms": [
+          20.0,
+          45.0
+        ]
+      }
+    },
+    {
+      "name": "daluo",
+      "instrument": "大锣",
+      "file": "audio/daluo.wav",
+      "seed": 2207,
+      "start_offset_samples": 1489,
+      "fallback_alignment_samples": -1489,
+      "cues": [
+        0.55,
+        0.9,
+        1.25,
+        1.65,
+        2.05,
+        2.45,
+        2.9,
+        3.35,
+        3.85,
+        4.35,
+        4.9,
+        5.45,
+        6.05,
+        6.65,
+        7.25
+      ],
+      "mix_weights": [
+        0.82,
+        0.76
+      ],
+      "early_reflection": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "xiaoluo",
+      "instrument": "小锣",
+      "file": "audio/xiaoluo.wav",
+      "seed": 3301,
+      "start_offset_samples": 2213,
+      "fallback_alignment_samples": -2213,
+      "cues": [
+        0.55,
+        0.9,
+        1.25,
+        1.65,
+        2.05,
+        2.45,
+        2.9,
+        3.35,
+        3.85,
+        4.35,
+        4.9,
+        5.45,
+        6.05,
+        6.65,
+        7.25
+      ],
+      "mix_weights": [
+        0.7,
+        0.84
+      ],
+      "early_reflection": {
+        "enabled": true,
+        "delay_ms": 44.0,
+        "gain_db": -9.0,
+        "window_ms": [
+          30.0,
+          70.0
+        ]
+      }
+    },
+    {
+      "name": "naobo",
+      "instrument": "铙钹",
+      "file": "audio/naobo.wav",
+      "seed": 4409,
+      "start_offset_samples": 2939,
+      "fallback_alignment_samples": -2939,
+      "cues": [
+        0.55,
+        0.9,
+        1.25,
+        1.65,
+        2.05,
+        2.45,
+        2.9,
+        3.35,
+        3.85,
+        4.35,
+        4.9,
+        5.45,
+        6.05,
+        6.65,
+        7.25
+      ],
+      "mix_weights": [
+        0.76,
+        0.72
+      ],
+      "early_reflection": {
+        "enabled": false
+      }
+    },
+    {
+      "name": "tanggu",
+      "instrument": "堂鼓",
+      "file": "audio/tanggu.wav",
+      "seed": 5501,
+      "start_offset_samples": 347,
+      "fallback_alignment_samples": -347,
+      "cues": [
+        0.55,
+        0.9,
+        1.25,
+        1.65,
+        2.05,
+        2.45,
+        2.9,
+        3.35,
+        3.85,
+        4.35,
+        4.9,
+        5.45,
+        6.05,
+        6.65,
+        7.25
+      ],
+      "mix_weights": [
+        0.98,
+        0.94
+      ],
+      "early_reflection": {
+        "enabled": true,
+        "delay_ms": 58.0,
+        "gain_db": -8.5,
+        "window_ms": [
+          38.0,
+          100.0
+        ]
+      }
+    }
+  ]
+}
