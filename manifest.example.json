@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "seed": 245,
+  "sample_rate": 48000,
+  "bit_depth": 24,
+  "dialogue_points_seconds": [
+    0.55,
+    1.05,
+    1.85,
+    2.65,
+    3.35,
+    4.35,
+    5.05,
+    5.75
+  ],
+  "mono_fold": {
+    "rule": "sum_0.5",
+    "band_hz": [
+      300.0,
+      3400.0
+    ],
+    "energy_tolerance": 0.015
+  },
+  "loudness": {
+    "target_lufs": -17.0,
+    "true_peak_dbtp": -1.0,
+    "tolerance_lu": 0.5
+  },
+  "ducking": {
+    "depth_db": -12.0,
+    "attack_ms": 15.0,
+    "recovery_ms": 160.0,
+    "sir_min_improvement_db": 7.0
+  },
+  "render": {
+    "block_frames": 4096,
+    "output_dir": "deliverables",
+    "snapshot_path": "state/render.snapshot.json",
+    "master_stereo": "master_stereo.wav",
+    "master_mono": "master_mono.wav",
+    "report": "mastering_report.json",
+    "recovery_report": "recovery_report.json"
+  },
+  "tracks": [
+    {
+      "name": "dialogue_a",
+      "kind": "dialogue",
+      "path": "media/dialogue_a.wav",
+      "sample_rate": 48000,
+      "channels": 1,
+      "bit_depth": 24,
+      "offset_seconds": 0.123456,
+      "synth": {
+        "cue_indices": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "jitter_samples": 7,
+        "local_duration_seconds": 5.3,
+        "f0_hz": 148.0,
+        "burst_gain": 0.58,
+        "vowel_gain": 0.27,
+        "gain": 1.0,
+        "pan": 0.0
+      }
+    },
+    {
+      "name": "dialogue_b",
+      "kind": "dialogue",
+      "path": "media/dialogue_b.wav",
+      "sample_rate": 48000,
+      "channels": 2,
+      "bit_depth": 24,
+      "offset_seconds": 0.071111,
+      "synth": {
+        "cue_indices": [
+          1,
+          3,
+          5,
+          7
+        ],
+        "jitter_samples": -5,
+        "local_duration_seconds": 5.95,
+        "f0_hz": 112.0,
+        "burst_gain": 0.52,
+        "vowel_gain": 0.25,
+        "gain": 1.0,
+        "pan": 0.0
+      }
+    },
+    {
+      "name": "narration",
+      "kind": "narration",
+      "path": "media/narration.wav",
+      "sample_rate": 48000,
+      "channels": 1,
+      "bit_depth": 24,
+      "offset_seconds": 0.234567,
+      "synth": {
+        "segments": [
+          {
+            "cue_index": 1,
+            "duration_seconds": 0.7
+          },
+          {
+            "cue_index": 4,
+            "duration_seconds": 0.85
+          },
+          {
+            "cue_index": 6,
+            "duration_seconds": 0.65
+          }
+        ],
+        "jitter_samples": -3,
+        "local_duration_seconds": 5.6,
+        "f0_hz": 176.0,
+        "gain": 0.42,
+        "pan": 0.0
+      }
+    },
+    {
+      "name": "music_bed",
+      "kind": "music",
+      "path": "media/music_bed.wav",
+      "sample_rate": 48000,
+      "channels": 2,
+      "bit_depth": 24,
+      "offset_seconds": 0.0,
+      "synth": {
+        "duration_seconds": 6.4,
+        "chord_hz": [
+          130.81,
+          164.81,
+          196.0,
+          246.94
+        ],
+        "gain": 0.18,
+        "width": 0.06,
+        "fade_seconds": 0.06
+      }
+    }
+  ]
+}
