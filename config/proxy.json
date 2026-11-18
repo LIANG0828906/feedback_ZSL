@@ -1,0 +1,21 @@
+{
+  "connect_timeout_ms": 400,
+  "downstream_idle_timeout_ms": 8000,
+  "envoy_access_log": "logs/envoy-access.log",
+  "envoy_admin_port": 18082,
+  "envoy_config": "config/envoy.yaml",
+  "envoy_version": "1.30",
+  "listen_host": "127.0.0.1",
+  "listen_port": 18080,
+  "mode": "embedded",
+  "pool_size": 8,
+  "targets": {
+    "local-a": {
+      "proxy_host": "127.0.0.1",
+      "proxy_port": 18080,
+      "upstream_host": "127.0.0.1",
+      "upstream_port": 18081
+    }
+  },
+  "upstream_read_timeout_ms": 1200
+}

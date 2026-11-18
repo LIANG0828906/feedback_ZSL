@@ -1,0 +1,18 @@
+{
+  "early_disconnect_after_response_ms": 15,
+  "early_disconnect_before_response_ms": 30,
+  "extra_ports": [],
+  "injection_file": "config/injection.json",
+  "listen_host": "127.0.0.1",
+  "listen_port": 18081,
+  "proxy_read_timeout_extra_ms": 250,
+  "read_timeout_ms": 3000,
+  "targets": {
+    "local-a": {
+      "proxy_host": "127.0.0.1",
+      "proxy_port": 18080,
+      "upstream_host": "127.0.0.1",
+      "upstream_port": 18081
+    }
+  }
+}
