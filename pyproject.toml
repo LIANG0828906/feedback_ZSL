@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deterministic-offline-mastering"
+version = "0.1.0"
+description = "Deterministic offline multitrack mastering with drift, automation, loudness and true-peak handling"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.0,<3",
+    "scipy>=1.13,<2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+offline-mastering = "mastering.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["mastering*"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
