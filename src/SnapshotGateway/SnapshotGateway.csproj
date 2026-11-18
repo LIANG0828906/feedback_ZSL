@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <RootNamespace>SnapshotGateway</RootNamespace>
+    <AssemblyName>SnapshotGateway</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.11" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.6" />
+  </ItemGroup>
+
+  <Target Name="PinSqlite342NativeBuild" AfterTargets="Build">
+    <Copy
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\linux-x64\libe_sqlite3.so"
+      DestinationFiles="$(OutDir)runtimes\linux-x64\native\libe_sqlite3.so"
+      SkipUnchangedFiles="true" />
+    <Copy
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\win-x64\e_sqlite3.dll"
+      DestinationFiles="$(OutDir)runtimes\win-x64\native\e_sqlite3.dll"
+      SkipUnchangedFiles="true" />
+    <Copy
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\win-x86\e_sqlite3.dll"
+      DestinationFiles="$(OutDir)runtimes\win-x86\native\e_sqlite3.dll"
+      SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="PinSqlite342NativePublish" AfterTargets="Publish">
+    <Copy
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\linux-x64\libe_sqlite3.so"
+      DestinationFiles="$(PublishDir)libe_sqlite3.so"
+      SkipUnchangedFiles="true" />
+    <Copy
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\linux-x64\libe_sqlite3.so"
+      DestinationFiles="$(PublishDir)runtimes\linux-x64\native\libe_sqlite3.so"
+      SkipUnchangedFiles="true" />
+    <Copy
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\win-x64\e_sqlite3.dll"
+      DestinationFiles="$(PublishDir)runtimes\win-x64\native\e_sqlite3.dll"
+      SkipUnchangedFiles="true" />
+    <Copy
+      Condition="'$(RuntimeIdentifier)' == '' or '$(RuntimeIdentifier)' == 'win-x64'"
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\win-x64\e_sqlite3.dll"
+      DestinationFiles="$(PublishDir)e_sqlite3.dll"
+      SkipUnchangedFiles="true" />
+    <Copy
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\win-x86\e_sqlite3.dll"
+      DestinationFiles="$(PublishDir)runtimes\win-x86\native\e_sqlite3.dll"
+      SkipUnchangedFiles="true" />
+    <Copy
+      Condition="'$(RuntimeIdentifier)' == 'win-x86'"
+      SourceFiles="$(MSBuildThisFileDirectory)..\..\native\win-x86\e_sqlite3.dll"
+      DestinationFiles="$(PublishDir)e_sqlite3.dll"
+      SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>
