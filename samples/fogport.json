@@ -1,0 +1,130 @@
+{
+  "camera": {
+    "aspect": 1.3333333333333333,
+    "fov_deg": 52.0,
+    "height": 120,
+    "position": [
+      27.0,
+      7.2,
+      -8.0
+    ],
+    "target": [
+      10.0,
+      4.8,
+      14.0
+    ],
+    "up": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "width": 160
+  },
+  "lights": [
+    {
+      "color": [
+        1.0,
+        0.47,
+        0.16
+      ],
+      "direction": [
+        0.15,
+        0.88,
+        0.45
+      ],
+      "falloff": 1.7,
+      "id": "floor_amber",
+      "inner_cone_deg": 4.0,
+      "intensity": 240.0,
+      "kind": "floor",
+      "outer_cone_deg": 13.0,
+      "position": [
+        8.0,
+        -1.4,
+        7.0
+      ],
+      "range": 18.0
+    },
+    {
+      "color": [
+        0.22,
+        0.72,
+        1.0
+      ],
+      "direction": [
+        -0.92,
+        -0.08,
+        -0.38
+      ],
+      "falloff": 1.6,
+      "id": "side_cyan",
+      "inner_cone_deg": 3.0,
+      "intensity": 180.0,
+      "kind": "side",
+      "outer_cone_deg": 11.0,
+      "position": [
+        24.0,
+        5.6,
+        12.0
+      ],
+      "range": 17.0
+    }
+  ],
+  "render": {
+    "absorption": 0.035,
+    "ambient": [
+      0.0015,
+      0.0035,
+      0.007
+    ],
+    "channel_max": 1.0,
+    "chunk_size": [
+      20,
+      15
+    ],
+    "convergence_tolerance": 0.06,
+    "exposure": 1.4,
+    "gamma": 2.2,
+    "light_max_samples": 96,
+    "light_step": 0.8,
+    "max_samples": 1024,
+    "phase_g": 0.08,
+    "scattering": 0.26,
+    "step": 1,
+    "substeps": 4,
+    "tonemap": "aces"
+  },
+  "scene_id": "fogport_validation",
+  "schema_version": 1,
+  "seed": 212,
+  "volume": {
+    "density_range": [
+      0.0,
+      1.0
+    ],
+    "dimensions": [
+      40,
+      24,
+      56
+    ],
+    "noise": {
+      "base_frequency": 0.105,
+      "floor_thickness": 0.34,
+      "gain": 0.53,
+      "lacunarity": 2.03,
+      "octaves": 5,
+      "strata_frequency": 5.0,
+      "top_thickness": 0.17
+    },
+    "origin": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "voxel_size": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  }
+}
