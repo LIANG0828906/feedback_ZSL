@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "binaural-bus"
+version = "0.1.0"
+description = "Deterministic offline binaural bus renderer for live-drama multitrack material"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26"]
+
+[project.scripts]
+binaural-bus = "binaural_bus.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["binaural_bus*"]
+

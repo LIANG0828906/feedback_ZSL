@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "project_id": "uid215-live-drama-episode-01",
+  "project_digest": "c0d43728b6ab4373c240bf50394f0f66af9d9580393bacfb922529c39d07eb65",
+  "sample_rate": 48000,
+  "bit_depth": 24,
+  "frames": 384000,
+  "seed": 21520261118,
+  "actors": [
+    {
+      "id": "actor_lin",
+      "channel": "actor_lin.wav",
+      "azimuth_deg": -35.0,
+      "elevation_deg": 5.0,
+      "truth": "actor_lin.direct.wav"
+    },
+    {
+      "id": "actor_chen",
+      "channel": "actor_chen.wav",
+      "azimuth_deg": 28.0,
+      "elevation_deg": -3.0,
+      "truth": "actor_chen.direct.wav"
+    }
+  ],
+  "speakers": [
+    {
+      "id": "speaker_left",
+      "channel": "speaker_left.wav",
+      "azimuth_deg": -72.0,
+      "elevation_deg": 12.0
+    },
+    {
+      "id": "speaker_right",
+      "channel": "speaker_right.wav",
+      "azimuth_deg": 68.0,
+      "elevation_deg": 8.0
+    }
+  ],
+  "crosstalk_paths": [
+    {
+      "actor_id": "actor_chen",
+      "speaker_id": "speaker_left",
+      "gain_db": -20.0,
+      "gain_linear": 0.1,
+      "delay_samples": 156.0,
+      "delay_ms": 3.25,
+      "speaker_azimuth_deg": -72.0,
+      "speaker_elevation_deg": 12.0
+    },
+    {
+      "actor_id": "actor_chen",
+      "speaker_id": "speaker_right",
+      "gain_db": -12.0,
+      "gain_linear": 0.251188643150958,
+      "delay_samples": 84.0,
+      "delay_ms": 1.75,
+      "speaker_azimuth_deg": 68.0,
+      "speaker_elevation_deg": 8.0
+    },
+    {
+      "actor_id": "actor_lin",
+      "speaker_id": "speaker_left",
+      "gain_db": -14.0,
+      "gain_linear": 0.19952623149688797,
+      "delay_samples": 120.0,
+      "delay_ms": 2.5,
+      "speaker_azimuth_deg": -72.0,
+      "speaker_elevation_deg": 12.0
+    },
+    {
+      "actor_id": "actor_lin",
+      "speaker_id": "speaker_right",
+      "gain_db": -18.0,
+      "gain_linear": 0.12589254117941673,
+      "delay_samples": 192.0,
+      "delay_ms": 4.0,
+      "speaker_azimuth_deg": 68.0,
+      "speaker_elevation_deg": 8.0
+    }
+  ]
+}

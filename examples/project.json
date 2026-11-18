@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "project_id": "uid215-live-drama-episode-01",
+  "seed": 21520261118,
+  "sample_rate": 48000,
+  "bit_depth": 24,
+  "duration_seconds": 8.0,
+  "actors": [
+    {
+      "id": "actor_lin",
+      "channel": "actor_lin.wav",
+      "channels": 1,
+      "azimuth_deg": -35.0,
+      "elevation_deg": 5.0,
+      "timeline": [
+        {"time_seconds": 0.0, "azimuth_deg": -35.0, "elevation_deg": 5.0},
+        {"time_seconds": 2.2, "azimuth_deg": -35.0, "elevation_deg": 5.0},
+        {"time_seconds": 2.35, "azimuth_deg": 42.0, "elevation_deg": 8.0},
+        {"time_seconds": 5.6, "azimuth_deg": 42.0, "elevation_deg": 8.0},
+        {"time_seconds": 5.9, "azimuth_deg": -48.0, "elevation_deg": 0.0}
+      ]
+    },
+    {
+      "id": "actor_chen",
+      "channel": "actor_chen.wav",
+      "channels": 1,
+      "azimuth_deg": 28.0,
+      "elevation_deg": -3.0,
+      "timeline": [
+        {"time_seconds": 0.0, "azimuth_deg": 28.0, "elevation_deg": -3.0},
+        {"time_seconds": 3.8, "azimuth_deg": 28.0, "elevation_deg": -3.0},
+        {"time_seconds": 4.2, "azimuth_deg": -62.0, "elevation_deg": 10.0},
+        {"time_seconds": 7.0, "azimuth_deg": -62.0, "elevation_deg": 10.0},
+        {"time_seconds": 7.15, "azimuth_deg": 12.0, "elevation_deg": 0.0}
+      ]
+    }
+  ],
+  "speakers": [
+    {
+      "id": "speaker_left",
+      "channel": "speaker_left.wav",
+      "channels": 1,
+      "azimuth_deg": -72.0,
+      "elevation_deg": 12.0,
+      "feedback": [
+        {"actor_id": "actor_lin", "gain_db": -14.0, "delay_ms": 2.5},
+        {"actor_id": "actor_chen", "gain_db": -20.0, "delay_ms": 3.25}
+      ]
+    },
+    {
+      "id": "speaker_right",
+      "channel": "speaker_right.wav",
+      "channels": 1,
+      "azimuth_deg": 68.0,
+      "elevation_deg": 8.0,
+      "feedback": [
+        {"actor_id": "actor_lin", "gain_db": -18.0, "delay_ms": 4.0},
+        {"actor_id": "actor_chen", "gain_db": -12.0, "delay_ms": 1.75}
+      ]
+    }
+  ],
+  "crosstalk": {
+    "reference_windows": [
+      {
+        "start_seconds": 0.55,
+        "end_seconds": 0.95,
+        "actor_id": "actor_lin",
+        "speaker_id": "speaker_left"
+      },
+      {
+        "start_seconds": 1.05,
+        "end_seconds": 1.45,
+        "actor_id": "actor_lin",
+        "speaker_id": "speaker_right"
+      },
+      {
+        "start_seconds": 2.65,
+        "end_seconds": 3.05,
+        "actor_id": "actor_chen",
+        "speaker_id": "speaker_left"
+      },
+      {
+        "start_seconds": 3.25,
+        "end_seconds": 3.65,
+        "actor_id": "actor_chen",
+        "speaker_id": "speaker_right"
+      }
+    ],
+    "direct_probe_windows": [
+      {
+        "start_seconds": 4.85,
+        "end_seconds": 5.15,
+        "actor_id": "actor_lin"
+      },
+      {
+        "start_seconds": 6.20,
+        "end_seconds": 6.55,
+        "actor_id": "actor_chen"
+      }
+    ],
+    "max_delay_ms": 10.0,
+    "residual_energy_ratio_max": 0.01,
+    "max_direct_energy_loss_ratio": 0.05
+  },
+  "spatial": {
+    "head_radius_m": 0.0875,
+    "speed_of_sound_mps": 343.0,
+    "parameter_block_seconds": 0.01,
+    "smoothing_seconds": 0.08,
+    "segment_report_seconds": 1.0,
+    "max_ild_rate_db_per_s": 8.0,
+    "max_itd_rate_us_per_s": 120.0,
+    "ild_max_db": 18.0,
+    "model": "woodworth_itd_head_shadow_fir_v1"
+  },
+  "export": {
+    "format": "wav",
+    "sample_rate": 48000,
+    "bit_depth": 24,
+    "channels": 2,
+    "target_lufs": -16.0,
+    "true_peak_limit_dbtp": -1.0,
+    "block_frames": 4096
+  }
+}
+

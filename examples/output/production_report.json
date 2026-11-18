@@ -1,0 +1,445 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "project_id": "uid215-live-drama-episode-01",
+  "source": {
+    "project_digest": "c0d43728b6ab4373c240bf50394f0f66af9d9580393bacfb922529c39d07eb65",
+    "input_digest": "a2bfbb52514f1230e169336068fab037bdfc4306e93fbee7c87dbb12f78ce6ff",
+    "channels_verified": 4
+  },
+  "format": {
+    "container": "wav",
+    "sample_rate": 48000,
+    "bit_depth": 24,
+    "channels": 2,
+    "frames": 384000,
+    "duration_seconds": 8.0
+  },
+  "crosstalk": {
+    "method": "reference_xcorr_then_joint_least_squares_v1",
+    "residual_energy_ratio_max": 0.01,
+    "max_direct_energy_loss_ratio": 0.05,
+    "actors": [
+      {
+        "actor_id": "actor_chen",
+        "method": "reference_xcorr_then_joint_least_squares_v1",
+        "before_energy": 517.7910851263489,
+        "after_energy": 4.838572557301306e-11,
+        "residual_ratio": 9.344642455790101e-14,
+        "direct_loss_ratio": 0.0,
+        "direct_probe_count": 1,
+        "pairs": [
+          {
+            "actor_id": "actor_chen",
+            "speaker_id": "speaker_left",
+            "speaker_azimuth_deg": -72.0,
+            "speaker_elevation_deg": 12.0,
+            "gain_linear": 0.09999999983176854,
+            "gain_db": -20.0000000146124,
+            "polarity": 1,
+            "delay_samples": 156,
+            "delay_ms": 3.25,
+            "before_energy": 146.58148605933025,
+            "after_energy": 2.406931873554341e-11,
+            "residual_ratio": 1.6420435747118244e-13,
+            "reference_windows": 1
+          },
+          {
+            "actor_id": "actor_chen",
+            "speaker_id": "speaker_right",
+            "speaker_azimuth_deg": 68.0,
+            "speaker_elevation_deg": 8.0,
+            "gain_linear": 0.2511886461352037,
+            "gain_db": -11.999999896807322,
+            "polarity": 1,
+            "delay_samples": 84,
+            "delay_ms": 1.75,
+            "before_energy": 56.01430506876258,
+            "after_energy": 2.431640683746965e-11,
+            "residual_ratio": 4.341106581188338e-13,
+            "reference_windows": 1
+          }
+        ]
+      },
+      {
+        "actor_id": "actor_lin",
+        "method": "reference_xcorr_then_joint_least_squares_v1",
+        "before_energy": 449.89799541571296,
+        "after_energy": 4.8349035257321534e-11,
+        "residual_ratio": 1.0746666077639722e-13,
+        "direct_loss_ratio": 0.0,
+        "direct_probe_count": 1,
+        "pairs": [
+          {
+            "actor_id": "actor_lin",
+            "speaker_id": "speaker_left",
+            "speaker_azimuth_deg": -72.0,
+            "speaker_elevation_deg": 12.0,
+            "gain_linear": 0.19952623249883866,
+            "gain_db": -13.999999956382512,
+            "polarity": 1,
+            "delay_samples": 120,
+            "delay_ms": 2.5,
+            "before_energy": 189.44131871882752,
+            "after_energy": 2.4008129132102588e-11,
+            "residual_ratio": 1.267312183765777e-13,
+            "reference_windows": 1
+          },
+          {
+            "actor_id": "actor_lin",
+            "speaker_id": "speaker_right",
+            "speaker_azimuth_deg": 68.0,
+            "speaker_elevation_deg": 8.0,
+            "gain_linear": 0.12589254387551413,
+            "gain_db": -17.99999981398418,
+            "polarity": 1,
+            "delay_samples": 192,
+            "delay_ms": 4.0,
+            "before_energy": 94.84106582372475,
+            "after_energy": 2.4340906125218947e-11,
+            "residual_ratio": 2.5664943675833307e-13,
+            "reference_windows": 1
+          }
+        ]
+      }
+    ]
+  },
+  "spatial": {
+    "model": "woodworth_itd_head_shadow_fir_v1",
+    "head_radius_m": 0.0875,
+    "speed_of_sound_mps": 343.0,
+    "parameter_block_seconds": 0.01,
+    "sign_conventions": {
+      "azimuth_deg": "positive=right, zero=front, negative=left",
+      "ild_db": "positive=right ear louder",
+      "itd_us": "positive=left ear arrives later (source to the right)"
+    },
+    "rate_limits": {
+      "max_ild_rate_db_per_s": 8.0,
+      "max_itd_rate_us_per_s": 120.0
+    },
+    "actors": [
+      {
+        "actor_id": "actor_lin",
+        "model": "woodworth_itd_head_shadow_fir_v1",
+        "timeline": [
+          {
+            "time_seconds": 0.0,
+            "azimuth_deg": -35.0,
+            "elevation_deg": 5.0
+          },
+          {
+            "time_seconds": 2.2,
+            "azimuth_deg": -35.0,
+            "elevation_deg": 5.0
+          },
+          {
+            "time_seconds": 2.35,
+            "azimuth_deg": 42.0,
+            "elevation_deg": 8.0
+          },
+          {
+            "time_seconds": 5.6,
+            "azimuth_deg": 42.0,
+            "elevation_deg": 8.0
+          },
+          {
+            "time_seconds": 5.9,
+            "azimuth_deg": -48.0,
+            "elevation_deg": 0.0
+          }
+        ],
+        "max_ild_rate_db_per_s": 8.000000000000007,
+        "max_itd_rate_us_per_s": 120.00000000000028,
+        "rate_limits_compliant": true,
+        "rendered_energy_ild_db": -0.16397469269473935,
+        "left_energy": 575.3102579920863,
+        "right_energy": 553.9934735547711,
+        "segments": [
+          {
+            "start_seconds": 0.0,
+            "end_seconds": 1.0,
+            "ild_db_mean": -10.285088487178855,
+            "ild_db_min": -10.285088487178854,
+            "ild_db_max": -10.285088487178854,
+            "itd_us_mean": -300.91760708637213,
+            "itd_us_min": -300.9176070863721,
+            "itd_us_max": -300.9176070863721,
+            "max_ild_rate_db_per_s": 0.0,
+            "max_itd_rate_us_per_s": 0.0
+          },
+          {
+            "start_seconds": 1.0,
+            "end_seconds": 2.0,
+            "ild_db_mean": -10.285088487178855,
+            "ild_db_min": -10.285088487178854,
+            "ild_db_max": -10.285088487178854,
+            "itd_us_mean": -300.91760708637213,
+            "itd_us_min": -300.9176070863721,
+            "itd_us_max": -300.9176070863721,
+            "max_ild_rate_db_per_s": 0.0,
+            "max_itd_rate_us_per_s": 0.0
+          },
+          {
+            "start_seconds": 2.0,
+            "end_seconds": 3.0,
+            "ild_db_mean": -7.718751853515484,
+            "ild_db_min": -10.285088487178854,
+            "ild_db_max": -3.885088487178848,
+            "itd_us_mean": -262.4225575814219,
+            "itd_us_min": -300.9176070863721,
+            "itd_us_max": -204.91760708637298,
+            "max_ild_rate_db_per_s": 7.999999999999822,
+            "max_itd_rate_us_per_s": 119.99999999999609
+          },
+          {
+            "start_seconds": 3.0,
+            "end_seconds": 4.0,
+            "ild_db_mean": 0.1149115128211545,
+            "ild_db_min": -3.885088487178848,
+            "ild_db_max": 4.114911512821156,
+            "itd_us_mean": -144.91760708637347,
+            "itd_us_min": -204.91760708637298,
+            "itd_us_max": -84.91760708637361,
+            "max_ild_rate_db_per_s": 7.999999999999822,
+            "max_itd_rate_us_per_s": 119.99999999999751
+          },
+          {
+            "start_seconds": 4.0,
+            "end_seconds": 5.0,
+            "ild_db_mean": 8.111710263508874,
+            "ild_db_min": 4.114911512821156,
+            "ild_db_max": 11.927136119307487,
+            "itd_us_mean": -24.917607086373515,
+            "itd_us_min": -84.91760708637361,
+            "itd_us_max": 35.0823929136265,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          },
+          {
+            "start_seconds": 5.0,
+            "end_seconds": 6.0,
+            "ild_db_mean": 11.277631168812462,
+            "ild_db_min": 8.727136119307508,
+            "ild_db_max": 11.927136119307518,
+            "itd_us_mean": 87.3596206363989,
+            "itd_us_min": 35.0823929136265,
+            "itd_us_max": 125.0823929136267,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          },
+          {
+            "start_seconds": 6.0,
+            "end_seconds": 7.0,
+            "ild_db_mean": 4.727136119307504,
+            "ild_db_min": 0.727136119307501,
+            "ild_db_max": 8.727136119307508,
+            "itd_us_mean": 35.08239291362653,
+            "itd_us_min": -24.91760708637349,
+            "itd_us_max": 95.08239291362663,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          },
+          {
+            "start_seconds": 7.0,
+            "end_seconds": 8.0,
+            "ild_db_mean": -3.2728638806925012,
+            "ild_db_min": -7.272863880692504,
+            "ild_db_max": 0.727136119307501,
+            "itd_us_mean": -84.9176070863736,
+            "itd_us_min": -144.91760708637355,
+            "itd_us_max": -24.91760708637349,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          }
+        ],
+        "crossfade_seconds": 0.005,
+        "discontinuity_check": {
+          "passed": true,
+          "method": "rate_limited_control_with_overlap_add_analytic_hrir"
+        }
+      },
+      {
+        "actor_id": "actor_chen",
+        "model": "woodworth_itd_head_shadow_fir_v1",
+        "timeline": [
+          {
+            "time_seconds": 0.0,
+            "azimuth_deg": 28.0,
+            "elevation_deg": -3.0
+          },
+          {
+            "time_seconds": 3.8,
+            "azimuth_deg": 28.0,
+            "elevation_deg": -3.0
+          },
+          {
+            "time_seconds": 4.2,
+            "azimuth_deg": -62.0,
+            "elevation_deg": 10.0
+          },
+          {
+            "time_seconds": 7.0,
+            "azimuth_deg": -62.0,
+            "elevation_deg": 10.0
+          },
+          {
+            "time_seconds": 7.15,
+            "azimuth_deg": 12.0,
+            "elevation_deg": 0.0
+          }
+        ],
+        "max_ild_rate_db_per_s": 8.000000000000007,
+        "max_itd_rate_us_per_s": 120.00000000000028,
+        "rate_limits_compliant": true,
+        "rendered_energy_ild_db": 0.7853607678880947,
+        "left_energy": 537.0627506126477,
+        "right_energy": 643.5186066527141,
+        "segments": [
+          {
+            "start_seconds": 0.0,
+            "end_seconds": 1.0,
+            "ild_db_mean": 8.438907029856779,
+            "ild_db_min": 8.438907029856782,
+            "ild_db_max": 8.438907029856782,
+            "itd_us_mean": 244.07954352898463,
+            "itd_us_min": 244.0795435289847,
+            "itd_us_max": 244.0795435289847,
+            "max_ild_rate_db_per_s": 0.0,
+            "max_itd_rate_us_per_s": 0.0
+          },
+          {
+            "start_seconds": 1.0,
+            "end_seconds": 2.0,
+            "ild_db_mean": 8.438907029856779,
+            "ild_db_min": 8.438907029856782,
+            "ild_db_max": 8.438907029856782,
+            "itd_us_mean": 244.07954352898463,
+            "itd_us_min": 244.0795435289847,
+            "itd_us_max": 244.0795435289847,
+            "max_ild_rate_db_per_s": 0.0,
+            "max_itd_rate_us_per_s": 0.0
+          },
+          {
+            "start_seconds": 2.0,
+            "end_seconds": 3.0,
+            "ild_db_mean": 8.438907029856779,
+            "ild_db_min": 8.438907029856782,
+            "ild_db_max": 8.438907029856782,
+            "itd_us_mean": 244.07954352898463,
+            "itd_us_min": 244.0795435289847,
+            "itd_us_max": 244.0795435289847,
+            "max_ild_rate_db_per_s": 0.0,
+            "max_itd_rate_us_per_s": 0.0
+          },
+          {
+            "start_seconds": 3.0,
+            "end_seconds": 4.0,
+            "ild_db_mean": 8.273813358274483,
+            "ild_db_min": 6.845183988366173,
+            "ild_db_max": 8.438907029856782,
+            "itd_us_mean": 241.58449402403417,
+            "itd_us_min": 220.0795435289848,
+            "itd_us_max": 244.0795435289847,
+            "max_ild_rate_db_per_s": 7.999999999999822,
+            "max_itd_rate_us_per_s": 119.99999999999609
+          },
+          {
+            "start_seconds": 4.0,
+            "end_seconds": 5.0,
+            "ild_db_mean": 2.84518398836617,
+            "ild_db_min": -1.1548160116338315,
+            "ild_db_max": 6.845183988366173,
+            "itd_us_mean": 160.07954352898534,
+            "itd_us_min": 100.0795435289856,
+            "itd_us_max": 220.0795435289848,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          },
+          {
+            "start_seconds": 5.0,
+            "end_seconds": 6.0,
+            "ild_db_mean": -5.154816011633835,
+            "ild_db_min": -9.154816011633837,
+            "ild_db_max": -1.1548160116338315,
+            "itd_us_mean": 40.07954352898549,
+            "itd_us_min": -19.920456471014546,
+            "itd_us_max": 100.0795435289856,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          },
+          {
+            "start_seconds": 6.0,
+            "end_seconds": 7.0,
+            "ild_db_mean": -13.007479367397975,
+            "ild_db_min": -15.651605429116872,
+            "ild_db_max": -9.154816011633837,
+            "itd_us_mean": -79.92045647101465,
+            "itd_us_min": -139.92045647101466,
+            "itd_us_max": -19.920456471014546,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          },
+          {
+            "start_seconds": 7.0,
+            "end_seconds": 8.0,
+            "ild_db_mean": -11.651605429116866,
+            "ild_db_min": -15.651605429116872,
+            "ild_db_max": -7.651605429116865,
+            "itd_us_mean": -113.0689713224998,
+            "itd_us_min": -157.9204564710145,
+            "itd_us_max": -55.92045647101459,
+            "max_ild_rate_db_per_s": 8.000000000000178,
+            "max_itd_rate_us_per_s": 120.00000000000284
+          }
+        ],
+        "crossfade_seconds": 0.005,
+        "discontinuity_check": {
+          "passed": true,
+          "method": "rate_limited_control_with_overlap_add_analytic_hrir"
+        }
+      }
+    ],
+    "all_rate_limits_compliant": true,
+    "crossfade_samples": 240,
+    "sample_discontinuity_detected": false
+  },
+  "bus": {
+    "integrated_lufs": -16.0,
+    "target_lufs": -16.0,
+    "loudness_deviation_lu": 0.0,
+    "true_peak_dbtp": -2.157639319731493,
+    "true_peak_limit_dbtp": -1.0,
+    "sample_peak_dbfs": -2.1576393371224616,
+    "suppressed_samples": 0,
+    "limiter_engaged": false,
+    "pre_limiter_lufs": -22.976859627223153,
+    "pre_limiter_true_peak_dbtp": -9.134498946954649,
+    "downmix": "discrete_L_R_sum_v1",
+    "contributions": [
+      {
+        "actor_id": "actor_lin",
+        "energy": 1129.3037315468573,
+        "ratio": 0.4889003946631665,
+        "percent": 48.890039466316644
+      },
+      {
+        "actor_id": "actor_chen",
+        "energy": 1180.581357265362,
+        "ratio": 0.5110996053368335,
+        "percent": 51.10996053368335
+      }
+    ]
+  },
+  "delivery": {
+    "master_file": "binaural_master.wav",
+    "block_frames": 4096,
+    "blocks": 94,
+    "snapshot_schema_version": 1
+  },
+  "resume": {
+    "status": "not_used",
+    "code": null,
+    "message": "no_progress_snapshot"
+  }
+}
