@@ -1,0 +1,102 @@
+{
+  "batches": [
+    {
+      "batch": 1,
+      "instances": [
+        "svc-03",
+        "svc-05",
+        "svc-09",
+        "svc-15",
+        "svc-21",
+        "svc-25",
+        "svc-28",
+        "svc-36",
+        "svc-44",
+        "svc-45",
+        "svc-47",
+        "svc-48"
+      ],
+      "observation_seconds": 10,
+      "start_offset_seconds": 100
+    },
+    {
+      "batch": 2,
+      "instances": [
+        "svc-01",
+        "svc-06",
+        "svc-08",
+        "svc-13",
+        "svc-16",
+        "svc-20",
+        "svc-22",
+        "svc-23",
+        "svc-30",
+        "svc-33",
+        "svc-35",
+        "svc-39"
+      ],
+      "observation_seconds": 10,
+      "start_offset_seconds": 200
+    },
+    {
+      "batch": 3,
+      "instances": [
+        "svc-07",
+        "svc-10",
+        "svc-11",
+        "svc-12",
+        "svc-19",
+        "svc-26",
+        "svc-27",
+        "svc-32",
+        "svc-38",
+        "svc-41",
+        "svc-42",
+        "svc-43"
+      ],
+      "observation_seconds": 10,
+      "start_offset_seconds": 300
+    },
+    {
+      "batch": 4,
+      "instances": [
+        "svc-02",
+        "svc-04",
+        "svc-14",
+        "svc-17",
+        "svc-18",
+        "svc-24",
+        "svc-29",
+        "svc-31",
+        "svc-34",
+        "svc-37",
+        "svc-40",
+        "svc-46"
+      ],
+      "observation_seconds": 10,
+      "start_offset_seconds": 400
+    }
+  ],
+  "generation": {
+    "scenario": "mixed",
+    "seed": 20261119
+  },
+  "metrics_file": "metrics.jsonl",
+  "parameter_key": "service.shutdown_timeout_seconds",
+  "previous_stable_version": "v1-shutdown-30s",
+  "release_id": "rel-mixed-20261119",
+  "schema_version": 1,
+  "target_version": "v2-shutdown-15s",
+  "thresholds": {
+    "batch": {
+      "connection_reject_rate": 0.01,
+      "error_rate": 0.02
+    },
+    "instance": {
+      "connection_reject_rate": 0.025,
+      "error_rate": 0.04
+    },
+    "minimum_samples_per_instance": 5
+  },
+  "version_reports_file": "version_reports.jsonl"
+}

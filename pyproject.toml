@@ -1,0 +1,11 @@
+[project]
+name = "release-orchestrator"
+version = "1.0.0"
+description = "Deterministic gray-release orchestration service"
+requires-python = ">=3.11"
+dependencies = ["prometheus-client>=0.20"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra"
