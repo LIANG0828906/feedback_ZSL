@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oob-rack-inspector"
+version = "1.0.0"
+description = "Lightweight IPMI 2.0, Redfish and SNMP rack simulator with compliance inspection"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+oob-rack = "oob_rack.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["oob_rack*"]

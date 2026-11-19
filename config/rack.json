@@ -1,0 +1,267 @@
+{
+  "control": {
+    "host": "127.0.0.1",
+    "port": 9471
+  },
+  "devices": [
+    {
+      "device_id": "bmc-01",
+      "fallback_protocols": [
+        "ipmi",
+        "snmp"
+      ],
+      "fans": [
+        "Fan 1",
+        "Fan 2",
+        "Fan 3",
+        "Fan 4"
+      ],
+      "firmware_profile": "legacy-1.2",
+      "firmware_version": "legacy-1.2",
+      "ipmi_port": 6230,
+      "manufacturer": "OpenRack Labs",
+      "model": "OR-2U-A1",
+      "power_supplies": [
+        "PSU 1",
+        "PSU 2"
+      ],
+      "rack_id": "rack-a",
+      "redfish_port": 8443,
+      "serial": "SN-72026-731373",
+      "slot": 1,
+      "snmp_port": 1610
+    },
+    {
+      "device_id": "bmc-02",
+      "fallback_protocols": [
+        "redfish",
+        "ipmi",
+        "snmp"
+      ],
+      "fans": [
+        "Fan 1",
+        "Fan 2",
+        "Fan 3",
+        "Fan 4"
+      ],
+      "firmware_profile": "mid-2.4",
+      "firmware_version": "mid-2.4",
+      "ipmi_port": 6231,
+      "manufacturer": "OpenRack Labs",
+      "model": "OR-2U-C3",
+      "power_supplies": [
+        "PSU 1",
+        "PSU 2"
+      ],
+      "rack_id": "rack-a",
+      "redfish_port": 8444,
+      "serial": "SN-72026-287071",
+      "slot": 2,
+      "snmp_port": 1611
+    },
+    {
+      "device_id": "bmc-03",
+      "fallback_protocols": [
+        "redfish",
+        "ipmi",
+        "snmp"
+      ],
+      "fans": [
+        "Fan 1",
+        "Fan 2",
+        "Fan 3",
+        "Fan 4"
+      ],
+      "firmware_profile": "new-3.0",
+      "firmware_version": "new-3.0",
+      "ipmi_port": 6232,
+      "manufacturer": "OpenRack Labs",
+      "model": "OR-2U-A1",
+      "power_supplies": [
+        "PSU 1",
+        "PSU 2"
+      ],
+      "rack_id": "rack-a",
+      "redfish_port": 8445,
+      "serial": "SN-72026-440317",
+      "slot": 3,
+      "snmp_port": 1612
+    },
+    {
+      "device_id": "bmc-04",
+      "fallback_protocols": [
+        "ipmi",
+        "snmp"
+      ],
+      "fans": [
+        "Fan 1",
+        "Fan 2",
+        "Fan 3",
+        "Fan 4"
+      ],
+      "firmware_profile": "legacy-1.2",
+      "firmware_version": "legacy-1.2",
+      "ipmi_port": 6233,
+      "manufacturer": "OpenRack Labs",
+      "model": "OR-2U-B2",
+      "power_supplies": [
+        "PSU 1",
+        "PSU 2"
+      ],
+      "rack_id": "rack-a",
+      "redfish_port": 8446,
+      "serial": "SN-72026-831263",
+      "slot": 4,
+      "snmp_port": 1613
+    },
+    {
+      "device_id": "bmc-05",
+      "fallback_protocols": [
+        "redfish",
+        "ipmi",
+        "snmp"
+      ],
+      "fans": [
+        "Fan 1",
+        "Fan 2",
+        "Fan 3",
+        "Fan 4"
+      ],
+      "firmware_profile": "mid-2.4",
+      "firmware_version": "mid-2.4",
+      "ipmi_port": 6234,
+      "manufacturer": "OpenRack Labs",
+      "model": "OR-2U-B2",
+      "power_supplies": [
+        "PSU 1",
+        "PSU 2"
+      ],
+      "rack_id": "rack-a",
+      "redfish_port": 8447,
+      "serial": "SN-72026-113732",
+      "slot": 5,
+      "snmp_port": 1614
+    },
+    {
+      "device_id": "bmc-06",
+      "fallback_protocols": [
+        "redfish",
+        "ipmi",
+        "snmp"
+      ],
+      "fans": [
+        "Fan 1",
+        "Fan 2",
+        "Fan 3",
+        "Fan 4"
+      ],
+      "firmware_profile": "new-3.0",
+      "firmware_version": "new-3.0",
+      "ipmi_port": 6235,
+      "manufacturer": "OpenRack Labs",
+      "model": "OR-2U-B2",
+      "power_supplies": [
+        "PSU 1",
+        "PSU 2"
+      ],
+      "rack_id": "rack-a",
+      "redfish_port": 8448,
+      "serial": "SN-72026-179374",
+      "slot": 6,
+      "snmp_port": 1615
+    }
+  ],
+  "firmware_profiles": {
+    "legacy-1.2": {
+      "label": "legacy",
+      "power_state_shape": "none",
+      "protocols": [
+        "ipmi",
+        "snmp"
+      ]
+    },
+    "mid-2.4": {
+      "label": "middle",
+      "power_state_shape": "string",
+      "protocols": [
+        "redfish",
+        "ipmi",
+        "snmp"
+      ]
+    },
+    "new-3.0": {
+      "label": "new",
+      "power_state_shape": "object",
+      "protocols": [
+        "redfish",
+        "ipmi",
+        "snmp"
+      ]
+    }
+  },
+  "inspection": {
+    "database": "../artifacts/inspections.db",
+    "interval_seconds": 5.0,
+    "retries": 1,
+    "start_immediately": true,
+    "timeout_seconds": 0.8,
+    "workers": 2
+  },
+  "ipmi": {
+    "cipher_suite": 1,
+    "password": "admin123",
+    "username": "admin"
+  },
+  "listen_host": "127.0.0.1",
+  "monitor": {
+    "host": "127.0.0.1",
+    "port": 9470
+  },
+  "rack_id": "rack-a",
+  "redfish": {
+    "ca_file": "../certs/bmc-cert.pem",
+    "password": "admin123",
+    "server_cert": "../certs/bmc-cert.pem",
+    "server_key": "../certs/bmc-key.pem",
+    "username": "admin",
+    "verify_tls": true
+  },
+  "seed": 2872026,
+  "snmp": {
+    "community": "public",
+    "enterprise_base": "1.3.6.1.4.1.41879.287"
+  },
+  "thresholds": {
+    "legacy-1.2": {
+      "fan_rpm": {
+        "lower": 650,
+        "upper": 8000
+      },
+      "temperature_c": {
+        "lower": 5.0,
+        "upper": 70.0
+      }
+    },
+    "mid-2.4": {
+      "fan_rpm": {
+        "lower": 800,
+        "upper": 8000
+      },
+      "temperature_c": {
+        "lower": 5.0,
+        "upper": 66.0
+      }
+    },
+    "new-3.0": {
+      "fan_rpm": {
+        "lower": 850,
+        "upper": 8000
+      },
+      "temperature_c": {
+        "lower": 5.0,
+        "upper": 64.0
+      }
+    }
+  },
+  "version": 1
+}
