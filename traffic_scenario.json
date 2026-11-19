@@ -1,0 +1,68 @@
+{
+  "seed": 20241119,
+  "rate_per_second": 50,
+  "http_timeout_seconds": 5,
+  "stable": {
+    "tenant_id": "tenant-standard",
+    "clients": [
+      "stable-client-a",
+      "stable-client-b",
+      "stable-client-c"
+    ],
+    "protocol_version": "ranking-features-v1",
+    "count": 20
+  },
+  "canary": {
+    "tenant_id": "tenant-canary",
+    "clients": [
+      "canary-client-a",
+      "canary-client-b"
+    ],
+    "protocol_version": "ranking-features-v2",
+    "count": 12
+  },
+  "hot_switch": {
+    "tenant_id": "tenant-switch",
+    "client_id": "same-client",
+    "samples": 2
+  },
+  "load_failure": {
+    "version": "v4",
+    "stable_tenant_id": "tenant-standard",
+    "stable_client_id": "stable-client-a"
+  },
+  "rollback": {
+    "tenant_id": "tenant-canary",
+    "clients": [
+      "canary-client-a",
+      "canary-client-b"
+    ],
+    "protocol_version": "ranking-features-v2",
+    "count": 2,
+    "inference_delay_ms": 50,
+    "send_rate_per_second": 1000,
+    "concurrency": 2,
+    "timeout_seconds": 30,
+    "probe_tenant_id": "tenant-probe",
+    "probe_client_id": "probe-client",
+    "probe_protocol_version": "ranking-features-v1",
+    "probe_count": 40,
+    "probe_interval_ms": 50
+  },
+  "protocol_checks": {
+    "tenant_id": "tenant-standard",
+    "client_id": "stable-client-a",
+    "model_mismatch": {
+      "declared_protocol_version": "ranking-features-v2",
+      "feature_protocol_version": "ranking-features-v2"
+    },
+    "field_order_mismatch": {
+      "declared_protocol_version": "ranking-features-v2",
+      "feature_protocol_version": "ranking-features-v2",
+      "swap_indices": [
+        2,
+        4
+      ]
+    }
+  }
+}

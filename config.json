@@ -1,0 +1,82 @@
+{
+  "service": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "log_level": "INFO"
+  },
+  "models": {
+    "v3": {
+      "path": "artifacts/models/ranking_v3.onnx",
+      "protocol_version": "ranking-features-v1",
+      "role": "stable"
+    },
+    "v4": {
+      "path": "artifacts/models/ranking_v4.onnx",
+      "protocol_version": "ranking-features-v2",
+      "role": "canary"
+    }
+  },
+  "stable_version": "v3",
+  "protocols": {
+    "ranking-features-v1": {
+      "feature_names": [
+        "user_age",
+        "item_age",
+        "ctr_7d",
+        "cvr_7d",
+        "price",
+        "category_affinity",
+        "freshness",
+        "query_match"
+      ]
+    },
+    "ranking-features-v2": {
+      "feature_names": [
+        "user_age",
+        "item_age",
+        "price",
+        "category_affinity",
+        "ctr_7d",
+        "cvr_7d",
+        "discount",
+        "delivery_eta",
+        "freshness",
+        "query_match"
+      ]
+    }
+  },
+  "routing": {
+    "default_weights": {
+      "v3": 0.8,
+      "v4": 0.2
+    },
+    "tenant_weights": {
+      "tenant-canary": {
+        "v3": 0.0,
+        "v4": 1.0
+      }
+    },
+    "client_weights": {},
+    "bucket_count": 10000,
+    "hash_seed": "ranking-gateway-v1"
+  },
+  "monitoring": {
+    "window_seconds": 10.0,
+    "min_samples": 8,
+    "p99_latency_ms": 40.0,
+    "error_rate": 0.1,
+    "evaluate_interval_ms": 200,
+    "request_timeout_ms": 500,
+    "auto_rollback_versions": [
+      "v4"
+    ]
+  },
+  "loading": {
+    "ready_timeout_ms": 3000,
+    "retain_previous_on_reload_failure": true
+  },
+  "fault_injection": {
+    "enabled": true
+  }
+}
+
