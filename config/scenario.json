@@ -1,0 +1,98 @@
+{
+  "seed": 296,
+  "duration_ms": 5500,
+  "tick_ms": 200,
+  "max_batch_records": 100,
+  "pause_writer_first": false,
+  "warmup_tenant": "",
+  "warmup_records": 0,
+  "align_to_second": true,
+  "target": "http://127.0.0.1:4318/v1/logs",
+  "coordinator_url": "http://127.0.0.1:8080",
+  "writer_control_url": "http://127.0.0.1:8081",
+  "tenant_rates": {
+    "tenant-01": 200,
+    "tenant-02": 300,
+    "tenant-03": 600,
+    "tenant-04": 900,
+    "tenant-05": 1500,
+    "tenant-06": 3000
+  },
+  "burst": {
+    "tenant_id": "tenant-06",
+    "start_ms": 1600,
+    "duration_ms": 700,
+    "multiplier": 10.0
+  },
+  "faults": [
+    {
+      "at_ms": 500,
+      "kind": "writer_pause",
+      "duration_ms": 5000
+    },
+    {
+      "at_ms": 1900,
+      "kind": "redis_slow",
+      "duration_ms": 700,
+      "delay_ms": 20
+    }
+  ],
+  "quota_updates": [
+    {
+      "at_ms": 4000,
+      "tenant_id": "tenant-01",
+      "logs_per_second": 400
+    }
+  ],
+  "plan": [
+    {
+      "at_ms": 700,
+      "tenant_id": "tenant-01",
+      "records": 1,
+      "batches": 1
+    },
+    {
+      "at_ms": 710,
+      "tenant_id": "tenant-02",
+      "records": 1,
+      "batches": 1
+    },
+    {
+      "at_ms": 720,
+      "tenant_id": "tenant-03",
+      "records": 1,
+      "batches": 1
+    },
+    {
+      "at_ms": 730,
+      "tenant_id": "tenant-04",
+      "records": 1,
+      "batches": 1
+    },
+    {
+      "at_ms": 740,
+      "tenant_id": "tenant-05",
+      "records": 1,
+      "batches": 1
+    },
+    {
+      "at_ms": 750,
+      "tenant_id": "tenant-06",
+      "records": 1,
+      "batches": 1
+    },
+    {
+      "at_ms": 1600,
+      "tenant_id": "tenant-06",
+      "records": 10,
+      "batches": 40,
+      "interval_ms": 5
+    },
+    {
+      "at_ms": 4500,
+      "tenant_id": "tenant-06",
+      "records": 10,
+      "batches": 1
+    }
+  ]
+}

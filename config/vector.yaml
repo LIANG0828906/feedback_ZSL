@@ -1,0 +1,192 @@
+data_dir: run/vector
+
+sources:
+  otlp:
+    type: opentelemetry
+    grpc:
+      address: 127.0.0.1:4317
+    http:
+      address: 127.0.0.1:4318
+
+transforms:
+  by_tenant:
+    type: route
+    inputs:
+      - otlp.logs
+    route:
+      tenant_01: '(to_string(.resources."tenant.id") ?? "") == "tenant-01"'
+      tenant_02: '(to_string(.resources."tenant.id") ?? "") == "tenant-02"'
+      tenant_03: '(to_string(.resources."tenant.id") ?? "") == "tenant-03"'
+      tenant_04: '(to_string(.resources."tenant.id") ?? "") == "tenant-04"'
+      tenant_05: '(to_string(.resources."tenant.id") ?? "") == "tenant-05"'
+      tenant_06: '(to_string(.resources."tenant.id") ?? "") == "tenant-06"'
+
+sinks:
+  quota_tenant_01:
+    type: http
+    inputs:
+      - by_tenant.tenant_01
+    uri: http://127.0.0.1:8080/v1/logs
+    method: post
+    encoding:
+      codec: json
+    framing:
+      method: newline_delimited
+    request:
+      headers:
+        Content-Type: application/x-ndjson
+      retry_attempts: 20
+      retry_initial_backoff_secs: 1
+      retry_max_duration_secs: 1
+      timeout_secs: 10
+      concurrency: none
+    batch:
+      max_events: 100000
+      max_bytes: 50331648
+      timeout_secs: 0.15
+    buffer:
+      type: memory
+      max_events: 20000
+      when_full: block
+    healthcheck:
+      enabled: false
+  quota_tenant_02:
+    type: http
+    inputs:
+      - by_tenant.tenant_02
+    uri: http://127.0.0.1:8080/v1/logs
+    method: post
+    encoding:
+      codec: json
+    framing:
+      method: newline_delimited
+    request:
+      headers:
+        Content-Type: application/x-ndjson
+      retry_attempts: 20
+      retry_initial_backoff_secs: 1
+      retry_max_duration_secs: 1
+      timeout_secs: 10
+      concurrency: none
+    batch:
+      max_events: 100000
+      max_bytes: 50331648
+      timeout_secs: 0.15
+    buffer:
+      type: memory
+      max_events: 20000
+      when_full: block
+    healthcheck:
+      enabled: false
+  quota_tenant_03:
+    type: http
+    inputs:
+      - by_tenant.tenant_03
+    uri: http://127.0.0.1:8080/v1/logs
+    method: post
+    encoding:
+      codec: json
+    framing:
+      method: newline_delimited
+    request:
+      headers:
+        Content-Type: application/x-ndjson
+      retry_attempts: 20
+      retry_initial_backoff_secs: 1
+      retry_max_duration_secs: 1
+      timeout_secs: 10
+      concurrency: none
+    batch:
+      max_events: 100000
+      max_bytes: 50331648
+      timeout_secs: 0.15
+    buffer:
+      type: memory
+      max_events: 20000
+      when_full: block
+    healthcheck:
+      enabled: false
+  quota_tenant_04:
+    type: http
+    inputs:
+      - by_tenant.tenant_04
+    uri: http://127.0.0.1:8080/v1/logs
+    method: post
+    encoding:
+      codec: json
+    framing:
+      method: newline_delimited
+    request:
+      headers:
+        Content-Type: application/x-ndjson
+      retry_attempts: 20
+      retry_initial_backoff_secs: 1
+      retry_max_duration_secs: 1
+      timeout_secs: 10
+      concurrency: none
+    batch:
+      max_events: 100000
+      max_bytes: 50331648
+      timeout_secs: 0.15
+    buffer:
+      type: memory
+      max_events: 20000
+      when_full: block
+    healthcheck:
+      enabled: false
+  quota_tenant_05:
+    type: http
+    inputs:
+      - by_tenant.tenant_05
+    uri: http://127.0.0.1:8080/v1/logs
+    method: post
+    encoding:
+      codec: json
+    framing:
+      method: newline_delimited
+    request:
+      headers:
+        Content-Type: application/x-ndjson
+      retry_attempts: 20
+      retry_initial_backoff_secs: 1
+      retry_max_duration_secs: 1
+      timeout_secs: 10
+      concurrency: none
+    batch:
+      max_events: 100000
+      max_bytes: 50331648
+      timeout_secs: 0.15
+    buffer:
+      type: memory
+      max_events: 20000
+      when_full: block
+    healthcheck:
+      enabled: false
+  quota_tenant_06:
+    type: http
+    inputs:
+      - by_tenant.tenant_06
+    uri: http://127.0.0.1:8080/v1/logs
+    method: post
+    encoding:
+      codec: json
+    framing:
+      method: newline_delimited
+    request:
+      headers:
+        Content-Type: application/x-ndjson
+      retry_attempts: 20
+      retry_initial_backoff_secs: 1
+      retry_max_duration_secs: 1
+      timeout_secs: 10
+      concurrency: none
+    batch:
+      max_events: 100000
+      max_bytes: 50331648
+      timeout_secs: 0.15
+    buffer:
+      type: memory
+      max_events: 20000
+      when_full: block
+    healthcheck:
+      enabled: false
