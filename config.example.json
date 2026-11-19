@@ -1,0 +1,21 @@
+{
+  "udp_listen": "0.0.0.0:4433",
+  "tcp_listen": "0.0.0.0:8443",
+  "metrics_listen": "127.0.0.1:19090",
+  "backend_url": "http://127.0.0.1:18080",
+  "db_path": "data/edgegateway.db",
+  "cert_file": "data/cert.pem",
+  "key_file": "data/key.pem",
+  "max_sessions": 64,
+  "max_session_inflight": 8,
+  "migration_window_ms": 8000,
+  "rtt_threshold_ms": 80,
+  "backlog_threshold": 4,
+  "rate_limit_per_sec": 12,
+  "backend_timeout_ms": 3000,
+  "feedback_recovery_samples": 5,
+  "allow_peer_override": false,
+  "max_fragment_bytes": 4096,
+  "max_body_bytes": 16384,
+  "shutdown_timeout_ms": 5000
+}
