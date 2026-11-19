@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slotguard"
+version = "0.2.0"
+description = "Logical replication slot protection and consistent subscription rebootstrap"
+requires-python = ">=3.11"
+dependencies = [
+  "psycopg[binary]>=3.2,<3.4",
+  "redis>=5,<9",
+]
+
+[project.scripts]
+slotguard = "cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = [
+  "cli",
+  "config",
+  "db",
+  "metrics",
+  "offsets",
+  "relief",
+  "resync",
+  "sampling",
+  "service",
+  "slots",
+  "store",
+]
