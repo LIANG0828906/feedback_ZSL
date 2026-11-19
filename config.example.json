@@ -1,0 +1,50 @@
+{
+  "listen": {
+    "host": "127.0.0.1",
+    "port": 8090
+  },
+  "sites": {
+    "east": {
+      "dsn": "host=127.0.0.1 port=55432 dbname=postgres user=postgres connect_timeout=2",
+      "priority": 20
+    },
+    "south": {
+      "dsn": "host=127.0.0.1 port=55433 dbname=postgres user=postgres connect_timeout=2",
+      "priority": 10
+    }
+  },
+  "sync": {
+    "poll_interval_ms": 20,
+    "fetch_size": 100,
+    "cursor_batch_ack": true,
+    "convergence_timeout_seconds": 120
+  },
+  "limits": {
+    "max_connections": 8,
+    "api_acquire_timeout_ms": 50,
+    "sync_acquire_timeout_ms": 2000,
+    "statement_timeout_ms": 5000
+  },
+  "audit": {
+    "sqlite_path": "var/dualwrite.sqlite3",
+    "recent_change_limit": 50
+  },
+  "injection": {
+    "enabled": false,
+    "delay_min_ms": 0,
+    "delay_max_ms": 700,
+    "reorder_window_ms": 250,
+    "duplicate_rate": 0.1,
+    "seed": 20261119,
+    "interruption": {
+      "start_after_seconds": 20,
+      "duration_seconds": 60,
+      "repeat_every_seconds": 0
+    }
+  },
+  "validation": {
+    "snapshot_chunk_rows": 2000,
+    "pending_preview_limit": 50
+  }
+}
+
