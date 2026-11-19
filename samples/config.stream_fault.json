@@ -1,0 +1,16 @@
+{
+  "allowed_lateness_seconds": 30,
+  "batch_rows": 256,
+  "duckdb_memory_limit_mb": 192,
+  "fault_injection": {
+    "batch": 1,
+    "partition_id": "stream:p0000"
+  },
+  "max_retries": 2,
+  "max_workers": 2,
+  "memory_limit_mb": 768,
+  "partitions": 4,
+  "stream_batch_rows": 256,
+  "stream_mode": "incremental",
+  "temp_limit_mb": 1536
+}
