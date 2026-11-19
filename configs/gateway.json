@@ -1,0 +1,109 @@
+{
+  "listen_h2": "127.0.0.1:18444",
+  "listen_h3": "127.0.0.1:18444",
+  "admin_listen": "127.0.0.1:19091",
+  "tls_cert_file": "",
+  "tls_key_file": "",
+  "upstreams": [
+    {
+      "id": "content-h1",
+      "url": "http://127.0.0.1:18082",
+      "protocol": "http1",
+      "max_connections": 2,
+      "max_inflight": 2
+    },
+    {
+      "id": "content-h2",
+      "url": "https://127.0.0.1:18083",
+      "protocol": "http2",
+      "tls_insecure": true,
+      "max_connections": 2,
+      "max_inflight": 2
+    },
+    {
+      "id": "content-h2c",
+      "url": "http://127.0.0.1:18084",
+      "protocol": "h2c",
+      "max_connections": 2,
+      "max_inflight": 2
+    }
+  ],
+  "routes": [
+    {
+      "id": "h1-content",
+      "path_prefix": "/api/h1",
+      "upstreams": ["content-h1"]
+    },
+    {
+      "id": "h2-content",
+      "path_prefix": "/api/h2",
+      "upstreams": ["content-h2"]
+    },
+    {
+      "id": "h2c-content",
+      "path_prefix": "/api/h2c",
+      "upstreams": ["content-h2c"]
+    },
+    {
+      "id": "shared-content",
+      "path_prefix": "/api/shared",
+      "upstreams": ["content-h1", "content-h2", "content-h2c"]
+    },
+    {
+      "id": "fault-content",
+      "path_prefix": "/fault",
+      "upstreams": ["content-h1", "content-h2", "content-h2c"]
+    }
+  ],
+  "scheduler": {
+    "max_inflight": 4,
+    "max_wait": "150ms",
+    "aging_interval": "40ms"
+  },
+  "priorities": [
+    {
+      "name": "high",
+      "rank": 0,
+      "h2_weight_min": 192,
+      "h2_weight_max": 256,
+      "h3_urgency": [0, 1],
+      "header_values": ["high", "critical"]
+    },
+    {
+      "name": "normal",
+      "rank": 10,
+      "h2_weight_min": 64,
+      "h2_weight_max": 191,
+      "h3_urgency": [2, 3, 4],
+      "header_values": ["normal"]
+    },
+    {
+      "name": "low",
+      "rank": 20,
+      "h2_weight_min": 1,
+      "h2_weight_max": 63,
+      "h3_urgency": [5, 6, 7],
+      "header_values": ["low", "bulk"]
+    }
+  ],
+  "default_priority": "normal",
+  "timeouts": {
+    "dial": "1s",
+    "upstream_headers": "3s",
+    "request": "10s",
+    "health_interval": "1s",
+    "health_timeout": "500ms",
+    "shutdown": "2s",
+    "idle_connection": "15s"
+  },
+  "limits": {
+    "max_header_bytes": 32768,
+    "max_request_bytes": 2097152,
+    "max_response_bytes": 8388608
+  },
+  "retry": {
+    "max": 2,
+    "backoff": "10ms"
+  },
+  "required_request_headers": []
+}

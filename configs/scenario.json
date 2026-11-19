@@ -1,0 +1,111 @@
+{
+  "gateway_h2": "https://127.0.0.1:18444",
+  "gateway_h3": "https://127.0.0.1:18444",
+  "admin_url": "http://127.0.0.1:19091",
+  "duration": "4s",
+  "rate_per_second": 20,
+  "h3_ratio": 0.5,
+  "max_concurrent": 16,
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/shared/echo?sample=1",
+      "priority": "normal",
+      "weight": 4
+    },
+    {
+      "method": "GET",
+      "path": "/api/h1/echo",
+      "priority": "high",
+      "weight": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/h2/echo",
+      "priority": "normal",
+      "weight": 1
+    },
+    {
+      "method": "GET",
+      "path": "/api/h2c/echo",
+      "priority": "low",
+      "weight": 1
+    },
+    {
+      "method": "GET",
+      "path": "/fault/slow?slow_ms=60",
+      "priority": "low",
+      "weight": 1
+    },
+    {
+      "method": "GET",
+      "path": "/fault/close",
+      "priority": "high",
+      "headers": {
+        "X-Fault-Close": "once"
+      },
+      "weight": 1
+    },
+    {
+      "method": "POST",
+      "path": "/api/shared/write",
+      "priority": "normal",
+      "headers": {
+        "X-Fault-Close": "always",
+        "Content-Type": "application/json"
+      },
+      "body": "{\"write\":true}",
+      "weight": 1
+    }
+  ],
+  "consistency_requests": [
+    {
+      "method": "GET",
+      "path": "/api/shared/echo?consistency=1",
+      "priority": "normal"
+    },
+    {
+      "method": "POST",
+      "path": "/api/shared/echo",
+      "priority": "high",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Test-Key": "consistency"
+      },
+      "body": "{\"hello\":\"world\"}"
+    }
+  ],
+  "upstream_stats": {
+    "http1": "http://127.0.0.1:18082/__stats",
+    "http2": "https://127.0.0.1:18083/__stats",
+    "h2c": "http://127.0.0.1:18084/__stats"
+  },
+  "migration": {
+    "enabled": true,
+    "local_ips": ["127.0.0.2", "127.0.0.3"],
+    "slow_path": "/fault/slow?slow_ms=140",
+    "resume_path": "/api/shared/migration-resume",
+    "session_id": "demo-migration",
+    "request_delay": "30ms"
+  },
+  "priority_probe": {
+    "enabled": true,
+    "low_count": 8,
+    "slow_path": "/fault/slow?slow_ms=140",
+    "high_path": "/api/shared/probe-high",
+    "delay": "25ms"
+  },
+  "failover_probe": {
+    "enabled": true,
+    "primary_id": "content-h1",
+    "control_down_url": "http://127.0.0.1:18082/__control/health?value=down",
+    "control_up_url": "http://127.0.0.1:18082/__control/health?value=up",
+    "path": "/api/shared/failover",
+    "health_wait": "1200ms"
+  },
+  "idempotency_probe": {
+    "enabled": true,
+    "path": "/api/shared/idempotency-probe",
+    "idempotency_key": "idempotency-probe-key"
+  }
+}
