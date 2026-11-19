@@ -1,0 +1,34 @@
+{
+  "seed": 777,
+  "target": {"host": "127.0.0.1", "port": 8190},
+  "service": {"host": "127.0.0.1", "port": 8180},
+  "db_path": "data/smoke/edge_sync.db",
+  "target_db_path": "data/smoke/target.db",
+  "report_path": "artifacts/smoke_report.json",
+  "egresses": [
+    {"id": "wired", "listen_port": 9201, "rtt_ms": 8, "loss_pct": 0.0, "bandwidth_mbps": 40, "concurrency": 4},
+    {"id": "vpn", "listen_port": 9202, "rtt_ms": 30, "loss_pct": 0.0, "bandwidth_mbps": 24, "concurrency": 4},
+    {"id": "cellular", "listen_port": 9203, "rtt_ms": 60, "loss_pct": 0.0, "bandwidth_mbps": 16, "concurrency": 4}
+  ],
+  "health": {
+    "window": 10,
+    "rtt_median_ms": 120,
+    "retrans_rate": 0.08,
+    "min_bad_samples": 3,
+    "jitter_tolerance_ms": 300,
+    "cooldown_ms": 500,
+    "source": "link"
+  },
+  "workload": {
+    "tasks": 2,
+    "shards_per_task": 24,
+    "shard_sizes_kb": [4, 8, 16, 32, 64],
+    "task_concurrency": 4,
+    "shard_max_attempts": 5,
+    "request_timeout_s": 20
+  },
+  "injections": [
+    {"egress": "vpn", "at_delivered_mb": 0.2, "duration_mb": 0.15, "rtt_ms": 260, "loss_pct": 12},
+    {"egress": "vpn", "at_delivered_mb": 0.6, "duration_mb": 1.0, "rtt_ms": 240, "loss_pct": 15}
+  ]
+}
