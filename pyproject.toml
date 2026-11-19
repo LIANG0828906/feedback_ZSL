@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iovflow"
+version = "0.1.0"
+description = "Small deterministic event-time streaming SQL engine for an on-vehicle telematics pipeline"
+requires-python = ">=3.11"
+dependencies = ["duckdb>=0.9"]
+
+[project.optional-dependencies]
+metrics = ["prometheus-client>=0.17"]
+
+[project.scripts]
+iovflow = "iovflow.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["iovflow*"]
+
