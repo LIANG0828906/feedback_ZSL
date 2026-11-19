@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "settlement-rollout"
+version = "1.0.0"
+description = "Local settlement gray-release orchestrator and reproducible scenarios"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+settlement-rollout = "settlement_rollout.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["settlement_rollout*"]

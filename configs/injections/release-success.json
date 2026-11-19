@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "expected_outcome": "RELEASED",
+  "load": {
+    "rate_per_second": 24,
+    "workers": 16
+  },
+  "defaults": {
+    "versions": {
+      "v1": {
+        "latency_ms": 20,
+        "error_percent": 0,
+        "health_fail_ms": 0
+      },
+      "v2": {
+        "latency_ms": 25,
+        "error_percent": 0,
+        "health_fail_ms": 0
+      }
+    },
+    "rollback_restart_refused": false
+  },
+  "instances": {}
+}

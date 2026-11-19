@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "expected_outcome": "ROLLED_BACK",
+  "load": {
+    "rate_per_second": 24,
+    "workers": 20
+  },
+  "defaults": {
+    "versions": {
+      "v1": {
+        "latency_ms": 20,
+        "error_percent": 0,
+        "health_fail_ms": 0
+      },
+      "v2": {
+        "latency_ms": 1200,
+        "error_percent": 6,
+        "error_status": 500,
+        "health_fail_ms": 0
+      }
+    },
+    "rollback_restart_refused": false
+  },
+  "instances": {}
+}

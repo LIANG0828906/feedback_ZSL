@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "release_id": "settlement-2026.11.19-quick",
+  "target_version": "v2",
+  "rollback_version": "v1",
+  "observation_window_seconds": 3.0,
+  "sampling": {
+    "interval_seconds": 0.25,
+    "quota_per_instance": 4
+  },
+  "instances": [
+    {
+      "id": "site-a-1",
+      "group": "site-a",
+      "port": 28701,
+      "initial_version": "v1"
+    },
+    {
+      "id": "site-a-2",
+      "group": "site-a",
+      "port": 28702,
+      "initial_version": "v1"
+    },
+    {
+      "id": "site-a-3",
+      "group": "site-a",
+      "port": 28703,
+      "initial_version": "v1"
+    },
+    {
+      "id": "site-b-1",
+      "group": "site-b",
+      "port": 28704,
+      "initial_version": "v1"
+    },
+    {
+      "id": "site-b-2",
+      "group": "site-b",
+      "port": 28705,
+      "initial_version": "v1"
+    },
+    {
+      "id": "site-b-3",
+      "group": "site-b",
+      "port": 28706,
+      "initial_version": "v1"
+    }
+  ],
+  "batches": [
+    {
+      "id": "canary-site-a",
+      "order": 1,
+      "instances": [
+        "site-a-1",
+        "site-a-2",
+        "site-a-3"
+      ],
+      "rollback_version": "v1"
+    },
+    {
+      "id": "remaining-site-b",
+      "order": 2,
+      "instances": [
+        "site-b-1",
+        "site-b-2",
+        "site-b-3"
+      ],
+      "rollback_version": "v1"
+    }
+  ],
+  "network": {
+    "host": "127.0.0.1",
+    "port_range": [
+      28700,
+      28799
+    ],
+    "backend_port_range": [
+      49000,
+      49999
+    ],
+    "orchestrator_port": 28799,
+    "precheck_timeout_seconds": 10.0,
+    "drain_timeout_seconds": 2.0,
+    "request_timeout_seconds": 30.0
+  },
+  "storage": {
+    "database_path": "state/rollout.sqlite3",
+    "report_path": "state/report.json"
+  }
+}
