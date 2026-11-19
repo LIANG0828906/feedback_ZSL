@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "telemetry-settlement"
+version = "0.1.0"
+description = "A resumable, local SQL settlement executor for telemetry and charging supplements"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "duckdb>=1.0,<3",
+    "pyarrow>=14",
+]
+
+[project.scripts]
+telemetry-settlement = "settlement.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["settlement*"]
+
