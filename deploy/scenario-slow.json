@@ -1,0 +1,78 @@
+{
+  "scenario_id": "slow-tenant-isolation-v1",
+  "batch_interval_ms": 100,
+  "status_poll_sec": 0.5,
+  "drain_timeout_sec": 60,
+  "tenants": [
+    {
+      "tenant_id": "tenant-00",
+      "rate_per_sec": 30,
+      "duration_sec": 16
+    },
+    {
+      "tenant_id": "tenant-07",
+      "rate_per_sec": 30,
+      "duration_sec": 16
+    },
+    {
+      "tenant_id": "tenant-17",
+      "rate_per_sec": 20,
+      "duration_sec": 16
+    }
+  ],
+  "faults": [
+    {
+      "tenant_id": "tenant-17",
+      "at_sec": 0,
+      "control": {
+        "slow_ratio": 1.0,
+        "slow_min_ms": 2500,
+        "slow_max_ms": 3000,
+        "error_ratio": 0.0,
+        "permanent_4xx_ratio": 0.0,
+        "health_ok": false
+      }
+    },
+    {
+      "tenant_id": "tenant-17",
+      "at_sec": 2,
+      "control": {
+        "slow_ratio": 0.0,
+        "error_ratio": 0.0,
+        "permanent_4xx_ratio": 0.0,
+        "health_ok": false
+      }
+    },
+    {
+      "tenant_id": "tenant-17",
+      "at_sec": 10,
+      "control": {
+        "slow_ratio": 0.0,
+        "error_ratio": 0.35,
+        "permanent_4xx_ratio": 0.0,
+        "health_ok": false
+      }
+    },
+    {
+      "tenant_id": "tenant-17",
+      "at_sec": 12,
+      "control": {
+        "slow_ratio": 0.0,
+        "error_ratio": 0.35,
+        "permanent_4xx_ratio": 0.0,
+        "health_ok": true
+      }
+    },
+    {
+      "tenant_id": "tenant-17",
+      "at_sec": 15,
+      "control": {
+        "slow_ratio": 0.0,
+        "error_ratio": 0.0,
+        "permanent_4xx_ratio": 0.0,
+        "health_ok": true
+      }
+    }
+  ]
+}
+

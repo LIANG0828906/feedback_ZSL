@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-dispatcher
+  labels:
+    app: webhook-dispatcher
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: webhook-dispatcher
+  template:
+    metadata:
+      labels:
+        app: webhook-dispatcher
+    spec:
+      terminationGracePeriodSeconds: 20
+      initContainers:
+        - name: prepare-data
+          image: webhook-lab:dev
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - mkdir -p /data && chmod 0777 /data
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+          volumeMounts:
+            - name: coordinator-data
+              mountPath: /data
+      containers:
+        - name: dispatcher
+          image: webhook-lab:dev
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -m
+            - app.main
+          env:
+            - name: DB_PATH
+              value: /data/webhook-lab.db
+            - name: TENANT_CONFIG_PATH
+              value: /etc/webhook-lab/tenants.json
+            - name: API_PORT
+              value: "8080"
+            - name: WORKER_COUNT
+              value: "64"
+            - name: LEASE_MS
+              value: "5000"
+            - name: RECOVERY_SUCCESSES
+              value: "2"
+            - name: LOG_LEVEL
+              value: INFO
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 400m
+              memory: 192Mi
+          volumeMounts:
+            - name: coordinator-data
+              mountPath: /data
+            - name: tenant-config
+              mountPath: /etc/webhook-lab
+              readOnly: true
+      volumes:
+        - name: coordinator-data
+          hostPath:
+            path: /var/lib/webhook-lab
+            type: DirectoryOrCreate
+        - name: tenant-config
+          configMap:
+            name: tenant-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webhook-dispatcher
+  labels:
+    app: webhook-dispatcher
+spec:
+  selector:
+    app: webhook-dispatcher
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+
