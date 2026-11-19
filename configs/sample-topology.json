@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "seed": 264264,
+  "limits": {
+    "max_concurrent_queries": 16,
+    "max_concurrent_traces": 4,
+    "trace_queue_size": 8,
+    "default_timeout_ms": 400,
+    "trace_queue_timeout_ms": 1500,
+    "default_retries": 0
+  },
+  "zones": [
+    {
+      "name": "example.test.",
+      "authority": "auth",
+      "records": [
+        {
+          "name": "www.example.test.",
+          "type": "CNAME",
+          "ttl": 30,
+          "value": "edge.example.test."
+        },
+        {
+          "name": "edge.example.test.",
+          "type": "A",
+          "ttl": 30,
+          "value": "10.20.0.10"
+        },
+        {
+          "name": "api.example.test.",
+          "type": "A",
+          "ttl": 120,
+          "value": "10.20.0.11"
+        },
+        {
+          "name": "broken.example.test.",
+          "type": "A",
+          "ttl": 60,
+          "value": "10.20.0.12"
+        },
+        {
+          "name": "servfail.example.test.",
+          "type": "A",
+          "ttl": 60,
+          "value": "10.20.0.13"
+        },
+        {
+          "name": "wrong.example.test.",
+          "type": "A",
+          "ttl": 60,
+          "value": "10.20.0.14"
+        },
+        {
+          "name": "short.example.test.",
+          "type": "A",
+          "ttl": 1,
+          "value": "10.20.0.15"
+        },
+        {
+          "name": "empty.example.test.",
+          "type": "TXT",
+          "ttl": 60,
+          "value": "only-txt"
+        },
+        {
+          "name": "big.example.test.",
+          "type": "TXT",
+          "ttl": 60,
+          "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+      ]
+    }
+  ],
+  "resolvers": [
+    {
+      "id": "root",
+      "role": "root",
+      "address": "127.0.0.1:15351",
+      "delegations": [
+        {
+          "zone": "test.",
+          "target": "tld",
+          "ttl": 300
+        }
+      ],
+      "latency_ms": 2,
+      "delegation_ttl": 300
+    },
+    {
+      "id": "tld",
+      "role": "tld",
+      "address": "127.0.0.1:15352",
+      "delegations": [
+        {
+          "zone": "example.test.",
+          "target": "auth",
+          "ttl": 120
+        }
+      ],
+      "latency_ms": 2,
+      "timeout_ms": 100,
+      "delegation_ttl": 120
+    },
+    {
+      "id": "auth",
+      "role": "authority",
+      "address": "127.0.0.1:15353",
+      "latency_ms": 2,
+      "timeout_ms": 100,
+      "udp_max_bytes": 512,
+      "delegation_ttl": 300
+    },
+    {
+      "id": "rec-shanghai",
+      "role": "recursive",
+      "address": "127.0.0.1:15354",
+      "upstreams": [
+        "root"
+      ],
+      "latency_ms": 1,
+      "delegation_ttl": 300
+    },
+    {
+      "id": "rec-hangzhou",
+      "role": "recursive",
+      "address": "127.0.0.1:15355",
+      "upstreams": [
+        "root"
+      ],
+      "latency_ms": 1,
+      "cache": {
+        "preload": [
+          {
+            "name": "www.example.test.",
+            "type": "A",
+            "rcode": "NOERROR",
+            "ttl": 45,
+            "answers": [
+              {
+                "name": "www.example.test.",
+                "type": "A",
+                "ttl": 45,
+                "value": "10.20.0.99"
+              }
+            ]
+          }
+        ]
+      },
+      "delegation_ttl": 300
+    },
+    {
+      "id": "fwd-shenzhen",
+      "role": "forwarder",
+      "address": "127.0.0.1:15356",
+      "upstreams": [
+        "root"
+      ],
+      "latency_ms": 1,
+      "delegation_ttl": 300
+    },
+    {
+      "id": "rec-shenzhen",
+      "role": "recursive",
+      "address": "127.0.0.1:15357",
+      "upstreams": [
+        "fwd-shenzhen"
+      ],
+      "latency_ms": 1,
+      "delegation_ttl": 300
+    },
+    {
+      "id": "rec-wuhan",
+      "role": "recursive",
+      "address": "127.0.0.1:15358",
+      "upstreams": [
+        "root"
+      ],
+      "latency_ms": 1,
+      "retries": 1,
+      "delegation_ttl": 300
+    }
+  ],
+  "sites": [
+    {
+      "id": "shanghai",
+      "recursive": "rec-shanghai"
+    },
+    {
+      "id": "hangzhou",
+      "recursive": "rec-hangzhou"
+    },
+    {
+      "id": "shenzhen",
+      "recursive": "rec-shenzhen"
+    },
+    {
+      "id": "nanjing",
+      "recursive": "rec-shanghai",
+      "static_mappings": {
+        "www.example.test.": "10.20.0.77"
+      }
+    },
+    {
+      "id": "beijing",
+      "recursive": "rec-shanghai",
+      "negative_cache": [
+        {
+          "name": "api.example.test.",
+          "type": "A",
+          "rcode": "NXDOMAIN",
+          "ttl": 90
+        }
+      ]
+    },
+    {
+      "id": "wuhan",
+      "recursive": "rec-wuhan"
+    }
+  ],
+  "faults": [
+    {
+      "id": "tld-broken-first-attempt",
+      "resolver": "tld",
+      "domain": "broken.example.test.",
+      "type": "timeout",
+      "attempts": [
+        1
+      ]
+    },
+    {
+      "id": "tld-servfail",
+      "resolver": "tld",
+      "domain": "servfail.example.test.",
+      "type": "servfail"
+    },
+    {
+      "id": "root-wrong-delegation",
+      "resolver": "root",
+      "domain": "wrong.example.test.",
+      "type": "wrong_delegation",
+      "wrong_address": "127.0.0.1:15999"
+    }
+  ]
+}
