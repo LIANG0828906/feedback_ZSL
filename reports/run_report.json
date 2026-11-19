@@ -1,0 +1,121 @@
+{
+  "checks": {
+    "accuracy_not_below_reference": true,
+    "all_steps_present": true,
+    "complete_routes": true,
+    "complete_step_submissions": true,
+    "current_parameters_match_last_history": true,
+    "final_parameter_tolerance": true,
+    "gradient_recompute_tolerance": true,
+    "lag_event_marker_consistent": true,
+    "loss_sequence_tolerance": true,
+    "ownership_complete": true,
+    "ownership_unique": true,
+    "step_transaction_history_complete": true,
+    "step_update_tolerance": true,
+    "takeover_recovery_within_30s": true,
+    "worker_p95_within_400ms": true
+  },
+  "e2e_seconds": 10.359,
+  "fault_events": [
+    {
+      "applied_version": 45,
+      "code": "DUPLICATE_GRADIENT",
+      "discarded": true,
+      "message": "duplicate submission discarded",
+      "ok": true,
+      "status": "duplicate_discarded",
+      "step": 45,
+      "type": "duplicate",
+      "worker_id": "worker-0"
+    },
+    {
+      "paused_worker": "worker-1",
+      "results": [
+        {
+          "base_version": 64,
+          "code": "STALE_VERSION",
+          "current_version": 70,
+          "message": "base_version 64 is older than current version 70 by more than 4 steps",
+          "ok": false,
+          "step": 76,
+          "worker_id": "worker-1"
+        },
+        {
+          "base_version": 64,
+          "code": "STALE_VERSION",
+          "current_version": 70,
+          "message": "base_version 64 is older than current version 70 by more than 4 steps",
+          "ok": false,
+          "step": 76,
+          "worker_id": "worker-1"
+        },
+        {
+          "base_version": 64,
+          "code": "STALE_VERSION",
+          "current_version": 70,
+          "message": "base_version 64 is older than current version 70 by more than 4 steps",
+          "ok": false,
+          "step": 76,
+          "worker_id": "worker-1"
+        },
+        {
+          "base_version": 64,
+          "code": "STALE_VERSION",
+          "current_version": 70,
+          "message": "base_version 64 is older than current version 70 by more than 4 steps",
+          "ok": false,
+          "step": 76,
+          "worker_id": "worker-1"
+        }
+      ],
+      "type": "stale"
+    },
+    {
+      "pid": 350585,
+      "returncode": 0,
+      "shard_id": "shard-1",
+      "signal": "SIGKILL",
+      "type": "kill_shard"
+    },
+    {
+      "restart_seconds": 0.453,
+      "type": "coordinator_restart"
+    }
+  ],
+  "status": "pass",
+  "verification_summary": {
+    "accuracy_delta": 0.0,
+    "applied_submissions": 900,
+    "completed_takeovers": 1,
+    "configured_steps": 300,
+    "duplicate_submissions": 1,
+    "e2e_seconds": 10.359,
+    "final_loss": 0.00010714337022639228,
+    "final_max_abs_parameter_deviation": 0.0,
+    "gradient_recompute_max_abs": 0.0,
+    "lag_events": 1,
+    "lagging_workers": [
+      {
+        "consecutive_stale": 0,
+        "lagging": true,
+        "total_stale": 4,
+        "trigger_version_gap": 6,
+        "worker_id": "worker-1"
+      }
+    ],
+    "loss_max_relative_error": 0.0,
+    "max_step_parameter_deviation": 0.0,
+    "max_worker_submit_p95_ms": 10.032,
+    "owners_after_takeover": [
+      "shard-0"
+    ],
+    "recomputed_submissions": 900,
+    "reference_accuracy": 1.0,
+    "stale_rejections": 4,
+    "step_update_max_abs": 0.0,
+    "steps": 300,
+    "trained_accuracy": 1.0,
+    "verification_seconds": 0.552
+  }
+}

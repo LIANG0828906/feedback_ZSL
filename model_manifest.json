@@ -1,0 +1,41 @@
+{
+  "model": {
+    "type": "linear_softmax",
+    "feature_dim": 64,
+    "num_classes": 10,
+    "parameter_dtype": "float64",
+    "input_dtype": "float32",
+    "initialization": {
+      "kind": "zeros",
+      "seed": 20261119
+    },
+    "parameter_layout": {
+      "weight": "weight.{row:03d}.{class_index:02d}",
+      "bias": "bias.{class_index:02d}"
+    }
+  },
+  "dataset": {
+    "name": "deterministic_synthetic_classification",
+    "train_samples": 400000,
+    "validation_samples": 20000,
+    "feature_dim": 64,
+    "num_classes": 10,
+    "generator_seed": 20261119,
+    "centroid_scale": 2.0,
+    "noise_scale": 1.0
+  },
+  "hyperparameters": {
+    "optimizer": "sgd",
+    "learning_rate": 0.5,
+    "loss": "cross_entropy_mean",
+    "aggregation": "sample_weighted_mean",
+    "steps": 300,
+    "workers": 3,
+    "samples_per_worker_per_step": 64,
+    "microbatch_order": "contiguous_step_blocks_in_generated_shard_order"
+  },
+  "routing": {
+    "kind": "sha256_parameter_name_mod_shard_count",
+    "shards": 2
+  }
+}

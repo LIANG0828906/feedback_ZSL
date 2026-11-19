@@ -1,0 +1,62 @@
+{
+  "coordinator": {
+    "host": "127.0.0.1",
+    "port": 50310,
+    "status_port": 50311
+  },
+  "database": "run/training_state.sqlite3",
+  "model_manifest": "model_manifest.json",
+  "data": {
+    "directory": "data",
+    "metadata": "data/data_meta.json",
+    "generate_if_missing": true
+  },
+  "shards": [
+    {
+      "shard_id": "shard-0",
+      "host": "127.0.0.1",
+      "port": 50321
+    },
+    {
+      "shard_id": "shard-1",
+      "host": "127.0.0.1",
+      "port": 50322
+    }
+  ],
+  "workers": [
+    {
+      "worker_id": "worker-0",
+      "shard_index": 0
+    },
+    {
+      "worker_id": "worker-1",
+      "shard_index": 1
+    },
+    {
+      "worker_id": "worker-2",
+      "shard_index": 2
+    }
+  ],
+  "runtime": {
+    "max_stale_steps": 4,
+    "max_consecutive_stale": 3,
+    "max_pending_steps": 32,
+    "max_pending_submissions": 256,
+    "worker_heartbeat_interval_ms": 500,
+    "worker_heartbeat_timeout_ms": 4000,
+    "shard_heartbeat_interval_ms": 300,
+    "shard_heartbeat_timeout_ms": 1800,
+    "monitor_interval_ms": 200,
+    "takeover_rpc_timeout_seconds": 5.0,
+    "takeover_wait_seconds": 12.0,
+    "submit_wait_seconds": 30.0,
+    "grpc_retry_seconds": 60.0
+  },
+  "faults": {
+    "duplicate_at_step": 45,
+    "stale_at_step": 70,
+    "stale_injections": 4,
+    "kill_shard": "shard-1",
+    "kill_at_step": 105
+  }
+}

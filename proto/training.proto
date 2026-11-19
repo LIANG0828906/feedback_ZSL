@@ -1,0 +1,165 @@
+syntax = "proto3";
+
+package training;
+
+service Coordinator {
+  rpc RegisterWorker(RegisterWorkerRequest) returns (RegistrationReply);
+  rpc RegisterShard(RegisterShardRequest) returns (RegistrationReply);
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatReply);
+  rpc SubmitGradient(GradientSubmission) returns (GradientReply);
+  rpc GetRuntime(RuntimeRequest) returns (RuntimeReply);
+  rpc WaitForVersion(WaitForVersionRequest) returns (WaitForVersionReply);
+  rpc GetStatus(StatusRequest) returns (StatusReply);
+}
+
+service ParameterShard {
+  rpc GetParameters(GetParametersRequest) returns (GetParametersReply);
+  rpc InstallTakeover(InstallTakeoverRequest) returns (InstallTakeoverReply);
+  rpc Ping(PingRequest) returns (PingReply);
+}
+
+message RegisterWorkerRequest {
+  string worker_id = 1;
+  int32 data_shard_index = 2;
+  int64 sample_count = 3;
+  int64 timestamp_ms = 4;
+}
+
+message RegisterShardRequest {
+  string shard_id = 1;
+  string endpoint = 2;
+  repeated string parameter_names = 3;
+  int64 timestamp_ms = 4;
+}
+
+message RegistrationReply {
+  bool ok = 1;
+  string code = 2;
+  string message = 3;
+  string record_json = 4;
+}
+
+message HeartbeatRequest {
+  string identity_type = 1;
+  string identity_id = 2;
+  int64 local_step = 3;
+  int64 timestamp_ms = 4;
+}
+
+message HeartbeatReply {
+  bool ok = 1;
+  string code = 2;
+  int64 version = 3;
+  bool takeover_in_progress = 4;
+  string message = 5;
+}
+
+message GradientSubmission {
+  string worker_id = 1;
+  int64 step = 2;
+  int64 base_version = 3;
+  int64 sample_count = 4;
+  repeated double gradient = 5;
+  double local_loss = 6;
+  double client_started_ms = 7;
+}
+
+message GradientReply {
+  bool ok = 1;
+  string code = 2;
+  string message = 3;
+  string status = 4;
+  int64 applied_version = 5;
+  int64 latest_version = 6;
+  bool discarded = 7;
+  int64 consecutive_stale = 8;
+  double server_elapsed_ms = 9;
+}
+
+message ShardAssignment {
+  string shard_id = 1;
+  string endpoint = 2;
+  repeated string parameter_names = 3;
+  string status = 4;
+  int64 generation = 5;
+}
+
+message RuntimeRequest {
+  int64 timeout_ms = 1;
+}
+
+message RuntimeReply {
+  bool ok = 1;
+  string code = 2;
+  int64 version = 3;
+  int64 last_applied_step = 4;
+  bool takeover_in_progress = 5;
+  repeated ShardAssignment shards = 6;
+}
+
+message WaitForVersionRequest {
+  int64 target_version = 1;
+  int64 timeout_ms = 2;
+}
+
+message WaitForVersionReply {
+  bool ok = 1;
+  string code = 2;
+  int64 version = 3;
+  bool takeover_in_progress = 4;
+  string message = 5;
+}
+
+message StatusRequest {
+  int64 timeout_ms = 1;
+}
+
+message StatusReply {
+  string json = 1;
+}
+
+message Parameter {
+  string name = 1;
+  double value = 2;
+}
+
+message GetParametersRequest {
+  string shard_id = 1;
+  repeated string parameter_names = 2;
+  int64 version = 3;
+}
+
+message GetParametersReply {
+  bool ok = 1;
+  string code = 2;
+  string message = 3;
+  int64 version = 4;
+  repeated Parameter parameters = 5;
+  bool takeover_in_progress = 6;
+}
+
+message InstallTakeoverRequest {
+  string old_shard_id = 1;
+  string target_shard_id = 2;
+  repeated Parameter parameters = 3;
+  int64 version = 4;
+  int64 generation = 5;
+}
+
+message InstallTakeoverReply {
+  bool ok = 1;
+  string code = 2;
+  string message = 3;
+  int64 installed_count = 4;
+}
+
+message PingRequest {
+  int64 timestamp_ms = 1;
+}
+
+message PingReply {
+  bool ok = 1;
+  string shard_id = 2;
+  int64 local_param_count = 3;
+  int64 version = 4;
+}
