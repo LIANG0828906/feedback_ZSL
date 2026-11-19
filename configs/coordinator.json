@@ -1,0 +1,16 @@
+{
+  "grpc_address": "127.0.0.1:17070",
+  "http_address": "127.0.0.1:19090",
+  "etcd_endpoints": ["127.0.0.1:2379"],
+  "etcd_dial_timeout_ms": 5000,
+  "key_prefix": "/settlement/v1",
+  "default_lease_ttl_ms": 6000,
+  "min_lease_ttl_ms": 3000,
+  "default_wait_timeout_ms": 15000,
+  "sweep_interval_ms": 150,
+  "queue_poll_interval_ms": 100,
+  "batch_count": 20,
+  "batch_prefix": "batch-",
+  "batch_width": 3,
+  "release_event_list_limit": 100
+}

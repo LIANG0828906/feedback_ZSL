@@ -1,0 +1,143 @@
+syntax = "proto3";
+
+package settlement.v1;
+
+option go_package = "settlement/internal/api;api";
+
+// SettlementLock is the coordination API used by settlement workers.
+// Business failures are returned in error_code with gRPC status OK.
+service SettlementLock {
+  rpc AcquireLock(AcquireLockRequest) returns (AcquireLockResponse);
+  rpc RenewLock(RenewLockRequest) returns (RenewLockResponse);
+  rpc ReleaseLock(ReleaseLockRequest) returns (ReleaseLockResponse);
+  rpc SubmitResult(SubmitResultRequest) returns (SubmitResultResponse);
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+  rpc ListStatus(ListStatusRequest) returns (ListStatusResponse);
+}
+
+message AcquireLockRequest {
+  string batch_id = 1;
+  string holder_id = 2;
+  // Zero selects the coordinator default. Explicit values below 3000 ms are
+  // rejected with E_LEASE_TOO_SHORT.
+  int64 lease_ttl_ms = 3;
+  // Positive values queue FIFO for this duration. Zero tries once.
+  int64 wait_timeout_ms = 4;
+  string request_id = 5;
+}
+
+message AcquireLockResponse {
+  bool acquired = 1;
+  string error_code = 2;
+  string message = 3;
+  string batch_id = 4;
+  string holder_id = 5;
+  string lease_id = 6;
+  int64 expires_at_unix_ms = 7;
+  int64 lease_ttl_ms = 8;
+  bool renewed = 9;
+  int64 wait_ms = 10;
+  string current_holder_id = 11;
+  int64 current_expires_at_unix_ms = 12;
+  string request_id = 13;
+}
+
+message RenewLockRequest {
+  string batch_id = 1;
+  string holder_id = 2;
+  int64 lease_ttl_ms = 3;
+}
+
+message RenewLockResponse {
+  bool renewed = 1;
+  string error_code = 2;
+  string message = 3;
+  string batch_id = 4;
+  string holder_id = 5;
+  string lease_id = 6;
+  int64 expires_at_unix_ms = 7;
+  int64 lease_ttl_ms = 8;
+}
+
+message ReleaseLockRequest {
+  string batch_id = 1;
+  string holder_id = 2;
+}
+
+message ReleaseLockResponse {
+  bool released = 1;
+  string error_code = 2;
+  string message = 3;
+  string batch_id = 4;
+  string holder_id = 5;
+}
+
+message SubmitResultRequest {
+  string batch_id = 1;
+  string holder_id = 2;
+  int32 task_count = 3;
+  int64 total_amount = 4;
+  string result_digest = 5;
+  // Canonical deterministic result payload. The first accepted payload is
+  // persisted and returned for all later idempotent submissions.
+  string result_json = 6;
+}
+
+message SubmitResultResponse {
+  bool accepted = 1;
+  bool idempotent = 2;
+  string error_code = 3;
+  string message = 4;
+  string batch_id = 5;
+  string committed_by = 6;
+  int32 task_count = 7;
+  int64 total_amount = 8;
+  string result_digest = 9;
+  string result_json = 10;
+  int64 committed_at_unix_ms = 11;
+}
+
+message ReleaseEvent {
+  string batch_id = 1;
+  string holder_id = 2;
+  string generation = 3;
+  string lease_id = 4;
+  int64 lease_expires_at_unix_ms = 5;
+  int64 released_at_unix_ms = 6;
+  string reason = 7;
+}
+
+message BatchStatus {
+  string batch_id = 1;
+  bool held = 2;
+  string holder_id = 3;
+  string lease_id = 4;
+  int64 expires_at_unix_ms = 5;
+  double lease_remaining_seconds = 6;
+  bool committed = 7;
+  string committed_by = 8;
+  int32 task_count = 9;
+  int64 total_amount = 10;
+  string result_digest = 11;
+  int64 committed_at_unix_ms = 12;
+  repeated ReleaseEvent release_events = 13;
+  string result_json = 14;
+}
+
+message GetStatusRequest {
+  string batch_id = 1;
+}
+
+message GetStatusResponse {
+  BatchStatus status = 1;
+  string error_code = 2;
+  string message = 3;
+}
+
+message ListStatusRequest {}
+
+message ListStatusResponse {
+  repeated BatchStatus statuses = 1;
+  string error_code = 2;
+  string message = 3;
+}
