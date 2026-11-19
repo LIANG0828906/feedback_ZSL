@@ -1,0 +1,28 @@
+{
+  "inventory_path": "../data/asset_inventory.json",
+  "scenario_path": "../data/simulator_scenario.json",
+  "database": {
+    "path": "../runtime/power_audit.db"
+  },
+  "http": {
+    "host": "127.0.0.1",
+    "port": 8080
+  },
+  "snmp": {
+    "request_timeout_seconds": 0.25,
+    "device_timeout_seconds": 1.2,
+    "total_timeout_seconds": 8.0,
+    "retries": 0,
+    "max_workers": 8,
+    "max_varbinds_per_request": 24
+  },
+  "emergency": {
+    "battery_threshold_percent": 25,
+    "runtime_threshold_minutes": 20,
+    "failover_reserve_percent": 10,
+    "min_transfer_load_percent": 1.0
+  },
+  "simulator": {
+    "backend": "auto"
+  }
+}

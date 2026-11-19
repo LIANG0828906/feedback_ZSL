@@ -1,0 +1,1269 @@
+{
+  "scenario_version": 1,
+  "description": "Deterministic local SNMP device state",
+  "devices": {
+    "UPS-01": {
+      "status": "on_battery",
+      "output_load_percent": 63,
+      "battery_remaining_percent": 18,
+      "runtime_minutes": 12,
+      "supply_state": "battery"
+    },
+    "UPS-02": {
+      "status": "online",
+      "output_load_percent": 71,
+      "battery_remaining_percent": 85,
+      "runtime_minutes": 45,
+      "supply_state": "mains"
+    },
+    "UPS-03": {
+      "status": "online",
+      "output_load_percent": 94,
+      "battery_remaining_percent": 80,
+      "runtime_minutes": 40,
+      "supply_state": "mains"
+    },
+    "UPS-04": {
+      "status": "online",
+      "output_load_percent": 66,
+      "battery_remaining_percent": 88,
+      "runtime_minutes": 52,
+      "supply_state": "mains"
+    },
+    "PDU-R01-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-01",
+      "uplink_branch_id": "FEED-R01-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-001",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "2": {
+          "server_id": "SRV-009",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "3": {
+          "server_id": "SRV-017",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "4": {
+          "server_id": "SRV-025",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "5": {
+          "server_id": "SRV-033",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "6": {
+          "server_id": "SRV-041",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "7": {
+          "server_id": "SRV-049",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "8": {
+          "server_id": "SRV-057",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "9": {
+          "server_id": "SRV-065",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        },
+        "10": {
+          "server_id": "SRV-077",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R01-A"
+        }
+      }
+    },
+    "PDU-R01-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-03",
+      "uplink_branch_id": "FEED-R01-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-001",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "2": {
+          "server_id": "SRV-009",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "3": {
+          "server_id": "SRV-017",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "4": {
+          "server_id": "SRV-025",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "5": {
+          "server_id": "SRV-033",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "6": {
+          "server_id": "SRV-041",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "7": {
+          "server_id": "SRV-049",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "8": {
+          "server_id": "SRV-057",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        },
+        "9": {
+          "server_id": "SRV-065",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R01-B"
+        }
+      }
+    },
+    "PDU-R02-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-01",
+      "uplink_branch_id": "FEED-R02-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-002",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "2": {
+          "server_id": "SRV-010",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "3": {
+          "server_id": "SRV-018",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "4": {
+          "server_id": "SRV-026",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "5": {
+          "server_id": "SRV-034",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "6": {
+          "server_id": "SRV-042",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "7": {
+          "server_id": "SRV-050",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "8": {
+          "server_id": "SRV-058",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "9": {
+          "server_id": "SRV-066",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        },
+        "10": {
+          "server_id": "SRV-078",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R02-A"
+        }
+      }
+    },
+    "PDU-R02-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-03",
+      "uplink_branch_id": "FEED-R02-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-002",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "2": {
+          "server_id": "SRV-010",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "3": {
+          "server_id": "SRV-018",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "4": {
+          "server_id": "SRV-026",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "5": {
+          "server_id": "SRV-034",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "6": {
+          "server_id": "SRV-042",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "7": {
+          "server_id": "SRV-050",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "8": {
+          "server_id": "SRV-058",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        },
+        "9": {
+          "server_id": "SRV-066",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R02-B"
+        }
+      }
+    },
+    "PDU-R03-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-01",
+      "uplink_branch_id": "FEED-R03-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-003",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "2": {
+          "server_id": "SRV-011",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "3": {
+          "server_id": "SRV-019",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "4": {
+          "server_id": "SRV-027",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "5": {
+          "server_id": "SRV-035",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "6": {
+          "server_id": "SRV-043",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "7": {
+          "server_id": "SRV-051",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "8": {
+          "server_id": "SRV-059",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        },
+        "9": {
+          "server_id": "SRV-079",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R03-A"
+        }
+      }
+    },
+    "PDU-R03-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-03",
+      "uplink_branch_id": "FEED-R03-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-003",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        },
+        "2": {
+          "server_id": "SRV-011",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        },
+        "3": {
+          "server_id": "SRV-019",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        },
+        "4": {
+          "server_id": "SRV-027",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        },
+        "5": {
+          "server_id": "SRV-035",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        },
+        "6": {
+          "server_id": "SRV-043",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        },
+        "7": {
+          "server_id": "SRV-051",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        },
+        "8": {
+          "server_id": "SRV-059",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R03-B"
+        }
+      }
+    },
+    "PDU-R04-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-01",
+      "uplink_branch_id": "FEED-R04-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-004",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "2": {
+          "server_id": "SRV-012",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "3": {
+          "server_id": "SRV-020",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "4": {
+          "server_id": "SRV-028",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "5": {
+          "server_id": "SRV-036",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "6": {
+          "server_id": "SRV-044",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "7": {
+          "server_id": "SRV-052",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "8": {
+          "server_id": "SRV-060",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        },
+        "9": {
+          "server_id": "SRV-073",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "10": {
+          "server_id": "SRV-074",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "11": {
+          "server_id": "SRV-075",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "12": {
+          "server_id": "SRV-076",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "13": {
+          "server_id": "SRV-080",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-R04-A"
+        }
+      }
+    },
+    "PDU-R04-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-03",
+      "uplink_branch_id": "FEED-R04-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-004",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        },
+        "2": {
+          "server_id": "SRV-012",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        },
+        "3": {
+          "server_id": "SRV-020",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        },
+        "4": {
+          "server_id": "SRV-028",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        },
+        "5": {
+          "server_id": "SRV-036",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        },
+        "6": {
+          "server_id": "SRV-044",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        },
+        "7": {
+          "server_id": "SRV-052",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        },
+        "8": {
+          "server_id": "SRV-060",
+          "status": "up",
+          "upstream_ups_id": "UPS-03",
+          "upstream_branch_id": "FEED-R04-B"
+        }
+      }
+    },
+    "PDU-R05-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-02",
+      "uplink_branch_id": "FEED-R05-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-005",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "2": {
+          "server_id": "SRV-013",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "3": {
+          "server_id": "SRV-021",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "4": {
+          "server_id": "SRV-029",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "5": {
+          "server_id": "SRV-037",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "6": {
+          "server_id": "SRV-045",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "7": {
+          "server_id": "SRV-053",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "8": {
+          "server_id": "SRV-061",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "9": {
+          "server_id": "SRV-067",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "10": {
+          "server_id": "SRV-068",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "11": {
+          "server_id": "SRV-069",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "12": {
+          "server_id": "SRV-070",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "13": {
+          "server_id": "SRV-071",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "14": {
+          "server_id": "SRV-072",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        },
+        "15": {
+          "server_id": "SRV-073",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "16": {
+          "server_id": "SRV-074",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "17": {
+          "server_id": "SRV-075",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "18": {
+          "server_id": "SRV-076",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        "19": {
+          "server_id": "SRV-081",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R05-A"
+        }
+      }
+    },
+    "PDU-R05-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-04",
+      "uplink_branch_id": "FEED-R05-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-005",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        },
+        "2": {
+          "server_id": "SRV-013",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        },
+        "3": {
+          "server_id": "SRV-021",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        },
+        "4": {
+          "server_id": "SRV-029",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        },
+        "5": {
+          "server_id": "SRV-037",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        },
+        "6": {
+          "server_id": "SRV-045",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        },
+        "7": {
+          "server_id": "SRV-053",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        },
+        "8": {
+          "server_id": "SRV-061",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R05-B"
+        }
+      }
+    },
+    "PDU-R06-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-02",
+      "uplink_branch_id": "FEED-R06-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-006",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "2": {
+          "server_id": "SRV-014",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "3": {
+          "server_id": "SRV-022",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "4": {
+          "server_id": "SRV-030",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "5": {
+          "server_id": "SRV-038",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "6": {
+          "server_id": "SRV-046",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "7": {
+          "server_id": "SRV-054",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "8": {
+          "server_id": "SRV-062",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "9": {
+          "server_id": "SRV-067",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "10": {
+          "server_id": "SRV-068",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "11": {
+          "server_id": "SRV-069",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "12": {
+          "server_id": "SRV-070",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "13": {
+          "server_id": "SRV-071",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "14": {
+          "server_id": "SRV-072",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        },
+        "15": {
+          "server_id": "SRV-082",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R06-A"
+        }
+      }
+    },
+    "PDU-R06-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-04",
+      "uplink_branch_id": "FEED-R06-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-006",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        },
+        "2": {
+          "server_id": "SRV-014",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        },
+        "3": {
+          "server_id": "SRV-022",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        },
+        "4": {
+          "server_id": "SRV-030",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        },
+        "5": {
+          "server_id": "SRV-038",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        },
+        "6": {
+          "server_id": "SRV-046",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        },
+        "7": {
+          "server_id": "SRV-054",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        },
+        "8": {
+          "server_id": "SRV-062",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R06-B"
+        }
+      }
+    },
+    "PDU-R07-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-02",
+      "uplink_branch_id": "FEED-R07-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-007",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        },
+        "2": {
+          "server_id": "SRV-015",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        },
+        "3": {
+          "server_id": "SRV-023",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        },
+        "4": {
+          "server_id": "SRV-031",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        },
+        "5": {
+          "server_id": "SRV-039",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        },
+        "6": {
+          "server_id": "SRV-047",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        },
+        "7": {
+          "server_id": "SRV-055",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        },
+        "8": {
+          "server_id": "SRV-063",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R07-A"
+        }
+      }
+    },
+    "PDU-R07-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-04",
+      "uplink_branch_id": "FEED-R07-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-007",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        },
+        "2": {
+          "server_id": "SRV-015",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        },
+        "3": {
+          "server_id": "SRV-023",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        },
+        "4": {
+          "server_id": "SRV-031",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        },
+        "5": {
+          "server_id": "SRV-039",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        },
+        "6": {
+          "server_id": "SRV-047",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        },
+        "7": {
+          "server_id": "SRV-055",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        },
+        "8": {
+          "server_id": "SRV-063",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R07-B"
+        }
+      }
+    },
+    "PDU-R08-A": {
+      "status": "online",
+      "uplink_ups_id": "UPS-02",
+      "uplink_branch_id": "FEED-R08-A",
+      "ports": {
+        "1": {
+          "server_id": "SRV-008",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        },
+        "2": {
+          "server_id": "SRV-016",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        },
+        "3": {
+          "server_id": "SRV-024",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        },
+        "4": {
+          "server_id": "SRV-032",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        },
+        "5": {
+          "server_id": "SRV-040",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        },
+        "6": {
+          "server_id": "SRV-048",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        },
+        "7": {
+          "server_id": "SRV-056",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        },
+        "8": {
+          "server_id": "SRV-064",
+          "status": "up",
+          "upstream_ups_id": "UPS-02",
+          "upstream_branch_id": "FEED-R08-A"
+        }
+      }
+    },
+    "PDU-R08-B": {
+      "status": "online",
+      "uplink_ups_id": "UPS-04",
+      "uplink_branch_id": "FEED-R08-B",
+      "ports": {
+        "1": {
+          "server_id": "SRV-008",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        },
+        "2": {
+          "server_id": "SRV-016",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        },
+        "3": {
+          "server_id": "SRV-024",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        },
+        "4": {
+          "server_id": "SRV-032",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        },
+        "5": {
+          "server_id": "SRV-040",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        },
+        "6": {
+          "server_id": "SRV-048",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        },
+        "7": {
+          "server_id": "SRV-056",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        },
+        "8": {
+          "server_id": "SRV-064",
+          "status": "up",
+          "upstream_ups_id": "UPS-04",
+          "upstream_branch_id": "FEED-R08-B"
+        }
+      }
+    },
+    "PDU-AUX-17": {
+      "status": "online",
+      "uplink_ups_id": "UPS-01",
+      "uplink_branch_id": "FEED-UPS01-AUX",
+      "ports": {
+        "1": {
+          "server_id": "SRV-083",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "2": {
+          "server_id": "SRV-083",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "3": {
+          "server_id": "SRV-084",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "4": {
+          "server_id": "SRV-084",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "5": {
+          "server_id": "SRV-085",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "6": {
+          "server_id": "SRV-085",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "7": {
+          "server_id": "SRV-086",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "8": {
+          "server_id": "SRV-086",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "9": {
+          "server_id": "SRV-087",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "10": {
+          "server_id": "SRV-087",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "11": {
+          "server_id": "SRV-088",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "12": {
+          "server_id": "SRV-088",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "13": {
+          "server_id": "SRV-089",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "14": {
+          "server_id": "SRV-089",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "15": {
+          "server_id": "SRV-090",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "16": {
+          "server_id": "SRV-090",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "17": {
+          "server_id": "SRV-091",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "18": {
+          "server_id": "SRV-091",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "19": {
+          "server_id": "SRV-092",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "20": {
+          "server_id": "SRV-092",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "21": {
+          "server_id": "SRV-093",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "22": {
+          "server_id": "SRV-093",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "23": {
+          "server_id": "SRV-094",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "24": {
+          "server_id": "SRV-094",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "25": {
+          "server_id": "SRV-095",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "26": {
+          "server_id": "SRV-095",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "27": {
+          "server_id": "SRV-096",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        },
+        "28": {
+          "server_id": "SRV-096",
+          "status": "up",
+          "upstream_ups_id": "UPS-01",
+          "upstream_branch_id": "FEED-UPS01-AUX"
+        }
+      }
+    }
+  }
+}

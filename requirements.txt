@@ -1,0 +1,5 @@
+# The simulator and service use a standard-library SNMP v2c implementation
+# so they remain runnable on constrained Windows hosts. These packages are
+# retained for deployments that use pysnmp's command responder APIs directly.
+pysnmp==4.4.12
+pysnmp-mibs

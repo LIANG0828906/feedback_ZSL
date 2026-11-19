@@ -1,0 +1,2264 @@
+{
+  "inventory_version": 1,
+  "site": "edge-lab",
+  "description": "96 servers, 4 UPS, 17 PDU demo inventory",
+  "devices": [
+    {
+      "device_id": "UPS-01",
+      "device_type": "ups",
+      "host": "127.0.0.1",
+      "port": 12701,
+      "community": "public",
+      "enabled": true
+    },
+    {
+      "device_id": "UPS-02",
+      "device_type": "ups",
+      "host": "127.0.0.1",
+      "port": 12702,
+      "community": "public",
+      "enabled": true
+    },
+    {
+      "device_id": "UPS-03",
+      "device_type": "ups",
+      "host": "127.0.0.1",
+      "port": 12703,
+      "community": "public",
+      "enabled": true
+    },
+    {
+      "device_id": "UPS-04",
+      "device_type": "ups",
+      "host": "127.0.0.1",
+      "port": 12704,
+      "community": "public",
+      "enabled": true
+    },
+    {
+      "device_id": "PDU-R01-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12705,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R01-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12706,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R02-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12707,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R02-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12708,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R03-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12709,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R03-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12710,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R04-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12711,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R04-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12712,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R05-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12713,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R05-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12714,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R06-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12715,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R06-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12716,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R07-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12717,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R07-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12718,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R08-A",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12719,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-R08-B",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12720,
+      "community": "public",
+      "enabled": true,
+      "port_count": 24
+    },
+    {
+      "device_id": "PDU-AUX-17",
+      "device_type": "pdu",
+      "host": "127.0.0.1",
+      "port": 12721,
+      "community": "public",
+      "enabled": true,
+      "port_count": 32
+    }
+  ],
+  "servers": [
+    {
+      "server_id": "SRV-001",
+      "rack": "R01",
+      "business_cost": 38,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 1,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 1,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-002",
+      "rack": "R02",
+      "business_cost": 75,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 1,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 1,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-003",
+      "rack": "R03",
+      "business_cost": 112,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 1,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 1,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-004",
+      "rack": "R04",
+      "business_cost": 149,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 1,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 1,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-005",
+      "rack": "R05",
+      "business_cost": 186,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 1,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 1,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-006",
+      "rack": "R06",
+      "business_cost": 223,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 1,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 1,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-007",
+      "rack": "R07",
+      "business_cost": 260,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 1,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 1,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-008",
+      "rack": "R08",
+      "business_cost": 297,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 1,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 1,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-009",
+      "rack": "R01",
+      "business_cost": 334,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 2,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 2,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-010",
+      "rack": "R02",
+      "business_cost": 371,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 2,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 2,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-011",
+      "rack": "R03",
+      "business_cost": 408,
+      "acceptable_outage": true,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 2,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 2,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-012",
+      "rack": "R04",
+      "business_cost": 445,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 2,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 2,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-013",
+      "rack": "R05",
+      "business_cost": 482,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 2,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 2,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-014",
+      "rack": "R06",
+      "business_cost": 519,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 2,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 2,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-015",
+      "rack": "R07",
+      "business_cost": 556,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 2,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 2,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-016",
+      "rack": "R08",
+      "business_cost": 593,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 2,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 2,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-017",
+      "rack": "R01",
+      "business_cost": 630,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 3,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 3,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-018",
+      "rack": "R02",
+      "business_cost": 667,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 3,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 3,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-019",
+      "rack": "R03",
+      "business_cost": 704,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 3,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 3,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-020",
+      "rack": "R04",
+      "business_cost": 741,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 3,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 3,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-021",
+      "rack": "R05",
+      "business_cost": 778,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 3,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 3,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-022",
+      "rack": "R06",
+      "business_cost": 815,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 3,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 3,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-023",
+      "rack": "R07",
+      "business_cost": 852,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 3,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 3,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-024",
+      "rack": "R08",
+      "business_cost": 889,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 3,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 3,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-025",
+      "rack": "R01",
+      "business_cost": 926,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 4,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 4,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-026",
+      "rack": "R02",
+      "business_cost": 963,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 4,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 4,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-027",
+      "rack": "R03",
+      "business_cost": 3,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 4,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 4,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-028",
+      "rack": "R04",
+      "business_cost": 40,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 4,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 4,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-029",
+      "rack": "R05",
+      "business_cost": 77,
+      "acceptable_outage": true,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 4,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 4,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-030",
+      "rack": "R06",
+      "business_cost": 114,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 4,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 4,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-031",
+      "rack": "R07",
+      "business_cost": 151,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 4,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 4,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-032",
+      "rack": "R08",
+      "business_cost": 188,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 4,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 4,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-033",
+      "rack": "R01",
+      "business_cost": 225,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 5,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 5,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-034",
+      "rack": "R02",
+      "business_cost": 262,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 5,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 5,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-035",
+      "rack": "R03",
+      "business_cost": 299,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 5,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 5,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-036",
+      "rack": "R04",
+      "business_cost": 336,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 5,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 5,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-037",
+      "rack": "R05",
+      "business_cost": 373,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 5,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 5,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-038",
+      "rack": "R06",
+      "business_cost": 410,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 5,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 5,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-039",
+      "rack": "R07",
+      "business_cost": 447,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 5,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 5,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-040",
+      "rack": "R08",
+      "business_cost": 484,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 5,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 5,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-041",
+      "rack": "R01",
+      "business_cost": 521,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 6,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 6,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-042",
+      "rack": "R02",
+      "business_cost": 558,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 6,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 6,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-043",
+      "rack": "R03",
+      "business_cost": 595,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 6,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 6,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-044",
+      "rack": "R04",
+      "business_cost": 632,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 6,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 6,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-045",
+      "rack": "R05",
+      "business_cost": 669,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 6,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 6,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-046",
+      "rack": "R06",
+      "business_cost": 706,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 6,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 6,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-047",
+      "rack": "R07",
+      "business_cost": 743,
+      "acceptable_outage": true,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 6,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 6,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-048",
+      "rack": "R08",
+      "business_cost": 780,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 6,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 6,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-049",
+      "rack": "R01",
+      "business_cost": 817,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 7,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 7,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-050",
+      "rack": "R02",
+      "business_cost": 854,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 7,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 7,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-051",
+      "rack": "R03",
+      "business_cost": 891,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 7,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 7,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-052",
+      "rack": "R04",
+      "business_cost": 928,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 7,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 7,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-053",
+      "rack": "R05",
+      "business_cost": 965,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 7,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 7,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-054",
+      "rack": "R06",
+      "business_cost": 5,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 7,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 7,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-055",
+      "rack": "R07",
+      "business_cost": 42,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 7,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 7,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-056",
+      "rack": "R08",
+      "business_cost": 79,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 7,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 7,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-057",
+      "rack": "R01",
+      "business_cost": 116,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 8,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 8,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-058",
+      "rack": "R02",
+      "business_cost": 153,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 8,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 8,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-059",
+      "rack": "R03",
+      "business_cost": 190,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 8,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 8,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-060",
+      "rack": "R04",
+      "business_cost": 227,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 8,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 8,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-061",
+      "rack": "R05",
+      "business_cost": 264,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 8,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 8,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-062",
+      "rack": "R06",
+      "business_cost": 301,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 8,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 8,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-063",
+      "rack": "R07",
+      "business_cost": 338,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 8,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 8,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-064",
+      "rack": "R08",
+      "business_cost": 375,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 8,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 8,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-065",
+      "rack": "R01",
+      "business_cost": 412,
+      "acceptable_outage": true,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 9,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 9,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-066",
+      "rack": "R02",
+      "business_cost": 449,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 9,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 9,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-067",
+      "rack": "R05",
+      "business_cost": 486,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 9,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-A",
+          "port": 9,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-068",
+      "rack": "R06",
+      "business_cost": 523,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 10,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-A",
+          "port": 10,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-069",
+      "rack": "R05",
+      "business_cost": 560,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 11,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-A",
+          "port": 11,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-070",
+      "rack": "R06",
+      "business_cost": 597,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 12,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-A",
+          "port": 12,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-071",
+      "rack": "R05",
+      "business_cost": 634,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 13,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-A",
+          "port": 13,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-072",
+      "rack": "R06",
+      "business_cost": 671,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 14,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-A",
+          "port": 14,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-073",
+      "rack": "R04",
+      "business_cost": 708,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 9,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-A",
+          "port": 15,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-074",
+      "rack": "R04",
+      "business_cost": 745,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 10,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-A",
+          "port": 16,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-075",
+      "rack": "R04",
+      "business_cost": 782,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 11,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-A",
+          "port": 17,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-076",
+      "rack": "R04",
+      "business_cost": 819,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 12,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-A",
+          "port": 18,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R04R05-SHARED"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-077",
+      "rack": "R01",
+      "business_cost": 856,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 10,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-078",
+      "rack": "R02",
+      "business_cost": 893,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 10,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-079",
+      "rack": "R03",
+      "business_cost": 930,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 9,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-080",
+      "rack": "R04",
+      "business_cost": 967,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 13,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-081",
+      "rack": "R05",
+      "business_cost": 7,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 19,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-082",
+      "rack": "R06",
+      "business_cost": 44,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 15,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-083",
+      "rack": "R01",
+      "business_cost": 81,
+      "acceptable_outage": true,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 20,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 20,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-084",
+      "rack": "R02",
+      "business_cost": 118,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 21,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 21,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-085",
+      "rack": "R03",
+      "business_cost": 155,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 22,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 22,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-086",
+      "rack": "R04",
+      "business_cost": 192,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 23,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 23,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-087",
+      "rack": "R05",
+      "business_cost": 229,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 24,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 24,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-088",
+      "rack": "R06",
+      "business_cost": 266,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 24,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 24,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-089",
+      "rack": "R07",
+      "business_cost": 303,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R07-A",
+          "port": 24,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R07-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R07-B",
+          "port": 24,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R07-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-090",
+      "rack": "R08",
+      "business_cost": 340,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R08-A",
+          "port": 24,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R08-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R08-B",
+          "port": 24,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R08-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-091",
+      "rack": "R01",
+      "business_cost": 377,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R01-A",
+          "port": 24,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R01-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R01-B",
+          "port": 24,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R01-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-092",
+      "rack": "R02",
+      "business_cost": 414,
+      "acceptable_outage": true,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R02-A",
+          "port": 24,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R02-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R02-B",
+          "port": 24,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R02-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-093",
+      "rack": "R03",
+      "business_cost": 451,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R03-A",
+          "port": 24,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R03-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R03-B",
+          "port": 24,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R03-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-094",
+      "rack": "R04",
+      "business_cost": 488,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R04-A",
+          "port": 24,
+          "declared_ups_id": "UPS-01",
+          "declared_upstream_branch_id": "FEED-R04-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R04-B",
+          "port": 24,
+          "declared_ups_id": "UPS-03",
+          "declared_upstream_branch_id": "FEED-R04-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-095",
+      "rack": "R05",
+      "business_cost": 525,
+      "acceptable_outage": true,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R05-A",
+          "port": 24,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R05-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R05-B",
+          "port": 24,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R05-B"
+        }
+      ]
+    },
+    {
+      "server_id": "SRV-096",
+      "rack": "R06",
+      "business_cost": 562,
+      "acceptable_outage": false,
+      "power_inputs": [
+        {
+          "path_id": "A",
+          "pdu_id": "PDU-R06-A",
+          "port": 24,
+          "declared_ups_id": "UPS-02",
+          "declared_upstream_branch_id": "FEED-R06-A"
+        },
+        {
+          "path_id": "B",
+          "pdu_id": "PDU-R06-B",
+          "port": 24,
+          "declared_ups_id": "UPS-04",
+          "declared_upstream_branch_id": "FEED-R06-B"
+        }
+      ]
+    }
+  ]
+}
