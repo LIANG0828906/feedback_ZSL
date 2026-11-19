@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upgrading to Varnish 7.3 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changes in Varnish 7.2" href="changes-7.2.html" />
+    <link rel="prev" title="Changes in Varnish 7.3" href="changes-7.3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changes-7.2.html" title="Changes in Varnish 7.2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.3.html" title="Changes in Varnish 7.3"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.3</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="upgrading-to-varnish-7-3">
+<span id="whatsnew-upgrading-7-3"></span><h1>Upgrading to Varnish 7.3<a class="headerlink" href="#upgrading-to-varnish-7-3" title="Link to this heading">¶</a></h1>
+<section id="new-vsl-format">
+<h2>New VSL format<a class="headerlink" href="#new-vsl-format" title="Link to this heading">¶</a></h2>
+<p>The binary format of Varnish logs changed to increase the space for VXIDs from
+32 bits to 64. This is not a change that older versions of the Varnish logging
+utilities can understand, and the new utilities can also not process old logs.</p>
+<p>There is no conversion tool from the old format to the new one, so this should
+become a problem only when raw logs are stored for future processing. If old
+binary logs need to remain usable, the only solution is to use a compatible
+Varnish version and at the time of this release, the 6.0 branch is the only
+one without an EOL date.</p>
+</section>
+<section id="for-developers-and-vmod-authors-c-interface-changes-requiring-adjustments">
+<h2>For developers and VMOD authors: C interface changes requiring adjustments<a class="headerlink" href="#for-developers-and-vmod-authors-c-interface-changes-requiring-adjustments" title="Link to this heading">¶</a></h2>
+<section id="via-backends">
+<h3>Via backends<a class="headerlink" href="#via-backends" title="Link to this heading">¶</a></h3>
+<p>The new backend argument to the <code class="docutils literal notranslate"><span class="pre">VRT_new_backend*()</span></code> functions is optional
+and <code class="docutils literal notranslate"><span class="pre">NULL</span></code> can be passed to match the previous behavior.</p>
+</section>
+<section id="suckaddr">
+<h3>suckaddr<a class="headerlink" href="#suckaddr" title="Link to this heading">¶</a></h3>
+<p>The following functions return or accept <code class="docutils literal notranslate"><span class="pre">const</span></code> pointers from now on:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VSA_Clone()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VSA_getsockname()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VSA_getpeername()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VSA_Malloc()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VSA_Build*()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VSS_ResolveOne()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VSS_ResolveFirst()</span></code></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">VSA_free()</span></code> has been added to free heap memory allocated by
+<code class="docutils literal notranslate"><span class="pre">VSA_Malloc()</span></code> or one of the <code class="docutils literal notranslate"><span class="pre">VSA_Build*()</span></code> functions with a
+<code class="docutils literal notranslate"><span class="pre">NULL</span></code> first argument.</p>
+</section>
+<section id="directors">
+<h3>directors<a class="headerlink" href="#directors" title="Link to this heading">¶</a></h3>
+<p>Directors which take and hold references to other directors via
+<code class="docutils literal notranslate"><span class="pre">VRT_Assign_Backend()</span></code> (typically any director which has other
+directors as backends) are now expected to implement the new
+<code class="docutils literal notranslate"><span class="pre">.release</span></code> callback of type <code class="docutils literal notranslate"><span class="pre">void</span>
+<span class="pre">vdi_release_f(VCL_BACKEND)</span></code>. This function is called by
+<code class="docutils literal notranslate"><span class="pre">VRT_DelDirector()</span></code>. The implementation is expected drop any backend
+references which the director holds (again using
+<code class="docutils literal notranslate"><span class="pre">VRT_Assign_Backend()</span></code> with <code class="docutils literal notranslate"><span class="pre">NULL</span></code> as the second argument).</p>
+<p>Failure to implement this callback can result in deadlocks, in
+particular during VCL discard.</p>
+<p><em>eof</em></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Upgrading to Varnish 7.3</a><ul>
+<li><a class="reference internal" href="#new-vsl-format">New VSL format</a></li>
+<li><a class="reference internal" href="#for-developers-and-vmod-authors-c-interface-changes-requiring-adjustments">For developers and VMOD authors: C interface changes requiring adjustments</a><ul>
+<li><a class="reference internal" href="#via-backends">Via backends</a></li>
+<li><a class="reference internal" href="#suckaddr">suckaddr</a></li>
+<li><a class="reference internal" href="#directors">directors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="changes-7.3.html"
+                          title="previous chapter">Changes in Varnish 7.3</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="changes-7.2.html"
+                          title="next chapter">Changes in Varnish 7.2</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/upgrading-7.3.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changes-7.2.html" title="Changes in Varnish 7.2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.3.html" title="Changes in Varnish 7.3"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.3</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

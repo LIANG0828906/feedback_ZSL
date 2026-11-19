@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bundling VMODs with the Varnish distribution &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How our website works" href="homepage_dogfood.html" />
+    <link rel="prev" title="The Varnish Developers Guide" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="homepage_dogfood.html" title="How our website works"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Varnish Developers Guide"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Developers Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Bundling VMODs with the Varnish distribution</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="bundling-vmods-with-the-varnish-distribution">
+<span id="policy-vmods"></span><h1>Bundling VMODs with the Varnish distribution<a class="headerlink" href="#bundling-vmods-with-the-varnish-distribution" title="Link to this heading">¶</a></h1>
+<p>Decisions about whether to add a new Varnish module (VMOD) to those
+bundled with Varnish are guided by these criteria.</p>
+<ul class="simple">
+<li><p>The VMOD is known to be in widespread use and in high demand for
+common use cases.</p></li>
+<li><p>Or, if the VMOD is relatively new, it provides compelling features
+that the developer group agrees will be a valuable enhancement for
+the project.</p></li>
+<li><p>The VMOD does not create dependencies on additional external
+libraries. VMODs that are “glue” for a library come from third
+parties.</p>
+<ul>
+<li><p>We don’t want to add new burdens of dependency and compatibility
+to the project.</p></li>
+<li><p>We don’t want to force Varnish deployments to install more than
+admins explicitly choose to install.</p></li>
+</ul>
+</li>
+<li><p>The VMOD code follows project conventions (passes make distcheck,
+follows source code style, and so forth).</p>
+<ul>
+<li><p>A pull request can demonstrate that this is the case (after any
+necessary fixups).</p></li>
+</ul>
+</li>
+<li><p>The developer group commits to maintaining the code for the long run
+(so there will have to be a consensus that we’re comfortable with
+it).</p></li>
+</ul>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">The Varnish Developers Guide</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="homepage_dogfood.html"
+                          title="next chapter">How our website works</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dev-guide/policy_vmods.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="homepage_dogfood.html" title="How our website works"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Varnish Developers Guide"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Developers Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Bundling VMODs with the Varnish distribution</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

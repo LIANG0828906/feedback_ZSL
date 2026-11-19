@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Backend servers &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hashing" href="vcl-hashing.html" />
+    <link rel="prev" title="Request and response VCL objects" href="vcl-variables.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl-hashing.html" title="Hashing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vcl-variables.html" title="Request and response VCL objects"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="vcl.html" accesskey="U">VCL - Varnish Configuration Language</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Backend servers</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="backend-servers">
+<span id="users-guide-backend-servers"></span><h1>Backend servers<a class="headerlink" href="#backend-servers" title="Link to this heading">¶</a></h1>
+<p>Varnish has a concept of “backend” or “origin” servers. A backend
+server is the server providing the content Varnish will accelerate.</p>
+<p>Our first task is to tell Varnish where it can find its backends. Start
+your favorite text editor and open the relevant VCL file.</p>
+<p>Somewhere in the top there will be a section that looks a bit like this.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># backend default {</span>
+<span class="c1">#     .host = &quot;127.0.0.1&quot;;</span>
+<span class="c1">#     .port = &quot;8080&quot;;</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+<p>We remove the comment markings in this text stanza making the it look like.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">default</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;8080&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now, this piece of configuration defines a backend in Varnish called
+<em>default</em>. When Varnish needs to get content from this backend it will
+connect to port 8080 on localhost (127.0.0.1).</p>
+<p>Varnish can have several backends defined you can even join
+several backends together into clusters of backends for load balancing
+purposes.</p>
+</section>
+<section id="the-none-backend">
+<h1>The “none” backend<a class="headerlink" href="#the-none-backend" title="Link to this heading">¶</a></h1>
+<p>Backends can also be declared as <code class="docutils literal notranslate"><span class="pre">none</span></code> with the following syntax::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">default</span> <span class="n">none</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">none</span></code> backends are special:</p>
+<ul>
+<li><p>All backends declared <code class="docutils literal notranslate"><span class="pre">none</span></code> compare equal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">a</span> <span class="n">none</span><span class="p">;</span>
+<span class="n">backend</span> <span class="n">b</span> <span class="n">none</span><span class="p">;</span>
+
+<span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">synth</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;this is true&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">none</span></code> backend evaluates to <code class="docutils literal notranslate"><span class="pre">false</span></code> when used in a boolean
+context:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>backend nil none;
+
+sub vcl_recv {
+    set req.backend_hint = nil;
+    if (! req.backend_hint) {
+        return (synth(200, &quot;We get here&quot;));
+    }
+}
+</pre></div>
+</div>
+</li>
+<li><p>When directors find no healthy backend, they typically return the
+<code class="docutils literal notranslate"><span class="pre">none</span></code> backend</p></li>
+</ul>
+</section>
+<section id="multiple-backends">
+<h1>Multiple backends<a class="headerlink" href="#multiple-backends" title="Link to this heading">¶</a></h1>
+<p>At some point you might need Varnish to cache content from several
+servers. You might want Varnish to map all the URL into one single
+host or not. There are lot of options.</p>
+<p>Lets say we need to introduce a Java application into out PHP web
+site. Lets say our Java application should handle URL beginning with
+<cite>/java/</cite>.</p>
+<p>We manage to get the thing up and running on port 8000. Now, lets have
+a look at the <cite>default.vcl</cite>.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">default</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;8080&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We add a new backend.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">java</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;8000&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now we need tell Varnish where to send the difference URL. Lets look at <cite>vcl_recv</cite>.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">url</span> <span class="o">~</span> <span class="s2">&quot;^/java/&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">java</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">default</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It’s quite simple, really. Lets stop and think about this for a
+moment. As you can see you can define how you choose backends based on
+really arbitrary data. You want to send mobile devices to a different
+backend? No problem. <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(req.http.User-agent</span> <span class="pre">~</span> <span class="pre">/mobile/)</span> <span class="pre">..</span></code> should do the
+trick.</p>
+<p>Without an explicit backend selection, Varnish will continue using
+the <cite>default</cite> backend. If there is no backend named <cite>default</cite>, the
+first backend found in the vcl will be used as the default backend.</p>
+</section>
+<section id="backends-and-virtual-hosts-in-varnish">
+<h1>Backends and virtual hosts in Varnish<a class="headerlink" href="#backends-and-virtual-hosts-in-varnish" title="Link to this heading">¶</a></h1>
+<p>Varnish fully supports virtual hosts. They might however work in a somewhat
+counter-intuitive fashion since they are never declared
+explicitly. You set up the routing of incoming HTTP requests in
+<cite>vcl_recv</cite>. If you want this routing to be done on the basis of virtual
+hosts you just need to inspect <cite>req.http.host</cite>.</p>
+<p>You can have something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">host</span> <span class="o">~</span> <span class="s2">&quot;foo.com&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">foo</span><span class="p">;</span>
+    <span class="p">}</span> <span class="n">elsif</span> <span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">host</span> <span class="o">~</span> <span class="s2">&quot;bar.com&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">bar</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that the first regular expressions will match “foo.com”,
+“www.foo.com”, “zoop.foo.com” and any other host ending in “foo.com”. In
+this example this is intentional but you might want it to be a bit
+more tight, maybe relying on the <code class="docutils literal notranslate"><span class="pre">==</span></code> operator in stead, like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;foo.com&quot;</span> <span class="o">||</span> <span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;www.foo.com&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">foo</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="connecting-through-a-proxy">
+<h1>Connecting Through a Proxy<a class="headerlink" href="#connecting-through-a-proxy" title="Link to this heading">¶</a></h1>
+<p>As of this release, Varnish can connect to an actual <em>destination</em>
+through a <em>proxy</em> using the <a class="reference external" href="https://raw.githubusercontent.com/haproxy/haproxy/master/doc/proxy-protocol.txt">PROXY2</a> protocol. Other protocols may be
+added.</p>
+<p>For now, a typical use case of this feature is to make TLS-encrypted
+connections through a TLS <em>onloader</em>. The <em>onloader</em> needs to support
+dynamic connections with the destination address information taken
+from a <a class="reference external" href="https://raw.githubusercontent.com/haproxy/haproxy/master/doc/proxy-protocol.txt">PROXY2</a> preamble. For example with <a class="reference external" href="http://www.haproxy.org/">haproxy</a> Version 2.2 or
+higher, this snippet can be used as a basis for configuring an
+<em>onloader</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># to review and adjust:</span>
+<span class="c1"># - maxconn</span>
+<span class="c1"># - bind ... mode ...</span>
+<span class="c1"># - ca-file ...</span>
+<span class="c1">#</span>
+<span class="n">listen</span> <span class="n">sslon</span>
+       <span class="n">mode</span>    <span class="n">tcp</span>
+       <span class="n">maxconn</span> <span class="mi">1000</span>
+       <span class="n">bind</span>    <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">sslon</span> <span class="n">accept</span><span class="o">-</span><span class="n">proxy</span> <span class="n">mode</span> <span class="mi">777</span>
+       <span class="n">stick</span><span class="o">-</span><span class="n">table</span> <span class="nb">type</span> <span class="n">ip</span> <span class="n">size</span> <span class="mi">100</span>
+       <span class="n">stick</span>   <span class="n">on</span> <span class="n">dst</span>
+       <span class="n">server</span>  <span class="n">s00</span> <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">0</span> <span class="n">ssl</span> <span class="n">ca</span><span class="o">-</span><span class="n">file</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">ca</span><span class="o">-</span><span class="n">bundle</span><span class="o">.</span><span class="n">crt</span> <span class="n">alpn</span> <span class="n">http</span><span class="o">/</span><span class="mf">1.1</span> <span class="n">sni</span> <span class="n">fc_pp_authority</span>
+       <span class="n">server</span>  <span class="n">s01</span> <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">0</span> <span class="n">ssl</span> <span class="n">ca</span><span class="o">-</span><span class="n">file</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">ca</span><span class="o">-</span><span class="n">bundle</span><span class="o">.</span><span class="n">crt</span> <span class="n">alpn</span> <span class="n">http</span><span class="o">/</span><span class="mf">1.1</span> <span class="n">sni</span> <span class="n">fc_pp_authority</span>
+       <span class="n">server</span>  <span class="n">s02</span> <span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">0</span> <span class="n">ssl</span> <span class="n">ca</span><span class="o">-</span><span class="n">file</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">ca</span><span class="o">-</span><span class="n">bundle</span><span class="o">.</span><span class="n">crt</span> <span class="n">alpn</span> <span class="n">http</span><span class="o">/</span><span class="mf">1.1</span> <span class="n">sni</span> <span class="n">fc_pp_authority</span>
+       <span class="c1"># ...</span>
+       <span class="c1"># A higher number of servers improves TLS session caching</span>
+</pre></div>
+</div>
+<p>Varnish running on the same server/namespace can then use the
+<em>onloader</em> with the <code class="docutils literal notranslate"><span class="pre">.via</span></code> feature (see <a class="reference internal" href="../reference/vcl-backend.html#backend-definition-via"><span class="std std-ref">Attribute .via</span></a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">sslon</span> <span class="p">{</span>
+  <span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/to/sslon&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">backend</span> <span class="n">destination</span> <span class="p">{</span>
+  <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;my.https.service&quot;</span><span class="p">;</span>
+  <span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;443&quot;</span><span class="p">;</span>
+  <span class="o">.</span><span class="n">via</span> <span class="o">=</span> <span class="n">sslon</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">.authority</span></code> attribute can be used to specify the <a class="reference external" href="https://en.wikipedia.org/wiki/Server_Name_Indication">SNI</a> for the
+connection if it differs from <code class="docutils literal notranslate"><span class="pre">.host</span></code>.</p>
+</section>
+<section id="directors">
+<span id="users-guide-advanced-backend-servers-directors"></span><h1>Directors<a class="headerlink" href="#directors" title="Link to this heading">¶</a></h1>
+<p>You can also group several backend into a group of backends. These
+groups are called directors. This will give you increased performance
+and resilience.</p>
+<p>You can define several backends and group them together in a
+director. This requires you to load a VMOD, a Varnish module, and then to
+call certain actions in <cite>vcl_init</cite>.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">directors</span><span class="p">;</span>    <span class="c1"># load the directors</span>
+
+<span class="n">backend</span> <span class="n">server1</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.0.10&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">backend</span> <span class="n">server2</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;192.168.0.11&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">sub</span> <span class="n">vcl_init</span> <span class="p">{</span>
+    <span class="n">new</span> <span class="n">bar</span> <span class="o">=</span> <span class="n">directors</span><span class="o">.</span><span class="n">round_robin</span><span class="p">();</span>
+    <span class="n">bar</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server1</span><span class="p">);</span>
+    <span class="n">bar</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="c1"># send all traffic to the bar director:</span>
+    <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">backend</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This director is a round-robin director. This means the director will
+distribute the incoming requests on a round-robin basis. There is
+also a <em>random</em> director which distributes requests in a, you guessed it,
+random fashion. If that is not enough, you can also write your own director
+(see <a class="reference internal" href="../reference/directors.html#ref-writing-a-director"><span class="std std-ref">Writing a Director</span></a>).</p>
+<p>But what if one of your servers goes down? Can Varnish direct all the
+requests to the healthy server? Sure it can. This is where the Health
+Checks come into play.</p>
+</section>
+<section id="health-checks">
+<span id="users-guide-advanced-backend-servers-health"></span><h1>Health checks<a class="headerlink" href="#health-checks" title="Link to this heading">¶</a></h1>
+<p>Lets set up a director with two backends and health checks. First let
+us define the backends:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">server1</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;server1.example.com&quot;</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">1</span><span class="n">s</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="mi">5</span><span class="n">s</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">backend</span> <span class="n">server2</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;server2.example.com&quot;</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">1</span><span class="n">s</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="mi">5</span><span class="n">s</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>What is new here is the <code class="docutils literal notranslate"><span class="pre">probe</span></code>.  In this example Varnish will check the
+health of each backend every 5 seconds, timing out after 1 second. Each
+poll will send a GET request to /. If 3 out of the last 5 polls succeeded
+the backend is considered healthy, otherwise it will be marked as sick.</p>
+<p>Refer to the <a class="reference internal" href="../reference/vcl-probe.html#reference-vcl-probes"><span class="std std-ref">Backend health probes</span></a> section in the
+<a class="reference internal" href="../reference/vcl.html#vcl-7"><span class="std std-ref">VCL</span></a> documentation for more information.</p>
+<p>Now we define the ‘director’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">directors</span><span class="p">;</span>
+
+<span class="n">sub</span> <span class="n">vcl_init</span> <span class="p">{</span>
+    <span class="n">new</span> <span class="n">vdir</span> <span class="o">=</span> <span class="n">directors</span><span class="o">.</span><span class="n">round_robin</span><span class="p">();</span>
+    <span class="n">vdir</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server1</span><span class="p">);</span>
+    <span class="n">vdir</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You use this <cite>vdir</cite> director as a backend_hint for requests, just like
+you would with a simple backend. Varnish will not send traffic to hosts
+that are marked as unhealthy.</p>
+<p>Varnish can also serve stale content if all the backends are down. See
+<a class="reference internal" href="vcl-grace.html#users-guide-handling-misbehaving-servers"><span class="std std-ref">Grace mode and keep</span></a> for more information on
+how to enable this.</p>
+<p>Please note that Varnish will keep health probes running for all loaded
+VCLs. Varnish will coalesce probes that seem identical - so be careful
+not to change the probe config if you do a lot of VCL loading. Unloading
+the VCL will discard the probes. For more information on how to do this
+please see ref:<cite>reference-vcl-director</cite>.</p>
+</section>
+<section id="layering">
+<h1>Layering<a class="headerlink" href="#layering" title="Link to this heading">¶</a></h1>
+<p>By default, most directors’ <code class="docutils literal notranslate"><span class="pre">.backend()</span></code> methods return a reference
+to the director itself. This allows for layering, like in this
+example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">directors</span><span class="p">;</span>
+
+<span class="n">sub</span> <span class="n">vcl_init</span> <span class="p">{</span>
+    <span class="n">new</span> <span class="n">dc1</span> <span class="o">=</span> <span class="n">directors</span><span class="o">.</span><span class="n">round_robin</span><span class="p">();</span>
+    <span class="n">dc1</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server1A</span><span class="p">);</span>
+    <span class="n">dc1</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server1B</span><span class="p">);</span>
+
+    <span class="n">new</span> <span class="n">dc2</span> <span class="o">=</span> <span class="n">directors</span><span class="o">.</span><span class="n">round_robin</span><span class="p">();</span>
+    <span class="n">dc2</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server2A</span><span class="p">);</span>
+    <span class="n">dc2</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">server2B</span><span class="p">);</span>
+
+    <span class="n">new</span> <span class="n">dcprio</span> <span class="o">=</span> <span class="n">directors</span><span class="o">.</span><span class="n">fallback</span><span class="p">();</span>
+    <span class="n">dcprio</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">dc1</span><span class="p">);</span>
+    <span class="n">dcprio</span><span class="o">.</span><span class="n">add_backend</span><span class="p">(</span><span class="n">dc2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With this initialization, <code class="docutils literal notranslate"><span class="pre">dcprio.backend()</span></code> will resolve to either
+<code class="docutils literal notranslate"><span class="pre">server1A</span></code> or <code class="docutils literal notranslate"><span class="pre">server1B</span></code> if both are healthy or one of them if
+only one is healthy. Only if both are sick will a healthy server from
+<code class="docutils literal notranslate"><span class="pre">dc2</span></code> be returned, if any.</p>
+</section>
+<section id="director-resolution">
+<h1>Director Resolution<a class="headerlink" href="#director-resolution" title="Link to this heading">¶</a></h1>
+<p>The actual resolution happens when the backend connection is prepared
+after a return from <code class="docutils literal notranslate"><span class="pre">vcl_backend_fetch</span> <span class="pre">{}</span></code> or <code class="docutils literal notranslate"><span class="pre">vcl_pipe</span> <span class="pre">{}</span></code>.</p>
+<p>In some cases like server sharding the resolution outcome is required
+already in VCL. For such cases, the <code class="docutils literal notranslate"><span class="pre">.resolve()</span></code> method can be used,
+like in this example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">dcprio</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>When using this statement with the previous example code,
+<code class="docutils literal notranslate"><span class="pre">req.backend_hint</span></code> will be set to one of the <code class="docutils literal notranslate"><span class="pre">server*</span></code> backends or
+the <code class="docutils literal notranslate"><span class="pre">none</span></code> backend if they were all sick.</p>
+<p><code class="docutils literal notranslate"><span class="pre">.resolve()</span></code> works on any object of the <code class="docutils literal notranslate"><span class="pre">BACKEND</span></code> type.</p>
+</section>
+<section id="connection-pooling">
+<span id="users-guide-advanced-backend-connection-pooling"></span><h1>Connection Pooling<a class="headerlink" href="#connection-pooling" title="Link to this heading">¶</a></h1>
+<p>Opening connections to backends always comes at a cost: Depending on
+the type of connection and backend infrastructure, the overhead for
+opening a new connection ranges from pretty low for a local Unix
+domain socket (see <a class="reference internal" href="../reference/vcl-backend.html#backend-definition"><span class="std std-ref">Backend definition</span></a> <code class="docutils literal notranslate"><span class="pre">.path</span></code> attribute) to
+substantial for establishing possibly multiple TCP and/or TLS
+connections over possibly multiple hops and long network
+paths. However relevant the overhead, it certainly always exists.</p>
+<p>So because re-using existing connections can generally be considered
+to reduce overhead and latencies, Varnish pools backend connections by
+default: Whenever a backend task is finished, the used connection is
+not closed but rather added to a pool for later reuse. To avoid a
+connection from being reused, the <code class="docutils literal notranslate"><span class="pre">Connection:</span> <span class="pre">close</span></code> http header
+can be added in <a class="reference internal" href="../reference/vcl-step.html#vcl-backend-fetch"><span class="std std-ref">vcl_backend_fetch</span></a>.</p>
+<p>While backends are defined per VCL, connection pooling works across
+VCLs and even across backends: By default, the identifier for pooled
+connections is constructed from the <code class="docutils literal notranslate"><span class="pre">.host</span></code>/<code class="docutils literal notranslate"><span class="pre">.port</span></code> or
+<code class="docutils literal notranslate"><span class="pre">.path</span></code> attributes of the <a class="reference internal" href="../reference/vcl-backend.html#backend-definition"><span class="std std-ref">Backend definition</span></a> (VMODs can make
+use of custom identifiers). So whenever two backends share the same
+address information, irrespective of which VCLs they are defined in,
+their connections are taken from a common pool.</p>
+<p>If not actively closed by the backend, pooled connections are kept
+open by Varnish until the <a class="reference internal" href="../reference/varnishd.html#ref-param-backend-idle-timeout"><span class="std std-ref">backend_idle_timeout</span></a>
+expires.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Backend servers</a></li>
+<li><a class="reference internal" href="#the-none-backend">The “none” backend</a></li>
+<li><a class="reference internal" href="#multiple-backends">Multiple backends</a></li>
+<li><a class="reference internal" href="#backends-and-virtual-hosts-in-varnish">Backends and virtual hosts in Varnish</a></li>
+<li><a class="reference internal" href="#connecting-through-a-proxy">Connecting Through a Proxy</a></li>
+<li><a class="reference internal" href="#directors">Directors</a></li>
+<li><a class="reference internal" href="#health-checks">Health checks</a></li>
+<li><a class="reference internal" href="#layering">Layering</a></li>
+<li><a class="reference internal" href="#director-resolution">Director Resolution</a></li>
+<li><a class="reference internal" href="#connection-pooling">Connection Pooling</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="vcl-variables.html"
+                          title="previous chapter">Request and response VCL objects</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="vcl-hashing.html"
+                          title="next chapter">Hashing</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users-guide/vcl-backends.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl-hashing.html" title="Hashing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vcl-variables.html" title="Request and response VCL objects"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="vcl.html" >VCL - Varnish Configuration Language</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Backend servers</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

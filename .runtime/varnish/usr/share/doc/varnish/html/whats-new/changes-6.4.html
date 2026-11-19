@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changes in Varnish 6.4.0 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Upgrading to Varnish 6.4.0" href="upgrading-6.4.html" />
+    <link rel="prev" title="Upgrading to Varnish 6.5.0" href="upgrading-6.5.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="upgrading-6.4.html" title="Upgrading to Varnish 6.4.0"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="upgrading-6.5.html" title="Upgrading to Varnish 6.5.0"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Changes in Varnish 6.4.0</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="changes-in-varnish-6-4-0">
+<span id="whatsnew-changes-6-4"></span><h1>Changes in Varnish 6.4.0<a class="headerlink" href="#changes-in-varnish-6-4-0" title="Link to this heading">¶</a></h1>
+<p>For information about updating your current Varnish deployment to the
+new version, see <a class="reference internal" href="upgrading-6.4.html#whatsnew-upgrading-6-4"><span class="std std-ref">Upgrading to Varnish 6.4.0</span></a>.</p>
+<p>A more detailed and technical account of changes in Varnish, with
+links to issues that have been fixed and pull requests that have been
+merged, may be found in the <a class="reference external" href="https://github.com/varnishcache/varnish-cache/blob/master/doc/changes.rst">change log</a>.</p>
+<section id="varnishd">
+<h2>varnishd<a class="headerlink" href="#varnishd" title="Link to this heading">¶</a></h2>
+<section id="bugs">
+<h3>bugs<a class="headerlink" href="#bugs" title="Link to this heading">¶</a></h3>
+<p>Numerous bugs have been fixed.</p>
+</section>
+<section id="generic-parameter-handling">
+<h3>Generic Parameter Handling<a class="headerlink" href="#generic-parameter-handling" title="Link to this heading">¶</a></h3>
+<p>Some parameters have dependencies and those are better documented now. For
+example <a class="reference internal" href="../reference/varnishd.html#ref-param-thread-pool-min"><span class="std std-ref">thread_pool_min</span></a> can’t be increased above
+<a class="reference internal" href="../reference/varnishd.html#ref-param-thread-pool-max"><span class="std std-ref">thread_pool_max</span></a>, which is now indicated as such in the
+manual.</p>
+<p>On a running Varnish instance the <code class="docutils literal notranslate"><span class="pre">param.show</span></code> command will display the
+actual minimum or maximum, but an attempt to <code class="docutils literal notranslate"><span class="pre">param.set</span></code> a parameter above
+or below its dynamic maximum or minimum will mention the failure’s cause in
+the error message:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">varnish</span><span class="o">&gt;</span> <span class="n">param</span><span class="o">.</span><span class="n">show</span> <span class="n">thread_pool_reserve</span>
+<span class="mi">200</span>
+<span class="n">thread_pool_reserve</span>
+        <span class="n">Value</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">0</span> <span class="p">[</span><span class="n">threads</span><span class="p">]</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="n">Maximum</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">95</span>
+
+        <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+
+<span class="n">varnish</span><span class="o">&gt;</span> <span class="n">param</span><span class="o">.</span><span class="n">show</span> <span class="n">thread_pool_min</span>
+<span class="mi">200</span>
+<span class="n">thread_pool_min</span>
+        <span class="n">Value</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">100</span> <span class="p">[</span><span class="n">threads</span><span class="p">]</span> <span class="p">(</span><span class="n">default</span><span class="p">)</span>
+        <span class="n">Maximum</span> <span class="ow">is</span><span class="p">:</span> <span class="mi">5000</span>
+
+        <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+
+<span class="n">varnish</span><span class="o">&gt;</span> <span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">thread_pool_reserve</span> <span class="mi">100</span>
+<span class="mi">106</span>
+<span class="n">Must</span> <span class="n">be</span> <span class="n">no</span> <span class="n">more</span> <span class="n">than</span> <span class="mi">95</span> <span class="p">(</span><span class="mi">95</span><span class="o">%</span> <span class="n">of</span> <span class="n">thread_pool_min</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">attempting</span> <span class="n">to</span> <span class="nb">set</span> <span class="n">param</span> <span class="s1">&#39;thread_pool_reserve&#39;</span> <span class="n">to</span> <span class="s1">&#39;100&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Expect further improvements in future releases.</p>
+</section>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Raised the minimum for the <a class="reference internal" href="../reference/varnishd.html#ref-param-vcl-cooldown"><span class="std std-ref">vcl_cooldown</span></a> parameter
+to 1 second.</p></li>
+</ul>
+</section>
+<section id="changes-in-behavior">
+<h3>Changes in behavior<a class="headerlink" href="#changes-in-behavior" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">if-range</span></code> header is now handled, allowing clients to conditionally
+request a range based on a date or an ETag.</p></li>
+<li><p>Output VCC warnings also for VCLs loaded via the <code class="docutils literal notranslate"><span class="pre">varnishd</span> <span class="pre">-f</span></code>
+option</p></li>
+</ul>
+</section>
+</section>
+<section id="changes-to-vcl">
+<h2>Changes to VCL<a class="headerlink" href="#changes-to-vcl" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>New syntax for “no backend”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">dummy</span> <span class="n">none</span><span class="p">;</span>
+
+<span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">dummy</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be used whenever a backend is needed for syntactical
+reasons. The <code class="docutils literal notranslate"><span class="pre">none</span></code> backend will fail any attempt to use it.
+The other purpose is to avoid the declaration of a dummy backend
+when one is not needed: for example an active VCL only passing
+requests to other VCLs with the <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">(vcl(...))</span></code> syntax or
+setups relying on dynamic backends from a VMOD.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">std.rollback(bereq)</span></code> is now safe to use, see <a class="reference internal" href="../reference/vmod_std.html#vmod-std-3"><span class="std std-ref">VMOD std - Varnish Standard Module</span></a>
+for details.</p></li>
+<li><p>Deliberately closing backend requests through <code class="docutils literal notranslate"><span class="pre">return(abandon)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">return(fail)</span></code> or <code class="docutils literal notranslate"><span class="pre">return(error)</span></code> is no longer accounted as a
+fetch failure.</p></li>
+<li><p>Numerical expressions can now be negative or negated as in
+<code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">resp.http.ok</span> <span class="pre">=</span> <span class="pre">-std.integer(&quot;-200&quot;);</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">+=</span></code> operator is now available for headers and response bodies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="n">resp</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">header</span> <span class="o">+=</span> <span class="s2">&quot;string&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<section id="vcl-variables">
+<h3>VCL variables<a class="headerlink" href="#vcl-variables" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Add more vcl control over timeouts with the <code class="docutils literal notranslate"><span class="pre">sess.timeout_linger</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sess.send_timeout</span></code> and <code class="docutils literal notranslate"><span class="pre">sess.idle_send_timeout</span></code> variables
+corresponding the parameters by the same names.</p></li>
+</ul>
+</section>
+</section>
+<section id="vmods">
+<h2>VMODs<a class="headerlink" href="#vmods" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>Imported <a class="reference internal" href="../reference/vmod_cookie.html#vmod-cookie-3"><span class="std std-ref">VMOD cookie - Varnish Cookie Module</span></a> from <a class="reference external" href="https://github.com/varnish/varnish-modules">varnish_modules</a></p>
+<p>The previously deprecated function <code class="docutils literal notranslate"><span class="pre">cookie.filter_except()</span></code> has
+been removed during import. It was replaced by <code class="docutils literal notranslate"><span class="pre">cookie.keep()</span></code></p>
+</li>
+</ul>
+</section>
+<section id="varnishlog">
+<h2>varnishlog<a class="headerlink" href="#varnishlog" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">Notice</span></code> VSL tag has been added.</p></li>
+<li><p>Log records can safely have empty fields or fields containing blanks
+if they are delimited by “double quotes”. This was applied to
+<code class="docutils literal notranslate"><span class="pre">SessError</span></code> and <code class="docutils literal notranslate"><span class="pre">Backend_health</span></code>.</p></li>
+</ul>
+</section>
+<section id="varnishadm">
+<h2>varnishadm<a class="headerlink" href="#varnishadm" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>New <code class="docutils literal notranslate"><span class="pre">pid</span></code> command in the Varnish CLI, to get the master and optionally
+cache process PIDs, for example from <code class="docutils literal notranslate"><span class="pre">varnishadm</span></code>.</p></li>
+</ul>
+</section>
+<section id="varnishstat">
+<h2>varnishstat<a class="headerlink" href="#varnishstat" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Add vi-style CTRL-f / CTRL-b for page down/up to interactive
+<code class="docutils literal notranslate"><span class="pre">varnishstat</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">MAIN.sess_drop</span></code> counter is gone.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">rx_close_idle</span></code> counter for separate accounting when
+<code class="docutils literal notranslate"><span class="pre">sess.timeout_idle</span></code> / <a class="reference internal" href="../reference/varnishd.html#ref-param-timeout-idle"><span class="std std-ref">timeout_idle</span></a> is reached.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sess.send_timeout</span></code> / <a class="reference internal" href="../reference/varnishd.html#ref-param-send-timeout"><span class="std std-ref">send_timeout</span></a> being reached
+is no longer reported as <code class="docutils literal notranslate"><span class="pre">MAIN.sc_rem_close</span></code>, but as
+<code class="docutils literal notranslate"><span class="pre">MAIN.sc_tx_error</span></code>.</p></li>
+</ul>
+</section>
+<section id="changes-for-developers-and-vmod-authors">
+<h2>Changes for developers and VMOD authors<a class="headerlink" href="#changes-for-developers-and-vmod-authors" title="Link to this heading">¶</a></h2>
+<section id="general">
+<h3>General<a class="headerlink" href="#general" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>New configure switch: <code class="docutils literal notranslate"><span class="pre">--with-unwind</span></code>. Alpine linux appears to offer a
+<code class="docutils literal notranslate"><span class="pre">libexecinfo</span></code> implementation that crashes when called by Varnish, this
+offers the alternative of using <code class="docutils literal notranslate"><span class="pre">libunwind</span></code> instead.</p></li>
+<li><p>The option <code class="docutils literal notranslate"><span class="pre">varnishtest</span> <span class="pre">-W</span></code> is gone, the same can be achieved with
+<code class="docutils literal notranslate"><span class="pre">varnishtest</span> <span class="pre">-p</span> <span class="pre">debug=+witness</span></code>. A <code class="docutils literal notranslate"><span class="pre">witness.sh</span></code> script is available
+in the source tree to generate a graphviz dot file and detect potential
+lock cycles from the test logs.</p></li>
+<li><p>Introduced <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">reqtop</span></code> to hold information on the ESI top request
+and <code class="docutils literal notranslate"><span class="pre">PRIV_TOP</span></code>.</p></li>
+<li><p>New or improved Coccinelle semantic patches that may be useful for
+VMOD or utilities authors.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">VSLs()</span></code> and <code class="docutils literal notranslate"><span class="pre">VSLbs()</span></code> functions for logging <code class="docutils literal notranslate"><span class="pre">STRANDS</span></code> to
+VSL.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">WS_VSB_new()</span></code> / <code class="docutils literal notranslate"><span class="pre">WS_VSB_finish()</span></code> for VSBs on workspaces.</p></li>
+<li><p>added <code class="docutils literal notranslate"><span class="pre">v_dont_optimize</span></code> attribute macro to instruct compilers
+(only gcc as of this release) to not optimize a function.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">VSB_tofile()</span></code> to <code class="docutils literal notranslate"><span class="pre">libvarnishapi</span></code>.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>VMODs<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>It is now possible for VMOD authors to customize the connection pooling
+of a dynamic backend. A hash is now computed to determine uniqueness and
+a backend declaration can contribute arbitrary data to influence the pool.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRB_Iterate()</span></code> signature has changed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_fail()</span></code> now also works from director code.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body_status</span></code> and <code class="docutils literal notranslate"><span class="pre">req_body_status</span></code> have been collapsed into one
+type. In particular, the <code class="docutils literal notranslate"><span class="pre">REQ_BODY_*</span></code> enums now have been replaced
+with <code class="docutils literal notranslate"><span class="pre">BS_*</span></code>.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">VRT_AllocStrandsWS()</span></code> as a utility function to allocate
+STRANDS on a workspace.</p></li>
+</ul>
+<p><em>eof</em></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Changes in Varnish 6.4.0</a><ul>
+<li><a class="reference internal" href="#varnishd">varnishd</a><ul>
+<li><a class="reference internal" href="#bugs">bugs</a></li>
+<li><a class="reference internal" href="#generic-parameter-handling">Generic Parameter Handling</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#changes-in-behavior">Changes in behavior</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#changes-to-vcl">Changes to VCL</a><ul>
+<li><a class="reference internal" href="#vcl-variables">VCL variables</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vmods">VMODs</a></li>
+<li><a class="reference internal" href="#varnishlog">varnishlog</a></li>
+<li><a class="reference internal" href="#varnishadm">varnishadm</a></li>
+<li><a class="reference internal" href="#varnishstat">varnishstat</a></li>
+<li><a class="reference internal" href="#changes-for-developers-and-vmod-authors">Changes for developers and VMOD authors</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#id1">VMODs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="upgrading-6.5.html"
+                          title="previous chapter">Upgrading to Varnish 6.5.0</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="upgrading-6.4.html"
+                          title="next chapter">Upgrading to Varnish 6.4.0</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/changes-6.4.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="upgrading-6.4.html" title="Upgrading to Varnish 6.4.0"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="upgrading-6.5.html" title="Upgrading to Varnish 6.5.0"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Changes in Varnish 6.4.0</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+prefix=/usr
+exec_prefix=${prefix}
+bindir=${exec_prefix}/bin
+sbindir=${exec_prefix}/sbin
+libdir=/usr/lib
+sysconfdir=/etc
+pkgsysconfdir=${sysconfdir}/varnish
+includedir=${prefix}/include
+pkgincludedir=${includedir}/varnish
+datarootdir=${prefix}/share
+datadir=${datarootdir}
+pkgdatadir=${datadir}/varnish
+vcldir=${pkgdatadir}/vcl
+vmoddir=${libdir}/varnish/vmods
+vmodtool=${pkgdatadir}/vmodtool.py
+vsctool=${pkgdatadir}/vsctool.py
+
+Name: VarnishAPI
+Description: Varnish API
+Version: 7.4.3
+Cflags: -I${pkgincludedir}
+Libs: -L${libdir} -lvarnishapi

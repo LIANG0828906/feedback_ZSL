@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>VCL-probe &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Varnish Processing States" href="states.html" />
+    <link rel="prev" title="VCL-backends" href="vcl-backend.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="states.html" title="Varnish Processing States"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vcl-backend.html" title="VCL-backends"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Reference Manual</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VCL-probe</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="vcl-probe">
+<span id="vcl-probe-7"></span><h1>VCL-probe<a class="headerlink" href="#vcl-probe" title="Link to this heading">¶</a></h1>
+<section id="configuring-backend-health-probes">
+<h2>Configuring Backend Health Probes<a class="headerlink" href="#configuring-backend-health-probes" title="Link to this heading">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Manual section<span class="colon">:</span></dt>
+<dd class="field-odd"><p>7</p>
+</dd>
+</dl>
+<section id="backend-health-probes">
+<span id="reference-vcl-probes"></span><h3>Backend health probes<a class="headerlink" href="#backend-health-probes" title="Link to this heading">¶</a></h3>
+<p>Varnish can be configured to periodically send a request to test if a
+backend is answering and thus “healthy”.</p>
+<p>Probes can be configured per backend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">foo</span> <span class="p">{</span>
+    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>They can be named and shared between backends:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">probe</span> <span class="n">light</span> <span class="p">{</span>
+    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">backend</span> <span class="n">foo</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="n">light</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">backend</span> <span class="n">bar</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">probe</span> <span class="o">=</span> <span class="n">light</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Or a <code class="docutils literal notranslate"><span class="pre">default</span></code> probe can be defined, which applies to all backends
+without a specific <code class="docutils literal notranslate"><span class="pre">.probe</span></code> configured:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">probe</span> <span class="n">default</span> <span class="p">{</span>
+    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The basic syntax is the same as for backends:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">probe</span> <span class="n">name</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">attribute1</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">attribute2</span> <span class="o">=</span> <span class="s2">&quot;value&quot;</span><span class="p">;</span>
+    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There are no mandatory attributes, they all have defaults.</p>
+</section>
+<section id="attribute-url">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.url</span></code><a class="headerlink" href="#attribute-url" title="Link to this heading">¶</a></h3>
+<p>The URL to query.  Defaults to <code class="docutils literal notranslate"><span class="pre">/</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/health-probe&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="attribute-request">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.request</span></code><a class="headerlink" href="#attribute-request" title="Link to this heading">¶</a></h3>
+<p>Can be used to specify a full HTTP/1.1 request to be sent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="s2">&quot;GET / HTTP/1.1&quot;</span>
+    <span class="s2">&quot;Host: example.com&quot;</span>
+    <span class="s2">&quot;X-Magic: We&#39;re fine with this.&quot;</span>
+    <span class="s2">&quot;Connection: close&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Each of the strings will have <code class="docutils literal notranslate"><span class="pre">CRNL</span></code> appended and a final HTTP
+header block terminating <code class="docutils literal notranslate"><span class="pre">CRNL</span></code> will be appended as well.</p>
+<p>Because connection shutdown is part of the health check,
+<code class="docutils literal notranslate"><span class="pre">Connection:</span> <span class="pre">close</span></code> is mandatory.</p>
+</section>
+<section id="attribute-expected-response">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.expected_response</span></code><a class="headerlink" href="#attribute-expected-response" title="Link to this heading">¶</a></h3>
+<p>The expected HTTP status, defaults to <code class="docutils literal notranslate"><span class="pre">200</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">expected_response</span> <span class="o">=</span> <span class="mi">418</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="attribute-expect-close">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.expect_close</span></code><a class="headerlink" href="#attribute-expect-close" title="Link to this heading">¶</a></h3>
+<p>Whether or not to expect the backend to close the underlying connection.</p>
+<p>Accepts <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>, defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">expect_close</span> <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Warning: when the backend does not close the connection,
+setting <code class="docutils literal notranslate"><span class="pre">expect_close</span></code> to <code class="docutils literal notranslate"><span class="pre">false</span></code> makes probe tasks wait until
+they time out before inspecting the response.</p>
+</section>
+<section id="attribute-timeout">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.timeout</span></code><a class="headerlink" href="#attribute-timeout" title="Link to this heading">¶</a></h3>
+<p>How fast the probe must succeed, default is two seconds:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">10</span><span class="n">s</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="attribute-interval">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.interval</span></code><a class="headerlink" href="#attribute-interval" title="Link to this heading">¶</a></h3>
+<p>Time between probes, default is five seconds:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="mi">1</span><span class="n">m</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="the-backend-health-shift-register">
+<h3>The backend health shift register<a class="headerlink" href="#the-backend-health-shift-register" title="Link to this heading">¶</a></h3>
+<p>Backend health probes uses a 64 stage shift register to remember the
+most recent health probes and to evaluate the total health of the backend.</p>
+<p>In the CLI, a good backend health status looks like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>varnish&gt; backend.list -p boot.backend
+Backend name    Admin    Probe    Health     Last change
+boot.backend    probe    5/5      healthy    Wed, 13 Jan 2021 10:31:50 GMT
+ Current states  good:  5 threshold:  4 window:  5
+  Average response time of good probes: 0.000793
+  Oldest ================================================== Newest
+  4444444444444444444444444444444444444444444444444444444444444444 Good IPv4
+  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Good Xmit
+  RRRRRRRRRRRRRRRRRRRRRRR----RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR Good Recv
+  HHHHHHHHHHHHHHHHHHHHHHH--------HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH Happy
+</pre></div>
+</div>
+<p>Starting from the bottom, the last line shows that this backend has been
+declared “Happy” for most the 64 health probes, but there were some
+trouble some while ago.</p>
+<p>However, in this case the <code class="docutils literal notranslate"><span class="pre">.window</span></code> is configured to five, and the
+<code class="docutils literal notranslate"><span class="pre">.threshold</span></code> is set to four, so at this point in time, the backend
+is considered fully healthy.</p>
+<p>An additional <code class="docutils literal notranslate"><span class="pre">.initial</span></code> fills that many “happy” entries in the
+shift register when the VCL is loaded, so that backends can quickly
+become healthy, even if their health is normally considered over
+many samples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="mi">1</span><span class="n">s</span><span class="p">;</span>
+<span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+<span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
+<span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This backend will be considered healthy if three out of four health
+probes in the last minute were good, but it becomes healthy as soon
+as two good probes have happened after the VCL was loaded.</p>
+<p>The default values are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.window</span></code> = 8</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.threshold</span></code> = 3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.initial</span></code> = one less than <code class="docutils literal notranslate"><span class="pre">.threshold</span></code></p></li>
+</ul>
+<p>Note that the default <code class="docutils literal notranslate"><span class="pre">.initial</span></code> means that the backend will be marked
+unhealthy until the first probe response come back successful.
+This means that for backends created on demand (by vmods) cannot use the
+default value for <code class="docutils literal notranslate"><span class="pre">.initial</span></code>, as the freshly created backend would very
+likely still be unhealthy when the backend request happens.</p>
+<section id="see-also">
+<h4>SEE ALSO<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference internal" href="varnishd.html#varnishd-1"><span class="std std-ref">varnishd</span></a></p></li>
+<li><p><a class="reference internal" href="vcl.html#vcl-7"><span class="std std-ref">VCL</span></a></p></li>
+<li><p><a class="reference internal" href="vcl-backend.html#vcl-backend-7"><span class="std std-ref">VCL-backends</span></a></p></li>
+<li><p><a class="reference internal" href="vmod_directors.html#vmod-directors-3"><span class="std std-ref">VMOD directors - Varnish Directors Module</span></a></p></li>
+<li><p><a class="reference internal" href="vmod_std.html#vmod-std-3"><span class="std std-ref">VMOD std - Varnish Standard Module</span></a></p></li>
+</ul>
+</section>
+<section id="history">
+<h4>HISTORY<a class="headerlink" href="#history" title="Link to this heading">¶</a></h4>
+<p>VCL was developed by Poul-Henning Kamp in cooperation with Verdens
+Gang AS, Redpill Linpro and Varnish Software.  This manual page is
+written by Per Buer, Poul-Henning Kamp, Martin Blix Grydeland,
+Kristian Lyngstøl, Lasse Karstensen and others.</p>
+</section>
+<section id="copyright">
+<h4>COPYRIGHT<a class="headerlink" href="#copyright" title="Link to this heading">¶</a></h4>
+<p>This document is licensed under the same license as Varnish
+itself. See LICENSE for details.</p>
+<ul class="simple">
+<li><p>Copyright (c) 2006 Verdens Gang AS</p></li>
+<li><p>Copyright (c) 2006-2021 Varnish Software AS</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">VCL-probe</a><ul>
+<li><a class="reference internal" href="#configuring-backend-health-probes">Configuring Backend Health Probes</a><ul>
+<li><a class="reference internal" href="#backend-health-probes">Backend health probes</a></li>
+<li><a class="reference internal" href="#attribute-url">Attribute <code class="docutils literal notranslate"><span class="pre">.url</span></code></a></li>
+<li><a class="reference internal" href="#attribute-request">Attribute <code class="docutils literal notranslate"><span class="pre">.request</span></code></a></li>
+<li><a class="reference internal" href="#attribute-expected-response">Attribute <code class="docutils literal notranslate"><span class="pre">.expected_response</span></code></a></li>
+<li><a class="reference internal" href="#attribute-expect-close">Attribute <code class="docutils literal notranslate"><span class="pre">.expect_close</span></code></a></li>
+<li><a class="reference internal" href="#attribute-timeout">Attribute <code class="docutils literal notranslate"><span class="pre">.timeout</span></code></a></li>
+<li><a class="reference internal" href="#attribute-interval">Attribute <code class="docutils literal notranslate"><span class="pre">.interval</span></code></a></li>
+<li><a class="reference internal" href="#the-backend-health-shift-register">The backend health shift register</a><ul>
+<li><a class="reference internal" href="#see-also">SEE ALSO</a></li>
+<li><a class="reference internal" href="#history">HISTORY</a></li>
+<li><a class="reference internal" href="#copyright">COPYRIGHT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="vcl-backend.html"
+                          title="previous chapter">VCL-backends</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="states.html"
+                          title="next chapter">Varnish Processing States</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/vcl-probe.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="states.html" title="Varnish Processing States"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vcl-backend.html" title="VCL-backends"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Reference Manual</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VCL-probe</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Ignoring the Vary header for bots &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="What’s new / Upgrading" href="../whats-new/index.html" />
+    <link rel="prev" title="Using extra digits in resp.status" href="resp-status.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../whats-new/index.html" title="What’s new / Upgrading"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="resp-status.html" title="Using extra digits in resp.status"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">VCL Design Patterns</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ignoring the Vary header for bots</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ignoring-the-vary-header-for-bots">
+<h1>Ignoring the Vary header for bots<a class="headerlink" href="#ignoring-the-vary-header-for-bots" title="Link to this heading">¶</a></h1>
+<p>Varnish supports HTTP variants out of the box, but the <em>Vary</em> header is
+somewhat limited since it operates on complete header values. If you want for
+example to conduct an A/B testing campaign or perform blue/green deployment
+you can make clients “remember” their path with a first-party cookie.</p>
+<p>When a search engine bot asks for contents however, there’s a high chance that
+they don’t process cookies and in all likelihood you would prefer to serve a
+response quickly. In that case you would probably prefer not to even try to
+attribute a category to the client, but in that case you create a new variant
+in your cache that is none of A, B, blue, green, or whatever your backend
+serves.</p>
+<p>If the way content is served makes no difference to the bot, because you
+changed the color of a button or something else orthogonal to the content
+itself, then you risk a cache miss with the detrimental effects of adding a
+needless variant to the cache and serving it with extra latency.</p>
+<p>If latency is paramount, you can use <code class="docutils literal notranslate"><span class="pre">req.hash_ignore_vary</span></code> to opt out of
+the Vary match during the lookup and get the freshest variant.</p>
+<p>Ignoring how the cookie is set, and assuming the backend always provides an
+accurate <em>Cache-Control</em> even when cookies are present, below is an example of
+an A/B testing setup where bots are served the freshest variant:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cookie</span><span class="p">;</span>
+
+<span class="n">include</span> <span class="s2">&quot;devicedetect.vcl&quot;</span><span class="p">;</span>
+
+<span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="n">call</span> <span class="n">devicedetect</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">X</span><span class="o">-</span><span class="n">UA</span><span class="o">-</span><span class="n">Device</span> <span class="o">~</span> <span class="s2">&quot;bot&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">hash_ignore_vary</span> <span class="o">=</span> <span class="n">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">sub</span> <span class="n">vcl_req_cookie</span> <span class="p">{</span>
+    <span class="n">cookie</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">Cookie</span><span class="p">);</span>
+    <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">X</span><span class="o">-</span><span class="n">AB</span><span class="o">-</span><span class="n">Test</span> <span class="o">=</span> <span class="n">cookie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ab-test&quot;</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">sub</span> <span class="n">vcl_deliver</span> <span class="p">{</span>
+    <span class="n">unset</span> <span class="n">resp</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">Vary</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is also assumed that the backend replies with a <code class="docutils literal notranslate"><span class="pre">Vary:</span> <span class="pre">X-AB-Test</span></code> header
+and varies on no other header.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="resp-status.html"
+                          title="previous chapter">Using extra digits in resp.status</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../whats-new/index.html"
+                          title="next chapter">What’s new / Upgrading</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/vcl-design-patterns/req-hash_ignore_vary.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../whats-new/index.html" title="What’s new / Upgrading"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="resp-status.html" title="Using extra digits in resp.status"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >VCL Design Patterns</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Ignoring the Vary header for bots</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

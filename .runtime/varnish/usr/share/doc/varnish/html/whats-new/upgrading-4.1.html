@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upgrading to Varnish 4.1 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Upgrading to Varnish 4.0" href="upgrading-4.0.html" />
+    <link rel="prev" title="Changes in Varnish 4.1" href="changes-4.1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="upgrading-4.0.html" title="Upgrading to Varnish 4.0"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="changes-4.1.html" title="Changes in Varnish 4.1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 4.1</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="upgrading-to-varnish-4-1">
+<span id="whatsnew-upgrading-4-1"></span><h1>Upgrading to Varnish 4.1<a class="headerlink" href="#upgrading-to-varnish-4-1" title="Link to this heading">¶</a></h1>
+<section id="changes-to-vcl">
+<h2>Changes to VCL<a class="headerlink" href="#changes-to-vcl" title="Link to this heading">¶</a></h2>
+<section id="data-type-conversion-functions-now-take-a-fallback">
+<h3>Data type conversion functions now take a fallback<a class="headerlink" href="#data-type-conversion-functions-now-take-a-fallback" title="Link to this heading">¶</a></h3>
+<p>Data type conversion functions in the std vmod now takes an additional
+argument <em>fallback</em>, which is returned if the conversion does not succeed.</p>
+</section>
+<section id="version-statement-is-kept">
+<h3>Version statement is kept<a class="headerlink" href="#version-statement-is-kept" title="Link to this heading">¶</a></h3>
+<p>The VCL syntax has not chanced significantly, and as such the Varnish 4.0
+version marker is kept for Varnish 4.1.</p>
+<p>One of the initial lines in a Varnish 4.1 VCL should read:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vcl</span> <span class="mf">4.0</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="remote-address-accessors">
+<h3>Remote address accessors<a class="headerlink" href="#remote-address-accessors" title="Link to this heading">¶</a></h3>
+<p>New in 4.1 is the <cite>local.ip</cite> and <cite>remote.ip</cite> representing the (local) TCP
+connection endpoints.</p>
+<p>With PROXY listeners the <cite>server.ip</cite> and <cite>client.ip</cite> are set from the PROXY
+preamble. On normal HTTP listeners the behaviour is unchanged.</p>
+</section>
+</section>
+<section id="management-interface">
+<h2>Management interface<a class="headerlink" href="#management-interface" title="Link to this heading">¶</a></h2>
+<p>The management interface enabled with <code class="docutils literal notranslate"><span class="pre">-M</span></code> previously supported the telnet
+protocol.</p>
+<p>Support for telnet control sequences have been retired. Replacement clients
+like netcat or (preferred) <code class="docutils literal notranslate"><span class="pre">varnishadm</span></code> should be used instead.</p>
+</section>
+<section id="runtime-users-and-groups">
+<h2>Runtime users and groups<a class="headerlink" href="#runtime-users-and-groups" title="Link to this heading">¶</a></h2>
+<p>With the new jail support, an additional runtime user (<cite>vcache</cite>) should be used
+for the Varnish worker child process.</p>
+<p>Additionally, the <code class="docutils literal notranslate"><span class="pre">varnishlog</span></code>, <code class="docutils literal notranslate"><span class="pre">varnishncsa</span></code> and other Varnish shared log
+utilities must now be run in a context with <cite>varnish</cite> group membership.</p>
+</section>
+<section id="changes-to-parameters">
+<h2>Changes to parameters<a class="headerlink" href="#changes-to-parameters" title="Link to this heading">¶</a></h2>
+<p><cite>vcl_cooldown</cite> is new, and decides how long time a VCL is kept warm after being
+replaced as the active VCL.</p>
+<p>The following parameters have been retired:</p>
+<ul class="simple">
+<li><p><cite>group</cite> (security revamp)</p></li>
+<li><p><cite>group_cc</cite> (security revamp)</p></li>
+<li><p><cite>listen_address</cite> (security revamp)</p></li>
+<li><p><cite>pool_vbc</cite></p></li>
+<li><p><cite>timeout_req</cite> - merged with <cite>timeout_idle</cite>.</p></li>
+<li><p><cite>user</cite> (security revamp)</p></li>
+</ul>
+<p>Minor changes of default values on <cite>workspace_session</cite> and <cite>vsl_mask</cite>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Upgrading to Varnish 4.1</a><ul>
+<li><a class="reference internal" href="#changes-to-vcl">Changes to VCL</a><ul>
+<li><a class="reference internal" href="#data-type-conversion-functions-now-take-a-fallback">Data type conversion functions now take a fallback</a></li>
+<li><a class="reference internal" href="#version-statement-is-kept">Version statement is kept</a></li>
+<li><a class="reference internal" href="#remote-address-accessors">Remote address accessors</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#management-interface">Management interface</a></li>
+<li><a class="reference internal" href="#runtime-users-and-groups">Runtime users and groups</a></li>
+<li><a class="reference internal" href="#changes-to-parameters">Changes to parameters</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="changes-4.1.html"
+                          title="previous chapter">Changes in Varnish 4.1</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="upgrading-4.0.html"
+                          title="next chapter">Upgrading to Varnish 4.0</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/upgrading-4.1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="upgrading-4.0.html" title="Upgrading to Varnish 4.0"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="changes-4.1.html" title="Changes in Varnish 4.1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 4.1</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

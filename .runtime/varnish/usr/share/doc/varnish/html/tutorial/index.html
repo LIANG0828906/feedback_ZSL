@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The Varnish Tutorial &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Varnish: The beef in the sandwich" href="introduction.html" />
+    <link rel="prev" title="Platform specific notes" href="../installation/platformnotes.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="Varnish: The beef in the sandwich"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../installation/platformnotes.html" title="Platform specific notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Varnish Tutorial</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="the-varnish-tutorial">
+<span id="tutorial-index"></span><h1>The Varnish Tutorial<a class="headerlink" href="#the-varnish-tutorial" title="Link to this heading">¶</a></h1>
+<p>This section covers the Varnish basics in a tutorial form. It will cover what Varnish is and how it
+works. It also covers how to get Varnish up and running. After this section you probably would want to
+continue with the users guide (<a class="reference internal" href="../users-guide/index.html#users-guide-index"><span class="std std-ref">The Varnish Users Guide</span></a>).</p>
+<p>If you’re reading this on the web note the “Next topic” and “Previous
+topic” links on the right side of each page.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Varnish: The beef in the sandwich</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#how-varnish-works">How Varnish works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#caching-with-varnish">Caching with Varnish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#content-composition-with-varnish">Content Composition with Varnish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#content-policy-with-varnish">Content Policy with Varnish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#varnish-is-general-purpose">Varnish is general purpose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="starting_varnish.html">Starting Varnish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="putting_varnish_on_port_80.html">Put Varnish on port 80</a></li>
+<li class="toctree-l1"><a class="reference internal" href="putting_varnish_on_port_80.html#restarting-varnish-again">Restarting Varnish again</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backend_servers.html">Backend servers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="peculiarities.html">Peculiarities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="now_what.html">Now what?</a></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../installation/platformnotes.html"
+                          title="previous chapter">Platform specific notes</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="introduction.html"
+                          title="next chapter">Varnish: The beef in the sandwich</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="Varnish: The beef in the sandwich"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../installation/platformnotes.html" title="Platform specific notes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Varnish Tutorial</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

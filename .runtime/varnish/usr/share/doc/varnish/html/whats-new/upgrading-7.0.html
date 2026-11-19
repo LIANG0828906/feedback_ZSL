@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upgrading to Varnish 7.0 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changes in Varnish 6.6" href="changes-6.6.html" />
+    <link rel="prev" title="Changes in Varnish 7.0" href="changes-7.0.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changes-6.6.html" title="Changes in Varnish 6.6"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.0.html" title="Changes in Varnish 7.0"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.0</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="upgrading-to-varnish-7-0">
+<span id="whatsnew-upgrading-7-0"></span><h1>Upgrading to Varnish 7.0<a class="headerlink" href="#upgrading-to-varnish-7-0" title="Link to this heading">¶</a></h1>
+<section id="pcre2">
+<h2>PCRE2<a class="headerlink" href="#pcre2" title="Link to this heading">¶</a></h2>
+<p>The migration from PCRE to PCRE2 led to many changes, starting with a
+change of build dependencies. See the current installation notes for
+package dependencies on various platforms.</p>
+<p>Previously the Just In Time (jit) compilation of regular expressions was
+always enabled at run time if it was present during the build. From now
+on jit compilation is enabled by default, but can be disabled with the
+<code class="docutils literal notranslate"><span class="pre">--disable-pcre2-jit</span></code> configure option. Once enabled, jit compilation
+is merely attempted and failures are ignored since they are not essential.</p>
+<p>The new <code class="docutils literal notranslate"><span class="pre">varnishd</span></code> parameter <code class="docutils literal notranslate"><span class="pre">pcre2_jit_compilation</span></code> controls whether
+jit compilation should be attempted and has no effect if jit support was
+disabled at configure time.</p>
+<p>See <a class="reference internal" href="../reference/varnishd.html#ref-param-pcre2-jit-compilation"><span class="std std-ref">pcre2_jit_compilation</span></a>.</p>
+<p>The former parameters <code class="docutils literal notranslate"><span class="pre">pcre_match_limit</span></code> and <code class="docutils literal notranslate"><span class="pre">pcre_match_limit_recursion</span></code>
+were renamed to <code class="docutils literal notranslate"><span class="pre">pcre2_match_limit</span></code> and <code class="docutils literal notranslate"><span class="pre">pcre2_depth_limit</span></code>. With older
+PCRE2 libraries, it is possible to see the depth limit being referred to as
+recursion limit in error messages.</p>
+<p>See <a class="reference internal" href="../reference/varnishd.html#ref-param-pcre2-depth-limit"><span class="std std-ref">pcre2_depth_limit</span></a> and <a class="reference internal" href="../reference/varnishd.html#ref-param-pcre2-depth-limit"><span class="std std-ref">pcre2_depth_limit</span></a>
+for more information.</p>
+<p>The syntax of regular expression should be the same, but it is possible to
+run into subtle differences. We are aware one such difference, PCRE2 fails
+the compilation of unknown escape sequences. For example PCRE interprets
+<code class="docutils literal notranslate"><span class="pre">&quot;\T&quot;</span></code> as <code class="docutils literal notranslate"><span class="pre">&quot;T&quot;</span></code> and ignores the escape character, but PCRE2 sees it as
+a syntax error. The solution is to simply use <code class="docutils literal notranslate"><span class="pre">&quot;T&quot;</span></code> and in general remove
+all spurious escape characters.</p>
+<p>While PCRE2 can capture named groups and has its own substitution syntax
+where captured groups can be referred to by position with <code class="docutils literal notranslate"><span class="pre">$&lt;n&gt;</span></code> or even
+by name. The substitution syntax for VCL’s <code class="docutils literal notranslate"><span class="pre">regsub()</span></code> remains the same and
+captured groups still require the <code class="docutils literal notranslate"><span class="pre">\&lt;n&gt;</span></code> syntax where <code class="docutils literal notranslate"><span class="pre">\1</span></code> refers to
+the first group.</p>
+<p>For this reason, there shouldn’t be changes required to existing VCL, ban
+expressions, VSL queries, or anything working with regular expression in
+Varnish, except maybe where PCRE2 seems to be stricter and refuses invalid
+escape sequences.</p>
+<p>VMOD authors manipulating <code class="docutils literal notranslate"><span class="pre">VCL_REGEX</span></code> arguments should not be affected by
+this migration if they only use the VRT API. However, the underlying VRE API
+was substantially changed and the new revision of VRE allowed to cover all
+the Varnish use cases so that <code class="docutils literal notranslate"><span class="pre">libvarnish</span></code> is now the only binary linking
+<em>directly</em> to <code class="docutils literal notranslate"><span class="pre">libpcre2-8</span></code>.</p>
+<p>The migration implies that bans persisted in the deprecated persistent storage
+are no longer compatible and a new deprecated persistent storage should be
+rebuilt from scratch.</p>
+</section>
+<section id="structured-fields-numbers">
+<h2>Structured Fields numbers<a class="headerlink" href="#structured-fields-numbers" title="Link to this heading">¶</a></h2>
+<p>VCL types INTEGER and REAL now map respectively to Structured Fields integer
+and decimal numbers. Numbers outside of the Structured Fields bounds are no
+longer accepted by the VCL compiler and the various conversion functions from
+vmod_std will fail the transaction for numbers out of bounds.</p>
+<p>The scientific notation is no longer supported, for example <code class="docutils literal notranslate"><span class="pre">12.34e+3</span></code> must
+be spelled out as <code class="docutils literal notranslate"><span class="pre">12340</span></code> instead.</p>
+</section>
+<section id="memory-footprint">
+<h2>Memory footprint<a class="headerlink" href="#memory-footprint" title="Link to this heading">¶</a></h2>
+<p>In order to lower the likelihood of flushing the logs of a single task more
+than once, the default value for <code class="docutils literal notranslate"><span class="pre">vsl_buffer</span></code> was increased to 16kB. This
+should generally result in better performance with tools like <code class="docutils literal notranslate"><span class="pre">varnishlog</span></code>
+or <code class="docutils literal notranslate"><span class="pre">varnishncsa</span></code> except for <code class="docutils literal notranslate"><span class="pre">raw</span></code> grouping.</p>
+<p>To accommodate this extra workspace consumption and add even more headroom
+on top of it, <code class="docutils literal notranslate"><span class="pre">workspace_client</span></code> and <code class="docutils literal notranslate"><span class="pre">workspace_backend</span></code> both increased
+to 96kB by default.</p>
+<p>The PCRE2 jit compiler produces code that consumes more stack, so the default
+value of <code class="docutils literal notranslate"><span class="pre">thread_pool_stack</span></code> was increased to 80kB, and to 64kB on 32bit
+systems.</p>
+<p>If you are relying on default values, this will result in an increase of
+virtual memory consumption proportional to the number of concurrent client
+requests and backend fetches being processed. This memory is not accounted
+for in the storage limits that can be applied.</p>
+<p>To address a potential head of line blocking scenario with HTTP/2, request
+bodies are now buffered between the HTTP/2 session (stream 0) and the client
+request. This is allocated on storage, controlled by the <code class="docutils literal notranslate"><span class="pre">h2_rxbuf_storage</span></code>
+parameter and comes in addition to the existing buffering between a client
+request and a backend fetch also allocated on storage. The new buffer size
+depends on <code class="docutils literal notranslate"><span class="pre">h2_initial_window_size</span></code> that has a new default value of 65535B
+to avoid having streams with negative windows.</p>
+</section>
+<section id="range-requests">
+<h2>Range requests<a class="headerlink" href="#range-requests" title="Link to this heading">¶</a></h2>
+<p>Varnish only supports bytes units for range requests and always stripped
+<code class="docutils literal notranslate"><span class="pre">Accept-Range</span></code> headers coming from the backend. This is no longer the case
+for pass transactions.</p>
+<p>To find out whether an <code class="docutils literal notranslate"><span class="pre">Accept-Range</span></code> header came from the backend, the
+<code class="docutils literal notranslate"><span class="pre">obj.uncacheable</span></code> in <code class="docutils literal notranslate"><span class="pre">vcl_deliver</span></code> indicates whether this was a pass
+transaction.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">http_range_support</span></code> is on, a consistency check is added to ensure
+the backend doesn’t act as a bad gateway. If an unexpected <code class="docutils literal notranslate"><span class="pre">Content-Range</span></code>
+header is received, or if it doesn’t match the client’s <code class="docutils literal notranslate"><span class="pre">Range</span></code> header,
+it is considered an error and a 503 response is generated instead.</p>
+<p>If your backend adds spurious <code class="docutils literal notranslate"><span class="pre">Content-Range</span></code> headers that you can assess
+are safe to ignore, you can amend the response in VCL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sub vcl_backend_response {
+    if (!bereq.http.range) {
+        unset beresp.http.content-range;
+    }
+}
+</pre></div>
+</div>
+<p>When a consistency check fails, an error is logged with the specific range
+problem encountered.</p>
+</section>
+<section id="acl">
+<h2>ACL<a class="headerlink" href="#acl" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">acl</span></code> keyword in VCL now supports bit flags:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">log</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pedantic</span></code> (enabled by default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table</span></code></p></li>
+</ul>
+<p>The global parameter <code class="docutils literal notranslate"><span class="pre">vcc_acl_pedantic</span></code> (off by default) was removed, and
+as a result ACLs are now pedantic by default. TODO: reference to manual.</p>
+<p>They are also quiet by default, the following ACL declarations are
+equivalent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">acl</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">acl</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">log</span> <span class="o">+</span><span class="n">pedantic</span> <span class="o">-</span><span class="n">table</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>This means that the entry an ACL matched is no longer logged as <code class="docutils literal notranslate"><span class="pre">VCL_acl</span></code> by
+default.</p>
+<p>To restore the previous default behavior, declare your ACL like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">acl</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">+</span><span class="n">log</span> <span class="o">-</span><span class="n">pedantic</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>ACLs are optimized for runtime performance by default, which can increase
+significantly the VCL compilation time with very large ACLs. The <code class="docutils literal notranslate"><span class="pre">table</span></code>
+flag improves compilation time at the expense of runtime performance.</p>
+<p>See <a class="reference internal" href="../reference/vcl.html#vcl-acl"><span class="std std-ref">Access Control List (ACL)</span></a>.</p>
+</section>
+<section id="changes-for-developers">
+<h2>Changes for developers<a class="headerlink" href="#changes-for-developers" title="Link to this heading">¶</a></h2>
+<section id="build">
+<h3>Build<a class="headerlink" href="#build" title="Link to this heading">¶</a></h3>
+<p>Building from source requires autoconf 2.69 or newer and automake 1.13 or
+newer. Neither are needed when building from a release archive since they
+are already bootstrapped.</p>
+<p>There is a new <code class="docutils literal notranslate"><span class="pre">--enable-workspace-emulator</span></code> configure flag to replace the
+regular “packed allocation” workspace with a “sparse allocation” alternative.
+Combined with the Address Sanitizer it can help VMOD authors find memory
+handling issues like buffer overflows that could otherwise be missed on a
+regular workspace.</p>
+</section>
+<section id="vdef-h">
+<h3><code class="docutils literal notranslate"><span class="pre">vdef.h</span></code><a class="headerlink" href="#vdef-h" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">vdef.h</span></code> header is no longer self-contained, it includes <code class="docutils literal notranslate"><span class="pre">stddef.h</span></code>.</p>
+<p>Since it is the first header that should be included when working with Varnish
+bindings, some definitions were promoted to <code class="docutils literal notranslate"><span class="pre">vdef.h</span></code>:</p>
+<ul class="simple">
+<li><p>a fallback for the <code class="docutils literal notranslate"><span class="pre">__has_feature()</span></code> macro in its absence</p></li>
+<li><p>VRT macros for Structured Fields number limits</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">txt</span></code> and its companion macros (the macros require <code class="docutils literal notranslate"><span class="pre">vas.h</span></code> too)</p></li>
+</ul>
+<p>This header is implicitly included by <code class="docutils literal notranslate"><span class="pre">vrt.h</span></code> and <code class="docutils literal notranslate"><span class="pre">cache.h</span></code> and should not
+concern VMOD authors.</p>
+</section>
+<section id="workspace-api">
+<h3>Workspace API<a class="headerlink" href="#workspace-api" title="Link to this heading">¶</a></h3>
+<p>The deprecated functions <code class="docutils literal notranslate"><span class="pre">WS_Front()</span></code> and <code class="docutils literal notranslate"><span class="pre">WS_Inside()</span></code> are gone, they
+were replaced by <code class="docutils literal notranslate"><span class="pre">WS_Reservation()</span></code> and <code class="docutils literal notranslate"><span class="pre">WS_Allocated()</span></code>. For this reason
+<code class="docutils literal notranslate"><span class="pre">WS_Assert_Allocated()</span></code> was removed despite not being deprecated, since it
+became redundant with <code class="docutils literal notranslate"><span class="pre">assert(WS_Allocated(...))</span></code>. Accessing the workspace
+front pointer only makes sense during a reservation, that’s why <code class="docutils literal notranslate"><span class="pre">WS_Front()</span></code>
+was deprecated in a previous release.</p>
+<p>It should no longer be needed to access <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ws</span></code> fields directly, and
+everything should be possible with the <code class="docutils literal notranslate"><span class="pre">WS_*()</span></code> functions. It even becomes
+mandatory when the workspace emulator is enabled, the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ws</span></code> fields
+have different semantics.</p>
+</section>
+<section id="string-list">
+<h3><code class="docutils literal notranslate"><span class="pre">STRING_LIST</span></code><a class="headerlink" href="#string-list" title="Link to this heading">¶</a></h3>
+<p>VMOD authors can no longer take <code class="docutils literal notranslate"><span class="pre">STRING_LIST</span></code> arguments in functions or
+object methods. To work with string fragments, use <code class="docutils literal notranslate"><span class="pre">VCL_STRANDS</span></code> instead.</p>
+<p>As a result the following symbols are gone:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_String()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_StringList()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_CollectString()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vrt_magic_string_end</span></code></p></li>
+</ul>
+<p>Functions that used to take a <code class="docutils literal notranslate"><span class="pre">STRING_LIST</span></code> in the form of a prototype
+ending with <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*,</span> <span class="pre">...</span></code> now take <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*,</span> <span class="pre">VCL_STRANDS</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_client_identity()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_req_method()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_req_url()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_req_proto()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_bereq_method()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_bereq_url()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_bereq_proto()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_beresp_body()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_beresp_proto()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_beresp_reason()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_beresp_storage_hint()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_beresp_filters()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_resp_body()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_resp_proto()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_resp_reason()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_l_resp_filters()</span></code></p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">VRT_SetHdr()</span></code> function also used to take a <code class="docutils literal notranslate"><span class="pre">STRING_LIST</span></code> and now
+takes a <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*,</span> <span class="pre">VCL_STRANDS</span></code> too. But, in addition to this change,
+it also no longer accepts the special <code class="docutils literal notranslate"><span class="pre">vrt_magic_string_unset</span></code> argument.</p>
+<p>Instead, a new <code class="docutils literal notranslate"><span class="pre">VRT_UnsetHdr()</span></code> function was added.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">VRT_CollectStrands()</span></code> function was renamed to <code class="docutils literal notranslate"><span class="pre">VRT_STRANDS_string()</span></code>,
+which was its original intended name.</p>
+</section>
+<section id="null-sentinels">
+<h3>Null sentinels<a class="headerlink" href="#null-sentinels" title="Link to this heading">¶</a></h3>
+<p>Two convenience sentinels <code class="docutils literal notranslate"><span class="pre">vrt_null_strands</span></code> and <code class="docutils literal notranslate"><span class="pre">vrt_null_blob</span></code> were
+added to avoid <code class="docutils literal notranslate"><span class="pre">NULL</span></code> usage. <code class="docutils literal notranslate"><span class="pre">VRT_blob()</span></code> returns <code class="docutils literal notranslate"><span class="pre">vrt_null_blob</span></code> when
+the source is null or the length is zero. The null blob has the type
+<code class="docutils literal notranslate"><span class="pre">VRT_NULL_BLOB_TYPE</span></code>.</p>
+</section>
+<section id="libvarnishapi">
+<h3>libvarnishapi<a class="headerlink" href="#libvarnishapi" title="Link to this heading">¶</a></h3>
+<p>Deprecated functions <code class="docutils literal notranslate"><span class="pre">VSB_new()</span></code> and <code class="docutils literal notranslate"><span class="pre">VSB_delete()</span></code> were removed. Use
+<code class="docutils literal notranslate"><span class="pre">VSB_init()</span></code> and <code class="docutils literal notranslate"><span class="pre">VSB_fini()</span></code> for static buffers and <code class="docutils literal notranslate"><span class="pre">VSB_new_auto()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">VSB_destroy()</span></code> for dynamic buffers.</p>
+<p>Their removal resulted in bumping the soname to 3.0.0 for libvarnishapi.</p>
+</section>
+<section id="libvarnish">
+<h3>libvarnish<a class="headerlink" href="#libvarnish" title="Link to this heading">¶</a></h3>
+<p>Other changes were made to libvarnish, those are only available to VMOD
+authors since they are not exposed by libvarnishapi.</p>
+<section id="vnum">
+<h4>VNUM<a class="headerlink" href="#vnum" title="Link to this heading">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">VNUMpfx()</span></code> function was replaced by <code class="docutils literal notranslate"><span class="pre">SF_Parse_Number()</span></code> that parses
+both decimal and integer numbers from RFC8941. In addition there are new
+<code class="docutils literal notranslate"><span class="pre">SF_Parse_Decimal()</span></code> and <code class="docutils literal notranslate"><span class="pre">SF_Parse_Integer()</span></code> more specialized functions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VNUM_bytes_unit()</span></code> returns an integer and no longer parses factional bytes.</p>
+<p>New token parsers <code class="docutils literal notranslate"><span class="pre">VNUM_uint()</span></code> and <code class="docutils literal notranslate"><span class="pre">VNUM_hex()</span></code> were added.</p>
+<p>The other VNUM functions rely on the new SF functions for parsing, with the
+same limitations.</p>
+<p>The following macros define the Structured Fields number bounds:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_INTEGER_MIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_INTEGER_MAX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_DECIMAL_MIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_DECIMAL_MAX</span></code></p></li>
+</ul>
+</section>
+<section id="vre">
+<h4>VRE<a class="headerlink" href="#vre" title="Link to this heading">¶</a></h4>
+<p>The VRE API completely changed in preparation for the PCRE2 migration, in
+order to funnel all PCRE usage in the Varnish source code through VRE.</p>
+<p>Similarly to how parameters were renamed, the <code class="docutils literal notranslate"><span class="pre">match_recursion</span></code> field from
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vre_limits</span></code> was renamed to <code class="docutils literal notranslate"><span class="pre">depth</span></code>. It has otherwise the same
+meaning and purpose.</p>
+<p>Notable breaking changes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VRE_compile()</span></code> signature changed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRE_exec()</span></code> was replaced:
+- <code class="docutils literal notranslate"><span class="pre">VRE_match()</span></code> does simple matching
+- <code class="docutils literal notranslate"><span class="pre">VRE_capture()</span></code> captures matched groups in a <code class="docutils literal notranslate"><span class="pre">txt</span></code> array
+- <code class="docutils literal notranslate"><span class="pre">VRE_sub()</span></code> substitute matches with a replacement in a VSB</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRE_error()</span></code> prints an error message for all the functions above in a VSB</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRE_export()</span></code> packs a usable <code class="docutils literal notranslate"><span class="pre">vre_t</span></code> that can be persisted as a byte
+stream</p></li>
+</ul>
+<p>An exported regular expression takes the form of a byte stream of a given size
+that can be used as-is by the various matching functions. Care should be taken
+to always maintain pointer alignment of an exported <code class="docutils literal notranslate"><span class="pre">vre_t</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">VRE_ERROR_NOMATCH</span></code> symbol is now hard-linked like <code class="docutils literal notranslate"><span class="pre">VRE_CASELESS</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">VRE_NOTEMPTY</span></code> is no longer supported. There are no match options left in
+the VRE facade but the <code class="docutils literal notranslate"><span class="pre">VRE_match()</span></code>, <code class="docutils literal notranslate"><span class="pre">VRE_capture()</span></code> and <code class="docutils literal notranslate"><span class="pre">VRE_sub()</span></code>
+functions still take an <code class="docutils literal notranslate"><span class="pre">options</span></code> argument to keep the ability of allowing
+match options in the future.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">VRE_ERROR_LEN</span></code> gives a size that should be safe to avoid truncated
+error messages in a static buffer.</p>
+<p>To gain full access to PCRE2 features from a regular expression provided via
+<code class="docutils literal notranslate"><span class="pre">vre_t</span></code> a backend-specific <code class="docutils literal notranslate"><span class="pre">vre_pcre2.h</span></code> contains a <code class="docutils literal notranslate"><span class="pre">VRE_unpack()</span></code>
+function. This opens for example the door to <code class="docutils literal notranslate"><span class="pre">pcre2_substitute()</span></code> with the
+PCRE2 substitution syntax and named capture groups as an alternative to VCL’s
+<code class="docutils literal notranslate"><span class="pre">regsub()</span></code> syntax backed by <code class="docutils literal notranslate"><span class="pre">VRE_sub()</span></code>.</p>
+<p>Ideally, <code class="docutils literal notranslate"><span class="pre">vre_pcre2.h</span></code> will be the only breaking change next time we move
+to a different regular expression engine. Hopefully not too soon.</p>
+<p><em>eof</em></p>
+</section>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Upgrading to Varnish 7.0</a><ul>
+<li><a class="reference internal" href="#pcre2">PCRE2</a></li>
+<li><a class="reference internal" href="#structured-fields-numbers">Structured Fields numbers</a></li>
+<li><a class="reference internal" href="#memory-footprint">Memory footprint</a></li>
+<li><a class="reference internal" href="#range-requests">Range requests</a></li>
+<li><a class="reference internal" href="#acl">ACL</a></li>
+<li><a class="reference internal" href="#changes-for-developers">Changes for developers</a><ul>
+<li><a class="reference internal" href="#build">Build</a></li>
+<li><a class="reference internal" href="#vdef-h"><code class="docutils literal notranslate"><span class="pre">vdef.h</span></code></a></li>
+<li><a class="reference internal" href="#workspace-api">Workspace API</a></li>
+<li><a class="reference internal" href="#string-list"><code class="docutils literal notranslate"><span class="pre">STRING_LIST</span></code></a></li>
+<li><a class="reference internal" href="#null-sentinels">Null sentinels</a></li>
+<li><a class="reference internal" href="#libvarnishapi">libvarnishapi</a></li>
+<li><a class="reference internal" href="#libvarnish">libvarnish</a><ul>
+<li><a class="reference internal" href="#vnum">VNUM</a></li>
+<li><a class="reference internal" href="#vre">VRE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="changes-7.0.html"
+                          title="previous chapter">Changes in Varnish 7.0</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="changes-6.6.html"
+                          title="next chapter">Changes in Varnish 6.6</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/upgrading-7.0.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changes-6.6.html" title="Changes in Varnish 6.6"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.0.html" title="Changes in Varnish 7.0"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.0</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

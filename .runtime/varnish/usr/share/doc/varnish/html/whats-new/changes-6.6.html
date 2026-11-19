@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changes in Varnish 6.6 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Upgrading to Varnish 6.6" href="upgrading-6.6.html" />
+    <link rel="prev" title="Upgrading to Varnish 7.0" href="upgrading-7.0.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="upgrading-6.6.html" title="Upgrading to Varnish 6.6"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="upgrading-7.0.html" title="Upgrading to Varnish 7.0"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Changes in Varnish 6.6</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="changes-in-varnish-6-6">
+<span id="whatsnew-changes-6-6"></span><h1>Changes in Varnish 6.6<a class="headerlink" href="#changes-in-varnish-6-6" title="Link to this heading">¶</a></h1>
+<p>For information about updating your current Varnish deployment to the
+new version, see <a class="reference internal" href="upgrading-6.6.html#whatsnew-upgrading-6-6"><span class="std std-ref">Upgrading to Varnish 6.6</span></a>.</p>
+<p>A more detailed and technical account of changes in Varnish, with
+links to issues that have been fixed and pull requests that have been
+merged, may be found in the <a class="reference external" href="https://github.com/varnishcache/varnish-cache/blob/master/doc/changes.rst">change log</a>.</p>
+<section id="varnishd">
+<h2>varnishd<a class="headerlink" href="#varnishd" title="Link to this heading">¶</a></h2>
+<section id="arguments">
+<h3>Arguments<a class="headerlink" href="#arguments" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">varnishd</span></code> now supports the <code class="docutils literal notranslate"><span class="pre">-b</span> <span class="pre">none</span></code> argument to start with
+only the builtin VCL and no backend at all.</p></li>
+</ul>
+</section>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">validate_headers</span></code> parameter has been added to control
+<a class="reference internal" href="#whatsnew-changes-6-6-header-validation">header validation</a>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ban_cutoff</span></code> parameter now refers to the overall length of the
+ban list, including completed bans, where before only non-completed
+(“active”) bans were counted towards <code class="docutils literal notranslate"><span class="pre">ban_cutoff</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">vary_notice</span></code> parameter has been added to control the
+threshold for the new <a class="reference internal" href="#whatsnew-changes-6-6-vary-notice">Vary Notice</a>.</p></li>
+</ul>
+</section>
+<section id="feature-flags">
+<h3><code class="docutils literal notranslate"><span class="pre">feature</span></code> Flags<a class="headerlink" href="#feature-flags" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">busy_stats_rate</span></code> feature flag has been added to ensure
+statistics updates (as configured using the <code class="docutils literal notranslate"><span class="pre">thread_stats_rate</span></code>
+parameter) even in scenarios where worker threads never run out
+of tasks and may remain forever busy.</p></li>
+</ul>
+</section>
+<section id="accounting">
+<span id="whatsnew-changes-6-6-accounting"></span><h3>Accounting<a class="headerlink" href="#accounting" title="Link to this heading">¶</a></h3>
+<p>Body bytes accounting has been fixed to always represent the number of
+body bytes moved on the wire, exclusive of protocol-specific overhead
+like HTTP/1 chunked encoding or HTTP/2 framing.</p>
+<p>This change affects counters like</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MAIN.s_req_bodybytes</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MAIN.s_resp_bodybytes</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VBE.*.*.bereq_bodybytes</span></code> and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VBE.*.*.beresp_bodybytes</span></code></p></li>
+</ul>
+<p>as well as the VSL records</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ReqAcct</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PipeAcct</span></code> and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BereqAcct</span></code>.</p></li>
+</ul>
+</section>
+<section id="session-close-reasons">
+<span id="whatsnew-changes-6-6-sc-close"></span><h3>Session Close Reasons<a class="headerlink" href="#session-close-reasons" title="Link to this heading">¶</a></h3>
+<p>The connection close reason has been fixed to properly report
+<code class="docutils literal notranslate"><span class="pre">SC_RESP_CLOSE</span></code> / <code class="docutils literal notranslate"><span class="pre">resp_close</span></code> where previously only
+<code class="docutils literal notranslate"><span class="pre">SC_REQ_CLOSE</span></code> / <code class="docutils literal notranslate"><span class="pre">req_close</span></code> was reported.</p>
+<p>For failing PROXY connections, <code class="docutils literal notranslate"><span class="pre">SessClose</span></code> now provides more
+detailed information on the cause of the failure.</p>
+<p>The session close reason logging/statistics for HTTP/2 connections
+have been improved.</p>
+</section>
+<section id="vary-notice">
+<span id="whatsnew-changes-6-6-vary-notice"></span><h3>Vary Notice<a class="headerlink" href="#vary-notice" title="Link to this heading">¶</a></h3>
+<p>A log (VSL) <code class="docutils literal notranslate"><span class="pre">Notice</span></code> record is now emitted whenever more than
+<code class="docutils literal notranslate"><span class="pre">vary_notice</span></code> variants are encountered in the cache for a specific
+hash. The new <code class="docutils literal notranslate"><span class="pre">vary_notice</span></code> parameter defaults to 10.</p>
+</section>
+</section>
+<section id="changes-to-vcl">
+<h2>Changes to VCL<a class="headerlink" href="#changes-to-vcl" title="Link to this heading">¶</a></h2>
+<section id="header-validation">
+<span id="whatsnew-changes-6-6-header-validation"></span><h3>Header Validation<a class="headerlink" href="#header-validation" title="Link to this heading">¶</a></h3>
+<p>Unless the new <code class="docutils literal notranslate"><span class="pre">validate_headers</span></code> feature is disabled, all newly set
+headers are now validated to contain only characters allowed by
+RFC7230. A (runtime) VCL failure is triggered if not.</p>
+</section>
+<section id="vcl-variables">
+<h3>VCL variables<a class="headerlink" href="#vcl-variables" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">client.identity</span></code> variable is now accessible on the backend
+side.</p></li>
+<li><p>The variables <code class="docutils literal notranslate"><span class="pre">bereq.is_hitpass</span></code> and <code class="docutils literal notranslate"><span class="pre">bereq.is_hitmiss</span></code> have
+been added to the backend side matching <code class="docutils literal notranslate"><span class="pre">req.is_hitpass</span></code> and
+<code class="docutils literal notranslate"><span class="pre">req.is_hitmiss</span></code> on the client side.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">bereq.xid</span></code> variable is now also available in <code class="docutils literal notranslate"><span class="pre">vcl_pipe</span> <span class="pre">{}</span></code></p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">resp.proto</span></code> variable is now read-only as it should have been
+for long, like the other <code class="docutils literal notranslate"><span class="pre">*.proto</span></code> variables.</p></li>
+</ul>
+</section>
+<section id="other-changes-to-vcl">
+<h3>Other changes to VCL<a class="headerlink" href="#other-changes-to-vcl" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>Long strings in VCL can now also be denoted using <code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span> <span class="pre">...</span> <span class="pre">&quot;&quot;&quot;</span></code> in
+addition to the existing <code class="docutils literal notranslate"><span class="pre">{&quot;</span> <span class="pre">...</span> <span class="pre">&quot;}</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ban()</span></code> builtin is now deprecated and should be replaced with
+<a class="reference internal" href="#whatsnew-changes-6-6-ban">std.ban()</a>.</p></li>
+<li><p>Trying to use <code class="docutils literal notranslate"><span class="pre">std.rollback()</span></code> from <code class="docutils literal notranslate"><span class="pre">vcl_pipe</span></code> now results in
+VCL failure.</p></li>
+<li><p>The modulus operator <code class="docutils literal notranslate"><span class="pre">%</span></code> has been added to VCL.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">return(retry)</span></code> from <code class="docutils literal notranslate"><span class="pre">vcl_backend_error</span> <span class="pre">{}</span></code> now correctly resets
+<code class="docutils literal notranslate"><span class="pre">beresp.status</span></code> and <code class="docutils literal notranslate"><span class="pre">beresp.reason</span></code>.</p></li>
+<li><p>The builtin VCL has been reworked: VCL code has been split into
+small subroutines, which custom VCL can prepend custom code to.</p>
+<p>This allows for better integration of custom VCL and the built-in
+VCL and better reuse.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="vmods">
+<h2>VMODs<a class="headerlink" href="#vmods" title="Link to this heading">¶</a></h2>
+<section id="directors-shard">
+<h3><code class="docutils literal notranslate"><span class="pre">directors.shard()</span></code><a class="headerlink" href="#directors-shard" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The shard director now supports reconfiguration (adding/removing
+backends) of several instances without any special ordering
+requirement.</p></li>
+<li><p>Calling the shard director <code class="docutils literal notranslate"><span class="pre">.reconfigure()</span></code> method is now
+optional. If not called explicitly, any shard director backend
+changes are applied at the end of the current task.</p></li>
+<li><p>Shard director <code class="docutils literal notranslate"><span class="pre">Error</span></code> log messages with <code class="docutils literal notranslate"><span class="pre">(notice)</span></code> have been
+turned into <code class="docutils literal notranslate"><span class="pre">Notice</span></code> log messages.</p></li>
+<li><p>All shard <code class="docutils literal notranslate"><span class="pre">Error</span></code> and <code class="docutils literal notranslate"><span class="pre">Notice</span></code> messages now use the unified
+prefix <code class="docutils literal notranslate"><span class="pre">vmod_directors:</span> <span class="pre">shard</span> <span class="pre">%s</span></code>.</p></li>
+</ul>
+</section>
+<section id="std-set-ip-tos">
+<h3><code class="docutils literal notranslate"><span class="pre">std.set_ip_tos()</span></code><a class="headerlink" href="#std-set-ip-tos" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">set_ip_tos()</span></code> function from the bundled <code class="docutils literal notranslate"><span class="pre">std</span></code> vmod now sets
+the IPv6 Taffic Class (TCLASS) when used on an IPv6 connection.</p>
+</section>
+<section id="std-ban-and-std-ban-error">
+<span id="whatsnew-changes-6-6-ban"></span><h3><code class="docutils literal notranslate"><span class="pre">std.ban()</span></code> and <code class="docutils literal notranslate"><span class="pre">std.ban_error()</span></code><a class="headerlink" href="#std-ban-and-std-ban-error" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">std.ban()</span></code> and <code class="docutils literal notranslate"><span class="pre">std.ban_error()</span></code> functions have been added to
+the <code class="docutils literal notranslate"><span class="pre">std</span></code> vmod, allowing VCL to check for ban errors. A typical
+usage pattern with the new interface is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ban</span><span class="p">(</span><span class="o">...</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">synth</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;Ban added&quot;</span><span class="p">));</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">synth</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="n">std</span><span class="o">.</span><span class="n">ban_error</span><span class="p">()));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cookie-functions">
+<span id="whatsnew-changes-6-6-cookie"></span><h3><code class="docutils literal notranslate"><span class="pre">cookie</span></code> functions<a class="headerlink" href="#cookie-functions" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">filter_re</span></code>, <code class="docutils literal notranslate"><span class="pre">keep_re</span></code> and <code class="docutils literal notranslate"><span class="pre">get_re</span></code> functions from the
+bundled <code class="docutils literal notranslate"><span class="pre">cookie</span></code> vmod have been changed to take the <code class="docutils literal notranslate"><span class="pre">VCL_REGEX</span></code>
+type. This implies that their regular expression arguments now need to
+be literal, whereas before they could be taken from some other
+variable or function returning <code class="docutils literal notranslate"><span class="pre">VCL_STRING</span></code>.</p>
+<p>Note that these functions never actually handled <em>dynamic</em> regexen,
+the string passed with the first call was compiled to a regex, which
+was then used for the lifetime of the respective VCL.</p>
+</section>
+</section>
+<section id="varnishlog">
+<h2>varnishlog<a class="headerlink" href="#varnishlog" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="#whatsnew-changes-6-6-accounting">Accounting</a> for changes
+to accounting-related VSL records.</p></li>
+<li><p>See <a class="reference internal" href="#whatsnew-changes-6-6-sc-close">Session Close Reasons</a>
+for a change affecting <code class="docutils literal notranslate"><span class="pre">SessClose</span></code>.</p></li>
+<li><p>Three new <code class="docutils literal notranslate"><span class="pre">Timestamp</span></code> VSL records have been added to backend
+request processing:</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Process</span></code> timestamp after <code class="docutils literal notranslate"><span class="pre">return(deliver)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">return(pass(x))</span></code> from <code class="docutils literal notranslate"><span class="pre">vcl_backend_response</span></code>,</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">Fetch</span></code> timestamp before a backend connection is requested
+and</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">Connected</span></code> timestamp when a connection to a regular backend
+(VBE) is established, or when a recycled connection was selected for
+reuse.</p></li>
+</ul>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">FetchError</span></code> log message <code class="docutils literal notranslate"><span class="pre">Timed</span> <span class="pre">out</span> <span class="pre">reusing</span> <span class="pre">backend</span>
+<span class="pre">connection</span></code> has been renamed to <code class="docutils literal notranslate"><span class="pre">first</span> <span class="pre">byte</span> <span class="pre">timeout</span> <span class="pre">(reused</span>
+<span class="pre">connection)</span></code> to clarify that it is emit for effectively the same
+reason as <code class="docutils literal notranslate"><span class="pre">first</span> <span class="pre">byte</span> <span class="pre">timeout</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ExpKill</span></code> log (VSL) records are now masked by default. See the
+<code class="docutils literal notranslate"><span class="pre">vsl_mask</span></code> parameter.</p></li>
+<li><p>Comparisons of numbers in VSL queries have been improved to match
+better the behavior which is likely expected by users who have not
+read the documentation in all detail.</p></li>
+<li><p>See <a class="reference internal" href="#whatsnew-changes-6-6-vary-notice">Vary Notice</a> for
+information on a newly added <code class="docutils literal notranslate"><span class="pre">Notice</span></code> log (VSL) record.</p></li>
+</ul>
+</section>
+<section id="varnishncsa">
+<h2>varnishncsa<a class="headerlink" href="#varnishncsa" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">%{X}T</span></code> format has been added to <code class="docutils literal notranslate"><span class="pre">varnishncsa</span></code>, which
+generalizes <code class="docutils literal notranslate"><span class="pre">%D</span></code> and <code class="docutils literal notranslate"><span class="pre">%T</span></code>, but also support milliseconds
+(<code class="docutils literal notranslate"><span class="pre">ms</span></code>) output.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">varnishncsa</span></code> <code class="docutils literal notranslate"><span class="pre">-E</span></code> argument to show ESI requests has been
+changed to imply <code class="docutils literal notranslate"><span class="pre">-c</span></code> (client mode). This behavior is now shared
+by all log utilities, and <code class="docutils literal notranslate"><span class="pre">-c</span></code> no longer includes ESI requests.</p></li>
+</ul>
+</section>
+<section id="varnishadm">
+<h2>varnishadm<a class="headerlink" href="#varnishadm" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">vcl.discard</span></code> CLI command can now be used to discard more than
+one VCL with a single command, which succeeds only if all given VCLs
+could be discarded (atomic behavior).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">vcl.discard</span></code> CLI command now supports glob patterns for vcl names.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">vcl.deps</span></code> CLI command has been added to output dependencies
+between VCLs (because of labels and <code class="docutils literal notranslate"><span class="pre">return(vcl)</span></code> statements).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">varnishadm</span></code> now has the <code class="docutils literal notranslate"><span class="pre">-p</span></code> option to disable readline support
+for use in scripts and as a generic CLI connector.</p></li>
+</ul>
+</section>
+<section id="varnishstat">
+<h2>varnishstat<a class="headerlink" href="#varnishstat" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>See <a class="reference internal" href="#whatsnew-changes-6-6-accounting">Accounting</a> for changes
+to accounting-related counters.</p></li>
+<li><p>See <a class="reference internal" href="#whatsnew-changes-6-6-sc-close">Session Close Reasons</a>
+for a change affecting <code class="docutils literal notranslate"><span class="pre">MAIN.sc_*</span></code> counters.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">MAIN.esi_req</span></code> counter has been added as a statistic of the
+number of ESI sub requests created.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">MAIN.s_bgfetch</span></code> counter has been added as a statistic on the
+number of background fetches issued.</p></li>
+</ul>
+<ul id="whatsnew-changes-6-6-varnishstat-raw">
+<li><p><code class="docutils literal notranslate"><span class="pre">varnishstat</span></code> now avoids display errors of gauges which previously
+could underflow to negative values, being displayed as extremely
+high positive values.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-r</span></code> option and the <code class="docutils literal notranslate"><span class="pre">r</span></code> key binding have been added to
+return to the previous behavior. When raw mode is active in
+<code class="docutils literal notranslate"><span class="pre">varnishstat</span></code> interactive (curses) mode, the word <code class="docutils literal notranslate"><span class="pre">RAW</span></code> is
+displayed at the right hand side in the lower status line.</p>
+</li>
+</ul>
+</section>
+<section id="varnishtest">
+<h2>varnishtest<a class="headerlink" href="#varnishtest" title="Link to this heading">¶</a></h2>
+<p>Various improvements have been made to the <code class="docutils literal notranslate"><span class="pre">varnishtest</span></code> facility:</p>
+<ul class="simple">
+<li><p>the <code class="docutils literal notranslate"><span class="pre">loop</span></code> keyword now works everywhere</p></li>
+<li><p>HTTP/2 logging has been improved</p></li>
+<li><p>Default HTTP/2 parameters have been tweaked</p></li>
+<li><p>Varnish listen address information is now available by default in
+the macros <code class="docutils literal notranslate"><span class="pre">${vNAME_addr}</span></code>, <code class="docutils literal notranslate"><span class="pre">${vNAME_port}</span></code> and
+<code class="docutils literal notranslate"><span class="pre">${vNAME_sock}</span></code>. Macros by the names <code class="docutils literal notranslate"><span class="pre">${vNAME_SOCKET_*}</span></code> contain
+the address information for each listen socket as created with the
+<code class="docutils literal notranslate"><span class="pre">-a</span></code> argument to <code class="docutils literal notranslate"><span class="pre">varnishd</span></code>.</p></li>
+<li><p>Synchronization points for counters (VSCs) have been added as
+<code class="docutils literal notranslate"><span class="pre">varnish</span> <span class="pre">vNAME</span> <span class="pre">-expect</span> <span class="pre">PATTERN</span> <span class="pre">OP</span> <span class="pre">PATTERN</span></code></p></li>
+<li><p>varnishtest now also works with IPv6 setups</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature</span> <span class="pre">ipv4</span></code> and <code class="docutils literal notranslate"><span class="pre">feature</span> <span class="pre">ipv6</span></code> can be used to control
+execution of test cases which require one or the other protocol.</p></li>
+<li><p>haproxy arguments can now be externally provided through the
+<code class="docutils literal notranslate"><span class="pre">HAPROXY_ARGS</span></code> variable.</p></li>
+<li><p>logexpect now supports alternatives with the <code class="docutils literal notranslate"><span class="pre">expect</span> <span class="pre">?</span> <span class="pre">...</span></code> syntax
+and negative matches with the <code class="docutils literal notranslate"><span class="pre">fail</span> <span class="pre">add</span> <span class="pre">...</span></code> and <code class="docutils literal notranslate"><span class="pre">fail</span> <span class="pre">clear</span></code>
+syntax.</p></li>
+<li><p>The overall logexpect match expectation can now be inverted using
+the <code class="docutils literal notranslate"><span class="pre">-err</span></code> argument.</p></li>
+<li><p>Numeric comparisons for HTTP headers have been added: <code class="docutils literal notranslate"><span class="pre">-lt</span></code>,
+<code class="docutils literal notranslate"><span class="pre">-le</span></code>, <code class="docutils literal notranslate"><span class="pre">-eq</span></code>, <code class="docutils literal notranslate"><span class="pre">-ne</span></code>, <code class="docutils literal notranslate"><span class="pre">-ge</span></code>, <code class="docutils literal notranslate"><span class="pre">-gt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rxdata</span> <span class="pre">-some</span></code> has been fixed.</p></li>
+</ul>
+</section>
+<section id="other-changes-to-varnish-utilities">
+<h2>Other Changes to Varnish Utilities<a class="headerlink" href="#other-changes-to-varnish-utilities" title="Link to this heading">¶</a></h2>
+<p>All varnish tools using the VUT library utilities for argument
+processing now support the <code class="docutils literal notranslate"><span class="pre">--optstring</span></code> argument to return a string
+suitable for use with <code class="docutils literal notranslate"><span class="pre">getopts</span></code> from shell scripts.</p>
+</section>
+<section id="developer-changes-for-vmod-authors">
+<span id="whatsnew-changes-6-6-vmod"></span><h2>Developer: Changes for VMOD authors<a class="headerlink" href="#developer-changes-for-vmod-authors" title="Link to this heading">¶</a></h2>
+<section id="vmod-vcl-interface">
+<h3>VMOD/VCL interface<a class="headerlink" href="#vmod-vcl-interface" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">VCL_REGEX</span></code> data type is now supported for VMODs, allowing
+them to use regular expression literals checked and compiled by the
+VCL compiler infrastructure.</p>
+<p>Consequently, the <code class="docutils literal notranslate"><span class="pre">VRT_re_init()</span></code> and <code class="docutils literal notranslate"><span class="pre">VRT_re_fini()</span></code> functions
+have been removed, because they are not required and their use was
+probably wrong anyway.</p>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">VCL_SUB</span></code> data type is now supported for VMODs to save
+references to subroutines to be called later using
+<code class="docutils literal notranslate"><span class="pre">VRT_call()</span></code>. Calls from a wrong context (e.g. calling a
+subroutine accessing <code class="docutils literal notranslate"><span class="pre">req</span></code> from the backend side) and recursive
+calls fail the VCL.</p>
+<p>See <a class="reference external" href="https://varnish-cache.org/docs/trunk/reference/vmod.html">VMOD - Varnish Modules</a> in the Reference Manual.</p>
+</li>
+</ul>
+<blockquote>
+<div><p>VMOD functions can also return the <code class="docutils literal notranslate"><span class="pre">VCL_SUB</span></code> data type for calls
+from VCL as in <code class="docutils literal notranslate"><span class="pre">call</span> <span class="pre">vmod.returning_sub();</span></code>.</p>
+</div></blockquote>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_check_call()</span></code> can be used to check if a <code class="docutils literal notranslate"><span class="pre">VRT_call()</span></code> would
+succeed in order to avoid the potential VCL failure in case it would
+not.</p>
+<p>It returns <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if <code class="docutils literal notranslate"><span class="pre">VRT_call()</span></code> would make the call or an
+error string why not.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_handled()</span></code> has been added, which is now to be used instead of
+access to the <code class="docutils literal notranslate"><span class="pre">handling</span></code> member of <code class="docutils literal notranslate"><span class="pre">VRT_CTX</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vmodtool.py</span></code> has been improved to simplify Makefiles when many
+VMODs are built in a single directory.</p></li>
+</ul>
+</section>
+<section id="general-api">
+<h3>General API<a class="headerlink" href="#general-api" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_ValidHdr()</span></code> has been added for VMODs to conduct the same
+check as the <a class="reference internal" href="#whatsnew-changes-6-6-header-validation">whatsnew_changes_6.6_header_validation</a> feature,
+for example when headers are set by VMODs using the <code class="docutils literal notranslate"><span class="pre">cache_http.c</span></code>
+Functions like <code class="docutils literal notranslate"><span class="pre">http_ForceHeader()</span></code> from untrusted input.</p></li>
+<li><p>Client and backend finite state machine internals (<code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">req_step</span></code>
+and <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">fetch_step</span></code>) have been removed from <code class="docutils literal notranslate"><span class="pre">cache.h</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">verrno.h</span></code> header file has been removed and merged into
+<code class="docutils literal notranslate"><span class="pre">vas.h</span></code></p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">pdiff()</span></code> function declaration has been moved from <code class="docutils literal notranslate"><span class="pre">cache.h</span></code>
+to <code class="docutils literal notranslate"><span class="pre">vas.h</span></code>.</p></li>
+</ul>
+</section>
+<section id="vsa">
+<h3>VSA<a class="headerlink" href="#vsa" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">VSA_getsockname()</span></code> and <code class="docutils literal notranslate"><span class="pre">VSA_getpeername()</span></code> functions have
+been added to get address information of file descriptors.</p></li>
+</ul>
+</section>
+<section id="private-pointers">
+<h3>Private Pointers<a class="headerlink" href="#private-pointers" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The interface for private pointers in VMODs has been changed:</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">free</span></code> pointer in <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vmod_priv</span></code> has been replaced
+with a pointer to <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vmod_priv_methods</span></code>, to where the
+pointer to the former free callback has been moved as the <code class="docutils literal notranslate"><span class="pre">fini</span></code>
+member.</p></li>
+<li><p>The former free callback type has been renamed from
+<code class="docutils literal notranslate"><span class="pre">vmod_priv_free_f</span></code> to <code class="docutils literal notranslate"><span class="pre">vmod_priv_fini_f</span></code> and as gained a
+<code class="docutils literal notranslate"><span class="pre">VRT_CTX</span></code> argument</p></li>
+</ul>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">VRT_priv_task_get()</span></code> and <code class="docutils literal notranslate"><span class="pre">VRT_priv_top_get()</span></code> functions
+have been added to VRT to allow vmods to retrieve existing
+<code class="docutils literal notranslate"><span class="pre">PRIV_TASK</span></code> / <code class="docutils literal notranslate"><span class="pre">PRIV_TOP</span></code> private pointers without creating any.</p></li>
+</ul>
+</section>
+<section id="backends">
+<h3>Backends<a class="headerlink" href="#backends" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>The VRT backend interface has been changed:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vrt_endpoint</span></code> has been added describing a UDS or TCP
+endpoint for a backend to connect to.</p>
+<p>Endpoints also support a preamble to be sent with every new
+connection.</p>
+</li>
+<li><p>This structure needs to be passed via the <code class="docutils literal notranslate"><span class="pre">endpoint</span></code> member of
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vrt_backend</span></code> when creating backends with
+<code class="docutils literal notranslate"><span class="pre">VRT_new_backend()</span></code> or <code class="docutils literal notranslate"><span class="pre">VRT_new_backend_clustered()</span></code>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VRT_Endpoint_Clone()</span></code> has been added to facilitate working with
+endpoints.</p></li>
+</ul>
+</section>
+<section id="filters-vdp-vfp">
+<h3>Filters (VDP/VFP)<a class="headerlink" href="#filters-vdp-vfp" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>Many filter (VDP/VFP) related signatures have been changed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vdp_init_f</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vdp_fini_f</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vdp_bytes_f</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VDP_bytes()</span></code></p></li>
+</ul>
+<p>as well as <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vdp_entry</span></code> and <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vdp_ctx</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">VFP_Push()</span></code> and <code class="docutils literal notranslate"><span class="pre">VDP_Push()</span></code> are no longer intended for VMOD
+use and have been removed from the API.</p>
+</li>
+<li><p>The VDP code is now more strict about <code class="docutils literal notranslate"><span class="pre">VDP_END</span></code>, which must be
+sent down the filter chain at most once. Care should be taken to
+send <code class="docutils literal notranslate"><span class="pre">VDP_END</span></code> together with the last payload bytes whenever
+possible.</p></li>
+</ul>
+</section>
+<section id="stevedore-api">
+<h3>Stevedore API<a class="headerlink" href="#stevedore-api" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The stevedore API has been changed:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">OBJ_ITER_FINAL</span></code> has been renamed to <code class="docutils literal notranslate"><span class="pre">OBJ_ITER_END</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ObjExtend()</span></code> signature has been changed to also cover the
+<code class="docutils literal notranslate"><span class="pre">ObjTrimStore()</span></code> use case and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ObjTrimStore()</span></code> has been removed.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="developer-changes-for-authors-of-varnish-utilities">
+<h2>Developer: Changes for Authors of Varnish Utilities<a class="headerlink" href="#developer-changes-for-authors-of-varnish-utilities" title="Link to this heading">¶</a></h2>
+<section id="libvarnishapi">
+<h3>libvarnishapi<a class="headerlink" href="#libvarnishapi" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">VSC_IsRaw()</span></code> function has been added to <code class="docutils literal notranslate"><span class="pre">libvarnishapi</span></code> to
+query if a gauge is being returned raw or adjusted (see
+<a class="reference internal" href="#whatsnew-changes-6-6-varnishstat-raw">varnishstat -r option</a>).</p></li>
+</ul>
+<p><em>eof</em></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Changes in Varnish 6.6</a><ul>
+<li><a class="reference internal" href="#varnishd">varnishd</a><ul>
+<li><a class="reference internal" href="#arguments">Arguments</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#feature-flags"><code class="docutils literal notranslate"><span class="pre">feature</span></code> Flags</a></li>
+<li><a class="reference internal" href="#accounting">Accounting</a></li>
+<li><a class="reference internal" href="#session-close-reasons">Session Close Reasons</a></li>
+<li><a class="reference internal" href="#vary-notice">Vary Notice</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#changes-to-vcl">Changes to VCL</a><ul>
+<li><a class="reference internal" href="#header-validation">Header Validation</a></li>
+<li><a class="reference internal" href="#vcl-variables">VCL variables</a></li>
+<li><a class="reference internal" href="#other-changes-to-vcl">Other changes to VCL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vmods">VMODs</a><ul>
+<li><a class="reference internal" href="#directors-shard"><code class="docutils literal notranslate"><span class="pre">directors.shard()</span></code></a></li>
+<li><a class="reference internal" href="#std-set-ip-tos"><code class="docutils literal notranslate"><span class="pre">std.set_ip_tos()</span></code></a></li>
+<li><a class="reference internal" href="#std-ban-and-std-ban-error"><code class="docutils literal notranslate"><span class="pre">std.ban()</span></code> and <code class="docutils literal notranslate"><span class="pre">std.ban_error()</span></code></a></li>
+<li><a class="reference internal" href="#cookie-functions"><code class="docutils literal notranslate"><span class="pre">cookie</span></code> functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#varnishlog">varnishlog</a></li>
+<li><a class="reference internal" href="#varnishncsa">varnishncsa</a></li>
+<li><a class="reference internal" href="#varnishadm">varnishadm</a></li>
+<li><a class="reference internal" href="#varnishstat">varnishstat</a></li>
+<li><a class="reference internal" href="#varnishtest">varnishtest</a></li>
+<li><a class="reference internal" href="#other-changes-to-varnish-utilities">Other Changes to Varnish Utilities</a></li>
+<li><a class="reference internal" href="#developer-changes-for-vmod-authors">Developer: Changes for VMOD authors</a><ul>
+<li><a class="reference internal" href="#vmod-vcl-interface">VMOD/VCL interface</a></li>
+<li><a class="reference internal" href="#general-api">General API</a></li>
+<li><a class="reference internal" href="#vsa">VSA</a></li>
+<li><a class="reference internal" href="#private-pointers">Private Pointers</a></li>
+<li><a class="reference internal" href="#backends">Backends</a></li>
+<li><a class="reference internal" href="#filters-vdp-vfp">Filters (VDP/VFP)</a></li>
+<li><a class="reference internal" href="#stevedore-api">Stevedore API</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#developer-changes-for-authors-of-varnish-utilities">Developer: Changes for Authors of Varnish Utilities</a><ul>
+<li><a class="reference internal" href="#libvarnishapi">libvarnishapi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="upgrading-7.0.html"
+                          title="previous chapter">Upgrading to Varnish 7.0</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="upgrading-6.6.html"
+                          title="next chapter">Upgrading to Varnish 6.6</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/changes-6.6.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="upgrading-6.6.html" title="Upgrading to Varnish 6.6"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="upgrading-7.0.html" title="Upgrading to Varnish 7.0"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Changes in Varnish 6.6</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

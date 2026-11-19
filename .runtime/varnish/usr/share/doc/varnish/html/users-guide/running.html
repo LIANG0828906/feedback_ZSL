@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Starting and running Varnish &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Security first" href="run_security.html" />
+    <link rel="prev" title="The Big Varnish Picture" href="intro.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="run_security.html" title="Security first"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="The Big Varnish Picture"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Users Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Starting and running Varnish</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="starting-and-running-varnish">
+<span id="users-running"></span><h1>Starting and running Varnish<a class="headerlink" href="#starting-and-running-varnish" title="Link to this heading">¶</a></h1>
+<p>This section covers starting, running, and stopping Varnish,
+command line flags and options, and communicating with the running
+Varnish processes, configuring storage and sockets and, and about
+securing and protecting Varnish against attacks.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="run_security.html">Security first</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="run_security.html#command-line-arguments">Command line arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_security.html#the-cli-interface">The CLI interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_security.html#vcl-programs">VCL programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_security.html#http-requests">HTTP requests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command-line.html">Required command line arguments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command-line.html#a-listen-address">‘-a’ <em>listen_address</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="command-line.html#f-vcl-file-or-b-backend">‘-f’ <em>VCL-file</em> or ‘-b’ <em>backend</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="command-line.html#optional-arguments">Optional arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run_cli.html">CLI - bossing Varnish around</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="run_cli.html#what-can-you-do-with-the-cli">What can you do with the CLI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage-backends.html">Storage backends</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage-backends.html#intro">Intro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage-backends.html#default">default</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage-backends.html#malloc">malloc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage-backends.html#umem">umem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage-backends.html#file">file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage-backends.html#deprecated-persistent">deprecated_persistent</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage-backends.html#transient-storage">Transient Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sizing-your-cache.html">Sizing your cache</a></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="intro.html"
+                          title="previous chapter">The Big Varnish Picture</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="run_security.html"
+                          title="next chapter">Security first</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users-guide/running.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="run_security.html" title="Security first"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="The Big Varnish Picture"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Starting and running Varnish</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

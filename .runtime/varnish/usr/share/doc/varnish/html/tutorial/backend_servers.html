@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Backend servers &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Peculiarities" href="peculiarities.html" />
+    <link rel="prev" title="Put Varnish on port 80" href="putting_varnish_on_port_80.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="peculiarities.html" title="Peculiarities"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="putting_varnish_on_port_80.html" title="Put Varnish on port 80"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Backend servers</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="backend-servers">
+<span id="tutorial-backend-servers"></span><h1>Backend servers<a class="headerlink" href="#backend-servers" title="Link to this heading">¶</a></h1>
+<p>Varnish has a concept of <cite>backend</cite> or origin servers. A backend
+server is the server providing the content Varnish will accelerate via the cache.</p>
+<p>Our first task is to tell Varnish where it can find its content. Start
+your favorite text editor and open the Varnish default configuration
+file. If you installed from source this is
+<cite>/usr/local/etc/varnish/default.vcl</cite>, if you installed from a package it
+is probably <cite>/etc/varnish/default.vcl</cite>.</p>
+<p>If you’ve been following the tutorial there is probably a section of
+the configuration that looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vcl</span> <span class="mf">4.0</span><span class="p">;</span>
+
+<span class="n">backend</span> <span class="n">default</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;www.varnish-cache.org&quot;</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;80&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This means we set up a backend in Varnish that fetches content from
+the host www.varnish-cache.org on port 80.</p>
+<p>Since you probably don’t want to be mirroring varnish-cache.org we
+need to get Varnish to fetch content from your own origin
+server. We’ve already bound Varnish to the public port 80 on the
+server so now we need to tie it to the origin.</p>
+<p>For this example, let’s pretend the origin server is running on
+localhost, port 8080.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vcl</span> <span class="mf">4.0</span><span class="p">;</span>
+
+<span class="n">backend</span> <span class="n">default</span> <span class="p">{</span>
+  <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">;</span>
+  <span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;8080&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Varnish can have several backends defined and can even join several backends
+together into clusters of backends for load balancing purposes, having Varnish
+pick one backend based on different algorithms.</p>
+<p>Next, let’s have a look at some of what makes Varnish unique and what you can do with it.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="putting_varnish_on_port_80.html"
+                          title="previous chapter">Put Varnish on port 80</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="peculiarities.html"
+                          title="next chapter">Peculiarities</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial/backend_servers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="peculiarities.html" title="Peculiarities"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="putting_varnish_on_port_80.html" title="Put Varnish on port 80"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Backend servers</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

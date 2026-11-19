@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upgrading to Varnish 7.1 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changes in Varnish 7.0" href="changes-7.0.html" />
+    <link rel="prev" title="Changes in Varnish 7.1" href="changes-7.1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changes-7.0.html" title="Changes in Varnish 7.0"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.1.html" title="Changes in Varnish 7.1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.1</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="upgrading-to-varnish-7-1">
+<span id="whatsnew-upgrading-7-1"></span><h1>Upgrading to Varnish 7.1<a class="headerlink" href="#upgrading-to-varnish-7-1" title="Link to this heading">¶</a></h1>
+<section id="varnishd">
+<h2>varnishd<a class="headerlink" href="#varnishd" title="Link to this heading">¶</a></h2>
+<p>Varnish now has an infrastructure in place to rename parameters or VCL
+variables while keeping a deprecated alias for compatibility.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h3>
+<p>There are plans to rename certain arguments. When this happens, aliases will
+not be listed by <code class="docutils literal notranslate"><span class="pre">param.show</span> <span class="pre">[-j|-l]</span></code> commands, but they will be displayed
+by <code class="docutils literal notranslate"><span class="pre">param.show</span> <span class="pre">[-j]</span> <span class="pre">&lt;param&gt;</span></code>. Systems operating on top of <code class="docutils literal notranslate"><span class="pre">varnishadm</span></code> or
+the Varnish CLI can be updated to anticipate this change with the help of the
+<code class="docutils literal notranslate"><span class="pre">deprecated_dummy</span></code> parameter added for testing purposes.</p>
+<p>The deprecated <code class="docutils literal notranslate"><span class="pre">vsm_space</span></code> parameter was removed. It was ignored and having
+no effect since Varnish 6.0.0 and should have disappeared with the 7.0.0
+release. The sub-argument of the <code class="docutils literal notranslate"><span class="pre">-l</span></code> command line option that was used as
+a shorthand for <code class="docutils literal notranslate"><span class="pre">vsm_space</span></code> is also no longer accepted.</p>
+</section>
+<section id="command-line-options">
+<h3>Command line options<a class="headerlink" href="#command-line-options" title="Link to this heading">¶</a></h3>
+<p>A common pattern when a CLI script is used during startup is to
+combine the <code class="docutils literal notranslate"><span class="pre">-I</span></code> and <code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">''</span></code> options to prevent an automatic
+startup of the cache process. In this case a start command is usually
+present in the CLI script, most likely as the last command. This
+enables loading VCLs and potentially VCL labels which require a
+specific order if the active VCL is supposed to switch execution to
+labels.</p>
+<p>To support this pattern, a VCL loaded through the CLI script is no
+longer implicitly used if there is no active VCL yet. If no VCL was
+loaded through the <code class="docutils literal notranslate"><span class="pre">-b</span></code> or <code class="docutils literal notranslate"><span class="pre">-f</span></code> options it means that an explicit
+<code class="docutils literal notranslate"><span class="pre">vcl.use</span></code> command is needed before the <code class="docutils literal notranslate"><span class="pre">start</span></code> command.</p>
+<p>In the scenario described above, that would already be the case since the
+desired active VCL would likely need to be loaded last, not eligible for an
+implicit <code class="docutils literal notranslate"><span class="pre">vcl.use</span></code> since dependencies were loaded first. This change should
+not affect existing <code class="docutils literal notranslate"><span class="pre">-I</span></code> scripts, but if it does, simply add the missing
+<code class="docutils literal notranslate"><span class="pre">vcl.use</span></code> command.</p>
+</section>
+<section id="other-changes-in-varnishd">
+<h3>Other changes in varnishd<a class="headerlink" href="#other-changes-in-varnishd" title="Link to this heading">¶</a></h3>
+<p>The ESI parser now recognizes the <code class="docutils literal notranslate"><span class="pre">onerror=&quot;continue&quot;</span></code> attribute of
+the <code class="docutils literal notranslate"><span class="pre">&lt;esi:include/&gt;</span></code> XML tag.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">+esi_include_onerror</span></code> feature flag controls if the attribute is
+honored: If enabled, failure of an include stops ESI processing unless
+the <code class="docutils literal notranslate"><span class="pre">onerror=&quot;continue&quot;</span></code> attribute was set for it.</p>
+<p>The feature flag is off by default, preserving the existing behavior
+to continue ESI processing despite include failures.</p>
+<p>Users of persistent storage engines be advised that objects created
+before the introduction of this change can not carry the
+<code class="docutils literal notranslate"><span class="pre">onerror=&quot;continue&quot;</span></code> attribute and, consequently, will be handled as
+if it was not present if the <code class="docutils literal notranslate"><span class="pre">+esi_include_onerror</span></code> feature flag is
+enabled.</p>
+<p>Also, as this change is not backwards compatible, downgrades with
+persisted storage are not supported across this release.</p>
+</section>
+</section>
+<section id="varnishtest">
+<h2>varnishtest<a class="headerlink" href="#varnishtest" title="Link to this heading">¶</a></h2>
+<p>The deprecated <code class="docutils literal notranslate"><span class="pre">err_shell</span></code> command was removed, use <code class="docutils literal notranslate"><span class="pre">shell</span> <span class="pre">-err</span></code> instead.</p>
+</section>
+<section id="changes-for-developers-and-vmod-authors">
+<h2>Changes for developers and VMOD authors<a class="headerlink" href="#changes-for-developers-and-vmod-authors" title="Link to this heading">¶</a></h2>
+<section id="backends">
+<h3>Backends<a class="headerlink" href="#backends" title="Link to this heading">¶</a></h3>
+<p>Backends have reference counters now to avoid the uncertainty of a task
+holding onto a dynamic backend for a long time, for example in the waiting
+list, with the risk of the backend going away during the transaction.</p>
+<p>Assignments should be replaced as such:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">lvalue</span> <span class="o">=</span> <span class="n">expr</span><span class="p">;</span>
+<span class="o">+</span><span class="n">VRT_Assign_Backend</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lvalue</span><span class="p">,</span> <span class="n">expr</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For backends which are guaranteed at least VCL lifetime, the
+respective VMOD can opt out of reference counting with
+<code class="docutils literal notranslate"><span class="pre">VRT_StaticDirector()</span></code> to avoid the reference counting overhead.</p>
+</section>
+<section id="filters">
+<h3>Filters<a class="headerlink" href="#filters" title="Link to this heading">¶</a></h3>
+<p>Two new functions <code class="docutils literal notranslate"><span class="pre">VRT_AddFilter()</span></code> and <code class="docutils literal notranslate"><span class="pre">VRT_RemoveFilter()</span></code>
+manage filters as VDP/VFP pairs. When used as pairs, the filters must
+have the same name, otherwise operating with only one fetch or
+delivery filter is fine.</p>
+<p>Unlike its deprecated predecessors <code class="docutils literal notranslate"><span class="pre">VRT_AddVFP()</span></code> and <code class="docutils literal notranslate"><span class="pre">VRT_AddVDP()</span></code>,
+the new <code class="docutils literal notranslate"><span class="pre">VRT_AddFilter()</span></code> returns an error string. The <code class="docutils literal notranslate"><span class="pre">VRT_RemoveVFP()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">VRT_RemoveVDP()</span></code> functions are also deprecated and kept for now
+as wrappers of <code class="docutils literal notranslate"><span class="pre">VRT_RemoveFilter()</span></code> without error handling.</p>
+</section>
+<section id="vmod-deprecated-aliases">
+<h3>VMOD deprecated aliases<a class="headerlink" href="#vmod-deprecated-aliases" title="Link to this heading">¶</a></h3>
+<p>A VMOD author can from now on rename a function or object method without
+immediately breaking compatibility by declaring the old name as an alias.</p>
+<p>In the VMOD descriptor, it is possible to add the following stanza:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$Alias deprecated_function original_function
+
+or
+
+$Alias .deprecated_method object.original_method
+</pre></div>
+</div>
+<p>This is a good occasion to revisit unfortunate name choices in existing VMODs.</p>
+</section>
+</section>
+<section id="platform-support">
+<h2>Platform Support<a class="headerlink" href="#platform-support" title="Link to this heading">¶</a></h2>
+<section id="systemd">
+<h3>systemd<a class="headerlink" href="#systemd" title="Link to this heading">¶</a></h3>
+<p>To make the selection of the main process deterministic for the kill mode, a
+PID file is now expected by default in the varnish service. In a setup where
+the service command for <code class="docutils literal notranslate"><span class="pre">ExecStart</span></code> is overridden, a <code class="docutils literal notranslate"><span class="pre">-P</span></code> option matching
+the <code class="docutils literal notranslate"><span class="pre">PIDFile</span></code> setting is needed.</p>
+<p><em>eof</em></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Upgrading to Varnish 7.1</a><ul>
+<li><a class="reference internal" href="#varnishd">varnishd</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#command-line-options">Command line options</a></li>
+<li><a class="reference internal" href="#other-changes-in-varnishd">Other changes in varnishd</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#varnishtest">varnishtest</a></li>
+<li><a class="reference internal" href="#changes-for-developers-and-vmod-authors">Changes for developers and VMOD authors</a><ul>
+<li><a class="reference internal" href="#backends">Backends</a></li>
+<li><a class="reference internal" href="#filters">Filters</a></li>
+<li><a class="reference internal" href="#vmod-deprecated-aliases">VMOD deprecated aliases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#platform-support">Platform Support</a><ul>
+<li><a class="reference internal" href="#systemd">systemd</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="changes-7.1.html"
+                          title="previous chapter">Changes in Varnish 7.1</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="changes-7.0.html"
+                          title="next chapter">Changes in Varnish 7.0</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/upgrading-7.1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changes-7.0.html" title="Changes in Varnish 7.0"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.1.html" title="Changes in Varnish 7.1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.1</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

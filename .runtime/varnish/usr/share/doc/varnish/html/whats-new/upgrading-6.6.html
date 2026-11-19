@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upgrading to Varnish 6.6 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changes in Varnish 6.5.0" href="changes-6.5.html" />
+    <link rel="prev" title="Changes in Varnish 6.6" href="changes-6.6.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changes-6.5.html" title="Changes in Varnish 6.5.0"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="changes-6.6.html" title="Changes in Varnish 6.6"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 6.6</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="upgrading-to-varnish-6-6">
+<span id="whatsnew-upgrading-6-6"></span><h1>Upgrading to Varnish 6.6<a class="headerlink" href="#upgrading-to-varnish-6-6" title="Link to this heading">¶</a></h1>
+<p>In general, this release should not come with relevant incompatibilies
+to the previous release 6.5.</p>
+<p>VCL should continue to work as before except when rather exotic,
+partly unintended and/or undocumented features are used.</p>
+<section id="header-validation">
+<h2>Header Validation<a class="headerlink" href="#header-validation" title="Link to this heading">¶</a></h2>
+<p>Varnish now validates any headers set from VCL to contain only
+characters allowed by RFC7230. A (runtime) VCL failure is triggered if
+not. Such VCL failures, which result in <code class="docutils literal notranslate"><span class="pre">503</span></code> responses, should be
+investigated. As a last resort, the <code class="docutils literal notranslate"><span class="pre">validate_headers</span></code> parameter can
+be set to <code class="docutils literal notranslate"><span class="pre">false</span></code> to avoid these VCL failures.</p>
+</section>
+<section id="ban-changes">
+<h2>BAN changes<a class="headerlink" href="#ban-changes" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ban_cutoff</span></code> parameter now refers to the overall length of the
+ban list, including completed bans, where before only non-completed
+(“active”) bans were counted towards <code class="docutils literal notranslate"><span class="pre">ban_cutoff</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ban()</span></code> VCL builtin is now deprecated and should be replaced
+with <a class="reference internal" href="changes-6.6.html#whatsnew-changes-6-6-ban"><span class="std std-ref">std.ban() and std.ban_error()</span></a></p></li>
+</ul>
+</section>
+<section id="accounting-changes">
+<h2>Accounting Changes<a class="headerlink" href="#accounting-changes" title="Link to this heading">¶</a></h2>
+<p>Accounting statistics and Log records have changed. See
+<a class="reference internal" href="changes-6.6.html#whatsnew-changes-6-6-accounting"><span class="std std-ref">Accounting</span></a> for details.</p>
+</section>
+<section id="vsl-changes">
+<h2>VSL changes<a class="headerlink" href="#vsl-changes" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">-c</span></code> option of log utilities no longer includes ESI requests. A
+new <code class="docutils literal notranslate"><span class="pre">-E</span></code> option is now available for ESI requests and it implies <code class="docutils literal notranslate"><span class="pre">-c</span></code>
+too. This brings all log utilities on par with <code class="docutils literal notranslate"><span class="pre">varnishncsa</span></code> where the
+<code class="docutils literal notranslate"><span class="pre">-E</span></code> option was initially introduced.</p>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">-c</span></code> to collect both client and ESI requests, you should
+use <code class="docutils literal notranslate"><span class="pre">-E</span></code> instead. If you use <code class="docutils literal notranslate"><span class="pre">-c</span></code> and a VSL query to exclude ESI
+requests, the query should no longer be needed.</p>
+</section>
+<section id="vmod-cookie-functions">
+<h2>VMOD <code class="docutils literal notranslate"><span class="pre">cookie</span></code> functions<a class="headerlink" href="#vmod-cookie-functions" title="Link to this heading">¶</a></h2>
+<p>The regular expression arguments taken by various functions from the
+<code class="docutils literal notranslate"><span class="pre">cookie</span></code> VMOD now need to be literal. See
+<a class="reference internal" href="changes-6.6.html#whatsnew-changes-6-6-cookie"><span class="std std-ref">cookie functions</span></a> for details.</p>
+</section>
+<section id="other-vcl-changes">
+<h2>Other VCL Changes<a class="headerlink" href="#other-vcl-changes" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">resp.proto</span></code> variable is now read-only as it should have been
+for long, like the other <code class="docutils literal notranslate"><span class="pre">*.proto</span></code> variables.</p>
+<p>Changing the protocol is an error and should not be required.</p>
+</li>
+<li><p>Trying to use <code class="docutils literal notranslate"><span class="pre">std.rollback()</span></code> from <code class="docutils literal notranslate"><span class="pre">vcl_pipe</span></code> now results in
+VCL failure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">return(retry)</span></code> from <code class="docutils literal notranslate"><span class="pre">vcl_backend_error</span> <span class="pre">{}</span></code> now correctly resets
+<code class="docutils literal notranslate"><span class="pre">beresp.status</span></code> and <code class="docutils literal notranslate"><span class="pre">beresp.reason</span></code>.</p></li>
+</ul>
+</section>
+<section id="changes-to-vmods">
+<h2>Changes to VMODs<a class="headerlink" href="#changes-to-vmods" title="Link to this heading">¶</a></h2>
+<p>Many VMODs will need minor adjustments to work with this release. See
+<a class="reference internal" href="changes-6.6.html#whatsnew-changes-6-6-vmod"><span class="std std-ref">Developer: Changes for VMOD authors</span></a> for details.</p>
+<p><em>eof</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Upgrading to Varnish 6.6</a><ul>
+<li><a class="reference internal" href="#header-validation">Header Validation</a></li>
+<li><a class="reference internal" href="#ban-changes">BAN changes</a></li>
+<li><a class="reference internal" href="#accounting-changes">Accounting Changes</a></li>
+<li><a class="reference internal" href="#vsl-changes">VSL changes</a></li>
+<li><a class="reference internal" href="#vmod-cookie-functions">VMOD <code class="docutils literal notranslate"><span class="pre">cookie</span></code> functions</a></li>
+<li><a class="reference internal" href="#other-vcl-changes">Other VCL Changes</a></li>
+<li><a class="reference internal" href="#changes-to-vmods">Changes to VMODs</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="changes-6.6.html"
+                          title="previous chapter">Changes in Varnish 6.6</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="changes-6.5.html"
+                          title="next chapter">Changes in Varnish 6.5.0</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/upgrading-6.6.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changes-6.5.html" title="Changes in Varnish 6.5.0"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="changes-6.6.html" title="Changes in Varnish 6.6"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 6.6</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

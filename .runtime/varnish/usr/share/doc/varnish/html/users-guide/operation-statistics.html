@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Statistics &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Varnish and Website Performance" href="performance.html" />
+    <link rel="prev" title="Logging in Varnish" href="operation-logging.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="performance.html" title="Varnish and Website Performance"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="operation-logging.html" title="Logging in Varnish"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="report.html" accesskey="U">Reporting and statistics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Statistics</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="statistics">
+<span id="users-guide-statistics"></span><h1>Statistics<a class="headerlink" href="#statistics" title="Link to this heading">¶</a></h1>
+<p>Varnish comes with a couple of nifty and very useful statistics generating tools that generates statistics in real time by constantly updating and presenting a specific dataset by aggregating and analyzing logdata from the shared memory logs.</p>
+<section id="varnishtop">
+<h2>varnishtop<a class="headerlink" href="#varnishtop" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../reference/varnishtop.html#varnishtop-1"><span class="std std-ref">varnishtop</span></a> utility reads the shared memory logs and presents a
+continuously updated list of the most commonly occurring log entries.</p>
+<p>With suitable filtering using the -I, -i, -X and -x options, it can be
+used to display a ranking of requested documents, clients, user
+agents, or any other information which is recorded in the log.</p>
+<p><code class="docutils literal notranslate"><span class="pre">varnishtop</span> <span class="pre">-i</span> <span class="pre">ReqURL</span></code> will show you what URLs are being asked for by
+the client. <code class="docutils literal notranslate"><span class="pre">varnishtop</span> <span class="pre">-i</span> <span class="pre">BereqURL</span></code> will show you what your backend
+is being asked the most. <code class="docutils literal notranslate"><span class="pre">varnishtop</span> <span class="pre">-I</span> <span class="pre">ReqHeader:Accept-Encoding</span></code> will
+show the most popular Accept-Encoding header the client are sending you.</p>
+</section>
+<section id="varnishhist">
+<h2>varnishhist<a class="headerlink" href="#varnishhist" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../reference/varnishhist.html#varnishhist-1"><span class="std std-ref">varnishhist</span></a> utility reads <a class="reference internal" href="../reference/varnishd.html#varnishd-1"><span class="std std-ref">varnishd</span></a> shared
+memory logs and presents a continuously updated histogram showing the
+distribution of the last N requests by their processing.
+The value of N and the vertical scale are displayed in the top left
+corner.  The horizontal scale is logarithmic.  Hits are marked with a
+pipe character (“|”), and misses are marked with a hash character (“#”).</p>
+</section>
+<section id="varnishstat">
+<h2>varnishstat<a class="headerlink" href="#varnishstat" title="Link to this heading">¶</a></h2>
+<p>Varnish has lots of counters. We count misses, hits, information about
+the storage, threads created, deleted objects. Just about
+everything. <a class="reference internal" href="../reference/varnishstat.html#varnishstat-1"><span class="std std-ref">varnishstat</span></a> will dump these counters. This is useful when
+tuning Varnish.</p>
+<p>There are programs that can poll <a class="reference internal" href="../reference/varnishstat.html#varnishstat-1"><span class="std std-ref">varnishstat</span></a> regularly and
+make nice graphs of these counters. One such program is Munin. Munin
+can be found at <a class="reference external" href="http://munin-monitoring.org/">http://munin-monitoring.org/</a> . There is a plugin for
+munin in the Varnish source code.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Statistics</a><ul>
+<li><a class="reference internal" href="#varnishtop">varnishtop</a></li>
+<li><a class="reference internal" href="#varnishhist">varnishhist</a></li>
+<li><a class="reference internal" href="#varnishstat">varnishstat</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="operation-logging.html"
+                          title="previous chapter">Logging in Varnish</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="performance.html"
+                          title="next chapter">Varnish and Website Performance</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users-guide/operation-statistics.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="performance.html" title="Varnish and Website Performance"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="operation-logging.html" title="Logging in Varnish"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="report.html" >Reporting and statistics</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Statistics</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

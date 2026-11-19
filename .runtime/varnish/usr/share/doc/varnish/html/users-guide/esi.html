@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Content composition with Edge Side Includes &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Troubleshooting Varnish" href="troubleshooting.html" />
+    <link rel="prev" title="Compression" href="compression.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="troubleshooting.html" title="Troubleshooting Varnish"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="compression.html" title="Compression"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Users Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Content composition with Edge Side Includes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="content-composition-with-edge-side-includes">
+<span id="users-guide-esi"></span><h1>Content composition with Edge Side Includes<a class="headerlink" href="#content-composition-with-edge-side-includes" title="Link to this heading">¶</a></h1>
+<p>Varnish can create web pages by assembling different pages, called <cite>fragments</cite>,
+together into one page. These <cite>fragments</cite> can have individual cache policies.
+If you have a web site with a list showing the five most popular articles on
+your site, this list can probably be cached as a <cite>fragment</cite> and included
+in all the other pages.</p>
+<p>Used properly this strategy can dramatically increase
+your hit rate and reduce the load on your servers.</p>
+<p>In Varnish we’ve only implemented a small subset of ESI, because most of
+the rest of the ESI specifications facilities are easier and better done
+with VCL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>esi:include
+esi:remove
+&lt;!--esi ...--&gt;
+</pre></div>
+</div>
+<p>Content substitution based on variables and cookies is not implemented.</p>
+<p>Varnish will not process ESI instructions in HTML comments.</p>
+<section id="example-esi-include">
+<h2>Example: esi:include<a class="headerlink" href="#example-esi-include" title="Link to this heading">¶</a></h2>
+<p>Lets see an example how this could be used. This simple cgi script
+outputs the date:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+
+<span class="n">echo</span> <span class="s1">&#39;Content-type: text/html&#39;</span>
+<span class="n">echo</span> <span class="s1">&#39;&#39;</span>
+<span class="n">date</span> <span class="s2">&quot;+%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span>
+</pre></div>
+</div>
+<p>Now, lets have an HTML file that has an ESI include statement:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">HTML</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">BODY</span><span class="o">&gt;</span>
+<span class="n">The</span> <span class="n">time</span> <span class="ow">is</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">esi</span><span class="p">:</span><span class="n">include</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;/cgi-bin/date.cgi&quot;</span><span class="o">/&gt;</span>
+<span class="n">at</span> <span class="n">this</span> <span class="n">very</span> <span class="n">moment</span><span class="o">.</span>
+<span class="o">&lt;/</span><span class="n">BODY</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">HTML</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>For ESI to work you need to activate ESI processing in VCL, like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_backend_response</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">bereq</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="s2">&quot;/test.html&quot;</span><span class="p">)</span> <span class="p">{</span>
+       <span class="nb">set</span> <span class="n">beresp</span><span class="o">.</span><span class="n">do_esi</span> <span class="o">=</span> <span class="n">true</span><span class="p">;</span> <span class="o">//</span> <span class="n">Do</span> <span class="n">ESI</span> <span class="n">processing</span>
+       <span class="nb">set</span> <span class="n">beresp</span><span class="o">.</span><span class="n">ttl</span> <span class="o">=</span> <span class="mi">24</span> <span class="n">h</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Sets</span> <span class="n">the</span> <span class="n">TTL</span> <span class="n">on</span> <span class="n">the</span> <span class="n">HTML</span> <span class="n">above</span>
+    <span class="p">}</span> <span class="n">elseif</span> <span class="p">(</span><span class="n">bereq</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="s2">&quot;/cgi-bin/date.cgi&quot;</span><span class="p">)</span> <span class="p">{</span>
+       <span class="nb">set</span> <span class="n">beresp</span><span class="o">.</span><span class="n">ttl</span> <span class="o">=</span> <span class="mi">1</span><span class="n">m</span><span class="p">;</span>      <span class="o">//</span> <span class="n">Sets</span> <span class="n">a</span> <span class="n">one</span> <span class="n">minute</span> <span class="n">TTL</span> <span class="n">on</span>
+                                 <span class="o">//</span> <span class="n">the</span> <span class="n">included</span> <span class="nb">object</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">beresp.do_esi</span> <span class="pre">=</span> <span class="pre">true;</span></code> is not required, and should
+be avoided, for the included fragments, unless they also contains
+<code class="docutils literal notranslate"><span class="pre">&lt;ESI::include …/&gt;</span></code> instructions.</p>
+</section>
+<section id="example-esi-remove-and-esi">
+<h2>Example: esi:remove and &lt;!–esi … –&gt;<a class="headerlink" href="#example-esi-remove-and-esi" title="Link to this heading">¶</a></h2>
+<p>The <cite>&lt;esi:remove&gt;</cite> and <cite>&lt;!–esi … –&gt;</cite> constructs can be used to present
+appropriate content whether or not ESI is available, for example you can
+include content when ESI is available or link to it when it is not.
+ESI processors will remove the start (“&lt;!–esi”) and the end (”–&gt;”) when
+the page is processed, while still processing the contents. If the page
+is not processed, it will remain intact, becoming a HTML/XML comment tag.
+ESI processors will remove <cite>&lt;esi:remove&gt;</cite> tags and all content contained
+in them, allowing you to only render the content when the page is not
+being ESI-processed.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;esi:remove&gt;
+  &lt;a href=&quot;http://www.example.com/LICENSE&quot;&gt;The license&lt;/a&gt;
+&lt;/esi:remove&gt;
+&lt;!--esi
+&lt;p&gt;The full text of the license:&lt;/p&gt;
+&lt;esi:include src=&quot;http://example.com/LICENSE&quot; /&gt;
+--&gt;
+</pre></div>
+</div>
+</section>
+<section id="what-happens-when-it-fails">
+<h2>What happens when it fails ?<a class="headerlink" href="#what-happens-when-it-fails" title="Link to this heading">¶</a></h2>
+<p>By default, the fragments must have <code class="docutils literal notranslate"><span class="pre">resp.status</span></code> 200 or 206 or
+their inclusion will cause the parent request to abort.</p>
+<p>Likewise, if the fragment is a streaming fetch, and that fetch
+fails, the parent request aborts.</p>
+<p>If you include synthetic fragments, that is fragments created in
+<code class="docutils literal notranslate"><span class="pre">vcl_backend_error{}</span></code> or <code class="docutils literal notranslate"><span class="pre">vcl_synth{}</span></code>, you must set
+<code class="docutils literal notranslate"><span class="pre">(be)resp.status</span></code> to 200 before <code class="docutils literal notranslate"><span class="pre">return(deliver);</span></code></p>
+<p>We say “abort” rather than “fail”, because by the time Varnish
+starts inserting the fragments, the HTTP response header has long
+since been sent, and it is no longer possible to change the parent
+requests’s <code class="docutils literal notranslate"><span class="pre">resp.status</span></code> to a 5xx, so the only way to signal that
+something is amiss, is to close the connection.</p>
+<p>However, it is possible to allow individual <code class="docutils literal notranslate"><span class="pre">&lt;ESI:include…</span></code> to
+continue in case of failures, by setting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">feature</span> <span class="o">+</span><span class="n">esi_include_onerror</span>
+</pre></div>
+</div>
+<p>and tagging those specific includes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">ESI</span><span class="p">:</span><span class="n">include</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;…&quot;</span> <span class="n">onerror</span><span class="o">=</span><span class="s2">&quot;continue&quot;</span><span class="o">/&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="can-an-esi-fragment-also-use-esi-includes">
+<h2>Can an ESI fragment also use ESI-includes ?<a class="headerlink" href="#can-an-esi-fragment-also-use-esi-includes" title="Link to this heading">¶</a></h2>
+<p>Yes, but the depth is limited by the <code class="docutils literal notranslate"><span class="pre">max_esi_depth</span></code>
+parameter in order to prevent infinite recursion.</p>
+</section>
+<section id="doing-esi-on-json-and-other-non-xml-ish-content">
+<h2>Doing ESI on JSON and other non-XML’ish content<a class="headerlink" href="#doing-esi-on-json-and-other-non-xml-ish-content" title="Link to this heading">¶</a></h2>
+<p>Varnish will peek at the first byte of an object and if it is not
+a “&lt;” Varnish assumes you didn’t really mean to ESI process it.
+You can disable this check by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">feature</span> <span class="o">+</span><span class="n">esi_disable_xml_check</span>
+</pre></div>
+</div>
+</section>
+<section id="ignoring-bom-in-esi-objects">
+<h2>Ignoring BOM in ESI objects<a class="headerlink" href="#ignoring-bom-in-esi-objects" title="Link to this heading">¶</a></h2>
+<p>If you backend spits out a Unicode Byte-Order-Mark as the first
+bytes of the response, the “&lt;” check will fail unless you set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">feature</span> <span class="o">+</span><span class="n">esi_remove_bom</span>
+</pre></div>
+</div>
+</section>
+<section id="esi-on-invalid-xml">
+<h2>ESI on invalid XML<a class="headerlink" href="#esi-on-invalid-xml" title="Link to this heading">¶</a></h2>
+<p>The ESI parser expects the XML to be reasonably well formed, but
+this may fail if you are ESI including non-XML files.  You can
+make the ESI parser disregard anything but ESI tags by setting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">feature</span> <span class="o">+</span><span class="n">esi_ignore_other_elements</span>
+</pre></div>
+</div>
+</section>
+<section id="esi-includes-with-https-protocol">
+<h2>ESI includes with HTTPS protocol<a class="headerlink" href="#esi-includes-with-https-protocol" title="Link to this heading">¶</a></h2>
+<p>If ESI:include tags specify HTTPS protocol, it will be ignored
+by default, because Varnish has no way to fetch it with encryption.
+If you want Varnish to fetch them like it does anything else, set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">feature</span> <span class="o">+</span><span class="n">esi_ignore_https</span>
+</pre></div>
+</div>
+</section>
+<section id="esi-on-partial-responses-206">
+<h2>ESI on partial responses (206)<a class="headerlink" href="#esi-on-partial-responses-206" title="Link to this heading">¶</a></h2>
+<p>Varnish supports range requests, but in general partial responses
+make no sense in an ESI context.</p>
+<p>If you really know what you are doing, change the 206 to a 200:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_backend_response</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">beresp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">206</span> <span class="o">&amp;&amp;</span> <span class="n">beresp</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">secret</span> <span class="o">==</span> <span class="s2">&quot;swordfish&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">set</span> <span class="n">beresp</span><span class="o">.</span><span class="n">do_esi</span> <span class="o">=</span> <span class="kc">True</span><span class="p">;</span>
+        <span class="nb">set</span> <span class="n">beresp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="esi-and-return-vcl">
+<h2>ESI and return(vcl(…))<a class="headerlink" href="#esi-and-return-vcl" title="Link to this heading">¶</a></h2>
+<p>If the original client request switched to a different VCL using
+<code class="docutils literal notranslate"><span class="pre">return(vcl(...))</span></code> in <code class="docutils literal notranslate"><span class="pre">vcl_recv</span></code>, any esi:include-requests
+will still start out in the same VCL as the original did, <em>not</em>
+in the one it switched to.</p>
+</section>
+<section id="esi-and-gzip-compression">
+<h2>ESI and gzip compression<a class="headerlink" href="#esi-and-gzip-compression" title="Link to this heading">¶</a></h2>
+<p>Varnish’s ESI implementation handles gzip compression automatically,
+no matter how it is mixed:  The parent request can be compressed
+or uncompressed and the fragments can be compressed or uncompressed,
+it all works out.</p>
+<p>Varnish does this compressing all parts of ESI responses
+separately, and stitching them together on the fly during
+delivery, which has a negative impact on compression ratio.</p>
+<p>When you <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">beresp.do_esi</span> <span class="pre">=</span> <span class="pre">True;</span></code> on a gzip’ed response, it
+will be uncompressed and recompressed part-wise during the fetch.</p>
+<p>The part-wise compression reduces the opportunities for
+removing redundancy, because back-references in the gzip
+data stream cannot point outside it’s own part.</p>
+<p>The other case where compression ratio is impacted, is if an
+uncompressed fragment is inserted into a compressed
+response.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Content composition with Edge Side Includes</a><ul>
+<li><a class="reference internal" href="#example-esi-include">Example: esi:include</a></li>
+<li><a class="reference internal" href="#example-esi-remove-and-esi">Example: esi:remove and &lt;!–esi … –&gt;</a></li>
+<li><a class="reference internal" href="#what-happens-when-it-fails">What happens when it fails ?</a></li>
+<li><a class="reference internal" href="#can-an-esi-fragment-also-use-esi-includes">Can an ESI fragment also use ESI-includes ?</a></li>
+<li><a class="reference internal" href="#doing-esi-on-json-and-other-non-xml-ish-content">Doing ESI on JSON and other non-XML’ish content</a></li>
+<li><a class="reference internal" href="#ignoring-bom-in-esi-objects">Ignoring BOM in ESI objects</a></li>
+<li><a class="reference internal" href="#esi-on-invalid-xml">ESI on invalid XML</a></li>
+<li><a class="reference internal" href="#esi-includes-with-https-protocol">ESI includes with HTTPS protocol</a></li>
+<li><a class="reference internal" href="#esi-on-partial-responses-206">ESI on partial responses (206)</a></li>
+<li><a class="reference internal" href="#esi-and-return-vcl">ESI and return(vcl(…))</a></li>
+<li><a class="reference internal" href="#esi-and-gzip-compression">ESI and gzip compression</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="compression.html"
+                          title="previous chapter">Compression</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="troubleshooting.html"
+                          title="next chapter">Troubleshooting Varnish</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users-guide/esi.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="troubleshooting.html" title="Troubleshooting Varnish"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="compression.html" title="Compression"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Content composition with Edge Side Includes</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

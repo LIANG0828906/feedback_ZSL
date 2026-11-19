@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How Varnish met CHERI 4/N &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How Varnish met CHERI 3/N" href="cheri3.html" />
+    <link rel="prev" title="How Varnish met CHERI 5/N" href="cheri5.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cheri3.html" title="How Varnish met CHERI 3/N"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cheri5.html" title="How Varnish met CHERI 5/N"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 4/N</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-varnish-met-cheri-4-n">
+<span id="phk-cheri-4"></span><h1>How Varnish met CHERI 4/N<a class="headerlink" href="#how-varnish-met-cheri-4-n" title="Link to this heading">¶</a></h1>
+<section id="so-what-can-cheri-do">
+<h2>So what can CHERI do ?<a class="headerlink" href="#so-what-can-cheri-do" title="Link to this heading">¶</a></h2>
+<p>CHERI can restrict pointers, but it does not restrict the memory
+they point to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;cheriintrin.h&gt;</span>
+<span class="c1">#include &lt;stdio.h&gt;</span>
+<span class="c1">#include &lt;string.h&gt;</span>
+
+<span class="nb">int</span>
+<span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+    <span class="n">char</span> <span class="o">*</span><span class="n">ptr1</span> <span class="o">=</span> <span class="n">cheri_perms_and</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">CHERI_PERM_LOAD</span><span class="p">);</span>
+    <span class="n">char</span> <span class="o">*</span><span class="n">ptr2</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span>
+
+    <span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;Hello World</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="n">ptr1</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Will</span> <span class="n">core</span> <span class="n">dump</span>
+    <span class="n">ptr2</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Works</span> <span class="n">fine</span><span class="o">.</span>
+    <span class="n">puts</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>I suspect most programmers will find this counter-intuitive, because
+normally it is the memory itself which write-protected in which
+case no pointers can ever write to it.</p>
+<p>This is where the word “capability” comes from:  The pointer is what
+gives you the “capability” to access the memory, and therefore they
+can be restricted separately from the memory they provide access to.</p>
+<p>If you could just create your own “capabilities” out of integers,
+that would be no big improvement, but you can not:  Under CHERI you
+can only make a new capability from another capability, and the new
+one can never be more potent than the one it is derived from.</p>
+<p>In addition to ‘read’ and ‘write’ permissions, capabilities contain the
+start and the length of the piece of memory they allow access to.</p>
+<p>Under CHERI the printf(3) pattern “%#p” tells the full story:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;cheriintrin.h&gt;</span>
+<span class="c1">#include &lt;stdio.h&gt;</span>
+<span class="c1">#include &lt;string.h&gt;</span>
+
+<span class="nb">int</span>
+<span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+    <span class="n">char</span> <span class="o">*</span><span class="n">ptr1</span> <span class="o">=</span> <span class="n">cheri_perms_and</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">CHERI_PERM_LOAD</span><span class="p">);</span>
+    <span class="n">char</span> <span class="o">*</span><span class="n">ptr2</span> <span class="o">=</span> <span class="n">buf</span><span class="p">;</span>
+    <span class="n">char</span> <span class="o">*</span><span class="n">ptr3</span><span class="p">;</span>
+    <span class="n">char</span> <span class="o">*</span><span class="n">ptr4</span><span class="p">;</span>
+
+    <span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;Hello World</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="o">//</span><span class="n">ptr1</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Will</span> <span class="n">core</span> <span class="n">dump</span>
+    <span class="n">ptr2</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Works</span> <span class="n">fine</span><span class="o">.</span>
+    <span class="n">puts</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;buf:</span><span class="se">\t</span><span class="s2">%#p</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;ptr1:</span><span class="se">\t</span><span class="s2">%#p</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ptr1</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;ptr2:</span><span class="se">\t</span><span class="s2">%#p</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ptr2</span><span class="p">);</span>
+    <span class="n">ptr3</span> <span class="o">=</span> <span class="n">ptr2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;ptr3:</span><span class="se">\t</span><span class="s2">%#p</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ptr3</span><span class="p">);</span>
+    <span class="n">ptr4</span> <span class="o">=</span> <span class="n">cheri_bounds_set</span><span class="p">(</span><span class="n">ptr3</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;ptr4:</span><span class="se">\t</span><span class="s2">%#p</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ptr4</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>And we get:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">buf</span><span class="p">:</span>    <span class="mh">0xfffffff7ff68</span> <span class="p">[</span><span class="n">rwRW</span><span class="p">,</span><span class="mh">0xfffffff7ff68</span><span class="o">-</span><span class="mh">0xfffffff7ff7c</span><span class="p">]</span>
+<span class="n">ptr1</span><span class="p">:</span>   <span class="mh">0xfffffff7ff68</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span><span class="mh">0xfffffff7ff68</span><span class="o">-</span><span class="mh">0xfffffff7ff7c</span><span class="p">]</span>
+<span class="n">ptr2</span><span class="p">:</span>   <span class="mh">0xfffffff7ff68</span> <span class="p">[</span><span class="n">rwRW</span><span class="p">,</span><span class="mh">0xfffffff7ff68</span><span class="o">-</span><span class="mh">0xfffffff7ff7c</span><span class="p">]</span>
+<span class="n">ptr3</span><span class="p">:</span>   <span class="mh">0xfffffff7ff69</span> <span class="p">[</span><span class="n">rwRW</span><span class="p">,</span><span class="mh">0xfffffff7ff68</span><span class="o">-</span><span class="mh">0xfffffff7ff7c</span><span class="p">]</span>
+<span class="n">ptr4</span><span class="p">:</span>   <span class="mh">0xfffffff7ff69</span> <span class="p">[</span><span class="n">rwRW</span><span class="p">,</span><span class="mh">0xfffffff7ff69</span><span class="o">-</span><span class="mh">0xfffffff7ff6d</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>(Ignore the upper-case ‘RW’ for now, I’ll get back to those later.)</p>
+<p>Because of the odd things people do with pointers in C, <code class="docutils literal notranslate"><span class="pre">ptr3</span></code>
+keeps the same range as <code class="docutils literal notranslate"><span class="pre">ptr2</span></code> and that’s a good excuse to
+address the question I imagine my readers have at this point:</p>
+</section>
+<section id="what-about-const">
+<h2>What about <code class="docutils literal notranslate"><span class="pre">const</span></code> ?<a class="headerlink" href="#what-about-const" title="Link to this heading">¶</a></h2>
+<p>The C language is a mess.</p>
+<p>Bjarne Stroustrup introduced <code class="docutils literal notranslate"><span class="pre">const</span></code> in “C-with-classes”,
+which later became C++, and in C++ it does the right thing.</p>
+<p>The morons on the ISO-C committee did a half-assed import
+in C89, and therefore it does the wrong thing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">char</span> <span class="o">*</span><span class="n">strchr</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="nb">int</span> <span class="n">c</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You pass a read-only pointer in, and you get a read-write
+pointer into that string back ?!</p>
+<p>There were at least three different ways they could have done right:</p>
+<ul>
+<li><p>Add a <code class="docutils literal notranslate"><span class="pre">cstrchr</span></code> function, having <code class="docutils literal notranslate"><span class="pre">const</span></code> on both sides.</p></li>
+<li><p>Enable prototypes to explain this, with some gruesome hack:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">const</span><span class="p">)</span> <span class="n">char</span> <span class="o">*</span><span class="n">strchr</span><span class="p">((</span><span class="n">const</span><span class="p">)</span> <span class="n">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="nb">int</span> <span class="n">c</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Allow multiple prototypes for the same function, varying only in const-ness:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">char</span> <span class="o">*</span><span class="n">strchr</span><span class="p">(</span><span class="n">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="nb">int</span> <span class="n">c</span><span class="p">);</span>
+<span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">strchr</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="nb">int</span> <span class="n">c</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>But instead they just ignored that issue, and several others like it.</p>
+<p>The result is that we have developed the concept of “const-poisoning”,
+to describe the fact that if you use “const” to any extent in your
+C sources, you almost always end up needing a macro like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define TRUST_ME(ptr)  ((void*)(uintptr_t)(ptr))</span>
+</pre></div>
+</div>
+<p>To remove const-ness where it cannot go.</p>
+<p>(If you think that is ISO-C’s opus magnum, ask yourself why we still
+cannot specify struct packing and endianess explicitly ?  It’s hardly
+like anybody ever have to apart data-structures explicitly specified in
+hardware or protocol documents, is it ?)</p>
+</section>
+<section id="read-write-markup-with-cheri">
+<h2>Read/Write markup with CHERI<a class="headerlink" href="#read-write-markup-with-cheri" title="Link to this heading">¶</a></h2>
+<p>Because <code class="docutils literal notranslate"><span class="pre">const</span></code> is such a mess in C, the CHERI compiler does not
+automatically remove the write-capability from <code class="docutils literal notranslate"><span class="pre">const</span></code> arguments
+to functions, something I suspect (but have not checked) that they
+can do in C++.</p>
+<p>Instead we will have to do it ourselves, so I have added two macros to
+our <code class="docutils literal notranslate"><span class="pre">&lt;vdef.h&gt;</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define RO(x) cheri_perms_and((x), CHERI_PERM_LOAD)</span>
+<span class="c1">#define ROP(x) cheri_perms_and((x), CHERI_PERM_LOAD|CHERI_PERM_LOAD_CAP)</span>
+</pre></div>
+</div>
+<p>Passing a pointer through the <code class="docutils literal notranslate"><span class="pre">RO()</span></code> macro makes it read-only, so we
+can do stuff like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@@ -285,7 +286,7 @@ VRT_GetHdr(VRT_CTX, VCL_HEADER hs)
+    […]
+-   return (p);
++   return (RO(p));
+ }
+</pre></div>
+</div>
+<p>To explicitly give <code class="docutils literal notranslate"><span class="pre">const</span></code> some bite.</p>
+<p>The difference between <code class="docutils literal notranslate"><span class="pre">RO</span></code> and <code class="docutils literal notranslate"><span class="pre">ROP</span></code> is where the upper- and
+lower-case “rw” comes into the picture:  Capabilities have two
+levels of read/write protection:</p>
+<ul class="simple">
+<li><p>Can you read or write normal data with this pointer (<code class="docutils literal notranslate"><span class="pre">CHERI_PERM_LOAD</span></code>)</p></li>
+<li><p>Can you read or write pointers with this pointer (<code class="docutils literal notranslate"><span class="pre">CHERI_PERM_LOAD_CAP</span></code>)</p></li>
+</ul>
+<p>Rule of thumb: Pure data: Use only the first, structs with pointers in them,
+use both.</p>
+<p>One can also make write-only pointers with CHERI, but there are
+only few places where they can be gainfully employed, outside strict
+security in handling of (cryptographic) secrets.</p>
+<p>Right now I’m plunking <code class="docutils literal notranslate"><span class="pre">RO()</span></code> and <code class="docutils literal notranslate"><span class="pre">ROP()</span></code> into the varnish code,
+and one by one relearning what atrocity the 37 uses of <code class="docutils literal notranslate"><span class="pre">TRUST_ME()</span></code>
+hide.</p>
+<p>Still no bugs found.</p>
+<p><em>/phk</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">How Varnish met CHERI 4/N</a><ul>
+<li><a class="reference internal" href="#so-what-can-cheri-do">So what can CHERI do ?</a></li>
+<li><a class="reference internal" href="#what-about-const">What about <code class="docutils literal notranslate"><span class="pre">const</span></code> ?</a></li>
+<li><a class="reference internal" href="#read-write-markup-with-cheri">Read/Write markup with CHERI</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cheri5.html"
+                          title="previous chapter">How Varnish met CHERI 5/N</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cheri3.html"
+                          title="next chapter">How Varnish met CHERI 3/N</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/cheri4.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="cheri3.html" title="How Varnish met CHERI 3/N"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cheri5.html" title="How Varnish met CHERI 5/N"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 4/N</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

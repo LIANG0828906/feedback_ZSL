@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Legacy-.* &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="IP Addresses - A long expected problem" href="ip_address.html" />
+    <link rel="prev" title="The 503’s heard around the world" href="503aroundtheworld.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ip_address.html" title="IP Addresses - A long expected problem"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="503aroundtheworld.html" title="The 503’s heard around the world"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Legacy-.*</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="legacy">
+<span id="phk-legacy"></span><h1>Legacy-.*<a class="headerlink" href="#legacy" title="Link to this heading">¶</a></h1>
+<p>In the middle of an otherwise pleaseant conversation recently, the
+other person suddenly burst out that <em>“Varnish was part of our
+legacy software.”</em></p>
+<p>That stung a bit.</p>
+<p>But fair enough:  They have been running varnish since 2009 or so.</p>
+<p>Neither Raymond’s “New Hacker’s Dictionary”, nor the legacy publication
+it tried to replace, Kelly-Bootle’s “The Devils DP Dictionary”, define
+“legacy software”.  The former because the collective “we” did not
+bother with utter trivialities such as invoicing, the latter because
+back then people didnt abandon software.</p>
+<p>Tomorrow I will be sitting in a small hut in the middle of a field,
+trying to figure out what somebody could possibly have been thinking
+about, when 10 years ago they claimed to implement “V.42” while
+also using their own HDLC frame layout.</p>
+<p>“V.42” and “HDLC” are also a legacy at this point, but chances are
+you have used it:  That was the hot way to do error-correction on
+modems, when dialing into a BBS or ISP in the 1990ies.</p>
+<p>I guess I should say “legacy-modems” ?</p>
+<p>Big-endianess, storing the bytes the sensible way for hex-dumps, is
+rapidly becoming legacy, as the final old HP and SUN irons are
+finally become eWaste.</p>
+<p>Objectively there is no difference of merit between little-endian
+and big-endian, the most successful computers architectures of all
+time picked equally one or the other, and the consolidation towards
+little-endian is driven more by <em>“It’s actually not that important”</em>
+than by anything else.</p>
+<p>But we still have a bit of code which cares about endianess
+in Varnish, in particular in the imported <cite>zlib</cite> code.</p>
+<p>For a while I ran a CI client on a WLAN access point with a
+big-endian MIPS-processor.  But with only 128MB RAM the spurious
+error rate caused too much noise.</p>
+<p>Nothing has been proclaimed “Legacy” more often and with more force,
+than the IBM mainframe, but they are still around, keeping the books
+balanced, as they have for half a century.</p>
+<p>And because they were born with variable length data types, IBM
+mainframes are big-endian, and because we in Varnish care about
+portability, you can also run Varnish Cache on your IBM mainframe:
+Thanks to Ingvar, there are “s390x” architecture Varnish
+packages if you need them.</p>
+<p>So I reached out to IBM’s FOSS-outreach people and asked if we could
+borrow a cup of mainframe to run a CI-client, and before I knew it,
+the Varnish Cache Project had access to a virtual s390x machine somewhere
+in IBM’s cloud.</p>
+<p>For once “In the Cloud” <em>literally</em> means “On somebody’s mainframe” :-)</p>
+<p>I’m not up to date on IBM Mainframe technology, the last one I used
+was a 3090 in 1989, so I have no idea how much performance
+IBM has allocated to us, on what kind of hardware, or what it might
+cost.</p>
+<p>But it runs a full CI iteration on Varnish Cache in 3 minutes flat,
+making it one of the fastest CI-clients we have.</p>
+<p>Thanks IBM!</p>
+<p>Poul-Henning, 2021-05-24</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="503aroundtheworld.html"
+                          title="previous chapter">The 503’s heard around the world</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="ip_address.html"
+                          title="next chapter">IP Addresses - A long expected problem</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/legacy.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ip_address.html" title="IP Addresses - A long expected problem"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="503aroundtheworld.html" title="The 503’s heard around the world"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Legacy-.*</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

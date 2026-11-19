@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The Varnish Reference Manual &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="VCL" href="vcl.html" />
+    <link rel="prev" title="Troubleshooting Varnish" href="../users-guide/troubleshooting.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl.html" title="VCL"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../users-guide/troubleshooting.html" title="Troubleshooting Varnish"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Varnish Reference Manual</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="the-varnish-reference-manual">
+<span id="reference-index"></span><h1>The Varnish Reference Manual<a class="headerlink" href="#the-varnish-reference-manual" title="Link to this heading">¶</a></h1>
+<section id="the-vcl-language">
+<span id="reference-vcl"></span><h2>The VCL language<a class="headerlink" href="#the-vcl-language" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vcl.html">VCL - The Varnish Configuration Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vcl-var.html">VCL Variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vcl-step.html">VCL Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vcl-backend.html">VCL backend configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vcl-probe.html">VCL backend health probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="states.html">Varnish Processing States</a></li>
+</ul>
+</div>
+<p>A collection of <a class="reference internal" href="../vcl-design-patterns/index.html#vcl-design-patterns-index"><span class="std std-ref">VCL Design Patterns</span></a> is available in addition to
+these reference manuals.</p>
+</section>
+<section id="bundled-vmods">
+<h2>Bundled VMODs<a class="headerlink" href="#bundled-vmods" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vmod_blob.html">VMOD blob - Utilities for the VCL blob type, encoding and decoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod_cookie.html">VMOD cookie - Varnish Cookie Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod_directors.html">VMOD directors - Varnish Directors Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod_proxy.html">VMOD proxy - Varnish Module to extract TLV attributes from PROXYv2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod_purge.html">VMOD purge - Varnish Purge Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod_std.html">VMOD std - Varnish Standard Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod_unix.html">VMOD unix - Utilities for Unix domain sockets</a></li>
+</ul>
+</div>
+</section>
+<section id="the-cli-interface">
+<h2>The CLI interface<a class="headerlink" href="#the-cli-interface" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="varnishadm.html">VarnishAdm - Control program for Varnish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="varnish-cli.html">CLI - The commands varnish understands</a></li>
+</ul>
+</div>
+</section>
+<section id="logging-and-monitoring">
+<h2>Logging and monitoring<a class="headerlink" href="#logging-and-monitoring" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vsl.html">VSL - The log records Varnish generates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vsl-query.html">VSLQ - Filter/Query expressions for VSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="varnishlog.html">VarnishLog - Logging raw VSL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="varnishncsa.html">VarnishNCSA - Logging in NCSA format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="varnishhist.html">VarnishHist - Realtime response histogram display</a></li>
+<li class="toctree-l1"><a class="reference internal" href="varnishtop.html">VarnishTop - Realtime activity display</a></li>
+</ul>
+</div>
+</section>
+<section id="counters-and-statistics">
+<h2>Counters and statistics<a class="headerlink" href="#counters-and-statistics" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="varnish-counters.html">VSC - The statistics Varnish collects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="varnishstat.html">VarnishStat - Watching and logging statistics</a></li>
+</ul>
+</div>
+</section>
+<section id="the-varnishd-program">
+<h2>The Varnishd program<a class="headerlink" href="#the-varnishd-program" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="varnishd.html">VarnishD - The program which does the actual work</a></li>
+</ul>
+</div>
+</section>
+<section id="varnishtest">
+<h2>Varnishtest<a class="headerlink" href="#varnishtest" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vtc.html">VTC - Language for writing test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="varnishtest.html">VarnishTest - execute test cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod_vtc.html">VMOD vtc - Utility module for varnishtest</a></li>
+</ul>
+</div>
+</section>
+<section id="for-developers-devops">
+<h2>For Developers &amp; DevOps<a class="headerlink" href="#for-developers-devops" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="shell_tricks.html">Shell tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vmod.html">VMODS - Extensions to VCL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vext.html">VEXT - Varnish Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vsm.html">VSM - Shared memory use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="directors.html">VDIR - Backends &amp; Directors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli_protocol.html">VCLI - CLI protocol API</a></li>
+</ul>
+</div>
+</section>
+<section id="code-book">
+<h2>Code-book<a class="headerlink" href="#code-book" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vtla.html">VTLA - Varnish Three Letter Acronyms</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">The Varnish Reference Manual</a><ul>
+<li><a class="reference internal" href="#the-vcl-language">The VCL language</a></li>
+<li><a class="reference internal" href="#bundled-vmods">Bundled VMODs</a></li>
+<li><a class="reference internal" href="#the-cli-interface">The CLI interface</a></li>
+<li><a class="reference internal" href="#logging-and-monitoring">Logging and monitoring</a></li>
+<li><a class="reference internal" href="#counters-and-statistics">Counters and statistics</a></li>
+<li><a class="reference internal" href="#the-varnishd-program">The Varnishd program</a></li>
+<li><a class="reference internal" href="#varnishtest">Varnishtest</a></li>
+<li><a class="reference internal" href="#for-developers-devops">For Developers &amp; DevOps</a></li>
+<li><a class="reference internal" href="#code-book">Code-book</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../users-guide/troubleshooting.html"
+                          title="previous chapter">Troubleshooting Varnish</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="vcl.html"
+                          title="next chapter">VCL</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl.html" title="VCL"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../users-guide/troubleshooting.html" title="Troubleshooting Varnish"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The Varnish Reference Manual</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

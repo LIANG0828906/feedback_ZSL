@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How Varnish met CHERI 6/N &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How Varnish met CHERI 5/N" href="cheri5.html" />
+    <link rel="prev" title="How Varnish met CHERI 7/N" href="cheri7.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cheri5.html" title="How Varnish met CHERI 5/N"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cheri7.html" title="How Varnish met CHERI 7/N"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 6/N</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-varnish-met-cheri-6-n">
+<span id="phk-cheri-6"></span><h1>How Varnish met CHERI 6/N<a class="headerlink" href="#how-varnish-met-cheri-6-n" title="Link to this heading">¶</a></h1>
+<section id="varnish-socket-addresses">
+<h2>Varnish Socket Addresses<a class="headerlink" href="#varnish-socket-addresses" title="Link to this heading">¶</a></h2>
+<p>Socket addresses are a bit of a mess, in particular because nobody
+dared shake up all the IPv4 legacy code when IPv6 was introduced.</p>
+<p>In varnish we encapsulate all that uglyness in a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">suckaddr</span></code>,
+so named because it sucks that we have to spend time and code on this.</p>
+<p>In a case like this, it makes sense to make the internals strictly
+read-only, to ensure nobody gets sneaky ideas:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct suckaddr *
+VSA_Build(void *d, const void *s, unsigned sal)
+{
+    struct suckaddr *sua;
+
+    [… lots of ugly stuff …]
+
+    return (RO(sua));
+}
+</pre></div>
+</div>
+<p>It would then seem logical to use C’s <code class="docutils literal notranslate"><span class="pre">const</span></code> to signal this fact,
+but since the current VSA api is currently defined such that users
+call <code class="docutils literal notranslate"><span class="pre">free(3)</span></code> on the suckaddrs when they are done with them, that does
+not work, because the prototype for <code class="docutils literal notranslate"><span class="pre">free(3)</span></code> is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void free(void *ptr);
+</pre></div>
+</div>
+<p>So you cannot call it with a <code class="docutils literal notranslate"><span class="pre">const</span></code> pointer.</p>
+<p>All hail the ISO-C standards committee!</p>
+<p>This brings me to a soft point with CHERI: Allocators.</p>
+</section>
+<section id="how-to-free-things-with-cheri">
+<h2>How to free things with CHERI<a class="headerlink" href="#how-to-free-things-with-cheri" title="Link to this heading">¶</a></h2>
+<p>A very common design-pattern in encapsulating classes look something
+like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct real_foo {
+    struct foo foo;
+    [some metadata about foo]
+};
+
+const struct foo *
+Make_Foo([arguments])
+{
+    struct real_foo *rf;
+
+    rf = calloc(1, sizeof *rf);
+    if (rf == NULL)
+        return (rf);
+    [fill in rf]
+    return (&amp;rf-&gt;foo);
+}
+
+void
+Free_Foo(const struct foo **ptr)
+{
+    const struct foo *fp;
+    struct real_foo *rfp;
+
+    assert(ptr != NULL);
+    fp = *ptr;
+    assert(fp != NULL);
+    *ptr = NULL;
+
+    rfp = (struct real_foo*)((uintptr_t)fp);
+    [clean stuff up]
+}
+</pre></div>
+</div>
+<p>We pass a <code class="docutils literal notranslate"><span class="pre">**ptr</span></code> to <code class="docutils literal notranslate"><span class="pre">Free_Foo()</span></code>, another varnish style-pattern,
+so we can NULL out the holding variable in the calling function,
+to avoid a dangling pointer to the now destroyed object from
+causing any kind of trouble later.</p>
+<p>In the calling function this looks like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>const struct foo *foo_ptr;
+[…]
+Free_Foo(&amp;foo_ptr);
+</pre></div>
+</div>
+<p>If we use CHERI to make the foo truly <code class="docutils literal notranslate"><span class="pre">const</span></code> for the users of
+the API, we cannot, as above, wash the <code class="docutils literal notranslate"><span class="pre">const</span></code> away with a trip through
+<code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code> and then write to the metadata.</p>
+<p>The CHERI C/C++ manual, a terse academic tome, laconically mention that:</p>
+<p><em>»Therefore, some additional work may be required to derive
+a pointer to the allocation’s metadata via another global capability,
+rather than the one that has been passed to free().«</em></p>
+<p>Despite the understatement, I am very much in favour of this, because
+this is <em>precisely</em> why my own
+<a class="reference external" href="https://papers.freebsd.org/1998/phk-malloc/">phkmalloc</a>
+became a big hit twenty years ago:  By firmly separating the metadata
+from the allocated space, several new classes of mistakes using the
+<code class="docutils literal notranslate"><span class="pre">malloc(3)</span></code> API could, and were, detected.</p>
+<p>But this <em>is</em> going to be an embuggerance for CHERI users, because
+with CHERI getting from one pointer to different one is actual work.</p>
+<p>The only “proper” solution is to build some kind of datastructure:
+List, tree, hash, DB2 database, pick any poison you prefer, and
+search out the metadata pointer using the impotent pointer as key.
+Given that CHERI pointers are huge, it may be a better idea to embed
+a numeric index in the object and use that as the key.</p>
+<p>An important benefit of this »additional work« is that if your
+free-function gets passed a pointer to something else, you will
+find out, because it is not in your data-structure.</p>
+<p>It would be a good idea if CHERI came with a quality implementation
+of “Find my other pointer”, so that nobody is forced to crack The
+Art of Computer Programming open for this.</p>
+<p>When the API is “fire-and-forget” like VSA, in the sense that there
+is no metadata to clean up, we can leave the hard work to the
+<code class="docutils literal notranslate"><span class="pre">malloc(3)</span></code> implementation.</p>
+<p>Ever since <code class="docutils literal notranslate"><span class="pre">phkmalloc</span></code> no relevant implementation of <code class="docutils literal notranslate"><span class="pre">malloc(3)</span></code>
+has dereferenced the freed pointer, in order to find the metadata
+for the allocation.  Despite its non-const C prototype <code class="docutils literal notranslate"><span class="pre">free(3)</span></code>,
+will therefore happily handle a <code class="docutils literal notranslate"><span class="pre">const</span></code> or even CHERIed read-only
+pointer.</p>
+<p>But you <em>will</em> have to scrub the <code class="docutils literal notranslate"><span class="pre">const</span></code> off with a <code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code>
+to satisfy the C-compiler:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void
+VSA_free(const struct suckaddr **vsap)
+{
+    const struct suckaddr *vsa;
+
+    AN(vsap);
+    vsa = *vsap;
+    *vsap = NULL;
+    free((char *)(uintptr_t)vsa);
+}
+</pre></div>
+</div>
+<p>Or in varnish style:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void
+VSA_free(const struct suckaddr **vsap)
+{
+    const struct suckaddr *vsa;
+
+    TAKE_OBJ_NOTNULL(vsa, vsap, SUCKADDR_MAGIC);
+    free(TRUST_ME(vsa));
+}
+</pre></div>
+</div>
+<p>Having been all over this code now, I have decided to constify <code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">suckaddr</span></code> in varnish, even without CHERI, it is sounder that way.</p>
+<p>It is not bug, but CHERI made it a lot simpler and faster for me
+to explore the consequences of this change, so I will forfeit
+a score of “half a bug” to CHERI at this point.</p>
+<p><em>/phk</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">How Varnish met CHERI 6/N</a><ul>
+<li><a class="reference internal" href="#varnish-socket-addresses">Varnish Socket Addresses</a></li>
+<li><a class="reference internal" href="#how-to-free-things-with-cheri">How to free things with CHERI</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cheri7.html"
+                          title="previous chapter">How Varnish met CHERI 7/N</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cheri5.html"
+                          title="next chapter">How Varnish met CHERI 5/N</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/cheri6.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="cheri5.html" title="How Varnish met CHERI 5/N"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cheri7.html" title="How Varnish met CHERI 7/N"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 6/N</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

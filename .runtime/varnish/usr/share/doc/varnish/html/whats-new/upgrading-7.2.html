@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upgrading to Varnish 7.2 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changes in Varnish 7.1" href="changes-7.1.html" />
+    <link rel="prev" title="Changes in Varnish 7.2" href="changes-7.2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changes-7.1.html" title="Changes in Varnish 7.1"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.2.html" title="Changes in Varnish 7.2"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.2</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="upgrading-to-varnish-7-2">
+<span id="whatsnew-upgrading-7-2"></span><h1>Upgrading to Varnish 7.2<a class="headerlink" href="#upgrading-to-varnish-7-2" title="Link to this heading">¶</a></h1>
+<section id="varnishd">
+<h2>varnishd<a class="headerlink" href="#varnishd" title="Link to this heading">¶</a></h2>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h3>
+<p>The following parameters are deprecated:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vcc_allow_inline_c</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vcc_err_unref</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vcc_unsafe_path</span></code></p></li>
+</ul>
+<p>They can still be set as individual boolean parameters. The deprecated
+aliases will be removed in a future release.</p>
+<p>They are replaced by the <code class="docutils literal notranslate"><span class="pre">vcc_feature</span></code> bits parameter:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">allow_inline_c</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">err_unref</span></code> (enabled by default)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unsafe_path</span></code> (enabled by default)</p></li>
+</ul>
+<p>The following commands are equivalent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">vcc_err_unref</span> <span class="n">off</span>
+<span class="n">param</span><span class="o">.</span><span class="n">set</span> <span class="n">vcc_feature</span> <span class="o">-</span><span class="n">err_unref</span>
+</pre></div>
+</div>
+</section>
+<section id="identity">
+<h3>Identity<a class="headerlink" href="#identity" title="Link to this heading">¶</a></h3>
+<p>The server identity must be a valid HTTP token, which may pose a problem
+to existing setups. For example <code class="docutils literal notranslate"><span class="pre">varnishd</span> <span class="pre">-i</span> <span class="pre">&quot;edge</span> <span class="pre">server</span> <span class="pre">1&quot;</span></code> is no
+longer accepted. You can use something like <code class="docutils literal notranslate"><span class="pre">varnishd</span> <span class="pre">-i</span> <span class="pre">&quot;edge-server-1&quot;</span></code>
+instead.</p>
+</section>
+</section>
+<section id="vcl">
+<h2>VCL<a class="headerlink" href="#vcl" title="Link to this heading">¶</a></h2>
+<p>Varnish generates a Via header and forwards it to the backend by default.
+This can be prevented for example in <code class="docutils literal notranslate"><span class="pre">vcl_recv</span></code> or <code class="docutils literal notranslate"><span class="pre">vcl_backend_fetch</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="n">unset</span> <span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">via</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">sub</span> <span class="n">vcl_backend_fetch</span> <span class="p">{</span>
+    <span class="n">unset</span> <span class="n">bereq</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">via</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Via header is generated with the <code class="docutils literal notranslate"><span class="pre">server.identity</span></code> variable for
+the <code class="docutils literal notranslate"><span class="pre">received-by</span></code> field. See <cite>rfc9110_</cite> for a description of the Via
+header.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">resp.http.via</span></code> header is no longer overwritten by varnish, but
+rather appended to.</p>
+</section>
+<section id="vmods">
+<h2>VMODs<a class="headerlink" href="#vmods" title="Link to this heading">¶</a></h2>
+<p>Cookies generated by vmod_cookie used to have a trailing semi-colon that
+goes against the recommandations from <a class="reference external" href="https://www.rfc-editor.org/rfc/rfc6265">rfc6265</a>. This should not pose a
+problem, unless a piece of VCL code or a backend have come to rely on this
+incorrect behavior.</p>
+</section>
+<section id="varnishlog">
+<h2>varnishlog<a class="headerlink" href="#varnishlog" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Begin</span></code> and <code class="docutils literal notranslate"><span class="pre">Link</span></code> log records have an optional 4th field for the
+sub-request level. This may break log processors, log queries or NCSA
+formats that expect those records to have exactly 3 fields.</p>
+</section>
+<section id="varnishstat">
+<h2>varnishstat<a class="headerlink" href="#varnishstat" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">MAIN.fetch_no_thread</span></code> counter is gone, it never worked. Track the
+<code class="docutils literal notranslate"><span class="pre">MAIN.bgfetch_no_thread</span></code> counter instead.</p>
+</section>
+<section id="changes-for-developers-and-vmod-authors">
+<h2>Changes for developers and VMOD authors<a class="headerlink" href="#changes-for-developers-and-vmod-authors" title="Link to this heading">¶</a></h2>
+<p>The functions <code class="docutils literal notranslate"><span class="pre">VRT_AddVDP()</span></code>, <code class="docutils literal notranslate"><span class="pre">VRT_AddVFP()</span></code>, <code class="docutils literal notranslate"><span class="pre">VRT_RemoveVDP()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">VRT_RemoveVFP()</span></code> are deprecated. Use <code class="docutils literal notranslate"><span class="pre">VRT_AddFilter()</span></code> to add a pair
+(VFP and VDP) and <code class="docutils literal notranslate"><span class="pre">VRT_RemoveFilter()</span></code> to remove it. A filter pair needs
+at least one member of the pair.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">varnishtest</span> <span class="pre">-i</span></code> option no longer works outside of a Varnish source
+tree. There shouldn’t be a reason to use <code class="docutils literal notranslate"><span class="pre">-i</span></code> outside of the Varnish
+test suite.</p>
+<p><em>eof</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Upgrading to Varnish 7.2</a><ul>
+<li><a class="reference internal" href="#varnishd">varnishd</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#identity">Identity</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vcl">VCL</a></li>
+<li><a class="reference internal" href="#vmods">VMODs</a></li>
+<li><a class="reference internal" href="#varnishlog">varnishlog</a></li>
+<li><a class="reference internal" href="#varnishstat">varnishstat</a></li>
+<li><a class="reference internal" href="#changes-for-developers-and-vmod-authors">Changes for developers and VMOD authors</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="changes-7.2.html"
+                          title="previous chapter">Changes in Varnish 7.2</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="changes-7.1.html"
+                          title="next chapter">Changes in Varnish 7.1</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/upgrading-7.2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changes-7.1.html" title="Changes in Varnish 7.1"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="changes-7.2.html" title="Changes in Varnish 7.2"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Upgrading to Varnish 7.2</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

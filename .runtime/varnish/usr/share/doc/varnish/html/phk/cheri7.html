@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How Varnish met CHERI 7/N &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How Varnish met CHERI 6/N" href="cheri6.html" />
+    <link rel="prev" title="Poul-Hennings random outbursts" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cheri6.html" title="How Varnish met CHERI 6/N"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Poul-Hennings random outbursts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 7/N</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-varnish-met-cheri-7-n">
+<span id="phk-cheri-7"></span><h1>How Varnish met CHERI 7/N<a class="headerlink" href="#how-varnish-met-cheri-7-n" title="Link to this heading">¶</a></h1>
+<section id="not-much-news">
+<h2>Not much news<a class="headerlink" href="#not-much-news" title="Link to this heading">¶</a></h2>
+<p>I have been occupied with other activities, so there isn’t much
+news about CHERI to report, except that I have still not been
+able to find any actual bugs in Varnish with it.</p>
+<p>Having spent almost two decades with the quality knob stuck at “11”
+that is how it should be, and there’s no denying that I am a little
+bit proud of that.</p>
+<p>But it also means I do not have a bug killed, classified and on
+display for the rest of the world to see just how amazing CHERI is,
+and why it should become standard in all computers:  Embedded,
+handheld, servers, development, test and production.</p>
+<p>Revisiting obscure corners of Varnish has caused me to commit
+a few of “spit&amp;polish” changes, including an API which should
+have returned <code class="docutils literal notranslate"><span class="pre">const</span></code> but did not.</p>
+<p>But I have not given up yet, and I will find a good example of what
+CHERI can do, sooner or later, but it may not be in the Varnish
+source code.</p>
+<p><em>/phk</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">How Varnish met CHERI 7/N</a><ul>
+<li><a class="reference internal" href="#not-much-news">Not much news</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Poul-Hennings random outbursts</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cheri6.html"
+                          title="next chapter">How Varnish met CHERI 6/N</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/cheri7.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="cheri6.html" title="How Varnish met CHERI 6/N"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Poul-Hennings random outbursts"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 7/N</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

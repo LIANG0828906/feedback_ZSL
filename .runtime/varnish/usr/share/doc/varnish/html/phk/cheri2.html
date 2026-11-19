@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How Varnish met CHERI 2/N &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How Varnish met CHERI 1/N" href="cheri1.html" />
+    <link rel="prev" title="How Varnish met CHERI 3/N" href="cheri3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cheri1.html" title="How Varnish met CHERI 1/N"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cheri3.html" title="How Varnish met CHERI 3/N"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 2/N</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-varnish-met-cheri-2-n">
+<span id="phk-cheri-2"></span><h1>How Varnish met CHERI 2/N<a class="headerlink" href="#how-varnish-met-cheri-2-n" title="Link to this heading">¶</a></h1>
+<p>CHERI capabilities are twice the size of pointers, and Varnish not
+only uses a lot of pointers per request, it is also stingy with
+RAM, because it is not uncommon to use 100K worker threads.</p>
+<p>A number of test-cases fail because they are stingy with memory
+allocations, and other test-cases run out of cache space.</p>
+<p>The job of these test-cases is to push varnish into obscure code-paths,
+using finely tuned sizes of objects, lengths of headers and parameter
+settings to varnish, and the bigger pointers in Varnish trows that
+tuning off.</p>
+<p>These test-failures have nothing to do with CHERI.</p>
+<p>There was enough margin that we could find magic numbers which work
+on both 32 bit and 64 bit CPUs, that is with both 4 and 8 byte
+pointers, but it is doubtful there is enough margin to make them
+also work with 16 byte pointers, so I will merely list these tests
+here as part of the accounting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Workspace</span> <span class="n">sizes</span>
+<span class="o">=====================</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">c00108</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r01038</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r01120</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r02219</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">o00005</span><span class="o">.</span><span class="n">vtc</span>
+
+<span class="n">Cache</span> <span class="n">sizes</span>
+<span class="o">=====================</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r03502</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r01140</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r02831</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">v00064</span><span class="o">.</span><span class="n">vtc</span>
+</pre></div>
+</div>
+<section id="things-you-cannot-do-under-cheri-pointers-in-pipes">
+<h2>Things you cannot do under CHERI: Pointers in Pipes<a class="headerlink" href="#things-you-cannot-do-under-cheri-pointers-in-pipes" title="Link to this heading">¶</a></h2>
+<p>Varnish has a central “waiter” service, whose job it is to monitor
+file descriptors to idle network connections, and do the right thing
+if data arrives on them, or if they are, or should be closed after
+a timeout.</p>
+<p>For reasons of performance, we have multiple implementations:
+<code class="docutils literal notranslate"><span class="pre">kqueue(2)</span></code> (BSD), <code class="docutils literal notranslate"><span class="pre">epoll(2)</span></code> (Linux), <code class="docutils literal notranslate"><span class="pre">ports(2)</span></code> (Solaris)
+and <code class="docutils literal notranslate"><span class="pre">poll(2)</span></code> which should work everywhere POSIX has been read.</p>
+<p>We only have the <code class="docutils literal notranslate"><span class="pre">poll(2)</span></code> based waiter for portability, one
+less issue to deal with during bring-up on new platforms, its
+performance degrades to uselessness with contemporary loads
+of open network connections.</p>
+<p>The way they all work is that have a single thread sitting
+in the relevant system-call, monitoring tens of thousands
+of file descriptors.</p>
+<p>Some of those system calls allows other threads to add fds to the
+list, but <code class="docutils literal notranslate"><span class="pre">poll(2)</span></code> does not, so when we start the poll-waiter
+we create a <code class="docutils literal notranslate"><span class="pre">pipe(2)</span></code>, and have the waiter-thread listen to that
+too.</p>
+<p>When another thread wants to add a file descriptor to the inventory,
+it uses <code class="docutils literal notranslate"><span class="pre">write(2)</span></code> to send a pointer into that pipe.  The kernel
+provide all the locking and buffering for us, wakes up the waiter-thread
+which reads the pointer, adds the new fd to its inventory and dives
+back into <code class="docutils literal notranslate"><span class="pre">poll(2)</span></code>.</p>
+<p>This is 100% safe, because nobody else can get to a pipe created
+with <code class="docutils literal notranslate"><span class="pre">pipe(2)</span></code>, but there is no way CHERI could spot that to
+make an execption, so reading pointers out of a filedescriptor,
+cause fully justified core-dumps.</p>
+<p>If the poll-waiter was actaully relevant, the proper fix would be
+to let the sending thread stick things on a locked list and just
+write a nonce-byte into the pipe to the waiter-thread, but that
+goes at the bottom of the TODO list, and for now I just remove the
+-Wpoll argument from five tests, which then pass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">Wpoll</span>
+<span class="o">=====================</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">b00009</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">b00048</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">b00054</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">b00059</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">c00080</span><span class="o">.</span><span class="n">vtc</span>
+</pre></div>
+</div>
+<p>But why five tests ?</p>
+<p>It looks like one to test the poll-waiter and four cases of copy&amp;paste.</p>
+</section>
+<section id="never-write-your-own-red-black-trees">
+<h2>Never write your own Red-Black Trees<a class="headerlink" href="#never-write-your-own-red-black-trees" title="Link to this heading">¶</a></h2>
+<p>In general there are few pieces of code I dare not wade into,
+but there are a LOT of code I dont want to touch, if there
+is any way to avoid it.</p>
+<p>Red-Black trees are one of them.</p>
+<p>In Varnish we stol^H^H^H^H imported both <code class="docutils literal notranslate"><span class="pre">&lt;queue.h&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;tree.h&gt;</span></code>
+from FreeBSD, but as a safety measure we stuck a <code class="docutils literal notranslate"><span class="pre">V</span></code> prefix on
+everything in them.</p>
+<p>Every so often I will run a small shell-script which does the
+v-thing and compare the result to <code class="docutils literal notranslate"><span class="pre">vtree.h</span></code> and <code class="docutils literal notranslate"><span class="pre">vqueue.h</span></code>,
+to keep up with FreeBSD.</p>
+<p>Today that paid off handsomely:  Some poor person on the CHERI
+team had to wade into <code class="docutils literal notranslate"><span class="pre">tree.h</span></code> and stick <code class="docutils literal notranslate"><span class="pre">__no_subobject_bounds</span></code>
+directives to pointers to make that monster work under CHERI.</p>
+<p>I just ran my script and 20 more tests pass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Red</span><span class="o">-</span><span class="n">Black</span> <span class="n">Trees</span>
+<span class="o">=====================</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">b00068</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">c00005</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">e00003</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">e00008</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">e00019</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">l00002</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">l00003</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">l00005</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">m00053</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r01312</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r01441</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">r02451</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">s00012</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">u00004</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">u00010</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">v00009</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">v00011</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">v00017</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">v00041</span><span class="o">.</span><span class="n">vtc</span>
+<span class="n">TEST</span> <span class="n">tests</span><span class="o">/</span><span class="n">v00043</span><span class="o">.</span><span class="n">vtc</span>
+</pre></div>
+</div>
+<p>Four failures left…</p>
+<p><em>/phk</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">How Varnish met CHERI 2/N</a><ul>
+<li><a class="reference internal" href="#things-you-cannot-do-under-cheri-pointers-in-pipes">Things you cannot do under CHERI: Pointers in Pipes</a></li>
+<li><a class="reference internal" href="#never-write-your-own-red-black-trees">Never write your own Red-Black Trees</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cheri3.html"
+                          title="previous chapter">How Varnish met CHERI 3/N</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cheri1.html"
+                          title="next chapter">How Varnish met CHERI 1/N</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/cheri2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="cheri1.html" title="How Varnish met CHERI 1/N"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cheri3.html" title="How Varnish met CHERI 3/N"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 2/N</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

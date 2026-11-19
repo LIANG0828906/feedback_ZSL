@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The 503’s heard around the world &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Legacy-.*" href="legacy.html" />
+    <link rel="prev" title="Getting into the routine" href="routine.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="legacy.html" title="Legacy-.*"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="routine.html" title="Getting into the routine"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The 503’s heard around the world</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="the-503-s-heard-around-the-world">
+<span id="phk-503aroundtheworld"></span><h1>The 503’s heard around the world<a class="headerlink" href="#the-503-s-heard-around-the-world" title="Link to this heading">¶</a></h1>
+<p>Yesterday, june 8th 2021, for about an hour, the world saw things like:</p>
+<img alt="../_images/fastly_503.png" src="../_images/fastly_503.png" />
+<p>(The alert reader will notice that it says “Mediation” instead of
+“Meditation”.  I dont know why, but I know who to ask, and I will.)</p>
+<p>People have, somewhat justifiably jumped on this error message,
+complaining about how terse it is, for instance <a class="reference external" href="https://onlineornot.com/what-fastly-outage-can-teach-about-writing-error-messages">Max Rozen</a>
+who makes some good and sensible suggestions about good and sensible
+error messages.</p>
+<p>But all his suggestions require some amount of ambient information,
+information which we in the Varnish Cache project do not have and
+never can have.</p>
+<p>When Varnish gets to the bottom of the <cite>builtin.vcl</cite> and errors
+out, we dont know where that Varnish instance runs, who it runs
+for, what information it serves, who it serves that information
+to and most crucially, what information can safely be shared with
+the clients.</p>
+<p>This is why the default “503 guru meditation” only mentions the
+<cite>XID</cite>:  The XID is a nonce, for all practical purposes a random
+number, but one which allows the persons responsible for that varnish
+instance to dig through their logs and find out what happened to
+this specific request.</p>
+<p>The other thing I want to note, is that the one thing you absolutely
+do not want to happen, is a “priority inversion”, where it takes
+more CPU, database accesses or bandwidth to produce the error
+message, than it would have to produce the intended result.</p>
+<p>This error message is intended to be in all respects minimal.</p>
+<p>I’m pretty sure I have seen normal 503s from Fastly’s CDN, they
+dont look like this, so something must have gone badly wrong for
+Fastly yesterday.</p>
+<p>Even though I’m sure the XID did not in any way help them debug
+this specific problem, I am happy to see that our “error message
+of last resort” did what it was supposed to do, as it was supposed
+to do it.</p>
+<section id="the-first-503-stress-test">
+<h2>The first 503 stress test<a class="headerlink" href="#the-first-503-stress-test" title="Link to this heading">¶</a></h2>
+<p>When we release the first version of Varnish the text “Varnish cache
+server” was link to the project homepage.</p>
+<p>That link acted as a “viral marketing campaign” for us:  When
+web-people saw the 503 on another webpage, often a competitors
+webpage, they clicked on the link to learn what software they
+were running.</p>
+<p>And since everybody usually makes a couple of mistakes trying to get
+Varnish running for the first time, more and more web-people
+learned about Varnish Cache.</p>
+<p>So word about Varnish Cache spread around the globe.</p>
+<p>All the way to China.</p>
+<p>Where the Chinese State Railroads rolled out Varnish Cache.</p>
+<p>And made some kind of beginners mistake.</p>
+<p>A lot of chinese web-people learned about Varnish Cache that day.</p>
+<p>As did a lot of other chinese people, who instead of a train schedules
+and train tickets, got a few lines of english, which the vast
+majority of them did not read or understand.</p>
+<p>But there were also a link.</p>
+<p>They did what any sensible web-user would do.</p>
+<p>They clicked on the link.</p>
+<p>And dDoS’ed the Varnish Cache project server.</p>
+<p>… and the Redpill-Linprox Data Center, where that server lived.</p>
+<p>… and the Norvegian ISPs that announced the prefix of that data center.</p>
+<p>In fact, they effectively dDoS’ed Norway.</p>
+<p>(Update: I’m now being told by people from Norway that this did not
+dDoS that much.  As I live in Denmark I obviously only have this
+saga on second hand.  (The only effect I experienced myself was that
+the Trac server was unreachable).  Somebody has exagerated the
+story along the way.</p>
+<p>However, this did prompt me to track down the precise timing:
+Varnish release 2.1.2, May 2010 has the link, release 2.1.3 from
+July same year does not.)</p>
+<p>And that, my friends, is why the error message of last resort in
+Varnish Cache does not even contain a link any more.</p>
+<p><em>/phk</em></p>
+<p>PS: The title of this post is of course an homage to
+<a class="reference external" href="https://www5.in.tum.de/~huckle/space_.pdf">John R. Garman’s famous article</a>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">The 503’s heard around the world</a><ul>
+<li><a class="reference internal" href="#the-first-503-stress-test">The first 503 stress test</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="routine.html"
+                          title="previous chapter">Getting into the routine</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="legacy.html"
+                          title="next chapter">Legacy-.*</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/503aroundtheworld.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="legacy.html" title="Legacy-.*"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="routine.html" title="Getting into the routine"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">The 503’s heard around the world</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

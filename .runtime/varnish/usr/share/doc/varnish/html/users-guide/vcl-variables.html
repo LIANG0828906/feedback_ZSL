@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Request and response VCL objects &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Backend servers" href="vcl-backends.html" />
+    <link rel="prev" title="Built-in VCL" href="vcl-built-in-code.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl-backends.html" title="Backend servers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vcl-built-in-code.html" title="Built-in VCL"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="vcl.html" accesskey="U">VCL - Varnish Configuration Language</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Request and response VCL objects</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="request-and-response-vcl-objects">
+<h1>Request and response VCL objects<a class="headerlink" href="#request-and-response-vcl-objects" title="Link to this heading">¶</a></h1>
+<p>In VCL, there several important objects that you need to be aware of. These
+objects can be accessed and manipulated using VCL.</p>
+<dl class="simple">
+<dt><em>req</em></dt><dd><p>The request object. When Varnish has received the request the <cite>req</cite> object is
+created and populated. Most of the work you do in <cite>vcl_recv</cite> you
+do on or with the <cite>req</cite> object.</p>
+</dd>
+<dt><em>bereq</em></dt><dd><p>The backend request object. Varnish constructs this before sending it to the
+backend. It is based on the <cite>req</cite> object.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt><em>beresp</em></dt><dd><p>The backend response object. It contains the headers of the object
+coming from the backend. If you want to modify the response coming from the
+server you modify this object in <cite>vcl_backend_response</cite>.</p>
+</dd>
+<dt><em>resp</em></dt><dd><p>The HTTP response right before it is delivered to the client. It is
+typically modified in <cite>vcl_deliver</cite>.</p>
+</dd>
+<dt><em>obj</em></dt><dd><p>The object as it is stored in cache. Read only.</p>
+</dd>
+</dl>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="vcl-built-in-code.html"
+                          title="previous chapter">Built-in VCL</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="vcl-backends.html"
+                          title="next chapter">Backend servers</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users-guide/vcl-variables.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl-backends.html" title="Backend servers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vcl-built-in-code.html" title="Built-in VCL"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="vcl.html" >VCL - Varnish Configuration Language</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Request and response VCL objects</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

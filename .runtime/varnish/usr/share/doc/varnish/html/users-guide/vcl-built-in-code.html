@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Built-in VCL &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Request and response VCL objects" href="vcl-variables.html" />
+    <link rel="prev" title="VCL Syntax" href="vcl-syntax.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl-variables.html" title="Request and response VCL objects"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vcl-syntax.html" title="VCL Syntax"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="vcl.html" accesskey="U">VCL - Varnish Configuration Language</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Built-in VCL</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="built-in-vcl">
+<span id="vcl-built-in-code"></span><h1>Built-in VCL<a class="headerlink" href="#built-in-vcl" title="Link to this heading">¶</a></h1>
+<p>Whenever a VCL program is loaded, the built-in VCL is appended to it. The
+vcl built-in subs (<a class="reference internal" href="../reference/vcl-step.html#id7"><span class="std std-ref">VCL Steps</span></a>) have a special property, they can appear multiple
+times and the result is concatenation of all built-in subroutines.</p>
+<p>For example, let’s take the following snippet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="c1"># loaded code for vcl_recv</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The effective VCL that is supplied to the compiler looks like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+    <span class="c1"># loaded code for vcl_recv</span>
+    <span class="c1"># built-in code for vcl_recv</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is how it is guaranteed that all <a class="reference internal" href="../reference/states.html#reference-states"><span class="std std-ref">Varnish Processing States</span></a> have at least
+one <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">(&lt;action&gt;)</span></code>.</p>
+<p>It is generally recommended not to invariably return from loaded code to
+let Varnish execute the built-in code, because the built-in code provides
+essentially a sensible default behavior for an HTTP cache.</p>
+<section id="built-in-subroutines-split">
+<h2>Built-in subroutines split<a class="headerlink" href="#built-in-subroutines-split" title="Link to this heading">¶</a></h2>
+<p>It might however not always be practical that the built-in VCL rules take
+effect at the very end of a state, so some subroutines like <code class="docutils literal notranslate"><span class="pre">vcl_recv</span></code>
+are split into multiple calls to other subroutines.</p>
+<p>By convention, those assistant subroutines are named after the variable
+they operate on, like <code class="docutils literal notranslate"><span class="pre">req</span></code> or <code class="docutils literal notranslate"><span class="pre">beresp</span></code>. This allows for instance to
+circumvent default behavior.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">vcl_recv</span></code> in the built-in VCL prevents caching when clients
+have a cookie. If you can trust your backend to always specify whether a
+response is cacheable or not regardless of whether the request contained a
+cookie you can do this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_req_cookie</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With this, all other default behaviors from the built-in <code class="docutils literal notranslate"><span class="pre">vcl_recv</span></code> are
+executed and only cookie handling is affected.</p>
+<p>Another example is how the built-in <code class="docutils literal notranslate"><span class="pre">vcl_backend_response</span></code> treats a
+negative TTL as a signal not to cache. It’s a historical mechanism to mark
+a response as uncacheable, but only if the built-in <code class="docutils literal notranslate"><span class="pre">vcl_backend_response</span></code>
+is not circumvented by a <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">(&lt;action&gt;)</span></code>.</p>
+<p>However, in a multi-tier architecture where a backend might be another
+Varnish server, you might want to cache stale responses to allow the
+delivery of graced objects and enable revalidation on the next fetch. This
+can be done with the following snippet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_beresp_stale</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">beresp</span><span class="o">.</span><span class="n">ttl</span> <span class="o">+</span> <span class="n">beresp</span><span class="o">.</span><span class="n">grace</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This granularity, and the general goal of the built-in subroutines split
+is to allow to circumvent a specific aspect of the default rules without
+giving the entire logic up.</p>
+</section>
+<section id="built-in-vcl-reference">
+<h2>Built-in VCL reference<a class="headerlink" href="#built-in-vcl-reference" title="Link to this heading">¶</a></h2>
+<p>A copy of the <code class="docutils literal notranslate"><span class="pre">builtin.vcl</span></code> file might be provided with your Varnish
+installation but <a class="reference internal" href="../reference/varnishd.html#varnishd-1"><span class="std std-ref">varnishd</span></a> is the reference to determine the code
+that is appended to any loaded VCL.</p>
+<p>The VCL compilation happens in two passes:</p>
+<ul class="simple">
+<li><p>the first one compiles the built-in VCL only,</p></li>
+<li><p>and the second pass compiles the concatenation of the loaded and built-in
+VCLs.</p></li>
+</ul>
+<p>Any VCL subroutine present in the built-in VCL can be extended, in which
+case the loaded VCL code will be executed before the built-in code.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Built-in VCL</a><ul>
+<li><a class="reference internal" href="#built-in-subroutines-split">Built-in subroutines split</a></li>
+<li><a class="reference internal" href="#built-in-vcl-reference">Built-in VCL reference</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="vcl-syntax.html"
+                          title="previous chapter">VCL Syntax</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="vcl-variables.html"
+                          title="next chapter">Request and response VCL objects</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users-guide/vcl-built-in-code.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl-variables.html" title="Request and response VCL objects"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vcl-syntax.html" title="VCL Syntax"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="vcl.html" >VCL - Varnish Configuration Language</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Built-in VCL</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

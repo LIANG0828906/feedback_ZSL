@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>IP Addresses - A long expected problem &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Varnish Developer Day 2019Q3" href="vdd19q3.html" />
+    <link rel="prev" title="Legacy-.*" href="legacy.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vdd19q3.html" title="Varnish Developer Day 2019Q3"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="legacy.html" title="Legacy-.*"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">IP Addresses - A long expected problem</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="ip-addresses-a-long-expected-problem">
+<span id="phk-ip-address"></span><h1>IP Addresses - A long expected problem<a class="headerlink" href="#ip-addresses-a-long-expected-problem" title="Link to this heading">¶</a></h1>
+<p>I’m old enough to remember <cite>HOSTS.TXT</cite> and the introduction of the DNS system.</p>
+<p>Those were the days when you got a class B network by sending a
+polite letter to California, getting a polite letter back, and then,
+some months later, when
+<a class="reference external" href="https://tools.ietf.org/html/rfc1166">RFC1166 INTERNET NUMBERS</a>
+arrived with in semi-annual packet of printed RFCs,
+find out that letter had at typo and you had configured all of
+the European Parliaments 1200 computers on 136.172/16 instead of
+136.173/16.</p>
+<p>But things were not simpler, if anything they were far more complex,
+because TCP/IP was not, as today, the only protocol that mattered.</p>
+<p>In addition to TCP/IP, there were IBM’s SNA, Digitals DecNet,
+ApolloRing, Banyan/VINES, Novell NetWare, X.21, X.25, X.75, and the
+whole CCITT-OSI-“Intelligent Network” telecom disaster that never
+got off the ground.</p>
+<p>This is why DNS packets have a <cite>class</cite> field which can be set to
+<cite>Hesiod</cite> or <cite>CHAOS</cite> in addition to <cite>the Internet</cite>:  The idea was
+that all the different protocols would get a number each, and we
+would have “The One Directory To Rule Them All”.</p>
+<p>Largely because of this, a new and “protocol agnostic” lookup
+functions were designed: <cite>getaddrinfo(3)</cite> and <cite>getnameinfo(3)</cite>,
+but of course for IP they were supposed to be backwards compatible
+because there were <em>thousands</em> of users out there already.</p>
+<p>This is why <cite>telnet 80.1440</cite> tries to connect to <cite>80.0.5.160</cite>,
+why <cite>ping 0x7f000001</cite> becomes <cite>127.0.0.1</cite> and <cite>0127.0.0.1</cite>
+becomes <cite>87.0.0.1</cite>.</p>
+<p>If you read the manual page for <cite>getaddrinfo(3)</cite> you will find
+that it does not tell you that, it merely says it
+<cite>conforms to IEEE Std 1001</cite>.</p>
+<p>But everybody knew what that was back in 1990, and nobody had firewalls
+anyway because Cheswick &amp; Bellowins book
+<a class="reference external" href="http://www.wilyhacker.com/">Firewalls and Internet Security</a>
+was not published until 1994, so no worries ?</p>
+<p>As is often the case with ‘designed for the future’ the <cite>getaddrinfo(3)</cite>
+API instantly fossilized, hit by a freeze-ray in the ‘the Unix™ wars’.</p>
+<p>This is why, when IPv4 numbers started to look like a finite resource,
+and the old A-, B- and C- class networks got dissolved into Classless
+Inter-Domain Routing or “CIDR” netmasks of any random size, getaddrinfo(3)
+did not grow to be able to translate “192.168.61/23” into something useful.</p>
+<p>I believe there were also some lilliputian dispute about the fact that
+<cite>192.168.61</cite> would return <cite>192.168.0.61</cite> to stay backwards compatible,
+whereas <cite>192.168.61/23</cite> would return <cite>192.168.61.0 + 255.255.254.0</cite>.</p>
+<p>Because of this, Varnish uses <cite>getaddrinfo(3)</cite> everywhere but one single
+place:  Parsing of ACL specifications in VCL.  First we have to use our
+own parser to check if it is a CIDR entry and if not we ask <cite>getaddrinfo(3)</cite>.</p>
+<p>The reason for this rant, is that somebody noticed that <cite>ping
+0127.0.0.1</cite> didn’t go to <cite>127.0.0.1</cite> as they expected.</p>
+<p>That has just become CVE-2021-29418 and CVE-2021-28918 and will
+probably become a dozen more, once the CVE-trophy-hunters go to town.</p>
+<p>All IP number strings enter Varnish from trusted points, either
+as command line arguments (<cite>-a</cite>, <cite>-b</cite>, <cite>-M</cite> etc.),
+in the VCL source (<cite>backend</cite>, <cite>acl</cite> etc.) or as PROXYv1 header
+strings from the TLS-stripper in front of Varnish.</p>
+<p>Of course, VCL allows you to do pretty much anything, including:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">.</span><span class="n">ip</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">http</span><span class="o">.</span><span class="n">trustme</span><span class="p">)</span> <span class="o">~</span> <span class="n">important_acl</span><span class="p">)</span> <span class="p">{</span>
+     <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you do something like that, you may want to a) Consider the wisdom
+of trusting IP#’s from strangers and b) Think about this “critical
+netmask problem”.</p>
+<p>Otherwise, I do not expect this new “critical netmask problem” to
+result in any source code changes in Varnish.</p>
+<p>If and when the various UNIX-oid operating systems, and the smoking
+remains of the “serious UNIX industry”, (IEEE ?  The Austin Group
+?  The Open Group ?  Whatever they are called these days) get their
+act together, and renovate the <cite>getaddrinfo(3)</cite> API, Varnish will
+automatically pick that up and use it.</p>
+<p>Should they, in a flash of enlightenment, also make <cite>getaddrinfo(3)</cite>
+useful for parsing these newfangled CIDR adresses we got in 1993,
+I will be more than happy to ditch <cite>vcc_acl_try_netnotation()</cite> too.</p>
+<p>Until next time,</p>
+<p>Poul-Henning, 2021-03-30</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="legacy.html"
+                          title="previous chapter">Legacy-.*</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="vdd19q3.html"
+                          title="next chapter">Varnish Developer Day 2019Q3</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/ip_address.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vdd19q3.html" title="Varnish Developer Day 2019Q3"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="legacy.html" title="Legacy-.*"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">IP Addresses - A long expected problem</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

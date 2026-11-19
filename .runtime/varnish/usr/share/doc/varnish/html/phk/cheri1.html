@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How Varnish met CHERI 1/N &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting into the routine" href="routine.html" />
+    <link rel="prev" title="How Varnish met CHERI 2/N" href="cheri2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="routine.html" title="Getting into the routine"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cheri2.html" title="How Varnish met CHERI 2/N"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 1/N</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-varnish-met-cheri-1-n">
+<span id="phk-cheri-1"></span><h1>How Varnish met CHERI 1/N<a class="headerlink" href="#how-varnish-met-cheri-1-n" title="Link to this heading">¶</a></h1>
+<p>I should warn you up front that Robert Watson has been my friend
+for a couple of decades, so I am by no means a neutral observer.</p>
+<p>But Robert is one of the smartest people I know, and when he first
+explained his ideas for hardware capabilities, I sold all my shares
+in sliced bread the very next morning.</p>
+<p>Roberts ideas grew to become CHERI, and if you have not heard about
+it yet, you should read up on it, now:</p>
+<p><a class="reference external" href="https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/">https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/</a></p>
+<p>The core idea in CHERI is that pointers are not integers, which
+means that you cannot randomly make up or modify pointers to point
+at random things any more, whatever your intentions might be.</p>
+<p>From a security point of view, this circumscribes several large
+classes of commonly used attack-vectors, and Microsoft Research
+found that CHERI stopped a full 43% of all the vulnerabilities they
+saw in 2019:</p>
+<p><a class="reference external" href="https://msrc-blog.microsoft.com/2022/01/20/an_armful_of_cheris/">https://msrc-blog.microsoft.com/2022/01/20/an_armful_of_cheris/</a></p>
+<p>(Yes, we can pause while you sell all your shares in sliced bread.)</p>
+<p>I have been eagerly waiting to see how my own Varnish HTTP Cache
+Software would fare under CHERI, because one of my goals with the
+Varnish software, was to turn the quality dial up to 11 to see if
+it made any real-life difference.</p>
+<p>Robert has graciously lent me a shell-account on one of his shiny
+new MORELLO machines, which rock an ARM64 prototype CPU with CHERI
+capabilites.</p>
+<p>In this sequence of rants I will sing the saga of “How Varnish meets
+CHERI” - as it happens.</p>
+<p>My hope is that it will inspire and help other software projects
+to take the CHERI-plunge, and to help convince ARM that “MORELLO”
+should become a permanent part of the ARM architecture.</p>
+<section id="a-very-thin-layer-of-varnish">
+<h2>A very thin layer of Varnish<a class="headerlink" href="#a-very-thin-layer-of-varnish" title="Link to this heading">¶</a></h2>
+<p>For those of you not familiar with Varnish, you will need to know:</p>
+<ul class="simple">
+<li><p>Varnish is an afterburner cache to HTTP webservers, written in
+C and it clocks in around 100KLOC.</p></li>
+<li><p>Around 20% of all webtraffic in the world pass through a Varnish instance.</p></li>
+<li><p>You configure Varnish with a domain-specific programming
+language called VCL, which is translated to C source code,
+compiled to a shared library, dlopen(3)’ed and executed.</p></li>
+<li><p>Varnish runs as two processes, a “manager” and a “child”.
+The child process does not <code class="docutils literal notranslate"><span class="pre">exec(2)</span></code> after the <code class="docutils literal notranslate"><span class="pre">fork(2)</span></code>.</p></li>
+<li><p>The source code is written in a very paranoid style, around 10%
+of all lines are asserts, and there are other layers of paranoia on
+top of that, for instance we always check that <code class="docutils literal notranslate"><span class="pre">close(2)</span></code> returns zero.</p></li>
+<li><p>We have 900+ test cases, which exercise 90%+ of our source lines.</p></li>
+<li><p>In 16 years, we have had just a single “Oh Shit!” security issue.</p></li>
+</ul>
+</section>
+<section id="i-still-hate-autocrap-tools">
+<h2>I still hate Autocrap tools<a class="headerlink" href="#i-still-hate-autocrap-tools" title="Link to this heading">¶</a></h2>
+<p>Autocrap is a hack on a hack on a hack which really ruins software
+portability, but it is the “industry standard” so we use it also
+for Varnish, no matter how much I hate it.</p>
+<p>See: <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/2346916.2349257">https://dl.acm.org/doi/abs/10.1145/2346916.2349257</a></p>
+<p>Because a lot of software does not work in CHERI mode, there are two
+kinds of packages for CheriBSD:  Regular and Cheri.</p>
+<p>See: <a class="reference external" href="https://ctsrd-cheri.github.io/cheribsd-getting-started/packages/index.html">https://ctsrd-cheri.github.io/cheribsd-getting-started/packages/index.html</a></p>
+<p>Autocrap does not grok that some packages end up in <code class="docutils literal notranslate"><span class="pre">/usr/local</span></code> and
+some in <code class="docutils literal notranslate"><span class="pre">/usr/local64</span></code>, so the first thing I had to do, was to explain
+this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export LIBTOOLIZE=/usr/local64/bin/libtoolize
+export PCRE2_LIBS=`/usr/local/bin/pcre2-config --libs8`
+export PCRE2_CFLAGS=`/usr/local/bin/pcre2-config --cflags`
+${SRCDIR}/configure \
+        [the usual options]
+</pre></div>
+</div>
+</section>
+<section id="things-you-just-can-t-do-with-cheri">
+<h2>Things you just can’t do with CHERI<a class="headerlink" href="#things-you-just-can-t-do-with-cheri" title="Link to this heading">¶</a></h2>
+<p>A long long time ago, I wrote a “persistent storage” module for
+Varnish, and in order to not rewrite too much of the rest of
+the source code, the architecture ended up files <code class="docutils literal notranslate"><span class="pre">mmap(2)</span></code>’ed to
+a consistent address, containing data structures with pointers.</p>
+<p>The advent of memory space layout randomization as a bandaid for
+buffer-overflows (dont get me started!), made that architecture
+unworkable, and for close to a decade this “stevedore” has been
+named <code class="docutils literal notranslate"><span class="pre">deprecated_persistent</span></code>.</p>
+<p>We still keep it around, because it helps us test the internal APIs,
+but it is obviously not going to work with CHERI so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>${SRCDIR}/configure \
+        --without-persistent-storage \
+        [the usual options]
+</pre></div>
+</div>
+</section>
+<section id="dont-panic-quite-as-detailed">
+<h2>Dont panic (quite as detailed)<a class="headerlink" href="#dont-panic-quite-as-detailed" title="Link to this heading">¶</a></h2>
+<p>Varnish has a built in panic-handler which dumps a lot of
+valuable information, so people dont need to send us 1TB
+coredumps.</p>
+<p>Part of the information dumped is a backtrace produced with
+<code class="docutils literal notranslate"><span class="pre">libunwind</span></code>, which is not available in a CHERI version (yet),
+so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>${SRCDIR}/configure \
+        --without-unwind \
+        [the usual options]
+</pre></div>
+</div>
+</section>
+<section id="u-intptr-t-is-or-isn-t">
+<h2>[u]intptr_t is or isn’t ?<a class="headerlink" href="#u-intptr-t-is-or-isn-t" title="Link to this heading">¶</a></h2>
+<p>The two typedefs <code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code> and <code class="docutils literal notranslate"><span class="pre">intptr_t</span></code> are big enough to
+hold a pointer so that you can write “portable” code which
+does the kind of integer-pointer-mis-math which
+CHERI prevents you from doing.</p>
+<p>In theory we should not have any <code class="docutils literal notranslate"><span class="pre">[u]intptr_t</span></code> in Varnish,
+since one of our quality policies is to never convert an integer
+to a pointer.</p>
+<p>But there are a couple of places where we have used them
+for “private” struct members, instead of unions.</p>
+<p>Those become the first stumbling block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vsm</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">601</span><span class="p">:</span><span class="mi">15</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">shift</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">width</span> <span class="n">of</span> <span class="nb">type</span>
+     <span class="n">vd</span><span class="o">-&gt;</span><span class="n">serial</span> <span class="o">=</span> <span class="n">VSM_PRIV_LOW</span><span class="p">(</span><span class="n">vd</span><span class="o">-&gt;</span><span class="n">serial</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+                  <span class="o">^~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+</pre></div>
+</div>
+<p>The confusing message is because In CHERI, <code class="docutils literal notranslate"><span class="pre">[u]intptr_t</span></code>, like pointers,
+are 16 bytes wide but in this case the integer-view is used as a bit-map.</p>
+<p>For now, I change them to <code class="docutils literal notranslate"><span class="pre">uint64_t</span></code>, and put them on the TODO list.</p>
+<p>One of them is printed as part of the panic output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VSB_printf</span><span class="p">(</span><span class="n">vsb</span><span class="p">,</span> <span class="s2">&quot;priv2 = %zd,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">vfe</span><span class="o">-&gt;</span><span class="n">priv2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>But that doesn’t work with the wider type, so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VSB_printf</span><span class="p">(</span><span class="n">vsb</span><span class="p">,</span> <span class="s2">&quot;priv2 = %jd,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">intmax_t</span><span class="p">)</span><span class="n">vfe</span><span class="o">-&gt;</span><span class="n">priv2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>And with that Varnish compiles under CHERI, which we can check with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>% file bin/varnishd/varnishd
+bin/varnishd/varnishd: […] CheriABI […]
+</pre></div>
+</div>
+</section>
+<section id="first-test-run">
+<h2>First test-run<a class="headerlink" href="#first-test-run" title="Link to this heading">¶</a></h2>
+<p>Just to see how bad it is, we run the main test-scripts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>% cd bin/varnishtest
+% ./varnishtest -i -k -q tests/*.vtc
+[…]
+38 tests failed, 33 tests skipped, 754 tests passed
+</pre></div>
+</div>
+<p>That’s not half bad…</p>
+<p><em>/phk</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">How Varnish met CHERI 1/N</a><ul>
+<li><a class="reference internal" href="#a-very-thin-layer-of-varnish">A very thin layer of Varnish</a></li>
+<li><a class="reference internal" href="#i-still-hate-autocrap-tools">I still hate Autocrap tools</a></li>
+<li><a class="reference internal" href="#things-you-just-can-t-do-with-cheri">Things you just can’t do with CHERI</a></li>
+<li><a class="reference internal" href="#dont-panic-quite-as-detailed">Dont panic (quite as detailed)</a></li>
+<li><a class="reference internal" href="#u-intptr-t-is-or-isn-t">[u]intptr_t is or isn’t ?</a></li>
+<li><a class="reference internal" href="#first-test-run">First test-run</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cheri2.html"
+                          title="previous chapter">How Varnish met CHERI 2/N</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="routine.html"
+                          title="next chapter">Getting into the routine</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/cheri1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="routine.html" title="Getting into the routine"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cheri2.html" title="How Varnish met CHERI 2/N"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 1/N</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

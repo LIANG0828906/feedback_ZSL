@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>VMOD unix - Utilities for Unix domain sockets &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="varnishadm" href="varnishadm.html" />
+    <link rel="prev" title="VMOD std - Varnish Standard Module" href="vmod_std.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="varnishadm.html" title="varnishadm"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vmod_std.html" title="VMOD std - Varnish Standard Module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Reference Manual</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VMOD unix - Utilities for Unix domain sockets</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="vmod-unix-utilities-for-unix-domain-sockets">
+<span id="vmod-unix-3"></span><h1>VMOD unix - Utilities for Unix domain sockets<a class="headerlink" href="#vmod-unix-utilities-for-unix-domain-sockets" title="Link to this heading">¶</a></h1>
+<section id="synopsis">
+<h2>SYNOPSIS<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
+<pre class="literal-block">import unix [as name] [from &quot;path&quot;]
+
+<a class="reference internal" href="#unix-user"><span class="std std-ref">STRING user()</span></a>
+
+<a class="reference internal" href="#unix-group"><span class="std std-ref">STRING group()</span></a>
+
+<a class="reference internal" href="#unix-uid"><span class="std std-ref">INT uid()</span></a>
+
+<a class="reference internal" href="#unix-gid"><span class="std std-ref">INT gid()</span></a></pre>
+</section>
+<section id="description">
+<h2>DESCRIPTION<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
+<p>This VMOD provides information about the credentials of the peer
+process (user and group of the process owner) that is connected to a
+Varnish listener via a Unix domain socket, if the platform supports
+it.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unix</span><span class="p">;</span>
+
+<span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+      <span class="c1"># Return &quot;403 Forbidden&quot; if the connected peer is</span>
+      <span class="c1"># not running as the user &quot;trusteduser&quot;.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">unix</span><span class="o">.</span><span class="n">user</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;trusteduser&quot;</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span><span class="p">(</span> <span class="n">synth</span><span class="p">(</span><span class="mi">403</span><span class="p">)</span> <span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="c1"># Require the connected peer to run in the group</span>
+      <span class="c1"># &quot;trustedgroup&quot;.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">unix</span><span class="o">.</span><span class="n">group</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;trustedgroup&quot;</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span><span class="p">(</span> <span class="n">synth</span><span class="p">(</span><span class="mi">403</span><span class="p">)</span> <span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="c1"># Require the connected peer to run under a specific numeric</span>
+      <span class="c1"># user id.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">unix</span><span class="o">.</span><span class="n">uid</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4711</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span><span class="p">(</span> <span class="n">synth</span><span class="p">(</span><span class="mi">403</span><span class="p">)</span> <span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="c1"># Require the connected peer to run under a numeric group id.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">unix</span><span class="o">.</span><span class="n">gid</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">815</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">return</span><span class="p">(</span> <span class="n">synth</span><span class="p">(</span><span class="mi">403</span><span class="p">)</span> <span class="p">);</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Obtaining the peer credentials is possible on a platform that supports
+one of the following:</p>
+<ul class="simple">
+<li><p><cite>getpeereid(3)</cite> (such as FreeBSD and other BSD-derived systems)</p></li>
+<li><p>the socket option <code class="docutils literal notranslate"><span class="pre">SO_PEERCRED</span></code> for <cite>getsockopt(2)</cite> (Linux)</p></li>
+<li><p><cite>getpeerucred(3C)</cite> (SunOS and descendants)</p></li>
+</ul>
+<p>On SunOS and friends, the <code class="docutils literal notranslate"><span class="pre">PRIV_PROC_INFO</span></code> privilege set is added to
+the Varnish child process while the VMOD is loaded, see
+<cite>setppriv(2)</cite>.</p>
+<p>On most platforms, the value returned is the effective user or group
+that was valid when the peer process initiated the connection.</p>
+<section id="string-user">
+<span id="unix-user"></span><h3>STRING user()<a class="headerlink" href="#string-user" title="Link to this heading">¶</a></h3>
+<p>Return the user name of the peer process owner.</p>
+<p>Restricted to: <code class="docutils literal notranslate"><span class="pre">client</span></code>, <code class="docutils literal notranslate"><span class="pre">backend</span></code>.</p>
+</section>
+<section id="string-group">
+<span id="unix-group"></span><h3>STRING group()<a class="headerlink" href="#string-group" title="Link to this heading">¶</a></h3>
+<p>Return the group name of the peer process owner.</p>
+<p>Restricted to: <code class="docutils literal notranslate"><span class="pre">client</span></code>, <code class="docutils literal notranslate"><span class="pre">backend</span></code>.</p>
+</section>
+<section id="int-uid">
+<span id="unix-uid"></span><h3>INT uid()<a class="headerlink" href="#int-uid" title="Link to this heading">¶</a></h3>
+<p>Return the numeric user id of the peer process owner.</p>
+<p>Restricted to: <code class="docutils literal notranslate"><span class="pre">client</span></code>, <code class="docutils literal notranslate"><span class="pre">backend</span></code>.</p>
+</section>
+<section id="int-gid">
+<span id="unix-gid"></span><h3>INT gid()<a class="headerlink" href="#int-gid" title="Link to this heading">¶</a></h3>
+<p>Return the numeric group id of the peer process owner.</p>
+<p>Restricted to: <code class="docutils literal notranslate"><span class="pre">client</span></code>, <code class="docutils literal notranslate"><span class="pre">backend</span></code>.</p>
+</section>
+</section>
+<section id="errors">
+<h2>ERRORS<a class="headerlink" href="#errors" title="Link to this heading">¶</a></h2>
+<p>All functions in this VMOD are subject to the following constraints:</p>
+<ul>
+<li><p>None of them may be called in <code class="docutils literal notranslate"><span class="pre">vcl_init{}</span></code> or <code class="docutils literal notranslate"><span class="pre">vcl_fini{}</span></code>. If
+one of them is called in <code class="docutils literal notranslate"><span class="pre">vcl_init{}</span></code>, then the VCL program will
+fail to load, with an error message from the VMOD.</p></li>
+<li><p>If called on a platform that is not supported, then VCL failure is
+invoked. An error message is written to the log (with the
+<code class="docutils literal notranslate"><span class="pre">VCL_Error</span></code> tag), and for all VCL subroutines except for
+<code class="docutils literal notranslate"><span class="pre">vcl_synth{}</span></code>, control is directed immediately to <code class="docutils literal notranslate"><span class="pre">vcl_synth{}</span></code>,
+with the response status set to 503 and the reason string set to
+“VCL failed”.</p>
+<p>If the failure occurs during <code class="docutils literal notranslate"><span class="pre">vcl_synth{}</span></code>, then <code class="docutils literal notranslate"><span class="pre">vcl_synth{}</span></code>
+is aborted, and the the response line “503 VCL failed” is sent.</p>
+</li>
+<li><p>If the current listener is not a Unix domain socket, or if the
+attempt to read credentials fails, then a <code class="docutils literal notranslate"><span class="pre">VCL_Error</span></code> message is
+written to the log. The STRING functions (<a class="reference internal" href="#unix-user">unix.user()</a> and
+<a class="reference internal" href="#unix-group">unix.group()</a>) return <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, while the INT functions
+(<a class="reference internal" href="#unix-uid">unix.uid()</a> and <a class="reference internal" href="#unix-gid">unix.gid()</a>) return -1.</p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>SEE ALSO<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="varnishd.html#varnishd-1"><span class="std std-ref">varnishd</span></a></p></li>
+<li><p><a class="reference internal" href="vcl.html#vcl-7"><span class="std std-ref">VCL</span></a></p></li>
+<li><p><cite>getpeereid(3)</cite></p></li>
+<li><p><cite>getsockopt(2)</cite></p></li>
+<li><p><cite>getpeerucred(3C)</cite></p></li>
+<li><p><cite>setppriv(2)</cite></p></li>
+</ul>
+</section>
+<section id="copyright">
+<h2>COPYRIGHT<a class="headerlink" href="#copyright" title="Link to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">document</span> <span class="ow">is</span> <span class="n">licensed</span> <span class="n">under</span> <span class="n">the</span> <span class="n">same</span> <span class="n">conditions</span> <span class="k">as</span> <span class="n">Varnish</span> <span class="n">itself</span><span class="o">.</span>
+<span class="n">See</span> <span class="n">LICENSE</span> <span class="k">for</span> <span class="n">details</span><span class="o">.</span>
+
+<span class="n">SPDX</span><span class="o">-</span><span class="n">License</span><span class="o">-</span><span class="n">Identifier</span><span class="p">:</span> <span class="n">BSD</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">Clause</span>
+
+<span class="n">Authors</span><span class="p">:</span> <span class="n">Geoffrey</span> <span class="n">Simmons</span> <span class="o">&lt;</span><span class="n">geoffrey</span><span class="o">.</span><span class="n">simmons</span><span class="nd">@uplex</span><span class="o">.</span><span class="n">de</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">VMOD unix - Utilities for Unix domain sockets</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="vmod_std.html"
+                          title="previous chapter">VMOD std - Varnish Standard Module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="varnishadm.html"
+                          title="next chapter">varnishadm</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/vmod_unix.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="varnishadm.html" title="varnishadm"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vmod_std.html" title="VMOD std - Varnish Standard Module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Reference Manual</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VMOD unix - Utilities for Unix domain sockets</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

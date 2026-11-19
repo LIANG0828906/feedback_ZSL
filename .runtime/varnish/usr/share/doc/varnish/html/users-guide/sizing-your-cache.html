@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sizing your cache &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="VCL - Varnish Configuration Language" href="vcl.html" />
+    <link rel="prev" title="Parameters" href="params.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl.html" title="VCL - Varnish Configuration Language"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="params.html" title="Parameters"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="running.html" accesskey="U">Starting and running Varnish</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sizing your cache</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="sizing-your-cache">
+<h1>Sizing your cache<a class="headerlink" href="#sizing-your-cache" title="Link to this heading">¶</a></h1>
+<p>Deciding on cache size can be a tricky task. A few things to consider:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>How big is your <em>hot</em> data set. For a portal or news site that
+would be the size of the front page with all the stuff on it, and
+the size of all the pages and objects linked from the first page.</p></li>
+<li><p>How expensive is it to generate an object? Sometimes it makes sense
+to only cache images a little while or not to cache them at all if
+they are cheap to serve from the backend and you have a limited
+amount of memory.</p></li>
+<li><p>Watch the <cite>n_lru_nuked</cite> counter with <a class="reference internal" href="../reference/varnishstat.html#varnishstat-1"><span class="std std-ref">varnishstat</span></a> or some
+other tool. If you have a lot of LRU activity then your cache is
+evicting objects due to space constraints and you should consider
+increasing the size of the cache.</p></li>
+</ul>
+</div></blockquote>
+<p>Be aware that every object that is stored also carries overhead that
+is kept outside the actually storage area. So, even if you specify <code class="docutils literal notranslate"><span class="pre">-s</span>
+<span class="pre">malloc,16G</span></code> Varnish might actually use <strong>double</strong> that. Varnish has a
+overhead of about 1KB per object. So, if you have lots of small objects
+in your cache the overhead might be significant.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="params.html"
+                          title="previous chapter">Parameters</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="vcl.html"
+                          title="next chapter">VCL - Varnish Configuration Language</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/users-guide/sizing-your-cache.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl.html" title="VCL - Varnish Configuration Language"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="params.html" title="Parameters"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Users Guide</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="running.html" >Starting and running Varnish</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sizing your cache</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

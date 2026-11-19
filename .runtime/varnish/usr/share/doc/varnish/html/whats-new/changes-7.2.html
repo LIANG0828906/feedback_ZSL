@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changes in Varnish 7.2 &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Upgrading to Varnish 7.2" href="upgrading-7.2.html" />
+    <link rel="prev" title="Upgrading to Varnish 7.3" href="upgrading-7.3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="upgrading-7.2.html" title="Upgrading to Varnish 7.2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="upgrading-7.3.html" title="Upgrading to Varnish 7.3"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Changes in Varnish 7.2</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="changes-in-varnish-7-2">
+<span id="whatsnew-changes-7-2"></span><h1>Changes in Varnish 7.2<a class="headerlink" href="#changes-in-varnish-7-2" title="Link to this heading">¶</a></h1>
+<p>For information about updating your current Varnish deployment to the
+new version, see <a class="reference internal" href="upgrading-7.2.html#whatsnew-upgrading-7-2"><span class="std std-ref">Upgrading to Varnish 7.2</span></a>.</p>
+<p>A more detailed and technical account of changes in Varnish, with
+links to issues that have been fixed and pull requests that have been
+merged, may be found in the <a class="reference external" href="https://github.com/varnishcache/varnish-cache/blob/master/doc/changes.rst">change log</a>.</p>
+<section id="varnishd">
+<h2>varnishd<a class="headerlink" href="#varnishd" title="Link to this heading">¶</a></h2>
+<section id="extensions">
+<h3>Extensions<a class="headerlink" href="#extensions" title="Link to this heading">¶</a></h3>
+<p>From the very first days of Varnish, we have been talking about having
+an extension points for “more advanced stuff” and we did, by and large,
+keep a place ready for it in the overall architecture.</p>
+<p>Now a credible use-case finally appeared, and we have implemented
+“Varnish Extensions” (VTLA: “VEXT”), which can both be used to load
+ambient VMODs and to implement entirely new functionaly, for instance
+stevedores.</p>
+<p>See <a class="reference internal" href="../reference/vext.html#ref-vext"><span class="std std-ref">VEXT - Varnish Extensions</span></a> in the reference manual for more information.</p>
+</section>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h3>
+<p>Duration values (with a unit in seconds) can optionally take a duration
+unit with the same syntax as VCL. For example, the default values of
+<code class="docutils literal notranslate"><span class="pre">default_ttl</span></code>, <code class="docutils literal notranslate"><span class="pre">default_grace</span></code> and <code class="docutils literal notranslate"><span class="pre">default_keep</span></code> were changed
+respectively from <code class="docutils literal notranslate"><span class="pre">120.000</span></code>, <code class="docutils literal notranslate"><span class="pre">10.000</span></code> and <code class="docutils literal notranslate"><span class="pre">0.000</span></code> to <code class="docutils literal notranslate"><span class="pre">2m</span></code>, <code class="docutils literal notranslate"><span class="pre">10s</span></code>
+and <code class="docutils literal notranslate"><span class="pre">0s</span></code>.</p>
+<p>The platform-dependent <code class="docutils literal notranslate"><span class="pre">tcp_keepalive_time</span></code> parameter is supported on
+MacOS.</p>
+<p>The new <code class="docutils literal notranslate"><span class="pre">vcc_feature</span></code> bits parameter replaces previous <code class="docutils literal notranslate"><span class="pre">vcc_*</span></code> boolean
+parameters. The latter still exist as deprecated aliases.</p>
+</section>
+<section id="other-changes-in-varnishd">
+<h3>Other changes in varnishd<a class="headerlink" href="#other-changes-in-varnishd" title="Link to this heading">¶</a></h3>
+<p>The metadata VMODs exposes to Varnishd has changed to a non-binary
+format, and it is incompatible with all previous releases.
+That makes it possible for the VCC (compilation) process to avoid
+opening the VMODs with <code class="docutils literal notranslate"><span class="pre">dlopen(3)</span></code>, which is both faster and
+safer.</p>
+<p>Background fetch tasks are no longer queued as this could result in slow
+grace hits subject to indefinite delays when thread pools are saturated.</p>
+</section>
+</section>
+<section id="changes-to-vcl">
+<h2>Changes to VCL<a class="headerlink" href="#changes-to-vcl" title="Link to this heading">¶</a></h2>
+<section id="vcl-variables">
+<h3>VCL variables<a class="headerlink" href="#vcl-variables" title="Link to this heading">¶</a></h3>
+<p>ESI sub-requests can no longer inherit a <code class="docutils literal notranslate"><span class="pre">req.http.transfer-encoding</span></code>
+header since the request body is strictly handled by the top request.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">resp.http.via</span></code> header generated by Varnish uses <code class="docutils literal notranslate"><span class="pre">server.identity</span></code>
+which defaults to the host name. A <code class="docutils literal notranslate"><span class="pre">req.http.via</span></code> header is generated
+also before entering <code class="docutils literal notranslate"><span class="pre">vcl_recv</span></code>. If a client request or backend response
+already had a Via header, it is now appended to instead of overwritten.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">resp.http.via</span></code> header is no longer overwritten by varnish, but
+rather appended to.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">server.identity</span></code> variable is guaranteed to be a single token as
+defined in the HTTP grammar, to safely be used as either a host name or
+pseudonym in Via headers.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">now</span></code> variable remains constant in a VCL subroutine. This was already
+the case, but is now (pun intended) formally defined behavior. It keeps the
+same value even if the execution blocks for a significant time, for example
+while calling a VMOD function.</p>
+</section>
+</section>
+<section id="bundled-vmods">
+<h2>Bundled VMODs<a class="headerlink" href="#bundled-vmods" title="Link to this heading">¶</a></h2>
+<p>For a real time timestamp, the function <code class="docutils literal notranslate"><span class="pre">std.now()</span></code> can be used instead.
+There is also a new <code class="docutils literal notranslate"><span class="pre">std.timed_call()</span></code> to measure the execution time of a
+subroutine.</p>
+<p>Cookie headers generated by vmod_cookie no longer have a spurious trailing
+semi-colon (<code class="docutils literal notranslate"><span class="pre">';'</span></code>) at the end of the string.</p>
+</section>
+<section id="varnishlog">
+<h2>varnishlog<a class="headerlink" href="#varnishlog" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Begin</span></code> log records may contain a 4th field with the sub-level of
+sub-tasks. The <code class="docutils literal notranslate"><span class="pre">Begin[4]</span></code> field is used by the <code class="docutils literal notranslate"><span class="pre">-E</span></code> option (or lack
+thereof) in log utilities to include sub-tasks or not. Internally, only ESI
+tasks are subject to this filtering, but it can apply to tasks spawned by
+VMODs too.</p>
+<p>Similarly, the <code class="docutils literal notranslate"><span class="pre">Link</span></code> record has the same optional 4th field.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-k</span></code> option from <code class="docutils literal notranslate"><span class="pre">varnishlog</span></code> is now available in <code class="docutils literal notranslate"><span class="pre">varnishncsa</span></code>.</p>
+</section>
+<section id="varnishstat">
+<h2>varnishstat<a class="headerlink" href="#varnishstat" title="Link to this heading">¶</a></h2>
+<p>The unused counter <code class="docutils literal notranslate"><span class="pre">MAIN.fetch_no_thread</span></code> was repurposed and renamed to
+<code class="docutils literal notranslate"><span class="pre">MAIN.bgfetch_no_thread</span></code> to signal when background fetch tasks fail to
+be scheduled because thread pools are saturated.</p>
+<p>To help estimate the rate of <code class="docutils literal notranslate"><span class="pre">vsl_space</span></code> consumption, the new counter
+<code class="docutils literal notranslate"><span class="pre">MAIN.shm_bytes</span></code> was added. It offers a finer-grained metric than the
+existing <code class="docutils literal notranslate"><span class="pre">MAIN.shm_cycles</span></code> that depends on the <code class="docutils literal notranslate"><span class="pre">vsl_space</span></code> setting.</p>
+<p>A new contribution script called <code class="docutils literal notranslate"><span class="pre">varnishstatdiff</span></code> can be used to compare
+the output of two <code class="docutils literal notranslate"><span class="pre">varnishstat</span> <span class="pre">-1</span></code> executions with a friendly diff format
+for <code class="docutils literal notranslate"><span class="pre">varnishstat</span></code>’s specific output.</p>
+</section>
+<section id="varnishtest">
+<h2>varnishtest<a class="headerlink" href="#varnishtest" title="Link to this heading">¶</a></h2>
+<p>New macros <code class="docutils literal notranslate"><span class="pre">${pkg_version}</span></code> and <code class="docutils literal notranslate"><span class="pre">${pkg_branch}</span></code> expanding respectively
+to <code class="docutils literal notranslate"><span class="pre">7.2.0</span></code> and <code class="docutils literal notranslate"><span class="pre">7.2</span></code> for the current release.</p>
+<p>It is possible to match the text on screen against a regular expression
+with the new <code class="docutils literal notranslate"><span class="pre">process</span> <span class="pre">-match</span></code> command.</p>
+<p>The new <code class="docutils literal notranslate"><span class="pre">filewrite</span> <span class="pre">[-a]</span></code> command can put or append text into a file.</p>
+<p>A Varnish instance name in a VTC is used by default as the server identity
+for predictable Via headers.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">varnish</span> <span class="n">v1</span> <span class="o">-</span><span class="n">vcl</span><span class="o">+</span><span class="n">backend</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>The expected Via header is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Via</span><span class="p">:</span> <span class="mf">1.1</span> <span class="n">v1</span> <span class="p">(</span><span class="n">Varnish</span><span class="o">/</span><span class="mf">7.2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The instance name can still be set to a different value using the <code class="docutils literal notranslate"><span class="pre">-arg</span></code>
+command to change the <code class="docutils literal notranslate"><span class="pre">varnishd</span> <span class="pre">-i</span></code> option.</p>
+</section>
+<section id="changes-for-developers-and-vmod-authors">
+<h2>Changes for developers and VMOD authors<a class="headerlink" href="#changes-for-developers-and-vmod-authors" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">varnishtest</span> <span class="pre">-i</span></code> option only works from a Varnish source tree, in
+which case the new macro <code class="docutils literal notranslate"><span class="pre">${topsrc}</span></code> is available in addition to the
+old <code class="docutils literal notranslate"><span class="pre">${topbuild}</span></code> macro.</p>
+<p>The functions <code class="docutils literal notranslate"><span class="pre">VRT_AddVDP()</span></code>, <code class="docutils literal notranslate"><span class="pre">VRT_AddVFP()</span></code>, <code class="docutils literal notranslate"><span class="pre">VRT_RemoveVDP()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">VRT_RemoveVFP()</span></code> are deprecated.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">VCS_String()</span></code> function can take the string <code class="docutils literal notranslate"><span class="pre">&quot;B&quot;</span></code> for the package
+branch.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">vnum.h</span></code> functions are exposed to VMOD and VEXT authors.</p>
+<p>The termination rules for <code class="docutils literal notranslate"><span class="pre">WRK_BgThread()</span></code> were relaxed to allow VMODs to
+use it.</p>
+<p><em>eof</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Changes in Varnish 7.2</a><ul>
+<li><a class="reference internal" href="#varnishd">varnishd</a><ul>
+<li><a class="reference internal" href="#extensions">Extensions</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#other-changes-in-varnishd">Other changes in varnishd</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#changes-to-vcl">Changes to VCL</a><ul>
+<li><a class="reference internal" href="#vcl-variables">VCL variables</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bundled-vmods">Bundled VMODs</a></li>
+<li><a class="reference internal" href="#varnishlog">varnishlog</a></li>
+<li><a class="reference internal" href="#varnishstat">varnishstat</a></li>
+<li><a class="reference internal" href="#varnishtest">varnishtest</a></li>
+<li><a class="reference internal" href="#changes-for-developers-and-vmod-authors">Changes for developers and VMOD authors</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="upgrading-7.3.html"
+                          title="previous chapter">Upgrading to Varnish 7.3</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="upgrading-7.2.html"
+                          title="next chapter">Upgrading to Varnish 7.2</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/whats-new/changes-7.2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="upgrading-7.2.html" title="Upgrading to Varnish 7.2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="upgrading-7.3.html" title="Upgrading to Varnish 7.3"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >What’s new / Upgrading</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Changes in Varnish 7.2</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>How Varnish met CHERI 5/N &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How Varnish met CHERI 4/N" href="cheri4.html" />
+    <link rel="prev" title="How Varnish met CHERI 6/N" href="cheri6.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cheri4.html" title="How Varnish met CHERI 4/N"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cheri6.html" title="How Varnish met CHERI 6/N"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 5/N</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-varnish-met-cheri-5-n">
+<span id="phk-cheri-5"></span><h1>How Varnish met CHERI 5/N<a class="headerlink" href="#how-varnish-met-cheri-5-n" title="Link to this heading">¶</a></h1>
+<section id="varnish-workspaces">
+<h2>Varnish Workspaces<a class="headerlink" href="#varnish-workspaces" title="Link to this heading">¶</a></h2>
+<p>To process a HTTP request or response, varnish must allocate bits
+of memory which will only be used for the duration of that processing,
+and all of it can be released back at the same time.</p>
+<p>To avoid calling <code class="docutils literal notranslate"><span class="pre">malloc(3)</span></code> a lot, which comes with a locking
+overhead in a heavily multithreaded process, but even more to
+avoid having to keep track of all these allocations in order to be able
+to <code class="docutils literal notranslate"><span class="pre">free(3)</span></code> them all, varnish has “workspaces”:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct ws {
+    […]
+    char    *s;     /* (S)tart of buffer */
+    char    *f;     /* (F)ree/front pointer */
+    char    *r;     /* (R)eserved length */
+    char    *e;     /* (E)nd of buffer */
+};
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">s</span></code> pointer points at the start of a slab of memory, owned
+exclusively by the current thread and <code class="docutils literal notranslate"><span class="pre">e</span></code> points to the end.</p>
+<p>Initially <code class="docutils literal notranslate"><span class="pre">f</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">s</span></code>, but as allocations are made
+from the workspace, it moves towards <code class="docutils literal notranslate"><span class="pre">e</span></code>.  The <code class="docutils literal notranslate"><span class="pre">r</span></code> pointer is
+used to make “reservations”, we will ignore that for now.</p>
+<p>Workspaces look easy to create:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ws-&gt;s = space;
+ws-&gt;e = ws-&gt;s + len;
+ws-&gt;f = ws-&gt;s;
+ws-&gt;r = NULL;
+</pre></div>
+</div>
+<p>… only, given the foot-shooting-abetting nature of the C language,
+we have bolted on a lot of seat-belts:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#define WS_ID_SIZE 4
+
+struct ws {
+    unsigned        magic;
+#define WS_MAGIC    0x35fac554
+    char            id[WS_ID_SIZE]; /* identity */
+    char            *s;             /* (S)tart of buffer */
+    char            *f;             /* (F)ree/front pointer */
+    char            *r;             /* (R)eserved length */
+    char            *e;             /* (E)nd of buffer */
+};
+
+void
+WS_Init(struct ws *ws, const char *id, void *space, unsigned len)
+{
+    unsigned l;
+
+    DSLb(DBG_WORKSPACE,
+        &quot;WS_Init(%s, %p, %p, %u)&quot;, id, ws, space, len);
+    assert(space != NULL);
+    assert(PAOK(space));
+    INIT_OBJ(ws, WS_MAGIC);
+    ws-&gt;s = space;
+    l = PRNDDN(len - 1);
+    ws-&gt;e = ws-&gt;s + l;
+    memset(ws-&gt;e, WS_REDZONE_END, len - l);
+    ws-&gt;f = ws-&gt;s;
+    assert(id[0] &amp; 0x20);           // cheesy islower()
+    bstrcpy(ws-&gt;id, id);
+    WS_Assert(ws);
+}
+</pre></div>
+</div>
+<p>Let me walk you through that:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">DSLb()</span></code> call can be used to trace all operations on the
+workspace, so we can see what actually goes on.</p>
+<p>(Hint: Your <code class="docutils literal notranslate"><span class="pre">malloc(3)</span></code> may have something similar,
+look for <code class="docutils literal notranslate"><span class="pre">utrace</span></code> in the manual page.)</p>
+<p>Next we check the provided space pointer is not NULL, and
+that it is properly aligned, these are both following
+a varnish style-pattern, to sprinkle asserts liberally,
+both as code documentation, but also because it allows
+the compiler to optimize things better.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">INIT_OBJ()</span> <span class="pre">and</span> <span class="pre">``magic</span></code> field is a style-pattern
+we use throughout varnish:  Each structure is tagged with
+a unique magic, which can be used to ensure that pointers
+are what we are told, when they get passed through a <code class="docutils literal notranslate"><span class="pre">void*</span></code>.</p>
+<p>We set the <code class="docutils literal notranslate"><span class="pre">s</span></code> pointer.</p>
+<p>We calculate a length at least one byte shorter than what
+we were provided, align it, and point <code class="docutils literal notranslate"><span class="pre">e</span></code> at that.</p>
+<p>We fill that extraspace at and past <code class="docutils literal notranslate"><span class="pre">e</span></code>, with a “canary” to
+stochastically detect overruns.  It catches most but not
+all overruns.</p>
+<p>We set the name of the workspace, ensuring it is not already
+marked as overflowed.</p>
+<p>And finally check that the resulting workspace complies with
+the defined invariants, as captured in the <code class="docutils literal notranslate"><span class="pre">WS_Assert()</span></code>
+function.</p>
+<p>With CHERI, it looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void
+WS_Init(struct ws *ws, const char *id, void *space, unsigned len)
+{
+    unsigned l;
+
+    DSLb(DBG_WORKSPACE,
+        &quot;WS_Init(%s, %p, %p, %u)&quot;, id, ws, space, len);
+    assert(space != NULL);
+    INIT_OBJ(ws, WS_MAGIC);
+    assert(PAOK(space));
+    ws-&gt;s = cheri_bounds_set(space, len);
+    ws-&gt;e = ws-&gt;s + len
+    ws-&gt;f = ws-&gt;s;
+    assert(id[0] &amp; 0x20);           // cheesy islower()
+    bstrcpy(ws-&gt;id, id);
+    WS_Assert(ws);
+}
+</pre></div>
+</div>
+<p>All the gunk to implement a canary to detect overruns went
+away, because with CHERI we can restrict the <code class="docutils literal notranslate"><span class="pre">s</span></code> pointer so writing
+outside the workspace is <em>by definition</em> impossible, as long as your
+pointer is derived from <code class="docutils literal notranslate"><span class="pre">s</span></code>.</p>
+<p>Less memory wasted, much stronger check and more readable source-code,
+what’s not to like ?</p>
+<p>When an allocation is made from the workspace, CHERI makes it possible
+to restrict the returned pointer to just the allocated space:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void *
+WS_Alloc(struct ws *ws, unsigned bytes)
+{
+    char *r;
+
+    […]
+    r = ws-&gt;f;
+    ws-&gt;f += bytes;
+    return(cheri_bounds_set(r, bytes));
+}
+</pre></div>
+</div>
+</section>
+<section id="varnish-string-buffers">
+<h2>Varnish String Buffers<a class="headerlink" href="#varnish-string-buffers" title="Link to this heading">¶</a></h2>
+<p>Back in the mists of time, Dag-Erling Smørgrav and I designed a
+safe string API called <code class="docutils literal notranslate"><span class="pre">sbuf</span></code> for the FreeBSD kernel.</p>
+<p>The basic idea is you set up your buffer, you call functions to stuff
+text into it, and those functions do all the hard work to ensure
+you do not overrun the buffer.  When the string is complete, you
+call a function to “finish” the buffer, and if returns a flag which
+tells you if overrun (or other problems) happened, and then you can
+get a pointer to the resulting string from another function.</p>
+<p>Varnish has adopted sbuf’s under the name <code class="docutils literal notranslate"><span class="pre">vsb</span></code>.  This should
+really not surprise anybody:  Dag-Erling was also involved
+in the birth of varnish.</p>
+<p>It should be obvious that internally <code class="docutils literal notranslate"><span class="pre">vsb</span></code> almost always operate
+on a bigger buffer than the result, so this is another obvious
+place to have CHERI cut a pointer down to size:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>char *
+VSB_data(const struct vsb *s)
+{
+
+    assert_VSB_integrity(s);
+    assert_VSB_state(s, VSB_FINISHED);
+
+    return (cheri_bounds_set(s-&gt;s_buf, s-&gt;s_len + 1));
+}
+</pre></div>
+</div>
+<p>Still no bugs though.</p>
+<p><em>/phk</em></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">How Varnish met CHERI 5/N</a><ul>
+<li><a class="reference internal" href="#varnish-workspaces">Varnish Workspaces</a></li>
+<li><a class="reference internal" href="#varnish-string-buffers">Varnish String Buffers</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cheri6.html"
+                          title="previous chapter">How Varnish met CHERI 6/N</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cheri4.html"
+                          title="next chapter">How Varnish met CHERI 4/N</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/phk/cheri5.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="cheri4.html" title="How Varnish met CHERI 4/N"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cheri6.html" title="How Varnish met CHERI 6/N"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Poul-Hennings random outbursts</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How Varnish met CHERI 5/N</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

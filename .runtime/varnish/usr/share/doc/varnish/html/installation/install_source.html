@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Compiling Varnish from source &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting help" href="help.html" />
+    <link rel="prev" title="Installing on RedHat or CentOS" href="install_redhat.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="help.html" title="Getting help"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install_redhat.html" title="Installing on RedHat or CentOS"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Varnish Installation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="install.html" accesskey="U">Installing Varnish</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Compiling Varnish from source</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="compiling-varnish-from-source">
+<span id="install-src"></span><h1>Compiling Varnish from source<a class="headerlink" href="#compiling-varnish-from-source" title="Link to this heading">¶</a></h1>
+<p>If there are no binary packages available for your system, or if you
+want to compile Varnish from source for other reasons, follow these
+steps:</p>
+<section id="getting-hold-of-the-source">
+<h2>Getting hold of the source<a class="headerlink" href="#getting-hold-of-the-source" title="Link to this heading">¶</a></h2>
+<p>Download the appropriate release tarball, which you can find on
+<a class="reference external" href="https://varnish-cache.org/releases/">https://varnish-cache.org/releases/</a> .</p>
+<p>Alternatively, if you want to hack on Varnish, you should clone our
+git repository by doing.</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/varnishcache/varnish-cache</span></code></p>
+</div></blockquote>
+</section>
+<section id="build-dependencies-on-freebsd">
+<h2>Build dependencies on FreeBSD<a class="headerlink" href="#build-dependencies-on-freebsd" title="Link to this heading">¶</a></h2>
+<p>To get the dependencies required to build varnish from source
+you can either:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pkg</span> <span class="n">install</span> <span class="n">automake</span> <span class="n">pkgconf</span> <span class="n">py36</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">py36</span><span class="o">-</span><span class="n">docutils</span> <span class="n">pcre2</span> <span class="n">libtool</span>
+</pre></div>
+</div>
+<p>And optionally, to be able to run all the testcases:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pkg</span> <span class="n">install</span> <span class="n">haproxy</span> <span class="n">nghttp2</span> <span class="n">vttest</span>
+</pre></div>
+</div>
+<p>Or if you want the built from sources:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">ports</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">varnish6</span>
+<span class="n">make</span> <span class="n">depends</span> <span class="n">clean</span>
+</pre></div>
+</div>
+<p>Then continue <a class="reference internal" href="#compiling-varnish">Compiling Varnish</a></p>
+</section>
+<section id="build-dependencies-on-debian-ubuntu">
+<h2>Build dependencies on Debian / Ubuntu<a class="headerlink" href="#build-dependencies-on-debian-ubuntu" title="Link to this heading">¶</a></h2>
+<p>In order to build Varnish from source you need a number of packages
+installed. On a Debian or Ubuntu system, use this command to install
+them (replace <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span></code> if needed):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> \
+    <span class="n">make</span> \
+    <span class="n">automake</span> \
+    <span class="n">autotools</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">libedit</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">libjemalloc</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">libncurses</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">libpcre2</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">libtool</span> \
+    <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> \
+    <span class="n">python3</span><span class="o">-</span><span class="n">docutils</span> \
+    <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span> \
+    <span class="n">cpio</span>
+</pre></div>
+</div>
+<p>Optionally, to rebuild the svg files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">graphviz</span>
+</pre></div>
+</div>
+<p>Recommended, in particular if you plan on building custom vmods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">autoconf</span><span class="o">-</span><span class="n">archive</span>
+</pre></div>
+</div>
+<p>Optionally, to pull from a repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span>
+</pre></div>
+</div>
+<p>Then continue <a class="reference internal" href="#compiling-varnish">Compiling Varnish</a></p>
+</section>
+<section id="build-dependencies-on-red-hat-centos">
+<h2>Build dependencies on Red Hat / CentOS<a class="headerlink" href="#build-dependencies-on-red-hat-centos" title="Link to this heading">¶</a></h2>
+<p>in the following shell commands, replace <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">yum</span> <span class="pre">install</span></code> if needed.</p>
+<p>Install sphinx</p>
+<ul>
+<li><p>On Red Hat / CentOS 8, sphinx is not included in the default
+repositories, so execute these steps to include it from the
+powertools repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dnf</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="s1">&#39;dnf-command(config-manager)&#39;</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">config</span><span class="o">-</span><span class="n">manager</span> <span class="o">--</span><span class="nb">set</span><span class="o">-</span><span class="n">enabled</span> <span class="n">powertools</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">diffutils</span> <span class="n">python3</span><span class="o">-</span><span class="n">sphinx</span>
+</pre></div>
+</div>
+</li>
+<li><p>On Red Hat / CentOS &lt;= 7, install sphinx:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">python</span><span class="o">-</span><span class="n">sphinx</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The following step should conclude installation of the required
+packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> \
+      <span class="n">make</span> \
+      <span class="n">autoconf</span> \
+      <span class="n">automake</span> \
+      <span class="n">jemalloc</span><span class="o">-</span><span class="n">devel</span> \
+      <span class="n">libedit</span><span class="o">-</span><span class="n">devel</span> \
+      <span class="n">libtool</span> \
+      <span class="n">libunwind</span><span class="o">-</span><span class="n">devel</span> \
+      <span class="n">ncurses</span><span class="o">-</span><span class="n">devel</span> \
+      <span class="n">pcre2</span><span class="o">-</span><span class="n">devel</span> \
+      <span class="n">pkgconfig</span> \
+      <span class="n">python3</span><span class="o">-</span><span class="n">docutils</span> \
+      <span class="n">cpio</span>
+</pre></div>
+</div>
+<p>Optionally, to rebuild the svg files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">graphviz</span>
+</pre></div>
+</div>
+<p>Optionally, to pull from a repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yum</span> <span class="n">install</span> <span class="n">git</span>
+</pre></div>
+</div>
+<p>Then continue <a class="reference internal" href="#compiling-varnish">Compiling Varnish</a></p>
+</section>
+<section id="build-dependencies-on-macos">
+<h2>Build dependencies on MacOS<a class="headerlink" href="#build-dependencies-on-macos" title="Link to this heading">¶</a></h2>
+<p>To compile varnish on MacOS, these steps should install the required
+dependencies:</p>
+<ul>
+<li><p>Install <code class="docutils literal notranslate"><span class="pre">xcode</span></code> via the App Store</p></li>
+<li><p>Install dependencies via <cite>brew</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">install</span> \
+    <span class="n">autoconf</span> \
+    <span class="n">automake</span> \
+    <span class="n">pkg</span><span class="o">-</span><span class="n">config</span> \
+    <span class="n">libtool</span> \
+    <span class="n">docutils</span> \
+    <span class="n">sphinx</span><span class="o">-</span><span class="n">doc</span>
+</pre></div>
+</div>
+</li>
+<li><p>Add sphinx to PATH as advised by the installer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/opt/sphinx-doc/bin:$PATH&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Then continue <a class="reference internal" href="#compiling-varnish">Compiling Varnish</a></p>
+</section>
+<section id="build-dependencies-on-alpine-linux">
+<h2>Build dependencies on Alpine Linux<a class="headerlink" href="#build-dependencies-on-alpine-linux" title="Link to this heading">¶</a></h2>
+<p>As of Alpine 3, these steps should install the required dependencies:</p>
+<ul>
+<li><p>Add the <a class="reference external" href="https://wiki.alpinelinux.org/wiki/Enable_Community_Repository">Alpine Community Repository</a></p></li>
+<li><p>Install dependencies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apk</span> <span class="n">add</span> <span class="o">-</span><span class="n">q</span> \
+    <span class="n">autoconf</span> \
+    <span class="n">automake</span> \
+    <span class="n">build</span><span class="o">-</span><span class="n">base</span> \
+    <span class="n">ca</span><span class="o">-</span><span class="n">certificates</span> \
+    <span class="n">cpio</span> \
+    <span class="n">gzip</span> \
+    <span class="n">libedit</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">libtool</span> \
+    <span class="n">libunwind</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">linux</span><span class="o">-</span><span class="n">headers</span> \
+    <span class="n">pcre2</span><span class="o">-</span><span class="n">dev</span> \
+    <span class="n">py</span><span class="o">-</span><span class="n">docutils</span> \
+    <span class="n">py3</span><span class="o">-</span><span class="n">sphinx</span> \
+    <span class="n">tar</span> \
+    <span class="n">sudo</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Optionally, to rebuild the svg files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apk</span> <span class="n">add</span> <span class="o">-</span><span class="n">q</span> <span class="n">graphviz</span>
+</pre></div>
+</div>
+<p>Optionally, to pull from a repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apk</span> <span class="n">add</span> <span class="o">-</span><span class="n">q</span> <span class="n">git</span>
+</pre></div>
+</div>
+<p>Then continue <a class="reference internal" href="#compiling-varnish">Compiling Varnish</a>, using the <code class="docutils literal notranslate"><span class="pre">--with-unwind</span></code>
+<code class="docutils literal notranslate"><span class="pre">configure</span></code> option.</p>
+</section>
+<section id="build-dependencies-on-a-smartos-zone">
+<h2>Build dependencies on a SmartOS Zone<a class="headerlink" href="#build-dependencies-on-a-smartos-zone" title="Link to this heading">¶</a></h2>
+<p>As of SmartOS pkgsrc 2019Q4, install the following packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pkgin</span> <span class="ow">in</span> <span class="n">autoconf</span> <span class="n">automake</span> <span class="n">editline</span> <span class="n">libtool</span> <span class="n">ncurses</span> \
+         <span class="n">pcre2</span> <span class="n">python37</span> <span class="n">py37</span><span class="o">-</span><span class="n">sphinx</span> <span class="n">py37</span><span class="o">-</span><span class="n">docutils</span> <span class="n">gmake</span> <span class="n">gcc8</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span>
+</pre></div>
+</div>
+<p><em>Note:</em> you will probably need to add <code class="docutils literal notranslate"><span class="pre">/opt/local/gcc8/bin</span></code> to
+<code class="docutils literal notranslate"><span class="pre">PATH</span></code> in order to have <code class="docutils literal notranslate"><span class="pre">gcc</span></code> available.</p>
+<p>Optionally, to rebuild the svg files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pkgin</span> <span class="ow">in</span> <span class="n">graphviz</span>
+</pre></div>
+</div>
+<p>Optionally, to pull from a repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pkgin</span> <span class="ow">in</span> <span class="n">git</span>
+</pre></div>
+</div>
+</section>
+<section id="building-on-solaris-and-other-solaris-ish-oses">
+<h2>Building on Solaris and other Solaris-ish OSes<a class="headerlink" href="#building-on-solaris-and-other-solaris-ish-oses" title="Link to this heading">¶</a></h2>
+<p>Building with gcc should be straight forward, as long as the above
+requirements are installed.</p>
+<p>By convention, consider installing Varnish under <cite>/opt/local</cite> using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">configure</span> \
+        <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">local</span> \
+        <span class="o">--</span><span class="n">mandir</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">man</span>
+</pre></div>
+</div>
+<p>Alternatively, building with Solaris Studio 12.4 should work
+considering the following recommendations:</p>
+<ul>
+<li><p>have GNU <cite>nm</cite> in <cite>$PATH</cite> before Solaris <cite>nm</cite></p></li>
+<li><p>Provide compiler flags for <cite>configure</cite> to include paths under which
+dependencies are installed. Example for <cite>/opt/local</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">configure</span> \
+        <span class="o">--</span><span class="n">prefix</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">local</span> \
+        <span class="o">--</span><span class="n">mandir</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">man</span> \
+        <span class="n">CPPFLAGS</span><span class="o">=</span><span class="s2">&quot;-I/opt/local/include&quot;</span> \
+        <span class="n">CFLAGS</span><span class="o">=</span><span class="s2">&quot;-m64&quot;</span> \
+        <span class="n">LDFLAGS</span><span class="o">=</span><span class="s2">&quot;-L/opt/local/lib -R/opt/local/lib&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="compiling-varnish">
+<h2>Compiling Varnish<a class="headerlink" href="#compiling-varnish" title="Link to this heading">¶</a></h2>
+<p>The configuration will need the dependencies above satisfied. Once that is
+taken care of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">varnish</span><span class="o">-</span><span class="n">cache</span>
+<span class="n">sh</span> <span class="n">autogen</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">sh</span> <span class="n">configure</span>
+<span class="n">make</span>
+</pre></div>
+</div>
+<p>The <cite>configure</cite> script takes some arguments, but more likely than not you can
+forget about that for now, almost everything in Varnish can be tweaked with run
+time parameters.</p>
+<p>Before you install, you may want to run the test suite, make a cup of
+tea while it runs, it usually takes a couple of minutes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">check</span>
+</pre></div>
+</div>
+<p>Don’t worry if one or two tests fail. Some of the tests are a
+bit too timing sensitive (Please tell us which so we can fix them).
+However, if a lot of them fail, and in particular if the <cite>b00000.vtc</cite> test
+fails, something is horribly wrong. You will get nowhere without
+figuring this one out.</p>
+</section>
+<section id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Link to this heading">¶</a></h2>
+<p>And finally, the true test of a brave heart: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">install</span></code></p>
+<p>Varnish will now be installed in <code class="docutils literal notranslate"><span class="pre">/usr/local</span></code>. The <code class="docutils literal notranslate"><span class="pre">varnishd</span></code> binary is in
+<cite>/usr/local/sbin/varnishd</cite>. To make sure that the necessary links and caches
+of the most recent shared libraries are found, run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">ldconfig</span></code>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Compiling Varnish from source</a><ul>
+<li><a class="reference internal" href="#getting-hold-of-the-source">Getting hold of the source</a></li>
+<li><a class="reference internal" href="#build-dependencies-on-freebsd">Build dependencies on FreeBSD</a></li>
+<li><a class="reference internal" href="#build-dependencies-on-debian-ubuntu">Build dependencies on Debian / Ubuntu</a></li>
+<li><a class="reference internal" href="#build-dependencies-on-red-hat-centos">Build dependencies on Red Hat / CentOS</a></li>
+<li><a class="reference internal" href="#build-dependencies-on-macos">Build dependencies on MacOS</a></li>
+<li><a class="reference internal" href="#build-dependencies-on-alpine-linux">Build dependencies on Alpine Linux</a></li>
+<li><a class="reference internal" href="#build-dependencies-on-a-smartos-zone">Build dependencies on a SmartOS Zone</a></li>
+<li><a class="reference internal" href="#building-on-solaris-and-other-solaris-ish-oses">Building on Solaris and other Solaris-ish OSes</a></li>
+<li><a class="reference internal" href="#compiling-varnish">Compiling Varnish</a></li>
+<li><a class="reference internal" href="#installing">Installing</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="install_redhat.html"
+                          title="previous chapter">Installing on RedHat or CentOS</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="help.html"
+                          title="next chapter">Getting help</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/installation/install_source.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="help.html" title="Getting help"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install_redhat.html" title="Installing on RedHat or CentOS"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Varnish Installation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="install.html" >Installing Varnish</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Compiling Varnish from source</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

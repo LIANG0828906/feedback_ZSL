@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Varnish: The beef in the sandwich &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Starting Varnish" href="starting_varnish.html" />
+    <link rel="prev" title="The Varnish Tutorial" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="starting_varnish.html" title="Starting Varnish"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Varnish Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Varnish: The beef in the sandwich</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="varnish-the-beef-in-the-sandwich">
+<span id="tutorial-intro"></span><h1>Varnish: The beef in the sandwich<a class="headerlink" href="#varnish-the-beef-in-the-sandwich" title="Link to this heading">¶</a></h1>
+<p>You may have heard the term “web-delivery-sandwich” used in relation to
+Varnish, and it is a pretty apt metafor:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────┐
+│ browser │
+└─────────┘                                            ┌─────────┐
+           \                                          ┌─────────┐│
+┌─────┐     ╔═════════╗    ┌─────┐    ┌─────────┐    ┌─────────┐│┘
+│ app │ --- ║ Network ║ -- │ TLS │ -- │ Varnish │ -- │ Backend │┘
+└─────┘     ╚═════════╝    └─────┘    └─────────┘    └─────────┘
+            /
+┌────────────┐
+│ API-client │
+└────────────┘
+</pre></div>
+</div>
+<p>The top layer of the sandwich, ‘TLS’ is responsible for handling
+the TLS (“https”) encryption, which means it must have access to
+the cryptographic certificate which authenticates your website.</p>
+<p>The bottom layer of the sandwich are your webservers, CDNs,
+API-servers, business backend systems and all the other sources for
+your web-content.</p>
+<p>Varnish goes in the middle, where it provides caching, policy,
+analytics, visibility and mitigation for your webtraffic.</p>
+</section>
+<section id="how-varnish-works">
+<h1>How Varnish works<a class="headerlink" href="#how-varnish-works" title="Link to this heading">¶</a></h1>
+<p>For each and every request, Varnish runs through the ‘VCL’ program
+to decide what should happen:  Which backend has this content, how
+long time can we cache it, is it accessible for this request, should
+it be redirected elsewhere and so on.  If that particular backend
+is down, varnish can find another or substitute different content
+until it comes back up.</p>
+<p>Your first VCL program will probably be trivial, for instance just
+splitting the traffic between two different backend servers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="n">vcl_recv</span> <span class="p">{</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">url</span> <span class="o">~</span> <span class="s2">&quot;^/wiki&quot;</span><span class="p">)</span> <span class="p">{</span>
+       <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">wiki_server</span><span class="p">;</span>
+   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+       <span class="nb">set</span> <span class="n">req</span><span class="o">.</span><span class="n">backend_hint</span> <span class="o">=</span> <span class="n">wordpress_server</span><span class="p">;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When you load the VCL program into Varnish, it is compiled into
+a C-program which is compiled into a shared library, which varnish
+then loads and calls into, therefore VCL code is <em>fast</em>.</p>
+<p>Everything Varnish does is recorded in ‘VSL’ log records which can
+be examined and monitored in real time or recorded for later use
+in native or NCSA format, and when we say ‘everything’ we mean
+<em>everything</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>*   &lt;&lt; Request  &gt;&gt; 318737
+-   Begin          req 318736 rxreq
+-   Timestamp      Start: 1612787907.221931 0.000000 0.000000
+-   Timestamp      Req: 1612787907.221931 0.000000 0.000000
+-   VCL_use        boot
+-   ReqStart       192.0.2.24 39698 a1
+-   ReqMethod      GET
+-   ReqURL         /vmods/
+-   ReqProtocol    HTTP/1.1
+-   ReqHeader      Host: varnish-cache.org
+-   ReqHeader      Accept: text/html, application/rss+xml, […]
+-   ReqHeader      Accept-Encoding: gzip,deflate
+-   ReqHeader      Connection: close
+-   ReqHeader      User-Agent: Mozilla/5.0 […]
+-   ReqHeader      X-Forwarded-For: 192.0.2.24
+-   VCL_call       RECV
+-   VCL_acl        NO_MATCH bad_guys
+-   VCL_return     hash
+[…]
+</pre></div>
+</div>
+<p>These <cite>VSL</cite> log records are written to a circular buffer in shared
+memory, from where other programs can subscribe to them via a supported
+API.  One such program is <cite>varnishncsa</cite> which produces NCSA-style log
+records:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>192.0.2.24 - - [08/Feb/2021:12:42:35 +0000] &quot;GET http://vmods/ HTTP/1.1&quot; 200 0 […]
+</pre></div>
+</div>
+<p>Varnish is also engineered for uptime, it is not necessary to restart
+varnish to change the VCL program, in fact, multiple VCL programs can be
+loaded at the same time and you can switch between them instantly.</p>
+</section>
+<section id="caching-with-varnish">
+<h1>Caching with Varnish<a class="headerlink" href="#caching-with-varnish" title="Link to this heading">¶</a></h1>
+<p>When Varnish receives a request, VCL can decide to look for a
+reusable answer in the cache, if there is one, that becomes one
+less request to put load on your backend applications database.
+Cache-hits take less than a millisecond, often mere microseconds,
+to deliver.</p>
+<p>If there is nothing usable in the cache, the answer from the backend
+can, again under VCL control, be put in the cache for some amount
+of time, so future requests for the same object can find it there.</p>
+<p>Varnish understands the <cite>Cache-Control</cite> HTTP header if your backend
+server sends one, but ultimately the VCL program makes the decision
+to cache and how long, and if you want to send a different <cite>Cache-Control</cite>
+header to the clients, VCL can do that too.</p>
+</section>
+<section id="content-composition-with-varnish">
+<h1>Content Composition with Varnish<a class="headerlink" href="#content-composition-with-varnish" title="Link to this heading">¶</a></h1>
+<p>Varnish supports <cite>ESI - Edge Side Includes</cite> which makes it possible
+to send responses to clients which are composed of different bits
+from different backends, with the very important footnote that the
+different bits can have very different caching policies.</p>
+<p>With ESI a backend can tell varnish to edit the content of another
+object into a HTML page:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">H1</span><span class="o">&gt;</span><span class="n">Todays</span> <span class="n">Top</span> <span class="n">News</span><span class="o">&lt;/</span><span class="n">H1</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">ESI</span><span class="p">:</span><span class="n">include</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;/topnews&quot;</span><span class="o">/&gt;</span>
+</pre></div>
+</div>
+<p>The <cite>/topnews</cite> request will be handled like every other request in
+Varnish, VCL will decide if it can be cached, which backend should
+supply it and so on, so even if the whole object in the example can
+not be cached, for instance if the page is dynamic content for a
+logged-in user, the <cite>/topnews</cite> object can be cached and can be
+shared from the cache, between all users.</p>
+</section>
+<section id="content-policy-with-varnish">
+<h1>Content Policy with Varnish<a class="headerlink" href="#content-policy-with-varnish" title="Link to this heading">¶</a></h1>
+<p>Because VCL is in full control of every request, and because VCL
+can be changed instantly on the fly, Varnish is a great tool to
+implement both reactive and prescriptive content-policies.</p>
+<p>Prescriptive content-policies can be everything from complying
+with UN sanctions using IP number access lists over delivering
+native language content to different clients to closing
+access to employee web-mail in compliance with “Right to
+disconnect” laws.</p>
+<p>Varnish, and VCL is particular, are well suited to sort requests
+and collect metrics for real-time A/B testing or during migrations
+to a new backend system.</p>
+<p>Reactive content-policies can be anything from blocking access to
+an infected backend or fixing the URL from the QR code on the new
+product, to extending caching times while the backend rebuilds the
+database.</p>
+</section>
+<section id="varnish-is-general-purpose">
+<h1>Varnish is general purpose<a class="headerlink" href="#varnish-is-general-purpose" title="Link to this heading">¶</a></h1>
+<p>Varnish is written to run on modern UNIX-like operating systems:
+Linux, FreeBSD, OS/X, OpenBSD, NetBSD, Solaris, OmniOs, SmartOS etc.</p>
+<p>Varnish runs on any CPU architecture: i386, amd64, arm32, arm64,
+mips, power, riscV, s390 - you name it.</p>
+<p>Varnish can be deployed on dedicated hardware, in VMs, jails,
+Containers, Cloud, as a service or any other way you may care for.</p>
+<p>Unfortunately the <a class="reference external" href="https://xkcd.com/149/">sudo make me a sandwich</a> feature is not ready yet,
+so you will have to do that yourself but click on “Next topic” in the
+navigation menu on the left and we’ll tell you the recipe…</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Varnish: The beef in the sandwich</a></li>
+<li><a class="reference internal" href="#how-varnish-works">How Varnish works</a></li>
+<li><a class="reference internal" href="#caching-with-varnish">Caching with Varnish</a></li>
+<li><a class="reference internal" href="#content-composition-with-varnish">Content Composition with Varnish</a></li>
+<li><a class="reference internal" href="#content-policy-with-varnish">Content Policy with Varnish</a></li>
+<li><a class="reference internal" href="#varnish-is-general-purpose">Varnish is general purpose</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">The Varnish Tutorial</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="starting_varnish.html"
+                          title="next chapter">Starting Varnish</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorial/introduction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="starting_varnish.html" title="Starting Varnish"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Varnish Tutorial"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Varnish: The beef in the sandwich</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

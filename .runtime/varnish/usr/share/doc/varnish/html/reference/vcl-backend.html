@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>VCL-backends &#8212; Varnish version 7.4.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=e2714048" />
+    
+    <script src="../_static/documentation_options.js?v=c4391b20"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="VCL-probe" href="vcl-probe.html" />
+    <link rel="prev" title="VCL-steps" href="vcl-step.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vcl-probe.html" title="VCL-probe"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vcl-step.html" title="VCL-steps"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">The Varnish Reference Manual</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VCL-backends</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="vcl-backends">
+<span id="vcl-backend-7"></span><h1>VCL-backends<a class="headerlink" href="#vcl-backends" title="Link to this heading">¶</a></h1>
+<section id="configuring-backends">
+<h2>Configuring Backends<a class="headerlink" href="#configuring-backends" title="Link to this heading">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Manual section<span class="colon">:</span></dt>
+<dd class="field-odd"><p>7</p>
+</dd>
+</dl>
+<section id="backend-definition">
+<span id="id1"></span><h3>Backend definition<a class="headerlink" href="#backend-definition" title="Link to this heading">¶</a></h3>
+<p>A backend declaration creates and initialises a named backend object.
+A declaration start with the keyword <code class="docutils literal notranslate"><span class="pre">backend</span></code> followed by the name of the
+backend. The actual declaration is in curly brackets, in a key/value fashion.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">name</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n">attribute1</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="o">.</span><span class="n">attribute2</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+    <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If there is a backend named <code class="docutils literal notranslate"><span class="pre">default</span></code> it will be used unless another
+backend is explicitly set.  If no backend is named <code class="docutils literal notranslate"><span class="pre">default</span></code> the first
+backend in the VCL program becomes the default.</p>
+<p>If you only use dynamic backends created by VMODs, an empty, always failing
+(503) backend can be specified:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">default</span> <span class="n">none</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A backend must be specified with either a <code class="docutils literal notranslate"><span class="pre">.host</span></code> or a <code class="docutils literal notranslate"><span class="pre">.path</span></code> attribute, but
+not both.  All other attributes have default values.</p>
+</section>
+<section id="attribute-host">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.host</span></code><a class="headerlink" href="#attribute-host" title="Link to this heading">¶</a></h3>
+<p>To specify a networked backend <code class="docutils literal notranslate"><span class="pre">.host</span></code> takes either a numeric
+IPv4/IPv6 address or a domain name which resolves to <em>at most</em>
+one IPv4 and one IPv6 address:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">;</span>
+
+<span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;[::1]:8080&quot;</span><span class="p">;</span>
+
+<span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;example.com:8081&quot;</span><span class="p">;</span>
+
+<span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;example.com:http&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="attribute-port">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.port</span></code><a class="headerlink" href="#attribute-port" title="Link to this heading">¶</a></h3>
+<p>The TCP port number or service name can be specified as part of
+<code class="docutils literal notranslate"><span class="pre">.host</span></code> as above or separately using the <code class="docutils literal notranslate"><span class="pre">.port</span></code> attribute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;8081&quot;</span><span class="p">;</span>
+
+<span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="attribute-path">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.path</span></code><a class="headerlink" href="#attribute-path" title="Link to this heading">¶</a></h3>
+<p>The absolute path to a Unix(4) domain socket of a local backend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/var/run/http.sock&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>or, where available, <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> followed by the name of an abstract socket
+of a local backend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;@mybackend&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A warning will be issued if the uds-socket does not exist when the
+VCL is loaded.  This makes it possible to start the UDS-listening peer,
+or set the socket file’s permissions afterwards.</p>
+<p>If the uds-socket socket does not exist or permissions deny access,
+connection attempts will fail.</p>
+</section>
+<section id="attribute-host-header">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.host_header</span></code><a class="headerlink" href="#attribute-host-header" title="Link to this heading">¶</a></h3>
+<p>A host header to add to probes and regular backend requests if they have no such header:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">host_header</span> <span class="o">=</span> <span class="s2">&quot;Host: example.com&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="timeout-attributes">
+<h3>Timeout Attributes<a class="headerlink" href="#timeout-attributes" title="Link to this heading">¶</a></h3>
+<p>These attributes control how patient <cite>varnishd</cite> is during backend fetches:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">connect_timeout</span> <span class="o">=</span> <span class="mf">1.4</span><span class="n">s</span><span class="p">;</span>
+<span class="o">.</span><span class="n">first_byte_timeout</span> <span class="o">=</span> <span class="mi">20</span><span class="n">s</span><span class="p">;</span>
+<span class="o">.</span><span class="n">between_bytes_timeout</span> <span class="o">=</span> <span class="mi">10</span><span class="n">s</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The default values comes parameters with the same names, see <a class="reference internal" href="varnishd.html#varnishd-1"><span class="std std-ref">varnishd</span></a>.</p>
+</section>
+<section id="attribute-max-connections">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.max_connections</span></code><a class="headerlink" href="#attribute-max-connections" title="Link to this heading">¶</a></h3>
+<p>Limit how many simultaneous connections varnish can open to the backend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">max_connections</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="attribute-proxy-header">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.proxy_header</span></code><a class="headerlink" href="#attribute-proxy-header" title="Link to this heading">¶</a></h3>
+<p>Send a PROXY protocol header to the backend with the <code class="docutils literal notranslate"><span class="pre">client.ip</span></code> and
+<code class="docutils literal notranslate"><span class="pre">server.ip</span></code> values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">proxy_header</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Legal values are one and two, depending which version of the PROXY protocol you want.</p>
+<p><em>Notice</em> this setting will lead to backend connections being used
+for a single request only (subject to future improvements). Thus,
+extra care should be taken to avoid running into failing backend
+connections with EADDRNOTAVAIL due to no local ports being
+available. Possible options are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Use additional backend connections to extra IP addresses or TCP ports</p></li>
+<li><p>Increase the number of available ports (Linux sysctl <code class="docutils literal notranslate"><span class="pre">net.ipv4.ip_local_port_range</span></code>)</p></li>
+<li><p>Reuse backend connection ports early (Linux sysctl <code class="docutils literal notranslate"><span class="pre">net.ipv4.tcp_tw_reuse</span></code>)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="attribute-preamble">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.preamble</span></code><a class="headerlink" href="#attribute-preamble" title="Link to this heading">¶</a></h3>
+<p>Send a BLOB on all newly opened connections to the backend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span><span class="n">preamble</span> <span class="o">=</span> <span class="p">:</span><span class="n">SGVsbG8gV29ybGRcbgo</span><span class="o">=</span><span class="p">:;</span>
+</pre></div>
+</div>
+</section>
+<section id="attribute-via">
+<span id="backend-definition-via"></span><h3>Attribute <code class="docutils literal notranslate"><span class="pre">.via</span></code><a class="headerlink" href="#attribute-via" title="Link to this heading">¶</a></h3>
+<p>Name of another <em>proxy</em> backend through which to make the connection
+to the <em>destination</em> backend using the <a class="reference external" href="https://raw.githubusercontent.com/haproxy/haproxy/master/doc/proxy-protocol.txt">PROXY2</a> protocol, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">backend</span> <span class="n">proxy</span> <span class="p">{</span>
+  <span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/to/proxy2_endpoint&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">backend</span> <span class="n">destination</span> <span class="p">{</span>
+  <span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;1.2.3.4&quot;</span><span class="p">;</span>
+  <span class="o">.</span><span class="n">via</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>proxy</em> backend can also use a <code class="docutils literal notranslate"><span class="pre">.host</span></code>/<code class="docutils literal notranslate"><span class="pre">.port</span></code> definition
+rather than <code class="docutils literal notranslate"><span class="pre">.path</span></code>.</p>
+<p>Use of the <code class="docutils literal notranslate"><span class="pre">.path</span></code> attribute for the <em>destination</em> backend is not
+supported.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">.via</span></code> attribute is unrelated to <code class="docutils literal notranslate"><span class="pre">.proxy_header</span></code>. If both are
+used, a second header is sent as per <code class="docutils literal notranslate"><span class="pre">.proxy_header</span></code> specification.</p>
+<p>As of this release, the <em>proxy</em> backend used with <code class="docutils literal notranslate"><span class="pre">.via</span></code> can not be
+a director, it can not itself use <code class="docutils literal notranslate"><span class="pre">.via</span></code> (error: <em>Can not stack .via
+backends</em>) and the protocol is fixed to <a class="reference external" href="https://raw.githubusercontent.com/haproxy/haproxy/master/doc/proxy-protocol.txt">PROXY2</a>.</p>
+<p>Implementation detail:</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">.via</span> <span class="pre">=</span> <span class="pre">&lt;proxy&gt;</span></code> is used, a <a class="reference external" href="https://raw.githubusercontent.com/haproxy/haproxy/master/doc/proxy-protocol.txt">PROXY2</a> preamble is created with
+the <em>destination</em> backend’s address information as <code class="docutils literal notranslate"><span class="pre">dst_addr</span></code>/<code class="docutils literal notranslate"><span class="pre">dst_port</span></code> and, optionally, other TLV attributes. The connection is
+then made to the <em>proxy</em> backend’s endpoint (<code class="docutils literal notranslate"><span class="pre">path</span></code> or <code class="docutils literal notranslate"><span class="pre">host</span></code>/<code class="docutils literal notranslate"><span class="pre">port</span></code>). This is technically equivalent to specifying a <code class="docutils literal notranslate"><span class="pre">backend</span>
+<span class="pre">destination_via_proxy</span></code> with a <code class="docutils literal notranslate"><span class="pre">.preamble</span></code> attribute containing the
+appropriate <a class="reference external" href="https://raw.githubusercontent.com/haproxy/haproxy/master/doc/proxy-protocol.txt">PROXY2</a> preamble for the <em>destination</em> backend.</p>
+</section>
+<section id="attribute-authority">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.authority</span></code><a class="headerlink" href="#attribute-authority" title="Link to this heading">¶</a></h3>
+<p>The HTTP authority to use when connecting to this backend. If unset,
+<code class="docutils literal notranslate"><span class="pre">.host_header</span></code> or <code class="docutils literal notranslate"><span class="pre">.host</span></code> are used.</p>
+<p><code class="docutils literal notranslate"><span class="pre">.authority</span> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></code> disables sending an authority.</p>
+<p>As of this release, the attribute is only used by <code class="docutils literal notranslate"><span class="pre">.via</span></code> connections
+as a <code class="docutils literal notranslate"><span class="pre">PP2_TYPE_AUTHORITY</span></code> Type-Length-Value (TLV) in the <a class="reference external" href="https://raw.githubusercontent.com/haproxy/haproxy/master/doc/proxy-protocol.txt">PROXY2</a>
+preamble.</p>
+</section>
+<section id="attribute-probe">
+<h3>Attribute <code class="docutils literal notranslate"><span class="pre">.probe</span></code><a class="headerlink" href="#attribute-probe" title="Link to this heading">¶</a></h3>
+<p>Please see <a class="reference internal" href="vcl-probe.html#vcl-probe-7"><span class="std std-ref">VCL-probe</span></a>.</p>
+</section>
+<section id="see-also">
+<h3>SEE ALSO<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="varnishd.html#varnishd-1"><span class="std std-ref">varnishd</span></a></p></li>
+<li><p><a class="reference internal" href="vcl.html#vcl-7"><span class="std std-ref">VCL</span></a></p></li>
+<li><p><a class="reference internal" href="vcl-probe.html#vcl-probe-7"><span class="std std-ref">VCL-probe</span></a></p></li>
+<li><p><a class="reference internal" href="vmod_directors.html#vmod-directors-3"><span class="std std-ref">VMOD directors - Varnish Directors Module</span></a></p></li>
+<li><p><a class="reference internal" href="vmod_std.html#vmod-std-3"><span class="std std-ref">VMOD std - Varnish Standard Module</span></a></p></li>
+</ul>
+</section>
+<section id="history">
+<h3>HISTORY<a class="headerlink" href="#history" title="Link to this heading">¶</a></h3>
+<p>VCL was developed by Poul-Henning Kamp in cooperation with Verdens
+Gang AS, Redpill Linpro and Varnish Software.  This manual page is
+written by Per Buer, Poul-Henning Kamp, Martin Blix Grydeland,
+Kristian Lyngstøl, Lasse Karstensen and others.</p>
+</section>
+<section id="copyright">
+<h3>COPYRIGHT<a class="headerlink" href="#copyright" title="Link to this heading">¶</a></h3>
+<p>This document is licensed under the same license as Varnish
+itself. See LICENSE for details.</p>
+<ul class="simple">
+<li><p>Copyright (c) 2006 Verdens Gang AS</p></li>
+<li><p>Copyright (c) 2006-2021 Varnish Software AS</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">VCL-backends</a><ul>
+<li><a class="reference internal" href="#configuring-backends">Configuring Backends</a><ul>
+<li><a class="reference internal" href="#backend-definition">Backend definition</a></li>
+<li><a class="reference internal" href="#attribute-host">Attribute <code class="docutils literal notranslate"><span class="pre">.host</span></code></a></li>
+<li><a class="reference internal" href="#attribute-port">Attribute <code class="docutils literal notranslate"><span class="pre">.port</span></code></a></li>
+<li><a class="reference internal" href="#attribute-path">Attribute <code class="docutils literal notranslate"><span class="pre">.path</span></code></a></li>
+<li><a class="reference internal" href="#attribute-host-header">Attribute <code class="docutils literal notranslate"><span class="pre">.host_header</span></code></a></li>
+<li><a class="reference internal" href="#timeout-attributes">Timeout Attributes</a></li>
+<li><a class="reference internal" href="#attribute-max-connections">Attribute <code class="docutils literal notranslate"><span class="pre">.max_connections</span></code></a></li>
+<li><a class="reference internal" href="#attribute-proxy-header">Attribute <code class="docutils literal notranslate"><span class="pre">.proxy_header</span></code></a></li>
+<li><a class="reference internal" href="#attribute-preamble">Attribute <code class="docutils literal notranslate"><span class="pre">.preamble</span></code></a></li>
+<li><a class="reference internal" href="#attribute-via">Attribute <code class="docutils literal notranslate"><span class="pre">.via</span></code></a></li>
+<li><a class="reference internal" href="#attribute-authority">Attribute <code class="docutils literal notranslate"><span class="pre">.authority</span></code></a></li>
+<li><a class="reference internal" href="#attribute-probe">Attribute <code class="docutils literal notranslate"><span class="pre">.probe</span></code></a></li>
+<li><a class="reference internal" href="#see-also">SEE ALSO</a></li>
+<li><a class="reference internal" href="#history">HISTORY</a></li>
+<li><a class="reference internal" href="#copyright">COPYRIGHT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="vcl-step.html"
+                          title="previous chapter">VCL-steps</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="vcl-probe.html"
+                          title="next chapter">VCL-probe</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/vcl-backend.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vcl-probe.html" title="VCL-probe"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vcl-step.html" title="VCL-steps"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Varnish version 7.4.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >The Varnish Reference Manual</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VCL-backends</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2010-2014, Varnish Software AS.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>
