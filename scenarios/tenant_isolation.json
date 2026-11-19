@@ -1,0 +1,29 @@
+{
+  "schema_version": "scenario-v1",
+  "name": "tenant-isolation",
+  "base_url": "http://127.0.0.1:8000",
+  "admin_token": "local-admin-token",
+  "duration_seconds": 10,
+  "warmup_seconds": 1,
+  "max_workers": 40,
+  "max_pending": 256,
+  "tenants": {
+    "tenant-alpha": 0.9,
+    "tenant-beta": 0.1
+  },
+  "statuses": ["created", "paid"],
+  "page_size": 20,
+  "traffic_profiles": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 10,
+      "request_rate_per_second": 60,
+      "read_ratio": 1.0
+    }
+  ],
+  "write_mix": {
+    "create_ratio": 0.6
+  },
+  "faults": [],
+  "request_timeout_seconds": 3
+}

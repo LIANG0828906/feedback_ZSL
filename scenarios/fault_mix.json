@@ -1,0 +1,62 @@
+{
+  "schema_version": "scenario-v1",
+  "name": "fault-mix",
+  "base_url": "http://127.0.0.1:8000",
+  "admin_token": "local-admin-token",
+  "duration_seconds": 38,
+  "warmup_seconds": 1,
+  "max_workers": 32,
+  "max_pending": 256,
+  "tenants": {
+    "tenant-alpha": 0.5,
+    "tenant-beta": 0.3,
+    "tenant-gamma": 0.2
+  },
+  "statuses": ["created", "paid", "shipped"],
+  "page_size": 20,
+  "traffic_profiles": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 5,
+      "request_rate_per_second": 18,
+      "read_ratio": 0.9
+    },
+    {
+      "start_seconds": 5,
+      "end_seconds": 13,
+      "request_rate_per_second": 36,
+      "read_ratio": 0.85
+    },
+    {
+      "start_seconds": 13,
+      "end_seconds": 18,
+      "request_rate_per_second": 20,
+      "read_ratio": 0.8
+    },
+    {
+      "start_seconds": 18,
+      "end_seconds": 38,
+      "request_rate_per_second": 4,
+      "read_ratio": 1.0
+    }
+  ],
+  "write_mix": {
+    "create_ratio": 0.6
+  },
+  "faults": [
+    {
+      "at_seconds": 5,
+      "mode": "slow",
+      "delay_ms": 850,
+      "duration_seconds": 5
+    },
+    {
+      "at_seconds": 12,
+      "mode": "unavailable",
+      "error_rate": 1.0,
+      "duration_seconds": 5
+    }
+  ],
+  "request_timeout_seconds": 5,
+  "settle_seconds": 2
+}
