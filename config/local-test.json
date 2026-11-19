@@ -1,0 +1,46 @@
+{
+  "primary": {
+    "connection_string": "DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost,1433;DATABASE=OrderMain;UID=sa;PWD=${MSSQL_SA_PASSWORD};Encrypt=yes;TrustServerCertificate=yes;Pooling=No;",
+    "database": "OrderMain",
+    "pool_size": 8,
+    "pool_acquire_timeout_ms": 25,
+    "login_timeout_seconds": 5,
+    "query_timeout_seconds": 15
+  },
+  "replica": {
+    "connection_string": "DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost,1434;DATABASE=OrderReplica;UID=sa;PWD=${MSSQL_SA_PASSWORD};Encrypt=yes;TrustServerCertificate=yes;Pooling=No;",
+    "database": "OrderReplica",
+    "pool_size": 8,
+    "pool_acquire_timeout_ms": 25,
+    "login_timeout_seconds": 5,
+    "query_timeout_seconds": 15
+  },
+  "replication": {
+    "mode": "log_shipping",
+    "poll_interval_ms": 500,
+    "watermark_wait_timeout_ms": 2000,
+    "lag_threshold_ms": 3000,
+    "lag_window_seconds": 30,
+    "sync_stall_ms": 5000,
+    "publication": "OrderPublication",
+    "distribution_database": "distribution"
+  },
+  "switch": {
+    "timeout_ms": 15000,
+    "allow_logical_switch": true
+  },
+  "faults": {
+    "replication_jobs": [],
+    "allow_simulated_replication_stall": true
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "request_threads": 16,
+    "max_body_bytes": 1048576,
+    "compare_on_replica_read": true,
+    "max_page_size": 200,
+    "default_page_size": 50
+  }
+}
+
