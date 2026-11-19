@@ -1,0 +1,43 @@
+{
+  "host": "127.0.0.1",
+  "port": 8000,
+  "metrics_port": 9090,
+  "model_dir": "artifacts/models",
+  "mapping_file": "protocol_mapping.json",
+  "stable_version": "v3",
+  "canary_version": "v4",
+  "default_canary_weight": 0.3,
+  "tenant_default_weights": {
+    "tenant-b": 0.5
+  },
+  "versions": {
+    "v3": {
+      "max_queue_depth": 128,
+      "max_concurrency": 1,
+      "min_batch_size": 1,
+      "max_batch_size": 16,
+      "min_wait_ms": 2.0,
+      "max_wait_ms": 20.0,
+      "enqueue_timeout_ms": 500.0,
+      "ready_wait_ms": 2000.0,
+      "circuit_p99_ms": 120.0,
+      "circuit_error_rate": 0.5,
+      "circuit_min_samples": 8,
+      "window_seconds": 10.0
+    },
+    "v4": {
+      "max_queue_depth": 128,
+      "max_concurrency": 1,
+      "min_batch_size": 1,
+      "max_batch_size": 16,
+      "min_wait_ms": 2.0,
+      "max_wait_ms": 20.0,
+      "enqueue_timeout_ms": 500.0,
+      "ready_wait_ms": 2000.0,
+      "circuit_p99_ms": 120.0,
+      "circuit_error_rate": 0.5,
+      "circuit_min_samples": 8,
+      "window_seconds": 10.0
+    }
+  }
+}

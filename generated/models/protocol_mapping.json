@@ -1,0 +1,32 @@
+{
+  "v3": {
+    "columns": [
+      "c_user_age",
+      "c_user_tenure",
+      "c_item_age",
+      "c_item_price",
+      "c_ctr_7d",
+      "c_cvr_7d",
+      "c_match_score",
+      "c_dwell_mean"
+    ],
+    "model_file": "ranker_v3.onnx",
+    "protocol_version": "rank-features-v1"
+  },
+  "v4": {
+    "columns": [
+      "c_item_price",
+      "c_item_age",
+      "c_match_score",
+      "c_ctr_7d",
+      "c_cvr_7d",
+      "c_dwell_mean",
+      "c_user_age",
+      "c_user_tenure",
+      "c_emb_cosine",
+      "c_ctx_hour"
+    ],
+    "model_file": "ranker_v4.onnx",
+    "protocol_version": "rank-features-v2"
+  }
+}
