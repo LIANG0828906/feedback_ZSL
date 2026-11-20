@@ -1,22 +1,215 @@
-面向本地赛事回放的混流录制工作台，需要把多路本地 16-bit PCM WAV 音轨（解说、现场声、选手语音各一路，采样率 16000 或 48000 Hz，单声道或双声道）按统一时基混合成一条输出轨道，并按固定时长切片写出。混流器要支持每路轨道的增益、静音区间与延迟补偿，切片之间必须保持采样连续（相邻切片样本数严格递增、无重叠无空洞），同时切片任务在有限并行度与内存预算下调度。运营中反复出现的问题是：不同采样率轨道混流后切片边界处出现可听跳变、并行切片顺序错乱导致切片顺序颠倒、内存超限时半写切片污染输出；录制中途修改增益后全量重跑耗时过长，进程被强制终止后无法确定已提交切片边界。
+# MixRec 本地赛事混流切片工作台
 
-任务环境与准备：
-Windows 10 及以上，安装 Python 3.11 或 3.12，并在命令提示符中确认 python --version 可执行。
-安装 NumPy 与 PySide6（如 pip install numpy PySide6），确认可导入；无需网络素材与外部服务。
-准备本地样本目录，运行题目要求提供的样本生成器产出多路 WAV、基线与配置 JSON；所有路径使用本地相对路径。
-确认工作目录可写，用于切片临时文件、索引 JSON 与轨迹日志的原子写入。
+MixRec 用统一时基把多路本地 16-bit PCM WAV 混流成一条输出轨道，并按固定样本数切片。项目面向 Windows 10/11 本地运行，Python 3.11 或 3.12；音频计算只依赖 NumPy，可视化界面使用可选依赖 PySide6。
 
-业务要求：
-1. 实现多路 WAV 读取与统一时基混流：按各轨采样率重采样到统一混流采样率（本地确定性多项式插值），按增益、静音区间与延迟补偿采样数对齐后逐样本混合并做限幅，输出流式混流结果；声道布局不一致或延迟补偿超出声明范围时以 E_MIX_INPUT 拒绝并指明轨道。
-2. 实现固定时长切片与采样连续性校验：按配置切片样本数把混流结果切分为有序切片并写出 WAV，每片文件记录起止样本与内容哈希；任一相邻切片的起止样本必须严格衔接，校验不符时以 E_SLICE_GAP 定位切片序号且该切片及后续不得落盘。
-3. 实现切片任务的并行调度器：全局并行度与单切片内存预算来自配置，切片任务可并行但提交顺序必须稳定；累计已分配内存超预算时任务进入等待队列，调度决策写入轨迹；高优先级任务不得插队破坏提交序，重复启动同一混流任务返回 E_BUSY。
-4. 实现内存预算计量与超限降级：对每个切片任务按预估样本数与缓冲大小计量内存，超出单切片预算的任务不得启动，按降级策略缩小内部块尺寸后重试，重试仍超限则以 E_BUDGET_EXCEEDED 拒绝启动并保持该切片位置空缺而不污染输出目录。
-5. 实现增益与静音区间修改的增量重算：某路轨道增益、静音区间或延迟补偿修改后，计算受影响的切片集合与采样区间，只重算该集合内切片，未受影响切片复用缓存结果与内容哈希；重算完成后以一次整体替换发布新的切片索引版本，替换过程中读取方持续看到完整旧版本。
-6. 实现切片原子提交与失败隔离：每片先写临时文件再原子重命名，切片索引以 JSON 记录切片序号、起止样本、内容哈希与轨道参数版本；任一切片失败或被预算拒绝后，该混流任务后续切片不得越过失败位置继续落盘，索引保持到失败切片的连续前缀，恢复后从该位置继续。
-7. 实现强制终止后的恢复与索引版本识别：将切片索引、各轨参数版本、已完成切片集合与哈希链持久化，保存采用临时文件加原子重命名；恢复时校验索引版本与哈希链，从最近已提交切片继续混流并保持采样连续，索引与切片内容哈希不符时以 E_RECOVERY_INVALID 中止且不覆盖已有切片。
-8. 实现可视化工作台与确定性样本入口：界面展示各轨波形或包络、混流进度、切片网格、内存占用曲线与调度等待队列，支持调节增益与静音区间、启动、暂停、协作式取消与从快照恢复；生成器产出多种采样率、声道布局与时长组合的本地样本及基线切片哈希，相同种子与操作序列下切片文件与轨迹日志逐字节一致。
+核心特性：
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 16 kHz / 48 kHz、单声道 / 双声道输入，确定性 Catmull-Rom 三次多项式重采样。
+- 每轨增益、静音区间、延迟补偿、逐样本混合与限幅。
+- 固定样本数切片、连续边界校验、WAV 内容哈希与文件哈希。
+- 受限并行度、单切片内存预算、全局内存预算和确定性提交顺序。
+- 增益 / 静音 / 延迟修改的增量重算与一次原子索引发布。
+- 每片“临时文件 + 原子重命名”，索引“临时文件 + 原子替换”。
+- 强制终止后的索引、哈希链、版本封印和从提交前缀恢复。
+- PySide6 工作台：波形包络、进度、切片网格、内存曲线、等待队列、暂停 / 取消 / 恢复。
+- 固定种子与操作序列下，WAV、切片、索引和轨迹逐字节可复现。
 
-验收：
-使用本地多路样本验证混流切片连续性、并行调度预算、增量重算与恢复后索引一致性，并附轨迹日志。
+## 环境准备
+
+Windows 命令提示符或 PowerShell：
+
+```bat
+python --version
+python -m pip install -r requirements.txt
+```
+
+只运行引擎和测试时可只安装：
+
+```bat
+python -m pip install numpy pytest
+```
+
+所有示例均使用本地相对路径，不需要网络素材或外部服务。
+
+## 快速开始
+
+生成三组确定性样本、配置和基线：
+
+```bat
+python -m mixrec generate --out local_samples --seed 20261121
+```
+
+等价的独立脚本入口：
+
+```bat
+python scripts\generate_samples.py --out local_samples --seed 20261121
+```
+
+生成内容：
+
+```text
+local_samples/
+  manifest.json
+  jobs/mixed_rates_mono/config.json
+  jobs/mixed_rates_mono/tracks/*.wav
+  jobs/mixed_rates_stereo/...
+  jobs/short_timeline/...
+  baseline/*.json
+```
+
+渲染并校验：
+
+```bat
+python -m mixrec render local_samples\jobs\mixed_rates_mono\config.json
+python -m mixrec verify local_samples\jobs\mixed_rates_mono\config.json
+```
+
+只提交前 3 片，然后从快照恢复：
+
+```bat
+python -m mixrec render local_samples\jobs\mixed_rates_mono\config.json ^
+  --output-dir local_run --trace local_run\trace.jsonl --no-resume --max-slices 3
+python -m mixrec resume local_samples\jobs\mixed_rates_mono\config.json ^
+  --output-dir local_run --trace local_run\trace.jsonl
+```
+
+增量修改轨道：
+
+```bat
+python -m mixrec update local_samples\jobs\mixed_rates_mono\config.json ^
+  --track ambience --gain-db -1.5 --mute 0.4:0.44
+```
+
+打开工作台：
+
+```bat
+python -m mixrec gui --config local_samples\jobs\mixed_rates_mono\config.json
+```
+
+运行测试和完整验收：
+
+```bat
+pytest -q
+python scripts\acceptance.py --out artifacts\validation --seed 20261121 --force
+```
+
+## 配置格式
+
+```json
+{
+  "schema_version": 1,
+  "job_id": "mixed_rates_mono",
+  "output": {
+    "sample_rate": 48000,
+    "channels": 1,
+    "bit_depth": 16,
+    "slice_samples": 4096,
+    "total_samples": 60960
+  },
+  "tracks": [
+    {
+      "id": "commentary",
+      "path": "tracks/commentary.wav",
+      "sample_rate": 16000,
+      "channels": 1,
+      "gain_db": 1.5,
+      "mute_ranges": [],
+      "delay_samples": 0,
+      "version": 1,
+      "max_delay_samples": 48000
+    }
+  ],
+  "scheduler": {
+    "max_workers": 2,
+    "per_slice_budget_bytes": 16777216,
+    "memory_budget_bytes": 33554432,
+    "block_samples": 4096,
+    "task_priorities": {"5": 10}
+  },
+  "output_dir": "output",
+  "trace_path": "trace.jsonl",
+  "max_delay_samples": 48000
+}
+```
+
+约定：
+
+- `path`、`output_dir`、`trace_path` 默认相对配置文件所在目录；命令行显式给出的 `--output-dir` / `--trace` 相对当前工作目录。
+- `mute_ranges` 使用秒，`[start, end)`；实现时转换为输出样本，并加上该轨延迟补偿。
+- `delay_samples` 以输出采样率为单位；负值或超过轨道 / 全局 `max_delay_samples` 返回 `E_MIX_INPUT`。
+- 单声道可上混到双声道，双声道可平均下混到单声道；超过双声道或声明布局与实际 WAV 不一致返回 `E_MIX_INPUT`。
+- `task_priorities` 只写入轨迹，不能改变切片提交顺序。
+
+## 输出与轨迹
+
+默认输出目录：
+
+```text
+output/
+  index.json
+  config_snapshot.json
+  slices/v000001/slice_000000.wav
+  slices/v000001/slice_000001.wav
+  ...
+```
+
+`index.json` 记录：
+
+- 切片序号、起止样本、样本数；
+- `content_sha256`（原始 PCM 数据）与 `file_sha256`（完整 WAV）；
+- 每片参数版本、产物版本、前链哈希与当前链哈希；
+- 轨道参数、来源 WAV 哈希、索引版本、参数指纹、索引封印和完成状态。
+
+JSONL 轨迹不含时间戳、线程号或绝对路径，字段按字典序输出。主要事件包括：
+
+- `job_start` / `run_complete` / `run_failed` / `run_stopped`
+- `memory_reserved` / `memory_released` / `task_waiting`
+- `budget_degraded` / `budget_rejected`
+- `task_started` / `task_completed` / `task_failed`
+- `slice_committed`
+- `incremental_start` / `incremental_published`
+- `recovery_resume`
+
+## 失败语义
+
+| 错误码 | 含义 |
+| --- | --- |
+| `E_MIX_INPUT` | WAV、采样率、声道布局或延迟范围不合法，带 `track_id` |
+| `E_SLICE_GAP` | 切片边界不连续 / 渲染长度不符，带 `slice_index` |
+| `E_BUSY` | 同一输出目录的混流任务已在运行 |
+| `E_BUDGET_EXCEEDED` | 降级内部块后仍超过单切片或全局内存预算 |
+| `E_RECOVERY_INVALID` | 索引封印、版本、参数、哈希链或切片内容校验失败 |
+| `E_CONFIG` | 配置字段或路径不合法 |
+| `E_IO` | 文件读写、临时文件或原子替换失败 |
+
+预算拒绝、渲染失败或哈希校验失败后，只保留失败位置之前的连续索引前缀；该切片及后续不会成为索引引用的正式产物。恢复会重新校验整个前缀，失败时不会覆盖已有切片。
+
+## 实际验证结果
+
+本机运行：
+
+```text
+python -m pytest -q
+21 passed
+
+python scripts/acceptance.py --out artifacts/validation --seed 20261121 --force
+```
+
+验收摘要（`artifacts/validation/summary.json`）：
+
+- 初始混流：`mixed_rates_mono`，15 片，60960 样本，`index_version=15`。
+- 确定性回放：内容哈希、WAV 文件哈希、轨迹 SHA-256 三项全部一致。
+- 预算拒绝：`short_timeline` 第 0 片返回 `E_BUDGET_EXCEEDED`；没有正式切片目录，也没有索引。
+- 增量更新：只重算第 4/5/6 片，复用 12 片；发布 `index_version=16`，未受影响内容哈希不变。
+- 受控调度：单切片预算触发内部块降级，全局预算使后续任务进入等待队列，轨迹记录降级与等待事件。
+- 恢复：从第 3 片之后继续，最终 15 片、哈希链和内容哈希与初始完整运行一致。
+- 恢复防覆盖：篡改切片后返回 `E_RECOVERY_INVALID`，索引字节保持不变。
+
+证据目录：
+
+- `artifacts/validation/traces/`: 五组确定性轨迹。
+- `artifacts/validation/indexes/`: 初始与增量发布的完整索引。
+- `artifacts/validation/baseline/`: 三组样本的切片与轨迹基线哈希。
+- `artifacts/validation/runs/`: 实际渲染、回放、预算拒绝、恢复和损坏检测输出。
+
+更详细的算法、事务与恢复设计见 `docs/DESIGN.md`。
