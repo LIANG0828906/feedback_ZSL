@@ -1,23 +1,98 @@
-面向后期制作的 HDR 与 SDR 素材统一交付，需要在同一工作台上把本地 10-bit HDR 帧序列（自定义二进制头加帧数据）在不同色彩空间（Rec.709、Rec.2020、Display-P3）与传递函数（SDR gamma、PQ、HLG）之间转换，允许操作员在同一会话中反复修改目标色彩空间、峰值亮度、色调映射曲线与逐段曝光调整，每次提交都形成新的转换版本并在时间轴上预览。难点在于版本演进与恢复一致性：同一段素材被多次转换后，历史版本必须在语义上可追溯、可回退，非法参数组合不得污染已发布版本；进程被强制终止后只能依据磁盘快照恢复到最后一次已发布版本与对应的预览状态，链条中任意一环错位都必须被识别而不能静默产出错误的帧。
+# HDR Delivery Studio
 
-任务环境与准备：
-安装 Python 3.11 与 pip，创建独立虚拟环境。
-安装 NumPy 与 PySide6，版本以当日稳定版为准，均从本地或常规索引获取。
-准备一个可写的本地工作目录用于帧样本、快照与轨迹日志输出。
-确认桌面会话可创建图形窗口，无图形环境时仅运行脚本化演示入口。
-样本由题目提供的生成器在本地生成，不依赖任何外部素材或网络服务。
+面向后期制作的本地 HDR/SDR 统一交付工作台。项目使用 Python 3.11、NumPy 与 PySide6，
+实现了确定性 HDR 帧序列、float64 色彩转换链、增量版本发布、非法参数保护、原子快照恢复
+以及可交互时间轴预览。
 
-业务要求：
-1. 实现 HDR 帧序列的加载与解读：解析自定义二进制头中的分辨率、帧数、位深、色彩空间、传递函数与峰值亮度，并按帧读取帧数据；头部字段缺失、位深与数据长度不符或传递函数码未知时返回 E_HDR_INVALID，不得产出任何转换结果帧。
-2. 实现完整色彩转换链：按源与目标色彩空间做线性化、基色矩阵变换、白点适应，再按目标传递函数编码，并支持可配置峰值亮度与色调映射曲线；任一步的中间值必须按声明精度计算，转换链结果需要附带每帧的最大码值偏差摘要，用于判断是否超出目标位深表达范围。
-3. 实现版本演进模型：每次参数提交（目标色彩空间、峰值亮度、色调映射曲线、逐段曝光调整）生成单调递增的新转换版本，版本记录参数集、受影响帧区间、输出内容哈希与链路中间摘要；支持查看任意两个版本的差异并回退到历史版本，回退必须产生新版本号而非覆盖旧版本号。
-4. 实现非法参数组合的版本保护：当目标峰值亮度低于源峰值亮度而色调映射曲线不支持压缩、或逐段曝光调整使输出超出位深范围时，必须以 E_PARAM_CONFLICT 拒绝本次提交并定位冲突参数，已发布的上一版本必须保持可用且哈希不变，拒绝不得写入任何转换帧。
-5. 实现增量重算与整体替换发布：参数变更后按转换链依赖判定受影响帧集合，只重算该集合内帧并复用其余帧的输出与哈希，重算完成后一次性整体替换发布版本；发布期间查询接口必须始终返回完整旧版本或完整新版本，不得返回混合版本，版本哈希不匹配时以 E_VERSION_MISMATCH 中止。
-6. 实现强制终止后的恢复流程：将已发布版本集、版本哈希链、受影响帧区间与预览状态写入快照，快照采用临时文件加原子重命名；恢复时从最近有效快照重建版本序列并仅重算未完成区间，哈希链断链或版本字段缺失时以 E_RECOVERY_INVALID 中止，区分可处理的中止信号与强制终止后的持久化恢复边界。
-7. 实现可交互工作台界面：时间轴展示帧序列与各版本受影响区间，色彩空间与传递函数参数可编辑，版本列表可对比与回退，预览支持播放当前发布版本；转换任务在后台执行且界面不阻塞，同一会话同时只允许一个转换任务，重复启动返回 E_BUSY，任务取消后释放帧文件句柄并保留最后发布版本。
-8. 提供确定性样本生成器与脚本化演示入口：生成多种分辨率、位深、传递函数与峰值亮度的本地 HDR 帧样本及基线版本哈希，输出包含版本号、参数集、受影响帧数、复用与重算帧数、帧哈希与预览状态的轨迹日志；相同种子与操作序列下输出帧与日志必须逐字节一致，日志不得以时间戳或文件大小代替内容哈希作为真值来源。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+```bash
+uv python install 3.11
+uv venv --python 3.11 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
 
-验收：
-用本地样本验证色彩转换、版本演进、非法参数拒绝与强制终止后恢复，并复现逐字节一致输出。
+.venv/bin/python -m pytest
+.venv/bin/python -m hdr_studio.cli demo --workspace ./work/demo --force
+.venv/bin/python -m hdr_studio.cli workbench --workspace ./work/demo
+```
+
+无图形会话时使用脚本化入口，或对 Qt 做离屏冒烟测试：
+
+```bash
+QT_QPA_PLATFORM=offscreen HDR_STUDIO_AUTOCLOSE_MS=800 \
+  .venv/bin/python -m hdr_studio.cli workbench --workspace ./work/demo --offscreen
+```
+
+完整可重复验收：
+
+```bash
+./scripts/verify.sh
+```
+
+## 已实现能力
+
+- 自定义二进制 HDR 序列头：分辨率、帧数、位深、色彩空间、传递函数、峰值亮度、
+  帧长度与 CRC32；任何头部缺失、未知码、长度不符或样本越界均返回 `E_HDR_INVALID`。
+- Rec.709、Rec.2020、Display-P3 间转换；线性化、基色矩阵、Bradford 白点适应、
+  目标传递函数编码均使用 float64。
+- SDR 2.4 gamma、SMPTE ST 2084 PQ、BT.2100 HLG；`none`、`reinhard`、`hable`
+  三种峰值映射；逐段曝光调整。
+- 每个版本记录参数、受影响区间、逐帧哈希、内容哈希、中间链摘要与逐帧最大码值偏差。
+- 版本差异、历史回退；回退生成新版本号，不覆盖旧记录。
+- 非法参数在落盘前拒绝，旧快照、旧版本目录和旧哈希保持不变。
+- 增量帧复用、staging 目录完整性复验、目录原子提升、快照临时文件加原子重命名。
+- 强终止恢复：恢复最后已发布快照，丢弃未发布孤儿版本，仅重算缺失帧；
+  损坏帧、断链或字段缺失返回 `E_RECOVERY_INVALID`。
+- Qt 后台转换线程、忙状态保护、取消与播放预览；查询始终看到完整旧版本或完整新版本。
+- 固定种子样本生成器与无时间戳、无文件大小的逐字节确定性轨迹日志。
+
+详细格式、事务状态机和验收数据见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
+
+## 工作区布局
+
+```text
+<workspace>/
+  samples/                     # 生成的 .hdrseq 与 manifest.json
+  versions/v000001/            # 不可变版本目录
+    manifest.json
+    frames/frame_000000.bin
+  snapshots/current.json       # 最新有效发布快照（原子替换）
+  snapshots/snapshot-v000001.json
+  trace/trace.jsonl            # 确定性版本/拒绝/取消轨迹
+  baselines.json               # demo 基线版本哈希
+```
+
+## 错误码
+
+| 错误码 | 含义 |
+|---|---|
+| `E_HDR_INVALID` | HDR 头、长度、位深、未知传递函数或样本越界 |
+| `E_PARAM_CONFLICT` | 峰值/曲线无法压缩，或曝光使码值超出目标位深 |
+| `E_BUSY` | 同一会话已有转换任务 |
+| `E_VERSION_MISMATCH` | 发布前内容哈希不一致或版本目录冲突 |
+| `E_RECOVERY_INVALID` | 快照断链、字段缺失、源不匹配或发布帧损坏 |
+| `E_CANCELLED` | 可处理的任务取消，不改变最后发布版本 |
+
+## Python API 示例
+
+```python
+from pathlib import Path
+from hdr_studio.model import ColorSpace, ConversionParams, ToneMap, TransferFunction
+from hdr_studio.session import ConversionSession
+
+session = ConversionSession.open(
+    Path("work/demo"),
+    Path("work/demo/samples/rec2020_pq_10bit.hdrseq"),
+)
+record = session.submit(
+    ConversionParams(
+        target_color_space=ColorSpace.REC709,
+        target_transfer=TransferFunction.SDR_GAMMA,
+        peak_luminance=100.0,
+        tone_map=ToneMap.REINHARD,
+    )
+)
+print(record.version, record.output_hash)
+session.close()
+```
+
