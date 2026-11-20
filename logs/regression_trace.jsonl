@@ -1,0 +1,62 @@
+{"event":"generate","files":9,"bytes":895236}
+{"event":"parse","file":"cube_v2.obj","ok":true,"load":{"positions":8,"texcoords":4,"normals":8,"faces":12,"groups":4,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"obj","targetFormat":"obj","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms"],"losses":[]}}}
+{"event":"parse","file":"nonmanifold_degenerate.obj","ok":true,"load":{"positions":7,"texcoords":3,"normals":7,"faces":4,"groups":3,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"obj","targetFormat":"obj","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms"],"losses":[]}}}
+{"event":"parse","file":"seam_version_loss.obj","ok":true,"load":{"positions":4,"texcoords":4,"normals":4,"faces":2,"groups":2,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"obj","targetFormat":"obj","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms"],"losses":[]}}}
+{"event":"parse","file":"legacy_v1.obj","ok":true,"load":{"positions":3,"texcoords":3,"normals":3,"faces":1,"groups":2,"sourceVersion":1,"internalVersion":2,"upgraded":true,"conversion":{"sourceFormat":"obj","targetFormat":"obj","sourceVersion":1,"targetVersion":2,"upgradedOnLoad":true,"notes":["v1 upgraded in memory to v2: per-corner UV/normal indices enabled","v1 vertex-bound UV/normal rule upgraded to v2 per-corner indices"],"losses":[]}}}
+{"event":"parse","file":"large_grid.obj","ok":true,"load":{"positions":4225,"texcoords":4225,"normals":4225,"faces":8192,"groups":5,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"obj","targetFormat":"obj","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms"],"losses":[]}}}
+{"event":"parse","file":"cube_ascii.stl","ok":true,"load":{"positions":36,"texcoords":0,"normals":12,"faces":12,"groups":1,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"stl","targetFormat":"stl","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms","ASCII STL loaded as independent triangle vertices"],"losses":[]}}}
+{"event":"parse","file":"cube_binary.stl","ok":true,"load":{"positions":36,"texcoords":0,"normals":12,"faces":12,"groups":1,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"stl","targetFormat":"stl","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms","binary STL loaded as independent triangle vertices"],"losses":[]}}}
+{"event":"parse","file":"nonmanifold_degenerate.stl","ok":true,"load":{"positions":12,"texcoords":0,"normals":4,"faces":4,"groups":1,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"stl","targetFormat":"stl","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms","binary STL loaded as independent triangle vertices"],"losses":[]}}}
+{"event":"parse","file":"degenerate_ascii.stl","ok":true,"load":{"positions":6,"texcoords":0,"normals":2,"faces":2,"groups":1,"sourceVersion":2,"internalVersion":2,"upgraded":false,"conversion":{"sourceFormat":"stl","targetFormat":"stl","sourceVersion":2,"targetVersion":2,"upgradedOnLoad":false,"notes":["v2 loaded without compatibility transforms","ASCII STL loaded as independent triangle vertices"],"losses":[]}}}
+{"event":"weld","file":"nonmanifold_degenerate.obj","beforeBoundaryEdges":7,"report":{"oldVertices":7,"newVertices":6,"mergedVertices":1,"affectedFaces":1,"removedDegenerateFaces":1,"boundaryEdges":6,"boundaryLoops":2,"nonManifoldEdges":1,"mergeMap":[0,1,2,3,4,2,5]}}
+{"event":"version_upgrade","source":1,"internal":2,"report":{"sourceFormat":"obj","targetFormat":"obj","sourceVersion":1,"targetVersion":2,"upgradedOnLoad":true,"notes":["v1 upgraded in memory to v2: per-corner UV/normal indices enabled","v1 vertex-bound UV/normal rule upgraded to v2 per-corner indices"],"losses":[]}}
+{"event":"version_loss","code":"E_VERSION_LOSS","groups":["seam"],"fileCreated":false}
+{"event":"obj_roundtrip","hash":"fcc7360901c74ba9","validation":{
+  "config":{"distanceTolerance":1.0000000000000001e-09,"samplingDensity":3,"normalAngleToleranceDegrees":9.9999999999999995e-07},
+  "truthMetrics":  {"vertices":8,"faces":12,"bounds":{"min":[0,0,0],"max":[1,1,1]},"volume":0.99999999999999989,"surfaceArea":6},
+  "candidateMetrics":  {"vertices":8,"faces":12,"bounds":{"min":[0,0,0],"max":[1,1,1]},"volume":0.99999999999999989,"surfaceArea":6},
+  "metricsWithinTolerance":true,
+  "metricTolerance":1.7320508075688772e-09,
+  "forward":  {"samples":36,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "reverse":  {"samples":36,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "combined":  {"samples":72,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "normalAngleDegrees":  {"samples":72,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "violatingTruthFaces":[],
+  "violatingCandidateFaces":[],
+  "passed":true
+}
+}
+{"event":"stl_roundtrip","ascii":{
+  "config":{"distanceTolerance":9.9999999999999995e-07,"samplingDensity":3,"normalAngleToleranceDegrees":1},
+  "truthMetrics":  {"vertices":8,"faces":12,"bounds":{"min":[0,0,0],"max":[1,1,1]},"volume":0.99999999999999989,"surfaceArea":6},
+  "candidateMetrics":  {"vertices":36,"faces":12,"bounds":{"min":[0,0,0],"max":[1,1,1]},"volume":0.99999999999999989,"surfaceArea":6},
+  "metricsWithinTolerance":true,
+  "metricTolerance":1.7320508075688771e-06,
+  "forward":  {"samples":36,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "reverse":  {"samples":36,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "combined":  {"samples":72,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "normalAngleDegrees":  {"samples":72,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "violatingTruthFaces":[],
+  "violatingCandidateFaces":[],
+  "passed":true
+}
+,"binary":{
+  "config":{"distanceTolerance":9.9999999999999995e-07,"samplingDensity":3,"normalAngleToleranceDegrees":1},
+  "truthMetrics":  {"vertices":8,"faces":12,"bounds":{"min":[0,0,0],"max":[1,1,1]},"volume":0.99999999999999989,"surfaceArea":6},
+  "candidateMetrics":  {"vertices":36,"faces":12,"bounds":{"min":[0,0,0],"max":[1,1,1]},"volume":0.99999999999999989,"surfaceArea":6},
+  "metricsWithinTolerance":true,
+  "metricTolerance":1.7320508075688771e-06,
+  "forward":  {"samples":36,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "reverse":  {"samples":36,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "combined":  {"samples":72,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "normalAngleDegrees":  {"samples":72,"min":0,"max":0,"mean":0,"rms":0,"p50":0,"p90":0,"p95":0,"p99":0},
+  "violatingTruthFaces":[],
+  "violatingCandidateFaces":[],
+  "passed":true
+}
+}
+{"event":"edit_undo_redo","exactUndo":true,"exactRedo":true,"before":{"vertices":8,"faces":12,"bounds":{"min":[0,0,0],"max":[1,1,1]},"volume":0.99999999999999989,"surfaceArea":6},"after":{"vertices":8,"faces":12,"bounds":{"min":[-0.013134534250463126,-0.5,0.125],"max":[1.3019352315593391,1,1]},"volume":0.85933888715588536,"surfaceArea":5.765343697047105}}
+{"event":"simplify","beforeFaces":8192,"afterFaces":6144,"affectedFaces":7193}
+{"event":"project_roundtrip","ok":true,"hash":"4f92f7ac344217a2","undoHistory":1,"corruptResult":"E_PROJECT_MISMATCH"}
+{"event":"task_gate","firstAcquired":true,"duplicateCode":"E_BUSY"}
+{"event":"summary","result":"PASS"}
