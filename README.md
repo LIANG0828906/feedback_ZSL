@@ -1,21 +1,311 @@
-面向本地离线资产的反向成像工具中，美术给定的渲染图需要反推场景参数：若干球体与平面组成的小场景，相机内外参、材质漫反射色、光源方向与强度均为可微分参数，正向管线按解析几何投射光线、Lambert 光照与软阴影求交，再与目标图逐像素 L2 损失反向传播。实际使用中参数被分成多个参数组，用户单独调某组（如只改某材质色或只改光源方向）后重新拟合，希望复用此前各组的中间梯度与损失贡献；某一参数组变化会通过共享的光照与可见性链路影响其他组的梯度，依赖关系必须被正确判定，否则复用陈旧中间量会让损失与梯度偏离从零重算的结果。训练还会被中途取消或强制终止，必须从磁盘检查点恢复且不重复计算已提交步。
+# 本地离线反向成像工具
 
-任务环境与准备：
-安装 Python 3.11 与 NumPy、PyTorch 的 CPU 版本，并确认可执行 pytest 与本地脚本。
-准备本地样本目录：由确定性生成器产出场景 JSON、目标图像数组与参数组配置，不依赖外部素材或网络。
-确认工作目录可写，用于放置检查点、轨迹日志与演示输出，并预先约定临时文件与原子重命名所用的路径。
+一个仅依赖本地文件、NumPy 与 PyTorch CPU 的确定性反向成像实现。场景包含多个球体和一个平面；相机内外参、几何、漫反射材质、光源方向与强度全部是可微参数。正向管线使用解析求交、Lambert 光照和软阴影，随后计算目标图像逐像素 L2 损失。
 
-业务要求：
-1. 实现场景描述解析与正向可微渲染管线：读取本地 JSON 场景（相机内外参、球体与平面的几何、材质漫反射色、光源方向与强度、目标图像路径与分辨率），用解析求交完成可见性与软阴影，按 Lambert 光照输出像素颜色，并保证整条链路对全部参数可微，前向输出与梯度均以固定字段顺序序列化。
-2. 实现参数分组与依赖图谱构建：把相机、几何、材质、光源划为参数组，按正向管线中的计算节点建立每组到中间量（求交结果、可见性、阴影因子、光照项、损失）的依赖边；参数组或场景结构变化后必须重算依赖图并输出新增、删除与变更的依赖边清单，图谱非法或环状依赖返回 E_GRAPH_INVALID。
-3. 实现增量梯度与损失贡献复用：任一参数组修改后，依据依赖图计算受影响中间量集合，只在这些节点上重算前向与反向，未受影响节点的值与梯度复用缓存并带内容哈希；复用结果与从零全量重算的损失与各组梯度必须在声明容差内一致，超差以 E_REUSE_MISMATCH 报告节点与组标识。
-4. 实现依赖失效判定与陈旧缓存拒绝：以参数版本号与中间量内容哈希共同标识缓存有效性，若复用节点的上游参数版本已变化而依赖图未标记失效，必须拒绝复用并降级为全量重算；降级事件须写入轨迹并在界面标注，不得静默返回陈旧梯度或损失。
-5. 实现可取消的分组拟合循环：按参数组轮换或按用户指定组执行梯度下降迭代，学习率、迭代数与组调度可配置；迭代在步边界检查点响应协作式取消，取消后释放优化器临时状态并保留最后一次已提交检查点，强制终止后的恢复只能依赖磁盘检查点。
-6. 实现原子检查点提交与强制终止恢复：每步将各参数组的当前值、累计损失、依赖图版本、缓存哈希与步号写入检查点（临时文件加原子重命名）；恢复时校验检查点版本与哈希链，从最近有效步继续且不重复计算已提交步，断链或字段缺失以 E_CKPT_INVALID 中止并定位首个异常步。
-7. 实现并发访问与资源边界：同一场景同时只允许一个拟合任务，重复启动返回 E_BUSY；训练线程与查询线程可并行，查询必须在同一已发布检查点快照上读取参数与损失，发布替换期间不得阻塞查询，读到未发布快照句柄时返回 E_SNAPSHOT_STALE。
-8. 提供确定性样本生成器与脚本化演示入口：生成多种分辨率、参数组划分与依赖耦合程度的本地场景与目标图像，输出含步号、修改的参数组、受影响节点数、复用与重算节点数、损失、梯度范数与内容哈希的轨迹日志；相同种子与操作序列下检查点与日志逐字节一致。
+本实现重点解决三个工程问题：
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 按参数组构建显式依赖图，只重算受影响节点；复用节点受参数版本和内容哈希双重保护。
+- 拟合支持协作式取消，每步以“临时文件 + `os.replace`”原子提交带哈希链的检查点。
+- 同一场景只允许一个拟合任务；训练线程与查询线程通过不可变快照并行，查询路径不上锁。
 
-验收：
-用本地样本验证增量复用与全量重算的损失及梯度一致、强制终止后从检查点恢复与异常注入的拒绝路径。
+## 目录
+
+```text
+inverse_render/
+  scene.py           场景 JSON 解析、结构/内容哈希
+  params.py          参数路径、分组、版本与检查点值
+  rendering.py       解析求交、可见性、软阴影、Lambert、L2
+  graph.py           依赖 DAG、环检测、影响集合、边差异
+  engine.py          增量前向/反向、缓存校验、全量一致性比较
+  checkpoint.py      原子检查点、逐提交哈希链、恢复校验
+  snapshot.py        不可变快照、无锁发布/查询
+  fit.py             分组 SGD、取消、轨迹日志、服务级互斥
+  generate.py        确定性样本生成器
+  cli.py             脚本化演示与检查入口
+tests/               验收测试
+artifacts/demo/      固定种子的实际演示输出
+```
+
+## 环境准备
+
+已在 Python 3.11.18、NumPy 2.4.6、PyTorch 2.7.1+cpu、pytest 8.4.2 上验证。
+
+```bash
+python3.11 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install 'torch==2.7.1+cpu' \
+  --index-url https://download.pytorch.org/whl/cpu
+.venv/bin/python -m pip install 'numpy>=1.26,<3' 'pytest>=8,<9'
+.venv/bin/python -m pip install -e .
+.venv/bin/python -m pytest -q
+```
+
+也可使用 `requirements-cpu.txt`。不需要 Docker、GPU、网络素材或外部目标。
+
+## 快速演示
+
+```bash
+.venv/bin/python -m inverse_render.cli env-check
+.venv/bin/python -m inverse_render.cli demo \
+  --out artifacts/demo --seed 20261121 --steps 4
+```
+
+`demo` 会：
+
+1. 生成 16x12、24x18、32x24 三种分辨率，4、6、8 个参数组，耦合等级 0、1、2 的样本。
+2. 修改材质组，比较增量复用与全新参数的从零全量重算。
+3. 绕过版本号直接修改参数，验证陈旧缓存拒绝与全量降级。
+4. 在子进程中于第 2 步提交后执行 `os._exit(137)`，再仅依赖磁盘检查点恢复。
+5. 用相同参数在两个目录重复拟合，逐字节比较检查点与轨迹日志。
+
+结果写入 `artifacts/demo/demo_report.json`。
+
+## 场景格式
+
+`scene.json`：
+
+```json
+{
+  "schema_version": 1,
+  "name": "coupled_small",
+  "resolution": [16, 12],
+  "camera": {
+    "position": [0.18, 0.52, 4.15],
+    "target": [0.0, -0.08, 0.0],
+    "up": [0.0, 1.0, 0.0],
+    "fov_deg": 48.0
+  },
+  "geometry": {
+    "spheres": [
+      {"name": "primary", "center": [-0.82, -0.1, 0.0], "radius": 0.63},
+      {"name": "accent", "center": [0.82, 0.06, -0.05], "radius": 0.53}
+    ],
+    "plane": {
+      "name": "floor",
+      "point": [0.0, -1.02, 0.0],
+      "normal": [0.0, 1.0, 0.0]
+    }
+  },
+  "materials": {
+    "primary": {"albedo": [0.84, 0.22, 0.12]},
+    "accent": {"albedo": [0.12, 0.34, 0.88]},
+    "floor": {"albedo": [0.48, 0.5, 0.54]}
+  },
+  "light": {"direction": [-0.55, -0.82, -0.22], "intensity": 2.55},
+  "shadow_softness": 0.025,
+  "coupling_level": 0,
+  "target": {"path": "target.npy"}
+}
+```
+
+目标数组必须是形状 `(height, width, 3)`、`float64` 的本地 `.npy` 文件。路径相对场景 JSON 解析。
+
+`groups.json` 可以任意拆分参数，但每个可微参数必须恰好属于一个组：
+
+```json
+{
+  "schema_version": 1,
+  "groups": [
+    {"id": "camera", "kind": "camera", "parameters": ["camera.*"]},
+    {"id": "geometry.a", "kind": "geometry", "parameters": ["geometry.primary.*"]},
+    {"id": "geometry.b", "kind": "geometry", "parameters": ["geometry.accent.*"]},
+    {"id": "geometry.floor", "kind": "geometry", "parameters": ["geometry.floor.*"]},
+    {"id": "material.a", "kind": "material", "parameters": ["material.primary.*"]},
+    {"id": "material.b", "kind": "material", "parameters": ["material.accent.*"]},
+    {"id": "material.floor", "kind": "material", "parameters": ["material.floor.*"]},
+    {"id": "light", "kind": "light", "parameters": ["light.*"]}
+  ]
+}
+```
+
+支持的参数路径：
+
+| 路径 | 形状 | 参数组类型 |
+| --- | --- | --- |
+| `camera.position` | `[3]` | `camera` |
+| `camera.target` | `[3]` | `camera` |
+| `camera.up` | `[3]` | `camera` |
+| `camera.fov_deg` | `[]` | `camera` |
+| `geometry.<object>.center` / `.radius` | `[3]` / `[]` | `geometry` |
+| `geometry.<plane>.point` / `.normal` | `[3]` / `[3]` | `geometry` |
+| `material.<object>.albedo` | `[3]` | `material` |
+| `light.direction` | `[3]` | `light` |
+| `light.intensity` | `[]` | `light` |
+
+不支持或未覆盖的参数、重复分组、未知模式、空组均返回 `E_GRAPH_INVALID`。非法场景返回 `E_SCENE_INVALID`。
+
+## 可微正向管线
+
+计算节点固定为：
+
+```text
+intersections -> visibility -> shadow_factor -> lighting -> loss
+```
+
+- 光线：由相机位置、朝向、`up` 和垂直 FOV 生成像素中心射线。
+- 求交：球体使用二次方程解析解，平面使用射线-平面解析解；最近命中选择驱动可见性。
+- 软阴影：从命中点向光源发射阴影射线，用判别式、近交点门限的 sigmoid 形成连续遮挡；多个遮挡者按透射率相乘。
+- 光照：`albedo * intensity * max(N·L, 0) * visibility * shadow / pi`。
+- 损失：`mean((rgb - target)^2)`。
+
+所有参数和上述节点都保留 PyTorch 自动微分图。图像与梯度使用固定字段顺序导出：
+
+```bash
+.venv/bin/python -m inverse_render.cli render \
+  --scene artifacts/demo/samples/coupled_small/scene.json \
+  --groups artifacts/demo/samples/coupled_small/groups.json \
+  --output artifacts/demo/render.json
+```
+
+顶层字段固定为 `schema_version, scene, resolution, node_order, nodes, loss, loss_hash, content_hash`；梯度固定为 `schema_version, group_order, groups, loss, content_hash`。
+
+## 依赖图与增量复用
+
+依赖边包括：
+
+```text
+group:camera     -> intersections
+group:geometry   -> intersections, shadow_factor
+group:material   -> lighting
+group:light      -> shadow_factor, lighting
+intersections    -> visibility, shadow_factor, lighting
+visibility       -> shadow_factor, lighting
+shadow_factor    -> lighting
+lighting         -> loss
+```
+
+参数组或场景结构变化后可重建图谱，并得到 `added`、`deleted`、`changed` 三类边差异：
+
+```bash
+.venv/bin/python -m inverse_render.cli graph \
+  --scene artifacts/demo/samples/coupled_small/scene.json \
+  --groups new-groups.json \
+  --previous-groups old-groups.json
+```
+
+`IncrementalEngine.reconfigure(...)` 同样返回 `GraphDiff` 并清空旧缓存。环、悬空边、重复边、组节点失配均返回 `E_GRAPH_INVALID`。
+
+每次评估使用以下签名判断缓存：
+
+```text
+graph_version
++ 每个上游参数组的版本号
++ 每个上游参数的内容 SHA-256
++ 该节点输出的内容 SHA-256
+```
+
+只有依赖图中从被改组可达的节点会重建前向图并执行反向；其它节点直接复用缓存张量及其保留的自动微分中间量。因此材质修改只影响 `lighting/loss`，光源修改影响 `shadow_factor/lighting/loss`，相机或几何修改影响全部下游节点。
+
+若节点不在预期受影响集合中，但其上游版本或内容哈希已经变化，缓存会被拒绝，并强制整图重算。轨迹记录 `degraded=true`、`degraded_reason`、`stale_nodes`，界面字段为 `ui_badge=FULL_RECOMPUTE`。不会静默返回陈旧值。
+
+增量与全量的默认声明容差为：
+
+- 损失绝对误差：`1e-8`
+- 每组任一梯度分量绝对误差：`1e-7`
+
+超差抛出 `E_REUSE_MISMATCH`，详情包含首个异常的 `node`、`group`、参数路径、误差和容差。
+
+## 拟合、取消与检查点
+
+```bash
+.venv/bin/python -m inverse_render.cli fit \
+  --scene artifacts/demo/samples/coupled_small/scene.json \
+  --groups artifacts/demo/samples/coupled_small/groups.json \
+  --state-dir artifacts/demo/my_fit \
+  --steps 8 --lr 0.02 --schedule rotate
+```
+
+`--schedule` 支持：
+
+- `all`：每步更新所有组。
+- `rotate`：按组顺序轮换，每步只更新一个组。
+- 组 ID：每步只更新指定组。
+- 逗号分隔的组 ID 列表。
+
+取消事件只在步边界检查。已完成步会提交；未完成步不会留下半成品。优化器为确定性无状态 SGD，取消/异常时立即释放临时状态。
+
+检查点位于 `state_dir/checkpoint.json`，写入路径为预先约定的 `state_dir/checkpoint.json.tmp`。流程是 `write -> flush -> fsync -> os.replace -> fsync(dir)`。强制终止最多留下 `.tmp` 文件，恢复仍读取上一个完整提交。
+
+检查点包含：
+
+- 模式版本与格式标识
+- 步号、场景哈希、依赖图版本
+- 组顺序固定的全部当前参数值
+- 累计损失、最后一步损失
+- 五个计算节点的缓存内容哈希
+- 前一次提交哈希
+- 每次提交的 `payload_hash / previous_hash / record_hash`
+- 顶层自哈希
+
+恢复会逐项校验版本、场景、图版本、字段、组集合、每个历史记录的本地哈希、历史链接、当前 payload 哈希和顶层自哈希。失败返回 `E_CKPT_INVALID`，并定位首个异常 `step`。`resume` 从 `checkpoint.step + 1` 开始，已提交步不会重复执行。
+
+```bash
+.venv/bin/python -m inverse_render.cli query \
+  --scene artifacts/demo/samples/coupled_small/scene.json \
+  --groups artifacts/demo/samples/coupled_small/groups.json \
+  --state-dir artifacts/demo/my_fit
+```
+
+## 并发与快照
+
+`FitLock` 同时使用进程内注册表和 `flock`，同一场景的第二个拟合任务返回 `E_BUSY`。锁文件位于系统临时目录下、以用户 ID 和场景哈希隔离。
+
+`SnapshotPublisher` 在完整构造参数、损失、检查点哈希后才执行一次引用替换。查询只读取当前引用并深拷贝，不加锁，因此不会被发布替换阻塞。
+
+- 没有已发布快照：`E_SNAPSHOT_STALE`
+- 查询旧快照句柄：`E_SNAPSHOT_STALE`
+- 查询已构造但未发布的句柄：`E_SNAPSHOT_STALE`
+
+`FitService.start(...)` 启动后台拟合，`query(handle)` 可在训练期间读取最近已发布检查点，`cancel()` 请求协作式取消。
+
+## 确定性
+
+- 样本生成、渲染、SGD、检查点、轨迹均由固定顺序和固定种子驱动。
+- 不记录时间戳、随机临时名或绝对路径到检查点/轨迹。
+- 轨迹为 canonical JSON Lines，每条字段顺序固定。
+- 相同场景、种子和操作序列下，`checkpoint.json` 与 `trace.jsonl` 逐字节一致。
+
+轨迹字段：
+
+```text
+step, modified_groups, affected_nodes, reused_nodes, recomputed_nodes,
+loss, gradient_norm, content_hash, graph_version, degraded,
+degraded_reason, stale_nodes, ui_badge
+```
+
+## 主要错误码
+
+| 错误码 | 含义 |
+| --- | --- |
+| `E_SCENE_INVALID` | 场景、目标数组或本地路径非法 |
+| `E_GRAPH_INVALID` | 分组、依赖边、节点或环非法 |
+| `E_REUSE_MISMATCH` | 增量与全量损失/梯度超差 |
+| `E_CKPT_INVALID` | 检查点版本、字段、哈希链或断链异常 |
+| `E_BUSY` | 同一场景已有拟合任务 |
+| `E_SNAPSHOT_STALE` | 快照尚未发布或已过期 |
+| `E_CONFIG_INVALID` | 学习率、步数、调度等配置非法 |
+| `E_IO` | 本地读写失败 |
+
+CLI 错误以单行 JSON 写入 stderr，并返回稳定退出码；`E_BUSY=3`、`E_SNAPSHOT_STALE=4`、`E_CKPT_INVALID=5`、`E_REUSE_MISMATCH=6`。
+
+## 实际验证
+
+验证命令：
+
+```bash
+.venv/bin/python -m pytest -q
+.venv/bin/python -m inverse_render.cli demo \
+  --out artifacts/demo --seed 20261121 --steps 4
+```
+
+本机结果：
+
+- `17 passed`。
+- 材质修改只重算 `lighting, loss`，`intersections, visibility, shadow_factor` 复用。
+- 增量与全量损失误差和四组梯度最大误差均为 `0.0`。
+- 未版本化参数注入产生 `upstream_content_changed_without_invalidation`，`ui_badge=FULL_RECOMPUTE`，降级后与全量结果一致。
+- 第 2 步强制退出返回码 `137`；恢复从第 2 步继续，仅执行第 3、4 步，历史步号严格为 `0,1,2,3,4`。
+- 崩溃恢复后的最终检查点与轨迹，和不间断的 4 步运行逐字节一致。
+- 两次独立拟合的检查点 SHA-256 与轨迹 SHA-256 分别完全一致。
+
+完整机器可读结果见 `artifacts/demo/demo_report.json`。
