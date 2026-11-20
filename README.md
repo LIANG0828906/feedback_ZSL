@@ -1,21 +1,160 @@
-本地对象存储网关需要把大对象拆分为固定大小的分片并行写入本地磁盘，并在分片全部完成后原子提交对象元数据。上传请求可能被中断后重试，重试时同一对象的分片编号会重新出现，部分分片可能已落盘但未提交，其他分片可能只写了残缺尾部。网关必须在磁盘容量预算内调度并行分片写入，限制同时在途分片数与单对象占用空间，提交时校验每个分片的内容摘要与长度，任何分片不一致都不得暴露对象，同时保留可继续重试的已完成分片状态。
+# 本地分片对象存储网关
 
-任务环境与准备：
-安装 Python 3.11 及以上版本，仅使用标准库，无需第三方包与外部服务。
-在本地创建任务工作目录与样本数据目录，样本对象由脚本生成固定字节内容以保证摘要可复现。
-确认磁盘具备存放多份样本对象与分片临时文件的空闲空间，演示脚本不访问网络。
+仅使用 Python 3.11+ 标准库实现。网关把固定大小分片并行写入本地磁盘，所有分片通过摘要与长度校验后再原子发布对象清单。进程中断后可以从已确认分片继续；未确认的临时文件、孤儿版本文件和残缺尾部不会被计入提交状态。
 
-业务要求：
-1. 实现分片上传会话的创建、分片写入、对象提交与中止接口，每个会话记录对象键、分片大小、总分片数与单调递增的会话版本号，提交时所有分片必须按编号连续且摘要匹配，否则拒绝提交并返回业务错误码 E_SHARD_GAP 或 E_SHARD_DIGEST_MISMATCH，中止后会话目录不可再被提交。
-2. 分片写入采用磁盘临时文件加整体替换的方式落盘，落盘前计算分片内容摘要与字节长度并记录到会话元数据，重复写入同一编号分片时以新的会话版本覆盖旧记录，旧临时文件在替换完成后清理，替换过程不得让会话元数据引用尚未完成替换的分片文件。
-3. 实现并行调度器，同时在途分片写入数量受可配置上限约束，单会话占用的分片文件字节总数受空间预算约束，超预算的新分片写入进入等待队列而不是直接失败，等待队列在已有分片完成后按编号升序出队，调度器需输出在途分片峰值与等待次数的摘要。
-4. 提交操作必须原子化：先生成包含全部分片摘要、长度与对象版本的对象清单临时文件并校验，再以整体替换方式发布清单，崩溃后要么看到完整旧清单要么看到完整新清单，不得出现部分分片可见的对象，发布完成后尚未清理的会话分片文件由后续清理流程处理。
-5. 实现中断恢复：进程重启后扫描会话目录，识别完整分片、残缺尾部临时文件与未提交清单，残缺临时文件不得计入已完成分片，恢复结果以 JSON 摘要输出已恢复分片数、丢弃字节数与可继续上传的分片编号区间，摘要需回落到可继续写入的入口。
-6. 提供可注入故障点，在分片落盘、元数据更新、清单发布三个阶段之后模拟强制终止，通过命令行参数选择故障阶段，重启后验证会话版本号不小于故障前已确认版本且已完成分片内容摘要一致，故障注入只通过参数触发且终止方式需与可恢复的进程退出区分。
-7. 实现元数据一致性校验工具，独立于上传路径读取会话目录与已提交清单，交叉比对分片摘要与对象清单，输出 JSON 格式校验报告并在发现摘要不匹配或清单缺失分片时以 stderr 输出业务错误码 E_SHARD_DIGEST_MISMATCH 或 E_MANIFEST_INCOMPLETE。
-8. 提供命令行入口与可重复演示脚本，覆盖正常上传、并行预算受限、重复分片重试、三阶段故障重启与校验工具核对，脚本使用本地固定样本数据并每次输出确定性摘要便于比对，演示脚本不得依赖网络或系统当前时间。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+```bash
+python3 --version
+python3 -m unittest discover -v
+./demo.sh
+```
 
-验收：
-用本地固定样本执行正常上传、预算受限与故障重启，核对提交对象、恢复摘要与校验报告一致。
+演示脚本只读取本地确定性样本，不访问网络、不读取系统当前时间。它会重建 `demo-work/`，生成固定样本、执行上传并输出规范化 JSON 摘要。
+
+## 目录
+
+```text
+shard_gateway/
+  storage.py      会话、分片落盘、原子提交、中止、清理
+  scheduler.py    在途数量与空间预算受限的并行调度器
+  recovery.py     重启扫描、孤儿清理、清单对账、续传区间
+  verifier.py     独立一致性校验工具
+  cli.py          命令行入口
+tests/test_gateway.py
+demo.py / demo.sh
+```
+
+运行时磁盘布局：
+
+```text
+<root>/
+  sessions/<session-id>/
+    meta.json
+    ABORTED
+    shards/shard-000001.v000002.bin
+    tmp/*.part
+  manifests/<sha256(object-key)>.json
+```
+
+`meta.json` 和对象清单都通过“同目录临时文件 + `fsync` + `os.replace` + 目录 `fsync`”发布。分片文件使用版本化文件名，元数据只会引用已经整体替换完成的分片文件。
+
+## 接口
+
+Python API：
+
+```python
+gateway = UploadGateway("./data")
+gateway.create_session(
+    session_id="upload-01",
+    object_key="bucket/object.bin",
+    shard_size=4096,
+    total_shards=9,
+    expected_size=33545,
+    expected_sha256="...",
+)
+gateway.write_shard(session_id="upload-01", shard_number=1, data=b"...")
+gateway.commit_session("upload-01")
+gateway.abort_session("upload-01")
+```
+
+命令行：
+
+```bash
+python3 -m shard_gateway make-sample --path sample.bin --size 33545
+python3 -m shard_gateway upload \
+  --root ./data --session-id upload-01 --object-key bucket/object.bin \
+  --sample sample.bin --shard-size 4096 \
+  --max-inflight 3 --space-budget 12288 --session-quota 33545
+python3 -m shard_gateway state --root ./data --session-id upload-01
+python3 -m shard_gateway recover --root ./data
+python3 -m shard_gateway verify --root ./data
+python3 -m shard_gateway abort --root ./data --session-id upload-01
+python3 -m shard_gateway cleanup --root ./data --session-id upload-01
+```
+
+提交错误码：
+
+- `E_SHARD_GAP`：分片编号不连续或有缺失。
+- `E_SHARD_DIGEST_MISMATCH`：文件实际摘要、长度、对象整体摘要或调用方期望值不一致。
+- `E_SESSION_ABORTED`：会话已中止，写入和提交均被拒绝。
+- `E_MANIFEST_INCOMPLETE`：清单结构不完整或无法与分片交叉核对。
+
+中止使用持久化 `ABORTED` 标记，先于元数据状态更新发布，因此即使中止过程中崩溃，提交路径仍会拒绝该会话。
+
+## 并行与空间预算
+
+调度器维护按编号升序排列的等待队列。只有队首满足条件时才会出队，因此不会跳过小编号分片。每次落盘完成后重新填充可用名额。
+
+- `max_inflight`：同时在途分片数上限。
+- `--space-budget`：可等待的在途落盘/替换字节预算。超预算的队首进入等待，已有分片确认后释放预留并继续调度。
+- `--session-quota`：单会话持久分片文件总字节硬上限；提交前始终满足，无法通过等待释放，因此作为可行性上限而不是等待队列条件。
+
+调度摘要包含 `inflight_peak`、`budget_bytes_peak`、`wait_count` 和完成分片数。若把“持久总量”直接作为等待条件，预算小于对象总大小时永远不可能靠等待完成；因此实现将可等待的在途空间和持久总量配额分开约束。
+
+## 原子提交与故障恢复
+
+提交步骤：
+
+1. 校验 `1..total_shards` 连续、每个分片文件长度和 SHA-256 与元数据一致，并校验对象总长度与对象摘要。
+2. 生成临时对象清单，回读临时清单并重新校验。
+3. 原子替换发布最终清单并 `fsync` 清单目录。
+4. 原子更新会话为 `committed`。
+
+故障注入只能由 `--fault-phase` 参数触发，并使用 `os._exit(86)` 绕过 `finally` 和正常异常退出：
+
+- `shard_landed`：分片文件已整体替换，但元数据尚未更新。
+- `metadata_updated`：分片元数据已原子更新，旧版本尚未清理。
+- `manifest_published`：最终对象清单已完整发布，会话提交标记尚未更新。
+
+恢复规则：
+
+- 版本化但未被元数据引用的分片文件视为未确认孤儿，删除并计入丢弃字节。
+- `tmp/*.part` 中的残缺尾部不计入已完成分片，删除并计入丢弃字节。
+- 仅保留实际长度、摘要都与会话元数据一致的已确认分片。
+- 已完整发布且可交叉校验的清单会把对应会话恢复为 `committed`。
+- 输出 `recovered_shards`、`discarded_bytes`、`continuable_ranges` 和已完成分片摘要。
+
+## 一致性校验
+
+`verify` 不经过上传/提交路径，直接读取会话元数据、分片文件和已发布清单：
+
+- 清单摘要或长度与分片不一致时输出 `E_SHARD_DIGEST_MISMATCH` 到 stderr。
+- 清单缺片、编号不完整、会话分片缺失或已提交会话缺清单时输出 `E_MANIFEST_INCOMPLETE` 到 stderr。
+- JSON 报告始终写到 stdout，包含对象摘要、清单摘要、会话状态和问题列表。
+
+## 实际验证结果
+
+环境：Python `3.14.4`，Linux 本地文件系统，验收时可用空间约 `923 GiB`。
+
+```text
+python3 -m unittest discover -v
+Ran 13 tests in 0.817s
+OK
+```
+
+`./demo.sh` 使用 `33545` 字节固定样本，分片大小 `4096`，共 `9` 个分片。连续运行两次的 JSON 输出逐字节一致：
+
+```text
+sample SHA-256:
+e8da3c525c849e174b6a846eb6db19595f621860ab6e2c4cdf1f33ccf9d06e95
+
+normal:   inflight_peak=3, wait_count=0, object digest match=true
+budget:   max_inflight=8, space_budget=8192, inflight_peak=2,
+          wait_count=7, object digest match=true
+duplicate: version 10 -> 20 (retry writes) -> 21 (commit),
+          shard files after cleanup=9, object digest match=true
+
+fault shard_landed:     exit=86, recovered_version=2 (not lower),
+                        recovered_shards=1, discarded_bytes=4096,
+                        completed digest match=true
+fault metadata_updated: exit=86, recovered_version=3,
+                        recovered_shards=2, discarded_bytes=0,
+                        completed digest match=true
+fault manifest_published: exit=86, manifest visible before recovery=true,
+                        recovered status=committed, recovered_version=12
+
+final verify: ok=true, objects=6, all object digest match=true
+demo output SHA-256 (two identical runs):
+7018af227170106e5f144b9100d8258489b17e70cb878817109f0f867d6222ed
+```
