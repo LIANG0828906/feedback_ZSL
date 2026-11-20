@@ -1,0 +1,455 @@
+{
+  "all_pass": true,
+  "checks": [
+    {
+      "artifacts": {
+        "obj_v1": "sha256:4c18cf025ed87a0900d42bcf868ac8a2341492389385dfe6d81c19d00816ae2c",
+        "obj_v2": "sha256:5019608f7b6dca501d3fd773acaf3d33ef21b13de302db5c3c49e1b3c2809a3d",
+        "stl_ascii": "sha256:d89c7367a5ba6b6719bdb931f05b12f28881c4aa7b5c31a91eb3fa6a4a6f1bb7",
+        "stl_binary": "sha256:50a3b44d90abddde6b718f17c85a646ad177fd8005fe70294f7c18f9af8440e4"
+      },
+      "name": "deterministic_local_samples",
+      "status": "PASS"
+    },
+    {
+      "counts": {
+        "obj_v1": 14,
+        "obj_v2": 14,
+        "stl_ascii": 14,
+        "stl_binary": 14
+      },
+      "name": "format_loading",
+      "status": "PASS"
+    },
+    {
+      "name": "v1_to_v2_upgrade",
+      "status": "PASS",
+      "upgraded_bytes": 761
+    },
+    {
+      "content_hash": "sha256:6eacf258a0e013066eb6c822f4d069a94facff0d41ba3a2599cbe1b2cf7d0ed0",
+      "metrics": {
+        "bbox_max": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bbox_size": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9999999999999999
+      },
+      "name": "committed_baseline",
+      "status": "PASS",
+      "version": 1
+    },
+    {
+      "export": {
+        "affected_faces": [],
+        "bytes_written": 1034,
+        "code": "OK",
+        "details": {
+          "attributes": [],
+          "content_hash": "sha256:6eacf258a0e013066eb6c822f4d069a94facff0d41ba3a2599cbe1b2cf7d0ed0",
+          "manifest_entry_hash": "sha256:a8eb075c64cdebb9e676ac97e36327654ab6f40f633f3d8ed4353fbe2b1e9df1",
+          "target_format": "obj",
+          "target_version": 2,
+          "version": 1
+        },
+        "format": "obj",
+        "format_version": 2,
+        "path": "/home/liang/feedback/uid190c93df-default-44/data/verification/baseline_roundtrip.obj"
+      },
+      "name": "obj_v2_roundtrip",
+      "precision": "max bidirectional deviation=0; candidate->truth mean=0, p95=0; truth->candidate mean=0, p95=0; max normal angle=1.20742e-06 deg; bad candidate faces=0",
+      "status": "PASS"
+    },
+    {
+      "export": {
+        "affected_faces": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "bytes_written": 1732,
+        "code": "E_VERSION_LOSS",
+        "details": {
+          "attributes": [
+            "face_groups",
+            "texture_coordinates",
+            "vertex_sharing"
+          ],
+          "content_hash": "sha256:6eacf258a0e013066eb6c822f4d069a94facff0d41ba3a2599cbe1b2cf7d0ed0",
+          "manifest_entry_hash": "sha256:a8eb075c64cdebb9e676ac97e36327654ab6f40f633f3d8ed4353fbe2b1e9df1",
+          "target_format": "stl",
+          "target_version": 2,
+          "version": 1
+        },
+        "format": "stl",
+        "format_version": 2,
+        "path": "/home/liang/feedback/uid190c93df-default-44/data/verification/baseline_ascii.stl"
+      },
+      "name": "stl_ascii_roundtrip_and_loss_report",
+      "precision": "max bidirectional deviation=0; candidate->truth mean=0, p95=0; truth->candidate mean=0, p95=0; max normal angle=1.20742e-06 deg; bad candidate faces=0",
+      "status": "PASS"
+    },
+    {
+      "export": {
+        "affected_faces": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "bytes_written": 784,
+        "code": "E_VERSION_LOSS",
+        "details": {
+          "attributes": [
+            "face_groups",
+            "texture_coordinates",
+            "vertex_sharing"
+          ],
+          "content_hash": "sha256:6eacf258a0e013066eb6c822f4d069a94facff0d41ba3a2599cbe1b2cf7d0ed0",
+          "manifest_entry_hash": "sha256:a8eb075c64cdebb9e676ac97e36327654ab6f40f633f3d8ed4353fbe2b1e9df1",
+          "target_format": "stl",
+          "target_version": 2,
+          "version": 1
+        },
+        "format": "stl",
+        "format_version": 2,
+        "path": "/home/liang/feedback/uid190c93df-default-44/data/verification/baseline_binary.stl"
+      },
+      "name": "stl_binary_roundtrip_and_loss_report",
+      "precision": "max bidirectional deviation=0; candidate->truth mean=0, p95=0; truth->candidate mean=0, p95=0; max normal angle=1.20742e-06 deg; bad candidate faces=0",
+      "status": "PASS"
+    },
+    {
+      "faces": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "name": "obj_v1_loss_is_explicit",
+      "status": "PASS"
+    },
+    {
+      "affected_faces": [
+        1,
+        13
+      ],
+      "mapping": {
+        "0": 0,
+        "1": 1,
+        "10": 9,
+        "11": 10,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 0,
+        "9": 8
+      },
+      "name": "weld_determinism_and_mapping",
+      "status": "PASS",
+      "topology": {
+        "boundary_chains": [],
+        "boundary_edges": 10,
+        "boundary_loops": [
+          [
+            12,
+            2,
+            36,
+            21,
+            20,
+            37,
+            38
+          ],
+          [
+            39,
+            40,
+            41
+          ]
+        ],
+        "edges": 22,
+        "halfedges": 42,
+        "non_manifold_edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            6
+          ]
+        ]
+      }
+    },
+    {
+      "name": "two_edits_generate_monotonic_versions",
+      "status": "PASS",
+      "v2_metrics": {
+        "bbox_max": [
+          1.1264357565811212,
+          1.0230458714568225,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          -0.03863756056579315,
+          0.0
+        ],
+        "bbox_size": [
+          1.1264357565811212,
+          1.0616834320226156,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9838008679747838
+      },
+      "v3_metrics": {
+        "bbox_max": [
+          1.1264357565811212,
+          1.0230458714568225,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          -0.03863756056579315,
+          0.008571428571428563
+        ],
+        "bbox_size": [
+          1.1264357565811212,
+          1.0616834320226156,
+          0.9914285714285714
+        ],
+        "faces": 11,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 11,
+        "vertices": 7,
+        "volume": 0.7547817290886394
+      },
+      "versions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "metrics": {
+        "bbox_max": [
+          1.1264357565811212,
+          1.0230458714568225,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          -0.03863756056579315,
+          0.0
+        ],
+        "bbox_size": [
+          1.1264357565811212,
+          1.0616834320226156,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9838008679747838
+      },
+      "name": "single_step_undo_metrics_exact",
+      "next_version": 4,
+      "restored_version": 2,
+      "status": "PASS"
+    },
+    {
+      "dependency_key": "sha256:f7dd9cc5f823a569a96a9b91a852d7c6af9bcb6d19e8fac8658645842918c5ee",
+      "invalidated_cache_entries": 2,
+      "name": "rollback_recomputes_dependencies_and_keeps_monotonic_number",
+      "parent": 1,
+      "status": "PASS",
+      "version": 4
+    },
+    {
+      "bad_candidate_faces": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "export": {
+        "affected_faces": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "bytes_written": 784,
+        "code": "E_VERSION_LOSS",
+        "details": {
+          "attributes": [
+            "face_groups",
+            "texture_coordinates",
+            "vertex_sharing"
+          ],
+          "content_hash": "sha256:dabc337c1fde9e93542526db74dff56d0ecb68c26814bdef3655be92f7d74f47",
+          "manifest_entry_hash": "sha256:9c2cfd6d46ea1e98b33e2573ef46f282506982cd42e6856d49baa35da6840b5d",
+          "target_format": "stl",
+          "target_version": 2,
+          "version": 4
+        },
+        "format": "stl",
+        "format_version": 2,
+        "path": "/home/liang/feedback/uid190c93df-default-44/data/verification/edited_current.stl"
+      },
+      "name": "edited_export_deviation_report",
+      "precision": "max bidirectional deviation=0.05; candidate->truth mean=0.0122385, p95=0.05; truth->candidate mean=0.0211659, p95=0.05; max normal angle=2.8624 deg; bad candidate faces=10",
+      "status": "PASS"
+    },
+    {
+      "name": "stale_export_and_truncated_recovery_rejected",
+      "recovery_code": "E_RECOVERY_INVALID",
+      "stale_code": "E_VERSION_STALE",
+      "status": "PASS"
+    },
+    {
+      "name": "hash_chain_tamper_rejected",
+      "recovery_code": "E_RECOVERY_INVALID",
+      "status": "PASS"
+    },
+    {
+      "committed_before": 4,
+      "discarded_staging": 1,
+      "forced_exit": 91,
+      "interrupted_exit_report": null,
+      "name": "forced_termination_recovers_only_committed_state",
+      "recovered_version": 4,
+      "status": "PASS"
+    },
+    {
+      "compared_files": [
+        "export.obj",
+        "manifest.json",
+        "snapshots/v00000002/mesh.obj",
+        "trace.jsonl"
+      ],
+      "name": "byte_deterministic_export_and_trace",
+      "status": "PASS"
+    },
+    {
+      "backend_line": "RENDER_BACKEND=software; driver reports llvmpipe (LLVM 21.1.8, 256 bits)",
+      "exit_code": 0,
+      "name": "desktop_window_and_opengl_smoke",
+      "platform": "wayland",
+      "status": "PASS"
+    }
+  ],
+  "checks_passed": 18,
+  "checks_total": 18,
+  "current_content_hash": "sha256:dabc337c1fde9e93542526db74dff56d0ecb68c26814bdef3655be92f7d74f47",
+  "current_version": 4,
+  "runs_tests": "python -m unittest discover -s tests -v",
+  "samples": {
+    "obj_v1": "data/samples/part_v1.obj",
+    "obj_v2": "data/samples/part_v2.obj",
+    "stl_ascii": "data/samples/part_ascii.stl",
+    "stl_binary": "data/samples/part_binary.stl"
+  },
+  "schema": "mesh-editor-acceptance-v1"
+}

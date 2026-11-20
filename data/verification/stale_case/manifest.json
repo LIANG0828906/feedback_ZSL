@@ -1,0 +1,403 @@
+{
+  "chain_head": "sha256:9c2cfd6d46ea1e98b33e2573ef46f282506982cd42e6856d49baa35da6840b5d",
+  "current_version": 4,
+  "events": [
+    {
+      "parent": 0,
+      "sequence": 1,
+      "type": "commit",
+      "version": 1
+    },
+    {
+      "parent": 1,
+      "sequence": 2,
+      "type": "commit",
+      "version": 2
+    },
+    {
+      "parent": 2,
+      "sequence": 3,
+      "type": "commit",
+      "version": 3
+    },
+    {
+      "from": 3,
+      "sequence": 4,
+      "to": 2,
+      "type": "undo"
+    },
+    {
+      "from": 2,
+      "sequence": 5,
+      "to": 1,
+      "type": "rollback"
+    },
+    {
+      "parent": 1,
+      "sequence": 6,
+      "type": "commit",
+      "version": 4
+    }
+  ],
+  "next_version": 5,
+  "schema": "mesh-editor-manifest-v1",
+  "versions": [
+    {
+      "content_hash": "sha256:6eacf258a0e013066eb6c822f4d069a94facff0d41ba3a2599cbe1b2cf7d0ed0",
+      "dependencies": {
+        "base_content_hash": "",
+        "base_version": 0,
+        "dependency_key": "sha256:15b161919a2dfc19c9318f8e8aa42351b9a7d0068f310d247b03c0ca8cb4163b",
+        "format_version": 2,
+        "weld_tolerance": 1e-06
+      },
+      "entry_hash": "sha256:a8eb075c64cdebb9e676ac97e36327654ab6f40f633f3d8ed4353fbe2b1e9df1",
+      "format": "obj",
+      "format_version": 2,
+      "mesh_relpath": "v00000001/mesh.obj",
+      "metrics_after": {
+        "bbox_max": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bbox_size": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9999999999999999
+      },
+      "metrics_before": null,
+      "operation": {
+        "source": "data/samples/part_v2.obj",
+        "type": "baseline",
+        "weld_tolerance": 1e-06
+      },
+      "parent": 0,
+      "previous_entry_hash": "",
+      "version": 1,
+      "weld_tolerance": 1e-06
+    },
+    {
+      "content_hash": "sha256:c367d542fe84ce554d907a7f357cf5ad46aecc7c725236941a7769f558eff981",
+      "dependencies": {
+        "base_content_hash": "sha256:6eacf258a0e013066eb6c822f4d069a94facff0d41ba3a2599cbe1b2cf7d0ed0",
+        "base_version": 1,
+        "dependency_key": "sha256:88d86536c3f1a0f9629e1a4c0acdc0d5fc6b9c9ae18734868f00fa0bbe079c79",
+        "format_version": 2,
+        "weld_tolerance": 1e-06
+      },
+      "entry_hash": "sha256:b27e8467b283ea7483cfd52b58287528ffdf07693d161ef2b7d489635bbcbb44",
+      "format": "obj",
+      "format_version": 2,
+      "mesh_relpath": "v00000002/mesh.obj",
+      "metrics_after": {
+        "bbox_max": [
+          1.1264357565811212,
+          1.0230458714568225,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          -0.03863756056579315,
+          0.0
+        ],
+        "bbox_size": [
+          1.1264357565811212,
+          1.0616834320226156,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9838008679747838
+      },
+      "metrics_before": {
+        "bbox_max": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bbox_size": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9999999999999999
+      },
+      "operation": {
+        "pivot": [
+          0.5714285714285714,
+          0.42857142857142855,
+          0.42857142857142855
+        ],
+        "rotation_degrees": [
+          0.0,
+          0.0,
+          5.0
+        ],
+        "scale": [
+          0.98,
+          0.98,
+          0.98
+        ],
+        "selection": {
+          "faces": [
+            0,
+            1,
+            2
+          ],
+          "vertices": []
+        },
+        "translation": [
+          0.1,
+          0.0,
+          0.0
+        ],
+        "type": "transform_selection"
+      },
+      "parent": 1,
+      "previous_entry_hash": "sha256:a8eb075c64cdebb9e676ac97e36327654ab6f40f633f3d8ed4353fbe2b1e9df1",
+      "version": 2,
+      "weld_tolerance": 1e-06
+    },
+    {
+      "content_hash": "sha256:7586a6bd4b629292dc23c8b3a2b70cd40bfab72ff54ea103d1ad507d67ecc7de",
+      "dependencies": {
+        "base_content_hash": "sha256:c367d542fe84ce554d907a7f357cf5ad46aecc7c725236941a7769f558eff981",
+        "base_version": 2,
+        "dependency_key": "sha256:845f8346d7de3e518f47e9e04a50ce108ceff852ecdb24536442d75247a88594",
+        "format_version": 2,
+        "weld_tolerance": 1e-06
+      },
+      "entry_hash": "sha256:f2480613af14e8e47107c1dc7a3520f99e8fa7ce0e557c450bfdf814a3783bed",
+      "format": "obj",
+      "format_version": 2,
+      "mesh_relpath": "v00000003/mesh.obj",
+      "metrics_after": {
+        "bbox_max": [
+          1.1264357565811212,
+          1.0230458714568225,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          -0.03863756056579315,
+          0.008571428571428563
+        ],
+        "bbox_size": [
+          1.1264357565811212,
+          1.0616834320226156,
+          0.9914285714285714
+        ],
+        "faces": 11,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 11,
+        "vertices": 7,
+        "volume": 0.7547817290886394
+      },
+      "metrics_before": {
+        "bbox_max": [
+          1.1264357565811212,
+          1.0230458714568225,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          -0.03863756056579315,
+          0.0
+        ],
+        "bbox_size": [
+          1.1264357565811212,
+          1.0616834320226156,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9838008679747838
+      },
+      "operation": {
+        "max_steps": 56,
+        "steps_applied": 2,
+        "target_faces": 11,
+        "target_ratio": 0.8,
+        "type": "edge_collapse"
+      },
+      "parent": 2,
+      "previous_entry_hash": "sha256:b27e8467b283ea7483cfd52b58287528ffdf07693d161ef2b7d489635bbcbb44",
+      "version": 3,
+      "weld_tolerance": 1e-06
+    },
+    {
+      "content_hash": "sha256:dabc337c1fde9e93542526db74dff56d0ecb68c26814bdef3655be92f7d74f47",
+      "dependencies": {
+        "base_content_hash": "sha256:6eacf258a0e013066eb6c822f4d069a94facff0d41ba3a2599cbe1b2cf7d0ed0",
+        "base_version": 1,
+        "dependency_key": "sha256:f7dd9cc5f823a569a96a9b91a852d7c6af9bcb6d19e8fac8658645842918c5ee",
+        "format_version": 2,
+        "weld_tolerance": 1e-06
+      },
+      "entry_hash": "sha256:9c2cfd6d46ea1e98b33e2573ef46f282506982cd42e6856d49baa35da6840b5d",
+      "format": "obj",
+      "format_version": 2,
+      "mesh_relpath": "v00000004/mesh.obj",
+      "metrics_after": {
+        "bbox_max": [
+          1.0,
+          1.05,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          0.05,
+          0.0
+        ],
+        "bbox_size": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9666666666666666
+      },
+      "metrics_before": {
+        "bbox_max": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bbox_size": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "faces": 14,
+        "groups": [
+          "back",
+          "bottom",
+          "defect",
+          "front",
+          "left",
+          "right",
+          "top"
+        ],
+        "triangles": 14,
+        "vertices": 11,
+        "volume": 0.9999999999999999
+      },
+      "operation": {
+        "pivot": [
+          0.5,
+          0.3333333333333333,
+          0.6666666666666666
+        ],
+        "rotation_degrees": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "selection": {
+          "faces": [
+            3,
+            4
+          ],
+          "vertices": []
+        },
+        "translation": [
+          0.0,
+          0.05,
+          0.0
+        ],
+        "type": "transform_selection"
+      },
+      "parent": 1,
+      "previous_entry_hash": "sha256:f2480613af14e8e47107c1dc7a3520f99e8fa7ce0e557c450bfdf814a3783bed",
+      "version": 4,
+      "weld_tolerance": 1e-06
+    }
+  ],
+  "workspace_id": "local-mesh-workspace"
+}
