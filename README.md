@@ -1,21 +1,149 @@
-面向电竞赛事直播的本地流转码服务，需要把一路本地采集的 16-bit PCM 音频与合成视频帧描述组装为多档码率轨道，并在有限的 CPU 并行度与内存预算下同时驱动多个码率档的切片任务，供后续自适应播放模拟使用。每档轨道按固定时长切片，切片之间必须保持时间轴连续（音频采样数与视频帧时刻严格递增、无重叠无空洞），而各档码率共享源时间轴。播放端模拟器按带宽估计在档位间切换，切换点必须落在切片边界并保证音频与视频的时间戳对齐、解码缓冲不越界。难点在于并行切片任务共享全局并行度与内存预算时，高码率档的切片会更慢并占用更多缓冲，调度既不能让某档长期饥饿导致播放缓冲耗尽，也不能突破总内存上限；任何切片失败都必须让整个档位的时间轴不被污染。
+# StreamForge
 
-任务环境与准备：
-安装 Python 3.11 与 pip，创建虚拟环境并安装 PySide6 与 NumPy（版本锁定在 requirements.txt），确认可在 Windows 桌面启动 Qt 窗口。
-准备本地确定性样本生成器输出：16-bit PCM WAV（单双声道、多种采样率）与 JSON 视频帧描述、带宽时间序列、档位配置与内存预算配置文件，均存于工作区 samples 目录。
-确认无外部网络与真实服务依赖，所有处理均使用本地样本与本地测试入口执行，关闭窗口或取消任务后检查临时文件与句柄已释放。
+面向本地电竞赛事直播转码实验的确定性多档切片服务。项目只读取工作区内生成的 16-bit PCM WAV、JSON 视频帧描述和带宽时变配置，不调用网络、Docker、FFmpeg、GStreamer 或真实编解码服务。
 
-业务要求：
-1. 实现源素材读取与时间轴规范化：读取本地 16-bit PCM WAV（单声道或双声道，采样率 16000–48000 Hz）与本地 JSON 视频帧描述（每帧 pts、时长、显示序号），按统一时基建立切片边界表，校验音频总采样数与视频总时长在声明容差内一致；重复 pts、递减 pts、帧时长为零或音视频时长明显不符时返回业务码 E_TIMEBASE_INVALID，并给出首个冲突的帧或采样位置。
-2. 实现多档码率轨道生成：为每档轨道定义目标码率、音频重采样参数与视频量化参数，音频按档位做本地确定性重采样与增益调整，视频按帧描述合成确定性的表示帧（不依赖真实编解码库），每档轨道独立切片但必须与共享切片边界表逐片对齐；档位参数变化后只重算受影响档位的切片，未受影响档位复用切片内容与内容哈希。
-3. 实现切片任务的并行调度器：全局并行度与单切片内存预算来自配置文件，切片任务跨档位可并行但同档位切片按序提交；可运行任务按提交序号稳定排序，累计已分配内存超预算时任务进入等待队列，调度决策需写入轨迹；高码率档被长时间压低调度时须输出饥饿告警并给出等待时长与已让出的调度次数，调度顺序不得依赖线程完成时刻。
-4. 实现内存预算计量与超限处理：对每个切片任务按预估样本数与缓冲大小计量内存占用，占用超出单切片预算的任务不得启动并通过降级策略（缩小内部块尺寸或拒绝启动）处理，拒绝时返回 E_BUDGET_EXCEEDED 并附带档位与切片序号；总内存占用不得超过配置文件上限，中途增加档位不得静默提高上限，运行期间需采样输出占用峰值。
-5. 实现自适应播放模拟与切换对齐：模拟器输入带宽时间序列，按缓冲水位与带宽估计在档位间切换，切换只能发生在切片边界；切换后必须校验音频与视频起始时间戳与切片边界一致、解码缓冲不越界，越界时以 E_SWITCH_MISALIGN 中止该次切换并保留原档位；模拟轨迹需记录每次切换的切片序号、带宽、缓冲水位与原因。
-6. 实现切片提交原子性与失败隔离：每档每个切片写入临时文件后原子重命名，切片文件包含内容哈希与对应时间范围；任一切片失败或内存超限被拒时该档位后续切片不得越过失败切片继续落盘，档位时间轴保持从起始到失败切片的连续前缀，已提交切片保留可用；失败回滚通过入口参数注入（如无效档位参数、损坏帧描述）验证，不修改切片模块源码。
-7. 实现状态快照与强制终止恢复：快照包含切片边界表、每档已完成切片索引与内容哈希、内存计量水位、调度器等待队列与配置版本，保存采用临时文件加原子重命名；载入时校验版本与哈希链，档位参数或边界表变化必须被识别并触发受影响切片的重算，断链或字段缺失以 E_RECOVERY_INVALID 中止，不产出不一致的档位时间轴。
-8. 实现可交互界面与确定性样本入口：界面展示各档位切片进度、内存占用曲线、调度等待与切换轨迹，支持启动、暂停、协作式取消与从快照恢复；同一档位同时只允许一个切片任务，重复启动返回 E_BUSY，取消或异常后释放临时文件句柄；提供样本生成器与脚本化演示，输出含档位、切片序号、内存计量、调度状态与内容哈希的轨迹日志，相同种子与操作序列下切片文件与日志逐字节一致。
+## 功能
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 16-bit PCM WAV（单/双声道，16–48 kHz）与 JSON 帧描述的时间轴校验。
+- 固定时长共享切片边界，音频采样位置和视频帧 PTS 严格连续。
+- 多档确定性音频重采样、增益、合成视频表示帧和层级内容哈希链。
+- 档位缓存：配置变化时只失效并重算指纹变化的档位。
+- 批屏障并行调度：全局并行度、稳定提交序、单切片/总内存预算、缓冲降级、超限拒绝和饥饿告警。
+- 原子切片写入和失败隔离：失败档位只保留从 0 开始的连续前缀。
+- 自适应播放模拟：只在切片边界切换并校验音视频起点与解码缓冲。
+- 原子快照、版本/哈希链校验、配置变化感知和断点恢复。
+- PySide6 桌面界面：档位进度、内存曲线、实时调度等待/饥饿事件、播放切换轨迹，以及启动、暂停、协作式取消和快照恢复。
 
-验收：
-用本地样本验证多档切片时间轴对齐、并行调度与内存预算约束、自适应切换对齐及快照恢复一致性，附运行轨迹。
+## 环境
+
+推荐 Python 3.11。当前验证环境为 Python 3.11.18、NumPy 2.4.6、PySide6 6.12.0、pytest 9.2.0。
+
+Windows PowerShell:
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pip install -e .
+python -m streamforge gui
+```
+
+Linux/macOS:
+
+```bash
+python3.11 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pip install -e .
+python -m streamforge gui
+```
+
+`requirements.txt` 锁定直接依赖；`python -m pip install -e .` 安装本地包和 `streamforge` 命令。
+
+## 快速演示
+
+```bash
+python -m streamforge generate --samples samples --seed 20261121
+python -m streamforge demo --samples samples --output artifacts/demo --seed 20261121
+python -m streamforge simulate \
+  --config samples/track_config.json \
+  --budgets samples/budgets.json \
+  --output artifacts/demo \
+  --bandwidth samples/bandwidth.json \
+  --playback samples/playback.json
+```
+
+`demo` 生成样本、执行三档切片、运行播放模拟，并输出：
+
+- `artifacts/demo/<tier>/slice-NNNNN.fslice`：切片文件。
+- `artifacts/demo/scheduler_trace.jsonl`：调度、内存与切片哈希轨迹。
+- `artifacts/demo/playback_trace.jsonl`：播放切换与拒绝轨迹。
+- `artifacts/demo/demo_trace.jsonl`：调度与播放合并轨迹。
+- `artifacts/demo/snapshot.json`：原子状态快照。
+- `artifacts/demo/demo_summary.json`：摘要与各档哈希。
+
+从快照恢复：
+
+```bash
+python -m streamforge run \
+  --config samples/track_config.json \
+  --budgets samples/budgets.json \
+  --output artifacts/demo \
+  --restore artifacts/demo/snapshot.json
+```
+
+失败注入（在提交前抛出，不修改切片模块源码）：
+
+```bash
+python -m streamforge run \
+  --config samples/track_config.json \
+  --budgets samples/budgets.json \
+  --output artifacts/failure \
+  --inject-failure low:1
+```
+
+## 样本格式
+
+`samples/track_config.json`：
+
+```json
+{
+  "config_version": "demo-v1-seed20261121",
+  "source": {"audio": "audio_stereo_48k.wav", "video": "video_frames.json"},
+  "timeline": {"slice_duration_ms": 400, "tolerance_ms": 2},
+  "tiers": [
+    {
+      "id": "high",
+      "target_bitrate_kbps": 1800,
+      "audio_sample_rate": 48000,
+      "gain_db": 0.0,
+      "video_qp": 24
+    }
+  ]
+}
+```
+
+视频帧支持 `pts_ms`/`duration_ms`、`pts_us`/`duration_us`、`pts_ns`/`duration_ns`，也可使用 `pts`/`duration` 加 `pts_unit`/`duration_unit`。每帧必须有唯一 `display_index`。第一帧从 0 开始，帧区间必须无空洞无重叠，且每个切片边界必须与某帧 PTS 重合。
+
+`samples/budgets.json` 定义 `global_parallelism`、`total_memory_bytes`、`single_slice_memory_bytes`、`initial_block_bytes`、`min_block_bytes`、`decode_buffer_bytes`、缓冲水位和饥饿阈值。
+
+## 核心设计
+
+时间轴统一使用纳秒整数，切片边界同时记录源采样位置。每档重采样后的采样位置从共享边界计算，避免累计浮点漂移。音频使用整数线性插值；视频表示帧由 SHA-256 确定性展开，不依赖真实编码器。
+
+切片文件格式为 `FSLICE01 + 4-byte header length + canonical JSON header + payload`。头部包含档位、序号、时间范围、音视频起点、帧描述、预估内存、前序哈希和 `content_hash`。写入先进入同目录临时文件，`fsync` 后原子替换。
+
+调度器采用批屏障：每轮将各档当前待运行切片按提交序号稳定排序，在并行度和总内存允许时并行执行；本轮全部结束后再按提交序号处理结果。因此调度顺序不依赖线程实际完成时刻，同时同档位最多只有一个任务。无法准入的任务进入等待队列；高码率档等待达到阈值时写入 `starvation_warning`，包含逻辑等待毫秒和让出次数。单切片预估超出预算时先缩小内部块；缩小到下限仍超出则返回 `E_BUDGET_EXCEEDED`，该档不再越过失败点提交。
+
+快照使用临时文件原子替换，包含边界表、档位哈希链、内存峰值/采样、等待队列和配置版本。载入时校验快照自身哈希、切片内容哈希和逐片前序哈希；档位参数或边界表变化会被标记为待重算，断链或字段缺失返回 `E_RECOVERY_INVALID`。
+
+## 业务码
+
+- `E_TIMEBASE_INVALID`：WAV/帧描述/容差/边界冲突；详情包含首个冲突帧、PTS 或采样位置。
+- `E_BUDGET_EXCEEDED`：单切片或总内存不允许启动；详情包含档位和切片序号。
+- `E_SWITCH_MISALIGN`：切换时间戳不对齐或解码缓冲越界；保留原档位。
+- `E_RECOVERY_INVALID`：快照版本、哈希链、文件或字段损坏。
+- `E_BUSY`：运行中的管线或档位被重复启动。
+- `E_CANCELLED`：协作式取消。
+- `E_INJECTED_FAILURE`：入口参数注入的提交前故障。
+
+## 验证
+
+```bash
+python -m pytest -q
+python scripts/acceptance.py
+```
+
+测试覆盖时间轴违规、三档边界与采样连续性、内存约束和降级、饥饿告警、预算拒绝、失败前缀隔离、缓存复用、切换对齐、解码缓冲越界、快照恢复/篡改、CLI 字节确定性和 Qt offscreen 启动。`scripts/acceptance.py` 会生成 `artifacts/acceptance_report.json` 及成功、失败、恢复轨迹。
+
+实际验证结果见 `artifacts/acceptance_report.json`。在无桌面显示的环境中，Qt 窗口通过 `QT_QPA_PLATFORM=offscreen` 启动验证；Windows 桌面可直接运行 `python -m streamforge gui`。
+
+本次实际结果：
+
+- `pytest`：31 项通过。
+- 三档各 8 个切片，时间轴和共享边界检查全部通过。
+- 调度内存峰值 1,919,684 B，低于配置上限 3,145,728 B。
+- 播放模拟 8 次切换，全部落在切片边界，错误列表为空。
+- `low:1` 注入失败后仅保留 `slice-00000.fslice`，`mid`/`high` 各完成 8 片，无临时文件残留。
+- 相同种子和操作序列下，切片文件、调度轨迹和快照逐字节一致。
+- 快照恢复复用 `low`/`mid`/`high` 全部切片，重算列表为空，恢复前后快照逐字节一致。
