@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "game-audio-restorer"
+version = "1.0.0"
+description = "Deterministic local game-voice restoration workbench"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "PyQt5>=5.15",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.4"]
+
+[project.scripts]
+game-audio-restorer = "game_audio_restorer.cli:main"
+game-audio-restorer-gui = "game_audio_restorer.gui:main"
+
+[tool.setuptools.packages.find]
+include = ["game_audio_restorer*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
