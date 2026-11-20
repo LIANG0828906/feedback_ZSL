@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hdr-atlas-pipeline"
+version = "1.0.0"
+description = "Deterministic tiled HDR atlas conversion, versioning, recovery and preview"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+opengl = ["PyOpenGL>=3.1.7"]
+test = ["pytest>=8"]
+
+[project.scripts]
+atlas-pipeline = "atlas_pipeline.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["atlas_pipeline*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

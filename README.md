@@ -1,21 +1,122 @@
-面向游戏资产流水线，本地 10-bit HDR 图集以自定义二进制头加半浮点通道数据存储，美术需在 Rec.709、Display-P3、Rec.2020 色彩空间与线性、sRGB、PQ 传递函数之间转换，并对图集内按区块网格划分的各个分区独立调整曝光与色调映射。图集被切成多个区块，用户对某些区块改参数后希望只重算这些区块，但所有区块共享统一的基色矩阵与白点适应，因此调色结果、区块划分、转换版本与误差摘要必须相互对应、可追溯。交付物需渲染预览、导出图集与误差报告，并对非法参数与不一致快照做出可诊断的拒绝。
+# HDR Atlas Studio
 
-任务环境与准备：
-Windows 10/11，Python 3.11 或以上
-安装 NumPy 与 PyOpenGL（pip 安装，无网络时使用本地 wheel）
-确认 OpenGL 上下文可用；样本由任务内置生成器在本地生成，无需外部数据集
+面向游戏资产流水线的本地确定性 HDR 图集转换工具。项目实现自定义 RGBA16F
+图集格式、Rec.709 / Display-P3 / Rec.2020 色彩转换、线性 / sRGB / PQ
+传递函数、分区曝光与色调映射、增量重算、不可变版本链、断电恢复、错误报告、
+预览界面，以及可复现的样本生成器。
 
-业务要求：
-1. 实现图集二进制读取与分区索引构建：解析头部中的宽高、位深、色彩空间码、传递函数码与区块网格尺寸，校验数据长度与头部一致并把半浮点通道数据解码为线性浮点；头部字段矛盾、传递函数码未知或区块网格不能整除分辨率时返回 E_ATLAS_INVALID 并输出定位字段名。
-2. 实现确定性色彩转换链：按源与目标色彩空间执行线性化、基色矩阵变换、白点适应与目标传递函数编码，色调映射曲线与峰值亮度可配置；每次转换须输出每区块最大码值偏差与误差摘要，转换结果不得依赖执行顺序，同一输入与参数重复执行得到逐字节一致的输出。
-3. 实现分区参数与转换版本模型：每个区块的曝光与色调映射参数独立，用户提交后生成单调递增的图集转换版本，版本记录区块参数集、受影响区块集合、输出内容哈希与链路中间摘要；支持查看任意两个版本的差异并回退到历史版本，回退后后续提交必须基于该版本重新生成。
-4. 实现增量重算与整体替换发布：区块参数、目标色彩空间、峰值亮度或白点修改后，按共享基色矩阵与白点适应依赖判定受影响区块集合，只重算该集合并复用其余区块输出与哈希；重算完成后一次性整体替换版本，预览查询期间只能读到完整旧版本或完整新版本，复用区块的误差摘要须与全量重算在声明容差内一致。
-5. 实现非法参数组合的版本保护：目标峰值低于源峰值且映射曲线不支持压缩、曝光使输出超出位深可表示范围、区块网格与参数表不一致时以 E_PARAM_CONFLICT 拒绝提交并定位冲突区块与字段，已发布上一版本不得被改写或部分覆盖，拒绝后预览仍显示上一完整版本。
-6. 实现强制终止后的恢复流程：将已发布版本集、版本哈希链、区块哈希与预览状态写入快照，保存采用临时文件加原子重命名；恢复时校验版本与哈希链，仅重算未完成区块，断链或版本字段缺失以 E_RECOVERY_INVALID 中止且不输出导出文件，恢复只依赖已持久化的已发布版本。
-7. 实现导出图集与误差报告并保证版本一致：导出前校验当前参数版本与区块哈希清单一致，不一致返回 E_VERSION_STALE；导出文件与报告须记录版本号、区块参数、每区块码值偏差与内容哈希，重新载入导出结果能复算出相同哈希并比对版本字段。
-8. 提供确定性样本生成器与图形预览界面：生成多种分辨率、位深、传递函数与区块划分的本地图集及基线版本哈希，界面按区块显示参数、误差热力与版本时间轴并支持提交、回退与取消；同一图集同时只允许一个转换任务，重复提交返回 E_BUSY，相同种子与操作序列下导出文件与轨迹日志逐字节一致。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+```bash
+python -m venv .venv
+source .venv/bin/activate             # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 
-验收：
-使用本地样本验证分区转换、增量重算、版本恢复与非法参数拒绝，并核对导出一致性。
+python -m atlas_pipeline opengl-check
+python -m atlas_pipeline generate --suite artifacts/demo-suite
+
+python -m atlas_pipeline generate \
+  --output sample.atlas --width 64 --height 48 \
+  --bit-depth 10 --color-space rec709 --transfer srgb \
+  --grid-cols 4 --grid-rows 3 --seed 7
+
+python -m atlas_pipeline convert \
+  --atlas sample.atlas \
+  --target-color-space display-p3 --target-transfer linear \
+  --target-peak 1000 \
+  --exposure 1=0.5 --curve 1=reinhard \
+  --snapshot-out state.json \
+  --export-atlas exported.atlas --report report.json --trace trace.json
+
+python -m atlas_pipeline preview \
+  --snapshot state.json --output preview.png --scale 4 --renderer auto
+
+python -m atlas_pipeline gui sample.atlas --renderer auto
+```
+
+`gui` 启动仅监听本机的图形预览界面。界面提供区块选择、曝光 / 色调曲线编辑、
+共享转换链编辑、误差热力、版本时间轴、提交、取消、回退和导出。浏览器前端
+不依赖第三方 JavaScript；预览 PNG 由 NumPy 确定性渲染，存在 OpenGL
+上下文时可用 PyOpenGL/EGL 纹理管线渲染。
+
+## 验收与测试
+
+```bash
+python -m pytest -q
+python scripts/run_acceptance.py
+```
+
+验收产物在 `artifacts/acceptance/`，包括三组不同分辨率/位深/传递函数/网格的
+样本、分区增量版本、中断快照、回退版本、导出图集、误差报告、CPU/OpenGL
+预览以及 `acceptance-report.json`。实际结果见
+`docs/VALIDATION.md`。
+
+## 核心语义
+
+- 图集头固定 48 字节小端格式，载荷为 RGBA16F。解析时校验魔术字、头 CRC、
+  位深、色彩空间码、传递函数码、存储格式、网格整除关系、载荷长度和载荷 CRC。
+- 源通道先按头部传递函数线性化。色彩链顺序为：线性化、源 RGB→XYZ、
+  Bradford 白点适应、XYZ→目标 RGB、曝光、峰值归一化、色调映射、目标传递函数
+  编码、位深量化。
+- 基色矩阵与白点适应由全局配置决定。修改目标色彩空间、传递函数、峰值亮度、
+  白点或适应方法会使全部区块失效；只修改区块曝光/色调映射时仅重算对应区块。
+- 每次提交先构建私有事务缓存。只有全部受影响区块成功后才在发布锁内一次性
+  替换版本、区块缓存和当前版本指针。预览读取同一把锁，只能看到完整旧状态或
+  完整新状态。
+- 版本号单调递增，永不覆盖历史。回退会发布一个新版本，内容取自历史版本，
+  后续提交以该回退版本为父版本。
+- 快照包含嵌入的原始图集、完整版本链、区块哈希、区块载荷、预览版本和可选
+  未完成事务；写入使用同目录临时文件、`fsync` 与 `os.replace`。
+- GUI 与设置 `--snapshot-out` 的 CLI 启用自动检查点，在事务开始、每个区块完成
+  和发布后原子更新快照；取消/失败会清除 pending 事务。
+- 导出前可携带期望版本、内容哈希和区块哈希清单。导出文件头写入版本号，
+  报告记录区块参数、误差、哈希与链路摘要；`verify-export` 重新载入半浮点载荷
+  并复算每个区块哈希和整体内容哈希。
+
+## 错误码
+
+| 错误码 | 用途 |
+| --- | --- |
+| `E_ATLAS_INVALID` | 头部、字段、网格、长度、CRC 或未知码非法 |
+| `E_PARAM_CONFLICT` | 曝光/TM/峰值/参数表冲突，附带 `tile` 与 `field` |
+| `E_BUSY` | 同一图集已有转换任务 |
+| `E_CANCELLED` | 事务在发布前被取消 |
+| `E_VERSION_STALE` | 提交/导出基于过期版本或哈希清单 |
+| `E_RECOVERY_INVALID` | 快照字段缺失、哈希链断裂或缓存损坏 |
+| `E_EXPORT_INVALID` | 导出文件或报告结构不可读 |
+| `E_IO` / `E_USAGE` | 文件系统与命令行/API 使用错误 |
+
+## 目录
+
+```text
+atlas_pipeline/
+  codec.py          二进制格式读写、头部校验、分区索引
+  color.py          色彩矩阵、白点适应、色调映射、逐区块转换
+  pipeline.py       事务提交、增量缓存、版本链、预览与回退
+  storage.py        原子快照、哈希链与中断恢复
+  export.py         图集/报告导出和复载校验
+  sample.py         确定性样本与样本套件
+  gui.py            本地图形预览 API 与浏览器界面
+  opengl_preview.py EGL/WGL 上下文诊断与 PyOpenGL 预览
+  render.py         PNG 与误差热力渲染
+  cli.py            命令行入口
+docs/
+  FORMAT.md         二进制格式与校验规则
+  ARCHITECTURE.md   事务、版本、缓存、快照与导出设计
+  VALIDATION.md     本次实际验证结果
+scripts/run_acceptance.py
+tests/
+```
+
+## 环境说明
+
+- Python 3.11+，NumPy 与 PyOpenGL。
+- 无网络时可用本地 wheel：
+
+```bat
+python -m pip install --no-index --find-links wheels numpy PyOpenGL
+```
+
+- 主 GUI 通过 `127.0.0.1` 提供页面，不需要 Tkinter 或 GLUT。
+- OpenGL 诊断在 Linux 使用 EGL；Windows 依次尝试 EGL 和隐藏窗口 WGL。
+  OpenGL 不可用时预览自动回退到 NumPy CPU 渲染，转换、版本和导出不受影响。
