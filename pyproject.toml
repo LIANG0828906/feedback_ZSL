@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "levelgen-workbench"
+version = "1.0.0"
+description = "Deterministic offline level generation and replay workbench"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy==1.26.4",
+  "PySide6==6.7.0",
+]
+
+[project.scripts]
+levelgen = "levelgen.cli:main"
+levelgen-gui = "levelgen.gui:main"
+levelgen-headless = "levelgen.headless:main"
+
+[tool.setuptools.packages.find]
+include = ["levelgen*"]
