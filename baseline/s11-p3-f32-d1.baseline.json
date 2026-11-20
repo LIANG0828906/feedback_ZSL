@@ -1,0 +1,932 @@
+{
+  "baseline_version": 1,
+  "frames": [
+    {
+      "applied": [
+        "p0:0"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "0053057b132371ec585ce7387f38721496e7e739deb79c280adea9839229446b",
+      "events": [
+        {
+          "cmd": "p0:0",
+          "frame": 0,
+          "op": "move",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 0,
+      "quota_used": {
+        "p0": 1,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "ca86d17d73bbd8964544b411cff87150ecbc26a4a6b525ba05e9fe9df885618c"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "c390277dca8acee62a7be3823d582a879544216c253da878f9970634aa6cacf8",
+      "events": [],
+      "frame": 1,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "3f63f43a901850e01bb4fe1172064914f14b83648e780783ecf73c2fd9e9e9e9"
+    },
+    {
+      "applied": [
+        "p0:2",
+        "p1:0",
+        "p2:0"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "ab22d6c71ae4d95ff2b938e640d970bc437f2349fbd377da5fa87eecf836087f",
+      "events": [
+        {
+          "cmd": "p0:2",
+          "frame": 2,
+          "op": "move",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p0:1",
+          "cost": 3,
+          "frame": 2,
+          "player": "p0",
+          "quota": 4,
+          "type": "E_QUOTA_EXCEEDED",
+          "used": 2
+        },
+        {
+          "cmd": "p1:0",
+          "frame": 2,
+          "op": "strike",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p2:0",
+          "frame": 2,
+          "op": "move",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 2,
+      "quota_used": {
+        "p0": 2,
+        "p1": 3,
+        "p2": 3
+      },
+      "state_hash": "0db3e1df2cbc02c8e2a927b89d5aa5d8902b7e7980235a668be51b3bdd73922d"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "99c26295832d263c5b217f4f07133d77f371444a168e9eff62735ed6058c7fb7",
+      "events": [],
+      "frame": 3,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "7cc8211c5cb093329e754348b819fb16d9750a4474ee805d2645585cbc699b79"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "041242b9462bf5f9852629d471ae6b657fc7fa9f66eb6b5c4e7868dd4cd1d824",
+      "events": [],
+      "frame": 4,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "1555458a91d9c55ffc8570a0c2cd1f842675372f22e3f044c3f79dd646506d38"
+    },
+    {
+      "applied": [
+        "p0:4",
+        "p0:3",
+        "p2:1",
+        "p1:1"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "75f2f600746ca687d812799ffe0257930bce5df3e1c8b53961b730dcf48164b0",
+      "events": [
+        {
+          "cmd": "p0:4",
+          "frame": 5,
+          "op": "move",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p0:3",
+          "frame": 5,
+          "op": "move",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p2:1",
+          "frame": 5,
+          "op": "move",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p1:1",
+          "frame": 5,
+          "op": "move",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 5,
+      "quota_used": {
+        "p0": 5,
+        "p1": 2,
+        "p2": 1
+      },
+      "state_hash": "216ffa07a5f29f88b003adf99dfb4126cf14594ff0e878b7ba92f7fff9f9db4d"
+    },
+    {
+      "applied": [
+        "p1:2"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "5f622139ba89277368c0273c857886163e9da4437fcc44cf22f07752eec94aa6",
+      "events": [
+        {
+          "cmd": "p1:2",
+          "frame": 6,
+          "op": "move",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 6,
+      "quota_used": {
+        "p0": 0,
+        "p1": 3,
+        "p2": 0
+      },
+      "state_hash": "e5e5fed21ca663359aa3b714a515073ba7ba87854cc0a55c7616a772b4f9a125"
+    },
+    {
+      "applied": [
+        "p0:6"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "1a16a431633a1e1d2b84c740fbd8721d225e7a6c64b4078d47cb8413f3ae2c87",
+      "events": [
+        {
+          "cmd": "p0:6",
+          "frame": 7,
+          "op": "move",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 7,
+      "quota_used": {
+        "p0": 3,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "b5586705357b0f1c5e44724d32a10c4cb20f247dbf95cd9471a6ea0e406480bc"
+    },
+    {
+      "applied": [
+        "p0:5"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "91591c89b0f5ed49de92f01a5d22a081ebe536503a24fa38c64b85e2cc45c283",
+      "events": [
+        {
+          "cmd": "p0:5",
+          "frame": 8,
+          "op": "stop",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 8,
+      "quota_used": {
+        "p0": 1,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "c0d1331398b360f37fe1018d18ceb75808b161b39110955911c2d1eb72fe2244"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "0f2534cc9f444389fcf527b9c6a71774c45230fb001e7f81521191a6ab252879",
+      "events": [],
+      "frame": 9,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "ddd3e616d2bcb6f5bca9afa1ba3da01b4f2d6edbd41fd65a6fac708828e86d64"
+    },
+    {
+      "applied": [
+        "p0:7"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "fdad6b485c9d4d75c27d255df64335c867cb3e9b1bb9431eb29ae9da0ec0ceb4",
+      "events": [
+        {
+          "cmd": "p0:7",
+          "frame": 10,
+          "op": "strike",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 10,
+      "quota_used": {
+        "p0": 2,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "1ec3b7e3040f02fc0e1cde030f53d66806474114848d48b30d0e5705690098a1"
+    },
+    {
+      "applied": [
+        "p2:2"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "a075894bc08377035a07af68fb3d2b24c40367558f8ecaf6e935855561dd7f2c",
+      "events": [
+        {
+          "cmd": "p2:2",
+          "frame": 11,
+          "op": "move",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p1:3",
+          "frame": 11,
+          "player": "p1",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 11,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 2
+      },
+      "state_hash": "ec5c55fb9984c64191d72e6a44186586cbbc5de6a30dcb74291aa5594e1ce6ad"
+    },
+    {
+      "applied": [
+        "p2:3",
+        "p0:8"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "23ca92b5c389ed6ecb2741a341a0e9356f19fa015b4fe92143ae91bc6e739f51",
+      "events": [
+        {
+          "cmd": "p2:3",
+          "frame": 12,
+          "op": "move",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p0:8",
+          "frame": 12,
+          "op": "move",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 12,
+      "quota_used": {
+        "p0": 2,
+        "p1": 0,
+        "p2": 1
+      },
+      "state_hash": "2ec71d7e7643cfe0dfb7e78fd50b865ded5d7a33f13bcfc48415839b90e4b96e"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "75e6fc75954ba3c8520955b35bcbd77f32e42411cc89f129525dbfef1c4422fb",
+      "events": [],
+      "frame": 13,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "64e0b87d738979f058ca185019841bcd900ab0671685ad4dc061cbf5f9a9c5f0"
+    },
+    {
+      "applied": [
+        "p2:4"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "75d055fcee4428191abaa83ae5cfcb9d394a0177576151648d15da5d2bffba1a",
+      "events": [
+        {
+          "cmd": "p2:4",
+          "frame": 14,
+          "op": "strike",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 14,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 2
+      },
+      "state_hash": "f2900ed4fa54e2eb1ee60c92c03d58c9e21995514dc78b6901138db00b2cfac7"
+    },
+    {
+      "applied": [
+        "p0:9",
+        "p2:5"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "927a971959b0a79da955dd35aca9a8d5dddaa66ba45a55d3df48bfaefb0d2565",
+      "events": [
+        {
+          "cmd": "p0:9",
+          "frame": 15,
+          "op": "stop",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p1:4",
+          "frame": 15,
+          "player": "p1",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        },
+        {
+          "cmd": "p0:10",
+          "frame": 15,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        },
+        {
+          "cmd": "p2:5",
+          "frame": 15,
+          "op": "stop",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 15,
+      "quota_used": {
+        "p0": 1,
+        "p1": 0,
+        "p2": 2
+      },
+      "state_hash": "db6718c7645bfddb8163ee0c6d89b755baf78765d6936e8189cd1da8fd1eb670"
+    },
+    {
+      "applied": [
+        "p1:5",
+        "p2:6"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "8991c698224d90178df2cc5fc286ebcc909cabd3b51fd31f49a854be9378ffb4",
+      "events": [
+        {
+          "cmd": "p1:5",
+          "frame": 16,
+          "op": "stop",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p0:11",
+          "frame": 16,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        },
+        {
+          "cmd": "p2:6",
+          "frame": 16,
+          "op": "move",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 16,
+      "quota_used": {
+        "p0": 0,
+        "p1": 1,
+        "p2": 3
+      },
+      "state_hash": "87083e4fbe3fd8f26c3b3d117ea6fb18041741c2a2f48024fc777916307bb44b"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "74657010bb6756c6d54f900a384ccea468d06893a9408fab2d8ad8161f1a0b26",
+      "events": [
+        {
+          "cmd": "p0:12",
+          "frame": 17,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 17,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "3d734844db335d32e764718a0ba7db2ee829eddb12be2baec16688d4231efca1"
+    },
+    {
+      "applied": [
+        "p1:7",
+        "p1:6",
+        "p2:7"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "e7c33300786fb6e73dd79adc059890b3291f8a1737f801f11001eebbba8dd09d",
+      "events": [
+        {
+          "cmd": "p1:7",
+          "frame": 18,
+          "op": "move",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p1:6",
+          "frame": 18,
+          "op": "strike",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p2:7",
+          "frame": 18,
+          "op": "strike",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 18,
+      "quota_used": {
+        "p0": 0,
+        "p1": 4,
+        "p2": 2
+      },
+      "state_hash": "d10e846ccbd465b9f0f00b376d79d4f6ba66c23926ed9f9bbeca2cd7951295ad"
+    },
+    {
+      "applied": [
+        "p1:8"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "3ff4c7bfdde4ce7e74db07270916158d7d006a91d22d6830f654a0a1c01ad126",
+      "events": [
+        {
+          "cmd": "p1:8",
+          "frame": 19,
+          "op": "stop",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p0:13",
+          "frame": 19,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 19,
+      "quota_used": {
+        "p0": 0,
+        "p1": 2,
+        "p2": 0
+      },
+      "state_hash": "f8aff2be5b64686ea34a5827b0e0c4c8ad909f356c696e5421b0540644081e39"
+    },
+    {
+      "applied": [
+        "p0:14"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "9eac774167e8f207d43ca8b096cd6b310732bfdb48ef7241f33c8ba6240ab518",
+      "events": [
+        {
+          "cmd": "p2:8",
+          "frame": 20,
+          "player": "p2",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        },
+        {
+          "cmd": "p0:14",
+          "frame": 20,
+          "op": "move",
+          "player": "p0",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 20,
+      "quota_used": {
+        "p0": 1,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "f71d79b8b65777e8b22b43d20a36d54d37c353b733e646a1fc5f1140d6d09562"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "77adf79ee7d0ff79748e05e8c7e348f541f3db5891feb4dc1fd5f17b2738d349",
+      "events": [],
+      "frame": 21,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "18320cd5f0aae002b997d6ab3fceff734f572db110c7b845696a0d75aac38c9c"
+    },
+    {
+      "applied": [
+        "p1:9"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "6ac4d2ea9feb95e5d40cd42542cb5b499dbeb8bec1f5dc59afec97babacaa225",
+      "events": [
+        {
+          "cmd": "p1:9",
+          "frame": 22,
+          "op": "strike",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p0:15",
+          "frame": 22,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        },
+        {
+          "cmd": "p2:9",
+          "frame": 22,
+          "player": "p2",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 22,
+      "quota_used": {
+        "p0": 0,
+        "p1": 1,
+        "p2": 0
+      },
+      "state_hash": "08d635cc390388734baedda4b2d7f13d775f54d6ccce8c4033e336bdbbff599c"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "b525dfdb961b74a92a4b451d4407b34350ce1ec53e8748c527d728bd26b68863",
+      "events": [
+        {
+          "cmd": "p0:16",
+          "frame": 23,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 23,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "fa892aa3c4ed9623ab6dbc3dbc42704c3d971951627b97b8fc8412ba48e8f6b9"
+    },
+    {
+      "applied": [
+        "p2:10"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "6ffe313c4971cb2d289a74976c352fc2fcff79292f5ade7794989d60b2b72bc6",
+      "events": [
+        {
+          "cmd": "p2:10",
+          "frame": 24,
+          "op": "move",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 24,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 2
+      },
+      "state_hash": "bb0000edc987c714fc869a06022222c4eecb84add9323dc5c1d4f990239c5b33"
+    },
+    {
+      "applied": [
+        "p1:10"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "01d02b7b52640b96ee579caf7a6fbf9155763fd76824dfda3cb48a523db9eaef",
+      "events": [
+        {
+          "cmd": "p1:10",
+          "frame": 25,
+          "op": "move",
+          "player": "p1",
+          "type": "CMD_APPLIED"
+        }
+      ],
+      "frame": 25,
+      "quota_used": {
+        "p0": 0,
+        "p1": 3,
+        "p2": 0
+      },
+      "state_hash": "47aff2f54b61fb8ae070701830603043c9e574d04ff759db84a569158cf803a4"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "0731452b7870a79d1f1d57c056cb19bcd3383ac5e6723f958bdf5f29a75eadc9",
+      "events": [],
+      "frame": 26,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "471057623ec46180018311ec8970d177ae6a10c89785ee0a4f5796a35242a4c1"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "ad97a2938472a17a55995db51ae2d9b0946d6c59246aad043669a7db020bf80d",
+      "events": [],
+      "frame": 27,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "81229f228142abbe4f10bbf411567eb6086abd61d0862ca17030049f943fbdaa"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "2018a36c1207b7f2590315dc793f87e7c796e4d1732b02d5e2968acdd947c384",
+      "events": [
+        {
+          "cmd": "p2:11",
+          "frame": 28,
+          "player": "p2",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 28,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "54455b6c58c93f675cb1364f0bf975524ee8019cc1a2d8b8935ba35acd7728ed"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "22361f19eda4d878087bb736eb63fa75bf83ccf8a9c199dd26387f8d3ba703c7",
+      "events": [],
+      "frame": 29,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "dca4c276ce2611c8b8414c390593e5b344067dd37a133a386b5ca0037725b099"
+    },
+    {
+      "applied": [],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "28d01c8e6b44df4a7226c5c381f2baa050e977fc731228a86fbfd5c235229724",
+      "events": [
+        {
+          "cmd": "p0:18",
+          "frame": 30,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        },
+        {
+          "cmd": "p0:17",
+          "frame": 30,
+          "player": "p0",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 30,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "state_hash": "62ef507de46d3194249c37c16b5d1f0b002af5d1bfda5b66a1888c0ad6b609d3"
+    },
+    {
+      "applied": [
+        "p2:12"
+      ],
+      "buffer_watermark": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 0
+      },
+      "chain_hash": "4fbd631244f4d5ef51b5fc297495b95fdc302f935df7afb5e7422e49f9950eda",
+      "events": [
+        {
+          "cmd": "p2:12",
+          "frame": 31,
+          "op": "strike",
+          "player": "p2",
+          "type": "CMD_APPLIED"
+        },
+        {
+          "cmd": "p1:11",
+          "frame": 31,
+          "player": "p1",
+          "reason": "target_dead",
+          "type": "E_CMD_INVALID"
+        }
+      ],
+      "frame": 31,
+      "quota_used": {
+        "p0": 0,
+        "p1": 0,
+        "p2": 2
+      },
+      "state_hash": "d0f9a9362a3bbd6426e5d09bb0f8c87126b832d568eb8d36b43c2cda0d7bf963"
+    }
+  ],
+  "match_id": "s11-p3-f32-d1",
+  "state_version": 1
+}
