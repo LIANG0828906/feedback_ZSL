@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acoustic-field-workbench"
+version = "0.1.0"
+description = "Deterministic incremental spatial-acoustic reconstruction workbench"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "PySide6>=6.6",
+]
+
+[project.scripts]
+acoustic-workbench = "acoustic_workbench.gui:main"
+acoustic-diagnostics = "acoustic_workbench.diagnostics:main"
+acoustic-samples = "acoustic_workbench.samplegen:main"
+
+[tool.setuptools.packages.find]
+include = ["acoustic_workbench*"]
+
