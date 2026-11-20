@@ -1,0 +1,145 @@
+{
+  "alignment": {
+    "arrivals": {
+      "FC": 229,
+      "FL": 233,
+      "FR": 241,
+      "LFE": 247,
+      "SL": 237,
+      "SR": 243
+    },
+    "ground_truth_match": true,
+    "offsets": {
+      "FC": -4,
+      "FL": 0,
+      "FR": 8,
+      "LFE": 14,
+      "SL": 4,
+      "SR": 10
+    }
+  },
+  "cold_baseline_run": {
+    "cache": {
+      "hits": 0,
+      "misses": 722,
+      "node_count": 722
+    },
+    "content_hash": "a6f21c73693f7e655ad5f050994883ed7e1d2364ca206eb163245e474af1e517",
+    "error_budget_bands": 174,
+    "version": 1,
+    "warning_count": 74
+  },
+  "consistency": {
+    "low_frequency_gain_jumps": [
+      {
+        "attribution": {
+          "alignment_offset": 1.8167725754675054e-05,
+          "filter_truncation": 1.7175968609322614,
+          "smoothing_coupling": 0.4329386187559306
+        },
+        "band": "24.8..31.2",
+        "channel": "SR",
+        "jump_db": -7.256,
+        "source": "filter_truncation"
+      },
+      {
+        "attribution": {
+          "alignment_offset": 7.267037102238651e-05,
+          "filter_truncation": 0.5340196544441543,
+          "smoothing_coupling": 0.11394734852804762
+        },
+        "band": "49.6..62.5",
+        "channel": "SR",
+        "jump_db": 4.447,
+        "source": "filter_truncation"
+      }
+    ],
+    "phase_inversions": [
+      {
+        "band": "1.00k",
+        "channel": "LFE",
+        "phase_delta_deg": 157.712
+      },
+      {
+        "band": "12.70k",
+        "channel": "LFE",
+        "phase_delta_deg": -155.975
+      },
+      {
+        "band": "16.00k",
+        "channel": "LFE",
+        "phase_delta_deg": 161.033
+      },
+      {
+        "band": "31.2",
+        "channel": "SR",
+        "phase_delta_deg": -155.75
+      },
+      {
+        "band": "39.4",
+        "channel": "SR",
+        "phase_delta_deg": -155.75
+      },
+      {
+        "band": "1.00k",
+        "channel": "SR",
+        "phase_delta_deg": -175.312
+      }
+    ]
+  },
+  "dataset": {
+    "seed": 20261120,
+    "wav": "samples/surround51.wav",
+    "wav_sha256": "0b8a68bfaa3d46c2a9deb867257270c8f7634929e3ae961c8d1f17518294d4df"
+  },
+  "fully_cached_repeat": {
+    "affected_nodes": [],
+    "cache": {
+      "hits": 722,
+      "misses": 0,
+      "node_count": 722
+    },
+    "content_hash": "a6f21c73693f7e655ad5f050994883ed7e1d2364ca206eb163245e474af1e517",
+    "content_hash_equal": true,
+    "version": 2
+  },
+  "reproducibility": {
+    "coefficients_byte_equal": true,
+    "coefficients_sha256_a": "cbabf1593e856fbb9b5b3ee4e2bee65f062ceec313eb31446f098ea8ede39007",
+    "coefficients_sha256_b": "cbabf1593e856fbb9b5b3ee4e2bee65f062ceec313eb31446f098ea8ede39007",
+    "content_hash_equal": true,
+    "trace_byte_equal": true,
+    "trace_sha256_a": "cdf8ee8af140b3522f95235fc4ff4a0dff01a75035865313d5db0e635d49ee57",
+    "trace_sha256_b": "cdf8ee8af140b3522f95235fc4ff4a0dff01a75035865313d5db0e635d49ee57"
+  },
+  "schema": "studio-calibration-validation-v1",
+  "smoothing_change": {
+    "affected_stage_counts": {
+      "consistency": 1,
+      "correction": 174,
+      "error": 174,
+      "filter": 6,
+      "filter_segment": 180,
+      "smooth": 174
+    },
+    "config_changes": [
+      "smoothing_octaves"
+    ]
+  },
+  "target_change": {
+    "affected_stage_counts": {
+      "consistency": 1,
+      "correction": 168,
+      "error": 174,
+      "filter": 6,
+      "filter_segment": 180
+    },
+    "config_changes": [
+      "target_curve"
+    ]
+  },
+  "tests": {
+    "count": 22,
+    "status": "passed"
+  }
+}
