@@ -20,3 +20,34 @@
 
 验收：
 用本地多版本骨骼样本验证解析升级、映射重定向、跨版本一致性及快照恢复，输出轨迹日志与偏差报告。
+
+---
+
+## 交付实现
+
+本仓库已实现完整管线，代码位于 `retarget_pipeline/`，测试位于 `tests/`，
+入口脚本位于 `scripts/`，设计与验证文档位于 `docs/`。
+
+### 快速开始
+
+```bash
+pip install -r requirements.txt
+python -m unittest discover -s tests          # 32 个用例
+python scripts/run_demo.py --workspace outputs/demo --gui
+```
+
+### 目录
+
+* `retarget_pipeline/`：codec/mapping/compat/retarget/validate/snapshot/
+  engine/samples/trajectory/gui 等模块
+* `scripts/run_demo.py`：端到端验收（样本→映射→后台重定向→校验→恢复→日志）
+* `scripts/cli.py`：单任务 generate / retarget / gui 命令
+* `docs/TECHNICAL_DESIGN.md`：架构、数学与错误码设计
+* `docs/VERIFICATION.md`：实际验证结果与复现命令
+* `outputs/demo/`：样本、重定向动画、偏差报告、轨迹日志与快照工程
+
+### 业务码
+
+`E_ANIM_FORMAT_INVALID`、`E_MAP_CONFLICT`、`E_VERSION_LOSS`、
+`E_POSE_UNRESOLVED`、`E_CONSISTENCY_FAIL`、`E_RECOVERY_INVALID`、
+`E_BUSY`、`E_CANCELLED`，统一定义在 `retarget_pipeline/errors.py`。
