@@ -1,21 +1,99 @@
-互动叙事项目中，剧情由带条件与效果的事件节点构成，每个事件根据前置状态条件决定是否触发，触发后按效果函数修改角色属性、信任值、资源计数与全局标记；分支与条件表达式普遍带有小数系数与指数累积，同一剧本在不同浮点/定点精度下会产生不同的分支走向，玩家看到的结果与设计意图不符却难以定位是哪条事件的条件在累积误差中被翻转。需要构建一个因果演算内核：把剧本载入为事件图，按决策步推进，记录每个条件表达式的求值链与误差界，支持定点数精度模式、误差归因报告、可复放的轨迹以及损坏剧本的注入验证，最终交付可复现的本地实验环境对同一剧本的操作序列给出逐字节一致的推进结果与归因。
+# 互动叙事因果演算内核
 
-任务环境与准备：
-安装 Python 3.11 及以上，使用标准库 json、hashlib 与 numpy 2.x；所有依赖离线安装，不访问网络。
-工作区为空白目录，执行前创建 data 与 reports 子目录用于本地剧本样本、轨迹日志与归因报告输出。
-运行前确认磁盘可写且具备真实文件句柄，用于验证临时文件加原子重命名的快照写入与强制终止恢复流程。
+这个工作区实现了一个可复现的本地因果演算内核。它把 JSON 剧本载入为事件图，以显式定点或 IEEE-754 binary64 模式逐步推进，记录每个条件表达式的求值链、误差区间与分支归因，并支持链式哈希轨迹、原子快照恢复和加载入口故障注入。
 
-业务要求：
-1. 实现剧本解析与事件图构建：读取本地 JSON 剧本中的事件节点、前置条件表达式、效果函数、分支边与初始状态，条件与效果中的数值统一表示为带标记的定点或浮点系数；缺失节点、悬空分支目标或非法系数返回业务码 E_SCENARIO_INVALID，任何推进前必须完成全图校验。
-2. 实现状态推进内核：按决策步从当前事件出发求值全部出边条件，选出满足条件的后继并按优先级稳定排序处理；每个决策步记录所选事件、被评估条件、各条件真值与状态修改前后值，形成因果记录链，相同剧本与相同操作序列下因果记录链逐字节一致。
-3. 实现定点与浮点双精度模式下的条件求值：定点模式按可配置小数位对系数与中间积做量化并给出舍入方向，浮点模式使用双精度；两种模式对同一条件表达式的真值差异必须在报告中显式列出，包含事件标识、条件标识、累计误差界与实际求值结果，禁止静默切换模式。
-4. 实现逐条件误差界推导与分支翻转归因：把系数量化、多步累积与指数放大串成逐节点误差传播模型，为每个条件输出真值的下界与上界；当上界与下界跨过阈值而真值不确定时标记为不确定分支并归因到最早越界的因子，无法归因时返回 E_ATTRIBUTION_FAILED，不得只给总误差。
-5. 实现可复放轨迹：逐决策步记录事件选择、条件求值输入输出、量化参数、模式与内容哈希；提供从轨迹复放推进过程并断言终局状态哈希与因果记录链一致的入口，轨迹截断或哈希断链以 E_TRACE_INVALID 中止且不产出推进结果。
-6. 实现异常注入验证通道：通过参数注入循环依赖事件、条件阈值与系数精度冲突、超深分支链、非有限系数与截断剧本，每类异常返回独立业务码并附注入点定位；注入发生在剧本载入入口且不修改求值与推进源码，异常必须在写出任何轨迹文件前被拦截。
-7. 实现推进快照与强制终止后的恢复：每个决策步以临时文件加原子重命名写出状态、因果记录前缀哈希、量化参数与模式；恢复时从最近有效快照重建并继续推进，不重复已记录决策步，快照版本或哈希链不符以 E_RECOVERY_INVALID 中止。
-8. 提供确定性样本生成器与脚本化实验入口：生成多种事件数、分支深度与条件精度的本地剧本及基线归因报告，输出含决策步、所选事件、条件真值、误差上下界与内容哈希的轨迹日志；相同种子与操作序列下推进结果与日志逐字节一致，并输出定点与浮点模式的差异对照。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+环境要求：Python 3.11+、NumPy 2.x。依赖安装完全离线，不访问网络。
 
-验收：
-用本地剧本样本验证双精度模式推进、分支翻转归因、轨迹复放与注入异常均符合预期。
+```bash
+# 从本机已有缓存创建 .venv 并复制 NumPy 2.x
+./scripts/bootstrap_offline.sh
+
+# 生成样本、运行固定点/浮点对照、轨迹复放、注入与强制终止恢复验证
+./scripts/run_experiment.sh
+```
+
+直接运行 CLI：
+
+```bash
+.venv/bin/python -m causalkernel.cli generate --out-dir data --seed 20261121
+.venv/bin/python -m causalkernel.cli compare \
+  --scenario data/branch_flip.json \
+  --operations data/operations.json \
+  --fixed-places 3 \
+  --out-dir reports/scenarios
+.venv/bin/python -m causalkernel.cli replay \
+  --scenario data/branch_flip.json \
+  --trace reports/scenarios/branch_flip.fixed.trace.json
+```
+
+## 主要产物
+
+- `data/*.json`：确定性样本与操作序列。
+- `reports/validation_report.json`：完整实验验收报告，含每个场景、注入、复放、恢复和确定性结果。
+- `reports/RESULTS.md`：便于阅读的验收摘要。
+- `reports/scenarios/*.fixed.trace.json` / `*.float.trace.json`：逐决策步轨迹。
+- `reports/scenarios/*.comparison.json` / `*.comparison.md`：定点与浮点真值、误差界和分支差异。
+- `reports/scenarios/*.attribution.json` / `*.attribution.md`：逐条件误差链和最早越界因子。
+- `reports/recovery_snapshots/`：每步原子写入的快照。
+
+## 剧本结构摘要
+
+```json
+{
+  "format": "causal-story/1",
+  "scenario_id": "example",
+  "start_event": "start",
+  "precision": {"mode": "fixed", "decimal_places": 3, "rounding": "half_even"},
+  "initial_state": {
+    "characters": {"hero": {"trust": {"kind": "fixed", "text": "1.000", "scale": 3}}},
+    "resources": {"energy": {"kind": "fixed", "text": "10", "scale": 0}},
+    "flags": {"gate_open": false}
+  },
+  "events": [
+    {
+      "id": "start",
+      "preconditions": ["trust_positive"],
+      "conditions": [
+        {
+          "id": "trust_positive",
+          "expr": {"op": "var", "path": "characters.hero.trust"},
+          "op": ">",
+          "threshold": {"kind": "fixed", "text": "0", "scale": 0}
+        }
+      ],
+      "effects": [
+        {"id": "open", "op": "set", "path": "flags.gate_open", "value": true}
+      ],
+      "branches": [
+        {"id": "b1", "to": "next", "priority": 10, "condition": "trust_positive"}
+      ]
+    }
+  ]
+}
+```
+
+表达式支持 `const`、`var`、`add`、`sub`、`mul`、`neg`、`pow`；效果支持 `add`、`sub`、`mul`、`set`、`toggle`。所有算术系数必须使用 `{"kind":"fixed"|"float","text":"..."}` 标记。固定点系数还必须声明 `scale`。
+
+`conditions` 是当前事件可被分支引用的条件目录；`preconditions` 才是事件触发前必须为真的条件 ID 列表。完整语义、哈希格式、误差传播公式和归因算法见 `TECHNICAL.md`。
+
+## 错误码
+
+- `E_SCENARIO_INVALID`：剧本结构、缺失目标、非法系数、普通成环或超深图。
+- `E_TRACE_INVALID`：轨迹截断、内容哈希或因果链断裂、复放不一致。
+- `E_RECOVERY_INVALID`：快照版本、场景、模式、操作、状态或哈希链不一致。
+- `E_ATTRIBUTION_FAILED`：条件不确定但无法找到越界因子。
+- `E_INJECT_CYCLE`：注入循环事件依赖。
+- `E_INJECT_PRECISION_CONFLICT`：注入阈值与定点精度的冲突。
+- `E_INJECT_DEPTH_EXCEEDED`：注入超深分支链。
+- `E_INJECT_NONFINITE_COEFFICIENT`：注入非有限系数。
+- `E_INJECT_TRUNCATED`：注入截断剧本。
+
+## 测试
+
+```bash
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+当前 10 个单元测试覆盖双模式分支翻转、归因、全图校验、优先级稳定排序、效果与状态哈希、逐字节确定性、轨迹复放与损坏拒绝、五类注入、原子写入以及强制终止后的快照恢复。
