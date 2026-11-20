@@ -1,0 +1,47 @@
+{
+  "artifact_dir": "artifacts/run",
+  "assets": [
+    {
+      "id": "program_a_5_1",
+      "path": "samples/program_a_5_1_24bit.wav"
+    },
+    {
+      "id": "program_b_stereo",
+      "path": "samples/program_b_stereo_16bit.wav"
+    },
+    {
+      "id": "program_c_mono",
+      "path": "samples/program_c_mono_16bit.wav"
+    }
+  ],
+  "meter": {
+    "absolute_gate_lufs": -70.0,
+    "block_samples": 4800,
+    "channel_weights": null,
+    "lufs_tolerance": 1e-06,
+    "oversample_factor": 4,
+    "relative_gate_lu": -10.0,
+    "sample_rate": 48000,
+    "scheduler": {
+      "degrade_sequence": [
+        "increase_oversample_batch",
+        "shrink_internal_buffer"
+      ],
+      "internal_buffer_samples": 65536,
+      "memory_budget_bytes": 25165824,
+      "oversample_batch_samples": 512,
+      "parallelism": 3,
+      "per_task_memory_budget_bytes": 9437184
+    },
+    "short_term_samples": 144000,
+    "target_lufs": -23.0,
+    "true_peak_include_lfe": true,
+    "true_peak_limit_dbtp": -1.0,
+    "true_peak_tolerance": 1e-06,
+    "version": 3
+  },
+  "sample_dir": "samples",
+  "seed": 20261121,
+  "snapshot_dir": "artifacts/run/snapshots",
+  "trace_path": "artifacts/run/trace.jsonl"
+}

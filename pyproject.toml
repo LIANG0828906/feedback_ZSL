@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "broadcast-loudness-workbench"
+version = "1.0.0"
+description = "Deterministic parallel LUFS and true-peak measurement workbench"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.23"]
+
+[project.scripts]
+loudness-workbench = "loudness_workbench.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["loudness_workbench*"]
