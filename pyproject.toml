@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "broadcast-loudness"
+version = "0.1.0"
+description = "Deterministic BS.1770 broadcast loudness meter for 48 kHz PCM WAV"
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "numpy>=1.26",
+    "PySide6>=6.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+bl-meter = "broadcast_loudness.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["broadcast_loudness*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 88
