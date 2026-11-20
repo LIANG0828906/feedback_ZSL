@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spectral-material-editor"
+version = "1.0.0"
+description = "Deterministic spectral material color-management lab"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26,<3",
+    "PySide6>=6.8,<7",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[tool.setuptools.packages.find]
+include = ["spectral_editor*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
