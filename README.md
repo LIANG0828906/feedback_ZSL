@@ -20,3 +20,57 @@
 
 验收：
 使用本地样本验证配额结算、透支归因、检查点续算与并行度无关的确定性，复核分叉报告。
+
+---
+
+## 交付实现
+
+本仓库在 `replay_service/` 包内实现了上述全部要求，设计与验证细节见：
+
+- `docs/DESIGN.md`：架构、输入契约、结算语义、确定性与检查点设计；
+- `docs/VALIDATION.md`：实际验证命令与结果记录。
+
+### 环境准备
+
+- Python ≥ 3.11（当前验证环境为 3.14.4）；
+- NumPy：`python3 -m pip install --user numpy`
+  （受 PEP 668 管理的系统解释器加 `--break-system-packages`）；
+- Tkinter：Windows/macOS 官方安装包自带；Debian/Ubuntu 需
+  `sudo apt install python3-tk`。缺失时 GUI 给出明确报错，CLI 不受影响。
+
+### 快速开始
+
+```bash
+# 1. 生成确定性样本与基线（samples/run1/）
+python3 -m replay_service.cli generate --out-dir samples/run1
+
+# 2. 不同并行度重演（各自独立工作目录，结果逐字节一致）
+python3 -m replay_service.cli replay --sample-dir samples/run1 --work-dir /tmp/w1 --parallelism 1
+python3 -m replay_service.cli replay --sample-dir samples/run1 --work-dir /tmp/w3 --parallelism 3
+
+# 3. 与基线分叉比对
+python3 -m replay_service.cli verify --sample-dir samples/run1 --work-dir /tmp/v --parallelism 4
+
+# 4. 从检查点续算单场演练
+python3 -m replay_service.cli resume \
+  --input samples/run1/large_degrade/input.json \
+  --checkpoint-dir /tmp/w1/checkpoints/large_degrade
+
+# 5. 自动化测试 + SIGKILL 续算验证
+python3 -m unittest discover -s tests -v
+python3 -m scripts.verify_kill_resume
+
+# 6. 桌面环境下启动复核界面
+python3 -m replay_service.cli gui --sample-dir samples/run1 --work-dir /tmp/gui
+```
+
+### 错误码
+
+| 错误码 | 触发场景 |
+| --- | --- |
+| `E_INPUT_INVALID` | JSON 字段缺失/越界/负值/重复，附首个出错位置 |
+| `E_QUOTA_EXCEEDED` | 严格模式下透支，附步号、玩家、尝试总量、上限、被拒操作 |
+| `E_CHECKPOINT_WRITE` | 原子检查点写失败，附步号，旧检查点不受影响 |
+| `E_RESUME_INVALID` | 版本不符/字段缺失/哈希断链/篡改，附首个断链步 |
+| `E_BASELINE_VERSION` | 基线或规则版本不匹配，不给分叉结论 |
+| `E_CANCELLED` | 协作式取消 |
