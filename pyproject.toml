@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "probe-baker"
+version = "0.1.0"
+description = "Deterministic local light-probe baker with incremental publication and recovery"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "numpy==2.2.6",
+  "PyOpenGL==3.1.7",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.3.5"]
+
+[project.scripts]
+probe-baker = "probe_baker.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["probe_baker*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
