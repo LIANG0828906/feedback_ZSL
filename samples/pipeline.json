@@ -1,0 +1,23 @@
+{
+  "group_by": ["tenant", "region", "bucket"],
+  "aggregates": [
+    {"name": "amount_sum", "op": "sum", "field": "amount"},
+    {"name": "amount_avg", "op": "avg", "field": "amount"},
+    {"name": "amount_min", "op": "min", "field": "amount"},
+    {"name": "amount_max", "op": "max", "field": "amount"},
+    {"name": "amount_stddev", "op": "stdDev", "field": "amount"}
+  ],
+  "rounding": {
+    "sum": {"mode": "half_even", "significant_digits": 10},
+    "avg": {"mode": "half_even", "significant_digits": 10},
+    "min": {"mode": "toward_zero", "significant_digits": 12},
+    "max": {"mode": "toward_zero", "significant_digits": 12},
+    "stdDev": {"mode": "up", "significant_digits": 8}
+  },
+  "engine": {
+    "batch_size": 4,
+    "max_active_groups": 2,
+    "max_state_bytes": 4096,
+    "spill_partitions": 3
+  }
+}

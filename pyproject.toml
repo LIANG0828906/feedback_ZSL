@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "docagg"
+version = "1.0.0"
+description = "Deterministic local document aggregation executor with precision accounting"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26"]
+
+[project.scripts]
+docagg = "docagg.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["docagg*"]
