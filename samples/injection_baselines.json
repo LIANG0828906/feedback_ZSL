@@ -1,0 +1,59 @@
+{
+  "base": "injection_base.json",
+  "cases": {
+    "constraint_limit": {
+      "blocked_before_output": true,
+      "code": "E_INJECT_CONSTRAINT_LIMIT",
+      "expected_code": "E_INJECT_CONSTRAINT_LIMIT",
+      "injection_point": {
+        "index": 64,
+        "location": "/constraints"
+      }
+    },
+    "dangling_door": {
+      "blocked_before_output": true,
+      "code": "E_INJECT_DANGLING_DOOR",
+      "expected_code": "E_INJECT_DANGLING_DOOR",
+      "injection_point": {
+        "code": "dangling_door_endpoint",
+        "door_id": "injected_door",
+        "location": "/input_layout/doors/0",
+        "missing": [
+          "injected_missing_room"
+        ]
+      }
+    },
+    "key_cycle": {
+      "blocked_before_output": true,
+      "code": "E_INJECT_KEY_CYCLE",
+      "expected_code": "E_INJECT_KEY_CYCLE",
+      "injection_point": {
+        "cycle": [
+          "cycle_key_a",
+          "cycle_key_b",
+          "cycle_key_a"
+        ],
+        "location": "/input_layout/key_dependencies"
+      }
+    },
+    "room_bounds": {
+      "blocked_before_output": true,
+      "code": "E_INJECT_ROOM_BOUNDS",
+      "expected_code": "E_INJECT_ROOM_BOUNDS",
+      "injection_point": {
+        "code": "room_out_of_bounds",
+        "location": "/input_layout/rooms/0",
+        "room_id": "injected_room"
+      }
+    },
+    "truncated_input": {
+      "blocked_before_output": true,
+      "code": "E_INJECT_TRUNCATED_INPUT",
+      "expected_code": "E_INJECT_TRUNCATED_INPUT",
+      "injection_point": {
+        "byte_offset": 781,
+        "location": "$"
+      }
+    }
+  }
+}

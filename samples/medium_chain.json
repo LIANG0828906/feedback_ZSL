@@ -1,0 +1,89 @@
+{
+  "constraints": [
+    {
+      "hard": true,
+      "id": "rooms",
+      "max": 11,
+      "min": 8,
+      "priority": 100,
+      "type": "room_count"
+    },
+    {
+      "hard": true,
+      "id": "connectivity",
+      "priority": 100,
+      "type": "connectivity"
+    },
+    {
+      "coefficients": {
+        "key_alpha": 0.9,
+        "key_beta": 0.9,
+        "key_gamma": 0.9
+      },
+      "hard": true,
+      "id": "key_chain",
+      "keys": [
+        "key_alpha",
+        "key_beta",
+        "key_gamma"
+      ],
+      "priority": 100,
+      "threshold": 0.6,
+      "type": "key_chain"
+    },
+    {
+      "hard": true,
+      "id": "locked_endpoint",
+      "priority": 100,
+      "type": "no_lock_unreachable_end"
+    },
+    {
+      "coefficient": 1.0,
+      "hard": false,
+      "id": "area_target",
+      "priority": 20,
+      "target": 260,
+      "tolerance": 80,
+      "type": "area_target",
+      "weight": 1.0
+    },
+    {
+      "coefficient": 1.0,
+      "hard": false,
+      "id": "door_target",
+      "priority": 10,
+      "target": 10,
+      "tolerance": 4,
+      "type": "door_count_target",
+      "weight": 1.0
+    }
+  ],
+  "evaluation": {
+    "mode": "fixed",
+    "uncertain_policy": "allow"
+  },
+  "generation": {
+    "direction_mode": "mixed",
+    "max_attempts": 16,
+    "max_phase_retries": 5,
+    "rewards": 1,
+    "room_margin": 1,
+    "room_max_height": 5,
+    "room_max_width": 6,
+    "room_min_height": 3,
+    "room_min_width": 3
+  },
+  "grid": {
+    "height": 18,
+    "width": 26
+  },
+  "limits": {
+    "max_constraints": 64
+  },
+  "quantization": {
+    "decimals": 2,
+    "rounding": "half_up"
+  },
+  "seed": 202,
+  "version": 1
+}

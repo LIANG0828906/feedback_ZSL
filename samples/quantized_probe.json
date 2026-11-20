@@ -1,0 +1,56 @@
+{
+  "constraints": [
+    {
+      "hard": true,
+      "id": "rooms",
+      "max": 1,
+      "min": 1,
+      "priority": 100,
+      "type": "room_count"
+    },
+    {
+      "hard": true,
+      "id": "connectivity",
+      "priority": 100,
+      "type": "connectivity"
+    },
+    {
+      "coefficient": 0.333,
+      "hard": false,
+      "id": "area_quantized",
+      "priority": 30,
+      "target": 2.997,
+      "tolerance": 0.0,
+      "type": "area_target",
+      "weight": 1.0
+    }
+  ],
+  "evaluation": {
+    "mode": "fixed",
+    "uncertain_policy": "allow"
+  },
+  "generation": {
+    "direction_mode": "bidirectional",
+    "max_attempts": 4,
+    "max_phase_retries": 3,
+    "rewards": 1,
+    "room_margin": 0,
+    "room_max_height": 3,
+    "room_max_width": 3,
+    "room_min_height": 3,
+    "room_min_width": 3
+  },
+  "grid": {
+    "height": 3,
+    "width": 3
+  },
+  "limits": {
+    "max_constraints": 64
+  },
+  "quantization": {
+    "decimals": 2,
+    "rounding": "half_up"
+  },
+  "seed": 9001,
+  "version": 1
+}

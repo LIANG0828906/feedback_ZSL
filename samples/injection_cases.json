@@ -1,0 +1,30 @@
+{
+  "base": "injection_base.json",
+  "cases": [
+    {
+      "expected_code": "E_INJECT_ROOM_BOUNDS",
+      "location": "/input_layout/rooms/0",
+      "mode": "room_bounds"
+    },
+    {
+      "expected_code": "E_INJECT_DANGLING_DOOR",
+      "location": "/input_layout/doors/0",
+      "mode": "dangling_door"
+    },
+    {
+      "expected_code": "E_INJECT_KEY_CYCLE",
+      "location": "/input_layout/key_dependencies",
+      "mode": "key_cycle"
+    },
+    {
+      "expected_code": "E_INJECT_CONSTRAINT_LIMIT",
+      "location": "/constraints",
+      "mode": "constraint_limit"
+    },
+    {
+      "expected_code": "E_INJECT_TRUNCATED_INPUT",
+      "location": "$",
+      "mode": "truncated_input"
+    }
+  ]
+}

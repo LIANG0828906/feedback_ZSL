@@ -1,0 +1,152 @@
+{
+  "samples": {
+    "config.json": {
+      "attempts": 1,
+      "doors": 9,
+      "error_report": [],
+      "failed_soft": [],
+      "hard_passed": true,
+      "layout_hash": "cdfbb47ab7eb9f945ed4a985e2b3c8b9724e294cb1db77802cd92d7647be1e32",
+      "rooms": 10,
+      "seed": 20261121,
+      "seed_derivation_hash": "c97567f73115ae3a1b479accddd07a4c26c281b8c71d3ebbccd20bde2797dd55",
+      "tags": 7,
+      "trace_hash": "a25d44466c5c577f036f959f49b44a961467802244bb71c084873e7d0df3021b",
+      "uncertain": [],
+      "unlock_order": [
+        "k1",
+        "k2"
+      ]
+    },
+    "conflict_rooms_vs_chain.json": {
+      "expected_error": "E_CONSTRAINT_CONFLICT",
+      "minimal_evidence": {
+        "constraints": [
+          "rooms",
+          "key_chain"
+        ],
+        "facts": [
+          "key_count=2",
+          "required_rooms=3",
+          "room_count_max=1"
+        ],
+        "sufficient": true
+      },
+      "stage": "room_layout",
+      "violated_constraints": [
+        "rooms",
+        "key_chain"
+      ]
+    },
+    "medium_chain.json": {
+      "attempts": 1,
+      "doors": 10,
+      "error_report": [],
+      "failed_soft": [
+        "area_target"
+      ],
+      "hard_passed": true,
+      "layout_hash": "9e53ea65b74de54e960b04e08e9ad91e81e361454edcf53c1f4c3ea2d951acac",
+      "rooms": 9,
+      "seed": 202,
+      "seed_derivation_hash": "d336de919aba7fb77a61ad911af9040cc00e52ed671fa743aeef3c39df7a8e8c",
+      "tags": 9,
+      "trace_hash": "34a8ee18b89a68bb79bb8c3306dbd455830ec3fe67e2cddea83f27bea7f60eb5",
+      "uncertain": [],
+      "unlock_order": [
+        "key_alpha",
+        "key_beta",
+        "key_gamma"
+      ]
+    },
+    "quantized_probe.json": {
+      "attempts": 1,
+      "doors": 0,
+      "error_report": [
+        {
+          "bounds": {
+            "left_lower": "0",
+            "left_upper": "0.03",
+            "operator": "<=",
+            "right_lower": "0",
+            "right_upper": "0"
+          },
+          "constraint_id": "area_quantized",
+          "first_uncertain_factor": {
+            "first_factor": "area coefficient",
+            "node_id": "area.coefficient",
+            "quantization": {
+              "decimals": 2,
+              "direction": "down",
+              "exact": "0.333",
+              "quantized": "0.33",
+              "rounding": "half_up"
+            },
+            "source": "coefficient",
+            "uncertain": true
+          },
+          "fixed_truth": false,
+          "float_truth": true,
+          "quantization": {
+            "decimals": 2,
+            "rounding": "half_up"
+          },
+          "truth_lower": false,
+          "truth_upper": true,
+          "type": "area_target",
+          "uncertain": true
+        }
+      ],
+      "failed_soft": [
+        "area_quantized"
+      ],
+      "hard_passed": true,
+      "layout_hash": "ebe8435f09da28784e6991c7aceb956bcd60407937c05b2f70b9804b77768c53",
+      "rooms": 1,
+      "seed": 9001,
+      "seed_derivation_hash": "37ac488bdf81e0c24bc7259eab67f44ff636d8c9a54a938cc4b189b7861ed159",
+      "tags": 3,
+      "trace_hash": "fc66402c18b132d6f3639cf5af685260db03ed12d6f50632814dc73bb79a7722",
+      "uncertain": [
+        "area_quantized"
+      ],
+      "unlock_order": []
+    },
+    "small.json": {
+      "attempts": 1,
+      "doors": 4,
+      "error_report": [],
+      "failed_soft": [],
+      "hard_passed": true,
+      "layout_hash": "04d1913d379bd295e116cb9fad0befb783950973bd8fa01256d57c56bfdd4f48",
+      "rooms": 4,
+      "seed": 101,
+      "seed_derivation_hash": "7ac91fb715815cf8bb8f0e7386ec483e28477ee6d99180c45814d0c21db5ea0f",
+      "tags": 5,
+      "trace_hash": "23206f36eda79e66f58140d3674517cbd2c046a9c0809546ec1d80f87b994f55",
+      "uncertain": [],
+      "unlock_order": [
+        "key_a"
+      ]
+    },
+    "tight_grid.json": {
+      "attempts": 1,
+      "doors": 6,
+      "error_report": [],
+      "failed_soft": [],
+      "hard_passed": true,
+      "layout_hash": "120dcff9f64c9caf5842fc836e3521849305c1a1ac670b885e3aec12771cbd4d",
+      "rooms": 6,
+      "seed": 303,
+      "seed_derivation_hash": "ec51b68d1a91ab1ff7a5016183c2d99b553e444ec6dbd9cf11a48bf7afd810c9",
+      "tags": 7,
+      "trace_hash": "63225f72f3c0c6f42951845fe6530e3ed8144e293f1e07700587fc9d3212cf67",
+      "uncertain": [],
+      "unlock_order": [
+        "bronze",
+        "silver"
+      ]
+    }
+  },
+  "trace_version": "LEVEL_TRACE_V1"
+}
