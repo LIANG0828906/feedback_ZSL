@@ -1,22 +1,253 @@
-UI 素材流水线接收美术绘制的矢量路径，每条路径含多条闭合子轮廓、直线段与二次、三次贝塞尔段，子轮廓之间存在孔洞嵌套、部分重合与极短退化段。文档规定填充结果依赖非零环绕与奇偶两套规则，但同一条路径在相近容差下用两套规则栅格化后，孔洞区域时而镂空、时而实心，预览与最终提交的位图不一致，难以判断是轮廓方向记录错误还是容差导致的环绕数跳变。组件需要把容差与轮廓方向对环绕数的影响沿判定链路显式传播，让每次填充判定的环绕数下界与上界、规则一致性结论与降级状态都可观测，并对入口注入的非法轮廓稳定拒绝。
+# 矢量填充判定流水线
 
-任务环境与准备：
-Windows 10 及以上，安装 Visual Studio 2022 与 CMake 3.20 以上，编译器启用 C++17。
-安装 Qt 5.15 或 Qt 6 的 MSVC 桌面套件用于位图预览，不引入容器或外部服务。
-准备本地样本目录：用随附样本生成器产出路径 JSON 与基线覆盖率哈希，全部由本地确定性过程生成。
-确认无网络依赖：几何切分、环绕数判定、光栅化与哈希实现均在本机完成，不调用线上服务或非本地数据。
+这是一个本地、确定性的 C++17 组件，用于解析多条闭合矢量子轮廓、计算非零环绕数与奇偶规则覆盖，
+并显式输出容差带造成的环绕数上下界、规则敏感像素、不确定像素、降级状态及异常注入结果。
+核心几何、光栅化、SHA-256 与 JSON 解析均不依赖网络或第三方运行时库。
 
-业务要求：
-1. 实现路径解析与轮廓规范化：读取本地 JSON 路径描述中的子轮廓列表、直线段、二次与三次贝塞尔段、轮廓方向标记与填充规则声明，按几何容差合并重合顶点并校验每条子轮廓闭合，输出顶点、段类型、控制点、方向与包围盒的确定性表示；字段缺失、坐标非有限或子轮廓未闭合时返回 E_PATH_INVALID 并定位子轮廓序号与段序号。
-2. 实现轮廓求交与环绕数贡献计算：对贝塞尔段做分割逼近并求取全部交点，按交点把轮廓切分为单调段，对每个待判定采样点计算其向左射线与各单调段的穿越贡献，依据段的方向得到环绕数的整数部分与近重合交点带来的不确定部分；容差变化后必须重算不确定部分并输出新旧环绕数下界的差异摘要。
-3. 实现双填充规则的判定与一致性结论：对同一采样网格分别按非零环绕与奇偶规则判定覆盖，输出两套规则的覆盖率图与逐像素判定差异；当某像素在两种规则下结论不同时须标注为规则敏感像素并给出该像素的环绕数下界、上界与最近边界距离，规则声明与子轮廓方向自相矛盾时以 E_FILL_RULE_CONFLICT 报告涉及子轮廓。
-4. 实现近重合与退化段的诊断与降级：检出与其他段近乎重合的边、长度低于阈值的退化段与不影响任何环绕数的孤立段，输出候选段对、重合方向与判定置信级别；当穿越大致在容差带内无法归类时把该像素标记为不确定并以 E_AMBIGUOUS_EDGE 报告涉及段，不确定像素不得被静默归入实心或镂空。
-5. 实现容差预算与放大关系记录：把顶点合并容差、交点归类容差与采样距离阈值建模为一项预算，输出每项容差对环绕数不确定像素数与覆盖面积偏差的影响，以及预算耗尽时的优先收紧次序；预算超出上限或容差为零、为负时返回 E_TOLERANCE_INVALID，且收紧次序一旦声明不得在不同路径上改变。
-6. 实现入口异常注入验证通道：通过运行参数注入重合边轮廓对、极短退化段、零面积子轮廓、孔洞嵌套方向反转与非有限坐标，每类异常返回独立业务码并附带注入点定位；注入须发生在解析入口且不修改环绕数判定源码，异常必须在写出任何覆盖率图或填充位图之前被拦截。
-7. 实现填充位图产出与降级状态隔离：把覆盖率图按采样网格合成为填充位图并记录像素判定来源（两规则一致、规则敏感、不确定），规则敏感或不确定像素超过声明比例时该位图标记为降级；降级位图不得被标记为可提交，提交接口对降级结果返回 E_DEGRADED_RESULT，且同一路径与参数下降级标记必须稳定复现。
-8. 提供确定性样本生成器与脚本化回归入口：生成多种子轮廓数、重合程度与方向组合的路径对样本及基线覆盖率哈希，输出含填充规则、容差预算、交点数、规则敏感像素数、不确定像素数与内容哈希的轨迹日志；相同输入与参数下覆盖率图、填充位图与日志逐字节一致，日志不得以时间戳或运行时长作为判定依据，后台光栅化任务在采样块检查点响应协作式取消并保留上一份已发布位图。
+## 当前实现
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 路径入口支持直线、二次贝塞尔、三次贝塞尔、子轮廓方向标记、孔洞角色和双填充规则声明。
+- 贝塞尔曲线使用 de Casteljau 自适应展平，离散弦段作为单调段参与射线穿越计算。
+- 每个采样像素输出 `winding[lower, upper]`、`crossings[lower, upper]`、最近边界距离、
+  两规则结论和判定来源。
+- 同时生成非零、奇偶两套覆盖率图、逐像素差异图、填充位图、像素来源图和逐像素轨迹。
+- 容差预算包含顶点合并、交点归类和采样距离阈值；预算分析会重算不确定区间并输出新旧下界差异。
+- 入口注入在 JSON 路径校验和光栅化之前执行；注入失败不会创建输出目录或写任何位图。
+- 输出用临时文件加原子重命名发布；采样块取消时不发布半成品，已有位图保持不变。
+- Qt 预览器是可选构建项，核心不依赖 Qt。
 
-验收：
-使用本地样本验证双规则填充判定、规则敏感与不确定像素诊断、容差预算记录及异常注入拒绝，并确认位图与轨迹日志逐字节可复现。
+## 构建
+
+要求 CMake 3.20+、支持 C++17 的编译器。
+
+### Windows / Visual Studio 2022
+
+```powershell
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+.\build\Release\fill_pipeline.exe --help
+```
+
+可选 Qt 5.15 / Qt 6 Widgets 预览器：
+
+```powershell
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 `
+  -DFILL_PIPELINE_BUILD_QT_PREVIEW=ON `
+  -DCMAKE_PREFIX_PATH=C:\Qt\6.5.3\msvc2019_64
+cmake --build build --config Release
+.\build\Release\fill_preview.exe .\out\fill_bitmap.ppm
+```
+
+### Linux / GCC 或 Clang
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+```
+
+## 路径 JSON 格式
+
+坐标按世界坐标保存，默认 y 轴向上。`direction` 必须与几何有向面积一致；不一致时返回
+`E_FILL_RULE_CONFLICT`。每条子轮廓必须显式回到起点，或声明 `"closed": true` 由入口补一条闭合直线段。
+
+```json
+{
+  "fillRule": "nonzero",
+  "budget": {
+    "vertexMerge": 0.001,
+    "intersectionClassify": 0.001,
+    "sampleDistance": 0.01,
+    "totalLimit": 2.0
+  },
+  "contours": [
+    {
+      "start": [0, 0],
+      "direction": "ccw",
+      "role": "outer",
+      "segments": [
+        {"type": "line", "to": [100, 0]},
+        {"type": "quadratic", "control1": [110, 20], "to": [100, 40]},
+        {"type": "cubic", "control1": [80, 60],
+         "control2": [20, 60], "to": [0, 40]},
+        {"type": "line", "to": [0, 0]}
+      ]
+    },
+    {
+      "start": [20, 20],
+      "direction": "cw",
+      "role": "hole",
+      "segments": [
+        {"type": "line", "to": [20, 60]},
+        {"type": "line", "to": [80, 60]},
+        {"type": "line", "to": [80, 20]},
+        {"type": "line", "to": [20, 20]}
+      ]
+    }
+  ]
+}
+```
+
+兼容字段别名包括 `subpaths`、`fill_rule`、`orientation`、`control1/control/controlPoint1`、
+`to/end/point` 等。点可写成 `[x, y]` 或 `{"x": ..., "y": ...}`。
+
+解析规则：
+
+- `fillRule` 缺失或非法：`E_PATH_INVALID`。
+- 子轮廓方向、段类型、起点、终点或控制点缺失：`E_PATH_INVALID`，并带 `contour`/`segment`。
+- 坐标非有限：`E_PATH_INVALID`，并带定位。
+- 未闭合或显式 `"closed": false`：`E_PATH_INVALID`。
+- 零面积自然轮廓：`E_ZERO_AREA_CONTOUR`。
+- 方向标记与几何方向矛盾，或 `role:"hole"` 在非零规则下与父轮廓同向：
+  `E_FILL_RULE_CONFLICT`，`relatedContours` 列出涉及子轮廓。
+- 任一容差非有限、为零、为负，或三项之和超过 `totalLimit`：`E_TOLERANCE_INVALID`。
+
+## 环绕数与不确定区间
+
+对每个像素中心，向世界坐标左侧投射水平射线：
+
+1. 展平后的每条单调弦段若明确穿越射线，按 y 方向贡献 `+1/-1`。
+2. 穿越位置落入 `intersectionClassify` 容差带，或端点落入容差带时，不猜测归类，而是把
+   对应贡献记入可能区间。
+3. 最近边界距离小于 `sampleDistance` 时，同样扩展上下界并标记不确定。
+4. `windingLower` 是所有可能负贡献的最坏情况，`windingUpper` 是所有可能正贡献的最坏情况。
+5. 非零规则只有在 `[lower, upper]` 完全在零的一侧时才是确定实心；奇偶规则只有在穿越数
+   区间两端奇偶性相同时才是确定结论。
+6. 两规则均确定且结论不同时标记 `rule_sensitive`；任一区间不确定时标记 `uncertain`。
+
+不确定像素在覆盖率图和填充图中写 `128`，在 `pixel_source.pgm` 中写 `170`；规则敏感像素
+写 `85`。不确定像素绝不会被静默写成实心 `255` 或镂空 `0`。
+
+## 容差预算与收紧顺序
+
+三项容差共享一个总预算，且顺序固定为：
+
+1. `intersection_classify`
+2. `sample_distance`
+3. `vertex_merge`
+
+该顺序是编译期固定值，不随路径或参数改变。`result.json` 的 `budgetAnalysis.impacts`
+分别给出将每项减半后的不确定像素数、覆盖面积偏差和差值；
+`budgetAnalysis.toleranceComparison` 给出旧/新预算下的下界变化像素数、变化直方图及上下界差异总和。
+
+## 命令行
+
+```bash
+# 生成确定性样本、基线与 manifest
+./build/fill_pipeline generate-samples --out samples --width 64 --height 64
+
+# 渲染
+./build/fill_pipeline render \
+  --input samples/nested_hole.json \
+  --out out/nested_hole
+
+# CLI 预算覆盖路径内预算
+./build/fill_pipeline render --input path.json --out out \
+  --budget 0.001,0.001,0.01,2.0
+
+# 入口注入；失败返回码 2，且不创建 out
+./build/fill_pipeline render --input path.json --out out --inject nonfinite
+
+# 提交门禁
+./build/fill_pipeline submit --result out/nested_hole/result.json
+```
+
+注入名称与独立业务码：
+
+| `--inject` | 业务码 |
+| --- | --- |
+| `overlap-edge` | `E_INJECT_OVERLAP_EDGE` |
+| `degenerate-segment` | `E_INJECT_DEGENERATE_SEGMENT` |
+| `zero-area` | `E_INJECT_ZERO_AREA_CONTOUR` |
+| `hole-direction` | `E_INJECT_HOLE_DIRECTION` |
+| `nonfinite` | `E_INJECT_NONFINITE_COORD` |
+
+注入错误均带 `injected:true`、`injectionClass`、`contour`、`segment` 和 `relatedContours`。
+
+退出码：
+
+- `0`：渲染成功或提交成功。
+- `1`：参数或 I/O 错误。
+- `2`：路径、容差、规则冲突或渲染参数错误。
+- `4`：协作式取消。
+- `9`：提交被降级结果门禁拒绝，业务码 `E_DEGRADED_RESULT` 或
+  `E_RESULT_NOT_COMMITTABLE`。
+
+## 输出文件
+
+| 文件 | 内容 |
+| --- | --- |
+| `result.json` | 规则、预算分析、诊断、指标、哈希、降级与提交门禁 |
+| `trace.jsonl` | 无时间戳的确定性运行轨迹及近重合/退化/孤立/歧义事件 |
+| `pixel_trace.jsonl` | 每个像素的上下界、穿越上下界、规则结论、来源与边界距离 |
+| `coverage_nonzero.pgm` | 非零规则覆盖率图，`0/128/255` |
+| `coverage_evenodd.pgm` | 奇偶规则覆盖率图，`0/128/255` |
+| `coverage_diff.pgm/.ppm` | 逐像素规则差异与不确定区域 |
+| `fill_bitmap.pgm/.ppm` | 按声明规则生成的填充位图 |
+| `pixel_source.pgm` | `0` 一致、`85` 规则敏感、`170` 不确定 |
+| `normalized_path.json` | 规范化顶点、段、控制点、方向、有向面积与包围盒 |
+
+`contentHash` 是对固定顺序的输出文件内容做 SHA-256 聚合；同一路径和参数下图像、轨迹和
+`result.json` 逐字节一致。日志不含时间戳、运行时长、绝对输出目录或随机数。
+
+## 样本与回归
+
+随附生成器产生 9 个样本：孔洞、三层嵌套、同向嵌套、偶奇嵌套、部分重合、贝塞尔混合、极短退化段、
+近重合边和宽松容差不确定区。`samples/manifest.json` 保存 PGM 基线覆盖率哈希。
+
+Linux 或 WSL：
+
+```bash
+bash scripts/run_regression.sh build regression-out
+```
+
+Windows PowerShell：
+
+```powershell
+.\scripts\run_regression.ps1 -BuildDir .\build -WorkDir .\regression-out
+```
+
+回归脚本会：
+
+- 生成样本并渲染两次，逐文件比较；
+- 将覆盖率 PGM 与 manifest 基线哈希比较；
+- 逐一验证五类入口注入在写出任何图像前被拒绝；
+- 验证取消返回 `E_CANCELLED` 且上一份 `fill_bitmap.pgm` 未变化；
+- 验证可提交结果成功，规则敏感降级结果返回 `E_DEGRADED_RESULT`。
+
+## 实际验证结果
+
+当前环境为 Linux、GCC 15.2、CMake 3.30.5。`ctest` 与 9 样本回归均通过；
+Windows PowerShell 脚本已提供，但当前执行环境无法直接运行 Windows/MSVC 验证。
+当前环境未安装 Qt，因此可选 `fill_preview` 未编译执行；PPM/PGM 产物已由回归逐字节验证。
+
+64×64 网格代表性结果：
+
+| 样本 | 交点 | 近重合对 | 退化段 | 规则敏感 | 不确定 | 状态 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `nested_hole.json` | 0 | 0 | 0 | 0 | 0 | ok |
+| `nested_same_direction.json` | 0 | 0 | 0 | 912 | 0 | degraded |
+| `evenodd_nested.json` | 0 | 0 | 0 | 0 | 0 | ok |
+| `three_contours.json` | 0 | 0 | 0 | 0 | 106 | ok |
+| `overlap_pair.json` | 2 | 0 | 0 | 400 | 0 | degraded |
+| `bezier_hole.json` | 0 | 0 | 0 | 0 | 122 | ok |
+| `degenerate_short.json` | 0 | 0 | 1 | 0 | 0 | ok |
+| `near_coincident.json` | 9 | 4 | 0 | 3100 | 0 | degraded |
+| `tolerance_ambiguity.json` | 0 | 0 | 0 | 748 | 1160 | degraded |
+
+回归摘要：
+
+```text
+baseline ok: 9 samples
+regression ok: 9 samples, baseline hashes match, outputs deterministic,
+cancellation preserved bitmap
+```
+
+## 数值边界
+
+- 贝塞尔求交基于自适应展平后的单调弦段，精度由交点归类容差和展平递归上限控制，不是解析根求解。
+- 采样为像素中心点采样，包围盒自动适配到 `[1, width-1] × [1, height-1]`。
+- `isolated` 的含义是“在本次确定性采样网格上未产生任何射线穿越贡献”，用于诊断不影响
+  环绕数的水平/切向段。
+- 规则敏感或不确定像素合计超过 `--degrade-ratio`（默认 `0.05`）时，结果标记降级且
+  `committable:false`；提交接口拒绝降级结果。
