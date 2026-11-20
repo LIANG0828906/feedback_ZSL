@@ -1,0 +1,107 @@
+{
+  "actions": [
+    [
+      {
+        "player_id": 1,
+        "type": "skill"
+      },
+      {
+        "player_id": 2,
+        "type": "skill"
+      }
+    ],
+    [
+      {
+        "player_id": 1,
+        "type": "defend"
+      },
+      {
+        "player_id": 2,
+        "type": "charge"
+      }
+    ],
+    [
+      {
+        "player_id": 1,
+        "type": "charge"
+      },
+      {
+        "player_id": 2,
+        "type": "attack"
+      }
+    ],
+    [
+      {
+        "player_id": 1,
+        "type": "defend"
+      },
+      {
+        "player_id": 2,
+        "type": "skill"
+      }
+    ],
+    [
+      {
+        "player_id": 1,
+        "type": "attack"
+      },
+      {
+        "player_id": 2,
+        "type": "skill"
+      }
+    ],
+    [
+      {
+        "player_id": 1,
+        "type": "defend"
+      },
+      {
+        "player_id": 2,
+        "type": "charge"
+      }
+    ],
+    [
+      {
+        "player_id": 1,
+        "type": "charge"
+      },
+      {
+        "player_id": 2,
+        "type": "attack"
+      }
+    ],
+    [
+      {
+        "player_id": 1,
+        "type": "attack"
+      },
+      {
+        "player_id": 2,
+        "type": "defend"
+      }
+    ]
+  ],
+  "initial_state": {
+    "players": [
+      {
+        "energy": 40,
+        "hp": 160,
+        "id": 1,
+        "shield": 0
+      },
+      {
+        "energy": 40,
+        "hp": 160,
+        "id": 2,
+        "shield": 0
+      }
+    ]
+  },
+  "match_id": "tight_budget_s05",
+  "rng_seed": 505,
+  "turn_budget": {
+    "compute": 500,
+    "memory": 500
+  },
+  "turn_count": 8
+}

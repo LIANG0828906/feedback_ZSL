@@ -1,0 +1,43 @@
+{
+  "compute_budget": 10000,
+  "matches": [
+    {
+      "baseline": "samples/baselines/small_s01.baseline.json",
+      "match_id": "small_s01",
+      "sample": "samples/matches/small_s01.json",
+      "seed": 101,
+      "turn_count": 6
+    },
+    {
+      "baseline": "samples/baselines/small_s02.baseline.json",
+      "match_id": "small_s02",
+      "sample": "samples/matches/small_s02.json",
+      "seed": 202,
+      "turn_count": 6
+    },
+    {
+      "baseline": "samples/baselines/medium_s03.baseline.json",
+      "match_id": "medium_s03",
+      "sample": "samples/matches/medium_s03.json",
+      "seed": 303,
+      "turn_count": 12
+    },
+    {
+      "baseline": "samples/baselines/large_s04.baseline.json",
+      "match_id": "large_s04",
+      "sample": "samples/matches/large_s04.json",
+      "seed": 404,
+      "turn_count": 20
+    },
+    {
+      "baseline": null,
+      "expect_error": "E_BUDGET_EXCEEDED",
+      "match_id": "tight_budget_s05",
+      "sample": "samples/matches/tight_budget_s05.json",
+      "seed": 505,
+      "turn_count": 8
+    }
+  ],
+  "memory_budget": 10000,
+  "version": "1.0.0"
+}
