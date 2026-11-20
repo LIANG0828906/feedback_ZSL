@@ -1,22 +1,181 @@
-本地有一批合成的三维标量体数据（密度场与标注分割掩码，格式为自定义二进制头加原始体素），需要在桌面端构建一个可直接集成的体渲染组件与示例应用，用于医学可视化的窗宽窗位调节与传递函数编辑。渲染管线要求把标量场的归一化、窗口映射、传递函数查表、梯度光照与前向 alpha 合成串成一条可校准的链路，核心难点在于数值精度沿链路的误差传播：从体素归一化到累积不透明度，任何一步的量化都会在投射光线合成中被放大，必须在浮点与定点之间做出取舍并让误差可控、可观测。组件需输出每次渲染的误差估计与收敛状态，供使用者判断当前传递函数在低不透明度区间是否可信，并支持在样本数据上复现同一视角下逐像素一致的渲染结果。由于渲染全部在 NumPy 中完成、界面只负责交互与显示，误差模型与显示管线之间必须保持同一套数值语义。
+# NumPy Deterministic Volume Renderer
 
-任务环境与准备：
-安装 Python 3.10 及以上，使用 pip 安装 numpy、PyQt5，确认本地 Python 环境可正常导入并运行无窗口脚本。
-在工作区创建项目目录，放入体数据生成器与自定义头格式说明，生成至少 64×64×64 单通道样本与带分割掩码样本，并记录样本的哈希与生成参数。
-准备一组脚本化视角与传递函数控制点用例，包含合法与非法控制点、两种精度模式与损坏快照样本，用于异常码与复现路径的检查。
-在 Windows 上确认 PyQt5 窗口可创建、QImage 可构造，记录所用 Python 与 numpy 版本作为误差比较的平台事实。
+桌面端可直接集成的三维标量体渲染组件与 PyQt5 示例应用。渲染、归一化、
+传递函数、光照、前向 alpha 合成和误差传播全部在 NumPy 中完成；界面只负责
+交互、显示和把核心结果转换为 `QImage`。
 
-业务要求：
-1. 实现体数据加载与归一化模块：解析自定义头（维度、体素间距、标量类型、窗宽窗位），把标量映射到 [0,1] 浮点并在加载时记录归一化参考值与真值来源；窗口或间距变化后需重新计算映射并输出新旧映射的最大绝对偏差，不得静默复用旧缓存。
-2. 实现传递函数编辑与查表：支持分段线性不透明度与颜色控制点，编辑后重建 LUT 并给出每个控制点区间的不透明度误差上界；控制点必须单调递增且相邻颜色插值连续，非法控制点或越界须返回业务码 E_TF_INVALID 并保留上一版 LUT 生效。
-3. 实现前向 alpha 合成器：沿光线按固定步长采样并累积不透明度，合成结果采用浮点计算，但须同时输出每像素累积误差估计（基于 LUT 量化步长与采样权重），并提供误差阈值判定，超过阈值的像素标记为不可信而不是直接输出颜色。
-4. 实现梯度光照与法向估算：使用中心差分计算梯度并做归一化，光照结果要与合成在同一浮点路径；必须处理边界体素与零梯度，保证不同采样步长下同一像素光照值的偏差在声明容差内，并在超差时以 E_LIGHT_DRIFT 报告。
-5. 实现精度模式切换：提供浮点与定点两条 LUT 量化路径，切换后必须重新渲染并输出两种模式在同一视角下的像素差异统计与误差传播对比，切换不得改变传递函数语义；模式非法或未初始化时返回 E_MODE_INVALID。
-6. 实现确定性渲染与结果复现：固定视角、步长与传递函数时，连续两次渲染的像素缓冲区逐字节一致；渲染结果须带内容哈希与误差摘要写入快照，快照整体替换时需识别版本变化（LUT、视角、步长、精度模式）并在不匹配时返回 E_SNAPSHOT_STALE。
-7. 实现渲染快照的保存与载入：快照包含视角矩阵、步长、LUT 控制点、精度模式与误差统计；载入后必须校验哈希与版本并可继续增量重渲染，损坏或字段缺失的快照以 E_SNAPSHOT_INVALID 中止，不得部分应用。
-8. 实现示例应用与确定性样本：提供体数据生成器与脚本化渲染入口，界面支持窗宽窗位拖动、传递函数编辑、精度模式切换与误差热力图显示；并发渲染只允许一个任务，重复提交返回 E_BUSY，异常时释放离屏缓冲并保留可恢复状态。
+项目包含：
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 72 字节自定义体数据头 + 原始体素读写，带 payload/header CRC32。
+- 64×64×64 确定性密度体与四类分割掩码样本，记录 SHA-256 和生成参数。
+- 分段线性不透明度/颜色传递函数，浮点与 12-bit 定点 LUT。
+- 固定步长光线投射、中心差分梯度、归一化法向、共享浮点合成路径。
+- 每像素累积误差估计、可信度阈值、收敛状态和误差热力图。
+- 内容哈希、版本哈希、完整快照保存/恢复和 `E_SNAPSHOT_STALE` 检测。
+- 单飞渲染会话（`E_BUSY`）、异常时离屏缓冲释放和最后成功帧保留。
 
-验收：
-在本地合成体数据上验证渲染链路、误差传播统计、精度模式对比与快照复现的一致性及异常码。
+## Quick Start
+
+Python 3.10+。本机验证时 Python 3.14 暂无可用 PyQt5 wheel，因此项目虚拟环境
+使用 Python 3.13。
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+
+python scripts/generate_samples.py
+python scripts/build_cases.py
+python -m volrender.render_demo --mask samples/segmentation_64.vol
+python -m volrender.app
+```
+
+无窗口测试：
+
+```bash
+QT_QPA_PLATFORM=offscreen python -m unittest discover -s tests -v
+```
+
+验收复现：
+
+```bash
+python scripts/verify_acceptance.py
+python scripts/platform_smoke.py
+```
+
+Windows PowerShell 对应命令：
+
+```powershell
+py -3.11 -m pip install numpy PyQt5
+py -3.11 scripts\platform_smoke.py
+py -3.11 -m unittest discover -s tests -v
+```
+
+## Project Layout
+
+| Path | Purpose |
+| --- | --- |
+| `volrender/format.py` | 自定义头、CRC、体素文件读写 |
+| `volrender/volume.py` | 归一化、窗宽窗位、间距重映射与映射差异 |
+| `volrender/transfer.py` | 控制点校验、浮点/定点 LUT、区间误差上界 |
+| `volrender/render.py` | 光线投射、光照、alpha 合成、误差传播、快照 API |
+| `volrender/snapshot.py` | 快照编码、哈希/版本校验、事务式恢复 |
+| `volrender/session.py` | 单任务并发约束和错误恢复 |
+| `volrender/app.py` | PyQt5 示例应用 |
+| `volrender/render_demo.py` | 脚本化、无 GUI 渲染入口 |
+| `samples/` | 64³ 密度体、分割掩码、manifest |
+| `cases/` | 视角/TF/精度/损坏与过期快照用例 |
+| `docs/` | 格式、数值语义、验收记录 |
+
+## Component API
+
+```python
+from volrender import (
+    RenderSession,
+    TransferFunction,
+    VolumeData,
+    VolumeRenderer,
+    VolRenderError,
+)
+
+volume = VolumeData.from_file("samples/density_64.vol")
+tf = TransferFunction([
+    (0.00, 0.00, 0.0, 0.0, 0.0),
+    (0.45, 0.18, 1.0, 0.7, 0.2),
+    (1.00, 0.94, 1.0, 1.0, 1.0),
+])
+renderer = VolumeRenderer(
+    volume=volume,
+    transfer=tf,
+    mode="float",
+    step=1.0,
+    image_size=(96, 96),
+    error_threshold=1.0e-3,
+)
+session = RenderSession(renderer)
+result = session.submit_render()
+
+print(result.content_hash)
+print(result.error_summary.as_dict())
+print(result.untrusted.sum())       # 不可信像素
+print(result.error_map)             # 与显示管线同源的误差图
+```
+
+编辑失败不会替换旧 LUT：
+
+```python
+try:
+    renderer.set_transfer_points(invalid_points)
+except VolRenderError as exc:
+    assert exc.code == "E_TF_INVALID"
+    # renderer.transfer / renderer.lut 仍是上一版
+```
+
+精度切换会同时渲染两条路径并返回像素差和误差传播对比：
+
+```python
+report = renderer.set_precision("fixed")
+print(report.comparison.as_dict())
+```
+
+## GUI Controls
+
+- 拖动/释放 Width、Level 滑块时重建窗映射，并在状态栏显示映射版本和
+  `max|delta|`。
+- TF 表格可增删点并编辑 `x/opacity/R/G/B`；非法编辑显示
+  `E_TF_INVALID`，表格恢复为当前仍生效的旧控制点。
+- 精度下拉框切换到 float/fixed 时自动双路径渲染，并显示像素差和最大误差。
+- `Show error heat map` 直接显示核心 `error_map / threshold` 的显示映射。
+- `Compare Precision` 与 `Audit Lighting Drift` 可单独重放检查。
+- `Save/Load Snapshot` 使用原子写入、整体校验和恢复，失败时保留最后成功帧。
+
+## Business Error Codes
+
+| Code | Meaning |
+| --- | --- |
+| `E_TF_INVALID` | 控制点非单调、重复、越界或非数值；旧 LUT 继续生效 |
+| `E_MODE_INVALID` | 精度模式非法或渲染器未初始化 |
+| `E_LIGHT_DRIFT` | 步长细化后的逐像素光照偏差超过声明容差 |
+| `E_SNAPSHOT_INVALID` | 快照损坏、字段缺失、内容哈希/完整性哈希不符 |
+| `E_SNAPSHOT_STALE` | 视角、步长、LUT、模式或映射版本与状态哈希不一致 |
+| `E_BUSY` | 已有渲染任务在执行 |
+
+## Verified Platforms
+
+| Platform | Python | NumPy | PyQt5 / Qt | Window | QImage |
+| --- | --- | --- | --- | --- | --- |
+| Windows 10 (10.0.26300) | 3.11.9 | 1.26.4 | 5.15.11 / 5.15.2 | created | constructed |
+| WSL2 Ubuntu 26.04 | 3.13.18 | 2.5.5 | 5.15.11 / 5.15.14 | created | constructed |
+
+同一 48×48 视角下，两端浮点内容哈希均为
+`d0bb1f6a1b74ce5ff671fc0880609cd044402bcaecf5b7730c315edd1bbd024a`，
+定点内容哈希均为
+`d11724dd8f737260bec1268c9a4beb0a05dffeebe13fff3b2e2e58babb72cf97`。
+详见 [docs/VERIFICATION.md](docs/VERIFICATION.md)。
+
+## Numerical Contract
+
+- 归一化使用加载时记录的原始标量 `min/max`，窗口参数以原始标量单位解释。
+- 所有采样、LUT 插值、梯度和合成计算使用 `float64`；仅最终显示缓冲量化到
+  8-bit RGBA。
+- 浮点/定点模式只改变 LUT 值量化，不改变控制点、采样位置或合成语义。
+- 误差图使用 LUT 量化误差、透射率、有效 alpha、颜色量化和采样权重传播得到。
+- 超过阈值的像素最终 RGBA 置零，不被当作可信颜色显示。
+- 内容哈希覆盖显示 RGBA、浮点误差图和不可信掩码。
+
+完整公式见 [docs/TECHNICAL.md](docs/TECHNICAL.md)。
+
+## Format and Fixtures
+
+自定义头格式见 [docs/FORMAT.md](docs/FORMAT.md)。
+
+样本哈希：
+
+- `samples/density_64.vol`:
+  `5501875c09bc4482b2d748519e656ee369324f70ea39f2a0364ee404967fb37b`
+- `samples/segmentation_64.vol`:
+  `dd130bf0ae9735636de043573723ddec9db075927b10b8341638f137aecce340`
+
+`cases/cases.json` 包含合法/非法传递函数、两种精度模式、两个脚本化视角；
+`cases/snapshots/` 包含两组合法快照及截断、内容篡改、字段缺失、视角/步长
+版本过期快照。

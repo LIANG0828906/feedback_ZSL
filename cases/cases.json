@@ -1,0 +1,292 @@
+{
+  "precision_modes": [
+    {
+      "expected_code": "OK",
+      "name": "float"
+    },
+    {
+      "expected_code": "OK",
+      "name": "fixed"
+    },
+    {
+      "expected_code": "E_MODE_INVALID",
+      "name": "int8"
+    }
+  ],
+  "schema_version": 1,
+  "snapshot_cases": [
+    {
+      "expected_code": "OK",
+      "file": "snapshots/good_float.volsnap.json",
+      "name": "good_float"
+    },
+    {
+      "expected_code": "OK",
+      "file": "snapshots/good_fixed.volsnap.json",
+      "name": "good_fixed"
+    },
+    {
+      "expected_code": "E_SNAPSHOT_INVALID",
+      "file": "snapshots/corrupt_truncated.volsnap.json",
+      "name": "corrupt_truncated"
+    },
+    {
+      "expected_code": "E_SNAPSHOT_INVALID",
+      "file": "snapshots/corrupt_content.volsnap.json",
+      "name": "corrupt_content"
+    },
+    {
+      "expected_code": "E_SNAPSHOT_INVALID",
+      "file": "snapshots/corrupt_missing_field.volsnap.json",
+      "name": "corrupt_missing_field"
+    },
+    {
+      "expected_code": "E_SNAPSHOT_STALE",
+      "file": "snapshots/stale_view.volsnap.json",
+      "name": "stale_view"
+    },
+    {
+      "expected_code": "E_SNAPSHOT_STALE",
+      "file": "snapshots/stale_step.volsnap.json",
+      "name": "stale_step"
+    }
+  ],
+  "transfer_functions": [
+    {
+      "expected_code": "OK",
+      "name": "medical_default",
+      "points": [
+        {
+          "b": 0.0,
+          "g": 0.0,
+          "opacity": 0.0,
+          "r": 0.0,
+          "x": 0.0
+        },
+        {
+          "b": 0.95,
+          "g": 0.42,
+          "opacity": 0.01,
+          "r": 0.18,
+          "x": 0.12
+        },
+        {
+          "b": 0.18,
+          "g": 0.62,
+          "opacity": 0.16,
+          "r": 0.95,
+          "x": 0.42
+        },
+        {
+          "b": 0.74,
+          "g": 0.88,
+          "opacity": 0.58,
+          "r": 1.0,
+          "x": 0.72
+        },
+        {
+          "b": 1.0,
+          "g": 1.0,
+          "opacity": 0.94,
+          "r": 1.0,
+          "x": 1.0
+        }
+      ]
+    },
+    {
+      "expected_code": "OK",
+      "name": "low_opacity",
+      "points": [
+        {
+          "b": 0.3,
+          "g": 0.15,
+          "opacity": 0.0,
+          "r": 0.1,
+          "x": 0.0
+        },
+        {
+          "b": 0.9,
+          "g": 0.45,
+          "opacity": 0.002,
+          "r": 0.2,
+          "x": 0.25
+        },
+        {
+          "b": 0.95,
+          "g": 0.75,
+          "opacity": 0.012,
+          "r": 0.45,
+          "x": 0.5
+        },
+        {
+          "b": 0.2,
+          "g": 0.65,
+          "opacity": 0.05,
+          "r": 1.0,
+          "x": 0.75
+        },
+        {
+          "b": 1.0,
+          "g": 1.0,
+          "opacity": 0.12,
+          "r": 1.0,
+          "x": 1.0
+        }
+      ]
+    },
+    {
+      "expected_code": "E_TF_INVALID",
+      "name": "invalid_nonmonotonic",
+      "points": [
+        {
+          "b": 0,
+          "g": 0,
+          "opacity": 0.0,
+          "r": 0,
+          "x": 0.0
+        },
+        {
+          "b": 0.5,
+          "g": 0.5,
+          "opacity": 0.2,
+          "r": 0.5,
+          "x": 0.7
+        },
+        {
+          "b": 1,
+          "g": 1,
+          "opacity": 0.5,
+          "r": 1,
+          "x": 0.4
+        }
+      ]
+    },
+    {
+      "expected_code": "E_TF_INVALID",
+      "name": "invalid_duplicate_x",
+      "points": [
+        {
+          "b": 0,
+          "g": 0,
+          "opacity": 0.0,
+          "r": 0,
+          "x": 0.0
+        },
+        {
+          "b": 0.5,
+          "g": 0.5,
+          "opacity": 0.2,
+          "r": 0.5,
+          "x": 0.5
+        },
+        {
+          "b": 1,
+          "g": 1,
+          "opacity": 0.5,
+          "r": 1,
+          "x": 0.5
+        }
+      ]
+    },
+    {
+      "expected_code": "E_TF_INVALID",
+      "name": "invalid_color_range",
+      "points": [
+        {
+          "b": 0,
+          "g": 0,
+          "opacity": 0.0,
+          "r": 0,
+          "x": 0.0
+        },
+        {
+          "b": 1,
+          "g": 1,
+          "opacity": 0.5,
+          "r": 1.2,
+          "x": 1.0
+        }
+      ]
+    },
+    {
+      "expected_code": "E_TF_INVALID",
+      "name": "invalid_nan",
+      "points": [
+        {
+          "b": 0,
+          "g": 0,
+          "opacity": 0.0,
+          "r": 0,
+          "x": 0.0
+        },
+        {
+          "b": 1,
+          "g": 1,
+          "opacity": "nan",
+          "r": 1,
+          "x": 1.0
+        }
+      ]
+    }
+  ],
+  "views": [
+    {
+      "matrix": [
+        [
+          0.7831108474982937,
+          0.6218821436015863,
+          -0.0,
+          7.627756716042917e-15
+        ],
+        [
+          -0.4033676237214703,
+          0.5079444150566662,
+          0.7611090797947662,
+          2.7790231354471975e-15
+        ],
+        [
+          0.47332014605739997,
+          -0.5960327765167258,
+          0.648623903856437,
+          -182.54029692098126
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "name": "default"
+    },
+    {
+      "matrix": [
+        [
+          0.3162277660168379,
+          0.9486832980505138,
+          -0.0,
+          3.6637359812630166e-15
+        ],
+        [
+          -0.42217579974695424,
+          0.14072526658231804,
+          0.8955244237056604,
+          5.88418203051333e-15
+        ],
+        [
+          0.8495690637658717,
+          -0.2831896879219572,
+          0.44501236673450423,
+          -123.59207094308277
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "name": "oblique"
+    }
+  ]
+}

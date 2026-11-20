@@ -1,0 +1,53 @@
+{
+  "files": {
+    "density_64.vol": {
+      "bytes": 524360,
+      "dtype": "int16",
+      "max": 319,
+      "min": 0,
+      "sha256": "5501875c09bc4482b2d748519e656ee369324f70ea39f2a0364ee404967fb37b",
+      "top_counts": {
+        "10": 33805,
+        "101": 1801,
+        "102": 1811,
+        "6": 33809,
+        "7": 27963,
+        "8": 23697,
+        "9": 27958,
+        "99": 1809
+      },
+      "unique_values": 209
+    },
+    "segmentation_64.vol": {
+      "bytes": 262216,
+      "dtype": "uint8",
+      "labels": {
+        "0": 147512,
+        "1": 78737,
+        "2": 637,
+        "3": 354,
+        "4": 34904
+      },
+      "sha256": "dd130bf0ae9735636de043573723ddec9db075927b10b8341638f137aecce340"
+    }
+  },
+  "format": "VRVOL001-header72",
+  "parameters": {
+    "density_dtype": "int16",
+    "generator": "analytic-medical-phantom-v1",
+    "mask_dtype": "uint8",
+    "seed": "deterministic-no-random",
+    "shape_xyz": [
+      64,
+      64,
+      64
+    ],
+    "spacing_xyz": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "window_level": 120.0,
+    "window_width": 260.0
+  }
+}
