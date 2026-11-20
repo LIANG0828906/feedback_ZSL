@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sciworkbench"
+version = "0.1.0"
+description = "Deterministic fixed-point scientific image-sequence workbench"
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.23"]
+
+[project.optional-dependencies]
+gui = ["PyQt5>=5.15"]
+test = ["pytest>=7"]
+
+[project.scripts]
+sciworkbench = "sciworkbench.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["sciworkbench*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
