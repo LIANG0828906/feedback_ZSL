@@ -1,0 +1,8 @@
+# EdgeKV deterministic sample v1
+# now is the injected logical clock used by the demo. No wall-clock time is read.
+now=1700000100
+PUT	stable-node	value-stable	0
+PUT	session:old	token-old	1700000000
+PUT	doomed-node	value-doomed	0
+DELETE	doomed-node	0
+PUT	session:fresh	token-new	1700000200
