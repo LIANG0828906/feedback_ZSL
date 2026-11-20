@@ -1,0 +1,26 @@
+{
+  "description": "one short rectangular pulse",
+  "device": {
+    "limiter": "hard",
+    "max": 1.0,
+    "min": -1.0,
+    "soft_knee_ratio": 0.8
+  },
+  "motor_map": {
+    "left_polarity": 1,
+    "left_ratio": 0.9,
+    "right_polarity": 1,
+    "right_ratio": 0.7
+  },
+  "name": "single_short",
+  "sample_rate": 1000,
+  "segments": [
+    {
+      "amplitude": 0.55,
+      "duration_ms": 40,
+      "envelope": "rectangular",
+      "frequency_hz": 35,
+      "start_ms": 0
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "description": "eight heavily overlapping segments with soft limiting",
+  "device": {
+    "limiter": "soft",
+    "max": 1.0,
+    "min": -1.0,
+    "soft_knee_ratio": 0.7
+  },
+  "motor_map": {
+    "left_polarity": 1,
+    "left_ratio": 0.85,
+    "right_polarity": 1,
+    "right_ratio": 0.75
+  },
+  "name": "dense_soft",
+  "sample_rate": 2000,
+  "segments": [
+    {
+      "amplitude": 0.8,
+      "duration_ms": 180,
+      "envelope": "sine",
+      "frequency_hz": 20,
+      "start_ms": 0
+    },
+    {
+      "amplitude": 0.75,
+      "duration_ms": 200,
+      "envelope": "linear_decay",
+      "frequency_hz": 33,
+      "start_ms": 35
+    },
+    {
+      "amplitude": 0.7,
+      "duration_ms": 190,
+      "envelope": "rectangular",
+      "frequency_hz": 47,
+      "right_polarity": -1,
+      "start_ms": 80
+    },
+    {
+      "amplitude": 0.65,
+      "duration_ms": 170,
+      "envelope": "sine",
+      "frequency_hz": 62,
+      "start_ms": 115
+    },
+    {
+      "amplitude": 0.9,
+      "duration_ms": 180,
+      "envelope": "linear_decay",
+      "frequency_hz": 29,
+      "start_ms": 145
+    },
+    {
+      "amplitude": 0.55,
+      "duration_ms": 210,
+      "envelope": "rectangular",
+      "frequency_hz": 81,
+      "start_ms": 190
+    },
+    {
+      "amplitude": 0.85,
+      "duration_ms": 160,
+      "envelope": "sine",
+      "frequency_hz": 14,
+      "left_polarity": -1,
+      "start_ms": 230
+    },
+    {
+      "amplitude": 0.7,
+      "duration_ms": 185,
+      "envelope": "linear_decay",
+      "frequency_hz": 53,
+      "left_ratio": 1.1,
+      "right_ratio": 0.45,
+      "start_ms": 275
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "samples": [
+    {
+      "envelopes": [
+        "linear_decay",
+        "rectangular",
+        "sine"
+      ],
+      "file": "cancel_long.json",
+      "limiter": "hard",
+      "name": "cancel_long",
+      "sample_rate": 8000,
+      "segments": 3
+    },
+    {
+      "envelopes": [
+        "linear_decay",
+        "rectangular",
+        "sine"
+      ],
+      "file": "dense_soft.json",
+      "limiter": "soft",
+      "name": "dense_soft",
+      "sample_rate": 2000,
+      "segments": 8
+    },
+    {
+      "envelopes": [
+        "linear_decay",
+        "rectangular",
+        "sine"
+      ],
+      "file": "mixed_envelopes.json",
+      "limiter": "hard",
+      "name": "mixed_envelopes",
+      "sample_rate": 2000,
+      "segments": 5
+    },
+    {
+      "envelopes": [
+        "rectangular"
+      ],
+      "file": "single_short.json",
+      "limiter": "hard",
+      "name": "single_short",
+      "sample_rate": 1000,
+      "segments": 1
+    },
+    {
+      "envelopes": [
+        "linear_decay",
+        "rectangular",
+        "sine"
+      ],
+      "file": "three_overlap.json",
+      "limiter": "hard",
+      "name": "three_overlap",
+      "sample_rate": 1000,
+      "segments": 3
+    }
+  ],
+  "schema": "haptic-samples-v1"
+}
