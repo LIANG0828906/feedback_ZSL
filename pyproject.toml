@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "br-econ-replay"
+version = "1.0.0"
+description = "Deterministic battle-royale airdrop economy replay and reconciliation"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "PySide6>=6.7",
+]
+
+[project.scripts]
+br-econ = "brecon.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["brecon*"]
+
