@@ -20,3 +20,69 @@ Windows 10/11 本地环境，安装 Python 3.11 及以上并可从命令行调�
 
 验收：
 用本地地形样本连续应用多批补丁，核验增量渲染与全量渲染一致、原子提交与强制终止后恢复正确。
+
+---
+
+## 交付实现
+
+本仓库已交付完整可运行的地形可视化增量更新工具，代码位于 `terrain_tool/`，
+测试位于 `tests/`。
+
+### 环境准备
+
+```bash
+python --version            # 需 3.11+
+pip install -r requirements.txt   # numpy、PySide6
+```
+
+离屏渲染基于 NumPy 与 PySide6 `QImage`，不依赖 GPU/显卡驱动；无显示器环境
+设置 `QT_QPA_PLATFORM=offscreen` 即可运行。
+
+### 命令行用法
+
+```bash
+# 生成四种确定性地形样本与基线哈希（artifacts/samples）
+python -m terrain_tool generate --all --patch-count 6
+
+# 端到端验收：增量/全量逐字节一致 + 原子提交 + 强制终止恢复
+python -m terrain_tool verify --terrain hills --patch-count 6
+
+# 启动示例界面（高程热力、分块网格、失效高亮、补丁列表、渲染预览）
+python -m terrain_tool gui
+```
+
+`verify` 会在 `artifacts/render/<地形>/` 输出 `verify_report.json`、
+`color.png`、`heat.png`，快照写入 `artifacts/snapshots/`。
+
+### 运行测试
+
+```bash
+QT_QPA_PLATFORM=offscreen python -m unittest discover -s tests -v
+```
+
+共 33 个用例，覆盖二进制校验、四叉树、失效闭包、增量/全量一致性、
+接缝超差定位、原子提交/断链恢复、后台 E_BUSY 与协作式取消。
+
+### 关键设计
+
+详见 `terrain_tool/TECHNICAL_NOTES.md`。要点：
+
+- 依赖图谱 `HEIGHT→NORMALS→RENDER`、`HEIGHT→LOD→SEAM→RENDER`、
+  `MATERIAL→BLEND→RENDER`，法线/混合/接缝带 1 chunk 失效光环，
+  无法证明未受影响即保守重算并记录原因。
+- 增量与全量共用同一批纯函数；渲染显示范围与热力刻度固定，
+  瓦片只依赖块局部输入，保证增量重渲与全量渲染**逐字节一致**。
+- 批次提交采用临时文件 + `fsync` + 原子 `os.replace`，指针最后落盘；
+  恢复时重放 SHA-256 哈希链，断链/缺字段返回 `E_RECOVERY_INVALID`。
+- 后台 QThread 单任务调度，重复启动 `E_BUSY`，协作式取消后释放离屏缓冲、
+  保留最后已提交快照。
+
+### 实测验证结果
+
+在四种确定性地形（plain/hills/ridge/noise）各连续应用 6 批补丁：
+
+- 颜色缓冲、误差热力缓冲增量与全量**逐字节相等**；
+- 逐块法线夹角最大偏差 `0.0°`、材质混合像素偏差 `0.0`；
+- 固定参数连续两次渲染内容哈希一致；
+- 模拟进程强制终止（遗留 `*.tmp`）后恢复到最近已提交批次，哈希链完整；
+- 从恢复快照续跑后续补丁，结果与一次性全路径完全一致。
