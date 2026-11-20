@@ -1,0 +1,35 @@
+{
+  "seed": 20261121,
+  "fixedClockMs": 1700000000000,
+  "profiles": [
+    {
+      "name": "small_clean",
+      "width": 16,
+      "height": 12,
+      "channels": 3,
+      "frameCount": 8,
+      "tamperFrames": [],
+      "manifestVersion": 1
+    },
+    {
+      "name": "medium_reencode",
+      "width": 32,
+      "height": 24,
+      "channels": 3,
+      "frameCount": 12,
+      "tamperFrames": [3, 7],
+      "tamperByteOffset": 5,
+      "manifestVersion": 1
+    },
+    {
+      "name": "medium_v2_upgrade",
+      "width": 32,
+      "height": 24,
+      "channels": 3,
+      "frameCount": 12,
+      "tamperFrames": [3, 7],
+      "tamperByteOffset": 5,
+      "manifestVersion": 2
+    }
+  ]
+}
