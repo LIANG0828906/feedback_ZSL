@@ -1,0 +1,349 @@
+{
+  "bbox_max": [
+    5.4,
+    5.4,
+    5.4
+  ],
+  "bbox_min": [
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "expected_defects": {
+    "has_duplicate_vertices": true,
+    "has_hole": true,
+    "has_isolated_fragment": true,
+    "has_nonmanifold_edge": true
+  },
+  "faces": 169,
+  "header": {
+    "coord_type": "f64",
+    "face_count": 169,
+    "header_bytes": 28,
+    "index_width": 4,
+    "magic": "MSHRP01",
+    "version": 1,
+    "vertex_count": 97
+  },
+  "path": "samples/scan_asset.msh",
+  "raw_boundaries": {
+    "boundary_edge_count": 44,
+    "branched_vertices": [
+      1,
+      13,
+      25,
+      37,
+      49,
+      86,
+      87,
+      88
+    ],
+    "closed": false,
+    "loop_count": 8,
+    "loops": [
+      {
+        "bbox_max": [
+          -0.5000000000000004,
+          1.1314261122877003e-16,
+          6.123233995736766e-17
+        ],
+        "bbox_min": [
+          -0.9238795325112867,
+          -0.8660254037844384,
+          -0.3826834323650897
+        ],
+        "loop_id": 0,
+        "vertex_count": 4,
+        "vertices": [
+          45,
+          56,
+          55,
+          90
+        ]
+      },
+      {
+        "bbox_max": [
+          0.4619397662556435,
+          0.9238795325112867,
+          0.7071067811865476
+        ],
+        "bbox_min": [
+          -0.35355339059327356,
+          0.6123724356957945,
+          0.38268343236508984
+        ],
+        "loop_id": 1,
+        "vertex_count": 4,
+        "vertices": [
+          17,
+          28,
+          27,
+          89
+        ]
+      },
+      {
+        "bbox_max": [
+          0.6123724356957946,
+          0.9238795325112867,
+          -0.3826834323650897
+        ],
+        "bbox_min": [
+          5.657130561438501e-17,
+          0.35355339059327373,
+          -0.7071067811865475
+        ],
+        "loop_id": 2,
+        "vertex_count": 4,
+        "vertices": [
+          52,
+          63,
+          62,
+          91
+        ]
+      },
+      {
+        "bbox_max": [
+          0.9238795325112867,
+          0.0,
+          -0.3826834323650897
+        ],
+        "bbox_min": [
+          0.6123724356957944,
+          -0.3535533905932741,
+          -0.7071067811865475
+        ],
+        "loop_id": 3,
+        "vertex_count": 4,
+        "vertices": [
+          49,
+          61,
+          88,
+          72
+        ]
+      },
+      {
+        "bbox_max": [
+          5.4,
+          5.4,
+          5.4
+        ],
+        "bbox_min": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "loop_id": 4,
+        "vertex_count": 4,
+        "vertices": [
+          93,
+          94,
+          95,
+          96
+        ]
+      },
+      {
+        "bbox_max": [
+          0.3826834323650898,
+          0.3314135740355918,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          -0.19134171618254506,
+          0.9238795325112867
+        ],
+        "loop_id": 5,
+        "vertex_count": 6,
+        "vertices": [
+          0,
+          3,
+          2,
+          1,
+          12,
+          86
+        ]
+      },
+      {
+        "bbox_max": [
+          0.9238795325112867,
+          0.0,
+          0.9238795325112867
+        ],
+        "bbox_min": [
+          0.3826834323650898,
+          -0.46193976625564376,
+          0.38268343236508984
+        ],
+        "loop_id": 6,
+        "vertex_count": 8,
+        "vertices": [
+          1,
+          13,
+          25,
+          36,
+          87,
+          13,
+          86,
+          24
+        ]
+      },
+      {
+        "bbox_max": [
+          1.0,
+          0.0,
+          0.38268343236508984
+        ],
+        "bbox_min": [
+          0.8001031451912652,
+          -0.5000000000000004,
+          -0.3826834323650897
+        ],
+        "loop_id": 7,
+        "vertex_count": 8,
+        "vertices": [
+          25,
+          37,
+          49,
+          60,
+          88,
+          37,
+          87,
+          48
+        ]
+      }
+    ],
+    "nonmanifold_edge_count": 1,
+    "open_chain_count": 2,
+    "open_chains": [
+      [
+        92,
+        38
+      ],
+      [
+        49,
+        92
+      ]
+    ]
+  },
+  "raw_topology": {
+    "boundary_edge_count": 44,
+    "edge_count": 275,
+    "edge_incidence": {
+      "1": 44,
+      "2": 230,
+      "nonmanifold": 1
+    },
+    "face_component_count": 3,
+    "face_count": 169,
+    "nonmanifold_edge_count": 1,
+    "nonmanifold_edges": [
+      [
+        38,
+        49
+      ]
+    ],
+    "vertex_count": 97
+  },
+  "sample": "scan_asset",
+  "sha256": "9b8371cf2fc9581446248d88709c4e0c2aac58d04761565456f4dbebe1feaca9",
+  "variants": {
+    "scan_asset_f32_u16": {
+      "path": "samples/scan_asset_f32_u16.msh",
+      "sha256": "12eeb06862876972656e7aa13ec324ddc4be44772d1fe0a1428e91625fe42469"
+    },
+    "tolerance_asset": {
+      "duplicate_offset": 0.0002,
+      "path": "samples/tolerance_asset.msh",
+      "sha256": "484fce6fc90961442634e633b67a4c13d6fbffa279f44eae938640b86030da80"
+    }
+  },
+  "vertices": 97,
+  "weld": {
+    "dropped_degenerate_faces": [],
+    "duplicate_count": 6,
+    "input_vertex_count": 97,
+    "merged_group_count": 6,
+    "output_vertex_count": 91,
+    "tolerance": 1e-06
+  },
+  "weld_tolerance": 1e-06,
+  "welded_boundaries": {
+    "boundary_edge_count": 10,
+    "branched_vertices": [],
+    "closed": false,
+    "loop_count": 2,
+    "loops": [
+      {
+        "bbox_max": [
+          0.3826834323650898,
+          0.3314135740355918,
+          1.0
+        ],
+        "bbox_min": [
+          0.0,
+          0.0,
+          0.9238795325112867
+        ],
+        "loop_id": 0,
+        "vertex_count": 4,
+        "vertices": [
+          1,
+          0,
+          3,
+          2
+        ]
+      },
+      {
+        "bbox_max": [
+          5.4,
+          5.4,
+          5.4
+        ],
+        "bbox_min": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "loop_id": 1,
+        "vertex_count": 4,
+        "vertices": [
+          87,
+          88,
+          89,
+          90
+        ]
+      }
+    ],
+    "nonmanifold_edge_count": 1,
+    "open_chain_count": 2,
+    "open_chains": [
+      [
+        86,
+        38
+      ],
+      [
+        49,
+        86
+      ]
+    ]
+  },
+  "welded_topology": {
+    "boundary_edge_count": 10,
+    "edge_count": 258,
+    "edge_incidence": {
+      "1": 10,
+      "2": 247,
+      "nonmanifold": 1
+    },
+    "face_component_count": 3,
+    "face_count": 169,
+    "nonmanifold_edge_count": 1,
+    "nonmanifold_edges": [
+      [
+        38,
+        49
+      ]
+    ],
+    "vertex_count": 91
+  }
+}
