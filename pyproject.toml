@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fpstore"
+version = "0.1.0"
+description = "Deterministic, crash-recoverable local audio fingerprint library"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "PySide6>=6.5",
+]
+
+[project.scripts]
+fpstore = "fpstore.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["fpstore*"]
