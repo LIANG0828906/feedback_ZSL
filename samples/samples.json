@@ -1,0 +1,61 @@
+{
+  "samples": [
+    {
+      "baseline": "small.baseline.json",
+      "bvh": "small.bvh",
+      "constraints": "small.constraints.json",
+      "name": "small",
+      "spec": {
+        "conflict": "none",
+        "frames": 90,
+        "joints": 16,
+        "missing_rate": 0.08,
+        "name": "small",
+        "seed": 20261121
+      }
+    },
+    {
+      "baseline": "large.baseline.json",
+      "bvh": "large.bvh",
+      "constraints": "large.constraints.json",
+      "name": "large",
+      "spec": {
+        "conflict": "none",
+        "frames": 1200,
+        "joints": 26,
+        "missing_rate": 0.18,
+        "name": "large",
+        "seed": 20261122
+      }
+    },
+    {
+      "baseline": "conflict.baseline.json",
+      "bvh": "conflict.bvh",
+      "constraints": "conflict.constraints.json",
+      "name": "conflict",
+      "spec": {
+        "conflict": "bone_length",
+        "frames": 120,
+        "joints": 20,
+        "missing_rate": 0.1,
+        "name": "conflict",
+        "seed": 20261123
+      }
+    },
+    {
+      "baseline": "unreachable.baseline.json",
+      "bvh": "unreachable.bvh",
+      "constraints": "unreachable.constraints.json",
+      "name": "unreachable",
+      "spec": {
+        "conflict": "unreachable",
+        "frames": 120,
+        "joints": 20,
+        "missing_rate": 0.1,
+        "name": "unreachable",
+        "seed": 20261124
+      }
+    }
+  ],
+  "schema": "mocap-sample-index-v1"
+}
