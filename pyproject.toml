@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acoustic-calibration-workbench"
+version = "0.1.0"
+description = "Deterministic multichannel acoustic calibration workbench"
+requires-python = ">=3.11"
+dependencies = ["numpy>=2.0", "PySide6>=6.7"]
+
+[project.scripts]
+acoustic-calibration = "acoustic_calibration.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["acoustic_calibration*"]
