@@ -1,0 +1,696 @@
+{
+  "check_count": 25,
+  "checks": [
+    {
+      "details": {
+        "content_sha256": "e61420851013da115df3e4fdf22b780ba0b4df8e27409907cd1bf1f1ab0acff1",
+        "dims": [
+          64,
+          64,
+          64
+        ],
+        "mask_offset": 524416,
+        "scalar_type": "uint16",
+        "spacing": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "name": "64:header_parse",
+      "passed": true
+    },
+    {
+      "details": {
+        "baseline_buffer_hash": "47d29cd024891b43f5d256c1bd82fef65d70589e954ec91e8a6c80079d554b62",
+        "tamper_error": {
+          "code": "E_PARAM_STALE",
+          "details": {},
+          "field": "parameter_hash"
+        }
+      },
+      "name": "64:param_stale_rejection",
+      "passed": true
+    },
+    {
+      "details": {
+        "buffer_hash": "47d29cd024891b43f5d256c1bd82fef65d70589e954ec91e8a6c80079d554b62",
+        "byte_count": 147456,
+        "parameter_hash": "a6572f9a50190517951e4487ab25758fac7490723f90e5ec85ec030ca60badbd"
+      },
+      "name": "64:offscreen_byte_repeatability",
+      "passed": true
+    },
+    {
+      "details": {
+        "after_commit": {
+          "binding_valid": true,
+          "displayed_buffer_hash": "f5c6d1933ad363d646aa46e26b2af45724cab02e651b22a42c82ee410a00f002",
+          "displayed_control_points": [
+            {
+              "color": [
+                0.02,
+                0.05,
+                0.12
+              ],
+              "opacity": 0.0,
+              "position": 0.0
+            },
+            {
+              "color": [
+                0.12,
+                0.35,
+                0.85
+              ],
+              "opacity": 0.02,
+              "position": 0.28
+            },
+            {
+              "color": [
+                0.2,
+                0.85,
+                0.7
+              ],
+              "opacity": 0.18,
+              "position": 0.55
+            },
+            {
+              "color": [
+                1.0,
+                0.76,
+                0.25
+              ],
+              "opacity": 0.55,
+              "position": 0.78
+            },
+            {
+              "color": [
+                1.0,
+                0.97,
+                0.92
+              ],
+              "opacity": 0.92,
+              "position": 1.0
+            }
+          ],
+          "displayed_mask_enabled": true,
+          "displayed_parameter_hash": "a31ea0a6cb3976a8d54dc8398c71eed2a69201bc187e0a92cd5a9324ea10a62d",
+          "displayed_step_size": 0.012,
+          "displayed_viewport": [
+            192,
+            192
+          ],
+          "displayed_window_center": 1790.0,
+          "displayed_window_width": 2849.9999999999995,
+          "pending_control_points": null,
+          "pending_is_uncommitted": false,
+          "pending_parameter_hash": null,
+          "pending_step_size": null,
+          "pending_window_center": null,
+          "pending_window_width": null
+        },
+        "during_drag": {
+          "binding_valid": true,
+          "displayed_buffer_hash": "47d29cd024891b43f5d256c1bd82fef65d70589e954ec91e8a6c80079d554b62",
+          "displayed_control_points": [
+            {
+              "color": [
+                0.02,
+                0.05,
+                0.12
+              ],
+              "opacity": 0.0,
+              "position": 0.0
+            },
+            {
+              "color": [
+                0.12,
+                0.35,
+                0.85
+              ],
+              "opacity": 0.02,
+              "position": 0.28
+            },
+            {
+              "color": [
+                0.2,
+                0.85,
+                0.7
+              ],
+              "opacity": 0.18,
+              "position": 0.55
+            },
+            {
+              "color": [
+                1.0,
+                0.76,
+                0.25
+              ],
+              "opacity": 0.55,
+              "position": 0.78
+            },
+            {
+              "color": [
+                1.0,
+                0.97,
+                0.92
+              ],
+              "opacity": 0.92,
+              "position": 1.0
+            }
+          ],
+          "displayed_mask_enabled": true,
+          "displayed_parameter_hash": "a6572f9a50190517951e4487ab25758fac7490723f90e5ec85ec030ca60badbd",
+          "displayed_step_size": 0.012,
+          "displayed_viewport": [
+            192,
+            192
+          ],
+          "displayed_window_center": 1700.0,
+          "displayed_window_width": 2500.0,
+          "pending_control_points": [
+            {
+              "color": [
+                0.02,
+                0.05,
+                0.12
+              ],
+              "opacity": 0.0,
+              "position": 0.0
+            },
+            {
+              "color": [
+                0.12,
+                0.35,
+                0.85
+              ],
+              "opacity": 0.02,
+              "position": 0.28
+            },
+            {
+              "color": [
+                0.2,
+                0.85,
+                0.7
+              ],
+              "opacity": 0.18,
+              "position": 0.55
+            },
+            {
+              "color": [
+                1.0,
+                0.76,
+                0.25
+              ],
+              "opacity": 0.55,
+              "position": 0.78
+            },
+            {
+              "color": [
+                1.0,
+                0.97,
+                0.92
+              ],
+              "opacity": 0.92,
+              "position": 1.0
+            }
+          ],
+          "pending_is_uncommitted": true,
+          "pending_parameter_hash": "a31ea0a6cb3976a8d54dc8398c71eed2a69201bc187e0a92cd5a9324ea10a62d",
+          "pending_step_size": 0.012,
+          "pending_window_center": 1790.0,
+          "pending_window_width": 2849.9999999999995
+        },
+        "mismatch_error": {
+          "code": "E_PREVIEW_MISMATCH",
+          "details": {},
+          "field": "window_center"
+        },
+        "new_buffer_hash": "f5c6d1933ad363d646aa46e26b2af45724cab02e651b22a42c82ee410a00f002"
+      },
+      "name": "64:preview_offscreen_alignment",
+      "passed": true
+    },
+    {
+      "details": {
+        "changed_inside_mask_rays": 3172,
+        "changed_outside_mask_rays": 0,
+        "changed_pixels": 3172,
+        "mask_coverage_pixels": 3172
+      },
+      "name": "64:mask_overlay_consistency",
+      "passed": true
+    },
+    {
+      "details": {
+        "changed_fields": [
+          "step_size"
+        ],
+        "rerendered_buffer_hash": "cad52cbaac3c75abf0d877586d175628d46de9a1133e85208e3048bcdbe9db66",
+        "reused_buffer_hash": "47d29cd024891b43f5d256c1bd82fef65d70589e954ec91e8a6c80079d554b62"
+      },
+      "name": "64:snapshot_reuse_and_rerender",
+      "passed": true
+    },
+    {
+      "details": {
+        "error": {
+          "code": "E_SNAPSHOT_INVALID",
+          "details": {},
+          "field": "version"
+        },
+        "outputs_written": false
+      },
+      "name": "64:snapshot_invalid_no_output",
+      "passed": true
+    },
+    {
+      "details": {
+        "buffer_hash": "47d29cd024891b43f5d256c1bd82fef65d70589e954ec91e8a6c80079d554b62",
+        "parameter_hash": "a6572f9a50190517951e4487ab25758fac7490723f90e5ec85ec030ca60badbd",
+        "source": "disk_snapshot_only"
+      },
+      "name": "64:crash_recovery_from_snapshot",
+      "passed": true
+    },
+    {
+      "details": {
+        "code": "E_HEADER_INVALID",
+        "details": {
+          "actual": 524290,
+          "expected": 524288
+        },
+        "field": "density_bytes"
+      },
+      "name": "64:header_invalid_code",
+      "passed": true
+    },
+    {
+      "details": {
+        "code": "E_MASK_INVALID",
+        "details": {
+          "density_dims": [
+            64,
+            64,
+            64
+          ],
+          "mask_dims": [
+            63,
+            64,
+            64
+          ]
+        },
+        "field": "mask_dims"
+      },
+      "name": "64:mask_invalid_code",
+      "passed": true
+    },
+    {
+      "details": {
+        "records": 3,
+        "render_fields": [
+          "buffer_hash",
+          "control_points",
+          "event",
+          "mask_coverage_pixels",
+          "mask_enabled",
+          "mask_hash",
+          "parameter_hash",
+          "sequence",
+          "step_size",
+          "view_matrix",
+          "viewport",
+          "window_center",
+          "window_width"
+        ],
+        "trace": "baseline_64.jsonl"
+      },
+      "name": "64:trace_required_fields",
+      "passed": true
+    },
+    {
+      "details": {
+        "content_sha256": "243dbd5e242c42380a24161aa0b5cec50892bb497045e50c4e2d464cb47ebe6a",
+        "dims": [
+          128,
+          128,
+          128
+        ],
+        "mask_offset": 4194432,
+        "scalar_type": "uint16",
+        "spacing": [
+          0.75,
+          0.75,
+          1.0
+        ]
+      },
+      "name": "128:header_parse",
+      "passed": true
+    },
+    {
+      "details": {
+        "baseline_buffer_hash": "378cce35f25cec070cbcd58865c83bf61c30726efd941d4a7a506ad301d8e504",
+        "tamper_error": {
+          "code": "E_PARAM_STALE",
+          "details": {},
+          "field": "parameter_hash"
+        }
+      },
+      "name": "128:param_stale_rejection",
+      "passed": true
+    },
+    {
+      "details": {
+        "buffer_hash": "378cce35f25cec070cbcd58865c83bf61c30726efd941d4a7a506ad301d8e504",
+        "byte_count": 147456,
+        "parameter_hash": "c3c277737530b57da13907d01470ddc30c3fb238961a8de2abc98aa3f67bc637"
+      },
+      "name": "128:offscreen_byte_repeatability",
+      "passed": true
+    },
+    {
+      "details": {
+        "after_commit": {
+          "binding_valid": true,
+          "displayed_buffer_hash": "1eac4cf3524f4f985b2e497711c45e8a22a13a5c872043e35744e21a2c1622ba",
+          "displayed_control_points": [
+            {
+              "color": [
+                0.02,
+                0.05,
+                0.12
+              ],
+              "opacity": 0.0,
+              "position": 0.0
+            },
+            {
+              "color": [
+                0.12,
+                0.35,
+                0.85
+              ],
+              "opacity": 0.02,
+              "position": 0.28
+            },
+            {
+              "color": [
+                0.2,
+                0.85,
+                0.7
+              ],
+              "opacity": 0.18,
+              "position": 0.55
+            },
+            {
+              "color": [
+                1.0,
+                0.76,
+                0.25
+              ],
+              "opacity": 0.55,
+              "position": 0.78
+            },
+            {
+              "color": [
+                1.0,
+                0.97,
+                0.92
+              ],
+              "opacity": 0.92,
+              "position": 1.0
+            }
+          ],
+          "displayed_mask_enabled": true,
+          "displayed_parameter_hash": "77d46028057ffbf58cb087fffb880bc3f921c4f1e7f854c08ecc1a76a621a8e1",
+          "displayed_step_size": 0.012,
+          "displayed_viewport": [
+            192,
+            192
+          ],
+          "displayed_window_center": 1840.0,
+          "displayed_window_width": 3077.9999999999995,
+          "pending_control_points": null,
+          "pending_is_uncommitted": false,
+          "pending_parameter_hash": null,
+          "pending_step_size": null,
+          "pending_window_center": null,
+          "pending_window_width": null
+        },
+        "during_drag": {
+          "binding_valid": true,
+          "displayed_buffer_hash": "378cce35f25cec070cbcd58865c83bf61c30726efd941d4a7a506ad301d8e504",
+          "displayed_control_points": [
+            {
+              "color": [
+                0.02,
+                0.05,
+                0.12
+              ],
+              "opacity": 0.0,
+              "position": 0.0
+            },
+            {
+              "color": [
+                0.12,
+                0.35,
+                0.85
+              ],
+              "opacity": 0.02,
+              "position": 0.28
+            },
+            {
+              "color": [
+                0.2,
+                0.85,
+                0.7
+              ],
+              "opacity": 0.18,
+              "position": 0.55
+            },
+            {
+              "color": [
+                1.0,
+                0.76,
+                0.25
+              ],
+              "opacity": 0.55,
+              "position": 0.78
+            },
+            {
+              "color": [
+                1.0,
+                0.97,
+                0.92
+              ],
+              "opacity": 0.92,
+              "position": 1.0
+            }
+          ],
+          "displayed_mask_enabled": true,
+          "displayed_parameter_hash": "c3c277737530b57da13907d01470ddc30c3fb238961a8de2abc98aa3f67bc637",
+          "displayed_step_size": 0.012,
+          "displayed_viewport": [
+            192,
+            192
+          ],
+          "displayed_window_center": 1750.0,
+          "displayed_window_width": 2700.0,
+          "pending_control_points": [
+            {
+              "color": [
+                0.02,
+                0.05,
+                0.12
+              ],
+              "opacity": 0.0,
+              "position": 0.0
+            },
+            {
+              "color": [
+                0.12,
+                0.35,
+                0.85
+              ],
+              "opacity": 0.02,
+              "position": 0.28
+            },
+            {
+              "color": [
+                0.2,
+                0.85,
+                0.7
+              ],
+              "opacity": 0.18,
+              "position": 0.55
+            },
+            {
+              "color": [
+                1.0,
+                0.76,
+                0.25
+              ],
+              "opacity": 0.55,
+              "position": 0.78
+            },
+            {
+              "color": [
+                1.0,
+                0.97,
+                0.92
+              ],
+              "opacity": 0.92,
+              "position": 1.0
+            }
+          ],
+          "pending_is_uncommitted": true,
+          "pending_parameter_hash": "77d46028057ffbf58cb087fffb880bc3f921c4f1e7f854c08ecc1a76a621a8e1",
+          "pending_step_size": 0.012,
+          "pending_window_center": 1840.0,
+          "pending_window_width": 3077.9999999999995
+        },
+        "mismatch_error": {
+          "code": "E_PREVIEW_MISMATCH",
+          "details": {},
+          "field": "window_center"
+        },
+        "new_buffer_hash": "1eac4cf3524f4f985b2e497711c45e8a22a13a5c872043e35744e21a2c1622ba"
+      },
+      "name": "128:preview_offscreen_alignment",
+      "passed": true
+    },
+    {
+      "details": {
+        "changed_inside_mask_rays": 3080,
+        "changed_outside_mask_rays": 0,
+        "changed_pixels": 3080,
+        "mask_coverage_pixels": 3080
+      },
+      "name": "128:mask_overlay_consistency",
+      "passed": true
+    },
+    {
+      "details": {
+        "changed_fields": [
+          "step_size"
+        ],
+        "rerendered_buffer_hash": "63788cd9b2d6534a310e21a76d213ee91911e4c1b58b628a11dbe7e01bc979ea",
+        "reused_buffer_hash": "378cce35f25cec070cbcd58865c83bf61c30726efd941d4a7a506ad301d8e504"
+      },
+      "name": "128:snapshot_reuse_and_rerender",
+      "passed": true
+    },
+    {
+      "details": {
+        "error": {
+          "code": "E_SNAPSHOT_INVALID",
+          "details": {},
+          "field": "version"
+        },
+        "outputs_written": false
+      },
+      "name": "128:snapshot_invalid_no_output",
+      "passed": true
+    },
+    {
+      "details": {
+        "buffer_hash": "378cce35f25cec070cbcd58865c83bf61c30726efd941d4a7a506ad301d8e504",
+        "parameter_hash": "c3c277737530b57da13907d01470ddc30c3fb238961a8de2abc98aa3f67bc637",
+        "source": "disk_snapshot_only"
+      },
+      "name": "128:crash_recovery_from_snapshot",
+      "passed": true
+    },
+    {
+      "details": {
+        "code": "E_HEADER_INVALID",
+        "details": {
+          "actual": 4194306,
+          "expected": 4194304
+        },
+        "field": "density_bytes"
+      },
+      "name": "128:header_invalid_code",
+      "passed": true
+    },
+    {
+      "details": {
+        "code": "E_MASK_INVALID",
+        "details": {
+          "density_dims": [
+            128,
+            128,
+            128
+          ],
+          "mask_dims": [
+            127,
+            128,
+            128
+          ]
+        },
+        "field": "mask_dims"
+      },
+      "name": "128:mask_invalid_code",
+      "passed": true
+    },
+    {
+      "details": {
+        "records": 3,
+        "render_fields": [
+          "buffer_hash",
+          "control_points",
+          "event",
+          "mask_coverage_pixels",
+          "mask_enabled",
+          "mask_hash",
+          "parameter_hash",
+          "sequence",
+          "step_size",
+          "view_matrix",
+          "viewport",
+          "window_center",
+          "window_width"
+        ],
+        "trace": "baseline_128.jsonl"
+      },
+      "name": "128:trace_required_fields",
+      "passed": true
+    },
+    {
+      "details": {
+        "completed_parameter_hash": "6c94a23cd357dffab463cb0bdce224c33f3b493d0007d4a464e96d9d86f351cf",
+        "error": {
+          "code": "E_BUSY",
+          "details": {
+            "volume_key": "verification-volume"
+          },
+          "field": "volume_key"
+        }
+      },
+      "name": "concurrency:duplicate_is_busy",
+      "passed": true
+    },
+    {
+      "details": {
+        "active_after_cancel": [],
+        "cancelled": true,
+        "last_snapshot_preserved": true
+      },
+      "name": "concurrency:cooperative_cancel",
+      "passed": true
+    },
+    {
+      "details": {
+        "buffer_hash": "97bc25a549b2769e9b39f9cd86d24d42a0a4ba688a543a1dc9417b3ffa819225",
+        "parameter_hash": "fd2d1b395522a87b42ab028711a0a1e3b4e8f4d4b95379c16fcd27bd1ff580d5",
+        "trace_byte_identical": true,
+        "volume_byte_identical": true
+      },
+      "name": "determinism:generation_render_trace",
+      "passed": true
+    }
+  ],
+  "failed_count": 0,
+  "passed": true,
+  "schema": "volrender-acceptance-v1",
+  "version": 1
+}

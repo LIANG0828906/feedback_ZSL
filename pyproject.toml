@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volrender"
+version = "0.1.0"
+description = "Hash-bound deterministic local volume rendering toolkit"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.23",
+  "PyQt5>=5.15",
+  "PyOpenGL>=3.1",
+]
+
+[project.scripts]
+volrender = "volrender.cli:main"
+volrender-gui = "volrender.app:main"
+
+[tool.setuptools.packages.find]
+include = ["volrender*"]
