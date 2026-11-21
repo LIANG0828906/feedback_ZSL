@@ -1,0 +1,1443 @@
+{
+  "baseline_version": "baseline-v1",
+  "case": {
+    "cover_count": 4,
+    "player_count": 2,
+    "revoke_density": 0.25,
+    "steps": 6
+  },
+  "damage_model_version": "cover-damage-v1",
+  "frames": [
+    {
+      "budget_usage": {
+        "events": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "event": "degrade",
+            "reserved_memory_bytes": 13056,
+            "scale": "0.75"
+          },
+          {
+            "cover_id": "C02",
+            "event": "queue",
+            "in_use_bytes": 13056,
+            "reason": "memory_budget",
+            "requested_bytes": 6867,
+            "submission_index": 1,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 13056,
+            "submission_indices": [
+              0
+            ],
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "submit",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "commit",
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 13056,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 9527,
+            "submission_indices": [
+              1,
+              2
+            ],
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "submit",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "submit",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "commit",
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "commit",
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 9527,
+            "wave": 1
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 4305,
+            "submission_indices": [
+              3
+            ],
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "submit",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "commit",
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 4305,
+            "wave": 2
+          }
+        ],
+        "memory_budget_bytes": 16384,
+        "parallelism": 2,
+        "peak_memory_bytes": 13056,
+        "tasks": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "degradation_scale": "0.75",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0
+          },
+          {
+            "base_memory_bytes": 6867,
+            "cover_id": "C02",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1
+          },
+          {
+            "base_memory_bytes": 2660,
+            "cover_id": "C03",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2
+          },
+          {
+            "base_memory_bytes": 4305,
+            "cover_id": "C04",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3
+          }
+        ],
+        "wave_count": 3
+      },
+      "buffer_watermark_bytes": 13056,
+      "chain_hash": "23f11c3d393359a95bfc4309c574cb2d87fe4d33b9fc994ead89d2c78ce20172",
+      "compensations": [],
+      "covers": [
+        {
+          "accumulated_damage": "0.000",
+          "cover_id": "C01",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "101.000",
+          "quantization_error_bound": "0.0000",
+          "remaining_durability": "101.000"
+        },
+        {
+          "accumulated_damage": "2.674",
+          "cover_id": "C02",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "105.326",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "105.326"
+        },
+        {
+          "accumulated_damage": "0.000",
+          "cover_id": "C03",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "137.000",
+          "quantization_error_bound": "0.0000",
+          "remaining_durability": "137.000"
+        },
+        {
+          "accumulated_damage": "6.235",
+          "cover_id": "C04",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "98.765",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "98.765"
+        }
+      ],
+      "crack_events": [],
+      "effective_shot_client_sequence": [
+        0,
+        1
+      ],
+      "effective_shots": [
+        {
+          "arrival_seq": 1,
+          "client_seq": 0,
+          "cover_id": "C02",
+          "player_id": "P1"
+        },
+        {
+          "arrival_seq": 2,
+          "client_seq": 1,
+          "cover_id": "C04",
+          "player_id": "P1"
+        }
+      ],
+      "predicted_ledger": [
+        {
+          "authoritative_remaining": "101.000",
+          "cover_id": "C01",
+          "predicted_remaining": "101.000"
+        },
+        {
+          "authoritative_remaining": "105.326",
+          "cover_id": "C02",
+          "predicted_remaining": "105.326"
+        },
+        {
+          "authoritative_remaining": "137.000",
+          "cover_id": "C03",
+          "predicted_remaining": "137.000"
+        },
+        {
+          "authoritative_remaining": "98.765",
+          "cover_id": "C04",
+          "predicted_remaining": "98.765"
+        }
+      ],
+      "revocation_events": [],
+      "state_hash": "6b9d384af4b3a50915493e7957f94400fb5ba0d692eb1fc76b5da50a96248027",
+      "step": 0,
+      "step_peak_memory_bytes": 13056
+    },
+    {
+      "budget_usage": {
+        "events": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "event": "degrade",
+            "reserved_memory_bytes": 13056,
+            "scale": "0.75"
+          },
+          {
+            "cover_id": "C02",
+            "event": "queue",
+            "in_use_bytes": 13056,
+            "reason": "memory_budget",
+            "requested_bytes": 6867,
+            "submission_index": 1,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 13056,
+            "submission_indices": [
+              0
+            ],
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "submit",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "commit",
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 13056,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 9527,
+            "submission_indices": [
+              1,
+              2
+            ],
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "submit",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "submit",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "commit",
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "commit",
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 9527,
+            "wave": 1
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 4305,
+            "submission_indices": [
+              3
+            ],
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "submit",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "commit",
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 4305,
+            "wave": 2
+          }
+        ],
+        "memory_budget_bytes": 16384,
+        "parallelism": 2,
+        "peak_memory_bytes": 13056,
+        "tasks": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "degradation_scale": "0.75",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0
+          },
+          {
+            "base_memory_bytes": 6867,
+            "cover_id": "C02",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1
+          },
+          {
+            "base_memory_bytes": 2660,
+            "cover_id": "C03",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2
+          },
+          {
+            "base_memory_bytes": 4305,
+            "cover_id": "C04",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3
+          }
+        ],
+        "wave_count": 3
+      },
+      "buffer_watermark_bytes": 13056,
+      "chain_hash": "ca3b1c094412e1d250149f5e3b9e1ec982c2d94c4000eec7dfef319aaaedcb72",
+      "compensations": [],
+      "covers": [
+        {
+          "accumulated_damage": "0.000",
+          "cover_id": "C01",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "101.000",
+          "quantization_error_bound": "0.0000",
+          "remaining_durability": "101.000"
+        },
+        {
+          "accumulated_damage": "2.674",
+          "cover_id": "C02",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "105.326",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "105.326"
+        },
+        {
+          "accumulated_damage": "7.196",
+          "cover_id": "C03",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "129.804",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "129.804"
+        },
+        {
+          "accumulated_damage": "6.235",
+          "cover_id": "C04",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "98.765",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "98.765"
+        }
+      ],
+      "crack_events": [],
+      "effective_shot_client_sequence": [
+        0
+      ],
+      "effective_shots": [
+        {
+          "arrival_seq": 3,
+          "client_seq": 0,
+          "cover_id": "C03",
+          "player_id": "P2"
+        }
+      ],
+      "predicted_ledger": [
+        {
+          "authoritative_remaining": "101.000",
+          "cover_id": "C01",
+          "predicted_remaining": "101.000"
+        },
+        {
+          "authoritative_remaining": "105.326",
+          "cover_id": "C02",
+          "predicted_remaining": "105.326"
+        },
+        {
+          "authoritative_remaining": "129.804",
+          "cover_id": "C03",
+          "predicted_remaining": "129.804"
+        },
+        {
+          "authoritative_remaining": "98.765",
+          "cover_id": "C04",
+          "predicted_remaining": "98.765"
+        }
+      ],
+      "revocation_events": [
+        {
+          "action": "cancelled_pending",
+          "arrival_seq": 13,
+          "cover_id": "C01",
+          "restoration_units": 5548,
+          "shot_key": "P1:2",
+          "step": 1
+        }
+      ],
+      "state_hash": "96e05e2ac645c3e0c22608a9ceb46d0e291ad235f6ce027675061f7f89127118",
+      "step": 1,
+      "step_peak_memory_bytes": 13056
+    },
+    {
+      "budget_usage": {
+        "events": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "event": "degrade",
+            "reserved_memory_bytes": 13056,
+            "scale": "0.75"
+          },
+          {
+            "cover_id": "C02",
+            "event": "queue",
+            "in_use_bytes": 13056,
+            "reason": "memory_budget",
+            "requested_bytes": 6867,
+            "submission_index": 1,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 13056,
+            "submission_indices": [
+              0
+            ],
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "submit",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "commit",
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 13056,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 9527,
+            "submission_indices": [
+              1,
+              2
+            ],
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "submit",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "submit",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "commit",
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "commit",
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 9527,
+            "wave": 1
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 4305,
+            "submission_indices": [
+              3
+            ],
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "submit",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "commit",
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 4305,
+            "wave": 2
+          }
+        ],
+        "memory_budget_bytes": 16384,
+        "parallelism": 2,
+        "peak_memory_bytes": 13056,
+        "tasks": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "degradation_scale": "0.75",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0
+          },
+          {
+            "base_memory_bytes": 6867,
+            "cover_id": "C02",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1
+          },
+          {
+            "base_memory_bytes": 2660,
+            "cover_id": "C03",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2
+          },
+          {
+            "base_memory_bytes": 4305,
+            "cover_id": "C04",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3
+          }
+        ],
+        "wave_count": 3
+      },
+      "buffer_watermark_bytes": 13056,
+      "chain_hash": "7a745854a1501d20dd3df20b16697ec3a46ce6fc153583cb615dd5975a0ae38a",
+      "compensations": [],
+      "covers": [
+        {
+          "accumulated_damage": "5.889",
+          "cover_id": "C01",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "95.111",
+          "quantization_error_bound": "0.0010",
+          "remaining_durability": "95.111"
+        },
+        {
+          "accumulated_damage": "2.674",
+          "cover_id": "C02",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "105.326",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "105.326"
+        },
+        {
+          "accumulated_damage": "7.196",
+          "cover_id": "C03",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "129.804",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "129.804"
+        },
+        {
+          "accumulated_damage": "6.235",
+          "cover_id": "C04",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "98.765",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "98.765"
+        }
+      ],
+      "crack_events": [],
+      "effective_shot_client_sequence": [
+        1,
+        2
+      ],
+      "effective_shots": [
+        {
+          "arrival_seq": 5,
+          "client_seq": 1,
+          "cover_id": "C01",
+          "player_id": "P2"
+        },
+        {
+          "arrival_seq": 6,
+          "client_seq": 2,
+          "cover_id": "C01",
+          "player_id": "P2"
+        }
+      ],
+      "predicted_ledger": [
+        {
+          "authoritative_remaining": "95.111",
+          "cover_id": "C01",
+          "predicted_remaining": "95.111"
+        },
+        {
+          "authoritative_remaining": "105.326",
+          "cover_id": "C02",
+          "predicted_remaining": "105.326"
+        },
+        {
+          "authoritative_remaining": "129.804",
+          "cover_id": "C03",
+          "predicted_remaining": "129.804"
+        },
+        {
+          "authoritative_remaining": "98.765",
+          "cover_id": "C04",
+          "predicted_remaining": "98.765"
+        }
+      ],
+      "revocation_events": [],
+      "state_hash": "6edd0891551e975c85ed9e63114062431e0864d4b1f1c5137996e4f7f93c1db3",
+      "step": 2,
+      "step_peak_memory_bytes": 13056
+    },
+    {
+      "budget_usage": {
+        "events": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "event": "degrade",
+            "reserved_memory_bytes": 13056,
+            "scale": "0.75"
+          },
+          {
+            "cover_id": "C02",
+            "event": "queue",
+            "in_use_bytes": 13056,
+            "reason": "memory_budget",
+            "requested_bytes": 6867,
+            "submission_index": 1,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 13056,
+            "submission_indices": [
+              0
+            ],
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "submit",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "commit",
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 13056,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 9527,
+            "submission_indices": [
+              1,
+              2
+            ],
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "submit",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "submit",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "commit",
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "commit",
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 9527,
+            "wave": 1
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 4305,
+            "submission_indices": [
+              3
+            ],
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "submit",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "commit",
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 4305,
+            "wave": 2
+          }
+        ],
+        "memory_budget_bytes": 16384,
+        "parallelism": 2,
+        "peak_memory_bytes": 13056,
+        "tasks": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "degradation_scale": "0.75",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0
+          },
+          {
+            "base_memory_bytes": 6867,
+            "cover_id": "C02",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1
+          },
+          {
+            "base_memory_bytes": 2660,
+            "cover_id": "C03",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2
+          },
+          {
+            "base_memory_bytes": 4305,
+            "cover_id": "C04",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3
+          }
+        ],
+        "wave_count": 3
+      },
+      "buffer_watermark_bytes": 13056,
+      "chain_hash": "6614587727cdc1d59eb90a63e783e20df3a99e7613ef5f333e4ffbea18570104",
+      "compensations": [
+        {
+          "authoritative_unchanged_units": 4045,
+          "cover_id": "C01",
+          "original_settled_step": 2,
+          "restoration_units": 4045,
+          "revoke_step": 3,
+          "shot_key": "P2:2"
+        }
+      ],
+      "covers": [
+        {
+          "accumulated_damage": "13.645",
+          "cover_id": "C01",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "91.400",
+          "quantization_error_bound": "0.0020",
+          "remaining_durability": "87.355"
+        },
+        {
+          "accumulated_damage": "2.674",
+          "cover_id": "C02",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "105.326",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "105.326"
+        },
+        {
+          "accumulated_damage": "7.196",
+          "cover_id": "C03",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "129.804",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "129.804"
+        },
+        {
+          "accumulated_damage": "6.235",
+          "cover_id": "C04",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "98.765",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "98.765"
+        }
+      ],
+      "crack_events": [],
+      "effective_shot_client_sequence": [
+        3,
+        4
+      ],
+      "effective_shots": [
+        {
+          "arrival_seq": 7,
+          "client_seq": 3,
+          "cover_id": "C01",
+          "player_id": "P1"
+        },
+        {
+          "arrival_seq": 8,
+          "client_seq": 4,
+          "cover_id": "C01",
+          "player_id": "P1"
+        }
+      ],
+      "predicted_ledger": [
+        {
+          "authoritative_remaining": "87.355",
+          "cover_id": "C01",
+          "predicted_remaining": "91.400"
+        },
+        {
+          "authoritative_remaining": "105.326",
+          "cover_id": "C02",
+          "predicted_remaining": "105.326"
+        },
+        {
+          "authoritative_remaining": "129.804",
+          "cover_id": "C03",
+          "predicted_remaining": "129.804"
+        },
+        {
+          "authoritative_remaining": "98.765",
+          "cover_id": "C04",
+          "predicted_remaining": "98.765"
+        }
+      ],
+      "revocation_events": [
+        {
+          "action": "compensated",
+          "arrival_seq": 14,
+          "authoritative_unchanged_units": 4045,
+          "cover_id": "C01",
+          "original_settled_step": 2,
+          "restoration_units": 4045,
+          "shot_key": "P2:2",
+          "step": 3
+        }
+      ],
+      "state_hash": "b73c8d559029f3555f9db1af4804fa177196c050e2ba36f3bf1a5eb57c320bce",
+      "step": 3,
+      "step_peak_memory_bytes": 13056
+    },
+    {
+      "budget_usage": {
+        "events": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "event": "degrade",
+            "reserved_memory_bytes": 13056,
+            "scale": "0.75"
+          },
+          {
+            "cover_id": "C02",
+            "event": "queue",
+            "in_use_bytes": 13056,
+            "reason": "memory_budget",
+            "requested_bytes": 6867,
+            "submission_index": 1,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 13056,
+            "submission_indices": [
+              0
+            ],
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "submit",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "commit",
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 13056,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 9527,
+            "submission_indices": [
+              1,
+              2
+            ],
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "submit",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "submit",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "commit",
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "commit",
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 9527,
+            "wave": 1
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 4305,
+            "submission_indices": [
+              3
+            ],
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "submit",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "commit",
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 4305,
+            "wave": 2
+          }
+        ],
+        "memory_budget_bytes": 16384,
+        "parallelism": 2,
+        "peak_memory_bytes": 13056,
+        "tasks": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "degradation_scale": "0.75",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0
+          },
+          {
+            "base_memory_bytes": 6867,
+            "cover_id": "C02",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1
+          },
+          {
+            "base_memory_bytes": 2660,
+            "cover_id": "C03",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2
+          },
+          {
+            "base_memory_bytes": 4305,
+            "cover_id": "C04",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3
+          }
+        ],
+        "wave_count": 3
+      },
+      "buffer_watermark_bytes": 13056,
+      "chain_hash": "7b34cce0459979eb59ed5652225930f9c7b84fa4421d7e5616eb2a0e9b76aa39",
+      "compensations": [],
+      "covers": [
+        {
+          "accumulated_damage": "13.645",
+          "cover_id": "C01",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "91.400",
+          "quantization_error_bound": "0.0020",
+          "remaining_durability": "87.355"
+        },
+        {
+          "accumulated_damage": "2.674",
+          "cover_id": "C02",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "105.326",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "105.326"
+        },
+        {
+          "accumulated_damage": "10.834",
+          "cover_id": "C03",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "126.166",
+          "quantization_error_bound": "0.0010",
+          "remaining_durability": "126.166"
+        },
+        {
+          "accumulated_damage": "6.235",
+          "cover_id": "C04",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "98.765",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "98.765"
+        }
+      ],
+      "crack_events": [],
+      "effective_shot_client_sequence": [
+        5
+      ],
+      "effective_shots": [
+        {
+          "arrival_seq": 9,
+          "client_seq": 5,
+          "cover_id": "C03",
+          "player_id": "P1"
+        }
+      ],
+      "predicted_ledger": [
+        {
+          "authoritative_remaining": "87.355",
+          "cover_id": "C01",
+          "predicted_remaining": "91.400"
+        },
+        {
+          "authoritative_remaining": "105.326",
+          "cover_id": "C02",
+          "predicted_remaining": "105.326"
+        },
+        {
+          "authoritative_remaining": "126.166",
+          "cover_id": "C03",
+          "predicted_remaining": "126.166"
+        },
+        {
+          "authoritative_remaining": "98.765",
+          "cover_id": "C04",
+          "predicted_remaining": "98.765"
+        }
+      ],
+      "revocation_events": [
+        {
+          "action": "cancelled_pending",
+          "arrival_seq": 15,
+          "cover_id": "C02",
+          "restoration_units": 3868,
+          "shot_key": "P1:6",
+          "step": 4
+        }
+      ],
+      "state_hash": "712bd24f8a80df9b39a2646478d11b9fd7fbdce5946f0eb764cd22fdb64207d6",
+      "step": 4,
+      "step_peak_memory_bytes": 13056
+    },
+    {
+      "budget_usage": {
+        "events": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "event": "degrade",
+            "reserved_memory_bytes": 13056,
+            "scale": "0.75"
+          },
+          {
+            "cover_id": "C02",
+            "event": "queue",
+            "in_use_bytes": 13056,
+            "reason": "memory_budget",
+            "requested_bytes": 6867,
+            "submission_index": 1,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 13056,
+            "submission_indices": [
+              0
+            ],
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "submit",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "cover_id": "C01",
+            "event": "commit",
+            "submission_index": 0,
+            "wave": 0
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 13056,
+            "wave": 0
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 9527,
+            "submission_indices": [
+              1,
+              2
+            ],
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "submit",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "submit",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "cover_id": "C02",
+            "event": "commit",
+            "submission_index": 1,
+            "wave": 1
+          },
+          {
+            "cover_id": "C03",
+            "event": "commit",
+            "submission_index": 2,
+            "wave": 1
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 9527,
+            "wave": 1
+          },
+          {
+            "event": "wave_start",
+            "reserved_memory_bytes": 4305,
+            "submission_indices": [
+              3
+            ],
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "submit",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "cover_id": "C04",
+            "event": "commit",
+            "submission_index": 3,
+            "wave": 2
+          },
+          {
+            "event": "wave_release",
+            "released_memory_bytes": 4305,
+            "wave": 2
+          }
+        ],
+        "memory_budget_bytes": 16384,
+        "parallelism": 2,
+        "peak_memory_bytes": 13056,
+        "tasks": [
+          {
+            "base_memory_bytes": 17408,
+            "cover_id": "C01",
+            "degradation_scale": "0.75",
+            "reserved_memory_bytes": 13056,
+            "submission_index": 0
+          },
+          {
+            "base_memory_bytes": 6867,
+            "cover_id": "C02",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 6867,
+            "submission_index": 1
+          },
+          {
+            "base_memory_bytes": 2660,
+            "cover_id": "C03",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 2660,
+            "submission_index": 2
+          },
+          {
+            "base_memory_bytes": 4305,
+            "cover_id": "C04",
+            "degradation_scale": "1",
+            "reserved_memory_bytes": 4305,
+            "submission_index": 3
+          }
+        ],
+        "wave_count": 3
+      },
+      "buffer_watermark_bytes": 13056,
+      "chain_hash": "bf6e9ded3fc7a43aec8962b4717f087ce09247e3dd6b06dd937bb081e8c67288",
+      "compensations": [],
+      "covers": [
+        {
+          "accumulated_damage": "13.645",
+          "cover_id": "C01",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "91.400",
+          "quantization_error_bound": "0.0020",
+          "remaining_durability": "87.355"
+        },
+        {
+          "accumulated_damage": "2.674",
+          "cover_id": "C02",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "105.326",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "105.326"
+        },
+        {
+          "accumulated_damage": "23.634",
+          "cover_id": "C03",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "113.366",
+          "quantization_error_bound": "0.0020",
+          "remaining_durability": "113.366"
+        },
+        {
+          "accumulated_damage": "6.235",
+          "cover_id": "C04",
+          "crack_segments": 0,
+          "cracked": false,
+          "predicted_remaining": "98.765",
+          "quantization_error_bound": "0.0005",
+          "remaining_durability": "98.765"
+        }
+      ],
+      "crack_events": [],
+      "effective_shot_client_sequence": [
+        7,
+        8
+      ],
+      "effective_shots": [
+        {
+          "arrival_seq": 11,
+          "client_seq": 7,
+          "cover_id": "C03",
+          "player_id": "P1"
+        },
+        {
+          "arrival_seq": 12,
+          "client_seq": 8,
+          "cover_id": "C03",
+          "player_id": "P1"
+        }
+      ],
+      "predicted_ledger": [
+        {
+          "authoritative_remaining": "87.355",
+          "cover_id": "C01",
+          "predicted_remaining": "91.400"
+        },
+        {
+          "authoritative_remaining": "105.326",
+          "cover_id": "C02",
+          "predicted_remaining": "105.326"
+        },
+        {
+          "authoritative_remaining": "113.366",
+          "cover_id": "C03",
+          "predicted_remaining": "113.366"
+        },
+        {
+          "authoritative_remaining": "98.765",
+          "cover_id": "C04",
+          "predicted_remaining": "98.765"
+        }
+      ],
+      "revocation_events": [],
+      "state_hash": "fc42bcb3a0ca6cf9841fb8efd997993b2b2251e33f048765747a6140e115e659",
+      "step": 5,
+      "step_peak_memory_bytes": 13056
+    }
+  ],
+  "scenario_fingerprint": "e83c9f977bb6ce5a4df69a94c3d8efa1a4d2fc5a9b0829a37f63c14534ea1d6d",
+  "schema_version": 1,
+  "seed": 42
+}
