@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tactical-scene"
+version = "0.1.0"
+description = "Deterministic versioned box-selection and hover occlusion core for a tactical editor"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "PySide6>=6.6",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+tactical-scene = "tactical_scene.__main__:main"
+
+[tool.setuptools]
+packages = ["tactical_scene"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

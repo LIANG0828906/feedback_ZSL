@@ -1,21 +1,99 @@
-回合制战术编辑器中，操作员在三维战场上用鼠标框选作战单位并连续平移视图，每次框选都要判定屏幕矩形覆盖到哪些单位、覆盖面积占总投影面积多少，据此决定是否把单位纳入已选集合；同时鼠标悬停单位时还需要显示其遮挡关系与最近可见面。单位以本地二进制场景文件提供（投影为屏幕三角形的轴对齐盒与胶囊），场景会从数十单位扩展到数万单位，框选还要处理位于相机后方、跨越视锥边界与相互遮挡的单位。现有编辑器在大规模场景中框选延迟剧烈抖动，有时把相机后方单位误算入选中集合，有时同一操作序列两次运行选中集合不同，遮挡关系也随视图平移跳变，无法说明结果来自哪一次场景快照。编辑器需要在固定的查询耗时预算与内存配额内，对屏幕分桶粒度与几何精化深度做自适应取舍，并让每次框选结论绑定唯一场景版本。
+# 战术场景查询核心
 
-任务环境与准备：
-安装 Python 3.11 及依赖 NumPy、PySide6（pip install numpy pyside6），确认在 Windows 上可正常导入。
-准备可写的本地目录用于场景样本、版本快照与轨迹日志，不依赖网络、账号或外部服务。
-样本与基线由题目要求的生成器在本地产出，运行前清理残留样本以避免干扰。
+这是一个可在无 GUI 环境运行、供回合制战术编辑器调用的确定性场景查询核心。它覆盖本地二进制场景、投影裁剪、屏幕分桶框选、覆盖率、悬停遮挡、预算降级、版本发布、并发编辑隔离与哈希链轨迹回放。
 
-业务要求：
-1. 实现本地二进制战场场景的加载与投影预处理：解析单位名称、轴对齐盒与胶囊包围体、世界变换、可见性标记与场景版本号，校验变换可逆、包围体非退化与版本字段完整；把各单位包围体按相机投到屏幕，输出屏幕包围矩形与最近深度；字段缺失或包围体退化时返回 E_SCENE_INVALID 并定位单位编号。
-2. 实现屏幕分桶索引与框选覆盖判定：把屏幕划分为可配置的分桶网格，将投影包围矩形登记到相交桶内，框选时只遍历相交桶中的候选单位，并按屏幕矩形与投影多边形的交面积与总体投影面积计算覆盖率，输出单位标识、覆盖率与是否入选；同一框选在候选顺序不同时结果必须逐字段一致，不得依赖遍历次序。
-3. 实现相机后方与视锥边界单位的正确剔除：依据投影深度与裁剪平面判定单位是否位于相机后方、是否完全在视锥外、是否跨越视锥边界；跨越边界的单位必须按裁剪后的屏幕多边形参与覆盖计算，后方单位不得进入候选集合；判定与覆盖结果须在报告中标注每个单位被纳入或排除的具体原因类别。
-4. 实现悬停遮挡关系的稳定判定：对悬停屏幕点按候选单位深度排序并做可见性裁剪，输出最近可见单位、其可见屏幕面积与遮挡它的单位列表；须保证视图平移前后同一单位遮挡关系单调且可解释，深度接近或投影重叠在声明精度内难分时以 E_OCCLUSION_AMBIGUOUS 报告并附候选单位与深度差，不得静默任选其一。
-5. 实现查询代价预算自适应：按单位数、分桶粒度与几何精化深度在粗分桶全量遍历、细分桶加包围盒预筛、多边形精化之间取舍，输出所选策略、各阶段候选单位数与实测耗时依据，以及相对预算充足结果的覆盖率误差上界；预算收紧时按声明降级序列逐级降级并记录阶段，未能降级而超预算时以 E_BUDGET_EXCEEDED 报告。
-6. 实现场景版本化与整体替换发布：单位位置、包围体与可见性标记变更后生成单调递增的场景版本与内容哈希，变更先在独立结构完成再整体替换发布；框选与悬停查询必须绑定单一已发布版本并在结果中回带版本号与哈希，查询期间不得观察到部分更新的投影索引；版本与哈希同发布清单不符返回 E_SCENE_STALE。
-7. 实现并发查询隔离与编辑互斥：编辑线程可后台修改单位并在完成后发布新版本，查询线程持续读取已发布版本快照，读到的候选单位集合与覆盖率须全部属于同一版本；读到已废弃快照句柄返回 E_STALE_HANDLE，同一场景同时只允许一个编辑任务，重复提交返回 E_BUSY，查询不得阻塞编辑发布超过声明时长。
-8. 实现查询轨迹归因与确定性样本入口：每次框选与悬停记录屏幕矩形或悬停点、相机矩阵、场景版本号、所用策略、入选单位列表与覆盖率，并支持按版本号回放断言结论一致；轨迹哈希断链或版本号缺失以 E_TRACE_INVALID 中止，日志不得以系统时间戳作为一致性依据；样本生成器产出多种单位规模、包围体类型与相机位姿的本地场景及基线选中结果，输出含版本号、策略、候选数与覆盖率的轨迹日志，相同种子与操作序列下结论逐字节一致。
+核心不依赖 Qt 进行查询；NumPy 负责矩阵和几何向量运算，PySide6 可作为编辑器前端依赖。所有结果均按 `unit_id` 和固定字段顺序规范化，不使用系统时间戳参与一致性判断。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速开始
 
-验收：
-用本地样本验证大规模框选的选中集合、覆盖率与版本隔离，并确认相机后方剔除、遮挡歧义与降级路径可复现。
+Python 3.11+：
+
+```bash
+uv venv --python 3.11 .venv
+uv pip install --python .venv/bin/python numpy pyside6 pytest
+
+# 清理并生成本地样本，包括 64、2048、20000 单位和边界/歧义场景
+.venv/bin/python -m tactical_scene generate \
+  --output artifacts/samples --seed 20261122 --sizes 64,2048,20000
+
+# 复算基线并逐条回放轨迹
+.venv/bin/python -m tactical_scene verify --suite artifacts/samples
+
+# 对最大样本执行分档预算基准
+.venv/bin/python -m tactical_scene benchmark \
+  --suite artifacts/samples --budgets 5,30,60,100,150,250,500 --repeats 5
+
+# 自动化测试
+.venv/bin/python -m pytest -q
+```
+
+Windows 上将 `.venv/bin/python` 替换为 `.venv\Scripts\python.exe`，命令参数相同。实现只使用 `pathlib`、`os.replace`、`os.fsync` 等跨平台接口。
+
+## 公共 API
+
+```python
+from tactical_scene import Camera, BudgetConfig, SceneEngine
+from tactical_scene.versioning import load_published_scene
+
+scene = load_published_scene(
+    "artifacts/samples/front_020000/scene.bfscene",
+    "artifacts/samples/front_020000/manifest.json",
+    expected_version=1,
+    expected_hash="从发布清单或场景对象取得的 64 位 SHA-256",
+)
+camera = Camera.look_at(
+    (0, 0, 180), (0, 0, 0), (0, 1, 0),
+    width=1600, height=900, near=0.5, far=5000,
+)
+engine = SceneEngine(
+    scene,
+    budget_config=BudgetConfig(
+        budget_ms=250,
+        memory_budget_bytes=128 * 1024 * 1024,
+    ),
+)
+
+handle = engine.acquire_handle()
+selection = engine.select_rect(
+    camera, 100, 140, 1320, 720, handle=handle,
+    expected_version=1, expected_hash=scene.content_hash,
+)
+hover = engine.hover(
+    camera, 800, 450, handle=handle,
+)
+```
+
+`select_rect` 返回：
+
+- `selected`：规范排序的入选单位编号。
+- `coverage_by_unit` / `decisions`：覆盖率、相交面积、投影面积、深度和逐单位原因。
+- `scene_version` / `scene_hash` / `camera_hash`：单次结论绑定的场景与相机。
+- `strategy`、`bucket_grid`、`refinement_depth`、`stage_counts`、`degraded_stages`。
+- `total_elapsed_ms`、各阶段耗时、内存占用、`within_budget`。
+- `coverage_error_upper_bound`：多边形精化为 `0.0`，包围盒近似为保守上界 `1.0`。
+
+`hover` 返回最近可见单位、最近面深度、目标可见面积、遮挡单位列表、深度候选栈及区域采样误差上界。深度差小于等于声明的 `depth_epsilon` 时不静默选择，抛出 `E_OCCLUSION_AMBIGUOUS`。
+
+## 错误码
+
+- `E_SCENE_INVALID`：字段缺失、校验和错误、变换不可逆、包围体退化或版本字段无效；可定位时带 `unit_id`/`unit_index`。
+- `E_BUDGET_EXCEEDED`：没有计划满足时间/内存预算，或实测执行超过预算。
+- `E_OCCLUSION_AMBIGUOUS`：悬停候选在声明深度精度内无法稳定排序。
+- `E_SCENE_STALE`：场景版本/哈希与发布清单、期望值或历史快照不一致。
+- `E_STALE_HANDLE`：快照句柄在新版本发布后失效。
+- `E_BUSY`：同一场景已有编辑任务。
+- `E_TRACE_INVALID`：轨迹哈希链断裂、记录被篡改或场景版本字段缺失。
+
+所有错误均为 `TacticalError`，包含稳定的 `.code`、`.message` 和 `.details`。
+
+## 验证结果
+
+本地环境：Python 3.11.18、NumPy 2.4.6、PySide6 6.12.0（Linux/WSL；依赖导入已验证）。当前测试结果：
+
+```text
+26 passed
+```
+
+正式样本套件 `artifacts/samples` 包含 64、2048、20000 单位场景，正面/斜视/边界后方/正交遮挡歧义相机，每例含 `.bfscene`、发布清单、相机、基线、轨迹和期望歧义记录。`verify` 对全部基线逐字段复算，并对每个轨迹事件按版本回放，结果一致。
+
+详细设计、格式和实测预算数据见 [`docs/TECHNICAL.md`](docs/TECHNICAL.md)。
