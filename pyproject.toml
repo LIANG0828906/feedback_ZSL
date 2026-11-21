@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "track-sync"
+version = "1.0.0"
+requires-python = "==3.11.*"
+description = "Deterministic multi-channel clock-drift analysis and compensation workbench"
+readme = "README.md"
+dependencies = [
+  "numpy==2.2.6",
+  "PySide6==6.8.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.3.5"]
+
+[project.scripts]
+track-sync = "audio_sync.cli:main"
+track-sync-gui = "audio_sync.ui:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
