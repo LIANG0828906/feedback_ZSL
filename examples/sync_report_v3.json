@@ -1,0 +1,363 @@
+{
+  "channel_layout": {
+    "channel_count": 2,
+    "channels": [
+      {
+        "index": 0,
+        "name": "mic_1",
+        "sample_rate": 48000
+      },
+      {
+        "index": 1,
+        "name": "mic_2",
+        "sample_rate": 48000
+      }
+    ],
+    "reference_channel": 0,
+    "sample_rate": 48000
+  },
+  "compensation": {
+    "mode": "linear",
+    "output_length": 143983,
+    "parameter_version": "c40f85f5fc37026acca97748",
+    "sinc_half_taps": 16,
+    "tolerance_samples": 2.0
+  },
+  "diagnoses": [
+    {
+      "candidates": [],
+      "channel": 0,
+      "ci_high_ppm": 0.0,
+      "ci_low_ppm": 0.0,
+      "conclusion": "reference_channel",
+      "confidence": 1.0,
+      "evidence_segments": [
+        0,
+        1,
+        2
+      ],
+      "jump_segments": [],
+      "message": "this channel is the declared zero-delay reference"
+    },
+    {
+      "candidates": [],
+      "channel": 1,
+      "ci_high_ppm": 91.04205093230195,
+      "ci_low_ppm": 90.62548290703285,
+      "conclusion": "clock_frequency_offset",
+      "confidence": 0.9999942515966136,
+      "evidence_segments": [
+        0,
+        1,
+        2
+      ],
+      "jump_segments": [],
+      "message": "delay changes continuously and is explained by a first-order clock-frequency offset"
+    }
+  ],
+  "drift_fits": [
+    {
+      "channel": 0,
+      "drift_ppm": 0.0,
+      "drift_ppm_ci_high": 0.0,
+      "drift_ppm_ci_low": 0.0,
+      "exceeded_threshold": false,
+      "initial_offset_samples": 0.0,
+      "max_residual_segment": 0,
+      "predicted_by_segment": [
+        {
+          "midpoint_sample": 23999.5,
+          "observed_delay_samples": 0.0,
+          "predicted_delay_samples": 0.0,
+          "residual_samples": 0.0,
+          "segment_index": 0
+        },
+        {
+          "midpoint_sample": 71999.5,
+          "observed_delay_samples": 0.0,
+          "predicted_delay_samples": 0.0,
+          "residual_samples": 0.0,
+          "segment_index": 1
+        },
+        {
+          "midpoint_sample": 119999.5,
+          "observed_delay_samples": 0.0,
+          "predicted_delay_samples": 0.0,
+          "residual_samples": 0.0,
+          "segment_index": 2
+        }
+      ],
+      "residual_by_segment": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "residual_max": 0.0,
+      "residual_rms": 0.0,
+      "residual_threshold_samples": 2.5,
+      "slope": 0.0,
+      "slope_std": 0.0
+    },
+    {
+      "channel": 1,
+      "drift_ppm": 90.8337669196674,
+      "drift_ppm_ci_high": 91.04205093230195,
+      "drift_ppm_ci_low": 90.62548290703285,
+      "exceeded_threshold": false,
+      "initial_offset_samples": 2.9568792284240017,
+      "max_residual_segment": 1,
+      "predicted_by_segment": [
+        {
+          "midpoint_sample": 23999.5,
+          "observed_delay_samples": 5.126642551687599,
+          "predicted_delay_samples": 5.136844217612559,
+          "residual_samples": -0.010201665924959968,
+          "segment_index": 0
+        },
+        {
+          "midpoint_sample": 71999.5,
+          "observed_delay_samples": 9.517268361606508,
+          "predicted_delay_samples": 9.496865029756595,
+          "residual_samples": 0.02040333184991283,
+          "segment_index": 1
+        },
+        {
+          "midpoint_sample": 119999.5,
+          "observed_delay_samples": 13.846684175975668,
+          "predicted_delay_samples": 13.85688584190063,
+          "residual_samples": -0.010201665924961745,
+          "segment_index": 2
+        }
+      ],
+      "residual_by_segment": [
+        -0.010201665924959968,
+        0.02040333184991283,
+        -0.010201665924961745
+      ],
+      "residual_max": 0.02040333184991283,
+      "residual_rms": 0.014427334309874923,
+      "residual_threshold_samples": 2.5,
+      "slope": 9.08337669196674e-05,
+      "slope_std": 1.0626735338497808e-07
+    }
+  ],
+  "fitting": {
+    "jump_threshold_samples": 8.0,
+    "min_drift_ppm": 0.25,
+    "min_segments": 2,
+    "residual_threshold_samples": 2.5,
+    "robust_iterations": 2
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "content_sha256": "cd64fc5e94346c2be1999179efd5d16d7f6d3e5f0932256f93c122cfb7f9bfdb",
+    "input_audio_sha256": "494e2c1b864618f6ecde9b1644f3ab54fbaef0f295061da0062591f57ace2af6",
+    "scope": "canonical_report_without_integrity"
+  },
+  "issues": [],
+  "kind": "sync_diagnostic_report",
+  "markers": [
+    {
+      "arrival_sample": 11999.604027695012,
+      "channel": 0,
+      "confidence": 0.8443583556138379,
+      "marker_index": 0,
+      "snr_db": 19.54088604073447
+    },
+    {
+      "arrival_sample": 36001.583857498335,
+      "channel": 0,
+      "confidence": 0.8422130647961698,
+      "marker_index": 1,
+      "snr_db": 19.42674167412796
+    },
+    {
+      "arrival_sample": 59998.339474282155,
+      "channel": 0,
+      "confidence": 0.840304197094538,
+      "marker_index": 2,
+      "snr_db": 19.326417806118872
+    },
+    {
+      "arrival_sample": 84000.25602678886,
+      "channel": 0,
+      "confidence": 0.8444934708188889,
+      "marker_index": 3,
+      "snr_db": 19.548125453418233
+    },
+    {
+      "arrival_sample": 108002.13678999826,
+      "channel": 0,
+      "confidence": 0.8262226258796822,
+      "marker_index": 4,
+      "snr_db": 18.619744776739914
+    },
+    {
+      "arrival_sample": 131999.05389298307,
+      "channel": 0,
+      "confidence": 0.831969864194217,
+      "marker_index": 5,
+      "snr_db": 18.901365403625935
+    },
+    {
+      "arrival_sample": 12003.594986438466,
+      "channel": 1,
+      "confidence": 0.8458847874601527,
+      "marker_index": 0,
+      "snr_db": 19.62302436924484
+    },
+    {
+      "arrival_sample": 36007.52959725414,
+      "channel": 1,
+      "confidence": 0.8437777131329809,
+      "marker_index": 1,
+      "snr_db": 19.50984385883432
+    },
+    {
+      "arrival_sample": 60006.28081909763,
+      "channel": 1,
+      "confidence": 0.8421841582737764,
+      "marker_index": 2,
+      "snr_db": 19.42521381019216
+    },
+    {
+      "arrival_sample": 84011.34041913807,
+      "channel": 1,
+      "confidence": 0.8457572982744463,
+      "marker_index": 3,
+      "snr_db": 19.616134293577392
+    },
+    {
+      "arrival_sample": 108015.16649484425,
+      "channel": 1,
+      "confidence": 0.8278954338449798,
+      "marker_index": 4,
+      "snr_db": 18.700795978949603
+    },
+    {
+      "arrival_sample": 132014.10351616034,
+      "channel": 1,
+      "confidence": 0.8336901233878942,
+      "marker_index": 5,
+      "snr_db": 18.98743257807623
+    }
+  ],
+  "parameter_version": "c40f85f5fc37026acca97748",
+  "provenance": {
+    "compensation": "pipeline:fractional_delay_resampling",
+    "diagnoses": "pipeline:continuity_and_jump_analysis",
+    "drift_fits": "pipeline:first_order_robust_fit",
+    "markers": "pipeline:detected",
+    "residual_summary": "pipeline:post_compensation_marker_detection",
+    "segment_delays": "pipeline:segmented_normalized_xcorr"
+  },
+  "reference_channel": 0,
+  "residual_summary": {
+    "channels": [
+      {
+        "channel": 0,
+        "marker_count": 6,
+        "max_abs_delay_samples": 0.0,
+        "residual_max_samples": 0.0,
+        "residual_rms_samples": 0.0,
+        "within_tolerance": true
+      },
+      {
+        "channel": 1,
+        "marker_count": 6,
+        "max_abs_delay_samples": 0.5153734886553138,
+        "residual_max_samples": 0.5153734886553138,
+        "residual_rms_samples": 0.32081101594212813,
+        "within_tolerance": true
+      }
+    ],
+    "max_abs_delay_samples": 0.5153734886553138,
+    "rms_samples": 0.32081101594212813,
+    "tolerance_samples": 2.0,
+    "worst_channel": 1
+  },
+  "sample_rate": 48000,
+  "schema_version": "v3",
+  "segment_delays": [
+    {
+      "channel": 0,
+      "ci_high_samples": 0.0,
+      "ci_low_samples": 0.0,
+      "delay_samples": 0.0,
+      "end_sample": 48000,
+      "marker_count": 2,
+      "method": "reference",
+      "peak_correlation": 1.0,
+      "segment_index": 0,
+      "start_sample": 0
+    },
+    {
+      "channel": 0,
+      "ci_high_samples": 0.0,
+      "ci_low_samples": 0.0,
+      "delay_samples": 0.0,
+      "end_sample": 96000,
+      "marker_count": 2,
+      "method": "reference",
+      "peak_correlation": 1.0,
+      "segment_index": 1,
+      "start_sample": 48000
+    },
+    {
+      "channel": 0,
+      "ci_high_samples": 0.0,
+      "ci_low_samples": 0.0,
+      "delay_samples": 0.0,
+      "end_sample": 144000,
+      "marker_count": 2,
+      "method": "reference",
+      "peak_correlation": 1.0,
+      "segment_index": 2,
+      "start_sample": 96000
+    },
+    {
+      "channel": 1,
+      "ci_high_samples": 5.626642551687599,
+      "ci_low_samples": 4.626642551687599,
+      "delay_samples": 5.126642551687599,
+      "end_sample": 48000,
+      "marker_count": 2,
+      "method": "segmented_normalized_xcorr",
+      "peak_correlation": 0.9530942729446459,
+      "segment_index": 0,
+      "start_sample": 0
+    },
+    {
+      "channel": 1,
+      "ci_high_samples": 10.017268361606508,
+      "ci_low_samples": 9.017268361606508,
+      "delay_samples": 9.517268361606508,
+      "end_sample": 96000,
+      "marker_count": 2,
+      "method": "segmented_normalized_xcorr",
+      "peak_correlation": 0.9479034938855815,
+      "segment_index": 1,
+      "start_sample": 48000
+    },
+    {
+      "channel": 1,
+      "ci_high_samples": 14.346684175975668,
+      "ci_low_samples": 13.346684175975668,
+      "delay_samples": 13.846684175975668,
+      "end_sample": 144000,
+      "marker_count": 2,
+      "method": "segmented_normalized_xcorr",
+      "peak_correlation": 0.9512100923543456,
+      "segment_index": 2,
+      "start_sample": 96000
+    }
+  ],
+  "segmentation": {
+    "correlation_window_samples": 8192,
+    "delay_search_samples": 1024,
+    "min_markers_per_segment": 1,
+    "refine_search_samples": 96,
+    "segment_length_samples": 48000
+  },
+  "source_version": "v3"
+}

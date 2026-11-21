@@ -1,22 +1,194 @@
-本地多通道采集设备（8 路麦克风阵列，各通道独立声卡，16-bit PCM WAV，标称采样率 48000 Hz）在长时间录制后出现通道间时基漂移：同一脉冲事件在各通道的到达样本逐渐错开，短录音上几乎察觉不到的偏差在长素材上会显著放大，而离线同步算法在数据规模变大后还必须做出分段与整段之间的取舍。工作台需完成从多通道 WAV 读取、同步标记检测、分段时延估计、漂移曲线拟合、分数延迟重采样补偿到同步后多通道拼接的全链路处理，并且同步标记描述、漂移诊断报告与补偿结果都需按三个版本（v1 仅标记时刻，v2 增加分段时延与漂移模型，v3 增加补偿参数与残差摘要）相互转换、兼容旧格式并输出诊断结论。
+# mcSync Workbench
 
-任务环境与准备：
-安装 Python 3.10 及以上版本，并安装 NumPy 与 PySide6（用于图形界面与本地确定性 WAV 读写和 FFT 计算）。
-确保工作区存在可写的本地目录用于样本、补偿结果、诊断报告与快照文件。
-运行前准备本地合成多通道 16-bit PCM WAV 样本生成脚本，样本需包含可配置的同步标记周期与已知时基漂移。
-准备 v1、v2、v3 三版同步标记描述与诊断报告的示例 JSON 文件，用于互操作与降级测试。
+本地 8 通道、独立声卡、16-bit PCM WAV 的时基漂移同步工作台。实现覆盖：
 
-业务要求：
-1. 实现多通道 WAV 读取与同步标记检测：按通道解析 16-bit PCM 数据，从每通道中检测已知周期脉冲标记的到达样本位置，输出标记序号、到达样本与置信度；标记缺失或信噪比不足时以 E_MARKER_MISSING 定位通道与标记序号，不得静默跳过该通道。
-2. 实现 v1、v2、v3 三版同步标记描述与诊断报告的解析、序列化与内部升级：v1 仅记录标记时刻，v2 增加分段时延与漂移模型参数，v3 增加补偿参数、残差摘要与通道布局声明；载入旧版时升级为 v3 内部表示并标注推导来源，降级导出时无法表达的字段以 E_VERSION_LOSS 列出受影响字段，不得静默丢弃。
-3. 实现分段时延估计与漂移来源诊断：按可配置分段长度对每通道与参考通道做互相关时延估计，得到分段时延序列并输出每段峰值相关度与不确定区间；依据分段时延序列的连续性与跳变特征区分时钟频率偏差与事件跳变，输出每通道诊断结论、证据分段与置信区间，无法归类时以 E_DRIFT_UNKNOWN 报告并给出候选解释。
-4. 实现一阶时钟漂移模型拟合：用分段时延序列拟合频率偏差与初始偏移，输出拟合参数、拟合残差与每通道的预测时延曲线；拟合参数变化后必须重新估计并输出新旧拟合参数差异与每分段预测偏差，拟合残差超过声明阈值时在报告中定位残差最大的分段。
-5. 实现基于漂移模型的分数延迟重采样补偿：按拟合出的频率偏差对每通道做本地确定性插值重采样，补偿后各通道标记到达位置与参考通道的偏差须在声明容差内；线性插值与窗函数插值两种质量模式可切换，切换后须输出两种模式下的同步残差对比与最大偏差通道，插值模式非法时返回 E_MODE_INVALID。
-6. 实现版本兼容的补偿结果与诊断报告原子导出：将补偿后多通道 WAV 与 v3 诊断报告（拟合参数、逐分段时延、诊断结论、残差摘要与内容哈希）以临时文件加原子重命名写出；写出前校验当前报告版本与补偿参数版本一致，不一致返回 E_VERSION_STALE；导出到 v1 或 v2 时按降级规则裁剪字段并记录清单。
-7. 实现参数变更后的增量重算与缓存复用：通道数、分段长度、参考通道、插值模式或漂移拟合参数变化后，只重算受影响的通道分段与拼接区段，未受影响区段复用缓存结果与其内容哈希；重算完成后以一次整体替换发布新结果，查询接口在替换期间始终返回完整旧版本或完整新版本，并输出复用与重算区段清单。
-8. 实现强制终止后的恢复与确定性样本入口：将已发布版本的拟合参数、分段时延、补偿参数与哈希链以临时文件加原子重命名按通道区间提交，恢复时校验版本与哈希链，仅从最近有效提交继续补偿未完成区间且不重复写入已提交区间，断链或字段缺失以 E_RECOVERY_INVALID 中止；同时提供本地合成多通道样本生成器（注入已知时基漂移与同步标记）及基线残差摘要，相同种子与操作序列下补偿结果与轨迹日志逐字节一致。
+- 多通道 WAV（单文件交织或逐通道目录）读取与确定性 16-bit PCM 写出
+- 周期脉冲标记检测、置信度/SNR、`E_MARKER_MISSING` 精确定位
+- 分段归一化互相关时延、峰值相关度、95% 不确定区间
+- 时钟频偏与事件跳变的连续性/跳变诊断，未知时返回 `E_DRIFT_UNKNOWN`
+- 稳健一阶漂移拟合、逐段预测/残差、拟合参数变化对比
+- 线性插值与 Hann 窗 sinc 分数延迟重采样、模式对比和 `E_MODE_INVALID`
+- v1/v2/v3 报告解析、升级来源标注、降级 `E_VERSION_LOSS` 字段清单
+- 原子 WAV/JSON 导出、内容哈希、`E_VERSION_STALE` 参数版本校验
+- 增量缓存、内容哈希校验、只读快照整体替换
+- 按通道区间提交的恢复日志、SHA-256 哈希链、`E_RECOVERY_INVALID`
+- 确定性合成样本、已知漂移真值、基线残差摘要、逐字节复现
+- 可选 PySide6 桌面界面
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+详细设计见 [docs/TECHNICAL.md](docs/TECHNICAL.md)，三版示例见
+[examples/README.md](examples/README.md)。
 
-验收：
-使用本地多通道样本验证标记检测、漂移拟合、补偿与三版报告互转，并检验中断恢复与确定性复现。
+## 环境与安装
+
+要求 Python 3.10+。本工作区实测环境：
+
+- Python 3.14.4
+- NumPy 2.5.5
+- PySide6 6.12.0
+- pytest 9.2.0
+
+```bash
+python3 -m pip install --user --break-system-packages -e '.[gui,test]'
+```
+
+也可以直接使用源码目录中的 `python3 -m mcsync ...`，无需安装。
+
+## 快速开始
+
+生成 8 通道、24 秒、含已知漂移和每 0.5 秒脉冲标记的样本：
+
+```bash
+python3 -m mcsync synth --out artifacts/demo --duration 24 --channels 8
+```
+
+运行全链路并导出 v1/v2/v3：
+
+```bash
+python3 -m mcsync analyze \
+  --input artifacts/demo/sample_8ch.wav \
+  --out artifacts/demo/analysis \
+  --mode linear \
+  --segment-seconds 1 \
+  --marker-period-seconds 0.5 \
+  --versions all
+```
+
+输出包括：
+
+```text
+artifacts/demo/analysis/
+  compensated.wav
+  report_v1.json
+  report_v2.json
+  report_v3.json
+  diagnostics.md
+  summary.json
+```
+
+运行本地验收：
+
+```bash
+python3 scripts/run_validation.py
+python3 -m pytest -q
+```
+
+启动界面：
+
+```bash
+python3 -m mcsync gui
+```
+
+## Python API
+
+```python
+from mcsync import (
+    CompensationConfig,
+    MarkerConfig,
+    PipelineConfig,
+    SegmentationConfig,
+    SyncPipeline,
+    export_result,
+    read_audio,
+)
+
+audio = read_audio("sample_8ch.wav")
+config = PipelineConfig(
+    reference_channel=0,
+    marker=MarkerConfig(period_seconds=0.5, pulse_duration_samples=96),
+    segmentation=SegmentationConfig(segment_length_samples=48000),
+    compensation=CompensationConfig(mode="windowed_sinc", tolerance_samples=2.0),
+)
+result = SyncPipeline(config).analyze(audio)
+export_result(result, "compensated.wav", "report_v3.json", target_version="v3")
+```
+
+增量发布：
+
+```python
+from mcsync import IncrementalSyncEngine
+
+engine = IncrementalSyncEngine(audio, config)
+outcome = engine.update_parameters(mode="linear")
+print(outcome.reuse_report["recomputed_concat_chunks"])
+snapshot = engine.snapshot()  # always one complete published revision
+```
+
+## 关键约定
+
+时延符号为 `channel_arrival - reference_arrival`。一阶模型：
+
+```text
+delay_samples(t) = initial_offset_samples + slope * reference_sample
+drift_ppm        = slope * 1_000_000
+```
+
+补偿时，输出参考样本 `m` 从通道输入位置
+`initial_offset_samples + (1 + slope) * m` 重采样，因此正频偏通道不会在长素材中持续后移。
+
+分段互相关在标记粗时延附近做精细搜索；无有效标记时才使用较大的全局搜索范围。
+分段越长，平均漂移估计越稳但越难捕捉事件跳变；`segment_length_samples` 是精度与鲁棒性的显式取舍。
+
+## 版本与错误
+
+内部统一为 v3。载入 v1/v2 时会推导可推导字段，并在 `provenance` 标明：
+
+- `v1:direct_marker_times`
+- `v1:derived_from_marker_times`
+- `v2:direct_segment_delays`
+- `unavailable_in_v1` / `unavailable_in_v2`
+
+降级文档包含：
+
+```json
+{
+  "compatibility": {
+    "code": "E_VERSION_LOSS",
+    "source_version": "v3",
+    "target_version": "v1",
+    "lost_fields": ["segment_delays", "..."]
+  }
+}
+```
+
+稳定错误码：
+
+| Code | Meaning |
+|---|---|
+| `E_MARKER_MISSING` | 标记缺失或 SNR/置信度不足，带通道和标记序号 |
+| `E_VERSION_LOSS` | 降级无法表达的字段清单 |
+| `E_VERSION_INVALID` | 文档结构、版本或内容哈希无效 |
+| `E_VERSION_STALE` | 报告、补偿参数或发布结果参数版本不一致 |
+| `E_DRIFT_UNKNOWN` | 无法可靠区分频偏/跳变，附候选解释 |
+| `E_RESIDUAL_THRESHOLD` | 拟合残差超阈值并定位最大残差段 |
+| `E_MODE_INVALID` | 非法插值模式 |
+| `E_RECOVERY_INVALID` | 恢复记录断链、缺字段、重叠或块哈希错误 |
+| `E_WAV_INVALID` | WAV 格式或 PCM 数据错误 |
+| `E_CHANNEL_INVALID` | 通道或参考通道越界 |
+
+## 实测结果
+
+`scripts/run_validation.py` 使用 8 通道、48 kHz、8 秒、种子 `20261122` 的本地样本，结果为：
+
+- 128/128 个标记全部检测成功，无缺失。
+- 已知漂移为 `0, 120, -95, 180, -150, 60, -35, 210 ppm`。
+- 最大漂移估计误差 `0.841 ppm`。
+- 线性补偿最大标记偏差 `1.018` 样本，容差 2 样本。
+- 窗 sinc 与线性模式均完整输出；本样本窗 sinc 最大偏差更小约 `0.033` 样本。
+- v1/v2/v3 均可导出并重新载入，v3 内容哈希校验通过。
+- 模拟中断后，6 个已提交区间被跳过，26 个未完成区间续算；结果与直接补偿逐样本一致。
+- 相同种子和操作序列下，补偿 WAV 与 v3 报告逐字节一致。
+- 注入缺失标记后，准确报告 `channel=1, marker_index=2`。
+- 注入 120 样本事件跳变后，诊断结论为 `event_jump`，证据跳变段为 2。
+
+完整机器可读结果见 `artifacts/validation/validation_summary.json`。
+
+## 测试
+
+```text
+25 passed
+```
+
+覆盖标记检测/缺失、WAV round-trip、漂移拟合、补偿容差、事件跳变/未知诊断、
+非法插值模式、v1/v2/v3 互转、原子导出与版本过期、增量复用、恢复哈希链、
+恢复重叠写入拒绝、确定性样本与逐字节复现。
+
