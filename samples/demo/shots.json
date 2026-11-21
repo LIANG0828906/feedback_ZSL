@@ -1,0 +1,1480 @@
+{
+  "schema_version": 1,
+  "match_id": "local-cover-20261122-8",
+  "seed": 20261122,
+  "step_ms": 50,
+  "observation": {
+    "start_step": 1,
+    "end_step": 45,
+    "sample_rule": "one snapshot after all arrivals and due settlements at each fixed physics-step boundary; end_step is inclusive"
+  },
+  "arrival_order_rule": "arrival_seq is a global stable integer assigned by the generator; same-step revocations are applied before the settlement barrier in arrival_seq order",
+  "clock_rule": "local_time_ms originates in the sample generator; no wall clock is read by replay, hashing or reconciliation",
+  "latency_rule": "latency_steps is emitted explicitly by the sample generator as arrival_step - target_step; the workbench does not infer latency",
+  "shots": [
+    {
+      "record_id": "shot-P1-0005",
+      "player_id": "P1",
+      "client_seq": 5,
+      "local_time_ms": 177,
+      "target_step": 3,
+      "arrival_step": 3,
+      "arrival_seq": 1,
+      "projectile": {
+        "hit_position": [
+          0.7306,
+          3.1834
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 67.0
+      },
+      "prediction": {
+        "C04": 2.395082,
+        "C07": 26.37441,
+        "C08": 1.796311
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 150,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0012",
+      "player_id": "P1",
+      "client_seq": 12,
+      "local_time_ms": 218,
+      "target_step": 4,
+      "arrival_step": 3,
+      "arrival_seq": 2,
+      "projectile": {
+        "hit_position": [
+          0.7238,
+          1.8419
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 112.0
+      },
+      "prediction": {
+        "C01": 4.608943,
+        "C04": 50.753236,
+        "C05": 3.456707,
+        "C07": 4.608943
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 200,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0014",
+      "player_id": "P2",
+      "client_seq": 14,
+      "local_time_ms": 207,
+      "target_step": 4,
+      "arrival_step": 3,
+      "arrival_seq": 3,
+      "projectile": {
+        "hit_position": [
+          0.32,
+          0.4099
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 81.0
+      },
+      "prediction": {
+        "C01": 27.942854,
+        "C02": 1.903135,
+        "C04": 2.537513
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 200,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0008",
+      "player_id": "P1",
+      "client_seq": 8,
+      "local_time_ms": 345,
+      "target_step": 6,
+      "arrival_step": 7,
+      "arrival_seq": 4,
+      "projectile": {
+        "hit_position": [
+          0.4385,
+          3.382
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 86.0
+      },
+      "prediction": {
+        "C04": 3.217281,
+        "C07": 35.428395,
+        "C08": 2.412961
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 300,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "late-late-5-P1-0025",
+      "player_id": "P1",
+      "client_seq": 25,
+      "local_time_ms": 150,
+      "target_step": 3,
+      "arrival_step": 8,
+      "arrival_seq": 5,
+      "projectile": {
+        "hit_position": [
+          3.4018,
+          0.6933
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 79.0
+      },
+      "prediction": {
+        "C02": 2.0034,
+        "C03": 29.415005,
+        "C06": 2.6712
+      },
+      "note": "late-by-5",
+      "latency_steps": 5,
+      "scheduled_time_ms": 150,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0020",
+      "player_id": "P2",
+      "client_seq": 20,
+      "local_time_ms": 361,
+      "target_step": 7,
+      "arrival_step": 9,
+      "arrival_seq": 7,
+      "projectile": {
+        "hit_position": [
+          3.6773,
+          0.4128
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 63.0
+      },
+      "prediction": {
+        "C02": 1.689069,
+        "C03": 24.799818,
+        "C06": 2.252092
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 350,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "late-late-7-P2-0025",
+      "player_id": "P2",
+      "client_seq": 25,
+      "local_time_ms": 251,
+      "target_step": 5,
+      "arrival_step": 12,
+      "arrival_seq": 8,
+      "projectile": {
+        "hit_position": [
+          0.9204,
+          1.6726
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 73.0
+      },
+      "prediction": {
+        "C01": 3.201653,
+        "C04": 35.256293,
+        "C05": 2.401239,
+        "C07": 3.201653
+      },
+      "note": "late-by-7",
+      "latency_steps": 7,
+      "scheduled_time_ms": 250,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0017",
+      "player_id": "P1",
+      "client_seq": 17,
+      "local_time_ms": 679,
+      "target_step": 13,
+      "arrival_step": 12,
+      "arrival_seq": 9,
+      "projectile": {
+        "hit_position": [
+          0.8459,
+          1.8378
+        ],
+        "incident_angle_deg": 20.0,
+        "momentum": 121.0
+      },
+      "prediction": {
+        "C01": 5.162722,
+        "C04": 56.851404,
+        "C05": 3.872042,
+        "C07": 5.162722
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 650,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0021",
+      "player_id": "P1",
+      "client_seq": 21,
+      "local_time_ms": 644,
+      "target_step": 12,
+      "arrival_step": 12,
+      "arrival_seq": 10,
+      "projectile": {
+        "hit_position": [
+          3.5914,
+          2.2216
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 119.0
+      },
+      "prediction": {
+        "C03": 4.253951,
+        "C05": 3.190463,
+        "C06": 46.844101
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 600,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0018",
+      "player_id": "P2",
+      "client_seq": 18,
+      "local_time_ms": 579,
+      "target_step": 11,
+      "arrival_step": 12,
+      "arrival_seq": 11,
+      "projectile": {
+        "hit_position": [
+          0.9517,
+          1.8043
+        ],
+        "incident_angle_deg": 20.0,
+        "momentum": 111.0
+      },
+      "prediction": {
+        "C01": 4.736051,
+        "C04": 52.15294,
+        "C05": 3.552038,
+        "C07": 4.736051
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 550,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0003",
+      "player_id": "P2",
+      "client_seq": 3,
+      "local_time_ms": 698,
+      "target_step": 13,
+      "arrival_step": 13,
+      "arrival_seq": 12,
+      "projectile": {
+        "hit_position": [
+          3.8244,
+          0.4363
+        ],
+        "incident_angle_deg": 10.0,
+        "momentum": 123.0
+      },
+      "prediction": {
+        "C02": 3.750012,
+        "C03": 55.059706,
+        "C06": 5.000017
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 650,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0019",
+      "player_id": "P2",
+      "client_seq": 19,
+      "local_time_ms": 691,
+      "target_step": 13,
+      "arrival_step": 13,
+      "arrival_seq": 13,
+      "projectile": {
+        "hit_position": [
+          1.8911,
+          0.7868
+        ],
+        "incident_angle_deg": 5.0,
+        "momentum": 118.0
+      },
+      "prediction": {
+        "C01": 4.003087,
+        "C02": 58.775487,
+        "C03": 4.003087,
+        "C05": 5.33745
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 650,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0001",
+      "player_id": "P2",
+      "client_seq": 1,
+      "local_time_ms": 645,
+      "target_step": 12,
+      "arrival_step": 14,
+      "arrival_seq": 14,
+      "projectile": {
+        "hit_position": [
+          0.5944,
+          3.4789
+        ],
+        "incident_angle_deg": 20.0,
+        "momentum": 106.0
+      },
+      "prediction": {
+        "C04": 4.111559,
+        "C07": 45.276099,
+        "C08": 3.083669
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 600,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0003",
+      "player_id": "P1",
+      "client_seq": 3,
+      "local_time_ms": 792,
+      "target_step": 15,
+      "arrival_step": 15,
+      "arrival_seq": 15,
+      "projectile": {
+        "hit_position": [
+          0.2833,
+          3.3699
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 113.0
+      },
+      "prediction": {
+        "C04": 4.227358,
+        "C07": 46.551264,
+        "C08": 3.170519
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 750,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0013",
+      "player_id": "P2",
+      "client_seq": 13,
+      "local_time_ms": 837,
+      "target_step": 16,
+      "arrival_step": 15,
+      "arrival_seq": 16,
+      "projectile": {
+        "hit_position": [
+          1.8995,
+          0.7575
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 124.0
+      },
+      "prediction": {
+        "C01": 4.078818,
+        "C02": 59.887401,
+        "C03": 4.078818,
+        "C05": 5.438423
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 800,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0015",
+      "player_id": "P2",
+      "client_seq": 15,
+      "local_time_ms": 704,
+      "target_step": 14,
+      "arrival_step": 15,
+      "arrival_seq": 17,
+      "projectile": {
+        "hit_position": [
+          0.7982,
+          0.7905
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 58.0
+      },
+      "prediction": {
+        "C01": 16.968149,
+        "C02": 1.155669,
+        "C04": 1.540891
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 700,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0017",
+      "player_id": "P2",
+      "client_seq": 17,
+      "local_time_ms": 679,
+      "target_step": 13,
+      "arrival_step": 15,
+      "arrival_seq": 18,
+      "projectile": {
+        "hit_position": [
+          0.6993,
+          1.6823
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 55.0
+      },
+      "prediction": {
+        "C01": 2.26332,
+        "C04": 24.923464,
+        "C05": 1.69749,
+        "C07": 2.26332
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 650,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "late-window-P1-0026",
+      "player_id": "P1",
+      "client_seq": 26,
+      "local_time_ms": 700,
+      "target_step": 14,
+      "arrival_step": 16,
+      "arrival_seq": 19,
+      "projectile": {
+        "hit_position": [
+          1.9153,
+          0.2797
+        ],
+        "incident_angle_deg": 5.0,
+        "momentum": 81.0
+      },
+      "prediction": {
+        "C01": 2.747882,
+        "C02": 40.345885,
+        "C03": 2.747882,
+        "C05": 3.663843
+      },
+      "note": "late-within-window",
+      "latency_steps": 2,
+      "scheduled_time_ms": 700,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0014",
+      "player_id": "P1",
+      "client_seq": 14,
+      "local_time_ms": 801,
+      "target_step": 16,
+      "arrival_step": 16,
+      "arrival_seq": 20,
+      "projectile": {
+        "hit_position": [
+          2.2655,
+          3.1699
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 137.0
+      },
+      "prediction": {
+        "C05": 6.369461,
+        "C07": 4.777095,
+        "C08": 70.139894
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 800,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0022",
+      "player_id": "P1",
+      "client_seq": 22,
+      "local_time_ms": 900,
+      "target_step": 18,
+      "arrival_step": 17,
+      "arrival_seq": 21,
+      "projectile": {
+        "hit_position": [
+          0.8794,
+          1.9286
+        ],
+        "incident_angle_deg": 0.0,
+        "momentum": 56.0
+      },
+      "prediction": {
+        "C01": 2.542703,
+        "C04": 28.0,
+        "C05": 1.907027,
+        "C07": 2.542703
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 900,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0006",
+      "player_id": "P1",
+      "client_seq": 6,
+      "local_time_ms": 859,
+      "target_step": 17,
+      "arrival_step": 18,
+      "arrival_seq": 22,
+      "projectile": {
+        "hit_position": [
+          3.4718,
+          0.2824
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 139.0
+      },
+      "prediction": {
+        "C02": 3.52497,
+        "C03": 51.755516,
+        "C06": 4.69996
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 850,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0007",
+      "player_id": "P1",
+      "client_seq": 7,
+      "local_time_ms": 1024,
+      "target_step": 20,
+      "arrival_step": 19,
+      "arrival_seq": 23,
+      "projectile": {
+        "hit_position": [
+          1.9653,
+          0.662
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 82.0
+      },
+      "prediction": {
+        "C01": 2.287427,
+        "C02": 33.585234,
+        "C03": 2.287427,
+        "C05": 3.049902
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 1000,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0018",
+      "player_id": "P1",
+      "client_seq": 18,
+      "local_time_ms": 968,
+      "target_step": 19,
+      "arrival_step": 19,
+      "arrival_seq": 24,
+      "projectile": {
+        "hit_position": [
+          3.442,
+          2.1861
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 144.0
+      },
+      "prediction": {
+        "C03": 5.741444,
+        "C05": 4.306083,
+        "C06": 63.224236
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 950,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0009",
+      "player_id": "P2",
+      "client_seq": 9,
+      "local_time_ms": 1076,
+      "target_step": 21,
+      "arrival_step": 19,
+      "arrival_seq": 25,
+      "projectile": {
+        "hit_position": [
+          0.3086,
+          0.3199
+        ],
+        "incident_angle_deg": 20.0,
+        "momentum": 55.0
+      },
+      "prediction": {
+        "C01": 18.458248,
+        "C02": 1.257156,
+        "C04": 1.676208
+      },
+      "note": "",
+      "latency_steps": -2,
+      "scheduled_time_ms": 1050,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0012",
+      "player_id": "P2",
+      "client_seq": 12,
+      "local_time_ms": 1039,
+      "target_step": 20,
+      "arrival_step": 20,
+      "arrival_seq": 26,
+      "projectile": {
+        "hit_position": [
+          2.0786,
+          2.0194
+        ],
+        "incident_angle_deg": 20.0,
+        "momentum": 145.0
+      },
+      "prediction": {
+        "C02": 7.199108,
+        "C04": 5.399331,
+        "C05": 79.275886,
+        "C06": 5.399331,
+        "C08": 7.199108
+      },
+      "note": "prediction-drift",
+      "latency_steps": 0,
+      "scheduled_time_ms": 1000,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0020",
+      "player_id": "P1",
+      "client_seq": 20,
+      "local_time_ms": 1047,
+      "target_step": 20,
+      "arrival_step": 21,
+      "arrival_seq": 27,
+      "projectile": {
+        "hit_position": [
+          2.1745,
+          3.6694
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 63.0
+      },
+      "prediction": {
+        "C05": 3.453837,
+        "C07": 2.590378,
+        "C08": 38.033329
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1000,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0005",
+      "player_id": "P2",
+      "client_seq": 5,
+      "local_time_ms": 1011,
+      "target_step": 20,
+      "arrival_step": 21,
+      "arrival_seq": 28,
+      "projectile": {
+        "hit_position": [
+          2.4844,
+          0.7476
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 114.0
+      },
+      "prediction": {
+        "C01": 3.749881,
+        "C02": 55.057772,
+        "C03": 3.749881,
+        "C05": 4.999841
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1000,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0006",
+      "player_id": "P2",
+      "client_seq": 6,
+      "local_time_ms": 1142,
+      "target_step": 22,
+      "arrival_step": 21,
+      "arrival_seq": 29,
+      "projectile": {
+        "hit_position": [
+          2.2351,
+          0.779
+        ],
+        "incident_angle_deg": 5.0,
+        "momentum": 83.0
+      },
+      "prediction": {
+        "C01": 2.815731,
+        "C02": 41.34208,
+        "C03": 2.815731,
+        "C05": 3.754308
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 1100,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0015",
+      "player_id": "P1",
+      "client_seq": 15,
+      "local_time_ms": 1128,
+      "target_step": 22,
+      "arrival_step": 22,
+      "arrival_seq": 30,
+      "projectile": {
+        "hit_position": [
+          2.1791,
+          3.1854
+        ],
+        "incident_angle_deg": 10.0,
+        "momentum": 136.0
+      },
+      "prediction": {
+        "C05": 7.601651,
+        "C07": 5.701238,
+        "C08": 83.708659
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 1100,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0005-dup2",
+      "player_id": "P2",
+      "client_seq": 5,
+      "local_time_ms": 1011,
+      "target_step": 20,
+      "arrival_step": 22,
+      "arrival_seq": 31,
+      "projectile": {
+        "hit_position": [
+          2.4844,
+          0.7476
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 114.0
+      },
+      "prediction": {
+        "C01": 3.749881,
+        "C02": 55.057772,
+        "C03": 3.749881,
+        "C05": 4.999841
+      },
+      "note": "duplicate-delivery",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1000,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0010",
+      "player_id": "P1",
+      "client_seq": 10,
+      "local_time_ms": 1130,
+      "target_step": 22,
+      "arrival_step": 24,
+      "arrival_seq": 32,
+      "projectile": {
+        "hit_position": [
+          2.4543,
+          1.653
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 121.0
+      },
+      "prediction": {
+        "C02": 4.824408,
+        "C04": 3.618306,
+        "C05": 53.12592,
+        "C06": 3.618306,
+        "C08": 4.824408
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1100,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0023",
+      "player_id": "P1",
+      "client_seq": 23,
+      "local_time_ms": 1181,
+      "target_step": 23,
+      "arrival_step": 25,
+      "arrival_seq": 33,
+      "projectile": {
+        "hit_position": [
+          3.3598,
+          0.7308
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 125.0
+      },
+      "prediction": {
+        "C02": 3.169937,
+        "C03": 46.54273,
+        "C06": 4.226583
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1150,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0002",
+      "player_id": "P2",
+      "client_seq": 2,
+      "local_time_ms": 1299,
+      "target_step": 25,
+      "arrival_step": 25,
+      "arrival_seq": 34,
+      "projectile": {
+        "hit_position": [
+          0.6961,
+          3.2669
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 118.0
+      },
+      "prediction": {
+        "C04": 4.704795,
+        "C07": 51.808749,
+        "C08": 3.528596
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 1250,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0007",
+      "player_id": "P2",
+      "client_seq": 7,
+      "local_time_ms": 1245,
+      "target_step": 24,
+      "arrival_step": 25,
+      "arrival_seq": 35,
+      "projectile": {
+        "hit_position": [
+          3.8048,
+          0.3379
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 139.0
+      },
+      "prediction": {
+        "C02": 3.900018,
+        "C03": 57.262174,
+        "C06": 5.200024
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1200,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0024",
+      "player_id": "P2",
+      "client_seq": 24,
+      "local_time_ms": 1394,
+      "target_step": 27,
+      "arrival_step": 26,
+      "arrival_seq": 36,
+      "projectile": {
+        "hit_position": [
+          3.4505,
+          2.219
+        ],
+        "incident_angle_deg": 10.0,
+        "momentum": 56.0
+      },
+      "prediction": {
+        "C03": 2.27643,
+        "C05": 1.707323,
+        "C06": 25.067834
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 1350,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0010",
+      "player_id": "P2",
+      "client_seq": 10,
+      "local_time_ms": 1598,
+      "target_step": 31,
+      "arrival_step": 29,
+      "arrival_seq": 37,
+      "projectile": {
+        "hit_position": [
+          3.673,
+          1.8832
+        ],
+        "incident_angle_deg": 0.0,
+        "momentum": 102.0
+      },
+      "prediction": {
+        "C03": 4.210319,
+        "C05": 3.15774,
+        "C06": 46.363636
+      },
+      "note": "",
+      "latency_steps": -2,
+      "scheduled_time_ms": 1550,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0004",
+      "player_id": "P2",
+      "client_seq": 4,
+      "local_time_ms": 1438,
+      "target_step": 28,
+      "arrival_step": 30,
+      "arrival_seq": 38,
+      "projectile": {
+        "hit_position": [
+          3.745,
+          0.4176
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 108.0
+      },
+      "prediction": {
+        "C02": 3.878694,
+        "C03": 56.949085,
+        "C06": 5.171593
+      },
+      "note": "prediction-drift",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1400,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0008",
+      "player_id": "P2",
+      "client_seq": 8,
+      "local_time_ms": 1584,
+      "target_step": 31,
+      "arrival_step": 31,
+      "arrival_seq": 39,
+      "projectile": {
+        "hit_position": [
+          0.6328,
+          0.342
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 127.0
+      },
+      "prediction": {
+        "C01": 39.280438,
+        "C02": 2.675316,
+        "C04": 3.567088
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 1550,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0021",
+      "player_id": "P2",
+      "client_seq": 21,
+      "local_time_ms": 1627,
+      "target_step": 32,
+      "arrival_step": 31,
+      "arrival_seq": 40,
+      "projectile": {
+        "hit_position": [
+          3.5613,
+          2.2057
+        ],
+        "incident_angle_deg": 20.0,
+        "momentum": 83.0
+      },
+      "prediction": {
+        "C03": 3.219428,
+        "C05": 2.414571,
+        "C06": 35.45204
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 1600,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0016",
+      "player_id": "P1",
+      "client_seq": 16,
+      "local_time_ms": 1726,
+      "target_step": 34,
+      "arrival_step": 32,
+      "arrival_seq": 41,
+      "projectile": {
+        "hit_position": [
+          0.8539,
+          1.7304
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 147.0
+      },
+      "prediction": {
+        "C01": 5.780368,
+        "C04": 63.652867,
+        "C05": 4.335276,
+        "C07": 5.780368
+      },
+      "note": "",
+      "latency_steps": -2,
+      "scheduled_time_ms": 1700,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0022",
+      "player_id": "P2",
+      "client_seq": 22,
+      "local_time_ms": 1605,
+      "target_step": 32,
+      "arrival_step": 32,
+      "arrival_seq": 42,
+      "projectile": {
+        "hit_position": [
+          2.2734,
+          0.2205
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 135.0
+      },
+      "prediction": {
+        "C01": 3.765885,
+        "C02": 55.292763,
+        "C03": 3.765885,
+        "C05": 5.021181
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 1600,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0023",
+      "player_id": "P2",
+      "client_seq": 23,
+      "local_time_ms": 1507,
+      "target_step": 30,
+      "arrival_step": 32,
+      "arrival_seq": 43,
+      "projectile": {
+        "hit_position": [
+          0.9353,
+          0.2702
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 105.0
+      },
+      "prediction": {
+        "C01": 33.986542,
+        "C02": 2.314759,
+        "C04": 3.086345
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1500,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0011",
+      "player_id": "P1",
+      "client_seq": 11,
+      "local_time_ms": 1560,
+      "target_step": 31,
+      "arrival_step": 33,
+      "arrival_seq": 44,
+      "projectile": {
+        "hit_position": [
+          1.8224,
+          2.1692
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 126.0
+      },
+      "prediction": {
+        "C02": 4.260396,
+        "C04": 3.195297,
+        "C05": 46.915072,
+        "C06": 3.195297,
+        "C08": 4.260396
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1550,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0013",
+      "player_id": "P1",
+      "client_seq": 13,
+      "local_time_ms": 1657,
+      "target_step": 33,
+      "arrival_step": 33,
+      "arrival_seq": 45,
+      "projectile": {
+        "hit_position": [
+          1.7982,
+          0.4559
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 143.0
+      },
+      "prediction": {
+        "C01": 4.703798,
+        "C02": 69.063697,
+        "C03": 4.703798,
+        "C05": 6.27173
+      },
+      "note": "",
+      "latency_steps": 0,
+      "scheduled_time_ms": 1650,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0019",
+      "player_id": "P1",
+      "client_seq": 19,
+      "local_time_ms": 1812,
+      "target_step": 36,
+      "arrival_step": 34,
+      "arrival_seq": 47,
+      "projectile": {
+        "hit_position": [
+          2.1503,
+          1.863
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 132.0
+      },
+      "prediction": {
+        "C02": 4.718668,
+        "C04": 3.539001,
+        "C05": 51.961524,
+        "C06": 3.539001,
+        "C08": 4.718668
+      },
+      "note": "",
+      "latency_steps": -2,
+      "scheduled_time_ms": 1800,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0024",
+      "player_id": "P1",
+      "client_seq": 24,
+      "local_time_ms": 1819,
+      "target_step": 36,
+      "arrival_step": 35,
+      "arrival_seq": 48,
+      "projectile": {
+        "hit_position": [
+          0.2727,
+          2.1831
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 80.0
+      },
+      "prediction": {
+        "C01": 3.292102,
+        "C04": 36.252311,
+        "C05": 2.469076,
+        "C07": 3.292102
+      },
+      "note": "",
+      "latency_steps": -1,
+      "scheduled_time_ms": 1800,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0002",
+      "player_id": "P1",
+      "client_seq": 2,
+      "local_time_ms": 1768,
+      "target_step": 35,
+      "arrival_step": 37,
+      "arrival_seq": 49,
+      "projectile": {
+        "hit_position": [
+          2.0323,
+          2.1698
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 121.0
+      },
+      "prediction": {
+        "C02": 4.325446,
+        "C04": 3.244084,
+        "C05": 47.631397,
+        "C06": 3.244084,
+        "C08": 4.325446
+      },
+      "note": "",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1750,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0002-dup1",
+      "player_id": "P1",
+      "client_seq": 2,
+      "local_time_ms": 1768,
+      "target_step": 35,
+      "arrival_step": 37,
+      "arrival_seq": 50,
+      "projectile": {
+        "hit_position": [
+          2.0323,
+          2.1698
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 121.0
+      },
+      "prediction": {
+        "C02": 4.325446,
+        "C04": 3.244084,
+        "C05": 47.631397,
+        "C06": 3.244084,
+        "C08": 4.325446
+      },
+      "note": "duplicate-delivery",
+      "latency_steps": 2,
+      "scheduled_time_ms": 1750,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0011",
+      "player_id": "P2",
+      "client_seq": 11,
+      "local_time_ms": 1888,
+      "target_step": 37,
+      "arrival_step": 38,
+      "arrival_seq": 51,
+      "projectile": {
+        "hit_position": [
+          0.2423,
+          1.9427
+        ],
+        "incident_angle_deg": 15.0,
+        "momentum": 68.0
+      },
+      "prediction": {
+        "C01": 2.982361,
+        "C04": 32.841478,
+        "C05": 2.236771,
+        "C07": 2.982361
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1850,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0001",
+      "player_id": "P1",
+      "client_seq": 1,
+      "local_time_ms": 1942,
+      "target_step": 38,
+      "arrival_step": 39,
+      "arrival_seq": 52,
+      "projectile": {
+        "hit_position": [
+          0.6843,
+          1.6874
+        ],
+        "incident_angle_deg": 30.0,
+        "momentum": 57.0
+      },
+      "prediction": {
+        "C01": 2.241367,
+        "C04": 24.681724,
+        "C05": 1.681026,
+        "C07": 2.241367
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1900,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0004",
+      "player_id": "P1",
+      "client_seq": 4,
+      "local_time_ms": 1936,
+      "target_step": 38,
+      "arrival_step": 39,
+      "arrival_seq": 53,
+      "projectile": {
+        "hit_position": [
+          4.0544,
+          0.4703
+        ],
+        "incident_angle_deg": 25.0,
+        "momentum": 96.0
+      },
+      "prediction": {
+        "C02": 2.693538,
+        "C03": 39.547976,
+        "C06": 3.591384
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1900,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P2-0016",
+      "player_id": "P2",
+      "client_seq": 16,
+      "local_time_ms": 1917,
+      "target_step": 38,
+      "arrival_step": 39,
+      "arrival_seq": 54,
+      "projectile": {
+        "hit_position": [
+          2.2897,
+          1.6608
+        ],
+        "incident_angle_deg": 35.0,
+        "momentum": 60.0
+      },
+      "prediction": {
+        "C02": 2.02876,
+        "C04": 1.52157,
+        "C05": 22.34051,
+        "C06": 1.52157,
+        "C08": 2.02876
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1900,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    },
+    {
+      "record_id": "shot-P1-0009",
+      "player_id": "P1",
+      "client_seq": 9,
+      "local_time_ms": 1986,
+      "target_step": 39,
+      "arrival_step": 40,
+      "arrival_seq": 55,
+      "projectile": {
+        "hit_position": [
+          0.6162,
+          0.2834
+        ],
+        "incident_angle_deg": 0.0,
+        "momentum": 58.0
+      },
+      "prediction": {
+        "C01": 20.714286,
+        "C02": 1.410811,
+        "C04": 1.881081
+      },
+      "note": "",
+      "latency_steps": 1,
+      "scheduled_time_ms": 1950,
+      "clock_source": "sample_generator",
+      "latency_rule": "arrival_step - target_step"
+    }
+  ]
+}
