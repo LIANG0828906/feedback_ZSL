@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loudness-diag"
+version = "1.0.0"
+description = "Block-domain 5.1 loudness diagnostics with deterministic recovery"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26"]
+
+[project.scripts]
+loudness-diag = "loudness_diag.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["loudness_diag*"]
+
+[tool.ruff.lint]
+ignore = ["PYI034"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/run_acceptance.py" = ["E402"]
+
