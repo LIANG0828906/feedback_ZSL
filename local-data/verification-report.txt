@@ -1,0 +1,396 @@
+BattleEconomy local verification
+checks=391 passed=391 failed=0
+runtime=8.0.34
+
+PASSED
+- non-positive yield returns E_TERRAIN_INVALID with terrain id
+- dangling outpost returns E_TERRAIN_INVALID with terrain id
+- out-of-range adjacency returns E_TERRAIN_INVALID with terrain id
+- small-sparse: same seed produces byte-identical scenario JSON
+- small-sparse: destruction sequence is deterministic
+- medium-balanced: same seed produces byte-identical scenario JSON
+- medium-balanced: destruction sequence is deterministic
+- large-dense: same seed produces byte-identical scenario JSON
+- large-dense: destruction sequence is deterministic
+- small-sparse: engine opens
+- small-sparse: baseline query succeeds
+- small-sparse batch 1: settlement succeeds ()
+- small-sparse batch 1: closure validated
+- small-sparse batch 1: closure conclusion matches
+- small-sparse batch 1: merged set equals union of per-event impacts
+- small-sparse batch 1: recorded closure equals per-event union
+- small-sparse batch 1: exact impact is within probed candidates
+- small-sparse batch 1: recompute plus reuse covers the terrain
+- small-sparse batch 1: exactly one version is published
+- small-sparse batch 1: previous version hash is linked
+- small-sparse batch 1: version hash matches result
+- small-sparse batch 1: post-publish query succeeds
+- small-sparse batch 1: query returns the committed version
+- small-sparse batch 1: unaffected terrain hashes are reused
+- small-sparse batch 1: economic step advances once
+- small-sparse batch 1: Aurora output accumulates once per economic step
+- small-sparse batch 1: Bastion output accumulates once per economic step
+- small-sparse batch 1: pre-publish handle is stale
+- small-sparse batch 1: old expected version is rejected
+- small-sparse batch 2: settlement succeeds ()
+- small-sparse batch 2: closure validated
+- small-sparse batch 2: closure conclusion matches
+- small-sparse batch 2: merged set equals union of per-event impacts
+- small-sparse batch 2: recorded closure equals per-event union
+- small-sparse batch 2: exact impact is within probed candidates
+- small-sparse batch 2: recompute plus reuse covers the terrain
+- small-sparse batch 2: exactly one version is published
+- small-sparse batch 2: previous version hash is linked
+- small-sparse batch 2: version hash matches result
+- small-sparse batch 2: post-publish query succeeds
+- small-sparse batch 2: query returns the committed version
+- small-sparse batch 2: unaffected terrain hashes are reused
+- small-sparse batch 2: economic step advances once
+- small-sparse batch 2: Aurora output accumulates once per economic step
+- small-sparse batch 2: Bastion output accumulates once per economic step
+- small-sparse batch 2: pre-publish handle is stale
+- small-sparse batch 2: old expected version is rejected
+- small-sparse batch 3: settlement succeeds ()
+- small-sparse batch 3: closure validated
+- small-sparse batch 3: closure conclusion matches
+- small-sparse batch 3: merged set equals union of per-event impacts
+- small-sparse batch 3: recorded closure equals per-event union
+- small-sparse batch 3: exact impact is within probed candidates
+- small-sparse batch 3: recompute plus reuse covers the terrain
+- small-sparse batch 3: exactly one version is published
+- small-sparse batch 3: previous version hash is linked
+- small-sparse batch 3: version hash matches result
+- small-sparse batch 3: post-publish query succeeds
+- small-sparse batch 3: query returns the committed version
+- small-sparse batch 3: unaffected terrain hashes are reused
+- small-sparse batch 3: economic step advances once
+- small-sparse batch 3: Aurora output accumulates once per economic step
+- small-sparse batch 3: Bastion output accumulates once per economic step
+- small-sparse batch 3: pre-publish handle is stale
+- small-sparse batch 3: old expected version is rejected
+- small-sparse batch 4: settlement succeeds ()
+- small-sparse batch 4: closure validated
+- small-sparse batch 4: closure conclusion matches
+- small-sparse batch 4: merged set equals union of per-event impacts
+- small-sparse batch 4: recorded closure equals per-event union
+- small-sparse batch 4: exact impact is within probed candidates
+- small-sparse batch 4: recompute plus reuse covers the terrain
+- small-sparse batch 4: exactly one version is published
+- small-sparse batch 4: previous version hash is linked
+- small-sparse batch 4: version hash matches result
+- small-sparse batch 4: post-publish query succeeds
+- small-sparse batch 4: query returns the committed version
+- small-sparse batch 4: unaffected terrain hashes are reused
+- small-sparse batch 4: economic step advances once
+- small-sparse batch 4: Aurora output accumulates once per economic step
+- small-sparse batch 4: Bastion output accumulates once per economic step
+- small-sparse batch 4: pre-publish handle is stale
+- small-sparse batch 4: old expected version is rejected
+- medium-balanced: engine opens
+- medium-balanced: baseline query succeeds
+- medium-balanced batch 1: settlement succeeds ()
+- medium-balanced batch 1: closure validated
+- medium-balanced batch 1: closure conclusion matches
+- medium-balanced batch 1: merged set equals union of per-event impacts
+- medium-balanced batch 1: recorded closure equals per-event union
+- medium-balanced batch 1: exact impact is within probed candidates
+- medium-balanced batch 1: recompute plus reuse covers the terrain
+- medium-balanced batch 1: exactly one version is published
+- medium-balanced batch 1: previous version hash is linked
+- medium-balanced batch 1: version hash matches result
+- medium-balanced batch 1: post-publish query succeeds
+- medium-balanced batch 1: query returns the committed version
+- medium-balanced batch 1: unaffected terrain hashes are reused
+- medium-balanced batch 1: economic step advances once
+- medium-balanced batch 1: Aurora output accumulates once per economic step
+- medium-balanced batch 1: Bastion output accumulates once per economic step
+- medium-balanced batch 1: pre-publish handle is stale
+- medium-balanced batch 1: old expected version is rejected
+- medium-balanced batch 2: settlement succeeds ()
+- medium-balanced batch 2: closure validated
+- medium-balanced batch 2: closure conclusion matches
+- medium-balanced batch 2: merged set equals union of per-event impacts
+- medium-balanced batch 2: recorded closure equals per-event union
+- medium-balanced batch 2: exact impact is within probed candidates
+- medium-balanced batch 2: recompute plus reuse covers the terrain
+- medium-balanced batch 2: exactly one version is published
+- medium-balanced batch 2: previous version hash is linked
+- medium-balanced batch 2: version hash matches result
+- medium-balanced batch 2: post-publish query succeeds
+- medium-balanced batch 2: query returns the committed version
+- medium-balanced batch 2: unaffected terrain hashes are reused
+- medium-balanced batch 2: economic step advances once
+- medium-balanced batch 2: Aurora output accumulates once per economic step
+- medium-balanced batch 2: Bastion output accumulates once per economic step
+- medium-balanced batch 2: pre-publish handle is stale
+- medium-balanced batch 2: old expected version is rejected
+- medium-balanced batch 3: settlement succeeds ()
+- medium-balanced batch 3: closure validated
+- medium-balanced batch 3: closure conclusion matches
+- medium-balanced batch 3: merged set equals union of per-event impacts
+- medium-balanced batch 3: recorded closure equals per-event union
+- medium-balanced batch 3: exact impact is within probed candidates
+- medium-balanced batch 3: recompute plus reuse covers the terrain
+- medium-balanced batch 3: exactly one version is published
+- medium-balanced batch 3: previous version hash is linked
+- medium-balanced batch 3: version hash matches result
+- medium-balanced batch 3: post-publish query succeeds
+- medium-balanced batch 3: query returns the committed version
+- medium-balanced batch 3: unaffected terrain hashes are reused
+- medium-balanced batch 3: economic step advances once
+- medium-balanced batch 3: Aurora output accumulates once per economic step
+- medium-balanced batch 3: Bastion output accumulates once per economic step
+- medium-balanced batch 3: pre-publish handle is stale
+- medium-balanced batch 3: old expected version is rejected
+- medium-balanced batch 4: settlement succeeds ()
+- medium-balanced batch 4: closure validated
+- medium-balanced batch 4: closure conclusion matches
+- medium-balanced batch 4: merged set equals union of per-event impacts
+- medium-balanced batch 4: recorded closure equals per-event union
+- medium-balanced batch 4: exact impact is within probed candidates
+- medium-balanced batch 4: recompute plus reuse covers the terrain
+- medium-balanced batch 4: exactly one version is published
+- medium-balanced batch 4: previous version hash is linked
+- medium-balanced batch 4: version hash matches result
+- medium-balanced batch 4: post-publish query succeeds
+- medium-balanced batch 4: query returns the committed version
+- medium-balanced batch 4: unaffected terrain hashes are reused
+- medium-balanced batch 4: economic step advances once
+- medium-balanced batch 4: Aurora output accumulates once per economic step
+- medium-balanced batch 4: Bastion output accumulates once per economic step
+- medium-balanced batch 4: pre-publish handle is stale
+- medium-balanced batch 4: old expected version is rejected
+- medium-balanced batch 5: settlement succeeds ()
+- medium-balanced batch 5: closure validated
+- medium-balanced batch 5: closure conclusion matches
+- medium-balanced batch 5: merged set equals union of per-event impacts
+- medium-balanced batch 5: recorded closure equals per-event union
+- medium-balanced batch 5: exact impact is within probed candidates
+- medium-balanced batch 5: recompute plus reuse covers the terrain
+- medium-balanced batch 5: exactly one version is published
+- medium-balanced batch 5: previous version hash is linked
+- medium-balanced batch 5: version hash matches result
+- medium-balanced batch 5: post-publish query succeeds
+- medium-balanced batch 5: query returns the committed version
+- medium-balanced batch 5: unaffected terrain hashes are reused
+- medium-balanced batch 5: economic step advances once
+- medium-balanced batch 5: Aurora output accumulates once per economic step
+- medium-balanced batch 5: Bastion output accumulates once per economic step
+- medium-balanced batch 5: pre-publish handle is stale
+- medium-balanced batch 5: old expected version is rejected
+- medium-balanced batch 6: settlement succeeds ()
+- medium-balanced batch 6: closure validated
+- medium-balanced batch 6: closure conclusion matches
+- medium-balanced batch 6: merged set equals union of per-event impacts
+- medium-balanced batch 6: recorded closure equals per-event union
+- medium-balanced batch 6: exact impact is within probed candidates
+- medium-balanced batch 6: recompute plus reuse covers the terrain
+- medium-balanced batch 6: exactly one version is published
+- medium-balanced batch 6: previous version hash is linked
+- medium-balanced batch 6: version hash matches result
+- medium-balanced batch 6: post-publish query succeeds
+- medium-balanced batch 6: query returns the committed version
+- medium-balanced batch 6: unaffected terrain hashes are reused
+- medium-balanced batch 6: economic step advances once
+- medium-balanced batch 6: Aurora output accumulates once per economic step
+- medium-balanced batch 6: Bastion output accumulates once per economic step
+- medium-balanced batch 6: pre-publish handle is stale
+- medium-balanced batch 6: old expected version is rejected
+- large-dense: engine opens
+- large-dense: baseline query succeeds
+- large-dense batch 1: settlement succeeds ()
+- large-dense batch 1: closure validated
+- large-dense batch 1: closure conclusion matches
+- large-dense batch 1: merged set equals union of per-event impacts
+- large-dense batch 1: recorded closure equals per-event union
+- large-dense batch 1: exact impact is within probed candidates
+- large-dense batch 1: recompute plus reuse covers the terrain
+- large-dense batch 1: exactly one version is published
+- large-dense batch 1: previous version hash is linked
+- large-dense batch 1: version hash matches result
+- large-dense batch 1: post-publish query succeeds
+- large-dense batch 1: query returns the committed version
+- large-dense batch 1: unaffected terrain hashes are reused
+- large-dense batch 1: economic step advances once
+- large-dense batch 1: Aurora output accumulates once per economic step
+- large-dense batch 1: Bastion output accumulates once per economic step
+- large-dense batch 1: pre-publish handle is stale
+- large-dense batch 1: old expected version is rejected
+- large-dense batch 2: settlement succeeds ()
+- large-dense batch 2: closure validated
+- large-dense batch 2: closure conclusion matches
+- large-dense batch 2: merged set equals union of per-event impacts
+- large-dense batch 2: recorded closure equals per-event union
+- large-dense batch 2: exact impact is within probed candidates
+- large-dense batch 2: recompute plus reuse covers the terrain
+- large-dense batch 2: exactly one version is published
+- large-dense batch 2: previous version hash is linked
+- large-dense batch 2: version hash matches result
+- large-dense batch 2: post-publish query succeeds
+- large-dense batch 2: query returns the committed version
+- large-dense batch 2: unaffected terrain hashes are reused
+- large-dense batch 2: economic step advances once
+- large-dense batch 2: Aurora output accumulates once per economic step
+- large-dense batch 2: Bastion output accumulates once per economic step
+- large-dense batch 2: pre-publish handle is stale
+- large-dense batch 2: old expected version is rejected
+- large-dense batch 3: settlement succeeds ()
+- large-dense batch 3: closure validated
+- large-dense batch 3: closure conclusion matches
+- large-dense batch 3: merged set equals union of per-event impacts
+- large-dense batch 3: recorded closure equals per-event union
+- large-dense batch 3: exact impact is within probed candidates
+- large-dense batch 3: recompute plus reuse covers the terrain
+- large-dense batch 3: exactly one version is published
+- large-dense batch 3: previous version hash is linked
+- large-dense batch 3: version hash matches result
+- large-dense batch 3: post-publish query succeeds
+- large-dense batch 3: query returns the committed version
+- large-dense batch 3: unaffected terrain hashes are reused
+- large-dense batch 3: economic step advances once
+- large-dense batch 3: Aurora output accumulates once per economic step
+- large-dense batch 3: Bastion output accumulates once per economic step
+- large-dense batch 3: pre-publish handle is stale
+- large-dense batch 3: old expected version is rejected
+- large-dense batch 4: settlement succeeds ()
+- large-dense batch 4: closure validated
+- large-dense batch 4: closure conclusion matches
+- large-dense batch 4: merged set equals union of per-event impacts
+- large-dense batch 4: recorded closure equals per-event union
+- large-dense batch 4: exact impact is within probed candidates
+- large-dense batch 4: recompute plus reuse covers the terrain
+- large-dense batch 4: exactly one version is published
+- large-dense batch 4: previous version hash is linked
+- large-dense batch 4: version hash matches result
+- large-dense batch 4: post-publish query succeeds
+- large-dense batch 4: query returns the committed version
+- large-dense batch 4: unaffected terrain hashes are reused
+- large-dense batch 4: economic step advances once
+- large-dense batch 4: Aurora output accumulates once per economic step
+- large-dense batch 4: Bastion output accumulates once per economic step
+- large-dense batch 4: pre-publish handle is stale
+- large-dense batch 4: old expected version is rejected
+- large-dense batch 5: settlement succeeds ()
+- large-dense batch 5: closure validated
+- large-dense batch 5: closure conclusion matches
+- large-dense batch 5: merged set equals union of per-event impacts
+- large-dense batch 5: recorded closure equals per-event union
+- large-dense batch 5: exact impact is within probed candidates
+- large-dense batch 5: recompute plus reuse covers the terrain
+- large-dense batch 5: exactly one version is published
+- large-dense batch 5: previous version hash is linked
+- large-dense batch 5: version hash matches result
+- large-dense batch 5: post-publish query succeeds
+- large-dense batch 5: query returns the committed version
+- large-dense batch 5: unaffected terrain hashes are reused
+- large-dense batch 5: economic step advances once
+- large-dense batch 5: Aurora output accumulates once per economic step
+- large-dense batch 5: Bastion output accumulates once per economic step
+- large-dense batch 5: pre-publish handle is stale
+- large-dense batch 5: old expected version is rejected
+- large-dense batch 6: settlement succeeds ()
+- large-dense batch 6: closure validated
+- large-dense batch 6: closure conclusion matches
+- large-dense batch 6: merged set equals union of per-event impacts
+- large-dense batch 6: recorded closure equals per-event union
+- large-dense batch 6: exact impact is within probed candidates
+- large-dense batch 6: recompute plus reuse covers the terrain
+- large-dense batch 6: exactly one version is published
+- large-dense batch 6: previous version hash is linked
+- large-dense batch 6: version hash matches result
+- large-dense batch 6: post-publish query succeeds
+- large-dense batch 6: query returns the committed version
+- large-dense batch 6: unaffected terrain hashes are reused
+- large-dense batch 6: economic step advances once
+- large-dense batch 6: Aurora output accumulates once per economic step
+- large-dense batch 6: Bastion output accumulates once per economic step
+- large-dense batch 6: pre-publish handle is stale
+- large-dense batch 6: old expected version is rejected
+- large-dense batch 7: settlement succeeds ()
+- large-dense batch 7: closure validated
+- large-dense batch 7: closure conclusion matches
+- large-dense batch 7: merged set equals union of per-event impacts
+- large-dense batch 7: recorded closure equals per-event union
+- large-dense batch 7: exact impact is within probed candidates
+- large-dense batch 7: recompute plus reuse covers the terrain
+- large-dense batch 7: exactly one version is published
+- large-dense batch 7: previous version hash is linked
+- large-dense batch 7: version hash matches result
+- large-dense batch 7: post-publish query succeeds
+- large-dense batch 7: query returns the committed version
+- large-dense batch 7: unaffected terrain hashes are reused
+- large-dense batch 7: economic step advances once
+- large-dense batch 7: Aurora output accumulates once per economic step
+- large-dense batch 7: Bastion output accumulates once per economic step
+- large-dense batch 7: pre-publish handle is stale
+- large-dense batch 7: old expected version is rejected
+- large-dense batch 8: settlement succeeds ()
+- large-dense batch 8: closure validated
+- large-dense batch 8: closure conclusion matches
+- large-dense batch 8: merged set equals union of per-event impacts
+- large-dense batch 8: recorded closure equals per-event union
+- large-dense batch 8: exact impact is within probed candidates
+- large-dense batch 8: recompute plus reuse covers the terrain
+- large-dense batch 8: exactly one version is published
+- large-dense batch 8: previous version hash is linked
+- large-dense batch 8: version hash matches result
+- large-dense batch 8: post-publish query succeeds
+- large-dense batch 8: query returns the committed version
+- large-dense batch 8: unaffected terrain hashes are reused
+- large-dense batch 8: economic step advances once
+- large-dense batch 8: Aurora output accumulates once per economic step
+- large-dense batch 8: Bastion output accumulates once per economic step
+- large-dense batch 8: pre-publish handle is stale
+- large-dense batch 8: old expected version is rejected
+- concurrency: engine opens
+- concurrency: settlement gate is held as soon as work is accepted
+- concurrency: duplicate submission returns E_BUSY
+- concurrency: query during settlement sees the complete prior publish
+- concurrency: current-version query during settlement is fenced
+- concurrency: delayed settlement completes
+- concurrency: settlement gate is released
+- concurrency: retired handle returns E_STALE_HANDLE
+- concurrency: stale expected version returns E_VERSION_STALE
+- concurrency: cooperative cancellation rolls back with E_BATCH_FAILED
+- rollback: engine opens
+- rollback: settlement failure returns E_BATCH_FAILED with phase and index
+- rollback: settlement failure preserves the published hash
+- rollback: settlement failure leaves snapshot bytes unchanged
+- rollback: settlement failure removes pending intent
+- rollback: commit failure returns E_BATCH_FAILED at commit phase
+- rollback: commit failure leaves snapshot bytes unchanged
+- rollback: commit failure removes pending intent
+- rollback: retry after rollback succeeds
+- rollback: retry publishes exactly one new version
+- rollback: retry query hash matches trace
+- rollback: unavailable proof triggers conservative full recompute with reason
+- recovery: source engine opens
+- recovery: source commits two batches
+- recovery: committed snapshot reopens
+- recovery: version, hash and economic step restore exactly
+- recovery: reopening does not rewrite the committed snapshot
+- recovery: committed destruction is not settled twice
+- recovery: broken chain returns E_RECOVERY_INVALID at first broken batch
+- recovery: missing contribution field returns E_RECOVERY_INVALID at current batch
+- forced termination: setup commits batch 1
+- forced termination: child persisted pending intent before kill
+- forced termination: child was forcibly terminated without normal exit
+- forced termination: snapshot recovery succeeds
+- forced termination: only the committed snapshot is restored
+- forced termination: unfinished batch intent is recovered
+- forced termination: unfinished batch resumes from committed watermark
+- forced termination: unfinished batch settles each destruction exactly once
+- forced termination: resumed batch publishes exactly one version
+- forced termination: committed batch intent is discarded without resettlement
+- determinism: engine opens
+- determinism: batch succeeds
+- determinism: batch succeeds
+- determinism: batch succeeds
+- determinism: batch succeeds
+- determinism: engine opens
+- determinism: batch succeeds
+- determinism: batch succeeds
+- determinism: batch succeeds
+- determinism: batch succeeds
+- determinism: same seed and operation sequence produce byte-identical trajectory logs
+- determinism: same operation sequence produces byte-identical committed snapshots
