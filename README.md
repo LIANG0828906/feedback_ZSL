@@ -1,5 +1,45 @@
 大场景流式加载的桌面预览工具需要在同一帧内完成分块异步加载、遮挡剔除查询与可见性掩码输出，以便美术在视点漫游时立即发现分块接缝与遮挡跳变。场景分块以自定义二进制格式提供，包含每块包围盒、顶点与索引缓冲、遮挡体标记、流式加载优先级与包围体层级引用表；运行时按视点距离与优先级调度分块加载，加载完成的分块进入视锥剔除与遮挡查询，遮挡查询基于遮挡体深度金字塔逐层进行。管线依次执行分块加载与包围盒更新、视锥剔除、遮挡体光栅化到深度金字塔、遮挡查询与临界判定、可见性掩码合成，最终离屏输出可见性掩码与每帧误差摘要。当前的核心痛点在于数值精度与误差沿链路传播：金字塔层级量化步长随视点距离变化，遮挡查询的深度余量在层间切换时产生跳变，包围盒在浮点变换与金字塔量化之间来回转换后余量被错误放大，导致远处分块在可见与不可见之间抖动，同一视点连续渲染的掩码不一致，而帧摘要只给出可见分块数，无法判断抖动来自量化步长、深度余量还是层间切换。本组件需要把上述链路做成可集成的模块，让每次渲染都输出可观测的误差预算与归因，并支持流式加载推进与渲染查询之间的版本隔离。
 
+# 实现状态与快速入口
+
+当前仓库已实现可集成的 C++17 组件、确定性样本生成器、CLI 与验收测试：
+
+- 二进制分块解析、父子引用/索引/包围盒包含校验。
+- 后台流式加载、优先级与视点距离调度、不可变加载快照。
+- 保守视锥剔除、软件遮挡体深度金字塔、逐层查询与临界判定。
+- 每块误差上界与每帧误差归因摘要，固定视点连续渲染逐字节确定。
+- 加载快照/金字塔/掩码版本绑定、`E_BUSY`、`E_SNAPSHOT_STALE` 与协作取消。
+- 原子磁盘快照、内容哈希校验、视点/集合变化检测与 SIGKILL 恢复。
+- 样本场景、视点序列、基线掩码哈希和 JSONL 轨迹日志。
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build -j
+ctest --test-dir build --output-on-failure
+bash scripts/verify.sh
+```
+
+生成样本并渲染：
+
+```bash
+./build/scene_gen --out /tmp/demo --grid-x 7 --grid-y 5 --layers 4 \
+  --occluder-density 0.7 --views 4 --width 192 --height 108
+./build/preview_cli render --scene /tmp/demo/scene.bin \
+  --views /tmp/demo/views.txt --out /tmp/demo/render \
+  --batch 5 --snapshot /tmp/demo/frame.snapshot
+./build/preview_cli recover --scene /tmp/demo/scene.bin \
+  --views /tmp/demo/views.txt --snapshot /tmp/demo/frame.snapshot \
+  --view-index 3
+```
+
+完整设计、二进制格式、误差公式、恢复语义和实际验证记录见
+[`docs/TECHNICAL.md`](docs/TECHNICAL.md)。
+
+当前离屏后端为确定性 CPU 软件光栅化参考实现；本环境未提供可用 OpenGL 4.3
+开发头/离屏驱动，因此验收不依赖 GPU。
+
+---
+
 任务环境与准备：
 安装支持 C++17 的编译器（如 MSVC 2019 或更新版本）与 CMake 3.20 以上。
 准备 OpenGL 4.3 或以上运行环境与本地离屏渲染所需的图形驱动；不依赖网络与外部资源。
