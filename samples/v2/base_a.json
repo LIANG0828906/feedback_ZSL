@@ -1,0 +1,169 @@
+{
+  "contours": [
+    {
+      "direction": "ccw",
+      "direction_source": "v1_order_containment",
+      "group": "body",
+      "id": "a-outer",
+      "metadata": {
+        "v1_nesting_depth": 0,
+        "v1_original_direction": "ccw"
+      },
+      "segments": [
+        {
+          "to": [
+            80.0,
+            10.0
+          ],
+          "type": "line"
+        },
+        {
+          "control1": [
+            90.0,
+            10.0
+          ],
+          "control2": [
+            100.0,
+            20.0
+          ],
+          "to": [
+            100.0,
+            30.0
+          ],
+          "type": "cubic"
+        },
+        {
+          "to": [
+            100.0,
+            70.0
+          ],
+          "type": "line"
+        },
+        {
+          "control1": [
+            100.0,
+            80.0
+          ],
+          "control2": [
+            90.0,
+            90.0
+          ],
+          "to": [
+            80.0,
+            90.0
+          ],
+          "type": "cubic"
+        },
+        {
+          "to": [
+            20.0,
+            90.0
+          ],
+          "type": "line"
+        },
+        {
+          "control1": [
+            10.0,
+            90.0
+          ],
+          "control2": [
+            0.0,
+            80.0
+          ],
+          "to": [
+            0.0,
+            70.0
+          ],
+          "type": "cubic"
+        },
+        {
+          "to": [
+            0.0,
+            30.0
+          ],
+          "type": "line"
+        },
+        {
+          "control1": [
+            0.0,
+            20.0
+          ],
+          "control2": [
+            10.0,
+            10.0
+          ],
+          "to": [
+            20.0,
+            10.0
+          ],
+          "type": "cubic"
+        }
+      ],
+      "start": [
+        20.0,
+        10.0
+      ]
+    },
+    {
+      "direction": "cw",
+      "direction_source": "v1_order_containment",
+      "group": "cutout",
+      "id": "a-hole",
+      "metadata": {
+        "v1_nesting_depth": 1,
+        "v1_original_direction": "ccw"
+      },
+      "orientation_corrected": true,
+      "segments": [
+        {
+          "to": [
+            35.0,
+            65.0
+          ],
+          "type": "line"
+        },
+        {
+          "to": [
+            65.0,
+            65.0
+          ],
+          "type": "line"
+        },
+        {
+          "to": [
+            65.0,
+            35.0
+          ],
+          "type": "line"
+        },
+        {
+          "to": [
+            35.0,
+            35.0
+          ],
+          "type": "line"
+        }
+      ],
+      "start": [
+        35.0,
+        35.0
+      ]
+    }
+  ],
+  "empty_result": false,
+  "fill_rule": "nonzero",
+  "format": "vector-path",
+  "groups": [
+    "body",
+    "cutout"
+  ],
+  "metadata": {
+    "derived_from": "v1",
+    "sample_generator": "vpipe.samplegen",
+    "sample_seed": 20261122
+  },
+  "tolerance": 0.01,
+  "tolerance_source": "v2_declared",
+  "version": 2,
+  "vertex_shares": []
+}
