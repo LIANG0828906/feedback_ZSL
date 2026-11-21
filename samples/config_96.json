@@ -1,0 +1,28 @@
+{
+  "atlas": {
+    "height": 512,
+    "padding": 1,
+    "width": 512
+  },
+  "budget": {
+    "degradeSequence": [
+      "halve_batch",
+      "split_tile"
+    ],
+    "globalBudgetBytes": 67108864,
+    "parallelism": 4,
+    "perTaskBudgetBytes": 4194304,
+    "sampleBatchSize": 4096
+  },
+  "raster": {
+    "fillRule": "nonzero",
+    "quantizationStep": 1,
+    "samplesPerAxis": 4,
+    "seamTolerance": 0,
+    "subpixelX": 0.25,
+    "subpixelY": 0.125,
+    "targetPixelSize": 96,
+    "tileHeight": 13,
+    "tileWidth": 17
+  }
+}

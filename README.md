@@ -1,23 +1,141 @@
-游戏内嵌 UI 的字体资产线需要把本地矢量字形轮廓光栅化为多尺寸位图图集：轮廓由二次与三次贝塞尔段混合构成，含复合字形引用、轮廓孔洞与两种填充规则，工作台载入字体描述后按目标像素尺寸与子像素偏移采样，划分分块并行求覆盖率，再合成位图并打包图集。生产中最棘手的是并行分块与资源预算相互纠缠：分块任务在有限并行度与单任务采样预算下调度，覆盖率必须按分块坐标定序合成而不能受线程完成次序干扰，否则同一字形两次结果不一致；某分块因预算被拒后图集里残留半合成字形与难以定位的接缝漏算；分块边界恰好压在孔洞边缘时填充规则判定也会出现重复累加或漏算；进程被强制终止后只能依据磁盘已提交分块与状态快照继续，不能从头重算。
+# Font Atlas Workbench
 
-任务环境与准备：
-安装 Visual Studio 2022 与 CMake 3.24 及以上，确认 C++17 编译可用。
-安装 Qt 6.5（含 Widgets 与 OpenGL 模块），在 CMake 中配置 Qt6_DIR 指向安装路径。
-确认本机 OpenGL 3.3 及以上上下文可用；无需外部字体文件，样本由随题生成器产出。
-在项目内准备本地样本目录与输出目录，运行前清空输出目录以保证确定性比对。
-Qt 与 OpenGL 仅作本地构建依赖，不引入任何网络或账号资源。
+本地 C++17 字体轮廓光栅化工作台。项目把混合二次/三次贝塞尔轮廓展开为方向一致的规范化折线，在目标像素尺寸和子像素偏移下做环绕数采样，分块并行生成抗锯齿覆盖率，按分块坐标稳定合成图集，并支持预算隔离、内容哈希校验和强制终止恢复。
 
-业务要求：
-1. 实现字体描述解析与字形轮廓规范化：读取本地 JSON 字体描述中的轮廓控制点、二次与三次贝塞尔段、轮廓方向、复合字形引用与 Unicode 映射，按非零环绕与奇偶两种填充规则构建规范化轮廓与包围盒；控制点缺失、段类型非法、复合字形引用成环或 Unicode 映射重复时返回 E_FONT_INVALID 并定位到字形与段序号。
-2. 实现基于环绕数判定的覆盖率扫描转换：对每个子像素采样点按轮廓方向计算环绕数决定覆盖，按可配置量化步长累加抗锯齿覆盖率并输出覆盖率字节图；量化步长变化后须重算并输出新旧覆盖率的总误差摘要与逐字形最大误差，量化步长为零或超出位深表示范围时以 E_QUANT_INVALID 中止。
-3. 实现字形分块划分与并行调度器：按字形包围盒与分块尺寸切分分块任务，任务之间可并行但同一字形的分块覆盖率必须按分块坐标定序合成，不得依赖线程完成次序；全局并行度与单任务预算来自配置文件且不得运行时静默提高，可运行任务按提交序号稳定排序，重复启动同一字形返回 E_BUSY。
-4. 实现采样点与内存预算计量及超预算处理：对每个分块任务按采样点数、覆盖率缓冲与临时扫描线内存计量占用，累计占用超出全局预算时任务进入等待队列，单任务超出其预算时不得启动并按声明降级序列缩小内部采样批或分块粒度后重试，重试仍超限返回 E_BUDGET_EXCEEDED 并保持该字形未写入图集。
-5. 实现分块边界与孔洞字形的覆盖率一致性：分块拼接处的采样覆盖不得重复累加或漏算，跨越分块的孔洞边缘须保持填充规则与轮廓方向一致；以同一字形整体单块光栅化结果为真值来源比对分块结果，覆盖率逐像素差值超出声明容差时以 E_SEAM_UNRESOLVED 定位到字形、分块对与像素坐标。
-6. 实现字形位图与图集合成并保证预算被拒后的隔离：按目标尺寸与子像素偏移把覆盖率图合成位图，再按图集布局打包并输出度量表（偏移、步进、包围盒）；某字形任一分块被预算拒绝或处理失败时该字形不得写入图集，其余字形可继续合成，图集空间不足或度量越界返回 E_ATLAS_OVERFLOW。
-7. 实现状态快照与强制终止恢复：快照包含分块表、每块覆盖率内容哈希、已完成分块索引、量化步长、填充规则与预算配置，保存采用临时文件加原子重命名；载入时校验版本与哈希链，从最近有效快照继续且不重复写入已提交分块，版本或哈希链不符以 E_SNAPSHOT_MISMATCH 中止，强制终止后的恢复只依赖磁盘已提交状态。
-8. 提供图形界面与确定性样本生成器：界面展示字形预览、分块网格、已完成分块着色与资源占用，支持输入文本、切换尺寸与子像素偏移、启动与协作式取消，取消在分块检查点响应并保留最后一次已发布图集；生成器产出多种字形集、尺寸与含孔洞复合字形的本地样本及基线覆盖率哈希，输出含字形、分块、预算用量、复用与重算分块数、内容哈希的轨迹日志，相同种子与操作序列下输出与日志逐字节一致。
+工程不依赖网络、账号或外部字体。`samples/` 已包含固定种子生成的字体、配置和基线哈希；`out/` 用于运行输出。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 已实现
 
-验收：
-用本地样本验证两种填充规则的覆盖率、分块与整体结果一致、预算拒绝隔离及快照恢复。
+- 严格 JSON 字体解析：`line`、`quad`、`cubic`、`close`、复合字形、Unicode 映射和轮廓方向；错误定位到字形、轮廓、段或复合引用序号。
+- 非零环绕与奇偶填充共用同一展平几何；孔洞、重叠轮廓和分块边界使用全局采样坐标，不依赖块内相对坐标。
+- 8 位覆盖率、`samplesPerAxis` 子像素采样、可配置量化步长；非 8 位范围步长返回 `E_QUANT_INVALID`。
+- 预算规划：按采样点、覆盖率缓冲、扫描线/采样批内存估算；先按 `degradeSequence` 缩小采样批、拆分分块，仍超限则在任何分块启动前返回 `E_BUDGET_EXCEEDED`。
+- 固定并行度调度：可运行任务按提交序号稳定取用；覆盖率按分块索引和坐标提交，不受线程完成顺序影响。
+- 单块整体光栅化真值比对；超过 `seamTolerance` 返回 `E_SEAM_UNRESOLVED`，诊断包含字形、块、相邻块和像素坐标。
+- 图集 shelf 布局、PGM 位图、`atlas.json` 度量表和逐字形位图；布局失败在任何图集写入前返回 `E_ATLAS_OVERFLOW`。
+- 分块内容文件与状态快照均采用临时文件、刷盘和原子替换；快照保存配置、分块表、内容哈希、已完成索引和哈希链。
+- `font_atlas` CLI、确定性样本生成器、JSONL 轨迹和可选 Qt 6.5 工作台。
+
+## 构建
+
+要求 CMake 3.24+、C++17 编译器和标准线程库。
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j 4
+ctest --test-dir build --output-on-failure
+```
+
+Qt 界面为可选目标。安装 Qt 6.5+ 的 `Widgets` 与 `OpenGLWidgets` 后配置：
+
+```bash
+cmake -S . -B build -DQt6_DIR=/path/to/Qt/6.5.*/lib/cmake/Qt6
+cmake --build build --target font_atlas_gui
+```
+
+未检测到 Qt 时，核心库、CLI 和测试仍可完整构建。
+
+## 本地样本与验证
+
+仓库内 `samples/` 是种子 `42` 的生成结果，包含两套字形几何（`font.json`、`font_alt.json`）、24/48/96 px 配置、非零/奇偶配置、预算拒绝配置、含孔洞复合字形、内容冲突样本和基线覆盖率哈希。
+
+```bash
+# 可重复生成同一份样本
+./build/font_atlas generate --out samples --seed 42
+
+# 两种填充规则、分块/整体一致性、并行确定性、预算隔离、快照恢复
+./build/font_atlas verify --samples samples --out out/verify
+
+# 完整图集与轨迹
+./build/font_atlas raster \
+  --font samples/font.json --config samples/config.json --out out/full
+
+# 量化步长变化误差摘要
+./build/font_atlas compare-quant \
+  --font samples/font.json --config samples/config.json \
+  --old 1 --new 8 --out out/quant.json
+
+# 强制终止恢复：子进程提交 2 块后直接退出
+set +e
+./build/font_atlas raster \
+  --font samples/font.json --config samples/config.json \
+  --out out/crash --state out/crash/state --hard-exit-after 2
+set -e
+./build/font_atlas raster \
+  --font samples/font.json --config samples/config.json \
+  --out out/crash --state out/crash/state --resume
+```
+
+`raster` 输出：
+
+- `atlas.pgm`：8 位覆盖率图集。
+- `atlas.json`：图集尺寸、图像哈希，以及每个字形的偏移、步进、bearing、包围盒和内容哈希。
+- `trace.jsonl`：字形、分块、采样/内存预算、复用/重算计数和内容哈希。
+- `result.json`：本次运行摘要和隔离失败列表。
+- `state/<glyph>/snapshot.json` 与 `state/<glyph>/chunks/*.cov`：原子恢复状态。
+
+`font_atlas_gui` 提供文本/字形输入、尺寸、子像素、填充规则、并行度设置，`QOpenGLWidget` 字形预览、分块网格、已完成块着色、资源占用和协作式取消。取消或失败只停止新提交，不覆盖最后一次成功发布的图集。
+
+## 字体描述
+
+顶层字段为 `version`、`name`、`unitsPerEm`、`ascent`、`descent` 和 `glyphs`。字形示例：
+
+```json
+{
+  "name": "ring",
+  "unicode": "U+004F",
+  "advance": 1000,
+  "contours": [
+    {
+      "direction": "cw",
+      "start": {"x": 100, "y": 400},
+      "segments": [
+        {"type": "cubic", "control1": {"x": 100, "y": 621},
+         "control2": {"x": 279, "y": 800}, "to": {"x": 500, "y": 800}},
+        {"type": "quad", "control": {"x": 720, "y": 800},
+         "to": {"x": 900, "y": 400}},
+        {"type": "close"}
+      ]
+    }
+  ],
+  "components": [
+    {"glyph": "base", "dx": 20, "dy": 10, "scale": 0.9}
+  ]
+}
+```
+
+- 段类型可为 `line`/`quad`/`quadratic`/`cubic`/`close`，也接受单字母别名。
+- 控制点和端点可用 `{x,y}` 或 `[x,y]`。
+- 可选 `points` 数组允许 `control`/`to`/`from` 使用数组下标。
+- `direction` 接受 `cw`/`ccw`，最终坐标空间面积符号不符时会反转轮廓。
+- 复合变换支持 `dx`、`dy`、`scale`、`scaleX`、`scaleY` 或六值 `matrix`；引用成环、引用缺失和变换退化均为 `E_FONT_INVALID`。
+
+## 错误码
+
+| 错误码 | 触发条件 |
+| --- | --- |
+| `E_FONT_INVALID` | 控制点/段类型错误、Unicode 重复、复合引用成环或缺失 |
+| `E_QUANT_INVALID` | 量化步长为 0 或超出 8 位表示范围 |
+| `E_BUSY` | 同一字形正在运行 |
+| `E_BUDGET_EXCEEDED` | 声明的降级序列耗尽后仍超出单任务/全局预算 |
+| `E_SEAM_UNRESOLVED` | 分块合成结果超过整体真值容差 |
+| `E_ATLAS_OVERFLOW` | 图集放不下字形或度量越界 |
+| `E_SNAPSHOT_MISMATCH` | 快照版本、配置、内容哈希或哈希链不符 |
+| `E_CANCELLED` | 协作式取消在分块检查点生效 |
+
+## 验证结果
+
+当前 Linux/GCC 15.2/CMake 3.30 环境实测：
+
+- `ctest --test-dir build --output-on-failure`：2/2 通过。
+- `font_atlas verify`：13 项检查全部通过。
+- 24/48/96 px、两种填充规则的 6 个字形覆盖率均与基线哈希一致，分块与整体真值零差异。
+- 并行度 1 和 4 的图集哈希相同。
+- 预算拒绝配置下部分字形返回 `E_BUDGET_EXCEEDED`，成功字形继续打包，失败字形未进入图集。
+- 进程以退出码 77 在提交 2 个分块后强制终止；恢复后 `Oacute` 复用 2 块、重算 18 块，最终图集哈希与完整运行相同：`4f4bc6cc7981c5a3c012149b9e429fe4a8235aba65325527bdaa5a8cdf57a72f`。
+- 量化 1→8 的样例总绝对误差为 376/8769 像素，逐字形最大误差为 1。
+
+当前环境的用户目录内含 Qt 6.10.2。GUI 目标已实际编译，并以 `QT_QPA_PLATFORM=xcb` 启动 `--smoke-test`，报告 `OpenGL 4.5 Core`；满足 OpenGL 3.3+ 要求。若 Qt 安装包自带 OpenGL 头/库但系统 CMake 未发现，可同时传入 `OPENGL_INCLUDE_DIR`、`OPENGL_opengl_LIBRARY` 和 `OPENGL_glx_LIBRARY`。
+
+更多实现细节见 `docs/TECHNICAL.md`，完整验收记录见 `artifacts/acceptance-verification.md`。
+
