@@ -1,22 +1,138 @@
-音乐游戏与虚拟演奏项目需要把外部编曲工具导出的数字乐谱导入本地引擎，并按演奏表达规则生成可回放的表现序列。乐谱文件存在三个版本的表达记录格式：v1 仅记录音符音高、起始拍与时长；v2 增加力度、连奏/断奏标记与延音踏板区间；v3 引入表情曲线锚点、速度变化段、声部分组与乐器音域声明。不同版本对时值单位、拍号变化与曲谱起始偏移的记载方式不同，直接互转常出现音符时值错乱、踏板区间跨小节丢失、表情锚点被隐式丢弃。引擎需完成乐谱解析、版本升级降级、演奏表达求解与结果验证，并让同一乐谱在不同版本组合下的表现序列可追溯、可复算。
+# 数字乐谱表现求解引擎
 
-任务环境与准备：
-安装 Python 3.11 或以上版本，并安装 NumPy 与 PySide6 的稳定版本，所有依赖安装在本地虚拟环境中。
-确认运行时不需要网络、真实乐谱账号或外部音频素材；样本与基线全部由题目内的生成器在本地产出。
-准备一个可写的本地工作目录用于存放乐谱文件、快照与轨迹日志，确认磁盘剩余空间足以保存多声部快照。
-启动图形界面需可用的本地显示环境；若仅验证管线，可通过脚本化入口运行而不打开窗口。
+本地、确定性、可恢复的音乐游戏乐谱导入与演奏表达管线。项目实现 v1/v2/v3 三种乐谱格式的统一解析、显式版本转换、逐音符表现求解、误差校验、不可变版本发布、增量重解、按声部崩溃恢复，以及 PySide6 图形界面。
 
-业务要求：
-1. 实现 v1、v2、v3 三版乐谱格式的解析与内部统一表示：v1 读取音高、起始拍与时长，v2 额外读取力度、连奏/断奏标记与延音踏板区间，v3 额外读取表情曲线锚点、速度变化段、声部分组与乐器音域声明；字段缺失、版本号未知或音符时值与拍号矛盾时返回业务码 E_SCORE_INVALID 并定位到音符编号与字段。
-2. 实现跨版本升级与降级层：载入旧版乐谱时升级到 v3 内部表示，缺失的力度与踏板区间按声明规则推导并在报告中标注推导来源；导出到旧版本时无法表达的表情锚点或声部分组以 E_VERSION_LOSS 列出受影响音符编号与字段，不得静默丢弃属性。
-3. 实现演奏表达求解：按乐谱的速度变化段、表情锚点、力度与连奏标记生成逐音符的实际起止时刻、力度值与踏板切换点，时值换算须基于统一内部拍号网格；任一音符被后续速度段截断或踏板区间跨小节时须正确处理并输出替代说明，求解结果与推导依据可序列化。
-4. 实现逐音符误差与一致性校验：以乐谱声明的节拍网格与音域声明为真值来源，对求解后的实际起止时刻、力度与音域计算偏差，输出逐音符偏差统计与最大偏差音符；超出用户设定容差或音高越出音域声明时在报告中定位音符编号并标记，不得只给出汇总数值。
-5. 实现确定性表现序列与版本化发布：相同乐谱、版本组合与参数下求解得到的表现序列逐字节一致，序列内容哈希写入发布清单；求解在独立数据结构完成后整体替换发布，查询期间看到的所有音符必须属于同一版本，版本号与内容哈希不匹配返回 E_VERSION_STALE。
-6. 实现增量重求解与依赖失效：修改表情锚点、速度段、力度或踏板区间后，计算受影响的音符集合并只重解该集合，未受影响音符复用缓存表现值与哈希；无法证明某音符未受影响的必须保守重解并标注原因，重解完成后以一次整体替换发布新序列。
-7. 实现强制终止后的恢复流程：按声部把已求解音符、参数版本与哈希链以临时文件加原子重命名提交，恢复时校验快照版本与哈希链，从最近有效提交继续求解未完成声部且不重复写入已提交音符，断链或字段缺失时以 E_RECOVERY_INVALID 中止并定位首个断点。
-8. 提供图形界面与确定性样本生成器：界面展示乐谱网格、表情与速度曲线、踏板区间、逐音符偏差热力与版本时间轴，支持编辑参数、启动求解与协作式取消；生成器产出多种拍号变化、版本组合与音域约束的本地乐谱及基线表现序列哈希，输出含版本、声部、受影响与复用音符数、偏差与内容哈希的轨迹日志，相同种子与操作序列下日志逐字节一致。
+## 交付内容
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- `score_engine/parser.py`：v1/v2/v3 解析与单位、拍号、起始偏移归一化。
+- `score_engine/conversion.py`：升级/降级及 `E_VERSION_LOSS` 显式损失报告。
+- `score_engine/solver.py`：速度分段积分、表情插值、力度、连奏/断奏、跨小节踏板求解。
+- `score_engine/performance_validation.py`：逐音符时间/力度/音域偏差、容差标记与最大偏差定位。
+- `score_engine/publish.py`：内容哈希、发布清单与锁内整体替换的不可变快照。
+- `score_engine/incremental.py`：依赖失效、受影响音符集、缓存复用与一次整体发布。
+- `score_engine/recovery.py`：声部临时文件 + 原子重命名提交、版本与哈希链校验、断点续算。
+- `score_engine/sample_generator.py`：固定种子样本、基线序列、增量/恢复轨迹。
+- `score_engine/gui.py`：乐谱网格、偏差热力、表情/速度曲线、踏板、版本时间轴与协作式取消。
+- `tests/`：24 项自动化测试。
 
-验收：
-使用本地乐谱样本验证三版格式互转、表现序列一致性与恢复结果，并附轨迹日志。
+设计说明见 `docs/DESIGN.md`，实际验收记录见 `docs/ACCEPTANCE.md`。
+
+## 环境
+
+当前已验证环境：
+
+- Python 3.14.4
+- NumPy 2.5.5
+- PySide6 6.12.0
+- pytest 9.2.0
+- Linux 本地显示 `DISPLAY=:0`，无 Docker/容器
+
+依赖已安装在项目本地 `.venv`：
+
+```bash
+uv venv --python /usr/bin/python3.14 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+```
+
+若系统 Python 已带 `venv`/`pip`，也可使用：
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
+
+运行时不访问网络、真实乐谱账号或外部音频素材。所有样本、基线、快照和日志均由本地生成器产出。
+
+## 快速运行
+
+生成确定性样本、基线、恢复快照和轨迹日志：
+
+```bash
+.venv/bin/python -m score_engine demo --out artifacts/acceptance --seed 20261122
+```
+
+运行全部测试：
+
+```bash
+.venv/bin/python -m pytest -q
+```
+
+无窗口验证 GUI 管线：
+
+```bash
+QT_QPA_PLATFORM=offscreen .venv/bin/python -m score_engine gui \
+  --score artifacts/acceptance/scores/virtual_v3.json --smoke
+```
+
+启动图形界面：
+
+```bash
+.venv/bin/python -m score_engine gui \
+  --score artifacts/acceptance/scores/virtual_v3.json
+```
+
+一键复现完整验收并写出 `artifacts/acceptance/acceptance.log`：
+
+```bash
+scripts/run_acceptance.sh
+```
+
+## 常用命令
+
+```bash
+# 求解并校验
+.venv/bin/python -m score_engine solve \
+  --score artifacts/acceptance/scores/virtual_v3.json \
+  --output artifacts/acceptance/manual.performance.json \
+  --manifest-dir artifacts/acceptance/manual-manifests
+
+# 校验已有序列
+.venv/bin/python -m score_engine validate \
+  --score artifacts/acceptance/scores/virtual_v3.json \
+  --sequence artifacts/acceptance/baselines/virtual_v3.performance.json
+
+# 升级 v1 -> v3
+.venv/bin/python -m score_engine convert \
+  --score artifacts/acceptance/scores/classic_v1.json \
+  --to 3 --output artifacts/acceptance/manual-upgraded.json
+
+# 降级 v3 -> v2，无 --allow-loss 时返回 E_VERSION_LOSS
+.venv/bin/python -m score_engine convert \
+  --score artifacts/acceptance/scores/virtual_v3.json \
+  --to 2 --allow-loss \
+  --output artifacts/acceptance/manual-v2.json
+
+# 强制终止后恢复演示
+.venv/bin/python -m score_engine recover-demo \
+  --score artifacts/acceptance/scores/virtual_v3.json \
+  --out artifacts/acceptance/recovery-demo --crash-after 2
+```
+
+## 格式约定
+
+内部统一使用“四分音符拍”为时间轴，所有拍位置与时长用精确有理数保存；外部文件中的音符/踏板/表情位置相对 `start_offset` 记录，解析后加上偏移，导出时减回。
+
+| 版本 | 音符时间单位 | 拍号 | 起始偏移 | 额外表达 |
+|---|---|---|---|---|
+| v1 | `duration_unit`，默认 whole note | 单一拍号 | `start_offset_seconds` | 仅 pitch/start/duration |
+| v2 | `time_unit`，默认 quarter beat，也可 tick | `meter_changes` | `origin_offset_beats` | velocity、articulation、pedal_spans |
+| v3 | `{value, unit}`，默认 quarter beat | 多拍号变化 | `start_offset` | 表情锚点、速度段、声部分组、音域 |
+
+业务错误：
+
+- `E_SCORE_INVALID`：字段缺失、未知版本、时值与拍号网格矛盾；定位 `note_id`、`field`、`part_id`。
+- `E_VERSION_LOSS`：目标版本无法表达属性；逐音符列出字段，不静默丢弃。
+- `E_VERSION_STALE`：查询的版本号或内容哈希与当前发布不一致。
+- `E_RECOVERY_INVALID`：恢复快照缺字段、版本不符或哈希链断开；定位首个断点。
+- `E_CANCELLED`：协作式取消。
+
+## 结果位置
+
+`artifacts/acceptance/` 包含：
+
+- `scores/`：v1/v2/v3 原生样本、升级组合、降级组合、音域越界样本。
+- `baselines/`：每个样本的基线表现序列与增量结果。
+- `recovery/`：按声部提交的恢复快照。
+- `manifests/`：基线清单、转换报告、增量发布清单。
+- `trace.jsonl`：确定性轨迹日志，包含版本、声部数、受影响/复用音符数、偏差与内容哈希。
+
