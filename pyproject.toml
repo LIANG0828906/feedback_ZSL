@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-lightprobe"
+version = "0.1.0"
+description = "Deterministic, incremental light-probe baker for local two-level scenes"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26"]
+
+[tool.setuptools.packages.find]
+include = ["lightprobe*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
