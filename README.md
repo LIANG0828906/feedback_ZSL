@@ -20,3 +20,42 @@
 
 验收：
 用本地样本验证三层笔触生成、层间失效重算、原子提交与强制终止后续算，并核对预览版本一致性。
+
+---
+
+## 交付实现
+
+本仓库已交付完整的 Python 实现（`npr/`）、脚本化入口与 40 个回归测试（`tests/`）：
+
+* 设计与错误码对照见 `docs/DESIGN.md`；
+* 实际验证结果与复现命令见 `docs/VERIFICATION.md`；
+* 运行时产物（样本、分块、清单、轨迹、预览）统一落在本地 `rundir/`（已 gitignore），仓库不预设任何项目数据文件。
+
+环境准备（本机 Python 3.14，无系统 pip 时）：
+
+```bash
+python3 get-pip.py --user --break-system-packages
+python3 -m pip install --user --break-system-packages virtualenv
+python3 -m virtualenv .venv
+.venv/bin/pip install numpy PyQt5 PyOpenGL
+```
+
+常用入口：
+
+```bash
+.venv/bin/python -m unittest discover -s tests      # 全量回归（40 tests）
+.venv/bin/python -m npr.cli gl-probe               # OpenGL 上下文探测（自动回退离屏）
+.venv/bin/python -m npr.cli gen-samples <dir>      # 确定性样本生成器
+.venv/bin/python -m npr.cli regression <workdir>   # 失效重算 + 基线哈希 + 轨迹日志
+.venv/bin/python -m npr.cli preview <workdir> <png># 离屏渲染最近已提交版本
+.venv/bin/python -m npr.cli recover <workdir> <scene>  # 哈希链校验与恢复
+.venv/bin/python -m npr.crash_demo crash|resume ...    # 强制终止/续算演练
+```
+
+关键行为摘要：
+
+* 三层固定层号 `0=outline / 1=shadow / 2=smear`，笔触 id 与字节输出在同参数下确定；
+* 因子失效闭包：轮廓→阴影（剔除）→涂抹（密度），无法证明未受影响时保守全量重算并写入轨迹；
+* 分块 `*.tmp + os.replace` 原子提交，失败回滚并返回 `E_COMMIT_FAILED`，旧版本不受影响；
+* 清单含父版本哈希链，恢复时逐版校验内容哈希并清理未提交分块，断裂返回 `E_RECOVERY_INVALID`（含首个断裂层）；
+* 预览只读不可变整版快照，旧句柄发布后返回 `E_STALE_VERSION`；同场景重算单任务，重复提交 `E_BUSY`。
