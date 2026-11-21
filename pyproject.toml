@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cover-replay-audit"
+version = "1.0.0"
+description = "Deterministic tactical cover-durability replay and audit toolkit"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26,<3",
+  "PySide6>=6.7,<7",
+]
+
+[project.scripts]
+cover-replay = "cover_replay.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cover_replay*"]
