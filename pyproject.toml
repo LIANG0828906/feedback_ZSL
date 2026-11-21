@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a11y-rhythm"
+version = "1.0.0"
+description = "Deterministic accessibility description and speech rhythm solver"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+gui = ["PyQt5>=5.15"]
+numeric = ["numpy>=1.24"]
+
+[project.scripts]
+a11y-rhythm = "a11y_rhythm.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["a11y_rhythm*"]
