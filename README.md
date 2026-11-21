@@ -1,21 +1,249 @@
-游戏配音的交付归档环节中，各录音棚提交的响度元数据文件横跨三个版本：v1 仅记录整轨积分响度与目标偏差，v2 追加逐段短期响度峰值、真峰值上限与超限段标记，v3 引入声道布局标识、下混权重快照、分段边界表与归档校验码。新到素材是本地 48 kHz、16-bit 或 24-bit PCM 的单声道或 5.1 声道 WAV，归档前要按 v3 规则整备元数据并判定每段是否需要返工，同时仍要读入旧的 v1、v2 元数据做交叉复核与降级回写。运营中反复出现的问题是：v1 没有声道布局与分段边界，返工判定只能靠猜；同一素材按不同版本元数据复核时超限段判定不一致却查不到原因；机器被强制终止后重启，部分分段元数据被重复归档，清单出现断链。工作台需把元数据解析、分段整备、版本互操作、返工判定与断链恢复串成一条可追溯的链路。
+# 游戏配音响度归档工作台
 
-任务环境与准备：
-安装Python 3.10及以上版本，并确保NumPy与Tkinter可用（Tkinter随Python标准发行版提供，若缺失需在系统中启用）
-准备本地可写目录用于存放生成的WAV样本、三版响度元数据、归档清单、快照与轨迹日志
-无需外部网络、账号、数据库或专用硬件，所有样本与基线由题内生成器在本地自动生成
+一个纯本地、可复现的 Python 工作台，把多声道 WAV 读取、v1/v2/v3 响度元数据解析、边界推导、分段整备、返工判定、版本升降级、跨版本复核、并行调度、原子归档、强杀恢复和不可变版本发布串成一条可追溯链路。
 
-业务要求：
-1. 实现多声道WAV读取与v1、v2、v3三版响度元数据的解析及统一内部表示：WAV支持16-bit与24-bit PCM、48000 Hz采样率、单声道与5.1声道，校验声道掩码、位深与数据长度一致；元数据解析v1读取整轨积分响度与目标偏差，v2追加逐段短期响度峰值、真峰值上限与超限段标记，v3追加声道布局标识、下混权重快照、分段边界表与归档校验码；字段缺失、版本号未知或校验码不匹配返回E_META_INVALID并定位首个异常字段，不得以默认值静默补全。
-2. 实现按分段边界表的响度整备计算：从v3分段边界表取得每段起止样本，对每段计算短期响度峰值与真峰值并与该段声明的真峰值上限比较，输出每段超限判定、超出量与依据字段；v1或v2缺少分段边界时按声明规则从整轨时长推导边界并标注推导来源，边界变化后须重新计算并输出新旧边界差异与受影响段数。
-3. 实现跨版本元数据升级与降级：载入v1或v2时升级为v3内部表示，缺失声道布局按下混权重快照与WAV头严格推导并标注来源，缺失归档校验码按声明算法生成并写字段映射表；降级回写v1或v2时无法表达的逐段超限信息以E_VERSION_LOSS列出受影响段号与字段，字段映射表须可独立还原每一次推导与生成决策。
-4. 实现版本间返工判定复核：对同一WAV分别按v1、v2、v3元数据重建分段并比较超限段集合、逐段短期响度峰值与真峰值，输出逐段差异明细与首个不一致段号及字段；差异超出声明量化容差时以E_SEGMENT_MISMATCH定位段号与字段，结论须能仅凭复核报告字段复现，不得只给总体统计。
-5. 实现整备任务的并行调度与内存预算控制：全局并行度与单任务内存预算来自配置文件且不得运行时静默提高，分段任务可并行但同一素材分段按段号顺序提交，可运行任务按提交序号稳定排序，累计占用超预算时进入等待队列并写入调度轨迹；同一素材同时只允许一个整备任务，重复启动返回E_BUSY。
-6. 实现按段原子提交与强制终止恢复：每段整备完成后先写临时文件再原子重命名提交该段元数据与内容哈希，归档清单记录已提交段号、参数版本与哈希链；进程被强制终止后仅依据磁盘清单与段文件恢复，识别清单版本变化并只补算未提交段，不重复写入已提交段；哈希链断链或段文件截断时以E_RECOVERY_INVALID定位首个断链段。
-7. 实现整备结果的版本化发布与查询隔离：分段元数据与返工判定以不可变版本对外提供查询，查询结果回带命中版本号与内容哈希，发布在独立数据结构完成后整体替换，替换期间查询返回完整旧版本或完整新版本；版本哈希与归档清单不匹配时返回E_VERSION_STALE，不得返回半更新的分段结论。
-8. 实现图形工作台与确定性样本生成器：界面展示分段网格、逐段短期响度峰值与真峰值、超限标记、字段映射表与恢复进度，支持载入WAV与元数据、切换目标版本、启动整备与协作式取消；生成器产出多种位深、声道布局与元数据版本组合的本地样本及基线返工判定，输出含素材标识、段号、版本、超限判定、哈希与恢复事件的轨迹日志，相同种子与操作序列下日志逐字节一致。
+- 音频：48 kHz、16-bit/24-bit PCM、单声道/5.1
+- 元数据：严格 JSON schema，v1/v2/v3 统一内部表示
+- 计算：BS.1770-4 K 加权短期响度峰值、4 倍插值真峰值
+- 归档：每段临时文件 + `os.replace`，清单哈希链，按段增量恢复
+- 发布：完整快照构建后原子替换指针，查询不会看到半更新结果
+- 界面：Tk 分段网格、返工标记、字段映射、恢复进度、轨迹日志
+- 验证：16 项自动化测试，包含真实子进程 `os._exit(137)` 强杀恢复
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+详细状态机、schema 和算法说明见 `docs/technical.md`。
 
-验收：
-使用本地样本验证三版元数据解析与升降级、分段返工判定复核、强杀后断链恢复与发布隔离，输出可复现轨迹日志。
+## 环境准备
+
+要求 Python 3.10+、NumPy、Tkinter。系统包可用时：
+
+```bash
+sudo apt-get install python3-numpy python3-tk
+```
+
+当前无 root 环境可用用户级脚本安装（会创建 `.venv`，并从 Ubuntu 包解包 Tk 到 `.vendor/`，不修改系统目录）：
+
+```bash
+./scripts/bootstrap_local.sh
+source scripts/env.sh
+```
+
+之后统一使用 `$LA_PYTHON`：
+
+```bash
+"$LA_PYTHON" --version
+"$LA_PYTHON" -c 'import numpy, tkinter; print(numpy.__version__, tkinter.TkVersion)'
+```
+
+## 快速验收
+
+```bash
+bash scripts/verify.sh
+```
+
+该脚本会：
+
+1. 生成 4 个确定性 WAV 样本及每个样本的 v1/v2/v3 元数据；
+2. 运行 16 项测试；
+3. 输出基线、复核报告和轨迹日志的 SHA-256。
+
+只生成样本：
+
+```bash
+source scripts/env.sh
+"$LA_PYTHON" -m loudness_archive generate \
+  --out artifacts/generated/demo \
+  --seed 20261122 \
+  --summary
+```
+
+打开工作台：
+
+```bash
+./scripts/gui.sh --workspace workbench_data
+```
+
+工作台可载入 WAV 与 v1/v2/v3 元数据，切换目标版本，预览逐段值、超限标记、字段映射和损失清单；归档按钮会自动识别已有清单并从首个未提交段恢复，Cancel 为协作式取消。
+
+## 元数据格式
+
+所有版本共有字段：
+
+```json
+{
+  "version": 1,
+  "asset_id": "wav-012345...",
+  "sample_rate": 48000,
+  "duration_samples": 120000,
+  "integrated_lufs": -23.4,
+  "target_offset_lu": -0.4
+}
+```
+
+### v1
+
+只有整轨积分响度和目标偏差，没有声道布局、分段边界、逐段指标或校验码。
+
+### v2
+
+追加：
+
+```json
+{
+  "segment_count": 4,
+  "true_peak_limit_dbtp": -1.0,
+  "segments": [
+    {
+      "index": 0,
+      "short_term_lufs": -20.1,
+      "true_peak_dbtp": -3.2,
+      "over_limit": false
+    }
+  ]
+}
+```
+
+v2 不含边界表，按 `start_i=floor(i*duration/count)` 规则推导。
+
+### v3
+
+追加：
+
+- `channel_layout`、`channel_mask`
+- `downmix_weights`，顺序与 WAV 声道顺序一致
+- 连续覆盖整轨的 `segments[].start_sample/end_sample`
+- 每段 `true_peak_limit_dbtp`、`excess_db`
+- `quantization_tolerance_db`
+- `archive_checksum`
+
+校验码：
+
+```text
+sha256(canonical-json:v1, excluding archive_checksum)
+```
+
+字段缺失、版本未知、边界断裂、声道掩码/布局/权重不一致或校验码不符时返回 `E_META_INVALID`，并给出首个异常字段路径。解析阶段不会用默认值静默补齐。
+
+## 升降级规则
+
+- v1/v2 → v3：保留整轨字段；从 WAV 头严格取得布局和掩码；从布局推导下混权重；v2 使用全局真峰值上限，v1 使用显式配置策略；重算逐段值；生成 v3 校验码。
+- 每次推导写入字段映射表，包括决策号、字段、动作、来源、算法、输入和结果。
+- v3 → v1/v2：默认抛出 `E_VERSION_LOSS`，列出受影响段号、逐段字段和全局字段。调用方必须显式允许有损输出。
+- 复核报告保留声明值、重算值、有效值、来源、限值和容差，可仅凭报告字段复现结论。
+
+## CLI 示例
+
+设：
+
+```bash
+DATA=artifacts/generated/demo
+WAV=$(find "$DATA/samples" -name '*.wav' | head -1)
+META=$(find "$DATA/metadata" -name '*.v3.json' | head -1)
+```
+
+解析与升级：
+
+```bash
+"$LA_PYTHON" -m loudness_archive inspect --wav "$WAV" --metadata "$META"
+"$LA_PYTHON" -m loudness_archive upgrade --wav "$WAV" --metadata "$META" \
+  --out /tmp/upgraded.v3.json
+```
+
+有损降级必须显式允许，损失清单仍完整输出：
+
+```bash
+"$LA_PYTHON" -m loudness_archive downgrade --wav "$WAV" --metadata "$META" \
+  --target v1 --allow-loss --out /tmp/downgraded.v1.json
+```
+
+跨版本复核：
+
+```bash
+V1="${META%.v3.json}.v1.json"
+V2="${META%.v3.json}.v2.json"
+"$LA_PYTHON" -m loudness_archive review \
+  --wav "$WAV" --v1 "$V1" --v2 "$V2" --v3 "$META" \
+  --out artifacts/generated/review.json
+```
+
+归档、强杀后恢复、查询：
+
+```bash
+WORK=artifacts/generated/archive
+# 下一个命令预期以 137 退出，模拟进程被强制终止。
+"$LA_PYTHON" -m loudness_archive archive \
+  --workspace "$WORK" --wav "$WAV" --metadata "$META" \
+  --crash-after 2 --no-publish
+
+"$LA_PYTHON" -m loudness_archive recover \
+  --workspace "$WORK" --wav "$WAV" --metadata "$META"
+
+"$LA_PYTHON" -m loudness_archive query \
+  --workspace "$WORK" --version-id ver-000001
+```
+
+如果重复使用同一个工作区，需先清理 `$WORK`，否则已有提交会被跳过，不一定能再次触发“前 2 段后终止”的演示。
+
+## 项目结构
+
+```text
+loudness_archive/
+  wav.py          RIFF/WAVE 解析、16/24-bit PCM、掩码与长度校验
+  loudness.py     K 加权、短期响度、真峰值、逐段分析
+  metadata.py     三版 schema、统一表示、边界推导与差异
+  versions.py     升级、降级、字段映射、损失清单
+  review.py       跨版本逐段复核与可复现报告
+  scheduler.py    稳定排序、并行度、内存预算与等待队列
+  archive.py      原子分段提交、哈希链、文件锁、强杀恢复
+  publish.py      不可变快照、原子发布、查询与 stale 检查
+  generator.py    确定性 WAV/元数据/基线/轨迹生成器
+  gui.py          Tk 工作台
+  cli.py          命令行入口
+config/workbench.json
+scripts/bootstrap_local.sh
+scripts/env.sh
+scripts/verify.sh
+docs/technical.md
+tests/
+```
+
+## 实际验证结果
+
+验证环境：Python 3.14.4、NumPy 2.5.5、Tk 8.6。
+
+```text
+Ran 16 tests in 4.288s
+OK
+```
+
+覆盖项包括：
+
+- 16/24-bit、单声道/5.1 WAV 及错误声道掩码；
+- 三版解析、首个异常字段、v3 校验码篡改；
+- v1/v2 边界推导、升级映射、降级损失清单；
+- 跨版本声明值/重算值差异、首个不一致段和字段；
+- 调度稳定顺序、内存等待、`E_BUSY` 和超预算；
+- 模拟强杀恢复不重写已提交段；
+- 真实 CLI 子进程 `os._exit(137)` 后恢复 2→5 段；
+- 链断和段文件截断定位首个异常段；
+- 发布查询、错误版本哈希、清单链头过期；
+- 并发查询只观察到完整旧/新快照；
+- 同种子两次生成的全部文件逐字节一致；
+- Tk 工作台可构造。
+
+种子 `20261122` 的最终验收产物：
+
+```text
+baseline.json       6c96824497d7dc46f7b42559c0bb2704f2e5d4af6a774bede68a653e04bba729
+review-report.json c90d621676929668a24d484d291c4d626e1cd5904a89ab87d127cf34aa13528d
+trace.jsonl        7e6616497148e1dcb547382e75ccb57fa29e4ef8e280bb651506e64caf370e5e
+```
+
+恢复演示结果：提交段 `[0, 1]`，恢复前清单版本 `2`，恢复后清单版本 `5`，只补算 `[2, 3, 4]`，发布版本 `ver-000001` 的查询哈希与发布哈希一致。
+
+## 设计边界
+
+- 短时窗口默认 3 秒；若段更短，则窗口等于段长。生成器使用 0.5 秒分段，因此段内短期响度取整段 K 加权值。
+- 真峰值是确定性的 4 倍 Catmull-Rom 过采样近似，不是平台相关的外部 True Peak 插件。算法版本写入配置、轨迹和复核复现区。
+- v1 没有真峰值上限，升级时必须使用显式配置策略，并在字段映射中标记 `policy`。
+- v2 没有边界表，其块值不能被视为显式边界声明；升级/复核会按声明公式推导并保留原声明值用于审计。
+- 工作台一次处理一个素材；批量调度器作为独立模块提供稳定排队和全局预算控制。
