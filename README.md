@@ -1,21 +1,231 @@
-回合制战术游戏的本地调试工具需要复现玩家在三维战场上的鼠标交互：屏幕点经相机反投影为射线，依次求交单位包围体、掩体三角形与地面，供选择、悬停与草拟放置区域使用。战场状态包括单位位置与包围盒、掩体三角形几何与格子可通行位掩码，会在编辑线程中被批量修改，而拾取查询频率很高，查询必须绑定某个完整发布的区域版本，不能读到半更新的加速结构。交付物是数据处理管线与结果验证工具，输出拾取结果、版本归因与可复放轨迹，并支持草拟放置区域的合法性判定，用于人工比对与回归测试。
+# Tactical Pick Debug Pipeline
 
-任务环境与准备：
-Python 3.11 及以上，安装 NumPy；不需要 GPU、网络或外部数据
-在本地工作区准备样本目录与输出目录，样本由题目要求的生成器产出
-Windows 上以控制台脚本运行回归入口，确认退出码与业务码符合约定
+本地、确定性、无 GPU/网络依赖的回合制战术战场拾取调试工具。管线覆盖：
 
-业务要求：
-1. 实现战场场景二进制加载与射线查询加速结构构建：解析单位轴对齐盒与胶囊包围体、掩体三角形、网格可通行位掩码与场景版本号，构建分桶或层次包围体结构；退化包围体、非法面片索引或位掩码与格数不符时返回 E_SCENE_INVALID 并定位首个冲突条目。
-2. 实现屏幕点到射线的反投影与多源求交：相机内外参校验后把屏幕坐标转为世界射线，依次求交单位、掩体与地面，返回最近命中实体、命中点、表面法向与距离；相机内参退化或射线方向非有限时以 E_RAY_INVALID 中止，不返回任何部分命中。
-3. 实现区域状态版本化：每次批量修改生成单调递增版本与内容哈希，拾取查询在单一已发布版本的只读快照上求值，结果回带版本号与哈希；查询携带的版本号与当前发布版本不一致时返回 E_VERSION_STALE，禁止在混合版本上拼接结果。
-4. 实现后台编辑与查询的并发隔离：编辑线程在独立数据结构上完成修改与加速结构重建后整体替换发布，查询期间始终读取完整旧版或完整新版；替换不得长时间阻塞查询，读到已废弃快照句柄返回 E_STALE_HANDLE，快照使用结束后必须释放。
-5. 实现草拟放置区域合法性判定：对拖拽产生的区域多边形按同一区域版本判定落点可通行、与单位不重叠、与掩体不穿模，返回合法或具体失败原因（失败顶点与冲突实体）；区域顶点自相交或越界返回 E_REGION_INVALID，判定结论需可重建。
-6. 实现拾取轨迹与版本归因：每次拾取记录屏幕坐标、相机参数、区域版本号、命中实体与命中点，轨迹带内容哈希链；支持按版本号回放查询并断言命中结果一致，轨迹截断或哈希断链以 E_TRACE_INVALID 中止，轨迹中不得以时间戳替代哈希。
-7. 实现确定性样本生成器与脚本化回归入口：生成多种网格规模、相机位姿与批量修改序列的本地场景及基线拾取结果，输出含版本号、射线、命中实体、命中点与合法性的轨迹日志；相同种子与操作序列下命中结果与日志逐字节一致。
-8. 实现异常注入验证通道：通过运行参数注入退化包围体、零长度射线、越界屏幕坐标、自相交草拟区域与损坏的区域快照，每类异常返回独立业务码并附注入点定位；注入发生在输入入口且不修改查询与版本管理源码，异常须在任何结果写出前被拦截。
+- 版本化二进制场景加载与单位/掩体 BVH 加速结构；
+- 屏幕坐标反投影、AABB/胶囊/三角面/地面最近命中；
+- 单版本只读快照、原子发布、句柄租约与版本归因；
+- 草拟放置区域的可通行性、单位重叠、掩体穿模判定；
+- 无时间戳的内容哈希链轨迹、逐行截断检测与逐版本回放；
+- 确定性样本生成、基线比对、并发撕裂检查与输入级异常注入。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+运行时几何与数据管线仅使用 Python 标准库，因此没有隐式数值库差异；`numpy` 按题目环境要求列入 `requirements.txt`，可用于同环境下的扩展分析，不影响核心管线。
 
-验收：
-用本地确定性样本验证射线命中、版本隔离与放置判定，并检查轨迹复放一致及异常业务码。
+## 快速运行
+
+Linux / WSL：
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 run_regression.py run --samples samples --out out
+python3 -m unittest discover -s tests -v
+```
+
+Windows 控制台：
+
+```bat
+py -3 -m pip install -r requirements.txt
+run_regression.cmd run --samples samples --out out
+py -3 -m unittest discover -s tests -v
+echo %ERRORLEVEL%
+```
+
+`run_regression.py` 会自行把 `src/` 加入模块搜索路径，因此无需先安装包。也可 `python -m pip install -e .` 后使用 `tactical-debug` 命令。
+
+## 命令
+
+```text
+python run_regression.py run        # 生成样本并执行完整回归（默认）
+python run_regression.py generate   # 仅生成确定性样本与基线
+python run_regression.py regress    # 对已有样本执行回归
+python run_regression.py injections # 自检全部异常注入，不创建任何输出
+python run_regression.py --inject <case> [--out DIR]
+```
+
+可用 `--seed`、`--samples`、`--out` 调整种子和目录。注入命令在任何样本或结果写出之前返回。
+
+## 业务码与进程退出码
+
+| 业务码 | 退出码 | 含义 |
+|---|---:|---|
+| `OK` | 0 | 成功 |
+| `E_INTERNAL` | 1 | 未预期内部错误 |
+| `E_USAGE` | 2 | 参数错误 |
+| `E_SCENE_INVALID` | 10 | 场景损坏、退化包围体、非法面片索引、位掩码长度/未用位不符 |
+| `E_RAY_INVALID` | 11 | 相机内参/外参退化、零长度或非有限射线 |
+| `E_VERSION_STALE` | 12 | 请求版本不是当前发布版本 |
+| `E_STALE_HANDLE` | 13 | 快照句柄已释放/废弃 |
+| `E_REGION_INVALID` | 14 | 草拟多边形自相交、零面积、越界或非法高度 |
+| `E_TRACE_INVALID` | 15 | 轨迹缺少尾摘要、截断、序号断档或哈希链断裂 |
+| `E_SCREEN_OUT_OF_RANGE` | 16 | 屏幕坐标非有限或越出视口 |
+| `E_SNAPSHOT_CORRUPT` | 17 | 快照封印与句柄租约不一致 |
+| `E_INJECTION_NOT_TRIGGERED` | 18 | 注入用例未产生预期异常 |
+| `E_CHECK_FAILED` | 20 | 回归、基线或复放断言失败 |
+
+错误 JSON 统一包含 `ok=false`、`business_code`、`exit_code`、`message`、`injection_point` 和 `details.first_conflict`，可直接定位首个冲突条目。
+
+## 数据布局
+
+场景文件 `*.tacbin` 使用小端定长记录：
+
+| 区段 | 内容 |
+|---|---|
+| 48 字节头 | 魔数 `TACSCN01`、格式版本、场景版本、网格宽高、格宽、地面高度、单位数、顶点数、三角面数 |
+| 单位记录 | `<I H H 7f>`：ID、类型、标志；AABB 使用 min/max，胶囊使用线段端点/半径 |
+| 顶点区 | `<3f>` |
+| 三角面区 | `<I 3I>`：掩体实体 ID、三个顶点索引 |
+| 位掩码 | `rows * ceil(width / 8)` 字节，bit=1 表示可通行 |
+
+加载器要求：
+
+- 所有浮点有限，AABB 三轴严格非退化，胶囊长度和半径非零；
+- 三角面索引在顶点范围内且面积非零；
+- 位掩码长度精确匹配网格，且每行未使用高位为 0；
+- 任一项失败都返回 `E_SCENE_INVALID` 和首个 `record_index`/轴/索引定位。
+
+单位与掩体分别构建确定性 median-split BVH。构建顺序按包围盒中心轴和原始索引稳定排序，相同输入得到相同叶序与候选集合。
+
+## 查询与快照
+
+`Camera` 使用针孔内参 `(width, height, fx, fy, cx, cy)` 和 `camera_to_world` 外参。屏幕坐标先检查视口，再生成归一化世界射线；世界射线同时求交：
+
+1. 单位的 AABB 或有限胶囊；
+2. 掩体三角面；
+3. 地面平面。
+
+结果按距离取最近，距离相同时按 `unit < cover < ground`、实体 ID 稳定决胜。返回命中实体、世界点、单位法向、距离、场景版本和内容哈希。相机或射线校验失败时直接中止，不构造部分命中。
+
+```python
+from tactical_pick import Camera, PickRequest, Picker, SceneManager, read_scene
+
+scene = read_scene("samples/seed_20261122/grid_small/scene_v0001.tacbin")
+manager = SceneManager(scene)
+camera = Camera.look_at((8, 9, 10), (4, 1, 4))
+request = PickRequest((480, 270), camera, requested_version=1)
+result = Picker(manager).pick(request)
+```
+
+编辑线程在独立数据副本上应用批量操作并完整重建 `SceneSnapshot`，随后只在极短的发布锁内替换当前引用。查询线程只读取一次 `SceneSnapshot` 引用，不需要读者锁，因此只会看到完整旧版或完整新版。
+
+`SnapshotHandle` 是只读租约。显式 `release()` 后继续访问返回 `E_STALE_HANDLE`；`Picker` 自动释放自己取得的句柄。句柄以 O(1) 比较租约版本和封印哈希，不会在每个高频查询中重算整场内容哈希。全量校验可通过 `SceneManager.verify_all()` 离线执行。
+
+## 草拟区域
+
+区域多边形使用 XZ 平面坐标，放置体高度默认 2.0。判定顺序固定为：
+
+1. 顶点有限、至少三个、非零边、非零面积、无自相交、所有顶点在网格内；
+2. 多边形覆盖到的每个格心单元必须可通行；
+3. 不与任何单位地面投影重叠；
+4. 不与放置高度范围内的掩体三角面投影相交。
+
+失败结果返回 `reason`、`failure_vertex`、`failure_point` 和 `conflict_entity`（如 `unit:101`、`cover:900`、`grid:2,7`）。`decision_hash` 由场景版本/哈希、多边形、高度和判定结论规范化后计算，可用于重建和比对。
+
+```python
+from tactical_pick import PlacementRequest, RegionJudge
+
+verdict = RegionJudge(manager).judge(
+    PlacementRequest(((1.2, 1.2), (2.8, 1.2), (2.8, 2.8), (1.2, 2.8)))
+)
+```
+
+输入自相交或越界抛出 `E_REGION_INVALID`；区域请求携带旧版本时抛出 `E_VERSION_STALE`。
+
+## 轨迹格式
+
+轨迹为规范化 JSONL，每条记录包含：
+
+- `schema`、`seq`、`kind`；
+- 完整请求：屏幕坐标、相机内参/外参、区域版本或多边形；
+- 完整结果：世界射线、版本、内容哈希、命中实体/点/法向/距离或放置结论；
+- `prev_hash` 与 `entry_hash`：`sha256(prev_hash || NUL || canonical_json(payload))`。
+
+最后一行是尾摘要：
+
+```json
+{"schema":1,"kind":"__trace_footer__","records":33,"final_hash":"...","footer_hash":"..."}
+```
+
+尾摘要绑定记录数与最终链哈希，因此即使整行被截掉也会返回 `E_TRACE_INVALID`。轨迹不含时间戳，也不以时间戳参与任何哈希。回放按记录中的归档版本重新查询并逐字段断言一致。
+
+## 确定性样本
+
+生成器固定产生三类网格/相机/批量修改序列：
+
+| 样本 | 网格 | 格宽 | 版本数 | 修改 |
+|---|---|---:|---:|---|
+| `grid_small` | 12 x 10 | 1.00 | 4 | 单位平移、位掩码切换 |
+| `grid_medium` | 18 x 14 | 1.25 | 4 | 胶囊平移、掩体新增 |
+| `grid_large` | 24 x 18 | 0.80 | 4 | 多单位平移、可通行性切换 |
+
+每个版本写出二进制场景、查询输入和基线结果。回归输出：
+
+```text
+out/seed_<seed>/
+  report.json
+  traces/grid_small.jsonl
+  traces/grid_medium.jsonl
+  traces/grid_large.jsonl
+```
+
+同一 `seed` 与操作序列下，样本目录、轨迹文件和 `report.json` 均逐字节一致；测试会生成两个独立目录并比较 SHA-256 清单。
+
+## 异常注入
+
+注入只改变输入或在租约后损坏快照封印，不修改查询与版本管理源码：
+
+| `--inject` 值 | 预期业务码 | 注入点示例 |
+|---|---|---|
+| `degenerate_bounds` | `E_SCENE_INVALID` | `scene.units[0].bounds.x` |
+| `illegal_triangle_index` | `E_SCENE_INVALID` | `scene.cover_triangles[0].indices[0]` |
+| `zero_length_ray` | `E_RAY_INVALID` | `ray.direction` |
+| `out_of_bounds_screen` | `E_SCREEN_OUT_OF_RANGE` | `camera.screen` |
+| `self_intersecting_region` | `E_REGION_INVALID` | `region.vertices[2]` |
+| `corrupt_snapshot` | `E_SNAPSHOT_CORRUPT` | `snapshot.content_hash` |
+
+## 实际验证结果
+
+在 Python 3.11.18、NumPy 2.4.6 环境执行：
+
+```text
+$ python -m unittest discover -s tests -v
+Ran 19 tests
+OK
+
+$ python run_regression.py run --samples samples --out out
+{"business_code":"OK","exit_code":0,"status":"pass", ...}
+
+$ python run_regression.py --inject zero_length_ray
+exit code: 11, business_code: E_RAY_INVALID
+```
+
+默认种子 `20261122` 的完整回归结果：
+
+- 3 个样本、12 个版本、51 次拾取、48 次区域判定；
+- 99 条轨迹记录全部归档版本回放一致；
+- 拾取覆盖 `unit:101`、`unit:102`、`cover:900`、新增掩体与 `ground`；
+- 区域覆盖 `OK`、`IMPASSABLE_CELL`、`UNIT_OVERLAP`、`COVER_CLIP`；
+- 60 次后台发布与 1200 次并发查询，撕裂读取 0，观察到旧/新版本重叠；
+- 六类注入均返回独立业务码，且 `--out` 指定目录未被创建；
+- 两次独立生成与回归的全部产物逐字节一致。
+
+详细机器可读结果见 `out/seed_20261122/report.json`。
+
+## 代码结构
+
+```text
+src/tactical_pick/
+  scene.py       # 数据模型、二进制编解码、首冲突校验
+  bvh.py         # 确定性 BVH
+  camera.py      # 内/外参校验和反投影
+  query.py       # 多源最近命中
+  snapshot.py    # 不可变快照、发布、句柄
+  editor.py      # 批量修改与离线重建
+  region.py      # 放置多边形判定
+  trace.py       # 哈希链、尾摘要、回放
+  generator.py   # 确定性样本与基线
+  regression.py  # 基线比对、隔离与并发回归
+  injection.py   # 输入级异常注入
+  cli.py         # 控制台入口
+tests/test_pipeline.py
+```
+
