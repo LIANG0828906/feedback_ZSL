@@ -1,22 +1,115 @@
-面向大场景流式加载的渲染工具需要把历史存档中的三版场景分块格式统一接入同一套遮挡剔除管线。存档格式 v1 只记录分块包围盒、顶点缓冲与索引缓冲，v2 增加分块网格划分与遮挡体标记，v3 引入分块压缩描述、流式加载优先级与包围体层级引用表。运行时按视点驱动分块异步加载，加载完成的分块进入遮挡剔除与视锥剔除，再离屏输出可见性掩码与剔除统计。运营中反复出现的问题是：旧版存档按新规则载入时分块包围盒与遮挡体标记对不上，流式加载后可见性掩码在相邻分块间跳变，同一存档在不同版本组合下剔除结果不一致却无法定位是格式降级、流式顺序还是加载超时造成，且进程被强制终止后重启会重复加载分块或读到半加载网格。
+# StreamChunk：流式分块遮挡剔除与恢复工具
 
-任务环境与准备：
-Windows 10 及以上，安装 Visual Studio 2022（含 C++ 工作负载）与 CMake 3.20 以上
-使用 OpenGL 4.1 以上驱动的本地离屏帧缓冲，无需外部资源或网络
-提供本地确定性场景分块存档生成器，产出 v1、v2、v3 样本及基线可见性掩码哈希
-准备自动化脚本入口运行渲染、恢复与多版本比对，输出轨迹日志到本地目录
+本工程把历史存档的 v1、v2、v3 场景分块统一为内部 v3 表示，并接入同一套
+视锥剔除、遮挡体深度金字塔（HZB）查询、确定性离屏可见性输出、不可变版本
+发布、强制终止恢复和多版本差异归因管线。
 
-业务要求：
-1. 实现 v1、v2、v3 三版场景分块格式的解析与内部统一表示：v1 读取包围盒、顶点与索引缓冲，v2 额外读取分块网格划分与遮挡体标记，v3 额外读取压缩描述、流式加载优先级与包围体层级引用表；字段缺失、版本号未知、引用表悬空或索引越界时返回业务码 E_CHUNK_INVALID 并定位到分块号与字段名，不得以默认值静默补齐。
-2. 实现跨版本兼容升级与降级：载入旧版存档时升级为 v3 内部表示，缺失的优先级按声明规则推导并标注推导来源，导出指定版本时无法表达的分块属性以 E_VERSION_LOSS 列出受影响分块编号与字段，不得静默丢弃遮挡体标记或层级引用。
-3. 实现视点驱动的分块异步加载与流式调度：分块按优先级与视点距离进入加载队列，加载完成的分块才可参与剔除；同一分块重复进入队列须去重，加载任务可并行但发布遵循确定顺序，单分块加载失败时以 E_LOAD_FAILED 记录并不得以占位分块参与可见性输出。
-4. 实现遮挡剔除与视锥剔除的一致性判定：加载完成的分块先做视锥剔除，再经遮挡体深度金字塔做遮挡查询，输出可见性掩码与临界分块列表；相邻分块共享边界处的可见性判定须在声明容差内一致，超差时以 E_VISIBILITY_MISMATCH 定位分块对与边界段，不得直接以任一侧结果覆盖。
-5. 实现流式加载与剔除结果的版本化发布：已加载分块集合与可见性掩码以不可变发布版本对外提供查询，加载推进在独立结构完成后整体替换发布，查询期间看到的全部分块必须属于同一版本；版本号或内容哈希不匹配返回 E_VERSION_STALE，发布前旧版本持续可读。
-6. 实现强制终止后的恢复流程：按分块把已加载数据、包围盒、遮挡体标记、内容哈希与流式调度状态以临时文件加原子重命名提交；恢复时校验快照版本与哈希链，仅继续加载未完成分块且不重复写入已提交分块，断链或字段缺失以 E_RECOVERY_INVALID 中止并定位首个断链分块，恢复不承诺生成退出报告。
-7. 实现确定性渲染与多版本组合一致性校验：固定视点、分块集合与参数时连续两次渲染的可见性掩码与剔除统计逐字节一致；对同一场景的 v1、v2、v3 存档分别渲染，按统一坐标基准比对可见性掩码差异并输出差异分块清单，差异来源须归因到格式降级、优先级推导或加载顺序之一，不得只给出总体差异统计。
-8. 实现并发边界与示例应用：同一场景同时只允许一个流式剔除任务，重复提交返回 E_BUSY；任务在分块加载完成与剔除批次检查点响应协作式取消，取消或异常后释放分块缓冲与文件句柄并保留最后一次已提交快照，示例界面展示分块加载进度、可见性掩码与临界分块，并提供本地确定性存档生成器与轨迹日志。
+## 已实现能力
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- v1/v2/v3 二进制解析，统一内部模型；字段缺失、未知版本、悬空层级引用、
+  索引越界、AABB 与顶点不一致均返回 `E_CHUNK_INVALID`，定位分块号与字段名。
+- 旧版载入时保留“字段不存在”语义；流式优先级按公开规则推导并标注
+  `derived-from-bounds` 来源。降级导出无法表达的属性返回 `E_VERSION_LOSS`
+  并逐分块、逐字段列出。
+- 按优先级与视点距离调度分块加载，队列去重、并行加载、按分块号确定性发布。
+  加载失败记录 `E_LOAD_FAILED`，失败分块不进入可见性掩码。
+- 先视锥剔除，再使用离屏深度图和最小深度金字塔做遮挡查询；输出掩码、统计、
+  临界分块和边界采样。边界可见比例超差返回 `E_VISIBILITY_MISMATCH`。
+- 已加载集合与掩码封装为不可变 `FrameSnapshot`，通过 `shared_ptr` 原子替换；
+  旧版本在发布期间持续可读，版本或内容哈希不符返回 `E_VERSION_STALE`。
+- 每分块快照使用临时文件写完后原子重命名提交，快照内包含网格、AABB、
+  遮挡体标记、优先级、层级、内容哈希和调度状态；恢复校验版本与哈希链，
+  跳过已提交分块，断链返回 `E_RECOVERY_INVALID` 并定位首个异常分块。
+- 单场景单任务约束，重复提交返回 `E_BUSY`；加载完成和剔除批次检查点均响应
+  协作式取消，取消后保留最后一次已发布快照并释放本轮候选缓冲。
+- 固定输入下掩码、统计和内容哈希逐字节确定；v1/v2/v3 对比输出差异分块清单，
+  并将原因归为 `format_degradation`、`priority_derivation` 或 `load_order`。
+- 提供本地确定性样本生成器、基线哈希、JSONL 轨迹日志、差异报告和
+  CLI 示例界面。
 
-验收：
-用本地三版存档样本验证分块载入、遮挡剔除掩码与中断恢复，并输出轨迹日志与差异清单。
+## 构建
+
+要求 CMake 3.20+、支持 C++17 的编译器；Windows 可使用 Visual Studio 2022。
+
+Windows：
+
+```powershell
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release
+ctest --test-dir build -C Release --output-on-failure
+powershell -ExecutionPolicy Bypass -File scripts\run_acceptance.ps1
+```
+
+Linux/WSL：
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j 4
+ctest --test-dir build --output-on-failure
+scripts/run_acceptance.sh artifacts/acceptance
+```
+
+## 快速使用
+
+```text
+chunkpipe generate --out artifacts/acceptance/samples
+chunkpipe run --archive artifacts/acceptance/samples/scene_v3.arc \
+  --out artifacts/acceptance/run-v3 --workers 3
+chunkpipe compare --dir artifacts/acceptance/samples \
+  --out artifacts/acceptance/compare
+chunkpipe compare --dir artifacts/acceptance/samples \
+  --out artifacts/acceptance/compare-partial --max-loaded 3
+chunkpipe determinism --archive artifacts/acceptance/samples/scene_v3.arc \
+  --out artifacts/acceptance/determinism
+chunkpipe export --archive artifacts/acceptance/samples/scene_v3.arc \
+  --out artifacts/acceptance/scene_v3_to_v2.arc --to-version 2
+chunkpipe run --archive artifacts/acceptance/samples/scene_v3.arc \
+  --out artifacts/acceptance/crash --crash-after 3
+chunkpipe recover --archive artifacts/acceptance/samples/scene_v3.arc \
+  --out artifacts/acceptance/crash
+```
+
+常用运行参数：`--workers`、`--delay-us`、`--fail 4,7`、
+`--cancel-after N`、`--max-loaded N`、`--crash-after N`、`--no-recovery`。
+
+## 输出文件
+
+- `trajectory.jsonl`：调度、加载、恢复提交、剔除、发布和失败轨迹。
+- `visibility.mask`：按分块号升序每块一个字节的可见性掩码。
+- `visibility.json`：掩码、加载集合、临界分块、边界采样和版本哈希。
+- `stats.json`：加载、视锥剔除、遮挡剔除、可见和临界统计。
+- `diff_report.json` / `diff.jsonl`：多版本差异及归因字段。
+- `determinism.json`：连续两次渲染的逐字节比较结果。
+- `error.json`：失败命令的业务码、分块、字段、边界段与细节。
+- `recovery/*.snap`：逐分块原子提交的恢复快照。
+
+## 业务码
+
+| 业务码 | 含义 |
+| --- | --- |
+| `E_CHUNK_INVALID` | 格式、字段、引用或索引无效 |
+| `E_VERSION_LOSS` | 目标版本无法表达源属性 |
+| `E_LOAD_FAILED` | 分块加载失败 |
+| `E_VISIBILITY_MISMATCH` | 相邻分块边界可见性超差 |
+| `E_VERSION_STALE` | 发布版本或内容哈希不匹配 |
+| `E_RECOVERY_INVALID` | 快照版本、字段或哈希链断链 |
+| `E_BUSY` | 同一场景已有流式剔除任务 |
+| `E_CANCELLED` | 协作式取消 |
+
+## 文档与验证
+
+- [二进制格式](docs/FORMAT.md)
+- [管线设计](docs/DESIGN.md)
+- [实际验收记录](docs/ACCEPTANCE.md)
+
+本轮实际验证结果：408 项自动检查通过；v1 掩码
+`070707070707070707`，v2/v3 掩码 `1f1f1f030303030303`；v3 内容哈希
+`a41580146ff083b8`；强制终止时已提交 3 块，恢复后提交 9 块且最终哈希一致。
+
+## 渲染后端说明
+
+为保证“固定输入逐字节一致”，本交付使用不创建窗口的确定性软件离屏帧缓冲
+和最小深度金字塔。渲染、剔除、掩码和统计不依赖 GPU 驱动。若部署环境必须
+使用 OpenGL 4.1 帧缓冲，可替换 `renderVisibility` 内部的深度图生成适配层，
+发布、恢复、调度和错误语义保持不变。当前验收容器没有 Windows OpenGL 驱动，
+因此本轮实测采用软件参考后端；Windows PowerShell 验收入口已提供。
