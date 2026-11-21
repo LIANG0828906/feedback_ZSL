@@ -1,22 +1,142 @@
-离线渲染团队需要为含烟尘与玻璃罩的本地场景生成带体积光散射的预览图，以便在交付前快速定位分块调度与采样预算问题。场景由自定义二进制描述提供：相机内外参、若干轴对齐盒与球体透明介质、方向光、介质密度场分块索引。渲染管线依次执行光线求交、介质边界穿越与分段、沿视线在介质内的步进采样、散射累积、透射率计算与阴影射线可见性估计，最终输出颜色缓冲与误差摘要。屏幕被划分为分块渲染任务，任务跨分块可并行，但同一分块内步进顺序固定；全局并行度与单任务采样预算来自配置文件，预算不足时必须按声明序列降级步长或拒绝启动，并如实记录降级阶段。运营中反复出现的问题是预算收紧后组件静默改变采样步长却没有记录，同一视角两次渲染结果不一致；分块边界处散射累积出现接缝；被预算拒绝的分块留下半写结果污染预览。
+# 离线体积光分块预览器
 
-任务环境与准备：
-安装 Python 3.11 及以上，创建虚拟环境并安装 NumPy 与 Tkinter（Tkinter 随标准库提供，若缺失需在系统组件中补齐）。
-确认工作目录可写，用于存放生成的场景二进制样本、颜色缓冲与快照文件。
-无需 GPU、外部服务或网络访问，渲染采用本地 CPU 实现与离屏缓冲。
-运行前无需预先准备数据文件，样本由题目要求的确定性生成器产出。
+这是一个纯 CPU、无 GPU、无外部服务依赖的确定性体积光预览实现。它读取自定义二进制场景，完成相机光线求交、透明介质边界分段、自适应步进、体积散射、透射率与方向光阴影估计，并按屏幕分块执行有预算上限的并行调度。
 
-业务要求：
-1. 实现场景二进制描述解析与介质几何构建：读取相机内外参、轴对齐盒与球体透明介质、方向光与密度场分块索引，校验矩阵可逆性、介质嵌套关系与密度索引范围；字段缺失、几何退化或索引越界时返回业务码 E_SCENE_INVALID，并给出首个失败字段与所属介质标识。
-2. 实现屏幕分块渲染调度器：按配置分块尺寸切分任务，任务跨分块可并行但同一分块内步进采样顺序固定，可运行任务按提交序号稳定排序；全局并行度与单任务采样预算来自配置文件且不得运行时静默提高，超预算任务进入等待队列，每次调度决策写入轨迹。
-3. 实现介质内步进采样与散射累积：沿视线穿越介质边界得到分段，按步长自适应采样密度场，累积散射与透射率并做阴影射线可见性估计；单任务采样数累计超出其预算时不得启动，须按声明降级序列逐级重试并记录降级阶段与用量，重试仍超限以 E_BUDGET_EXCEEDED 拒绝启动并保持该分块无任何输出。
-4. 实现分块边界的散射连续性与拼接：相邻分块共享边界像素的采样相位，拼接处散射累积与透射率偏差须在声明容差内；以整屏单块渲染结果为真值来源比对分块结果，超差时返回 E_SEAM_UNRESOLVED 并定位接缝像素坐标与两侧累加值。
-5. 实现浮点与定点双路径散射累积与误差摘要：切换精度路径后重新渲染并输出两种模式的逐像素偏差统计与误差上界；每次渲染输出含分块层级、预算用量、降级阶段、步长与误差摘要的确定性摘要，固定视角与参数下连续两次渲染的颜色缓冲与摘要逐字节一致。
-6. 实现增量重渲染与版本化发布：相机、光源、介质参数或密度场某分块变化后，计算受影响屏幕分块集合并只重渲该集合，未受影响分块复用缓存结果与内容哈希；无法证明某分块未受影响时必须保守重渲并标注原因，完成后以一次整体替换发布新版本，查询接口在替换期间始终返回完整旧版本或完整新版本。
-7. 实现异常注入验证通道：通过运行参数注入损坏的分块索引、缺失介质条目、非有限相机矩阵、截断的密度场数据与超出预算的采样配置，每类异常返回独立业务码并附带注入点定位；注入发生在加载与配置入口且不修改渲染与调度源码，异常必须在写出任何颜色缓冲前被拦截。
-8. 实现原子快照与强制终止恢复：快照包含分块表、每块颜色缓冲内容哈希、已完成分块索引、密度版本、预算配置、降级阶段与精度模式，保存采用临时文件加原子重命名；恢复时校验版本与哈希链，从最近有效快照继续且不重复写入已完成分块，断链或字段缺失以 E_RECOVERY_INVALID 中止。并提供图形预览界面与确定性样本生成器，展示分块网格、降级阶段与预算占用曲线，同一场景同时只允许一个渲染任务，重复提交返回 E_BUSY。
+实现同时覆盖预算降级、接缝验证、浮点/定点双路径、增量重渲、原子快照恢复、异常注入和 Tkinter 图形预览。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 已实现能力
 
-验收：
-用本地样本验证分块渲染、预算降级与异常注入结果，并核对快照恢复与双路径误差摘要的一致性。
+- 自定义单文件二进制场景格式，包含相机内外参、AABB/球体介质、方向光、密度场分块和 SHA-256 校验。
+- 加载期校验矩阵可逆性、介质嵌套关系、密度索引/量/非有限值；业务错误定位到首个失败字段和介质标识。
+- 声明式预算降级序列：`full -> balanced -> draft`，每级记录预检采样量、实际用量和步长。
+- 分块任务并行，提交按 `seq` 稳定排序；同一分块内部像素/步进顺序固定。
+- 整屏单块真值比对接缝，超差返回 `E_SEAM_UNRESOLVED`，包含像素坐标、两侧颜色和透射率。
+- `float64` 与 Q20 定点累加双路径，逐像素颜色/透射率误差及保守误差上界。
+- 相机、光源、介质、密度块变化的增量重渲；可证明未受影响的块复用旧内容哈希，否则保守重渲并记录原因。
+- 每块哈希链快照，临时文件 + `os.replace` 原子写入；强制中止后从最近快照恢复，不重复写已完成块。
+- 五类加载入口异常注入，各自返回独立业务码，且发生在写出任何颜色缓冲之前。
+- Tkinter 预览器展示像素预览、分块网格、降级标签、预算占用曲线。
+
+## 快速开始
+
+项目环境要求 Python 3.11+、NumPy；GUI 需要 Tkinter。当前工作区使用带 Tkinter 的 Python 3.12 创建了 `.venv`：
+
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install pytest
+```
+
+生成确定性样本并渲染双精度预览：
+
+```bash
+.venv/bin/python -m volrender.cli generate \
+  --out artifacts/sample --sample-budget 12000
+
+.venv/bin/python -m volrender.cli render \
+  --scene artifacts/sample/scene.volbin \
+  --config artifacts/sample/render_config.json \
+  --out artifacts/preview
+```
+
+输出通过原子版本目录发布：
+
+```text
+artifacts/preview/
+  CURRENT                       # 当前版本 ID
+  current -> versions/<id>      # 原子切换的完整版本
+  versions/<id>/
+    color_float64.bin           # <f8, H x W x 3>
+    transmittance_float64.bin   # <f8, H x W>
+    color_fixed.bin
+    transmittance_fixed.bin
+    precision_abs_error.bin     # 颜色逐像素绝对误差
+    precision_transmittance_abs_error.bin
+    precision_error_bound.bin   # 逐像素保守误差上界
+    preview.png
+    preview_summary.json
+    summary_float64.json
+    summary_fixed.json
+    manifest.json
+```
+
+运行测试和完整验收脚本：
+
+```bash
+.venv/bin/python -m pytest -q
+.venv/bin/python scripts/verify_demo.py
+```
+
+验收报告写入 `artifacts/verification/report.json`，可目检预览位于 `artifacts/demo/preview/current/preview.png`。
+
+## GUI
+
+在具备桌面显示的机器上：
+
+```bash
+.venv/bin/python -m volrender.cli render \
+  --scene artifacts/sample/scene.volbin \
+  --config artifacts/sample/render_config.json \
+  --out artifacts/gui-preview \
+  --gui
+```
+
+界面包含像素预览、分块边框、降级阶段标签、逐块预算占用折线和阶段图例。无显示环境会返回 `E_DISPLAY_UNAVAILABLE`。
+
+## 异常注入
+
+注入发生在场景/配置加载入口，不修改渲染器或调度器：
+
+```bash
+.venv/bin/python -m volrender.cli render \
+  --scene artifacts/sample/scene.volbin \
+  --config artifacts/sample/render_config.json \
+  --out artifacts/must-not-exist \
+  --inject truncated_density
+```
+
+| 注入参数 | 业务码 |
+|---|---|
+| `corrupt_tile_index` | `E_TILE_INDEX_CORRUPT` |
+| `missing_medium` | `E_MEDIUM_MISSING` |
+| `nonfinite_camera` | `E_CAMERA_MATRIX_NONFINITE` |
+| `truncated_density` | `E_DENSITY_TRUNCATED` |
+| `budget_oversample` | `E_BUDGET_CONFIG_INVALID` |
+
+普通场景校验失败统一返回 `E_SCENE_INVALID`，并带 `field`/`medium_id`。
+
+## 快照恢复
+
+```bash
+# 模拟处理 2 个块后强制终止；只写快照，不写颜色输出
+.venv/bin/python -m volrender.cli render \
+  --scene artifacts/sample/scene.volbin \
+  --config artifacts/sample/render_config.json \
+  --out artifacts/recovery-preview \
+  --mode float64 --snapshot-dir artifacts/snapshots --stop-after 2
+
+# 从最近有效快照继续
+.venv/bin/python -m volrender.cli render \
+  --scene artifacts/sample/scene.volbin \
+  --config artifacts/sample/render_config.json \
+  --out artifacts/recovery-preview \
+  --mode float64 --snapshot-dir artifacts/snapshots --resume
+```
+
+## 主要业务码
+
+| 业务码 | 含义 |
+|---|---|
+| `E_SCENE_INVALID` | 场景字段、几何、嵌套或密度索引非法 |
+| `E_BUDGET_CONFIG_INVALID` | 配置非法或注入超预算配置 |
+| `E_BUDGET_EXCEEDED` | 所有声明降级阶段仍超过单块预算 |
+| `E_SEAM_UNRESOLVED` | 分块结果超出整屏真值容差 |
+| `E_RECOVERY_INVALID` | 快照版本、字段、哈希链或载荷不一致 |
+| `E_BUSY` | 同一场景已有渲染任务在执行 |
+| `E_INTERRUPTED` | 强制终止模拟或用户中断 |
+
+## 文档
+
+- `docs/FORMAT.md`：二进制容器、场景头、配置和确定性规则。
+- `docs/DESIGN.md`：渲染、预算、接缝、精度、增量、发布、快照设计。
+- `docs/VERIFICATION.md`：本次实际测试与验收数据。

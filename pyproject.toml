@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volrender-preview"
+version = "0.1.0"
+description = "Deterministic CPU volumetric preview renderer with tiled scheduling"
+requires-python = ">=3.11"
+dependencies = ["numpy>=2.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+volrender = "volrender.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["volrender*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
