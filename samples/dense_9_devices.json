@@ -1,0 +1,56 @@
+{
+  "sample_id": "dense_9",
+  "versions": [
+    {
+      "config": {
+        "allocation_ratio": {
+          "left": 0.5,
+          "right": 0.5
+        },
+        "bit_depth": 16,
+        "limiter": "hard",
+        "polarity": {
+          "left": 1,
+          "right": 1
+        },
+        "sample_rate": 1000
+      },
+      "label": "balanced_hard",
+      "version": 1
+    },
+    {
+      "config": {
+        "allocation_ratio": {
+          "left": 0.72,
+          "right": 0.28
+        },
+        "bit_depth": 16,
+        "limiter": "hard",
+        "polarity": {
+          "left": 1,
+          "right": -1
+        },
+        "sample_rate": 1000
+      },
+      "label": "left_bias_inverted",
+      "version": 2
+    },
+    {
+      "config": {
+        "allocation_ratio": {
+          "left": 0.45,
+          "right": 0.55
+        },
+        "bit_depth": 12,
+        "limiter": "soft",
+        "polarity": {
+          "left": -1,
+          "right": 1
+        },
+        "sample_rate": 2000
+      },
+      "label": "high_rate_soft",
+      "version": 3
+    }
+  ]
+}
