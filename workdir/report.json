@@ -1,0 +1,98 @@
+{
+  "assets": {
+    "gated24": {
+      "block_count": 5,
+      "gated_out_block_ids": [
+        4
+      ],
+      "handle": 3,
+      "integrated_lufs": -8.979111053525003,
+      "true_peak_max_dbtp": -11.999234205429364,
+      "version_hash": "d9d07634076f2c702d65b3004765a56bd84dd1009a0944b23fc99b410bcee594"
+    },
+    "tone16": {
+      "block_count": 5,
+      "gated_out_block_ids": [],
+      "handle": 0,
+      "integrated_lufs": -14.567610550908627,
+      "true_peak_max_dbtp": -19.999469871546843,
+      "version_hash": "23cf829919fb0991e4b7eee26a09fc776f5b02f490e64bf56bc7ce78ff187c68"
+    },
+    "tone24": {
+      "block_count": 4,
+      "gated_out_block_ids": [],
+      "handle": 1,
+      "integrated_lufs": -10.756332386212287,
+      "true_peak_max_dbtp": -17.999997690299267,
+      "version_hash": "c9271d6a17d9c43a407cb224d456a58d29fb6a5d2b9035c4968910e9d3dd6390"
+    },
+    "tp_ref": {
+      "block_count": 1,
+      "gated_out_block_ids": [],
+      "handle": 2,
+      "integrated_lufs": -1.5158739795162006,
+      "true_peak_max_dbtp": -6.020511975039589,
+      "version_hash": "e2406c5eb1985a06e2fe48360cf484bf3740278da73d60f58f8c84f714a844d3"
+    }
+  },
+  "recompute": [
+    {
+      "affected_block_ids": [],
+      "asset_id": "gated24",
+      "change": "rel_gate_offset -10 -> -8",
+      "gating_selection_changed": false,
+      "mode": "incremental",
+      "reason": "gate parameters changed; block values reused",
+      "version_hash": "d54e814f372b9b12c5e560f6df703dfe8877fb9d1ae30a6f9f8156369cdfd6e2"
+    },
+    {
+      "asset_id": "tone16",
+      "change": "block_samples 19200 -> 9600",
+      "gating_selection_changed": true,
+      "mode": "full",
+      "reason": "block length or oversampling changed; re-sliced",
+      "reslice": {
+        "block_count_delta": 5,
+        "max_window_offset_shift": 48000,
+        "new_block_count": 10,
+        "old_block_count": 5
+      },
+      "version_hash": "17923dfcafd855c8729ff4879a8eefc16a930ae505f0f4c1f0feaab9f0900a0b"
+    }
+  ],
+  "recovery": {
+    "asset_id": "gated24",
+    "committed_before_crash": 2,
+    "consistent": true,
+    "full_run_version_hash": "d9d07634076f2c702d65b3004765a56bd84dd1009a0944b23fc99b410bcee594",
+    "resumed_version_hash": "d9d07634076f2c702d65b3004765a56bd84dd1009a0944b23fc99b410bcee594",
+    "total_blocks": 5,
+    "unfinished_after_recovery": [
+      2,
+      3,
+      4
+    ]
+  },
+  "versions": [
+    {
+      "asset_id": "tone16",
+      "handle": 0,
+      "version_hash": "23cf829919fb0991e4b7eee26a09fc776f5b02f490e64bf56bc7ce78ff187c68"
+    },
+    {
+      "asset_id": "tone24",
+      "handle": 1,
+      "version_hash": "c9271d6a17d9c43a407cb224d456a58d29fb6a5d2b9035c4968910e9d3dd6390"
+    },
+    {
+      "asset_id": "tp_ref",
+      "handle": 2,
+      "version_hash": "e2406c5eb1985a06e2fe48360cf484bf3740278da73d60f58f8c84f714a844d3"
+    },
+    {
+      "asset_id": "gated24",
+      "handle": 3,
+      "version_hash": "d9d07634076f2c702d65b3004765a56bd84dd1009a0944b23fc99b410bcee594"
+    }
+  ]
+}

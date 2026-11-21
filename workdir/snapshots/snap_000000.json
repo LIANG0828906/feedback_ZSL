@@ -1,0 +1,51 @@
+{
+  "params": {
+    "sample_rate": 48000,
+    "channels": 6,
+    "block_samples": 19200,
+    "oversample_factor": 4,
+    "parallelism": 4,
+    "memory_budget_bytes": 67108864,
+    "abs_gate_lufs": -70.0,
+    "rel_gate_offset_lu": -10.0,
+    "target_loudness_lufs": -24.0,
+    "true_peak_ceiling_dbtp": -2.0,
+    "channel_weights": [
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      1.41,
+      1.41
+    ],
+    "short_term_window_s": 3.0
+  },
+  "committed_blocks": [
+    {
+      "asset_id": "gated24",
+      "index": 0,
+      "start": 0,
+      "end": 19200,
+      "sync_marker": 0,
+      "content_hash": "0266658e5d64ffbdec758616dc2c3d36c6db9c064765a46890c02da125912b2d",
+      "k_weighted_energy": 0.2373048351896575,
+      "short_term_lufs": -6.937934127527667,
+      "true_peak_dbtp": -12.000000253286984
+    },
+    {
+      "asset_id": "gated24",
+      "index": 1,
+      "start": 19200,
+      "end": 38400,
+      "sync_marker": 1,
+      "content_hash": "ceeb48659d1d2a70a87f4d37186838dca9b083dc607db3807f90cf0dcab2816b",
+      "k_weighted_energy": 0.05932776503721831,
+      "short_term_lufs": -12.958420118561358,
+      "true_peak_dbtp": -11.999976494457748
+    }
+  ],
+  "gating": null,
+  "format_version": 1,
+  "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "hash": "af0981b0602878d627a992ec2bb2cef187869eac5ff04cae18779d3a89b96cf8"
+}
