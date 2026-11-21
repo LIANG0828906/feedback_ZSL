@@ -1,23 +1,308 @@
-虚拟演播厅在多声道监听系统换装后出现残余串音：同一路测试信号馈入单只扬声器时，其余声道仍拾取到可听分量，且不同分频带上的串音量差异明显。工程师手头有本地合成测量数据：对每一对源声道与拾取声道采集的 16-bit PCM WAV 分量（48000 Hz，单声道与 5.1 声道两种布局）、一份描述扬声器与拾取位置的几何清单以本地 JSON 描述，以及一份分频段划分的配置。工作台要从逐对声道的分量测量出发，构造声道路由矩阵，逐频带估计串音耦合强度与相位关系，给出残余串音预算与抵消增益的可行性判断，并按校准目标生成可发布的声道间抵消增益与极性设置。现场反复出现的问题是：同一组分量测量在不同分频段划分下算出的抵消增益差异远超预期，交接方无法判断差异来自耦合估计的相位不连续、几何清单中的距离换算，还是分频段边界处的能量泄漏，导致换装后的校准既不能复现也无法解释。
+# 虚拟演播厅多声道串音校准工作台
 
-任务环境与准备：
-安装 Python 3.9 或以上版本，创建虚拟环境并安装 numpy、scipy、PyQt5 与 soundfile，版本以本地可重现为准。
-准备本地样本生成器入口，能生成逐对源-拾取声道的 16-bit PCM、48000 Hz 合成分量测量 WAV、几何清单 JSON 与分频段配置。
-确认工作目录可读写，为快照、临时文件与轨迹日志预留磁盘空间；不要求真实声卡、麦克风阵列或扬声器设备。
-运行前检查配置中的分频段边界、抵消增益上限与目标抑制量字段存在且取值为合法值。
-验证恢复流程时使用操作系统进程终止而非协作式取消，恢复只依据磁盘上已提交的快照进行。
+本仓库实现一个完全本地、确定性、可恢复的多声道串音测量与校准工作台。它从逐对 16-bit PCM WAV 分量、几何清单和分频段配置出发，完成声道对齐、逐频段耦合估计、路由矩阵、残余串音预算、相位/极性判定、抵消增益求解、增量复算和原子快照发布。
 
-业务要求：
-1. 实现逐对分量的多声道读数与几何对齐：按声道解析 16-bit PCM 分量测量，依本地 JSON 几何清单把扬声器与拾取位置的距离换算为传播延迟样本并做整样本对齐，输出每对源-拾取声道的到达样本、对齐偏移、距离换算依据与判定置信级别；几何清单缺失距离字段或某对分量在整段内无有效分量时，以业务码 E_PAIR_MISSING 中止并定位源声道与拾取声道。
-2. 实现分频段耦合估计：在对齐后的分量上按配置的分频段划分做本地确定性滤波与频谱估计，逐段估计串音耦合强度与相对相位，并给出由段内样本数、量化步长与滤波器过渡带宽度推导的估计不确定区间；分频段划分或分量对齐变化后必须重算并输出新旧耦合估计的差异摘要与最大偏差频段，某频段内有效样本不足以完成估计时以 E_BAND_UNRESOLVED 中止并给出冲突频段与有效样本数。
-3. 实现路由矩阵构造与残余串音预算：把逐频段耦合强度按分频段聚合成源声道到拾取声道的路由矩阵，计算施加抵消增益后各拾取声道的残余串音能量并折算为相对主声道的抑制量，输出每频段每对的残余串音预算表；当某频段残余串音在给定抵消增益上限内无法降到目标抑制量时，以 E_BUDGET_SHORT 标注该频段并给出所需最小抵消增益与可达抑制量，不得以静默放宽目标替代。
-4. 实现相位连续性与极性判定：在相邻频段的耦合相位之间检查连续性，识别相位翻转、相位跳变与低频段群延迟不连续，输出翻转候选的源-拾取对与频段区间；判定须区分真正的极性反接与分频段边界处的相位卷绕，无法区分时以 E_PHASE_AMBIGUOUS 报告候选原因与置信度，不得只输出数值差值。
-5. 实现抵消增益与极性设置的校准求解：按残余串音预算与相位判定结果为每对声道求解抵消增益与极性设置，并输出求解所用的约束顺序、每一步是否命中目标抑制量与最终设置的可行性结论；求解结果须满足抵消增益上限且不改变主声道增益，任一约束无法同时满足时以 E_CALIB_INFEASIBLE 中止并列出冲突约束与冲突频段。
-6. 实现分频段划分变化后的增量复算：将几何对齐、分频段划分、耦合估计、路由矩阵、相位判定与校准求解建模为依赖链路，任一分频段边界、距离换算依据或目标抑制量修改后计算受影响节点与频段集合并只重算该集合，未受影响频段复用缓存结果与内容哈希；无法证明某频段未受影响时必须保守重算并标注原因，复算完成以整体替换发布，查询期间不得读到部分更新的路由矩阵或半套校准设置。
-7. 实现工作台界面与任务并发控制：界面按分频段展示路由矩阵热力、残余串音预算、相位连续性标记与校准设置，支持编辑分频段边界与目标抑制量、启动复算与协作式取消；复算在后台线程对独立数据完成后整体替换发布，主线程不得阻塞，同一组测量同时只允许一个复算任务，重复提交返回 E_BUSY，取消后释放文件句柄并保留最后一次已提交结果。
-8. 提供确定性样本生成器与脚本化诊断入口：生成本地合成的逐对分量测量样本，注入已知传播延迟、指定频段的耦合强度与相位偏差以及量化噪声；输出含节点、源-拾取对、频段、耦合估计、残余串音预算、缓存命中与内容哈希的轨迹日志，相同种子与操作序列下校准设置与轨迹日志逐字节一致，日志中不得以时间戳或文件大小代替内容哈希。
+不依赖声卡、麦克风阵列、扬声器或容器环境。所有验证使用固定种子的本地合成样本。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速开始
 
-验收：
-本地样本验证逐对分量耦合估计、残余串音预算与校准求解；快照恢复后路由矩阵与校准设置逐字节复现。
+要求 Python 3.9 以上。仓库验证环境固定为 Python 3.12.16。
+
+```bash
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+uv pip install --python .venv/bin/python -e . --no-deps
+```
+
+生成样本并跑完整诊断：
+
+```bash
+chmod +x scripts/run_demo.sh
+./scripts/run_demo.sh
+```
+
+也可以直接调用：
+
+```bash
+.venv/bin/python -m studio_calibrator generate \
+  --out validation/demo/sample --seed 42 --duration 1.0 --force
+
+.venv/bin/python -m studio_calibrator diagnose \
+  --manifest validation/demo/sample/manifest.json \
+  --geometry validation/demo/sample/geometry.json \
+  --config validation/demo/sample/config.json \
+  --snapshot-dir validation/demo/snapshots \
+  --trace validation/demo/trace.jsonl \
+  --out validation/demo/diagnosis.json
+
+.venv/bin/python -m studio_calibrator restore \
+  --snapshot-dir validation/demo/snapshots \
+  --out validation/demo/restored.json
+```
+
+启动工作台：
+
+```bash
+QT_QPA_PLATFORM=xcb .venv/bin/studio-calibrator gui \
+  --manifest validation/demo/sample/manifest.json \
+  --geometry validation/demo/sample/geometry.json \
+  --config validation/demo/sample/config.json \
+  --snapshot-dir validation/demo/snapshots \
+  --trace validation/demo/gui_trace.jsonl
+```
+
+## 输入格式
+
+### `manifest.json`
+
+声明采样率、源声道、拾取声道、每个源声道的参考激励，以及 `mono` 与 `5.1` 两种逐对分量布局。5.1 文件按 WAVE 顺序 `FL FR FC LFE BL BR` 存放六路拾取分量。
+
+```json
+{
+  "schema_version": 1,
+  "sample_rate": 48000,
+  "speakers": ["FL", "FR", "FC", "LFE", "BL", "BR"],
+  "receivers": ["FL", "FR", "FC", "LFE", "BL", "BR"],
+  "main_receivers": {
+    "FL": "FL",
+    "FR": "FR",
+    "FC": "FC",
+    "LFE": "LFE",
+    "BL": "BL",
+    "BR": "BR"
+  },
+  "stimuli": {"FL": "stimuli/FL.wav"},
+  "layouts": {
+    "mono": {
+      "pairs": [
+        {
+          "source": "FL",
+          "receiver": "FR",
+          "path": "mono/FL__FR.wav",
+          "channel": 0
+        }
+      ]
+    },
+    "5.1": {
+      "channel_order": ["FL", "FR", "FC", "LFE", "BL", "BR"],
+      "pairs": [
+        {
+          "source": "FL",
+          "receiver": "FR",
+          "path": "pickups_5_1/FL.wav",
+          "channel": 1
+        }
+      ]
+    }
+  }
+}
+```
+
+`main_receivers` 明确每个源声道的主拾取声道；当源和拾取 ID 不同时必须提供，缺省则使用同名 ID。Workbench 会验证 WAV 为 48000 Hz、`PCM_16`，且布局声道数合法。`mono` 必须为单声道，`5.1` 必须为六声道。任一声源-拾取对缺失、WAV 无法读取或整段无有效分量时返回 `E_PAIR_MISSING`。
+
+### `geometry.json`
+
+每一对源-拾取声道都必须有正的 `distance_m`。若有三维位置，会额外计算欧氏距离并报告显式距离与位置距离之差。
+
+```json
+{
+  "schema_version": 1,
+  "speed_of_sound_m_s": 343.0,
+  "distance_basis": "explicit_distance_quantized_from_3d_positions",
+  "speaker_positions_m": {"FL": [-1.7, 1.0, 0.2]},
+  "receiver_positions_m": {"FL": [-0.75, 0.35, 0.1]},
+  "pairs": [
+    {"source": "FL", "receiver": "FR", "distance_m": 2.501041667}
+  ]
+}
+```
+
+传播延迟：
+
+```text
+geometry_delay_samples = round(distance_m / speed_of_sound_m_s * sample_rate)
+```
+
+分量按 `geometry_delay_samples` 左移，使传播延迟归零；状态中同时报告互相关实测到达样本、几何延迟、对齐偏移、距离依据、实测与几何差，以及 `high/medium/low` 置信级别。
+
+### `config.json`
+
+```json
+{
+  "schema_version": 1,
+  "measurement_layout": "mono",
+  "max_cancellation_gain_db": 12.0,
+  "target_suppression_db": 12.0,
+  "min_band_samples": 64,
+  "estimator_version": "band-ls-v1",
+  "bands": [
+    {
+      "id": "B0",
+      "low_hz": 20.0,
+      "high_hz": 120.0,
+      "transition_hz": 20.0
+    }
+  ],
+  "phase": {
+    "jump_threshold_deg": 120.0,
+    "polarity_tolerance_deg": 35.0,
+    "low_frequency_max_hz": 500.0,
+    "group_delay_jump_samples": 2.5,
+    "ambiguity_confidence": 0.6
+  },
+  "calibration": {
+    "gain_step_db": 0.05,
+    "residual_floor": 1e-12
+  }
+}
+```
+
+启动前强制检查 `bands`、`low_hz`、`high_hz`、`transition_hz`、`max_cancellation_gain_db`、`target_suppression_db` 和 `measurement_layout`。频段必须有序、互不重叠、过渡带宽度合法，上限位于 `[0, 60]` dB，目标位于 `(0, 120]` dB。
+
+## 算法与业务语义
+
+### 分频段耦合估计
+
+对齐后的参考与分量在频域以确定性升余弦频带权函数做局部滤波，再用复最小二乘估计频带传递系数 `H_b`：
+
+```text
+H_b = sum(W * conj(X) * Y) / sum(W * |X|^2)
+```
+
+输出：
+
+- 耦合强度 `20 log10(|H_b|)` 与相对相位 `arg(H_b)`。
+- 强度与相位不确定区间。区间由有效样本数、16-bit 量化步长、相干残差和过渡带占比推导。
+- 相干度、群延迟、有效样本数、有效频点数和边界泄漏占比。
+
+频带有效样本数按 `valid_time_samples * band_width / nyquist` 换算。低于 `min_band_samples` 时以 `E_BAND_UNRESOLVED` 中止，并报告频段和有效样本数。
+
+### 抵消深度与残余串音
+
+`gain_db` 是正的抵消深度，范围为 `0..max_cancellation_gain_db`。`enabled=false` 表示不注入校正信号。相位失配会形成不可突破的残余地板：
+
+```text
+phase_floor = coupling_amplitude * |sin(phase)|
+residual = max(coupling_amplitude * 10^(-gain_db / 20), phase_floor)
+suppression_db = -20 log10(residual)
+```
+
+所需最小深度：
+
+```text
+required_gain_db = 20 log10(coupling_amplitude / target_amplitude)
+```
+
+若所需深度超过上限，或相位地板已经高于目标残余，则预算条目标注 `short` 并返回 `E_BUDGET_SHORT`。不会静默放宽目标值。预算输出逐频段、逐源-拾取对的耦合、所需深度、可达抑制量、实际残余和极性提示。
+
+### 相位连续性与极性
+
+对每对声道按频段顺序检查：
+
+- `boundary_phase_wrap`：相邻相位跨过 `+/-180` 度的解析卷绕，报告原始差和卷绕差。
+- `phase_jump`：超过阈值的实际相位跳变。
+- `polarity_flip_candidate`：接近 180 度的跳变；同时保留“真实极性反接”“分频边界跳变”“边界能量泄漏”候选原因。
+- `group_delay_discontinuity`：低频相邻频段群延迟跳变。
+- `polarity_reversed`：全频段相位中心接近 180 度且圆一致性足够高，判定为稳定极性反接。
+
+无法区分候选原因且置信度低于策略阈值时，状态中返回 `E_PHASE_AMBIGUOUS`，并保留候选原因和置信度；校准会将相关声道对标为冲突。
+
+### 校准求解
+
+约束按固定顺序执行：
+
+1. `phase_polarity`
+2. `target_suppression`
+3. `gain_cap`
+4. `main_gain_preserved`
+
+每一步都记录目标、可达值以及是否命中。主声道冻结为 `0 dB / polarity=+1`。任何约束无法同时满足时返回 `E_CALIB_INFEASIBLE`，列出失败约束、源-拾取对和频段；该状态的 `publishable=false`。
+
+### 增量复算
+
+依赖链路为：
+
+```text
+alignment -> coupling -> route_matrix -> budget -> phase -> calibration
+```
+
+缓存键包含对齐内容哈希、频段哈希、估计器版本和配置内容。目标抑制量变化只重算 `budget` 与 `calibration`；改变两个相邻边界时，只重算受影响频段的耦合/路由/预算，并因连续性依赖保守重算相位。频段结构、覆盖不连续或估计器版本变化无法证明安全时，所有频段强制重算并记录原因。
+
+状态中包含逐节点、逐频段的 `cache_hits/recomputed_bands/affected_bands`，以及新旧耦合差异摘要和最大偏差频段。未受影响频段复用缓存时，轨迹仍记录其内容哈希。
+
+### 原子发布与恢复
+
+每次诊断先完整构造内存状态，再写入快照临时目录：
+
+```text
+result.json
+route_matrix.json
+calibration.json
+metadata.json
+COMMITTED
+```
+
+只有所有文件、逐文件 SHA-256 和 `COMMITTED` 标记都落盘后，目录才原子改名为快照目录，随后原子替换 `CURRENT`。查询只读取管理器当前引用的完整不可变状态，不会看到半套路由矩阵或校准设置。
+
+恢复只读取 `CURRENT` 指向且带 `COMMITTED` 的目录，并重新校验文件哈希。临时目录和未完成目录会被忽略。测试会用 `SIGKILL` 在提交前杀死进程，再验证只能恢复上一次已提交快照。
+
+### 并发与取消
+
+`RecomputeManager` 对同一组测量只允许一个活跃复算。重复提交返回 `E_BUSY`。取消为协作式，工作线程在配对和频段边界检查取消事件；取消后不提交快照，查询仍返回上一次已提交状态。文件读取使用 `with` 生命周期，WAV 与轨迹句柄在退出时关闭。
+
+PyQt5 工作台在 `QThread` 中运行完整复算。主线程只更新视图，不执行滤波、FFT 或求解。
+
+## 轨迹日志
+
+每个事件为一行规范 JSON，包含：
+
+- `seq`
+- `node`
+- `action`
+- `pair`（适用时）
+- `band`（适用时）
+- `cached`
+- `reason`
+- `content_hash`
+- `details`
+
+耦合事件包含强度、相位、不确定区间、相干度和群延迟；预算事件包含逐对残余能量与可达抑制量；校准事件包含深度、极性、目标和可行性。日志不使用时间戳或文件大小代替内容哈希。
+
+相同样本随机种子、配置和操作顺序下，校准设置、状态哈希及轨迹日志逐字节一致。
+
+## 错误码
+
+| 错误码 | 行为 |
+| --- | --- |
+| `E_PAIR_MISSING` | 几何距离缺失、配对/声道缺失或整段分量为空，中止 |
+| `E_BAND_UNRESOLVED` | 频段有效样本/能量不足，中止并报频段 |
+| `E_BUDGET_SHORT` | 频段无法在深度上限内达到目标，标注并继续诊断 |
+| `E_PHASE_AMBIGUOUS` | 极性反接与边界效应无法区分，报告候选与置信度 |
+| `E_CALIB_INFEASIBLE` | 校准约束冲突，输出完整冲突列表且不可发布 |
+| `E_BUSY` | 同一组测量已有活跃复算 |
+| `E_CANCELLED` | 协作式取消，保留上次已提交状态 |
+| `E_CONFIG_INVALID` | 配置字段缺失或取值非法 |
+| `E_LAYOUT_INVALID` | WAV/清单布局不一致 |
+| `E_SNAPSHOT_INVALID` | 快照标记或内容哈希校验失败 |
+
+## 测试
+
+```bash
+QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -vv
+```
+
+测试覆盖：
+
+- 合成样本逐字节确定性。
+- 单声道与 5.1 布局的同分量解码。
+- 独立主拾取 ID 映射下的路由、预算和主声道冻结。
+- 对齐、耦合、预算、极性反接与校准真值。
+- 缺失距离、空分量、频段不足、预算短缺。
+- 相位卷绕与极性候选区分。
+- 目标/边界变化的增量缓存分区。
+- 快照恢复后路由矩阵与校准设置逐字节一致。
+- 提交前 `SIGKILL` 只恢复已完成快照。
+- `E_BUSY`、协作式取消和上次提交结果保留。
+- 无显示环境下 PyQt5 工作台渲染、后台复算与启动恢复。
+
+实际验证结果见 [VALIDATION.md](VALIDATION.md)。
