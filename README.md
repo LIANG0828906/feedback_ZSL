@@ -1,22 +1,179 @@
-动捕棚在长序列录制后，导演频繁只改动若干根关节的约束权重或末端目标，现有求解把所有帧整段重算一遍，既拖垮交互也掩盖了改动真实影响范围；更麻烦的是求解中途机器被强制终止，重启后要么从头再来，要么从一帧姿态快照恢复出的结果与未中断继续求解逐帧判若两人。需要一套桌面工作台：载入本地 BVH 与约束描述，按帧区间求解关节旋转与骨骼长度保持、关节角度限位、末端效应器位置三类约束，参数改动只重解受影响区间，并把每区间姿态结果、残差与内容哈希一并提交，中断后仅凭磁盘已提交区间续解。
+# Motion Workbench
 
-任务环境与准备：
-Windows 10 及以上，安装 Python 3.11（64 位）并确认 python 命令可用。
-安装依赖：pip install numpy==1.26.4 PySide6==6.7.2，全部为本地离线可安装版本。
-无需外部账号或网络服务；BVH 样本与约束描述由题内生成器在本地生成。
-工作区为空白目录，自行确定工程结构与入口脚本，不依赖现有代码或数据附件。
+面向动捕长序列的离线约束求解工作台。载入本地 BVH 与 JSON 约束，按帧求解关节旋转、骨骼长度和末端目标；参数变化只重解显式闭包内的帧。姿态、残差、参数版本和内容哈希按区间原子提交，强杀后仅依赖磁盘状态续解。
 
-业务要求：
-1. 实现 BVH 解析与确定性正向运动学求值器：读取层级关节表、通道顺序、骨骼偏移与逐帧通道值，输出世界空间关节变换；关节层级父引用越界、通道数与声明不符或帧数缺失时返回 E_BVH_INVALID 并定位出错关节与帧号，同一文件重复解析结果逐字段一致。
-2. 实现三类约束的逐帧局部迭代求解器：骨骼长度保持、关节角度限位与末端效应器位置各自带权重与容差，每帧输出每约束残差与总残差；权重或容差修改后必须计算受影响帧区间并只重解该区间，未受影响帧复用缓存姿态与哈希，且复用结果与全量重解逐帧一致。
-3. 将影响区间推导建立在显式依赖上：关节约束改动沿父子链判定受影响关节集，再按帧号传播到受影响帧，并与末端目标所在帧共同构成闭包；无法证明某帧未受影响的必须保守重解并标注原因；闭包推导过程写入轨迹，禁止以固定全量重解替代。
-4. 实现按帧区间原子的姿态提交：每区间以临时文件加原子重命名写出姿态结果、逐约束残差、内容哈希与依赖参数版本，写失败不得覆盖上一有效区间并返回 E_COMMIT_FAILED；已提交区间不得被后续重解静默改写，改写须走新版本号。
-5. 实现强制终止后的续解流程：仅依据磁盘已提交区间重建约束参数与姿态状态，确定续解起点，已提交帧不重复求解；快照区间表版本、哈希链或参数版本不符时以 E_RECOVERY_INVALID 中止并定位首个断链帧，不得产出无法验证的姿态结果。
-6. 实现约束冲突诊断：某帧迭代达上限仍未满足全部约束时，输出冲突约束标识、涉及关节、最差残差项与证据字段，该帧及后续帧不得进入已提交区间；诊断报告须可仅凭自身字段定位到具体帧与约束，不得以笼统失败结束。
-7. 实现求解任务并发与资源边界：同一 BVH 同时只允许一个求解任务，重复启动返回 E_BUSY；任务在帧区间边界响应协作式取消并释放文件句柄，取消后保留最后一次已提交区间；强杀后不承诺生成退出报告，恢复只依赖磁盘状态。
-8. 提供图形界面与确定性样本生成器：三维视口播放骨骼姿态并按帧显示残差热力，侧栏编辑约束权重与容差，支持启动、暂停、协作式取消与从快照恢复；生成器产出不同帧数、关节数与冲突组合的本地 BVH 及基线残差哈希，输出含帧号、重解区间、残差、冲突状态、缓存命中与内容哈希的轨迹日志。
+## 已实现能力
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 确定性 BVH 解析与 FK：校验层级父引用、通道数量、帧数和数值，错误统一返回 `E_BVH_INVALID`，并携带 `joint`、`frame` 定位字段。
+- 三类逐帧约束：`bone_length`、`joint_limit`、`effector_target`，各自带 `weight`、`tolerance`、残差和证据。
+- 显式依赖闭包：按关节的祖先/子树链确定受影响关节，再与约束帧范围及同帧末端目标求交；轨迹记录原因，无法证明时保守重解并标记。
+- 不可变区间提交：临时文件 + `fsync` + 原子替换；区间文件只追加新版本，旧文件不被覆盖。写失败返回 `E_COMMIT_FAILED`。
+- 磁盘恢复：参数快照自校验、区间内容哈希、前驱哈希链和区间表版本共同验证；异常返回 `E_RECOVERY_INVALID` 和 `first_break_frame`。
+- 冲突诊断：达到迭代上限时输出具体帧、约束 ID、关节、最差残差和证据，并写 barrier 阻止冲突帧及后续帧进入有效区间。
+- 单任务边界：进程内锁 + OS 文件锁，同一 BVH 重复启动返回 `E_BUSY`；强杀后 OS 自动释放锁。
+- 桌面界面：可旋转三维投影视口、逐帧残差热力、播放时间线、约束权重/容差编辑，以及启动、暂停、取消、磁盘恢复。
+- 确定性样本生成器：不同帧数、关节数和冲突组合，输出 BVH、约束 JSON、基线残差哈希与可校验会话。
 
-验收：
-用本地 BVH 样本验证增量重解区间正确、残差与全量重解一致，强杀后仅凭磁盘快照续解且哈希链可校验。
+## Windows 快速开始
+
+目标环境为 Windows 10+、64 位 Python 3.11。先准备离线 wheel 目录，然后：
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\activate
+python -m pip install --no-index --find-links .\wheels -r requirements.txt
+python -m motion_workbench
+```
+
+依赖固定为：
+
+```text
+numpy==1.26.4
+PySide6==6.7.2
+```
+
+核心解析、求解、提交与恢复仅使用 Python 标准库；NumPy 和 PySide6 用于目标环境依赖完整性及桌面 UI。无 PySide6 时仍可使用全部命令行功能。
+
+## 命令行
+
+生成单个样本及基线：
+
+```powershell
+python -m motion_workbench generate --out samples --frames 48 --joints 12 --conflict none --seed 7
+```
+
+生成多组合样本集：
+
+```powershell
+python -m motion_workbench generate --out samples --suite
+```
+
+全量/增量求解（同一会话目录即增量）：
+
+```powershell
+python -m motion_workbench solve `
+  --bvh samples\frames048_joints12_none_seed7.bvh `
+  --constraints samples\frames048_joints12_none_seed7.constraints.json `
+  --session samples\work-session --chunk-size 8
+```
+
+修改约束并触发区间规划：
+
+```powershell
+python -m motion_workbench edit --session samples\work-session `
+  --constraint "ee:effector" --weight 1.5 --tolerance 0.006
+```
+
+仅从磁盘快照恢复：
+
+```powershell
+python -m motion_workbench resume --session samples\work-session
+python -m motion_workbench verify --session samples\work-session
+```
+
+`verify` 还可传入 `--expected-table-version` 或 `--expected-parameters-version`；与磁盘快照不一致时返回 `E_RECOVERY_INVALID`。
+
+强杀恢复验证使用故障注入参数（进程以 137 硬退出）：
+
+```powershell
+python -m motion_workbench solve --bvh ... --constraints ... `
+  --session samples\crash-session --chunk-size 6 --crash-after-commits 2
+python -m motion_workbench resume --session samples\crash-session
+python -m motion_workbench verify --session samples\crash-session
+```
+
+## 约束 JSON
+
+```json
+{
+  "schema": "motion-workbench/constraints/v1",
+  "name": "shot-001",
+  "solver": {
+    "max_iterations": 36,
+    "rotation_step_deg": 5.0,
+    "scale_step": 0.02,
+    "min_rotation_step_deg": 0.01,
+    "min_scale_step": 0.00001
+  },
+  "constraints": [
+    {
+      "id": "bone:forearm.R",
+      "type": "bone_length",
+      "joint": "forearm.R",
+      "target_length": 0.28,
+      "weight": 1.0,
+      "tolerance": 0.0005,
+      "frames": [[0, 120]]
+    },
+    {
+      "id": "limit:upperarm.R",
+      "type": "joint_limit",
+      "joint": "upperarm.R",
+      "min_deg": [-80, -50, -70],
+      "max_deg": [90, 80, 70],
+      "weight": 1.0,
+      "tolerance": 0.1,
+      "frames": [[0, 120]]
+    },
+    {
+      "id": "ee:hand.R",
+      "type": "effector_target",
+      "joint": "hand.R",
+      "weight": 1.2,
+      "tolerance": 0.008,
+      "targets": [
+        [0, [0.4, 1.2, 0.1]],
+        [1, [0.41, 1.21, 0.1]]
+      ]
+    }
+  ]
+}
+```
+
+`joint_limit` 的三个角度按该关节 BVH rotation channel 的声明顺序解释。末端约束的 `targets` 帧集合必须与其 `frames` 一致；省略 `frames` 时自动使用目标帧集合。
+
+## 验证
+
+```powershell
+python -m unittest discover -v
+python scripts/run_acceptance.py
+```
+
+完整验收输出见 `artifacts/verification.json`，固定样本和可检查会话位于 `artifacts/acceptance/`。本次实际结果：
+
+- 24 项自动化测试全部通过。
+- 24 帧/8 关节样本只修改第 10 帧末端目标，影响区间为 `[10,10]`，23 帧缓存命中；增量结果与全新全量求解 24/24 帧哈希一致。
+- 强杀进程退出码 `137`，磁盘已有区间 `[0,11]`；恢复仅计算 `12..23`，缓存 `0..11`，与未中断全量结果 24/24 帧哈希一致。
+- 不可达末端目标产生 `conflict` 报告，barrier 位于具体冲突帧，报告字段可独立定位约束与证据。
+- 注入 manifest 写失败返回 `E_COMMIT_FAILED`，有效提交数仍为 0，链头保持 `GENESIS`。
+
+更完整的设计、依赖闭包、提交格式和恢复校验见 [docs/TECHNICAL.md](docs/TECHNICAL.md)。
+
+## 工程结构
+
+```text
+motion_workbench/
+  bvh.py           BVH 解析、校验与确定性 FK
+  constraints.py   约束模型、JSON 校验、逐帧依赖哈希
+  dependency.py    关节链与帧范围影响闭包
+  solver.py        确定性局部迭代求解、残差与冲突证据
+  store.py         不可变区间、参数快照、原子提交、哈希链恢复
+  session.py       求解任务编排、缓存复用、取消/暂停
+  generator.py     确定性 BVH/约束/基线生成器
+  gui.py           PySide6 桌面工作台
+  cli.py           无界面命令
+tests/             24 项回归与验收测试
+scripts/run_acceptance.py
+```
+
+## 错误码
+
+| 错误码 | 含义 |
+| --- | --- |
+| `E_BVH_INVALID` | BVH 层级、通道、帧数或数值错误 |
+| `E_CONSTRAINT_INVALID` | 约束字段、帧范围或关节引用错误 |
+| `E_COMMIT_FAILED` | 原子写失败，上一有效状态保持不变 |
+| `E_RECOVERY_INVALID` | 参数快照、区间表版本、内容哈希或哈希链断链 |
+| `E_BUSY` | 同一 BVH 已有求解任务 |
+| `E_CANCELLED` | 协作式取消完成 |
+| `E_CONFLICT` | 迭代上限内未满足全部约束，附结构化报告 |
