@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "npr-stroke-pipeline"
+version = "0.1.0"
+description = "Deterministic layered hand-drawn stroke rendering pipeline"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy",
+  "PySide6",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+npr-pipeline = "npr_pipeline.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
