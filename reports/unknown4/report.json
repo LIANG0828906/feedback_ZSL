@@ -1,0 +1,625 @@
+{
+  "chain_head": "5e903cef10023b453001c5071e14aacd27fa9ae0f5d6f3de4218b4aad8880189",
+  "config": {
+    "align_tolerance": 1.0,
+    "marker_period_s": 1.0,
+    "max_lag": 2400,
+    "min_seg_conf": 5.0,
+    "mode": "linear",
+    "ref_channel": 0,
+    "residual_threshold": 2.0,
+    "seg_len_s": 2.0,
+    "snr_threshold": 0.3,
+    "strategy_threshold_s": 10.0
+  },
+  "dataset": {
+    "channels": 4,
+    "dir": "unknown4",
+    "fs": 48000,
+    "hash": "eaeb350ddf2984a606f485242fbad7ee02aa56b234e7442a12fde4441b541d3d"
+  },
+  "records": [
+    {
+      "data": {
+        "channel": 0,
+        "diagnosis": {
+          "conclusion": "REFERENCE",
+          "evidence_segments": [],
+          "residual_stats": {
+            "residual_rms": 0.0
+          }
+        },
+        "fit": {
+          "offset": 0.0,
+          "offset_ci": 0.0,
+          "ppm": 0.0,
+          "ppm_ci": 0.0,
+          "residual_rms": 0.0,
+          "residuals": [
+            0.0
+          ],
+          "slope": 0.0
+        },
+        "input_hash": "cd0ab52507976f6fd57cca906922d85303158f9f3bce5da8d86063e8597c78f9",
+        "jump_candidates": [],
+        "markers_unavailable": [],
+        "segments": []
+      },
+      "hash": "070135816f0cde22ceef333bbd04ab37207e9046a9e9afeae6264adce4d00c95",
+      "prev_hash": "f1b52c0b301e37728a335d698e4628ba85877504712770ecc69e660d40a0819b"
+    },
+    {
+      "data": {
+        "channel": 1,
+        "diagnosis": {
+          "candidate_hypotheses": [
+            "nonlinear_clock_or_noise"
+          ],
+          "conclusion": "E_DRIFT_UNKNOWN",
+          "evidence_segments": [],
+          "fit": {
+            "offset": 2.735239868579592,
+            "offset_ci": 11.824838464691739,
+            "ppm": 2.8164835729145365,
+            "ppm_ci": 18.133525359135835,
+            "residual_rms": 9.285179620926924,
+            "residuals": [
+              -2.8820287930982462,
+              -3.083980876567869,
+              11.58240100832928,
+              11.31382127976036,
+              -13.945102439689542,
+              -4.28944613407062,
+              5.513978119640354,
+              5.3165619000501945,
+              -12.983631564642558,
+              -13.234427259490863,
+              8.476995205346274,
+              8.214859554433236
+            ],
+            "slope": 2.8164835729145366e-06
+          },
+          "residual_stats": {
+            "n_segments": 12,
+            "residual_max": 13.945102439689542,
+            "residual_rms": 9.285179620926924
+          },
+          "step_segments": []
+        },
+        "fit": {
+          "offset": 2.735239868579592,
+          "offset_ci": 11.824838464691739,
+          "ppm": 2.8164835729145365,
+          "ppm_ci": 18.133525359135835,
+          "residual_rms": 9.285179620926924,
+          "residuals": [
+            -2.8820287930982462,
+            -3.083980876567869,
+            11.58240100832928,
+            11.31382127976036,
+            -13.945102439689542,
+            -4.28944613407062,
+            5.513978119640354,
+            5.3165619000501945,
+            -12.983631564642558,
+            -13.234427259490863,
+            8.476995205346274,
+            8.214859554433236
+          ],
+          "slope": 2.8164835729145366e-06
+        },
+        "input_hash": "b4a58d6fb01957f48bd32ebc4507b15f5993a6da29e0a38cca0f9183e5f94166",
+        "jump_candidates": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "markers_unavailable": [],
+        "segments": [
+          {
+            "center": 48000.00251561024,
+            "confidence": 23.902,
+            "delay": -0.011597705933581892,
+            "n_markers": 1,
+            "segment": 0,
+            "start": 0,
+            "valid": true
+          },
+          {
+            "center": 120000.00502300676,
+            "confidence": 23.9025,
+            "delay": -0.0107629650913168,
+            "n_markers": 2,
+            "segment": 1,
+            "start": 96000,
+            "valid": true
+          },
+          {
+            "center": 240000.00608262917,
+            "confidence": 24.2639,
+            "delay": 14.993596951539985,
+            "n_markers": 3,
+            "segment": 2,
+            "start": 192000,
+            "valid": true
+          },
+          {
+            "center": 335999.9918559452,
+            "confidence": 24.3367,
+            "delay": 14.995399605901639,
+            "n_markers": 1,
+            "segment": 3,
+            "start": 288000,
+            "valid": true
+          },
+          {
+            "center": 432000.0019370267,
+            "confidence": 24.8816,
+            "delay": -9.993141662155267,
+            "n_markers": 3,
+            "segment": 4,
+            "start": 384000,
+            "valid": true
+          },
+          {
+            "center": 551999.9999663146,
+            "confidence": 23.6868,
+            "delay": 0.0004926666629216925,
+            "n_markers": 2,
+            "segment": 5,
+            "start": 480000,
+            "valid": true
+          },
+          {
+            "center": 623999.9987870601,
+            "confidence": 24.7739,
+            "delay": 10.006703734302391,
+            "n_markers": 1,
+            "segment": 6,
+            "start": 576000,
+            "valid": true
+          },
+          {
+            "center": 696000.0041116853,
+            "confidence": 23.9779,
+            "delay": 10.012074346958798,
+            "n_markers": 2,
+            "segment": 7,
+            "start": 672000,
+            "valid": true
+          },
+          {
+            "center": 792000.0103666241,
+            "confidence": 25.1853,
+            "delay": -8.017736677117227,
+            "n_markers": 2,
+            "segment": 8,
+            "start": 768000,
+            "valid": true
+          },
+          {
+            "center": 888000.0016128998,
+            "confidence": 23.8987,
+            "delay": -7.998149973620457,
+            "n_markers": 2,
+            "segment": 9,
+            "start": 864000,
+            "valid": true
+          },
+          {
+            "center": 984000.0103105428,
+            "confidence": 23.3229,
+            "delay": 13.983654938713244,
+            "n_markers": 2,
+            "segment": 10,
+            "start": 960000,
+            "valid": true
+          },
+          {
+            "center": 1080000.0140674545,
+            "confidence": 24.235,
+            "delay": 13.991901721381282,
+            "n_markers": 2,
+            "segment": 11,
+            "start": 1056000,
+            "valid": true
+          }
+        ]
+      },
+      "hash": "9cfb16736cf117c7b4fed7bfdc0e6656e63f25fa14e8ed0ff3b599974f3d2bd0",
+      "prev_hash": "070135816f0cde22ceef333bbd04ab37207e9046a9e9afeae6264adce4d00c95"
+    },
+    {
+      "data": {
+        "channel": 2,
+        "diagnosis": {
+          "candidate_hypotheses": [],
+          "conclusion": "CLOCK_SKEW",
+          "evidence_segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fit": {
+            "offset": -0.004040418492609017,
+            "offset_ci": 0.00892967775113584,
+            "ppm": -0.0038636041477168336,
+            "ppm_ci": 0.013693763211449845,
+            "residual_rms": 0.0070118219478317876,
+            "residuals": [
+              -0.005021865176516134,
+              0.0022612103655842517,
+              0.007533568346455879,
+              0.005025008565052362,
+              -0.0029537722765908686,
+              -0.0012652328726027885,
+              -0.009000478909158127,
+              0.00267979976620715,
+              -0.008539802442611013,
+              -0.0027983324600295654,
+              0.016656299605141985,
+              -0.004576402510933136
+            ],
+            "slope": -3.863604147716834e-09
+          },
+          "offset": -0.004040418492609017,
+          "offset_ci": 0.00892967775113584,
+          "ppm": -0.0038636041477168336,
+          "ppm_ci": 0.013693763211449845,
+          "residual_stats": {
+            "n_segments": 12,
+            "residual_max": 0.016656299605141985,
+            "residual_rms": 0.0070118219478317876
+          }
+        },
+        "fit": {
+          "offset": -0.004040418492609017,
+          "offset_ci": 0.00892967775113584,
+          "ppm": -0.0038636041477168336,
+          "ppm_ci": 0.013693763211449845,
+          "residual_rms": 0.0070118219478317876,
+          "residuals": [
+            -0.005021865176516134,
+            0.0022612103655842517,
+            0.007533568346455879,
+            0.005025008565052362,
+            -0.0029537722765908686,
+            -0.0012652328726027885,
+            -0.009000478909158127,
+            0.00267979976620715,
+            -0.008539802442611013,
+            -0.0027983324600295654,
+            0.016656299605141985,
+            -0.004576402510933136
+          ],
+          "slope": -3.863604147716834e-09
+        },
+        "input_hash": "b5c74c4787bca6938cacc9278aca3081e99a7fa032fc5bceb278ae4a78771900",
+        "jump_candidates": [],
+        "markers_unavailable": [],
+        "segments": [
+          {
+            "center": 48000.00251561024,
+            "confidence": 23.4774,
+            "delay": -0.009247736677934881,
+            "n_markers": 1,
+            "segment": 0,
+            "start": 0,
+            "valid": true
+          },
+          {
+            "center": 120000.00502300676,
+            "confidence": 24.6025,
+            "delay": -0.0022428406441576954,
+            "n_markers": 2,
+            "segment": 1,
+            "start": 96000,
+            "valid": true
+          },
+          {
+            "center": 240000.00608262917,
+            "confidence": 24.7602,
+            "delay": 0.00256588483489395,
+            "n_markers": 3,
+            "segment": 2,
+            "start": 192000,
+            "valid": true
+          },
+          {
+            "center": 335999.9918559452,
+            "confidence": 24.0474,
+            "delay": -0.0003135808897241077,
+            "n_markers": 1,
+            "segment": 3,
+            "start": 288000,
+            "valid": true
+          },
+          {
+            "center": 432000.0019370267,
+            "confidence": 25.2883,
+            "delay": -0.008663267768497462,
+            "n_markers": 3,
+            "segment": 4,
+            "start": 384000,
+            "valid": true
+          },
+          {
+            "center": 551999.9999663146,
+            "confidence": 24.8884,
+            "delay": -0.007438360854621351,
+            "n_markers": 2,
+            "segment": 5,
+            "start": 480000,
+            "valid": true
+          },
+          {
+            "center": 623999.9987870601,
+            "confidence": 25.2449,
+            "delay": -0.015451786385256128,
+            "n_markers": 1,
+            "segment": 6,
+            "start": 576000,
+            "valid": true
+          },
+          {
+            "center": 696000.0041116853,
+            "confidence": 24.8219,
+            "delay": -0.0040496872290987085,
+            "n_markers": 2,
+            "segment": 7,
+            "start": 672000,
+            "valid": true
+          },
+          {
+            "center": 792000.0103666241,
+            "confidence": 25.7838,
+            "delay": -0.015640195460264295,
+            "n_markers": 2,
+            "segment": 8,
+            "start": 768000,
+            "valid": true
+          },
+          {
+            "center": 888000.0016128998,
+            "confidence": 24.4765,
+            "delay": -0.010269631442042737,
+            "n_markers": 2,
+            "segment": 9,
+            "start": 864000,
+            "valid": true
+          },
+          {
+            "center": 984000.0103105428,
+            "confidence": 24.9012,
+            "delay": 0.008814094591343746,
+            "n_markers": 2,
+            "segment": 10,
+            "start": 960000,
+            "valid": true
+          },
+          {
+            "center": 1080000.0140674545,
+            "confidence": 25.2663,
+            "delay": -0.01278951353742741,
+            "n_markers": 2,
+            "segment": 11,
+            "start": 1056000,
+            "valid": true
+          }
+        ]
+      },
+      "hash": "e9474b70c192b9a88a91fbef82c86e5cdfee385e8bf2ba865c967e0789142f55",
+      "prev_hash": "9cfb16736cf117c7b4fed7bfdc0e6656e63f25fa14e8ed0ff3b599974f3d2bd0"
+    },
+    {
+      "data": {
+        "channel": 3,
+        "diagnosis": {
+          "candidate_hypotheses": [],
+          "conclusion": "CLOCK_SKEW",
+          "evidence_segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fit": {
+            "offset": 0.002155710607121119,
+            "offset_ci": 0.017105490295477192,
+            "ppm": -0.011928006334280088,
+            "ppm_ci": 0.026231465485103665,
+            "residual_rms": 0.013431688760212468,
+            "residuals": [
+              -0.0014030713504713868,
+              -0.008604042049215313,
+              -0.0195660089987557,
+              0.030842985867862195,
+              -0.006493097247413707,
+              0.010129081016320603,
+              -0.004983768441219517,
+              0.0042312988874898625,
+              0.004177827665765955,
+              0.015522602318905015,
+              -0.015419652899729082,
+              -0.008434154769538914
+            ],
+            "slope": -1.1928006334280088e-08
+          },
+          "offset": 0.002155710607121119,
+          "offset_ci": 0.017105490295477192,
+          "ppm": -0.011928006334280088,
+          "ppm_ci": 0.026231465485103665,
+          "residual_stats": {
+            "n_segments": 12,
+            "residual_max": 0.030842985867862195,
+            "residual_rms": 0.013431688760212468
+          }
+        },
+        "fit": {
+          "offset": 0.002155710607121119,
+          "offset_ci": 0.017105490295477192,
+          "ppm": -0.011928006334280088,
+          "ppm_ci": 0.026231465485103665,
+          "residual_rms": 0.013431688760212468,
+          "residuals": [
+            -0.0014030713504713868,
+            -0.008604042049215313,
+            -0.0195660089987557,
+            0.030842985867862195,
+            -0.006493097247413707,
+            0.010129081016320603,
+            -0.004983768441219517,
+            0.0042312988874898625,
+            0.004177827665765955,
+            0.015522602318905015,
+            -0.015419652899729082,
+            -0.008434154769538914
+          ],
+          "slope": -1.1928006334280088e-08
+        },
+        "input_hash": "ac09385eba3b08751098c3dda25bd9a96f71c0b8ef99aa1ab4e34357052aa259",
+        "jump_candidates": [],
+        "markers_unavailable": [],
+        "segments": [
+          {
+            "center": 48000.00251561024,
+            "confidence": 23.9079,
+            "delay": 0.00018009492259807303,
+            "n_markers": 1,
+            "segment": 0,
+            "start": 0,
+            "valid": true
+          },
+          {
+            "center": 120000.00502300676,
+            "confidence": 25.002,
+            "delay": -0.007879692262122262,
+            "n_markers": 2,
+            "segment": 1,
+            "start": 96000,
+            "valid": true
+          },
+          {
+            "center": 240000.00608262917,
+            "confidence": 23.6779,
+            "delay": -0.02027301998441544,
+            "n_markers": 3,
+            "segment": 2,
+            "start": 192000,
+            "valid": true
+          },
+          {
+            "center": 335999.9918559452,
+            "confidence": 24.5753,
+            "delay": 0.02899088644380754,
+            "n_markers": 1,
+            "segment": 3,
+            "start": 288000,
+            "valid": true
+          },
+          {
+            "center": 432000.0019370267,
+            "confidence": 24.1926,
+            "delay": -0.009490285399806453,
+            "n_markers": 3,
+            "segment": 4,
+            "start": 384000,
+            "valid": true
+          },
+          {
+            "center": 551999.9999663146,
+            "confidence": 24.588,
+            "delay": 0.005700532127320912,
+            "n_markers": 2,
+            "segment": 5,
+            "start": 480000,
+            "valid": true
+          },
+          {
+            "center": 623999.9987870601,
+            "confidence": 24.4177,
+            "delay": -0.01027113377222122,
+            "n_markers": 1,
+            "segment": 6,
+            "start": 576000,
+            "valid": true
+          },
+          {
+            "center": 696000.0041116853,
+            "confidence": 24.6963,
+            "delay": -0.0019148829630921682,
+            "n_markers": 2,
+            "segment": 7,
+            "start": 672000,
+            "valid": true
+          },
+          {
+            "center": 792000.0103666241,
+            "confidence": 24.6689,
+            "delay": -0.0031134428675159143,
+            "n_markers": 2,
+            "segment": 8,
+            "start": 768000,
+            "valid": true
+          },
+          {
+            "center": 888000.0016128998,
+            "confidence": 24.2993,
+            "delay": 0.007086243281946736,
+            "n_markers": 2,
+            "segment": 9,
+            "start": 864000,
+            "valid": true
+          },
+          {
+            "center": 984000.0103105428,
+            "confidence": 25.0611,
+            "delay": -0.02500110064852379,
+            "n_markers": 2,
+            "segment": 10,
+            "start": 960000,
+            "valid": true
+          },
+          {
+            "center": 1080000.0140674545,
+            "confidence": 24.824,
+            "delay": -0.019160691171236977,
+            "n_markers": 2,
+            "segment": 11,
+            "start": 1056000,
+            "valid": true
+          }
+        ]
+      },
+      "hash": "5e903cef10023b453001c5071e14aacd27fa9ae0f5d6f3de4218b4aad8880189",
+      "prev_hash": "e9474b70c192b9a88a91fbef82c86e5cdfee385e8bf2ba865c967e0789142f55"
+    }
+  ],
+  "version": 1
+}

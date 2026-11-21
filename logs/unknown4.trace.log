@@ -1,0 +1,15 @@
+00001 LOAD channels=4 dataset=unknown4 dataset_hash=eaeb350ddf2984a6 fs=48000 samples=1152000
+00002 MARKERS channel=0 detected=23 unavailable=0
+00003 MARKERS channel=1 detected=23 unavailable=0
+00004 MARKERS channel=2 detected=23 unavailable=0
+00005 MARKERS channel=3 detected=23 unavailable=0
+00006 STRATEGY est_cost_segmented=18432000 est_cost_whole=23040000 reason=duration_above_threshold segments=12 selected=segmented_fit
+00007 FIT channel=0 diagnosis=REFERENCE jump_candidates=0 offset=0.0 ppm=0.0 residual_rms=0.0
+00008 FIT channel=1 diagnosis=E_DRIFT_UNKNOWN jump_candidates=12 offset=2.73524 ppm=2.816484 residual_rms=9.28518
+00009 FIT channel=2 diagnosis=CLOCK_SKEW jump_candidates=0 offset=-0.00404 ppm=-0.003864 residual_rms=0.007012
+00010 FIT channel=3 diagnosis=CLOCK_SKEW jump_candidates=0 offset=0.002156 ppm=-0.011928 residual_rms=0.013432
+00011 COMPENSATE cache_recomputed=48 cache_reused=0 max_error=14.087239 mode=linear
+00012 COMPENSATE cache_recomputed=48 cache_reused=0 max_error=14.117458 mode=sinc
+00013 STRATEGY_COMPARE segmented_rms=3.423578003903669 whole_rms=5.081526763303459
+00014 STITCH channels=4 hash=d3455195e983bd4f path=synced_multichannel.wav samples=1151994
+00015 REPORT chain_head=5e903cef10023b45 path=report.json

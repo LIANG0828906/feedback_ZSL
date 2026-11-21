@@ -1,0 +1,630 @@
+{
+  "chain_head": "f45ad0c0821b2ee773adb91a3786faf142cd66e483ab7c604f736f16ec4dc954",
+  "config": {
+    "align_tolerance": 1.0,
+    "marker_period_s": 1.0,
+    "max_lag": 2400,
+    "min_seg_conf": 5.0,
+    "mode": "linear",
+    "ref_channel": 0,
+    "residual_threshold": 2.0,
+    "seg_len_s": 2.0,
+    "snr_threshold": 0.3,
+    "strategy_threshold_s": 10.0
+  },
+  "dataset": {
+    "channels": 4,
+    "dir": "jump4",
+    "fs": 48000,
+    "hash": "d3201095a74ae410d454809a06d0e2975298585bff8a68ec7c8b3bbd3ec9d001"
+  },
+  "records": [
+    {
+      "data": {
+        "channel": 0,
+        "diagnosis": {
+          "conclusion": "REFERENCE",
+          "evidence_segments": [],
+          "residual_stats": {
+            "residual_rms": 0.0
+          }
+        },
+        "fit": {
+          "offset": 0.0,
+          "offset_ci": 0.0,
+          "ppm": 0.0,
+          "ppm_ci": 0.0,
+          "residual_rms": 0.0,
+          "residuals": [
+            0.0
+          ],
+          "slope": 0.0
+        },
+        "input_hash": "4e2a37e09a2f9defa09532c3001b95b3313f2afda327f5aa86a45330e88313cf",
+        "jump_candidates": [],
+        "markers_unavailable": [],
+        "segments": []
+      },
+      "hash": "3e383350bd5a4a9c8267fd733a800bb4c8974782aa3e8ab8eb79dcfca974970b",
+      "prev_hash": "f1b52c0b301e37728a335d698e4628ba85877504712770ecc69e660d40a0819b"
+    },
+    {
+      "data": {
+        "channel": 1,
+        "diagnosis": {
+          "candidate_hypotheses": [],
+          "conclusion": "CLOCK_SKEW",
+          "evidence_segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fit": {
+            "offset": -0.11440183921245861,
+            "offset_ci": 0.08154558302155641,
+            "ppm": 10.092093601284281,
+            "ppm_ci": 0.12201736349474636,
+            "residual_rms": 0.06337742077221306,
+            "residuals": [
+              0.007756603646314475,
+              0.04915377121045861,
+              0.02017859777326958,
+              -0.13966322309434132,
+              -0.06396726756246718,
+              0.05963303045213486,
+              0.07070687491135885,
+              0.0510545267312148,
+              -0.04811341169644834,
+              0.06562024228237284,
+              -0.06185379238288036,
+              -0.010505952270991159
+            ],
+            "slope": 1.0092093601284281e-05
+          },
+          "offset": -0.11440183921245861,
+          "offset_ci": 0.08154558302155641,
+          "ppm": 10.092093601284281,
+          "ppm_ci": 0.12201736349474636,
+          "residual_stats": {
+            "n_segments": 12,
+            "residual_max": 0.13966322309434132,
+            "residual_rms": 0.06337742077221306
+          }
+        },
+        "fit": {
+          "offset": -0.11440183921245861,
+          "offset_ci": 0.08154558302155641,
+          "ppm": 10.092093601284281,
+          "ppm_ci": 0.12201736349474636,
+          "residual_rms": 0.06337742077221306,
+          "residuals": [
+            0.007756603646314475,
+            0.04915377121045861,
+            0.02017859777326958,
+            -0.13966322309434132,
+            -0.06396726756246718,
+            0.05963303045213486,
+            0.07070687491135885,
+            0.0510545267312148,
+            -0.04811341169644834,
+            0.06562024228237284,
+            -0.06185379238288036,
+            -0.010505952270991159
+          ],
+          "slope": 1.0092093601284281e-05
+        },
+        "input_hash": "b48693082c1444f512b876162b16178876197f0ac0b5a233a582dc6509dbb6ad",
+        "jump_candidates": [],
+        "markers_unavailable": [],
+        "segments": [
+          {
+            "center": 48000.00000937478,
+            "confidence": 15.6688,
+            "delay": 0.37777525739011253,
+            "n_markers": 1,
+            "segment": 0,
+            "start": 0,
+            "valid": true
+          },
+          {
+            "center": 143999.99798484068,
+            "confidence": 16.68,
+            "delay": 1.38801339024576,
+            "n_markers": 3,
+            "segment": 1,
+            "start": 96000,
+            "valid": true
+          },
+          {
+            "center": 263999.9966296562,
+            "confidence": 18.2752,
+            "delay": 2.570089435286036,
+            "n_markers": 2,
+            "segment": 2,
+            "start": 192000,
+            "valid": true
+          },
+          {
+            "center": 335999.99576658476,
+            "confidence": 19.2803,
+            "delay": 3.136878345000696,
+            "n_markers": 1,
+            "segment": 3,
+            "start": 288000,
+            "valid": true
+          },
+          {
+            "center": 431999.9973593455,
+            "confidence": 19.9716,
+            "delay": 4.1814153023301515,
+            "n_markers": 3,
+            "segment": 4,
+            "start": 384000,
+            "valid": true
+          },
+          {
+            "center": 551999.9882856128,
+            "confidence": 19.0282,
+            "delay": 5.516066740925908,
+            "n_markers": 2,
+            "segment": 5,
+            "start": 480000,
+            "valid": true
+          },
+          {
+            "center": 647999.9961805502,
+            "confidence": 19.5651,
+            "delay": 6.49598165078487,
+            "n_markers": 2,
+            "segment": 6,
+            "start": 576000,
+            "valid": true
+          },
+          {
+            "center": 743999.9937034529,
+            "confidence": 19.9404,
+            "delay": 7.445170263328919,
+            "n_markers": 2,
+            "segment": 7,
+            "start": 672000,
+            "valid": true
+          },
+          {
+            "center": 815999.9874040529,
+            "confidence": 22.9369,
+            "delay": 8.07263300061959,
+            "n_markers": 1,
+            "segment": 8,
+            "start": 768000,
+            "valid": true
+          },
+          {
+            "center": 888000.0011126563,
+            "confidence": 17.8732,
+            "delay": 8.912997532239388,
+            "n_markers": 2,
+            "segment": 9,
+            "start": 864000,
+            "valid": true
+          },
+          {
+            "center": 1008000.0013350773,
+            "confidence": 16.9219,
+            "delay": 9.996574731972942,
+            "n_markers": 3,
+            "segment": 10,
+            "start": 960000,
+            "valid": true
+          },
+          {
+            "center": 1104000.0007459277,
+            "confidence": 25.2752,
+            "delay": 11.016763551862368,
+            "n_markers": 1,
+            "segment": 11,
+            "start": 1056000,
+            "valid": true
+          }
+        ]
+      },
+      "hash": "feb708615a959c8e2c3621d5b1225e29e5afd5b7356c952fda943f8e545b7359",
+      "prev_hash": "3e383350bd5a4a9c8267fd733a800bb4c8974782aa3e8ab8eb79dcfca974970b"
+    },
+    {
+      "data": {
+        "channel": 2,
+        "diagnosis": {
+          "candidate_hypotheses": [],
+          "conclusion": "EVENT_JUMP",
+          "evidence_segments": [
+            5,
+            6
+          ],
+          "fit": {
+            "offset": -9.061314849032769,
+            "offset_ci": 10.484346812031662,
+            "ppm": 62.68221933194297,
+            "ppm_ci": 15.687819113764617,
+            "residual_rms": 8.14845923969039,
+            "residuals": [
+              6.390892311359913,
+              1.2990996732695983,
+              -4.879784722230365,
+              -8.826382616748482,
+              -13.82890619455592,
+              -0.02269819087419478,
+              14.914802082116942,
+              9.87965508796453,
+              5.982542870342925,
+              2.3223380442154067,
+              -4.115683835615549,
+              -9.115874509244819
+            ],
+            "slope": 6.268221933194297e-05
+          },
+          "jump_segment": 6,
+          "jump_size": 40.110188776595166,
+          "jump_size_ci": 0.14051510298837355,
+          "piecewise_residual_rms": 0.04967959109110252,
+          "ppm_after": 9.941101721301623,
+          "ppm_before": 10.03631156557992,
+          "residual_stats": {
+            "n_segments": 12,
+            "residual_max": 14.914802082116942,
+            "residual_rms": 8.14845923969039
+          },
+          "transition_segment": 5
+        },
+        "fit": {
+          "offset": -9.061314849032769,
+          "offset_ci": 10.484346812031662,
+          "ppm": 62.68221933194297,
+          "ppm_ci": 15.687819113764617,
+          "residual_rms": 8.14845923969039,
+          "residuals": [
+            6.390892311359913,
+            1.2990996732695983,
+            -4.879784722230365,
+            -8.826382616748482,
+            -13.82890619455592,
+            -0.02269819087419478,
+            14.914802082116942,
+            9.87965508796453,
+            5.982542870342925,
+            2.3223380442154067,
+            -4.115683835615549,
+            -9.115874509244819
+          ],
+          "slope": 6.268221933194297e-05
+        },
+        "input_hash": "cd62d694a63659ea70bc24633df13b33a65b64ddeb5d7dd869d8c2a1dc33308e",
+        "jump_candidates": [
+          0,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "markers_unavailable": [],
+        "segments": [
+          {
+            "center": 48000.00000937478,
+            "confidence": 17.1698,
+            "delay": 0.3383239908480391,
+            "n_markers": 1,
+            "segment": 0,
+            "start": 0,
+            "valid": true
+          },
+          {
+            "center": 143999.99798484068,
+            "confidence": 17.6201,
+            "delay": 1.2640242817219587,
+            "n_markers": 3,
+            "segment": 1,
+            "start": 96000,
+            "valid": true
+          },
+          {
+            "center": 263999.9966296562,
+            "confidence": 17.1719,
+            "delay": 2.6070061211091797,
+            "n_markers": 2,
+            "segment": 2,
+            "start": 192000,
+            "valid": true
+          },
+          {
+            "center": 335999.99576658476,
+            "confidence": 17.6246,
+            "delay": 3.173527964391724,
+            "n_markers": 1,
+            "segment": 3,
+            "start": 288000,
+            "valid": true
+          },
+          {
+            "center": 431999.9973593455,
+            "confidence": 18.19,
+            "delay": 4.188497542288587,
+            "n_markers": 3,
+            "segment": 4,
+            "start": 384000,
+            "valid": true
+          },
+          {
+            "center": 551999.9882856128,
+            "confidence": 19.8989,
+            "delay": 25.516571297041764,
+            "n_markers": 2,
+            "segment": 5,
+            "start": 480000,
+            "valid": true
+          },
+          {
+            "center": 647999.9961805502,
+            "confidence": 19.7462,
+            "delay": 46.47156512077163,
+            "n_markers": 2,
+            "segment": 6,
+            "start": 576000,
+            "valid": true
+          },
+          {
+            "center": 743999.9937034529,
+            "confidence": 19.0673,
+            "delay": 47.45391102721578,
+            "n_markers": 2,
+            "segment": 7,
+            "start": 672000,
+            "valid": true
+          },
+          {
+            "center": 815999.9874040529,
+            "confidence": 21.6851,
+            "delay": 48.0699182066337,
+            "n_markers": 1,
+            "segment": 8,
+            "start": 768000,
+            "valid": true
+          },
+          {
+            "center": 888000.0011126563,
+            "confidence": 18.7033,
+            "delay": 48.922834031691764,
+            "n_markers": 2,
+            "segment": 9,
+            "start": 864000,
+            "valid": true
+          },
+          {
+            "center": 1008000.0013350773,
+            "confidence": 16.6068,
+            "delay": 50.0066784856358,
+            "n_markers": 3,
+            "segment": 10,
+            "start": 960000,
+            "valid": true
+          },
+          {
+            "center": 1104000.0007459277,
+            "confidence": 24.5535,
+            "delay": 51.023980830943856,
+            "n_markers": 1,
+            "segment": 11,
+            "start": 1056000,
+            "valid": true
+          }
+        ]
+      },
+      "hash": "b897ef44230f782565bd61b5ab682190d0329dba473f08d03e76141ad4716f5e",
+      "prev_hash": "feb708615a959c8e2c3621d5b1225e29e5afd5b7356c952fda943f8e545b7359"
+    },
+    {
+      "data": {
+        "channel": 3,
+        "diagnosis": {
+          "candidate_hypotheses": [],
+          "conclusion": "CLOCK_SKEW",
+          "evidence_segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fit": {
+            "offset": 0.014413831158114994,
+            "offset_ci": 0.014081474626617727,
+            "ppm": -0.012694976500420776,
+            "ppm_ci": 0.0210702326771502,
+            "residual_rms": 0.010944155519355065,
+            "residuals": [
+              0.0074093855676056475,
+              -0.005181564332316672,
+              -0.0021053317784034496,
+              -0.006287335357970637,
+              -0.0040813111322989745,
+              0.006637445118484431,
+              -0.0052905227719313806,
+              -0.007947169897105526,
+              0.032354561526703345,
+              -0.0014345911734246382,
+              -0.00946738159449879,
+              -0.004606184174843356
+            ],
+            "slope": -1.2694976500420776e-08
+          },
+          "offset": 0.014413831158114994,
+          "offset_ci": 0.014081474626617727,
+          "ppm": -0.012694976500420776,
+          "ppm_ci": 0.0210702326771502,
+          "residual_stats": {
+            "n_segments": 12,
+            "residual_max": 0.032354561526703345,
+            "residual_rms": 0.010944155519355065
+          }
+        },
+        "fit": {
+          "offset": 0.014413831158114994,
+          "offset_ci": 0.014081474626617727,
+          "ppm": -0.012694976500420776,
+          "ppm_ci": 0.0210702326771502,
+          "residual_rms": 0.010944155519355065,
+          "residuals": [
+            0.0074093855676056475,
+            -0.005181564332316672,
+            -0.0021053317784034496,
+            -0.006287335357970637,
+            -0.0040813111322989745,
+            0.006637445118484431,
+            -0.0052905227719313806,
+            -0.007947169897105526,
+            0.032354561526703345,
+            -0.0014345911734246382,
+            -0.00946738159449879,
+            -0.004606184174843356
+          ],
+          "slope": -1.2694976500420776e-08
+        },
+        "input_hash": "7f8e31fb8433e03194655d4f0fae440a738c92032dab8ae077d66ac86b9cff6f",
+        "jump_candidates": [],
+        "markers_unavailable": [],
+        "segments": [
+          {
+            "center": 48000.00000937478,
+            "confidence": 24.7761,
+            "delay": 0.02121385785358143,
+            "n_markers": 1,
+            "segment": 0,
+            "start": 0,
+            "valid": true
+          },
+          {
+            "center": 143999.99798484068,
+            "confidence": 24.7694,
+            "delay": 0.007404190235320129,
+            "n_markers": 3,
+            "segment": 1,
+            "start": 96000,
+            "valid": true
+          },
+          {
+            "center": 263999.9966296562,
+            "confidence": 24.6583,
+            "delay": 0.008957025626386894,
+            "n_markers": 2,
+            "segment": 2,
+            "start": 192000,
+            "valid": true
+          },
+          {
+            "center": 335999.99576658476,
+            "confidence": 25.2584,
+            "delay": 0.003860983749746083,
+            "n_markers": 1,
+            "segment": 3,
+            "start": 288000,
+            "valid": true
+          },
+          {
+            "center": 431999.9973593455,
+            "confidence": 24.219,
+            "delay": 0.004848290211157291,
+            "n_markers": 3,
+            "segment": 4,
+            "start": 384000,
+            "valid": true
+          },
+          {
+            "center": 551999.9882856128,
+            "confidence": 25.3831,
+            "delay": 0.014043649397081026,
+            "n_markers": 2,
+            "segment": 5,
+            "start": 480000,
+            "valid": true
+          },
+          {
+            "center": 647999.9961805502,
+            "confidence": 25.5681,
+            "delay": 0.0008969636623987753,
+            "n_markers": 2,
+            "segment": 6,
+            "start": 576000,
+            "valid": true
+          },
+          {
+            "center": 743999.9937034529,
+            "confidence": 23.9049,
+            "delay": -0.002978401175369072,
+            "n_markers": 2,
+            "segment": 7,
+            "start": 672000,
+            "valid": true
+          },
+          {
+            "center": 815999.9874040529,
+            "confidence": 24.0102,
+            "delay": 0.036409292020380235,
+            "n_markers": 1,
+            "segment": 8,
+            "start": 768000,
+            "valid": true
+          },
+          {
+            "center": 888000.0011126563,
+            "confidence": 24.5838,
+            "delay": 0.0017061008381915599,
+            "n_markers": 2,
+            "segment": 9,
+            "start": 864000,
+            "valid": true
+          },
+          {
+            "center": 1008000.0013350773,
+            "confidence": 24.6761,
+            "delay": -0.007850086765756714,
+            "n_markers": 3,
+            "segment": 10,
+            "start": 960000,
+            "valid": true
+          },
+          {
+            "center": 1104000.0007459277,
+            "confidence": 25.4224,
+            "delay": -0.0042076070826624346,
+            "n_markers": 1,
+            "segment": 11,
+            "start": 1056000,
+            "valid": true
+          }
+        ]
+      },
+      "hash": "f45ad0c0821b2ee773adb91a3786faf142cd66e483ab7c604f736f16ec4dc954",
+      "prev_hash": "b897ef44230f782565bd61b5ab682190d0329dba473f08d03e76141ad4716f5e"
+    }
+  ],
+  "version": 1
+}
