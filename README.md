@@ -20,3 +20,45 @@
 
 验收：
 用本地材质样本验证色彩管理链路、增量重算影响集及强制终止后版本恢复与哈希一致。
+
+---
+
+## 实现说明（spectral_studio）
+
+### 环境
+
+系统 Python 为 externally-managed，依赖安装在项目内 `.venv`（Python 3.14 + numpy 2.5 + PySide6 6.12 + pytest 9）：
+
+```bash
+python3 -m venv --without-pip .venv && .venv/bin/python /tmp/get-pip.py   # 或任何已装 pip 的 3.11+ 环境
+.venv/bin/python -m pip install numpy PySide6 pytest
+```
+
+### 模块结构
+
+- `spectral_studio/canon.py` — 规范化序列化（12 位有效数字浮点舍入、键排序）与 SHA-256 内容哈希；所有哈希与轨迹日志的唯一真值来源，不含时间戳/文件大小。
+- `spectral_studio/spectrum.py` — 材质导入与规范化：校验波长严格递增、采样间隔非零、反射率值域 [0,1]（违规返回 `E_SPECTRUM_INVALID`）；统一重采样到 380–780nm/5nm 网格并输出重采样参考值与内容哈希；sRGB/Display-P3 材质经固定 9 基函数有界最小二乘做确定性光谱重建（uplift），与光谱材质共享同一套配色函数与色适应矩阵。
+- `spectral_studio/colorimetry.py` — 观察者配色函数（1931 2° 解析高斯拟合、1964 10° 解析近似）、光源 SPD（普朗克近似 D65/D50/A、等能 E、自定义 SPD）、白点、Bradford / von Kries / 无适应矩阵、sRGB 与 Display-P3 变换及传递函数编解码。
+- `spectral_studio/pipeline.py` — 色彩管理链路：光谱归一化 → CMF 积分 → 白点适应 → 目标空间变换 → 传递函数编码；float64 计算、声明精度 1e-12，每步附误差摘要（积分加密对照、矩阵求逆残差、色域裁剪量、编码往返误差）；非有限三刺激值或未知目标色彩空间以 `E_COLOR_INVALID` 中止且不写版本。共享 CMF 与色适应矩阵以内容哈希为键缓存。
+- `spectral_studio/versioning.py` — 版本模型：每次提交生成新版本（参数集、依赖因子、编码值、中间量、内容哈希、prev_hash 链），版本号单调递增；差异查看；回退作为新版本追加。
+- `spectral_studio/engine.py` — 增量重算与整体替换发布：按依赖因子哈希逐项比对计算受影响版本集合（光源/白点/观察者/适应策略波及全部，单材质参数只影响自身），无法证明未受影响时保守重算并标注 `conservative:dep-factors-missing`；逐版本设置取消检查点；同一库同时只允许一个重算任务（重复提交 `E_BUSY`）；发布为一次原子整体替换；读者通过快照句柄读取完整发布版本，句柄释放后再读返回 `E_STALE_SNAPSHOT`；重算期间逐版本写崩溃日志（journal）快照。
+- `spectral_studio/persistence.py` — JSON 快照（临时文件 + `os.replace` 原子重命名），含已发布版本集、完整版本历史、哈希链、界面状态与依赖因子；恢复时校验每条材质哈希链与发布链，断链或字段缺失以 `E_RECOVERY_INVALID` 中止并定位首个断链版本（material_id + version），仅重算状态为 incomplete 的版本。
+- `spectral_studio/samplegen.py` — 确定性样本生成器（种子驱动，3 种波长网格 × 不同曲率的光谱材质 + sRGB + Display-P3 材质 + 基线哈希），不依赖网络与外部数据。
+- `spectral_studio/demo.py` — 脚本化演示入口，输出含版本号、依赖因子、受影响集合、复用/重算计数、编码值与内容哈希的轨迹日志。
+- `spectral_studio/ui.py` — PySide6 界面：材质列表按 sRGB / Display-P3 并排色块与数值、版本时间轴（依赖因子变更高亮）、白点/观察者/光源/适应策略编辑、差异查看与回退；重算在 QThread 后台执行，主线程不阻塞。
+
+### 运行
+
+```bash
+.venv/bin/python -m spectral_studio.samplegen --seed 20240117 --out samples   # 生成样本与基线
+.venv/bin/python -m spectral_studio.demo --seed 20240117                      # 脚本化演示 + 轨迹日志
+.venv/bin/python -m pytest tests -q                                           # 测试
+.venv/bin/python scripts/force_kill_verify.py                                 # 真实 SIGKILL 恢复验证
+.venv/bin/python -m spectral_studio.ui                                        # 交互界面（无头：QT_QPA_PLATFORM=offscreen）
+```
+
+### 实际验证结果
+
+- `pytest`：29 项全部通过（光谱校验、链路中间量与误差摘要、白点/单材质/光源影响集粒度、缓存命中统计、回退追加、差异查看、E_BUSY、取消保留最后发布、并发读取隔离、E_STALE_SNAPSHOT、快照往返一致、断链定位、incomplete 版本恢复重算、保守重算、UI 无头冒烟、轨迹逐字节一致）。
+- 演示轨迹（seed=20240117）：初始发布 7 材质 → 白点 D65→D50 影响全部 7 个版本 → 单材质编辑仅影响 1 个（复用 6）→ 观察者+适应策略变更影响全部 → 回退追加新版本 → 模拟崩溃恢复仅重算 1 个 incomplete 版本；连续两次运行 `artifacts/trace_seed20240117.json` 逐字节一致，`recovery_consistent: True`。
+- `scripts/force_kill_verify.py`：子进程在 40 材质重算中途被 SIGKILL，恢复时校验哈希链通过，仅重算 36 个未完成版本（4 个在被杀前已完成并复用），恢复后全部版本为 published，重复恢复哈希稳定。
