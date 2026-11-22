@@ -1,0 +1,840 @@
+{
+  "all_pass": true,
+  "environment": {
+    "algorithm_version": "edgepipe-1.0.0",
+    "numpy": "2.4.6",
+    "opencv": "5.1.0",
+    "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+    "python": "3.11.18 (main, Nov 11 2026, 00:16:37) [Clang 23.1.3 ]"
+  },
+  "error_codes": {
+    "E_BAND_insufficient": {
+      "code": "E_BAND",
+      "details": {
+        "provided": 1,
+        "required": 7
+      },
+      "field": "band_width",
+      "message": "band_width=1 小于确定性边界所需值 7"
+    },
+    "E_DECODE_corrupt_image": {
+      "code": "E_DECODE",
+      "details": {},
+      "field": "path",
+      "message": "图像解码失败或内容损坏: artifacts/validation_work/error-code-temp/broken.png"
+    },
+    "E_DIFF_first_pixel": {
+      "code": "E_DIFF",
+      "details": {
+        "block_id": "b0004",
+        "channel": null,
+        "coordinate": {
+          "x": 64,
+          "y": 48
+        },
+        "reason": "pixel_mismatch",
+        "shape_a": [
+          96,
+          128
+        ],
+        "shape_b": [
+          96,
+          128
+        ],
+        "stage": "final",
+        "value_a": 0,
+        "value_b": 255
+      },
+      "field": "mask",
+      "message": "掩膜存在逐像素差异"
+    },
+    "E_PARA_threshold_order": {
+      "code": "E_PARA",
+      "details": {
+        "high_threshold": 11.0,
+        "low_threshold": 42.0
+      },
+      "field": "low_threshold",
+      "message": "low_threshold 不得大于 high_threshold"
+    },
+    "E_PARA_threshold_range": {
+      "code": "E_PARA",
+      "details": {
+        "value": 99999.0
+      },
+      "field": "high_threshold",
+      "message": "high_threshold 必须在 [0, 4096] 范围内"
+    },
+    "E_STATE_illegal_transition": {
+      "code": "E_STATE",
+      "details": {
+        "block_id": "b0000",
+        "current": "PENDING",
+        "requested": "COMMITTED",
+        "stage": "gradient"
+      },
+      "field": "state",
+      "message": "非法状态迁移 PENDING -> COMMITTED"
+    }
+  },
+  "generated_at_utc": "2026-11-22T16:53:39.734349+00:00",
+  "samples": [
+    {
+      "all_pass": true,
+      "checkpoint_invalidation": {
+        "algorithm_mismatch": {
+          "reason": "算法版本不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "all_invalidations_detected": true,
+        "content_mismatch": {
+          "reason": "分块内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "healthy_status": "valid",
+        "input_mismatch": {
+          "reason": "输入内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "params_mismatch": {
+          "reason": "参数版本不匹配",
+          "status": "invalid",
+          "valid": false
+        }
+      },
+      "checkpoint_size_bytes": 38300,
+      "chunk_vs_whole_final_equal": true,
+      "chunk_vs_whole_max_pixel_difference": 0,
+      "chunk_vs_whole_stages_equal": true,
+      "config": {
+        "band_width": null,
+        "block_size": 48,
+        "close_enabled": true,
+        "close_iterations": 1,
+        "close_kernel_size": 3,
+        "effective_band_width": 9,
+        "gradient_operator": "sobel",
+        "high_threshold": 45.0,
+        "low_threshold": 20.0,
+        "max_workers": 4,
+        "open_enabled": true,
+        "open_iterations": 1,
+        "open_kernel_size": 1,
+        "prune_enabled": true,
+        "prune_length": 8,
+        "required_band_width": 9,
+        "thin_enabled": true,
+        "thinning_iterations": 4,
+        "thread_buffer_bytes": 67108864
+      },
+      "effective_band_width": 9,
+      "geometry": {
+        "all_pass": true,
+        "circle_fit_ok": true,
+        "circles": [
+          {
+            "center_shift_px": 0.347835,
+            "coverage": 1.0,
+            "fit_center": [
+              95.741185,
+              57.767612
+            ],
+            "fit_radius_px": 12.992751,
+            "id": "c0",
+            "radius_error_px": 0.007249,
+            "support_pixels": 97,
+            "truth": {
+              "cx": 96.0,
+              "cy": 58.0,
+              "diameter": 26.0
+            },
+            "valid": true
+          }
+        ],
+        "coverage_ok": true,
+        "displacement_ok": true,
+        "mask_pixels": 600,
+        "max_abs_systematic_displacement_px": 0.519879,
+        "max_circle_radius_error_px": 0.007249,
+        "segments": [
+          {
+            "coverage": 1.0,
+            "id": "s0",
+            "max_abs_perpendicular_offset_px": 4.489228,
+            "max_distance_px": 3.1969,
+            "mean_distance_px": 2.932458,
+            "mean_signed_perpendicular_offset_px": -0.488747,
+            "support_pixels": 210,
+            "truth": {
+              "length": 99.12618221237011,
+              "x1": 13.0,
+              "x2": 112.0,
+              "y1": 19.0,
+              "y2": 24.0
+            }
+          },
+          {
+            "coverage": 1.0,
+            "id": "s1",
+            "max_abs_perpendicular_offset_px": 4.469326,
+            "max_distance_px": 3.0,
+            "mean_distance_px": 2.837419,
+            "mean_signed_perpendicular_offset_px": 0.519879,
+            "support_pixels": 80,
+            "truth": {
+              "length": 35.12833614050059,
+              "x1": 20.0,
+              "x2": 17.0,
+              "y1": 47.0,
+              "y2": 82.0
+            }
+          },
+          {
+            "coverage": 1.0,
+            "id": "s2",
+            "max_abs_perpendicular_offset_px": 4.176697,
+            "max_distance_px": 3.1969,
+            "mean_distance_px": 2.769587,
+            "mean_signed_perpendicular_offset_px": -0.122033,
+            "support_pixels": 160,
+            "truth": {
+              "length": 58.89821729050889,
+              "x1": 34.0,
+              "x2": 79.0,
+              "y1": 40.0,
+              "y2": 78.0
+            }
+          }
+        ],
+        "tolerance_px": 3.5
+      },
+      "geometry_all_pass": true,
+      "image_shape": [
+        96,
+        128
+      ],
+      "incremental_initial_commits": 7,
+      "incremental_initial_complete": false,
+      "input_hash": "55e98630ad32dd39a525a0b4d6f67f2ce8baf90eab5742f64df230af0b0a32d8",
+      "masks": {
+        "full": "artifacts/validation_work/masks/gray_lines_lowcontrast_96x128_full.png",
+        "full_vs_whole_heatmap": "artifacts/validation_work/masks/gray_lines_lowcontrast_96x128_full_vs_whole_heatmap.png"
+      },
+      "name": "gray_lines_lowcontrast_96x128",
+      "params_version": "3a384bd07a3b6364ad13f74dc0a86effa1c23c557a227bc56227a7333027619e",
+      "paths": {
+        "full": {
+          "complete": true,
+          "elapsed_seconds": 0.262492,
+          "newly_committed": 30,
+          "restored_commits": 0
+        },
+        "incremental": {
+          "complete": true,
+          "elapsed_seconds": 0.154566,
+          "newly_committed": 23,
+          "restored_commits": 7
+        },
+        "resume": {
+          "complete": true,
+          "elapsed_seconds": 0.137488,
+          "newly_committed": 23,
+          "restored_commits": 7
+        }
+      },
+      "prefix_commits": 7,
+      "required_band_width": 9,
+      "resume_initial_error": "模拟强制终止于第 7 个新提交",
+      "three_paths_commit_sequence_equal": true,
+      "three_paths_geometry_equal": true,
+      "three_paths_masks_equal": true,
+      "three_paths_stages_equal": true,
+      "three_paths_state_matrix_equal": true,
+      "total_commits": 30
+    },
+    {
+      "all_pass": true,
+      "checkpoint_invalidation": {
+        "algorithm_mismatch": {
+          "reason": "算法版本不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "all_invalidations_detected": true,
+        "content_mismatch": {
+          "reason": "分块内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "healthy_status": "valid",
+        "input_mismatch": {
+          "reason": "输入内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "params_mismatch": {
+          "reason": "参数版本不匹配",
+          "status": "invalid",
+          "valid": false
+        }
+      },
+      "checkpoint_size_bytes": 55396,
+      "chunk_vs_whole_final_equal": true,
+      "chunk_vs_whole_max_pixel_difference": 0,
+      "chunk_vs_whole_stages_equal": true,
+      "config": {
+        "band_width": null,
+        "block_size": 48,
+        "close_enabled": true,
+        "close_iterations": 1,
+        "close_kernel_size": 3,
+        "effective_band_width": 9,
+        "gradient_operator": "sobel",
+        "high_threshold": 140.0,
+        "low_threshold": 60.0,
+        "max_workers": 4,
+        "open_enabled": true,
+        "open_iterations": 1,
+        "open_kernel_size": 1,
+        "prune_enabled": true,
+        "prune_length": 8,
+        "required_band_width": 9,
+        "thin_enabled": true,
+        "thinning_iterations": 4,
+        "thread_buffer_bytes": 67108864
+      },
+      "effective_band_width": 9,
+      "geometry": {
+        "all_pass": true,
+        "circle_fit_ok": true,
+        "circles": [
+          {
+            "center_shift_px": 0.316073,
+            "coverage": 1.0,
+            "fit_center": [
+              62.773804,
+              57.779234
+            ],
+            "fit_radius_px": 15.044475,
+            "id": "c0",
+            "radius_error_px": 0.044475,
+            "support_pixels": 114,
+            "truth": {
+              "cx": 63.0,
+              "cy": 58.0,
+              "diameter": 30.0
+            },
+            "valid": true
+          }
+        ],
+        "coverage_ok": true,
+        "displacement_ok": true,
+        "mask_pixels": 563,
+        "max_abs_systematic_displacement_px": 0.365242,
+        "max_circle_radius_error_px": 0.044475,
+        "segments": [
+          {
+            "coverage": 0.986842,
+            "id": "s0",
+            "max_abs_perpendicular_offset_px": 4.428635,
+            "max_distance_px": 3.5969,
+            "mean_distance_px": 2.844166,
+            "mean_signed_perpendicular_offset_px": -0.365242,
+            "support_pixels": 168,
+            "truth": {
+              "length": 74.96665925596525,
+              "x1": 10.0,
+              "x2": 84.0,
+              "y1": 18.0,
+              "y2": 30.0
+            }
+          },
+          {
+            "coverage": 1.0,
+            "id": "s1",
+            "max_abs_perpendicular_offset_px": 4.237839,
+            "max_distance_px": 3.1969,
+            "mean_distance_px": 2.763579,
+            "mean_signed_perpendicular_offset_px": 0.027327,
+            "support_pixels": 160,
+            "truth": {
+              "length": 59.464274989274024,
+              "x1": 14.0,
+              "x2": 54.0,
+              "y1": 75.0,
+              "y2": 119.0
+            }
+          },
+          {
+            "coverage": 1.0,
+            "id": "s2",
+            "max_abs_perpendicular_offset_px": 4.539797,
+            "max_distance_px": 3.1969,
+            "mean_distance_px": 2.94584,
+            "mean_signed_perpendicular_offset_px": -0.337575,
+            "support_pixels": 66,
+            "truth": {
+              "length": 28.635642126552707,
+              "x1": 60.0,
+              "x2": 88.0,
+              "y1": 106.0,
+              "y2": 112.0
+            }
+          }
+        ],
+        "tolerance_px": 3.5
+      },
+      "geometry_all_pass": true,
+      "image_shape": [
+        131,
+        97
+      ],
+      "incremental_initial_commits": 7,
+      "incremental_initial_complete": false,
+      "input_hash": "efc66f501c873a990ac93a8133aa8b72c3ba39f52d02d27d3690724b1994d14a",
+      "masks": {
+        "full": "artifacts/validation_work/masks/gray_noisy_131x97_full.png",
+        "full_vs_whole_heatmap": "artifacts/validation_work/masks/gray_noisy_131x97_full_vs_whole_heatmap.png"
+      },
+      "name": "gray_noisy_131x97",
+      "params_version": "21403a6d11cddc37cd0b3c4e383da21322d3ad1d80c16eeded5d400372496f22",
+      "paths": {
+        "full": {
+          "complete": true,
+          "elapsed_seconds": 0.242408,
+          "newly_committed": 45,
+          "restored_commits": 0
+        },
+        "incremental": {
+          "complete": true,
+          "elapsed_seconds": 0.236584,
+          "newly_committed": 38,
+          "restored_commits": 7
+        },
+        "resume": {
+          "complete": true,
+          "elapsed_seconds": 0.2145,
+          "newly_committed": 38,
+          "restored_commits": 7
+        }
+      },
+      "prefix_commits": 7,
+      "required_band_width": 9,
+      "resume_initial_error": "模拟强制终止于第 7 个新提交",
+      "three_paths_commit_sequence_equal": true,
+      "three_paths_geometry_equal": true,
+      "three_paths_masks_equal": true,
+      "three_paths_stages_equal": true,
+      "three_paths_state_matrix_equal": true,
+      "total_commits": 45
+    },
+    {
+      "all_pass": true,
+      "checkpoint_invalidation": {
+        "algorithm_mismatch": {
+          "reason": "算法版本不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "all_invalidations_detected": true,
+        "content_mismatch": {
+          "reason": "分块内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "healthy_status": "valid",
+        "input_mismatch": {
+          "reason": "输入内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "params_mismatch": {
+          "reason": "参数版本不匹配",
+          "status": "invalid",
+          "valid": false
+        }
+      },
+      "checkpoint_size_bytes": 76747,
+      "chunk_vs_whole_final_equal": true,
+      "chunk_vs_whole_max_pixel_difference": 0,
+      "chunk_vs_whole_stages_equal": true,
+      "config": {
+        "band_width": null,
+        "block_size": 48,
+        "close_enabled": true,
+        "close_iterations": 1,
+        "close_kernel_size": 3,
+        "effective_band_width": 9,
+        "gradient_operator": "sobel",
+        "high_threshold": 90.0,
+        "low_threshold": 40.0,
+        "max_workers": 4,
+        "open_enabled": true,
+        "open_iterations": 1,
+        "open_kernel_size": 1,
+        "prune_enabled": true,
+        "prune_length": 8,
+        "required_band_width": 9,
+        "thin_enabled": true,
+        "thinning_iterations": 4,
+        "thread_buffer_bytes": 67108864
+      },
+      "effective_band_width": 9,
+      "geometry": {
+        "all_pass": true,
+        "circle_fit_ok": true,
+        "circles": [
+          {
+            "center_shift_px": 0.306207,
+            "coverage": 1.0,
+            "fit_center": [
+              55.783479,
+              62.783479
+            ],
+            "fit_radius_px": 13.964643,
+            "id": "c0",
+            "radius_error_px": 0.035357,
+            "support_pixels": 108,
+            "truth": {
+              "cx": 56.0,
+              "cy": 63.0,
+              "diameter": 28.0
+            },
+            "valid": true
+          },
+          {
+            "center_shift_px": 0.33681,
+            "coverage": 0.944444,
+            "fit_center": [
+              136.761839,
+              62.761839
+            ],
+            "fit_radius_px": 10.048532,
+            "id": "c1",
+            "radius_error_px": 0.048532,
+            "support_pixels": 76,
+            "truth": {
+              "cx": 137.0,
+              "cy": 63.0,
+              "diameter": 20.0
+            },
+            "valid": true
+          }
+        ],
+        "coverage_ok": true,
+        "displacement_ok": true,
+        "mask_pixels": 970,
+        "max_abs_systematic_displacement_px": 0.540362,
+        "max_circle_radius_error_px": 0.048532,
+        "segments": [
+          {
+            "coverage": 0.92126,
+            "id": "s0",
+            "max_abs_perpendicular_offset_px": 5.066167,
+            "max_distance_px": 4.0,
+            "mean_distance_px": 3.01703,
+            "mean_signed_perpendicular_offset_px": -0.540362,
+            "support_pixels": 260,
+            "truth": {
+              "length": 125.14391715141412,
+              "x1": 14.0,
+              "x2": 139.0,
+              "y1": 22.0,
+              "y2": 28.0
+            }
+          },
+          {
+            "coverage": 1.0,
+            "id": "s1",
+            "max_abs_perpendicular_offset_px": 4.462874,
+            "max_distance_px": 3.0,
+            "mean_distance_px": 2.882785,
+            "mean_signed_perpendicular_offset_px": 0.515391,
+            "support_pixels": 112,
+            "truth": {
+              "length": 51.088159097779204,
+              "x1": 25.0,
+              "x2": 22.0,
+              "y1": 50.0,
+              "y2": 101.0
+            }
+          },
+          {
+            "coverage": 1.0,
+            "id": "s2",
+            "max_abs_perpendicular_offset_px": 4.460614,
+            "max_distance_px": 3.0,
+            "mean_distance_px": 2.86721,
+            "mean_signed_perpendicular_offset_px": -0.482111,
+            "support_pixels": 168,
+            "truth": {
+              "length": 75.32595834106593,
+              "x1": 51.0,
+              "x2": 126.0,
+              "y1": 91.0,
+              "y2": 98.0
+            }
+          },
+          {
+            "coverage": 0.969231,
+            "id": "s3",
+            "max_abs_perpendicular_offset_px": 5.172575,
+            "max_distance_px": 3.5969,
+            "mean_distance_px": 2.818318,
+            "mean_signed_perpendicular_offset_px": 0.137944,
+            "support_pixels": 178,
+            "truth": {
+              "length": 63.41135544995076,
+              "x1": 78.0,
+              "x2": 117.0,
+              "y1": 31.0,
+              "y2": 81.0
+            }
+          }
+        ],
+        "tolerance_px": 3.5
+      },
+      "geometry_all_pass": true,
+      "image_shape": [
+        120,
+        160,
+        3
+      ],
+      "incremental_initial_commits": 7,
+      "incremental_initial_complete": false,
+      "input_hash": "63fcffc902be33e7c882b1580ceb5150063816ce1dd16724151b678b140de1db",
+      "masks": {
+        "full": "artifacts/validation_work/masks/color_shapes_120x160_full.png",
+        "full_vs_whole_heatmap": "artifacts/validation_work/masks/color_shapes_120x160_full_vs_whole_heatmap.png"
+      },
+      "name": "color_shapes_120x160",
+      "params_version": "1e348be0a8b4cd82d2a03ebb1d9af0694afd0f364aed86e8d423fb109615760c",
+      "paths": {
+        "full": {
+          "complete": true,
+          "elapsed_seconds": 0.469949,
+          "newly_committed": 60,
+          "restored_commits": 0
+        },
+        "incremental": {
+          "complete": true,
+          "elapsed_seconds": 0.435015,
+          "newly_committed": 53,
+          "restored_commits": 7
+        },
+        "resume": {
+          "complete": true,
+          "elapsed_seconds": 0.432731,
+          "newly_committed": 53,
+          "restored_commits": 7
+        }
+      },
+      "prefix_commits": 7,
+      "required_band_width": 9,
+      "resume_initial_error": "模拟强制终止于第 7 个新提交",
+      "three_paths_commit_sequence_equal": true,
+      "three_paths_geometry_equal": true,
+      "three_paths_masks_equal": true,
+      "three_paths_stages_equal": true,
+      "three_paths_state_matrix_equal": true,
+      "total_commits": 60
+    },
+    {
+      "all_pass": true,
+      "checkpoint_invalidation": {
+        "algorithm_mismatch": {
+          "reason": "算法版本不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "all_invalidations_detected": true,
+        "content_mismatch": {
+          "reason": "分块内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "healthy_status": "valid",
+        "input_mismatch": {
+          "reason": "输入内容哈希不匹配",
+          "status": "invalid",
+          "valid": false
+        },
+        "params_mismatch": {
+          "reason": "参数版本不匹配",
+          "status": "invalid",
+          "valid": false
+        }
+      },
+      "checkpoint_size_bytes": 90344,
+      "chunk_vs_whole_final_equal": true,
+      "chunk_vs_whole_max_pixel_difference": 0,
+      "chunk_vs_whole_stages_equal": true,
+      "config": {
+        "band_width": null,
+        "block_size": 48,
+        "close_enabled": true,
+        "close_iterations": 1,
+        "close_kernel_size": 3,
+        "effective_band_width": 9,
+        "gradient_operator": "scharr",
+        "high_threshold": 60.0,
+        "low_threshold": 30.0,
+        "max_workers": 4,
+        "open_enabled": true,
+        "open_iterations": 1,
+        "open_kernel_size": 1,
+        "prune_enabled": true,
+        "prune_length": 8,
+        "required_band_width": 9,
+        "thin_enabled": true,
+        "thinning_iterations": 4,
+        "thread_buffer_bytes": 67108864
+      },
+      "effective_band_width": 9,
+      "geometry": {
+        "all_pass": true,
+        "circle_fit_ok": true,
+        "circles": [
+          {
+            "center_shift_px": 0.8634,
+            "coverage": 0.888889,
+            "fit_center": [
+              68.696699,
+              61.191626
+            ],
+            "fit_radius_px": 15.743957,
+            "id": "c0",
+            "radius_error_px": 1.743957,
+            "support_pixels": 182,
+            "truth": {
+              "cx": 69.0,
+              "cy": 62.0,
+              "diameter": 28.0
+            },
+            "valid": true
+          }
+        ],
+        "coverage_ok": true,
+        "displacement_ok": true,
+        "mask_pixels": 1951,
+        "max_abs_systematic_displacement_px": 0.8634,
+        "max_circle_radius_error_px": 1.743957,
+        "segments": [
+          {
+            "coverage": 0.939024,
+            "id": "s0",
+            "max_abs_perpendicular_offset_px": 5.458663,
+            "max_distance_px": 4.0,
+            "mean_distance_px": 3.018983,
+            "mean_signed_perpendicular_offset_px": 0.758759,
+            "support_pixels": 265,
+            "truth": {
+              "length": 80.05623023850174,
+              "x1": 12.0,
+              "x2": 92.0,
+              "y1": 18.0,
+              "y2": 21.0
+            }
+          },
+          {
+            "coverage": 0.551282,
+            "id": "s1",
+            "max_abs_perpendicular_offset_px": 5.489921,
+            "max_distance_px": 4.0,
+            "mean_distance_px": 3.414709,
+            "mean_signed_perpendicular_offset_px": -0.087264,
+            "support_pixels": 203,
+            "truth": {
+              "length": 76.32168761236873,
+              "x1": 18.0,
+              "x2": 94.0,
+              "y1": 46.0,
+              "y2": 53.0
+            }
+          },
+          {
+            "coverage": 0.762712,
+            "id": "s2",
+            "max_abs_perpendicular_offset_px": 5.466997,
+            "max_distance_px": 4.0,
+            "mean_distance_px": 3.116752,
+            "mean_signed_perpendicular_offset_px": -0.332955,
+            "support_pixels": 212,
+            "truth": {
+              "length": 57.8013840664737,
+              "x1": 26.0,
+              "x2": 55.0,
+              "y1": 75.0,
+              "y2": 125.0
+            }
+          },
+          {
+            "coverage": 0.745763,
+            "id": "s3",
+            "max_abs_perpendicular_offset_px": 5.484389,
+            "max_distance_px": 3.5969,
+            "mean_distance_px": 3.150546,
+            "mean_signed_perpendicular_offset_px": -0.422935,
+            "support_pixels": 218,
+            "truth": {
+              "length": 57.982756057296896,
+              "x1": 62.0,
+              "x2": 93.0,
+              "y1": 87.0,
+              "y2": 136.0
+            }
+          }
+        ],
+        "tolerance_px": 3.5
+      },
+      "geometry_all_pass": true,
+      "image_shape": [
+        150,
+        110,
+        3
+      ],
+      "incremental_initial_commits": 7,
+      "incremental_initial_complete": false,
+      "input_hash": "86a1cb5c44dff07e34d0613fc0e38a5879d0583ceaaf03f004d65093b3e9c78c",
+      "masks": {
+        "full": "artifacts/validation_work/masks/color_lowcontrast_150x110_full.png",
+        "full_vs_whole_heatmap": "artifacts/validation_work/masks/color_lowcontrast_150x110_full_vs_whole_heatmap.png"
+      },
+      "name": "color_lowcontrast_150x110",
+      "params_version": "be3fa91b85de2ca599184bd5deb9a33407108b88127b0bc60516f60fffd567dd",
+      "paths": {
+        "full": {
+          "complete": true,
+          "elapsed_seconds": 0.532868,
+          "newly_committed": 60,
+          "restored_commits": 0
+        },
+        "incremental": {
+          "complete": true,
+          "elapsed_seconds": 0.526463,
+          "newly_committed": 53,
+          "restored_commits": 7
+        },
+        "resume": {
+          "complete": true,
+          "elapsed_seconds": 0.57913,
+          "newly_committed": 53,
+          "restored_commits": 7
+        }
+      },
+      "prefix_commits": 7,
+      "required_band_width": 9,
+      "resume_initial_error": "模拟强制终止于第 7 个新提交",
+      "three_paths_commit_sequence_equal": true,
+      "three_paths_geometry_equal": true,
+      "three_paths_masks_equal": true,
+      "three_paths_stages_equal": true,
+      "three_paths_state_matrix_equal": true,
+      "total_commits": 60
+    }
+  ],
+  "schema": "edgepipe.validation/v1"
+}
