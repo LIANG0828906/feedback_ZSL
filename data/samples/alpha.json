@@ -1,0 +1,1093 @@
+{
+  "classes": [
+    {
+      "id": "class.iron",
+      "name": "Iron Vanguard",
+      "role": "frontline",
+      "skills": [
+        "skill.iron.strike",
+        "skill.iron.bash",
+        "skill.iron.earth"
+      ]
+    },
+    {
+      "id": "class.ranger",
+      "name": "Ash Ranger",
+      "role": "ranged",
+      "skills": [
+        "skill.ranger.quick",
+        "skill.ranger.pierce",
+        "skill.ranger.rain"
+      ]
+    },
+    {
+      "id": "class.mystic",
+      "name": "Storm Mystic",
+      "role": "caster",
+      "skills": [
+        "skill.mystic.spark",
+        "skill.mystic.siphon",
+        "skill.mystic.cataclysm"
+      ]
+    }
+  ],
+  "formulas": [
+    {
+      "args": [
+        {
+          "id": "formula.attack_scaled",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_plus_defense",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.attack_ratio",
+      "name": "attack / (attack + defense), 1.5x tuned",
+      "op": "DIV_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "kind": "const",
+          "value": 15000
+        }
+      ],
+      "id": "formula.attack_scaled",
+      "name": "attack x1.5",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "defense",
+          "kind": "attr",
+          "side": "defender"
+        }
+      ],
+      "id": "formula.attack_plus_defense",
+      "name": "attack + defense denominator",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.iron.strike.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.iron.strike.base",
+      "name": "skill.iron.strike base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.iron.strike.growth",
+      "name": "skill.iron.strike attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.iron.strike.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.iron.strike.damage",
+      "name": "skill.iron.strike damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.iron.bash.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.iron.bash.base",
+      "name": "skill.iron.bash base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.iron.bash.growth",
+      "name": "skill.iron.bash attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.iron.bash.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.iron.bash.damage",
+      "name": "skill.iron.bash damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.iron.earth.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.iron.earth.base",
+      "name": "skill.iron.earth base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.iron.earth.growth",
+      "name": "skill.iron.earth attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.iron.earth.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.iron.earth.damage",
+      "name": "skill.iron.earth damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.ranger.quick.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.ranger.quick.base",
+      "name": "skill.ranger.quick base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.ranger.quick.growth",
+      "name": "skill.ranger.quick attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.ranger.quick.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.ranger.quick.damage",
+      "name": "skill.ranger.quick damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.ranger.pierce.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.ranger.pierce.base",
+      "name": "skill.ranger.pierce base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.ranger.pierce.growth",
+      "name": "skill.ranger.pierce attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.ranger.pierce.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.ranger.pierce.damage",
+      "name": "skill.ranger.pierce damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.ranger.rain.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.ranger.rain.base",
+      "name": "skill.ranger.rain base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.ranger.rain.growth",
+      "name": "skill.ranger.rain attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.ranger.rain.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.ranger.rain.damage",
+      "name": "skill.ranger.rain damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.mystic.spark.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.mystic.spark.base",
+      "name": "skill.mystic.spark base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.mystic.spark.growth",
+      "name": "skill.mystic.spark attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.mystic.spark.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.mystic.spark.damage",
+      "name": "skill.mystic.spark damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.mystic.siphon.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.mystic.siphon.base",
+      "name": "skill.mystic.siphon base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.mystic.siphon.growth",
+      "name": "skill.mystic.siphon attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.mystic.siphon.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.mystic.siphon.damage",
+      "name": "skill.mystic.siphon damage range",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "field": "base_damage",
+          "kind": "skill"
+        },
+        {
+          "id": "formula.skill.mystic.cataclysm.growth",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.mystic.cataclysm.base",
+      "name": "skill.mystic.cataclysm base + growth",
+      "op": "ADD"
+    },
+    {
+      "args": [
+        {
+          "field": "attack",
+          "kind": "attr",
+          "side": "attacker"
+        },
+        {
+          "field": "growth_coeff",
+          "kind": "skill"
+        }
+      ],
+      "id": "formula.skill.mystic.cataclysm.growth",
+      "name": "skill.mystic.cataclysm attack growth",
+      "op": "MUL_BP"
+    },
+    {
+      "args": [
+        {
+          "id": "formula.skill.mystic.cataclysm.base",
+          "kind": "formula"
+        },
+        {
+          "id": "formula.attack_ratio",
+          "kind": "formula"
+        }
+      ],
+      "id": "formula.skill.mystic.cataclysm.damage",
+      "name": "skill.mystic.cataclysm damage range",
+      "op": "MUL_BP"
+    }
+  ],
+  "generator_seed": 420143,
+  "loadouts": [
+    {
+      "attributes": {
+        "attack": 1488,
+        "defense": 823,
+        "hp": 1333935,
+        "resource_max": 135996,
+        "resource_regen": 25480,
+        "speed": 87
+      },
+      "class_id": "class.iron",
+      "id": "loadout.iron_a",
+      "name": "Iron Vanguard Primary"
+    },
+    {
+      "attributes": {
+        "attack": 1538,
+        "defense": 811,
+        "hp": 1298700,
+        "resource_max": 137550,
+        "resource_regen": 25680,
+        "speed": 88
+      },
+      "class_id": "class.iron",
+      "id": "loadout.iron_b",
+      "name": "Iron Vanguard Rival"
+    },
+    {
+      "attributes": {
+        "attack": 1744,
+        "defense": 620,
+        "hp": 1106568,
+        "resource_max": 128938,
+        "resource_regen": 30501,
+        "speed": 120
+      },
+      "class_id": "class.ranger",
+      "id": "loadout.ranger_a",
+      "name": "Ash Ranger Primary"
+    },
+    {
+      "attributes": {
+        "attack": 1838,
+        "defense": 639,
+        "hp": 1094148,
+        "resource_max": 126888,
+        "resource_regen": 31176,
+        "speed": 113
+      },
+      "class_id": "class.ranger",
+      "id": "loadout.ranger_b",
+      "name": "Ash Ranger Rival"
+    },
+    {
+      "attributes": {
+        "attack": 1583,
+        "defense": 703,
+        "hp": 1157344,
+        "resource_max": 148935,
+        "resource_regen": 34751,
+        "speed": 101
+      },
+      "class_id": "class.mystic",
+      "id": "loadout.mystic_a",
+      "name": "Storm Mystic Primary"
+    },
+    {
+      "attributes": {
+        "attack": 1633,
+        "defense": 660,
+        "hp": 1128198,
+        "resource_max": 152535,
+        "resource_regen": 34139,
+        "speed": 105
+      },
+      "class_id": "class.mystic",
+      "id": "loadout.mystic_b",
+      "name": "Storm Mystic Rival"
+    }
+  ],
+  "name": "边境裂隙 · Alpha",
+  "project_id": "project_alpha",
+  "provenance": {
+    "generator_seed": 420143,
+    "generator_version": "sample-generator-v1",
+    "scales": {
+      "coefficient": "basis points (10000 = 1.0)",
+      "damage": "milli-HP integer",
+      "hit_roll": "basis points (10000 = 1.0)",
+      "resource": "milli-resource integer"
+    }
+  },
+  "scenarios": [
+    {
+      "estimated_ms_per_match": 4,
+      "id": "scene.duel.iron",
+      "max_rounds": 20,
+      "mode": "duel",
+      "name": "Duel · Iron vs Ranger",
+      "opponent_loadout_ids": [
+        "loadout.ranger_b"
+      ],
+      "party_loadout_ids": [
+        "loadout.iron_a"
+      ],
+      "primary_loadout_id": "loadout.iron_a",
+      "seed": 4201531
+    },
+    {
+      "estimated_ms_per_match": 4,
+      "id": "scene.duel.ranger",
+      "max_rounds": 20,
+      "mode": "duel",
+      "name": "Duel · Ranger vs Mystic",
+      "opponent_loadout_ids": [
+        "loadout.mystic_b"
+      ],
+      "party_loadout_ids": [
+        "loadout.ranger_a"
+      ],
+      "primary_loadout_id": "loadout.ranger_a",
+      "seed": 4201532
+    },
+    {
+      "estimated_ms_per_match": 4,
+      "id": "scene.duel.mystic",
+      "max_rounds": 22,
+      "mode": "duel",
+      "name": "Duel · Mystic vs Iron",
+      "opponent_loadout_ids": [
+        "loadout.iron_b"
+      ],
+      "party_loadout_ids": [
+        "loadout.mystic_a"
+      ],
+      "primary_loadout_id": "loadout.mystic_a",
+      "seed": 4201533
+    },
+    {
+      "estimated_ms_per_match": 4,
+      "id": "scene.duel.rival_iron",
+      "max_rounds": 20,
+      "mode": "duel",
+      "name": "Duel · Rival Iron vs Ranger",
+      "opponent_loadout_ids": [
+        "loadout.ranger_a"
+      ],
+      "party_loadout_ids": [
+        "loadout.iron_b"
+      ],
+      "primary_loadout_id": "loadout.iron_b",
+      "seed": 4201534
+    },
+    {
+      "estimated_ms_per_match": 7,
+      "id": "scene.squad.ranger",
+      "max_rounds": 24,
+      "mode": "squad",
+      "name": "Squad · Ranger / Mystic",
+      "opponent_loadout_ids": [
+        "loadout.iron_a",
+        "loadout.ranger_a"
+      ],
+      "party_loadout_ids": [
+        "loadout.ranger_b",
+        "loadout.mystic_b"
+      ],
+      "primary_loadout_id": "loadout.ranger_b",
+      "seed": 4201535
+    },
+    {
+      "estimated_ms_per_match": 7,
+      "id": "scene.squad.mystic",
+      "max_rounds": 24,
+      "mode": "squad",
+      "name": "Squad · Mystic / Iron",
+      "opponent_loadout_ids": [
+        "loadout.ranger_a",
+        "loadout.mystic_a"
+      ],
+      "party_loadout_ids": [
+        "loadout.mystic_b",
+        "loadout.iron_b"
+      ],
+      "primary_loadout_id": "loadout.mystic_b",
+      "seed": 4201536
+    }
+  ],
+  "schema_version": 1,
+  "skills": [
+    {
+      "base_damage": 126360,
+      "class_id": "class.iron",
+      "cooldown": 0,
+      "formula_id": "formula.skill.iron.strike.damage",
+      "growth_coeff": 1199,
+      "hit_max_bp": 10600,
+      "hit_min_bp": 9400,
+      "id": "skill.iron.strike",
+      "name": "Shield Strike",
+      "priority": 10,
+      "resource_cost": 0
+    },
+    {
+      "base_damage": 198686,
+      "class_id": "class.iron",
+      "cooldown": 2,
+      "formula_id": "formula.skill.iron.bash.damage",
+      "growth_coeff": 1614,
+      "hit_max_bp": 11000,
+      "hit_min_bp": 9000,
+      "id": "skill.iron.bash",
+      "name": "Shield Bash",
+      "priority": 30,
+      "resource_cost": 19920
+    },
+    {
+      "base_damage": 313425,
+      "class_id": "class.iron",
+      "cooldown": 4,
+      "formula_id": "formula.skill.iron.earth.damage",
+      "growth_coeff": 981,
+      "hit_max_bp": 11400,
+      "hit_min_bp": 8600,
+      "id": "skill.iron.earth",
+      "name": "Earthsplitter",
+      "priority": 50,
+      "resource_cost": 56573
+    },
+    {
+      "base_damage": 88659,
+      "class_id": "class.ranger",
+      "cooldown": 0,
+      "formula_id": "formula.skill.ranger.quick.damage",
+      "growth_coeff": 1380,
+      "hit_max_bp": 10800,
+      "hit_min_bp": 9200,
+      "id": "skill.ranger.quick",
+      "name": "Quick Shot",
+      "priority": 10,
+      "resource_cost": 0
+    },
+    {
+      "base_damage": 187150,
+      "class_id": "class.ranger",
+      "cooldown": 2,
+      "formula_id": "formula.skill.ranger.pierce.damage",
+      "growth_coeff": 2110,
+      "hit_max_bp": 10900,
+      "hit_min_bp": 9100,
+      "id": "skill.ranger.pierce",
+      "name": "Piercing Bolt",
+      "priority": 30,
+      "resource_cost": 24154
+    },
+    {
+      "base_damage": 261560,
+      "class_id": "class.ranger",
+      "cooldown": 4,
+      "formula_id": "formula.skill.ranger.rain.damage",
+      "growth_coeff": 1010,
+      "hit_max_bp": 11500,
+      "hit_min_bp": 8500,
+      "id": "skill.ranger.rain",
+      "name": "Arrow Rain",
+      "priority": 50,
+      "resource_cost": 60930
+    },
+    {
+      "base_damage": 96730,
+      "class_id": "class.mystic",
+      "cooldown": 0,
+      "formula_id": "formula.skill.mystic.spark.damage",
+      "growth_coeff": 1677,
+      "hit_max_bp": 10700,
+      "hit_min_bp": 9300,
+      "id": "skill.mystic.spark",
+      "name": "Arc Spark",
+      "priority": 10,
+      "resource_cost": 0
+    },
+    {
+      "base_damage": 164390,
+      "class_id": "class.mystic",
+      "cooldown": 2,
+      "formula_id": "formula.skill.mystic.siphon.damage",
+      "growth_coeff": 2323,
+      "hit_max_bp": 11100,
+      "hit_min_bp": 8900,
+      "id": "skill.mystic.siphon",
+      "name": "Void Siphon",
+      "priority": 30,
+      "resource_cost": 21648
+    },
+    {
+      "base_damage": 304980,
+      "class_id": "class.mystic",
+      "cooldown": 5,
+      "formula_id": "formula.skill.mystic.cataclysm.damage",
+      "growth_coeff": 1245,
+      "hit_max_bp": 11800,
+      "hit_min_bp": 8200,
+      "id": "skill.mystic.cataclysm",
+      "name": "Cataclysm",
+      "priority": 50,
+      "resource_cost": 68558
+    }
+  ],
+  "truth": {
+    "formula_cases": [
+      {
+        "defender_loadout_id": "loadout.ranger_a",
+        "expected_max": 233926,
+        "expected_mid": 212660,
+        "expected_min": 191394,
+        "formula_id": "formula.skill.iron.bash.damage",
+        "id": "truth.formula.skill.iron.bash",
+        "loadout_id": "loadout.iron_b",
+        "skill_id": "skill.iron.bash",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.ranger_a",
+        "expected_max": 382140,
+        "expected_mid": 335210,
+        "expected_min": 288281,
+        "formula_id": "formula.skill.iron.earth.damage",
+        "id": "truth.formula.skill.iron.earth",
+        "loadout_id": "loadout.iron_b",
+        "skill_id": "skill.iron.earth",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.ranger_a",
+        "expected_max": 143391,
+        "expected_mid": 135274,
+        "expected_min": 127158,
+        "formula_id": "formula.skill.iron.strike.damage",
+        "id": "truth.formula.skill.iron.strike",
+        "loadout_id": "loadout.iron_b",
+        "skill_id": "skill.iron.strike",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.ranger_a",
+        "expected_max": 391409,
+        "expected_mid": 331702,
+        "expected_min": 271996,
+        "formula_id": "formula.skill.mystic.cataclysm.damage",
+        "id": "truth.formula.skill.mystic.cataclysm",
+        "loadout_id": "loadout.mystic_b",
+        "skill_id": "skill.mystic.cataclysm",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.ranger_a",
+        "expected_max": 198786,
+        "expected_mid": 179086,
+        "expected_min": 159387,
+        "formula_id": "formula.skill.mystic.siphon.damage",
+        "id": "truth.formula.skill.mystic.siphon",
+        "loadout_id": "loadout.mystic_b",
+        "skill_id": "skill.mystic.siphon",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.ranger_a",
+        "expected_max": 112812,
+        "expected_mid": 105431,
+        "expected_min": 98051,
+        "formula_id": "formula.skill.mystic.spark.damage",
+        "id": "truth.formula.skill.mystic.spark",
+        "loadout_id": "loadout.mystic_b",
+        "skill_id": "skill.mystic.spark",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.iron_a",
+        "expected_max": 211773,
+        "expected_mid": 194287,
+        "expected_min": 176802,
+        "formula_id": "formula.skill.ranger.pierce.damage",
+        "id": "truth.formula.skill.ranger.pierce",
+        "loadout_id": "loadout.ranger_b",
+        "skill_id": "skill.ranger.pierce",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.iron_a",
+        "expected_max": 99480,
+        "expected_mid": 92111,
+        "expected_min": 84743,
+        "formula_id": "formula.skill.ranger.quick.damage",
+        "id": "truth.formula.skill.ranger.quick",
+        "loadout_id": "loadout.ranger_b",
+        "skill_id": "skill.ranger.quick",
+        "source": "integer_formula_interval"
+      },
+      {
+        "defender_loadout_id": "loadout.iron_a",
+        "expected_max": 311842,
+        "expected_mid": 271166,
+        "expected_min": 230491,
+        "formula_id": "formula.skill.ranger.rain.damage",
+        "id": "truth.formula.skill.ranger.rain",
+        "loadout_id": "loadout.ranger_b",
+        "skill_id": "skill.ranger.rain",
+        "source": "integer_formula_interval"
+      }
+    ],
+    "policy": {
+      "damage_source": "exact integer interval from formula DAG and hit bounds",
+      "threshold_source": "baseline attribute policy bands",
+      "win_rate_source": "256-seed baseline calibration band with deterministic prefix tolerance"
+    },
+    "thresholds": [
+      {
+        "attribute": "attack",
+        "comparison": ">=",
+        "description": "攻击不低于该场景基准配装攻击的 95%。",
+        "id": "truth.threshold.attack.scene.duel.iron",
+        "scenario_id": "scene.duel.iron",
+        "source": "baseline_band",
+        "threshold": 1413
+      },
+      {
+        "attribute": "defense",
+        "comparison": ">=",
+        "description": "防御不低于该场景基准配装防御的 90%。",
+        "id": "truth.threshold.defense.scene.duel.iron",
+        "scenario_id": "scene.duel.iron",
+        "source": "baseline_band",
+        "threshold": 740
+      },
+      {
+        "attribute": "attack",
+        "comparison": ">=",
+        "description": "攻击不低于该场景基准配装攻击的 95%。",
+        "id": "truth.threshold.attack.scene.duel.ranger",
+        "scenario_id": "scene.duel.ranger",
+        "source": "baseline_band",
+        "threshold": 1656
+      },
+      {
+        "attribute": "defense",
+        "comparison": ">=",
+        "description": "防御不低于该场景基准配装防御的 90%。",
+        "id": "truth.threshold.defense.scene.duel.ranger",
+        "scenario_id": "scene.duel.ranger",
+        "source": "baseline_band",
+        "threshold": 558
+      },
+      {
+        "attribute": "attack",
+        "comparison": ">=",
+        "description": "攻击不低于该场景基准配装攻击的 95%。",
+        "id": "truth.threshold.attack.scene.duel.mystic",
+        "scenario_id": "scene.duel.mystic",
+        "source": "baseline_band",
+        "threshold": 1503
+      },
+      {
+        "attribute": "defense",
+        "comparison": ">=",
+        "description": "防御不低于该场景基准配装防御的 90%。",
+        "id": "truth.threshold.defense.scene.duel.mystic",
+        "scenario_id": "scene.duel.mystic",
+        "source": "baseline_band",
+        "threshold": 632
+      },
+      {
+        "attribute": "attack",
+        "comparison": ">=",
+        "description": "攻击不低于该场景基准配装攻击的 95%。",
+        "id": "truth.threshold.attack.scene.duel.rival_iron",
+        "scenario_id": "scene.duel.rival_iron",
+        "source": "baseline_band",
+        "threshold": 1461
+      },
+      {
+        "attribute": "defense",
+        "comparison": ">=",
+        "description": "防御不低于该场景基准配装防御的 90%。",
+        "id": "truth.threshold.defense.scene.duel.rival_iron",
+        "scenario_id": "scene.duel.rival_iron",
+        "source": "baseline_band",
+        "threshold": 729
+      },
+      {
+        "attribute": "attack",
+        "comparison": ">=",
+        "description": "攻击不低于该场景基准配装攻击的 95%。",
+        "id": "truth.threshold.attack.scene.squad.ranger",
+        "scenario_id": "scene.squad.ranger",
+        "source": "baseline_band",
+        "threshold": 1746
+      },
+      {
+        "attribute": "defense",
+        "comparison": ">=",
+        "description": "防御不低于该场景基准配装防御的 90%。",
+        "id": "truth.threshold.defense.scene.squad.ranger",
+        "scenario_id": "scene.squad.ranger",
+        "source": "baseline_band",
+        "threshold": 575
+      },
+      {
+        "attribute": "attack",
+        "comparison": ">=",
+        "description": "攻击不低于该场景基准配装攻击的 95%。",
+        "id": "truth.threshold.attack.scene.squad.mystic",
+        "scenario_id": "scene.squad.mystic",
+        "source": "baseline_band",
+        "threshold": 1551
+      },
+      {
+        "attribute": "defense",
+        "comparison": ">=",
+        "description": "防御不低于该场景基准配装防御的 90%。",
+        "id": "truth.threshold.defense.scene.squad.mystic",
+        "scenario_id": "scene.squad.mystic",
+        "source": "baseline_band",
+        "threshold": 594
+      }
+    ],
+    "win_rates": [
+      {
+        "calibrated_rate_bp": 10000,
+        "candidate_id": "candidate.baseline",
+        "expected_high_bp": 10000,
+        "expected_low_bp": 9550,
+        "id": "truth.win.scene.duel.iron",
+        "reference_samples": 256,
+        "scenario_id": "scene.duel.iron",
+        "source": "calibrated_reference_band"
+      },
+      {
+        "calibrated_rate_bp": 10000,
+        "candidate_id": "candidate.baseline",
+        "expected_high_bp": 10000,
+        "expected_low_bp": 9550,
+        "id": "truth.win.scene.duel.ranger",
+        "reference_samples": 256,
+        "scenario_id": "scene.duel.ranger",
+        "source": "calibrated_reference_band"
+      },
+      {
+        "calibrated_rate_bp": 0,
+        "candidate_id": "candidate.baseline",
+        "expected_high_bp": 450,
+        "expected_low_bp": 0,
+        "id": "truth.win.scene.duel.mystic",
+        "reference_samples": 256,
+        "scenario_id": "scene.duel.mystic",
+        "source": "calibrated_reference_band"
+      },
+      {
+        "calibrated_rate_bp": 10000,
+        "candidate_id": "candidate.baseline",
+        "expected_high_bp": 10000,
+        "expected_low_bp": 9550,
+        "id": "truth.win.scene.duel.rival_iron",
+        "reference_samples": 256,
+        "scenario_id": "scene.duel.rival_iron",
+        "source": "calibrated_reference_band"
+      },
+      {
+        "calibrated_rate_bp": 0,
+        "candidate_id": "candidate.baseline",
+        "expected_high_bp": 450,
+        "expected_low_bp": 0,
+        "id": "truth.win.scene.squad.ranger",
+        "reference_samples": 256,
+        "scenario_id": "scene.squad.ranger",
+        "source": "calibrated_reference_band"
+      },
+      {
+        "calibrated_rate_bp": 10000,
+        "candidate_id": "candidate.baseline",
+        "expected_high_bp": 10000,
+        "expected_low_bp": 9550,
+        "id": "truth.win.scene.squad.mystic",
+        "reference_samples": 256,
+        "scenario_id": "scene.squad.mystic",
+        "source": "calibrated_reference_band"
+      }
+    ]
+  },
+  "validation_budget": {
+    "max_matches_per_round": 5,
+    "max_scenario_seconds": 8,
+    "memory_buffer_kb": 2048,
+    "parallel_slots": 3
+  }
+}

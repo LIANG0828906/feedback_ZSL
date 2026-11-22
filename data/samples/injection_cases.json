@@ -1,0 +1,127 @@
+{
+  "project_cases": [
+    {
+      "expected_code": "E_SCHEMA",
+      "expected_field": "formula_id",
+      "expected_object_id": "skill.iron.strike",
+      "id": "missing_required_field",
+      "operation": {
+        "collection": "skills",
+        "field": "formula_id",
+        "kind": "delete_field",
+        "selector": {
+          "id": "skill.iron.strike"
+        }
+      },
+      "project": "alpha.json"
+    },
+    {
+      "expected_code": "E_CYCLE",
+      "expected_field": "args",
+      "expected_object_id": "formula.injected.cycle_a",
+      "id": "formula_cycle",
+      "operation": {
+        "kind": "add_formula_cycle"
+      },
+      "project": "alpha.json"
+    },
+    {
+      "expected_code": "E_REF",
+      "expected_field": "args",
+      "expected_object_id": "formula.injected.bad_ref",
+      "id": "missing_formula_reference",
+      "operation": {
+        "kind": "add_bad_formula_reference"
+      },
+      "project": "alpha.json"
+    },
+    {
+      "expected_code": "E_REF",
+      "expected_field": "skills",
+      "expected_object_id": "class.iron",
+      "id": "missing_class_skill_reference",
+      "operation": {
+        "collection": "classes",
+        "field": "skills",
+        "kind": "append_value",
+        "selector": {
+          "id": "class.iron"
+        },
+        "value": "skill.injected.missing"
+      },
+      "project": "alpha.json"
+    },
+    {
+      "expected_code": "E_SCHEMA",
+      "expected_field": "growth_coeff",
+      "expected_object_id": "skill.iron.bash",
+      "id": "invalid_fixed_point",
+      "operation": {
+        "collection": "skills",
+        "field": "growth_coeff",
+        "kind": "set_field",
+        "selector": {
+          "id": "skill.iron.bash"
+        },
+        "value": 12.5
+      },
+      "project": "alpha.json"
+    },
+    {
+      "expected_code": "E_SCHEMA",
+      "expected_field": "primary_loadout_id",
+      "expected_object_id": "scene.duel.ranger",
+      "id": "scenario_loadout_one_to_one",
+      "operation": {
+        "kind": "set_scenario_primary",
+        "selector": {
+          "id": "scene.duel.ranger"
+        },
+        "value": "loadout.iron_a"
+      },
+      "project": "alpha.json"
+    },
+    {
+      "expected_code": "E_PARA",
+      "expected_field": "parallel_slots",
+      "expected_object_id": "validation_budget",
+      "id": "budget_parameter_overflow",
+      "operation": {
+        "collection": "root",
+        "field": "validation_budget.parallel_slots",
+        "kind": "set_field",
+        "selector": {},
+        "value": 99
+      },
+      "project": "alpha.json"
+    }
+  ],
+  "projects": {
+    "alpha": "alpha.json",
+    "beta": "beta.json",
+    "gamma": "gamma.json"
+  },
+  "runtime_cases": [
+    {
+      "expected_code": "E_STATE",
+      "id": "illegal_combo_transition",
+      "operation": "submit_then_submit_again"
+    },
+    {
+      "expected_code": "E_STATE",
+      "id": "frozen_combo_adjustment",
+      "operation": "adjust_submitted_combo"
+    },
+    {
+      "expected_code": "E_PARA",
+      "id": "target_samples_out_of_range",
+      "operation": "request_target_samples_zero"
+    },
+    {
+      "expected_code": "E_DIFF",
+      "id": "three_path_mismatch",
+      "operation": "mutate_one_round_then_compare"
+    }
+  ],
+  "schema_version": 1
+}

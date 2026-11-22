@@ -1,0 +1,480 @@
+{
+  "candidates": [
+    {
+      "id": "candidate.baseline",
+      "modifications": [],
+      "name": "基准方案",
+      "note": "未调整，作为真值校准与回归基线。",
+      "priority": 120
+    },
+    {
+      "id": "candidate.burst_plus",
+      "modifications": [
+        {
+          "field": "base_damage",
+          "op": "scale_bp",
+          "target_id": "skill.iron.bash",
+          "target_kind": "skill",
+          "value": 10750
+        },
+        {
+          "field": "base_damage",
+          "op": "scale_bp",
+          "target_id": "skill.iron.earth",
+          "target_kind": "skill",
+          "value": 10750
+        },
+        {
+          "field": "base_damage",
+          "op": "scale_bp",
+          "target_id": "skill.mystic.cataclysm",
+          "target_kind": "skill",
+          "value": 10750
+        },
+        {
+          "field": "base_damage",
+          "op": "scale_bp",
+          "target_id": "skill.mystic.siphon",
+          "target_kind": "skill",
+          "value": 10750
+        },
+        {
+          "field": "base_damage",
+          "op": "scale_bp",
+          "target_id": "skill.ranger.pierce",
+          "target_kind": "skill",
+          "value": 10750
+        },
+        {
+          "field": "base_damage",
+          "op": "scale_bp",
+          "target_id": "skill.ranger.rain",
+          "target_kind": "skill",
+          "value": 10750
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.iron.bash",
+          "target_kind": "skill",
+          "value": 10500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.iron.earth",
+          "target_kind": "skill",
+          "value": 10500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.mystic.cataclysm",
+          "target_kind": "skill",
+          "value": 10500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.mystic.siphon",
+          "target_kind": "skill",
+          "value": 10500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.ranger.pierce",
+          "target_kind": "skill",
+          "value": 10500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.ranger.rain",
+          "target_kind": "skill",
+          "value": 10500
+        }
+      ],
+      "name": "爆发增强",
+      "note": "爆发技能基础伤害 +7.5%，资源消耗 +5%。",
+      "priority": 115
+    },
+    {
+      "id": "candidate.sustain_trim",
+      "modifications": [
+        {
+          "field": "growth_coeff",
+          "op": "scale_bp",
+          "target_id": "skill.iron.strike",
+          "target_kind": "skill",
+          "value": 9200
+        },
+        {
+          "field": "growth_coeff",
+          "op": "scale_bp",
+          "target_id": "skill.mystic.spark",
+          "target_kind": "skill",
+          "value": 9200
+        },
+        {
+          "field": "growth_coeff",
+          "op": "scale_bp",
+          "target_id": "skill.ranger.quick",
+          "target_kind": "skill",
+          "value": 9200
+        }
+      ],
+      "name": "续航削减",
+      "note": "基础技能成长系数 -8%，观察长回合伤害曲线。",
+      "priority": 110
+    },
+    {
+      "id": "candidate.attack_tune",
+      "modifications": [
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_a",
+          "target_kind": "loadout",
+          "value": 10500
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_b",
+          "target_kind": "loadout",
+          "value": 10500
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_a",
+          "target_kind": "loadout",
+          "value": 10500
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_b",
+          "target_kind": "loadout",
+          "value": 10500
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_a",
+          "target_kind": "loadout",
+          "value": 10500
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_b",
+          "target_kind": "loadout",
+          "value": 10500
+        }
+      ],
+      "name": "攻击上调",
+      "note": "全部主用配装攻击 +5%。",
+      "priority": 105
+    },
+    {
+      "id": "candidate.defense_tune",
+      "modifications": [
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_a",
+          "target_kind": "loadout",
+          "value": 10800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_b",
+          "target_kind": "loadout",
+          "value": 10800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_a",
+          "target_kind": "loadout",
+          "value": 10800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_b",
+          "target_kind": "loadout",
+          "value": 10800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_a",
+          "target_kind": "loadout",
+          "value": 10800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_b",
+          "target_kind": "loadout",
+          "value": 10800
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_a",
+          "target_kind": "loadout",
+          "value": 9800
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_b",
+          "target_kind": "loadout",
+          "value": 9800
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_a",
+          "target_kind": "loadout",
+          "value": 9800
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_b",
+          "target_kind": "loadout",
+          "value": 9800
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_a",
+          "target_kind": "loadout",
+          "value": 9800
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_b",
+          "target_kind": "loadout",
+          "value": 9800
+        }
+      ],
+      "name": "防御上调",
+      "note": "防御 +8%、生命 -2% 的偏防守配平。",
+      "priority": 100
+    },
+    {
+      "id": "candidate.glass_cannon",
+      "modifications": [
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_a",
+          "target_kind": "loadout",
+          "value": 11000
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_b",
+          "target_kind": "loadout",
+          "value": 11000
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_a",
+          "target_kind": "loadout",
+          "value": 11000
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_b",
+          "target_kind": "loadout",
+          "value": 11000
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_a",
+          "target_kind": "loadout",
+          "value": 11000
+        },
+        {
+          "field": "attack",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_b",
+          "target_kind": "loadout",
+          "value": 11000
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_a",
+          "target_kind": "loadout",
+          "value": 8800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_b",
+          "target_kind": "loadout",
+          "value": 8800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_a",
+          "target_kind": "loadout",
+          "value": 8800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_b",
+          "target_kind": "loadout",
+          "value": 8800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_a",
+          "target_kind": "loadout",
+          "value": 8800
+        },
+        {
+          "field": "defense",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_b",
+          "target_kind": "loadout",
+          "value": 8800
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_a",
+          "target_kind": "loadout",
+          "value": 9200
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.iron_b",
+          "target_kind": "loadout",
+          "value": 9200
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_a",
+          "target_kind": "loadout",
+          "value": 9200
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.mystic_b",
+          "target_kind": "loadout",
+          "value": 9200
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_a",
+          "target_kind": "loadout",
+          "value": 9200
+        },
+        {
+          "field": "hp",
+          "op": "scale_bp",
+          "target_id": "loadout.ranger_b",
+          "target_kind": "loadout",
+          "value": 9200
+        }
+      ],
+      "name": "玻璃大炮",
+      "note": "攻击 +10%，防御 -12%，生命 -8%，用于阈值失败诊断。",
+      "priority": 95
+    },
+    {
+      "id": "candidate.resource_relief",
+      "modifications": [
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.iron.bash",
+          "target_kind": "skill",
+          "value": 8500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.iron.earth",
+          "target_kind": "skill",
+          "value": 8500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.mystic.cataclysm",
+          "target_kind": "skill",
+          "value": 8500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.mystic.siphon",
+          "target_kind": "skill",
+          "value": 8500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.ranger.pierce",
+          "target_kind": "skill",
+          "value": 8500
+        },
+        {
+          "field": "resource_cost",
+          "op": "scale_bp",
+          "target_id": "skill.ranger.rain",
+          "target_kind": "skill",
+          "value": 8500
+        },
+        {
+          "field": "cooldown",
+          "op": "add",
+          "target_id": "skill.iron.bash",
+          "target_kind": "skill",
+          "value": -1
+        },
+        {
+          "field": "cooldown",
+          "op": "add",
+          "target_id": "skill.mystic.siphon",
+          "target_kind": "skill",
+          "value": -1
+        },
+        {
+          "field": "cooldown",
+          "op": "add",
+          "target_id": "skill.ranger.pierce",
+          "target_kind": "skill",
+          "value": -1
+        }
+      ],
+      "name": "资源减压",
+      "note": "高阶技能资源 -15%，2 回合技能冷却 -1。",
+      "priority": 90
+    }
+  ],
+  "project_id": "project_beta"
+}

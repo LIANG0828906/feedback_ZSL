@@ -1,0 +1,114 @@
+{
+  "deterministic": true,
+  "generator_version": "sample-generator-v1",
+  "injection_cases": "injection_cases.json",
+  "injection_cases_hash": "cda829494bb5d4e69de36e383c8d25a2a06bc87e2dd3a02d68122f12d0cdf0d4",
+  "manifest_hash": "b4a7dbaecc3f40997db308a914d82aad2f3e2fca249748579eaaba99f0f9d472",
+  "projects": [
+    {
+      "budget": {
+        "max_matches_per_round": 5,
+        "max_scenario_seconds": 8,
+        "memory_buffer_kb": 2048,
+        "parallel_slots": 3
+      },
+      "candidate_file": "alpha.candidates.json",
+      "candidate_set_hash": "fabb3e2576df8b4105b93a7732ac644d42998ca77d763ec1b7e68cbbe3e3d4b4",
+      "candidates": 7,
+      "classes": 3,
+      "demo_request": {
+        "min_samples": 2,
+        "target_samples": 64,
+        "total_sample_budget": 1200
+      },
+      "formulas": 30,
+      "loadouts": 6,
+      "name": "边境裂隙 · Alpha",
+      "project_file": "alpha.json",
+      "project_hash": "047f0644a38671166c9b49e4fc12de9d5d449930fcb6c48368ad9ba0f091f909",
+      "project_id": "project_alpha",
+      "project_model_hash": "2e716e1318d0231c222bba2b7fcf37da9ab7a93afeef9e4b9dce1e463a24b985",
+      "scenarios": 6,
+      "seed": 420143,
+      "skills": 9,
+      "slug": "alpha",
+      "truth_counts": {
+        "formula_cases": 9,
+        "thresholds": 12,
+        "win_rates": 6
+      }
+    },
+    {
+      "budget": {
+        "max_matches_per_round": 3,
+        "max_scenario_seconds": 6,
+        "memory_buffer_kb": 1536,
+        "parallel_slots": 2
+      },
+      "candidate_file": "beta.candidates.json",
+      "candidate_set_hash": "b007c995412a21cb84140d5aa41137900c715d62e5eb697df81d93a98c48a4b8",
+      "candidates": 7,
+      "classes": 3,
+      "demo_request": {
+        "min_samples": 2,
+        "target_samples": 56,
+        "total_sample_budget": 900
+      },
+      "formulas": 30,
+      "loadouts": 6,
+      "name": "灰烬竞技场 · Beta",
+      "project_file": "beta.json",
+      "project_hash": "35037c879803d1f3b4bd1c440cd9098f246845ee4fff09d50232ae593845e261",
+      "project_id": "project_beta",
+      "project_model_hash": "cdd78360f782233555afb8b744ba164cfff9ec2d0bf1ea98c82d25e0eca18ca7",
+      "scenarios": 6,
+      "seed": 730021,
+      "skills": 9,
+      "slug": "beta",
+      "truth_counts": {
+        "formula_cases": 9,
+        "thresholds": 12,
+        "win_rates": 6
+      }
+    },
+    {
+      "budget": {
+        "max_matches_per_round": 7,
+        "max_scenario_seconds": 10,
+        "memory_buffer_kb": 3072,
+        "parallel_slots": 4
+      },
+      "candidate_file": "gamma.candidates.json",
+      "candidate_set_hash": "202fbd6e0ef809f5ea05d4889f0005bd142259755699e40dd076c5707dabaf96",
+      "candidates": 7,
+      "classes": 3,
+      "demo_request": {
+        "min_samples": 2,
+        "target_samples": 80,
+        "total_sample_budget": 1800
+      },
+      "formulas": 30,
+      "loadouts": 6,
+      "name": "风暴回廊 · Gamma",
+      "project_file": "gamma.json",
+      "project_hash": "17a7de5005c66d5dd45a04a00c074dc374bf8c9df26a6d551df34117bf99756f",
+      "project_id": "project_gamma",
+      "project_model_hash": "1151f14e9748e6df7f067bc1d9a3dd4f8ee4703a12cfea09e54459d4235c4946",
+      "scenarios": 6,
+      "seed": 991337,
+      "skills": 9,
+      "slug": "gamma",
+      "truth_counts": {
+        "formula_cases": 9,
+        "thresholds": 12,
+        "win_rates": 6
+      }
+    }
+  ],
+  "scales": {
+    "coefficient": "basis points (10000 = 1.0)",
+    "damage": "milli-HP integer",
+    "hit_roll": "basis points (10000 = 1.0)",
+    "resource": "milli-resource integer"
+  }
+}
