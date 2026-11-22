@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spatial-audio-workbench"
+version = "1.0.0"
+description = "Deterministic spatial acoustics and sound-field reconstruction workbench"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+gui = ["PyQt5>=5.15"]
+
+[project.scripts]
+spatial-audio = "space_audio.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["space_audio*"]
