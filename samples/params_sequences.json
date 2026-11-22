@@ -1,0 +1,72 @@
+{
+  "scenarios": [
+    {
+      "description": "全阶段默认参数",
+      "name": "baseline",
+      "params": {
+        "denoise": {
+          "radius": 1,
+          "strength": 1.0
+        },
+        "local_contrast": {
+          "blend": 0.75,
+          "clip_limit": 2.0,
+          "tile_size": 32
+        },
+        "sharpen": {
+          "amount": 0.8,
+          "radius": 1,
+          "threshold": 2
+        }
+      }
+    },
+    {
+      "changed_stage": "local_contrast",
+      "description": "仅调整局部对比度，用于验证只重算末端阶段",
+      "name": "contrast_only",
+      "params": {
+        "denoise": {
+          "radius": 1,
+          "strength": 1.0
+        },
+        "local_contrast": {
+          "blend": 0.9,
+          "clip_limit": 3.2,
+          "tile_size": 24
+        },
+        "sharpen": {
+          "amount": 0.8,
+          "radius": 1,
+          "threshold": 2
+        }
+      }
+    },
+    {
+      "changed_stage": "sharpen",
+      "description": "调整锐化，用于验证锐化及局部对比度失效",
+      "name": "sharpen_and_downstream",
+      "params": {
+        "denoise": {
+          "radius": 1,
+          "strength": 1.0
+        },
+        "local_contrast": {
+          "blend": 0.7,
+          "clip_limit": 2.4,
+          "tile_size": 40
+        },
+        "sharpen": {
+          "amount": 1.25,
+          "radius": 2,
+          "threshold": 1
+        }
+      }
+    }
+  ],
+  "schema": 1,
+  "stage_order": [
+    "denoise",
+    "sharpen",
+    "local_contrast"
+  ]
+}
