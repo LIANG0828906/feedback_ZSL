@@ -1,22 +1,295 @@
-当前是空白工作区，需要从零构建一套面向游戏与互动媒体音频采集链路的多通道采集与时钟同步领域组件，并交付完整可运行示例。本地确定性样本生成器产出多组多通道采集会话：每个会话由若干采集设备通道组成，各通道标称采样率相同但存在微小且非恒定的时钟漂移，样本中嵌入带已知时域特征的对齐标记（脉冲与线性扫频），并记录每个通道相对参考通道的解析真值（逐标记的到达样本偏移、累计漂移率与漂移曲线参数），作为精度观测与验收来源。组件需完成多通道加载与时钟模型估计、分数延迟对齐、漂移补偿与重采样、参考时钟校正、对齐质量评估与多声道导出，并在实时、断点恢复与全量重算三条路径下产出一致结果。
+# Interactive Audio Clock Synchronization
 
-任务环境与准备：
-在 Windows 上安装 Python 3.11 及以上，并可用 pip 安装。
-安装 NumPy 与 PySide6，版本在依赖清单中固定并本地离线可用。
-用任务自带的本地确定性样本生成器产出多通道采集会话、标记与解析真值文件。
-准备本地临时目录用于持久化检查点、导出多声道结果与误差报告，无需外部账号或网络服务。
+面向游戏与互动媒体音频采集链路的多通道采集、时钟漂移估计、分数延迟对齐与参考时钟校正组件。项目包含确定性样本生成器、核心 NumPy DSP 库、SQLite 分段检查点、三条执行路径逐样本比对、多声道导出、误差传播报告、CLI 和 PySide6 桌面工作台。
 
-业务要求：
-1. 实现多通道采集会话加载与校验：读取本地确定性样本清单与各通道裸采样数据，含标称采样率、通道数、时长、对齐标记位置与解析真值指纹；校验各通道采样点数与清单一致、采样率相同、通道标识唯一，字段缺失或点数不符返回 E_SCHEMA 并指出通道与字段名，数据损坏返回 E_DECODE。
-2. 实现时钟漂移模型估计：以参考通道为基准，利用对齐标记的到达样本位置估计每个通道的分数偏移与漂移率，漂移模型须以参数化形式（初相位加线性或分段线性速率）给出并附带估计置信区间；要求估计偏移在给定容差内与解析真值吻合，估计器必须基于可观测标记而非从清单真值直接读取。
-3. 实现分数延迟对齐与漂移补偿重采样：按估计的漂移模型对非参考通道做分数延迟校正与变比重采样，插值阶数与窗长可配置；输出对齐后各通道采样点数须与参考通道严格一致，起止边界不得补零越界或丢样；漂移率或插值参数越界返回 E_PARA 并保持未提交结果不变。
-4. 实现参考时钟校正与多声道导出：把所有通道校正到统一参考时间轴并导出为可配置声道布局的多声道结果，要求任一通道在任一标记处残余偏移不超过声明上界，导出文件声道数与布局映射一致；当某通道估计置信区间过宽时须标记为低置信并在导出报告中列出而不静默采用。
-5. 实现精度误差报告与传播分析：输出每个通道的初始偏移估计误差、漂移率估计误差与各标记处残余偏移误差，并给出随标记序数累积的误差上界估计；上界只能由已观测的标记间距、估计置信区间与插值阶数推导，不得从清单真值反推；实测残余误差超出上界时返回 E_BOUND。
-6. 实现分通道分段状态机与检查点恢复：每个通道按时间分段经历待估计、已校正、已提交、失败四类状态，状态只能沿合法迁移推进，非法迁移返回 E_STATE 并保持原状态；每提交一段把漂移参数、对齐区间、内容哈希、参数版本与算法版本原子且串行写入本地持久化存储，写入不得交错，重启加载时版本不匹配须整体作废快照而非部分混用。
-7. 保证实时采集处理、断点恢复处理与一次性全量重算三条路径输出逐样本一致：三者对同一会话与同一参数须产出逐样本相同的多声道结果、相同的漂移参数与相同的标记残余偏移统计；提供自动比对功能定位首个不一致采样位置、通道标识与所属分段，不一致时返回 E_DIFF。
-8. 实现可视化示例与并发资源边界：桌面示例展示各通道漂移曲线、标记到达位置、对齐前后波形对比与误差热力图，允许调整插值阶数、容差与分段长度并触发重算，调整只影响未提交分段；校正与重采样可在工作线程并行但须限制最大并行度与每线程缓冲上限，共享检查点提交串行化，取消或强制终止后重启只能依据已持久化且版本匹配的分段恢复。
+## 交付内容
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- `src/audio_sync/generator.py`：本地确定性 4 通道样本生成器，输出脉冲/线性扫频标记、漂移真值和真值指纹。
+- `src/audio_sync/manifest.py`：清单、裸采样与真值加载校验。
+- `src/audio_sync/markers.py`：只基于可观测波形和标记模板的匹配滤波/分数峰搜索。
+- `src/audio_sync/drift.py`：初相位 + 分段线性速率的漂移模型、置信区间和观测数据误差上界。
+- `src/audio_sync/resample.py`：可配置阶数与窗宽的 Kaiser 窗化 sinc 分数延迟重采样。
+- `src/audio_sync/state.py`：每通道每分段的四态状态机。
+- `src/audio_sync/checkpoint.py`：WAL SQLite 检查点，事务级原子提交和版本整体失效。
+- `src/audio_sync/engine.py`：实时、恢复、全量重算路径与自动逐样本比对。
+- `src/audio_sync/export.py`：布局校验后的 NPY/WAV 多声道导出及误差报表。
+- `src/audio_sync/gui.py`：漂移曲线、标记残差、前后波形、误差热力图工作台。
+- `tests/`：28 项本地验收测试，不依赖网络和外部服务。
 
-验收：
-用本地样本验证多通道对齐精度、三条路径逐样本一致、误差上界与错误码链路。
+## 快速开始
+
+要求 Python 3.11+。依赖已固定为 `numpy==2.3.4`、`PySide6==6.10.0`。
+
+### Windows 在线安装一次
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements-windows.lock
+```
+
+### Windows 离线安装
+
+在一台可联网且使用 CPython 3.11 的 Windows 机器上先准备 wheelhouse：
+
+```powershell
+.\scripts\fetch_wheels.ps1
+```
+
+把项目目录连同 `wheelhouse/` 复制到目标机器，然后：
+
+```powershell
+.\scripts\install_offline.ps1
+```
+
+安装过程使用 `pip --no-index --find-links wheelhouse`，不会访问网络。`requirements-windows.lock` 固定了 PySide6 的完整传递依赖。
+
+### 生成、验收并打开示例
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m audio_sync generate --out artifacts/demo_session
+python -m audio_sync validate --session artifacts/demo_session
+python -m audio_sync verify --session artifacts/demo_session --out artifacts/runs/verified
+python -m audio_sync gui --session artifacts/demo_session
+```
+
+也可直接运行 `.\scripts\run_demo.ps1`。Linux/WSL 使用：
+
+```bash
+PYTHONPATH=src python -m audio_sync generate --suite --out artifacts/demo_suite
+PYTHONPATH=src python -m unittest discover -s tests -v
+PYTHONPATH=src python -m audio_sync gui --session artifacts/demo_session
+```
+
+## 样本与会话格式
+
+每个会话目录包含：
+
+```text
+manifest.json
+truth.json
+channels/
+  ref.npy
+  capture_a.npy
+  capture_b.npy
+  capture_c.npy
+```
+
+- `manifest.json` 记录会话、标称采样率、通道清单、采样点数、每个通道的 SHA-256、标记位置/类型/模板、布局映射，以及 `truth.json` 的 SHA-256 指纹。
+- `truth.json` 是解析真值：每个通道的初相位、分段线性速率、逐标记到达样本/偏移/累计漂移。它只用于验收与报告，不参与模型估计。
+- 裸采样为单声道 `float32 .npy`。参考通道长度等于 `session_samples`；采集通道带前后 guard，并通过 `guard_before`/`guard_after` 显式记录，避免对齐边界补零或丢样。
+- 标记交替使用高斯包络单频脉冲和 Hann 窗线性扫频。样本由连续时间多音背景与连续标记模板在存在非恒定漂移的采样时刻确定性生成。
+
+样本生成器用固定 seed 得到逐字节一致的文件。`generate --suite` 产出三组不同 seed 和时长的会话。
+
+## 核心算法
+
+### 1. 观测式标记检测
+
+估计器只读取：
+
+- 采集通道裸采样；
+- 清单中标记的标称位置和连续时间模板；
+- 已观测的标记间距和搜索范围。
+
+对每一类标记，用连续模板在整数粗搜索、`1/64` 样本细搜索、`1/1024` 样本超细搜索三层归一化相关，取最大峰得到分数到达偏移。真值文件在检测和模型拟合阶段完全不可见。
+
+### 2. 漂移模型
+
+模型参数向量为：
+
+```text
+[initial_offset_samples, rate_0, rate_1, ..., rate_(P-1)]
+```
+
+延迟曲线连续：
+
+```text
+d(t) = d0 + sum_k rate_k * clip(t - knot_k, 0, knot_(k+1) - knot_k)
+```
+
+`rate_k` 是每个分段内的恒定斜率，最后按 ppm 输出。模型由观测标记偏移做最小二乘拟合，协方差：
+
+```text
+Cov = sigma_fit^2 * pinv(X^T X)
+sigma_fit = max(declared_marker_uncertainty, fit_rmse)
+```
+
+初始偏移、速率及任意标记时刻预测值均输出 95% 置信半宽。标记不足、矩阵秩不足或参数越界分别进入 `E_BOUND` / `E_PARA`。
+
+### 3. 分数延迟与重采样
+
+对齐映射为：
+
+```text
+aligned[n] = channel[n + d(n)]
+```
+
+插值核为 Kaiser 窗化 sinc：
+
+- `interpolation_order` 控制默认阶数；
+- `window_half_width` 可独立覆盖窗半宽；
+- 所有核权重在固定 tap 顺序上求和，保证分块、分段、线程调度不改变浮点归约顺序；
+- 每个输出样本先验证完整插值支撑位于原始通道内，绝不零填充或外推；
+- 每线程按 `max_buffer_bytes` 计算分块大小，缓冲上限在重采样层强制生效。
+
+若漂移率、绝对偏移、插值参数或边界支撑越界，返回 `E_PARA`；已提交分段不变，当前分段不进入 `COMMITTED`。
+
+### 4. 误差上界与传播
+
+每个标记 `j` 的声明上界只使用已观测数据推导：
+
+```text
+B_j = prediction_CI95_j
+    + 0.5 * max(rate_CI95) * nearest_marker_spacing_j
+    + interpolation_bound(f_marker, fs, order)
+    + score_term(observed_correlation_score)
+    + detection_floor
+    + declared_margin
+```
+
+其中插值项为：
+
+```text
+(2*pi*f_marker/fs)^(order+1) / (order+1)!
+```
+
+`cumulative_error_bounds_samples` 是上界随标记序数的保守累计包络。对齐后再次从输出波形检测标记残余偏移；只要任一 `abs(residual_j) > B_j` 即返回 `E_BOUND`，错误中包含通道、标记和参考样本位置。
+
+真值误差（初偏移误差、速率误差、逐标记估计误差）仅作为验收观测写入报告，绝不参与上界计算。
+
+### 5. 参考时钟校正与低置信
+
+所有通道输出映射到参考通道的同一时间轴，长度严格等于参考通道。若初始偏移、标记预测或速率 95% 置信区间超过阈值，通道会：
+
+- 在结果中标为 `low_confidence` 并记录原因；
+- 在导出 sidecar 和 `error_report.json` 的 `low_confidence_channels` 中显式列出；
+- 不静默丢弃、不静默降级。
+
+## 三条一致路径
+
+- `full`：一次全量重算，不读取也不写检查点。
+- `realtime`：按分段顺序推进，每段内各通道并行校正，整段一次事务提交。
+- `resume`：重启后只恢复内容哈希和版本均匹配的 `COMMITTED` 分段，缺失段重新计算。
+
+三条路径调用同一模型估计和同一重采样核。`compare_results` 对输出数组做逐样本二进制比较，然后比较漂移参数和残余统计。首个差异返回 `E_DIFF`，并给通道、样本位置和所属分段：
+
+```json
+{
+  "code": "E_DIFF",
+  "channel": "capture_a",
+  "sample": 1234,
+  "segment": 0
+}
+```
+
+## 状态机与检查点
+
+每个 `(channel, segment)` 独立状态：
+
+```text
+PENDING -> CORRECTED -> COMMITTED
+    |          |
+    +---------> FAILED -> PENDING (retry)
+```
+
+非法迁移返回 `E_STATE`，状态保持不变。`COMMITTED` 为终态。
+
+每次提交写入：
+
+- 漂移参数与对齐区间；
+- 原始内容切片哈希；
+- 参数版本与算法版本；
+- 对齐输出数组及其 SHA-256。
+
+SQLite 使用 `journal_mode=WAL`、`synchronous=FULL`、`BEGIN IMMEDIATE`，进程内再加 `RLock`，因此共享提交严格串行且不会交错。快照的 schema、算法版本或 session 不匹配时，启动加载会一次性清空全部段，不会部分混用。参数版本按段记录：桌面端调整插值阶数、容差或窗宽时，已有 `COMMITTED` 段保留，只重算未提交段。分段长度变化会定义一组全新的时间边界，旧提交的范围不再匹配，因而不被复用，也不会跨边界混用；`full` 路径始终用于彻底重算。
+
+取消会在安全分段边界生效。事务提交前后的强制终止分别只会留下“全新未提交”或“完整已提交”的分段。
+
+## 导出
+
+```python
+export_alignment(
+    result,
+    "artifacts/runs/demo/export",
+    formats=("npy", "wav"),
+    layout_name="quad",
+    channels=("ref", "capture_a", "capture_b", "capture_c"),
+    speakers=("FL", "FR", "SL", "SR"),
+)
+```
+
+输出：
+
+- `aligned_multichannel.npy`：形状 `(samples, channels)`，默认 `float32`；
+- `aligned_multichannel.wav`：32-bit PCM，声道数和采样率写入文件头；
+- `aligned_multichannel.layout.json`：slot → channel → speaker 完整映射；
+- `error_report.json`：分析、置信区间、误差上界、低置信通道和文件哈希。
+
+布局必须是全部通道的排列，否则返回 `E_PARA`。
+
+## 错误码
+
+| 错误码 | 含义 |
+|---|---|
+| `E_SCHEMA` | 字段缺失、类型错误、采样点数/采样率/通道唯一性不一致；含通道与字段 |
+| `E_DECODE` | JSON/NPY/真值指纹/通道内容哈希/检查点 BLOB 损坏 |
+| `E_PARA` | 插值阶数、窗宽、漂移率、偏移、缓冲、布局或分段参数越界 |
+| `E_STATE` | 非法状态迁移 |
+| `E_BOUND` | 观测误差上界被突破，或估计偏移超过验收容差 |
+| `E_DIFF` | 路径比对出现首个样本/参数/残余统计差异 |
+
+## 桌面工作台
+
+`python -m audio_sync gui --session artifacts/demo_session` 提供：
+
+- 每条采集通道的估计漂移曲线（实线）和解析真值曲线（虚线）；
+- 标记序数上的残余偏移、上界包络与零点；
+- 标记附近对齐前/后的波形叠加；
+- 通道 × 标记的 `|residual| / bound` 热力图；
+- 插值阶数、窗半宽、分段长度、容差、最大并行度和每线程缓冲调整；
+- `full` / `realtime` / `resume` 路径选择、取消、重算和导出。
+
+工作线程使用 `QThread`；数值通道并行由 `ThreadPoolExecutor` 控制，最大并行度不超过 `max_workers`，每线程插值缓冲不超过 `max_buffer_bytes`。
+
+![Desktop workbench](artifacts/gui_preview.png)
+
+## 实测验收
+
+当前环境：Python 3.14.4 / WSL2，NumPy 2.3.4，PySide6 6.10.0。
+
+默认样本 `artifacts/demo_session`（48 kHz、4 通道、8 s、384000 样本、14 个标记）：
+
+| 指标 | capture_a | capture_b | capture_c |
+|---|---:|---:|---:|
+| 初偏移估计误差（样本） | -0.006389 | -0.007562 | -0.006308 |
+| 最大速率估计误差（ppm） | 0.519 | 0.493 | 0.494 |
+| 最大标记残余（样本） | 0.020508 | 0.020508 | 0.021484 |
+| 最大观测上界（样本） | 0.115102 | 0.115102 | 0.115102 |
+| 低置信 | 否 | 否 | 否 |
+
+三条路径结果：
+
+- 4 通道 × 384000 样本逐样本完全一致；
+- 漂移参数逐位一致；
+- 逐标记残余统计逐位一致；
+- 恢复路径复用 12 个已提交通道段，并重算剩余 12 个通道段；
+- `aligned_multichannel.npy` 为 `(384000, 4)` float32，WAV 为 4 声道 / 48000 Hz / 32-bit PCM。
+
+测试命令：
+
+```bash
+PYTHONPATH=src python -m unittest discover -s tests -v
+```
+
+结果：`Ran 28 tests ... OK`。其中包含错误码链路、真值指纹、样本损坏、状态迁移、文件版本失效、参数调整保留已提交段、误差上界突破、首个差异定位、大窗宽 guard 边界、真值污染不影响估计/上界、三路径逐样本一致以及 PySide6 离屏渲染。
+
+`artifacts/runs/verified-s1`、`verified-s2`、`verified-s3` 保留了三组生成会话的实际验证报告。其中 `session_02` 的末段只有一个可见标记，速率 CI 会自动变宽并触发低置信标记，展示“不静默采用”的导出行为。
+
+## 已知边界
+
+- 真值文件是任务验收资产；生产采集可替换为外部测量报告，但核心估计器仍只使用样本和清单模板。
+- 采集通道必须提供足够 guard，使完整插值支撑落在文件内；组件宁可返回 `E_PARA`，也不会越界补零。
+- 标记越稀、分段越短，速率可辨识性越差；协方差和低置信标记会反映该限制。
+- 参考通道本身定义为时钟基准，因此参考通道延迟模型恒为零。

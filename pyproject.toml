@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "interactive-audio-sync"
+version = "1.0.0"
+description = "Deterministic multichannel acquisition alignment and clock synchronization component"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy==2.3.4",
+    "PySide6==6.10.0",
+]
+
+[project.scripts]
+audio-sync = "audio_sync.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
