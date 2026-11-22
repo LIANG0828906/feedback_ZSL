@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audio-repair-studio"
+version = "0.1.0"
+description = "Deterministic segment-based speech and music spectral restoration desktop tool"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "numpy==2.5.5",
+    "scipy==1.18.1",
+    "PySide6==6.12.0",
+]
+
+[project.scripts]
+audio-repair = "audio_repair.cli:main"
+audio-repair-ui = "audio_repair.app:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
