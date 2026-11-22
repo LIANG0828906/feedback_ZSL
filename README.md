@@ -1,22 +1,261 @@
-当前是空白工作区，需要从零构建一套面向游戏贴图与互动媒体素材的图像压缩质量评估桌面工作台。本地确定性样本生成器按固定种子产出多张测试图像：分辨率从数百像素到数千像素变化，单通道与三通道并存，内容包括平滑渐变、高频纹理与嵌有已知几何图元（圆形与矩形边界）的区域，并附带解析真值（图元边界坐标、原始无压缩基准像素），用于质量评估误差观测。工作台需实现一条可配置的有损压缩链路与质量评估链路：压缩侧包含分块正交变换、量化、反量化与逆变换的重建链路，解码后与原图逐像素比对；评估侧计算峰值信噪比、结构相似度与基于图元边界的边缘保真度，并输出逐块误差热力图。业务方核心关注数值精度与误差传播：量化步长、变换分块尺寸与评估窗口会逐级放大误差，需要可观测、可回溯、可复核。压缩与评估按图像分块推进，支持暂停、退出、重启后从已提交分块继续，并保证实时处理、断点恢复与一次性全量重算三条路径结果一致。
+# IMQ Workbench
 
-任务环境与准备：
-准备 Windows 本地工作区，安装 Python 3.11 与 pip，不引入容器环境。
-安装 NumPy 与 PySide6，版本以本地可离线安装的稳定版为准；界面不可用时允许命令行入口。
-运行本地确定性样本生成器产出测试图像、解析真值与清单文件，写入工作目录，不依赖网络与外部数据。
-确认工作目录可读写以持久化分块检查点与质量报告，并在运行说明中给出启动与重试方式。
+面向游戏贴图与互动媒体素材的本地图像压缩质量评估工作台。项目包含确定性样本生成、分块正交变换压缩、量化误差观测、SSIM/PSNR/图元边缘保真度评估、SQLite 断点检查点、三路径一致性比对、命令行入口和 PySide6 桌面界面。
 
-业务要求：
-1. 实现压缩与评估双链路的完整管线：压缩侧按可配置分块尺寸对每块做正交变换、按量化步长做量化与反量化、再逆变换得到重建图像；评估侧在原图与重建图像上计算峰值信噪比、结构相似度与边缘保真度并输出逐块误差热力图；要求重建图像尺寸、通道数与输入严格一致，分块尺寸或量化步长越界返回 E_PARA 并指出字段名。
-2. 实现量化误差传播模型并使其可观测：逐块记录变换系数量化前后的误差与重建块误差，沿空间邻接关系报告误差如何从量化步长经逆变换扩散到像素域；要求量化步长增大时重建均方误差与峰值信噪比的劣化方向单调可测，边块不得因补齐而多算或漏算误差。
-3. 实现分块状态机：图像被切分为固定尺寸分块，每块经历待处理、处理中、已提交、失败四类状态，只能沿合法迁移推进；进度以已提交分块数与总块数表示，非法迁移返回 E_STATE 并保持原状态；已提交分块的压缩参数与评估结果被冻结，后续调整参数只能作用于未提交分块。
-4. 实现可暂停可退出可重启续跑的检查点机制：每提交一块把该块变换系数量化结果、重建像素、误差统计、输入内容哈希与算法版本原子且串行写入本地持久化存储，写入不得交错；重启加载时若内容哈希或算法版本不匹配则整体快照作废并全量重算，禁止部分混用旧分块。
-5. 保证实时处理、断点恢复处理与一次性全量重算三条路径输出逐像素与逐指标一致：三者对同一图像、同一分块尺寸与同一量化步长须产出相同的重建像素、相同的质量指标与相同的分块提交序列；提供自动比对功能定位首个不一致像素坐标、所属分块编号与差异阶段，不一致时返回 E_DIFF。
-6. 实现评估窗口与分块边界的精度一致性约束：结构相似度与边缘保真度在分块边界处须使用重叠边带并按确定性规则合并，保证分块并行评估结果与整图单次评估结果在给定容差内吻合；重叠宽度须随评估窗口尺寸联动，窗口过大导致边带不足时返回 E_BAND；边缘保真度须与解析图元边界真值对齐比对。
-7. 实现异常链路与强制终止边界：图像损坏或不可解码返回 E_DECODE，单块内部异常须将该块置为失败并允许重试且不污染其他块与已提交结果；用户取消或进程被强制终止后重启只能依据已持久化且版本匹配的分块恢复，不得声称强制终止后仍能生成完整质量报告。
-8. 实现并发与资源边界并交付工作台界面：分块压缩与评估可在工作线程池并行推进，须限制最大并行度与每线程像素缓冲上限，共享检查点写入串行化并保证块序稳定；界面展示原图与重建图对照、逐块误差热力图、质量指标曲线与分块状态矩阵，允许逐块查看状态并触发重试与导出质量报告。
+运行时不访问网络，不依赖容器、Pillow 或外部数据。实际验收环境为 WSL2/Ubuntu 上的 Python 3.11.18；代码同时提供 Windows 批处理启动脚本。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 环境与安装
 
-验收：
-用本地确定性样本验证压缩重建、质量指标、三条路径一致性及异常码，附运行结果。
+已验证版本：
+
+- Python 3.11.18
+- pip 26.3
+- NumPy 2.3.4
+- PySide6 6.9.3
+
+Windows 首次准备：
+
+```bat
+setup_windows.bat
+```
+
+脚本会执行：
+
+```bat
+py -3.11 -m venv .venv
+call .venv\Scripts\activate.bat
+python -m pip install -r requirements.txt
+python -m imq_workbench generate --output-dir artifacts\samples --preset full
+python -m imq_workbench check
+```
+
+若需完全离线安装，在一台可联网机器上预取 wheel：
+
+```bat
+py -3.11 -m pip download -r requirements.txt -d wheelhouse
+```
+
+将 `wheelhouse` 随工作区复制到离线 Windows 机器后，`setup_windows.bat` 会自动使用：
+
+```bat
+python -m pip install --no-index --find-links wheelhouse -r requirements.txt
+```
+
+手动安装方式：
+
+```bat
+py -3.11 -m venv .venv
+.venv\Scripts\activate
+python -m pip install -r requirements.txt
+```
+
+## 启动与重试
+
+桌面工作台：
+
+```bat
+run_workbench.bat
+```
+
+等价命令：
+
+```bat
+.venv\Scripts\python -m imq_workbench app --samples-dir artifacts\samples
+```
+
+命令行首次运行：
+
+```bat
+.venv\Scripts\python -m imq_workbench run ^
+  --samples-dir artifacts\samples ^
+  --sample mixed_rgb_2048 ^
+  --block-size 32 --quant-step 8 --eval-window 7 --workers 4 ^
+  --mode realtime --checkpoint artifacts\state\checkpoints.sqlite
+```
+
+暂停或退出后从已提交块续跑：
+
+```bat
+.venv\Scripts\python -m imq_workbench run ^
+  --samples-dir artifacts\samples ^
+  --sample mixed_rgb_2048 ^
+  --block-size 32 --quant-step 8 --eval-window 7 --workers 4 ^
+  --mode resume --checkpoint artifacts\state\checkpoints.sqlite
+```
+
+忽略旧检查点并一次性全量重算：
+
+```bat
+.venv\Scripts\python -m imq_workbench run ^
+  --samples-dir artifacts\samples ^
+  --sample mixed_rgb_2048 ^
+  --block-size 32 --quant-step 8 --eval-window 7 --workers 4 ^
+  --mode recompute --checkpoint artifacts\state\checkpoints.sqlite
+```
+
+合作式暂停验证：
+
+```bat
+python -m imq_workbench run ... --stop-after 40 --mode realtime
+```
+
+`--stop-after` 在达到提交数后请求暂停；当前正在执行的小批块会安全提交，然后退出返回码 `3`，并明确输出 `incomplete snapshot: no complete quality report is claimed`。
+
+强制终止恢复验证钩子：
+
+```bat
+python -m imq_workbench run ... --crash-after 20 --no-report
+```
+
+该参数只用于验收：进程以 `os._exit(137)` 直接终止，SQLite 中只保留完整提交事务。之后用 `--mode resume` 继续即可。
+
+完整验收：
+
+```bat
+verify_workbench.bat
+```
+
+## 功能说明
+
+### 确定性样本
+
+`generate` 使用固定种子生成 4 张完整样本：
+
+| 样本 | 分辨率 | 通道 | 内容 |
+|---|---:|---:|---|
+| `gradient_gray_512` | 512×384 | 1 | 平滑渐变 + 圆形边界 |
+| `texture_rgb_768` | 768×512 | 3 | 高频纹理 + 矩形边界 |
+| `shapes_gray_1280` | 1280×720 | 1 | 混合纹理 + 圆/矩形边界 |
+| `mixed_rgb_2048` | 2048×1152 | 3 | 数千像素级混合媒体 + 4 个解析图元 |
+
+每张样本写入：
+
+- `.png`：可显示测试图。
+- `.baseline.npy`：原始无压缩 uint8 基准像素。
+- `.truth.npz`：`edge_mask` 与每个图元独立的边界坐标数组。
+- `manifest.json`：种子、尺寸、通道数、SHA-256、图元参数、边界像素数与文件索引。
+
+### 压缩链路
+
+1. 将图像按 `block_size` 切分，右下边块只保留真实像素。
+2. 边块用对称填充补齐后执行正交 DCT-II。
+3. 按 `quant_step` 做 `round(coefficient / step)` 量化和反量化。
+4. 逆 DCT、裁剪边块、四舍五入并裁剪到 `[0, 255]`。
+5. 逐块记录量化前后系数误差、重建像素误差、邻接块误差差值与块哈希。
+
+重建结果的尺寸、通道数和 dtype 与输入严格一致。
+
+### 评估链路
+
+- `PSNR/MSE`：在真实像素上逐块累计，不复用补零像素。
+- `SSIM`：窗口大小可配置的确定性均匀窗口 SSIM；块边界使用 `overlap_band=(window-1)//2` 的重叠边带，按块独占区域合并。
+- 边缘保真度：在中心差分梯度域比较原图与重建图，并只在解析真值 `edge_mask` 像素上汇总。
+- 误差热力图：逐块、逐像素通道平均平方误差，导出 `.npy` 与彩色 `.png`。
+
+分块合并与整图单次计算的 MSE、PSNR、SSIM、边缘保真度在实测中差异小于 `1e-14`。
+
+### 三路径一致性
+
+- `realtime`：清空目标快照后从头处理。
+- `resume`：加载内容哈希和算法版本均匹配的已提交块，只处理未提交块。
+- `recompute`：忽略已提交块，清空后全量重算。
+
+三条路径使用相同的块编号、相同的块内运算与相同提交顺序。`compare_pipeline_results` 会逐像素、逐地图、逐指标和逐提交序比较；不一致返回 `E_DIFF`，并给出首个不一致像素、块号和差异阶段。
+
+### 检查点与状态
+
+状态机只允许：
+
+```text
+pending -> processing -> committed
+pending -> processing -> failed
+failed  -> processing
+```
+
+非法迁移返回 `E_STATE` 且保持原状态。已提交块参数冻结；续跑时修改 `quant_step` 或评估窗口只影响未提交块。`block_size` 决定分块划分，若同一图像已有其他分块尺寸的已提交快照，`resume` 会返回 `E_PARA(field=block_size)`；需要明确改用 `recompute` 建立新划分。
+
+SQLite 检查点位于 `artifacts/state/`：
+
+- 每块一个 `BEGIN IMMEDIATE ... COMMIT` 事务。
+- 每块保存量化系数、重建像素、评估切片、统计 JSON、输入块哈希、参数和 payload SHA-256。
+- 进程内用 `RLock` 和单连接串行化写入。
+- 启动时若整图内容哈希、算法版本、形状、网格、块输入哈希或任一 payload 校验失败，则删除该快照全部块并全量重算。
+- 强制终止后只恢复已提交事务；未完成快照不生成最终质量报告。
+
+### 并发与资源
+
+- 工作线程池上限 8。
+- `max_buffer_pixels` 校验每线程单块工作集，默认 8,000,000 像素。
+- 线程安全重建缓存复用邻域重建，避免每块 3×3 邻域重复 DCT。
+- `executor.map` 保持块序；检查点写入按块号稳定串行提交。
+
+## 参数范围
+
+| 参数 | 范围 |
+|---|---|
+| `block_size` | `4, 8, 16, 32, 64` |
+| `quant_step` | `0.1 .. 512.0` |
+| `evaluation_window` | 奇数 `3 .. 63` |
+| `max_workers` | `1 .. 8` |
+| 重叠边带 | `(evaluation_window - 1) // 2` |
+| 边带约束 | 重叠边带不得大于 `block_size`，否则 `E_BAND` |
+
+## 错误码
+
+| 错误码 | 含义 | 关键字段 |
+|---|---|---|
+| `E_PARA` | 参数越界或类型错误 | `details.field` |
+| `E_STATE` | 非法块状态迁移、冻结块重试、未完成报告导出 | `block_index`, `from`, `to`, `state` |
+| `E_DIFF` | 三路径或自动比对不一致 | `stage`, `first_pixel`, `block_index` |
+| `E_BAND` | 评估窗口需要的边带超过块可提供范围 | `required_band`, `max_band` |
+| `E_DECODE` | 图像/真值损坏或不可解码 | `path`, `reason` |
+| `E_BLOCK` | 单块内部异常，已隔离为该块失败 | `block_index` |
+| `E_IO` | 工作区或检查点写入失败 | `path`, `reason` |
+
+CLI 发生可恢复业务错误时返回码为 `2`；合作式暂停未完成返回 `3`；成功返回 `0`。
+
+## 桌面界面
+
+界面提供：
+
+- 原图与重建图并排对照。
+- 逐块误差热力图。
+- 累计 PSNR、SSIM、边缘保真度曲线。
+- 可点击的四色块状态矩阵。
+- 单块几何、量化步长、系数误差、像素误差与边缘指标详情。
+- Start、Pause、Resume、Recompute、Retry selected、Export report。
+
+若 GUI 不可用，全部功能可通过 CLI 完成。
+
+## 测试与实测结果
+
+自动化测试：
+
+```bat
+.venv\Scripts\python -m unittest discover -v
+```
+
+验收矩阵：
+
+```bat
+.venv\Scripts\python -m imq_workbench verify
+```
+
+详细实测记录见 `VERIFICATION.md`，原始机器可读结果位于：
+
+- `artifacts/verification_cli.json`
+- `artifacts/large_run.json`
+- `artifacts/large_resume.json`
+- `artifacts/unittest.log`
+- `artifacts/check.json`
+- `artifacts/runs/verification/quality_report.json`
+- `artifacts/runs/large_2048/quality_report.json`
+- `artifacts/runs/large_2048_resume/quality_report.json`
+
+## 测试样例失败排查
+
+- 若提示 `no samples found`，先运行 `python -m imq_workbench generate --output-dir artifacts/samples --preset full`。
+- 若 `resume` 提示 `checkpoint_invalidated_reason`，表示内容、版本或块 payload 已变化；本次会从零全量重算，不会混用旧块。
+- 若 `E_BAND`，增大 `block_size` 或减小 `evaluation_window`。
+- 若 GUI 插件不可用，使用任何 CLI 命令；界面不可用不影响压缩、评估、检查点和报告。
+- 若工作区不可写，执行 `python -m imq_workbench check` 查看具体目录。
