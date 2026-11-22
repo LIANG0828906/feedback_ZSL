@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "glyph-workbench"
+version = "0.1.0"
+description = "Deterministic glyph outline editor and anti-aliased rasterization workbench"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "numpy==2.4.6",
+  "PySide6==6.12.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest==9.2.0"]
+
+[project.scripts]
+glyph-workbench = "glyph_workbench.cli:main"
+glyph-samples = "glyph_workbench.samplegen:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["glyph_workbench"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
