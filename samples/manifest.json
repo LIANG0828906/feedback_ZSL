@@ -1,0 +1,49 @@
+{
+  "generator_version": "edgeforge.samples.v1",
+  "master_seed": 20261123,
+  "rng_algorithm": "numpy.default_rng(PCG64)",
+  "samples": [
+    {
+      "channels": 1,
+      "height": 240,
+      "image_sha256": "28662c518da0b0570e73395f3e6a7bb3f5316b3c8128a955f4393a427d898272",
+      "path": "low_contrast_gray_320x240",
+      "sample_id": "low_contrast_gray_320x240",
+      "scenario": "低对比度单通道纹理",
+      "truth_mask_sha256": "da14a56fcf9160139313143bcbd7a377a62add80630259ffa960e32579dd989b",
+      "width": 320
+    },
+    {
+      "channels": 1,
+      "height": 1000,
+      "image_sha256": "6cc83f18d4ef483e0748bae4fa6869f0db614d022cd7eb67836d54143202fd13",
+      "path": "mixed_gray_1600x1000",
+      "sample_id": "mixed_gray_1600x1000",
+      "scenario": "中高分辨率单通道混合纹理",
+      "truth_mask_sha256": "b7008a31eaba0ea898ab574b19aea70efb8c50f37be9307fb9410b256cf26e8e",
+      "width": 1600
+    },
+    {
+      "channels": 3,
+      "height": 600,
+      "image_sha256": "fb322aacb736a2025c18f2f67108a80e65a127dde52284397040e7377dcb5cbe",
+      "path": "noisy_rgb_800x600",
+      "sample_id": "noisy_rgb_800x600",
+      "scenario": "高噪声三通道素材",
+      "truth_mask_sha256": "80c2dac9bcd1f4d81924de92c818547bd3540a87e7f6786611c671091d36ccea",
+      "width": 800
+    },
+    {
+      "channels": 3,
+      "height": 1152,
+      "image_sha256": "42aa1e1c6f1b05a7ab858cc36603fd92f9791aa2463a2df6c90543842b2ba414",
+      "path": "panorama_rgb_2048x1152",
+      "sample_id": "panorama_rgb_2048x1152",
+      "scenario": "宽幅三通道游戏场景素材",
+      "truth_mask_sha256": "a451f9eb60252a09978b1bb02ce18eb8a83b8e314a4991cf98028b49e4625d59",
+      "width": 2048
+    }
+  ],
+  "schema_version": 1,
+  "seed_policy": "每个样本使用写死的独立种子，生成顺序不影响内容"
+}
