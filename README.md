@@ -1,23 +1,161 @@
-在一个空白工作区从零构建一套面向虚拟制片（virtual production）实时合成场景的桌面数据处理管线与结果验证工具。工作区内无任何现存项目、代码或素材附件，全部输入由本地确定性样本生成器按固定种子产出：若干场景层的描述（含背景板、前景道具、角色层），每个层分属至少三个版本的前景合成格式描述——版本差异体现在字段命名、层可见性与层级关系表达方式、alpha 预乘约定、色彩与时间基准单位上；另有一组逐帧合成指令与解析真值（每帧若干采样像素的期望合成结果、各层可见性终点、以及每个版本对应的字段映射真值表）。管线需把多版本层描述统一加载为内部合成模型，按时间轴逐帧执行层排序、alpha 合成与色彩空间线性化，输出合成帧与逐帧统计，并把结果按目标版本导出；当用户调整某层参数时只重算受影响帧窗口，而停止交互后执行的精确合成必须与增量结果逐像素一致。
+# VP Composite Pipeline
 
-任务环境与准备：
-确认 Windows 环境可使用 Python 3.11 及以上版本，并创建独立虚拟环境。
-安装依赖：pip install numpy 与 pip install PySide6，版本以本地 wheel 可用为准。
-准备本地确定性样本生成脚本，按固定种子产出三个版本的层描述、逐帧合成指令与解析真值清单，放在工作区 samples 目录。
-准备本地测试服务与持久化目录约定，确保检查点写入路径可写且测试结束后可清理。
-准备逐像素比对与错误码断言的本地测试脚本入口，不依赖网络与真实素材。
+面向虚拟制片实时合成场景的本地桌面数据处理与验证工具。管线把
+`vpfc/1`、`vpfc/2`、`vpfc/3` 三种前景合成格式统一为内部线性光模型，按固定
+帧窗口执行 alpha 合成、增量失效、持久化检查点、跨版本导出，并提供
+PySide6 操作界面。所有样本由固定种子本地生成，不依赖网络素材。
 
-业务要求：
-1. 实现多版本前景合成格式的统一加载器：读取本地确定性生成的至少三个版本的层描述文件，各版本在字段命名、层可见性表达、层级关系、alpha 预乘约定与时间基准单位上互不相同；加载后映射为内部合成模型并保留源版本标识，未知版本号、必填字段缺失或 alpha 约定无法判定时返回 E_VER 或 E_SCHEMA 并指出字段路径，不得以默认值静默补齐无法判定的语义。
-2. 实现逐帧合成核心：按内部模型的有序层栈执行 alpha 合成与色彩空间线性化，支持预乘与非预乘两类输入的确定性换算，输出帧的尺寸、通道数与帧时间基准严格由内部模型推导且与原素材声明一致；参数越界返回 E_PARA 并指出字段名，同一输入与参数重复合成须产出逐像素相同的帧，不得因执行顺序或线程标识改变结果。
-3. 实现帧窗口状态机：合成按固定帧窗口推进，每窗口经历待合成、合成中、已提交、失败四类状态且只能沿合法迁移推进；进度以已提交窗口数与总窗口数表示，已提交窗口锁定其层参数快照与源版本快照，非法迁移返回 E_STATE 并保持原状态，后续未提交编辑不得改写已提交窗口的合成结果。
-4. 实现增量重算与依赖失效：层参数、层可见性或时间基准调整时，仅标记受影响帧窗口及其下游导出阶段失效，未失效窗口必须复用持久化缓存并输出含窗口编号、失效层标识与失效原因的清单；要求增量路径与从空缓存全量重算的合成帧逐像素一致，并提供自动比对定位首个不一致像素坐标、所属窗口与层标识，不一致时返回 E_DIFF。
-5. 实现跨版本导出与降级报告：把内部模型与合成帧导出为任一受支持的目标版本，对低版本无法表达的层属性（如预乘约定或层级表达）生成 E_LOSSY 警告清单并记录降级映射痕迹；导出产物须能被对应版本加载器重新读回，同一内部模型重复导出按声明规范化规则逐字节一致，且降级不得改变层栈顺序与帧时间基准。
-6. 实现持久化检查点与断点恢复：每提交一个帧窗口把该窗口合成帧摘要、层参数快照、内容哈希、源格式版本与算法版本原子且串行写入本地持久化存储，写入不得交错；重启加载时若内容哈希、源版本或算法版本任一不匹配则整体快照作废并全量重算，禁止部分混用旧窗口缓存；强制终止后重启只能依据已持久化的版本匹配窗口恢复。
-7. 实现可交互的专业应用界面：展示层栈与源版本标识、帧窗口状态矩阵、合成结果与逐帧统计、差异热力图，允许调整层参数、可见性与目标导出格式并触发增量重算，支持逐窗口查看与导出；界面须标注哪些窗口已失效与哪些被复用，已提交窗口结果不得被静默改写。
-8. 实现异常链路与并发资源边界：样本损坏返回 E_DECODE，单窗口内部异常须将该窗口置为失败并允许重试且不污染其他窗口；合成可在工作线程池并行推进，须限制最大并行度与每线程帧缓冲上限，共享检查点写入串行化并保持窗口顺序稳定，并行运行与单线程串行对同一编辑序列须产出逐像素一致的最终帧与相同窗口提交序列。
+## 已实现能力
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 三版本层描述统一加载：字段命名、可见性表达、层级、alpha 约定、色彩与
+  时间单位均不同。
+- 线性光逐帧合成：预乘/非预乘输入确定性换算，RGBA8 输出，帧尺寸、通道数、
+  帧率严格来自内部模型。
+- 四态窗口状态机：`pending → computing → committed/failed`，显式失效才允许
+  回退到 `pending`，非法迁移返回 `E_STATE` 且状态不变。
+- 精确增量重算：只失效层参数真正影响的窗口；未失效窗口复用已持久化结果。
+- 像素级验证：增量/全量与串行/并行结果自动比对，首个差异定位到帧、窗口、
+  像素坐标和覆盖层；失败返回 `E_DIFF`。
+- 原子检查点：逐窗口串行写入，内容/源版本/算法版本任一不匹配时整体作废，
+  支持部分已持久化窗口恢复。
+- 跨版本导出：3×3 回读互操作、规范化字节稳定、`E_LOSSY` 降级警告与痕迹。
+- 桌面界面：源版本、层栈、窗口状态矩阵、帧预览、统计、热力图、参数编辑、
+  时间基准调整、增量/全量重算和逐窗口导出。
+- 故障隔离与资源边界：单窗口失败可重试，最大并行度 8，每线程工作帧缓冲
+  上限 4，检查点写入串行化。
 
-验收：
-使用本地确定性多样本验证多版本加载、增量与全量合成逐像素一致、导出互操作及断点恢复。
+详细设计见 `docs/TECHNICAL.md`，实测结果见 `docs/TEST_REPORT.md`。
+
+## 目录
+
+```text
+vp_pipeline/          核心库、CLI、PySide6 UI
+scripts/              确定性样本生成器、一键验收入口
+samples/              三版本场景、逐帧指令、解析/像素真值
+tests/                unittest 验收套件（含 offscreen UI）
+docs/                 技术说明与测试报告
+requirements.txt      运行依赖
+pyproject.toml        包元数据与 CLI 入口
+```
+
+## Windows 安装
+
+要求 Windows Python 3.11 或更高版本，PowerShell 中执行：
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m vp_pipeline.cli verify --samples samples
+```
+
+如果 PowerShell 阻止激活脚本，可直接使用
+`.\.venv\Scripts\python.exe`，无需执行 `Activate.ps1`。若 3.11 不存在，
+将 `py -3.11` 换成已安装的 3.11+ 版本选择器。
+
+本机 WSL2 实测环境为 Python 3.14.4、NumPy 2.5.5、PySide6 6.12.0。容器无法
+调用 Windows 宿主，因此 Windows 实机执行未在本会话中完成；代码路径使用
+跨平台原子替换和 `msvcrt`/`fcntl` 双分支锁。
+
+## 快速开始
+
+重新生成固定种子样本：
+
+```bash
+python scripts/generate_samples.py --seed 20261123 --output samples
+```
+
+检查单版本加载：
+
+```bash
+python -m vp_pipeline.cli inspect --source-version 3 --samples samples
+```
+
+运行窗口合成并与全量结果比对：
+
+```bash
+python -m vp_pipeline.cli run \
+  --source-version 3 \
+  --samples samples \
+  --checkpoints artifacts/checkpoints \
+  --workers 2
+```
+
+导出并回读验证：
+
+```bash
+python -m vp_pipeline.cli export \
+  --source-version 3 \
+  --target vpfc/1 \
+  --samples samples \
+  --output artifacts/exports/v3_to_v1
+```
+
+一键执行全部单测和端到端验证：
+
+```bash
+python scripts/run_acceptance.py
+```
+
+或分别执行：
+
+```bash
+python -m unittest discover -s tests -v
+python -m vp_pipeline.cli verify --samples samples
+```
+
+启动桌面界面：
+
+```bash
+python -m vp_pipeline.cli gui \
+  --samples samples \
+  --checkpoints artifacts/checkpoints \
+  --source-version 3
+```
+
+无显示器环境下可冒烟运行：
+
+```bash
+QT_QPA_PLATFORM=offscreen python -m unittest tests.test_ui -v
+```
+
+## 操作界面
+
+- 顶部选择源版本、目标导出格式、并行窗口数和线程数。
+- 左侧展示有序层栈、父层、可见性、源版本；选择层后可改 opacity、alpha、
+  可见性和线性化颜色。
+- 中央显示当前帧和窗口状态矩阵。绿色为已提交、灰色为待合成、橙色为合成中、
+  红色为失败；按钮文字标注“已失效”或“复用缓存”。
+- 右侧显示已提交窗口进度、逐帧统计、失效/复用清单，以及增量重算、全量重算、
+  校验并热力图、场景导出和当前窗口导出按钮。
+- 应用编辑只会标记受影响窗口失效，不会静默改写已提交窗口的旧帧与快照。
+
+## 数据与真值
+
+样本包含 5 个可绘制层、18 帧、每窗口 3 帧：
+
+- `samples/scene_vpfc1.json`
+- `samples/scene_vpfc2.json`
+- `samples/scene_vpfc3.json`
+- `samples/frame_instructions.json`
+- `samples/truth/expected_frames.json`
+- `samples/truth/visibility_endpoints.json`
+- `samples/truth/field_mappings.json`
+
+`expected_frames.json` 由生成器中的独立纯 Python 参考合成器产生，不使用生产
+渲染器，覆盖每帧 6 个采样像素。三个版本渲染结果必须逐字节一致。
+
+## 错误码
+
+`E_VER`、`E_SCHEMA`、`E_PARA`、`E_STATE`、`E_LOSSY`、`E_DIFF`、`E_DECODE`、
+`E_IO`、`E_INTERNAL`。结构化异常通过 `PipelineError.to_dict()` 输出
+`code`、`message`、`field_path` 和上下文细节。
+
+## 边界与约定
+
+- 当前合成器要求 4 通道 RGBA 场景；其他通道数返回 `E_SCHEMA`，不做隐式转换。
+- 预乘输入必须与 alpha 一致；不一致样本返回 `E_SCHEMA`，不静默修复。
+- 重启恢复会逐窗口校验当前模型快照；全部匹配才恢复，任一不匹配则整体作废。
+  因而编辑后只有完成全部失效窗口重算，才允许该编辑模型的完整缓存恢复。
+- 导出目录固定写入 `scene.json`、`frames.bin`、`frames_meta.json`、
+  `export_report.json`，不写入时间戳。
