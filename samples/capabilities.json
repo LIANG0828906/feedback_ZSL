@@ -1,0 +1,43 @@
+{
+  "devices": {
+    "game-pc-01": {
+      "codecs": [
+        "h264-baseline",
+        "h264-high",
+        "hevc-main"
+      ],
+      "max_fps": 60,
+      "max_height": 360,
+      "max_width": 640,
+      "supports_input": true
+    },
+    "workbench-01": {
+      "codecs": [
+        "h264-baseline",
+        "h264-high",
+        "hevc-main"
+      ],
+      "max_fps": 60,
+      "max_height": 1080,
+      "max_width": 1920,
+      "supports_input": true
+    }
+  },
+  "profiles": {
+    "h264-baseline": {
+      "compression_level": 1,
+      "fragment_bytes": 420,
+      "rank": 10
+    },
+    "h264-high": {
+      "compression_level": 3,
+      "fragment_bytes": 640,
+      "rank": 20
+    },
+    "hevc-main": {
+      "compression_level": 6,
+      "fragment_bytes": 860,
+      "rank": 30
+    }
+  }
+}

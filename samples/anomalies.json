@@ -1,0 +1,104 @@
+{
+  "capability": {
+    "capability_change_codecs": [
+      "h264-baseline"
+    ],
+    "capability_change_frame": 16,
+    "capability_change_max_height": 270,
+    "capability_change_max_width": 480,
+    "capability_change_side": "receiver",
+    "description": "第 16 帧收到降级能力，拒绝并保留协商基线",
+    "name": "capability"
+  },
+  "clean": {
+    "description": "无异常，用于基线演示",
+    "name": "clean"
+  },
+  "corrupt": {
+    "corrupt": [
+      {
+        "attempts": 1,
+        "fragments": [
+          0
+        ],
+        "frame_seq": 12
+      }
+    ],
+    "description": "第 12 帧分片校验失败，触发重传并产生损坏诊断",
+    "name": "corrupt"
+  },
+  "loss": {
+    "description": "第 7 帧首传丢片并由重传恢复；第 18 帧持续丢片",
+    "loss": [
+      {
+        "attempts": 1,
+        "fragments": [
+          2
+        ],
+        "frame_seq": 7
+      },
+      {
+        "attempts": null,
+        "fragments": [
+          1
+        ],
+        "frame_seq": 18
+      }
+    ],
+    "name": "loss"
+  },
+  "mixed": {
+    "capability_change_codecs": [
+      "h264-baseline"
+    ],
+    "capability_change_frame": 16,
+    "capability_change_max_height": 270,
+    "capability_change_max_width": 480,
+    "capability_change_side": "receiver",
+    "corrupt": [
+      {
+        "attempts": 1,
+        "fragments": [
+          0
+        ],
+        "frame_seq": 12
+      }
+    ],
+    "description": "组合丢包、乱序、能力变化、损坏与输入重复",
+    "duplicate_inputs": [
+      7
+    ],
+    "loss": [
+      {
+        "attempts": 1,
+        "fragments": [
+          1
+        ],
+        "frame_seq": 6
+      },
+      {
+        "attempts": null,
+        "fragments": [
+          0
+        ],
+        "frame_seq": 20
+      }
+    ],
+    "name": "mixed",
+    "reorder_frames": [
+      9,
+      24
+    ],
+    "session_mismatch_frames": [
+      28
+    ]
+  },
+  "reorder": {
+    "description": "第 9、23 帧分片逆序到达，接收端仍按序号重组",
+    "name": "reorder",
+    "reorder_frames": [
+      9,
+      23
+    ]
+  }
+}

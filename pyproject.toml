@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cast-workbench"
+version = "1.0.0"
+description = "Deterministic multi-screen casting protocol workbench"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+authors = [{ name = "Cast Workbench" }]
+dependencies = [
+    "numpy==2.3.5",
+    "PySide6==6.12.0",
+]
+
+[project.scripts]
+cast-workbench = "scworkbench.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["scworkbench*"]
+
+[tool.setuptools.package-data]
+scworkbench = ["assets/fonts/*"]
