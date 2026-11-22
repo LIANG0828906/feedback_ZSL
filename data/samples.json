@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "seed": 20261123,
+  "truth_manifest": "truth/truth_manifest.json",
+  "scenes": [
+    {
+      "scene_id": "hud_orbit",
+      "scene_file": "scenes/hud_orbit.json",
+      "category": "normal",
+      "expected_error": null,
+      "seed": 20261123
+    },
+    {
+      "scene_id": "badge_combo",
+      "scene_file": "scenes/badge_combo.json",
+      "category": "normal",
+      "expected_error": null,
+      "seed": 20261124
+    },
+    {
+      "scene_id": "media_cards",
+      "scene_file": "scenes/media_cards.json",
+      "category": "normal",
+      "expected_error": null,
+      "seed": 20261125
+    },
+    {
+      "scene_id": "anomaly_self_intersection",
+      "scene_file": "scenes/anomaly_self_intersection.json",
+      "category": "anomaly",
+      "expected_error": "E_SELF",
+      "seed": 20261126
+    },
+    {
+      "scene_id": "anomaly_degenerate",
+      "scene_file": "scenes/anomaly_degenerate.json",
+      "category": "anomaly",
+      "expected_error": "E_DEGEN",
+      "seed": 20261127
+    },
+    {
+      "scene_id": "anomaly_stroke_clip",
+      "scene_file": "scenes/anomaly_stroke_clip.json",
+      "category": "anomaly",
+      "expected_error": "E_CLIP",
+      "seed": 20261128
+    },
+    {
+      "scene_id": "anomaly_stage_failure",
+      "scene_file": "scenes/anomaly_stage_failure.json",
+      "category": "anomaly",
+      "expected_error": "E_STAGE",
+      "seed": 20261129
+    }
+  ]
+}
