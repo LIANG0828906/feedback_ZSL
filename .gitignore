@@ -1,13 +1,15 @@
-.env
-.env.*
-*.pem
-*.key
-*.pfx
-auth.json
-credentials.json
-secrets.json
-.npmrc
-node_modules/
 .venv/
 venv/
 __pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+build/
+dist/
+*.egg-info/
+
+# Runtime outputs are reproducible from scripts/generate_sample.py.
+artifacts/runtime/
+artifacts/sample/
+reports/local_*/
+
