@@ -1,0 +1,565 @@
+{
+  "anomalies": {
+    "bit_depth_change": {
+      "command": "mshdr run --dataset /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/injected/bit_depth_change/dataset.json --scene scene_00_neon_dusk --start-mode none --output /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/anomaly_bit_depth_change",
+      "elapsed_seconds": 0.6056,
+      "payload": {
+        "code": "E_VER",
+        "details": {
+          "calculated_metadata_version": "b8e9b3f3662129c30334007d452e28443075f090ce4582bb9918241d69e41509",
+          "declared_metadata_version": "ee53ab09eb7ebb76167163f6f2fccc3636e3f7885a5054dba516190641ffec92"
+        },
+        "field": "metadata_version",
+        "message": "Metadata content does not match metadata_version; treating the scene snapshot as stale",
+        "ok": false
+      },
+      "returncode": 8
+    },
+    "exposure_order": {
+      "command": "mshdr run --dataset /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/injected/exposure_order/dataset.json --scene scene_00_neon_dusk --start-mode none --output /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/anomaly_exposure_order",
+      "elapsed_seconds": 0.4405,
+      "payload": {
+        "code": "E_ORDER",
+        "details": {
+          "exposure_time": 0.06666666666666667,
+          "index": 1,
+          "previous_exposure_time": 0.5,
+          "previous_index": 0
+        },
+        "field": "exposures.frames[1].exposure_time",
+        "message": "Exposure times must be strictly increasing in frame order",
+        "ok": false
+      },
+      "returncode": 9
+    },
+    "missing_band": {
+      "command": "mshdr run --dataset /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/injected/missing_band/dataset.json --scene scene_00_neon_dusk --start-mode none --output /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/anomaly_missing_band",
+      "elapsed_seconds": 0.6579,
+      "payload": {
+        "code": "E_META",
+        "details": {
+          "path": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/injected/missing_band/scene_00_neon_dusk/bands/band_00.npy"
+        },
+        "field": "bands[0]",
+        "message": "Missing image file for bands[0]: /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/injected/missing_band/scene_00_neon_dusk/bands/band_00.npy",
+        "ok": false
+      },
+      "returncode": 2
+    }
+  },
+  "bad_segment_comparison": {
+    "command": "mshdr compare --left outputs/paths/full/scene_00_neon_dusk --right /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_retry --report /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_comparison.json",
+    "elapsed_seconds": 0.5283,
+    "payload": {
+      "checked_fields": [
+        "synthetic_rgb",
+        "fused_radiance",
+        "cleaned_detail",
+        "enhanced_detail",
+        "chroma_xyz",
+        "linear_rgb",
+        "gamut_mask",
+        "boundary_rgb",
+        "gamut_excess",
+        "stats.output_bit_depth",
+        "stats.filtering_quality.residual_std",
+        "stats.filtering_quality.edge_fidelity",
+        "stats.gamut.out_of_gamut_count",
+        "stats.gamut.max_excess"
+      ],
+      "code": null,
+      "first_mismatch": null,
+      "left": "outputs/paths/full/scene_00_neon_dusk",
+      "message": "Outputs are exactly equal",
+      "ok": true,
+      "reproduce_script": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_comparison.reproduce.sh",
+      "result_file": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_comparison.json",
+      "right": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_retry",
+      "segment_size": [
+        32,
+        32
+      ],
+      "stats_fields": [
+        "output_bit_depth",
+        "filtering_quality.residual_std",
+        "filtering_quality.edge_fidelity",
+        "gamut.out_of_gamut_count",
+        "gamut.max_excess"
+      ]
+    },
+    "returncode": 0
+  },
+  "bad_segment_failure": {
+    "command": "mshdr run --dataset samples/dataset.json --scene scene_00_neon_dusk --start-mode fresh --checkpoint-root /home/liang/feedback/uid42a8691e-default-154/checkpoints/acceptance_bad_segment --output /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_retry --bad-segment 5",
+    "elapsed_seconds": 1.1753,
+    "payload": {
+      "code": "E_SEG",
+      "details": {
+        "committed_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "failed_segments": [
+          {
+            "code": "E_SEG",
+            "details": {
+              "bbox": [
+                32,
+                32,
+                64,
+                64
+              ],
+              "segment_index": 5
+            },
+            "field": "segments[5]",
+            "message": "Injected bad segment failure",
+            "ok": false,
+            "segment_index": 5
+          }
+        ],
+        "parallelism": {
+          "budget": {
+            "blocked_reservations": 0,
+            "capacity_pixels": 500000,
+            "max_pixels_per_thread": 250000,
+            "max_workers": 2,
+            "peak_reserved_pixels": 6728
+          },
+          "elapsed_seconds": 0.4148785739962477,
+          "max_workers": 2,
+          "mode": "parallel",
+          "requested_max_workers": 2,
+          "segment_count": 12
+        },
+        "progress": "11/12"
+      },
+      "field": "segments",
+      "message": "One or more segments failed; committed segments remain isolated and retryable",
+      "ok": false
+    },
+    "returncode": 10
+  },
+  "bad_segment_retry": {
+    "command": "mshdr run --dataset samples/dataset.json --scene scene_00_neon_dusk --start-mode resume --checkpoint-root /home/liang/feedback/uid42a8691e-default-154/checkpoints/acceptance_bad_segment --output /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_retry",
+    "elapsed_seconds": 0.735,
+    "payload": {
+      "checkpoint_invalid_reason": null,
+      "filtering_quality": {
+        "edge_fidelity": 0.8685206693741929,
+        "edge_pass": true,
+        "edge_roi": [
+          22,
+          36,
+          48,
+          62
+        ],
+        "max_residual_std": 0.012,
+        "min_edge_fidelity": 0.82,
+        "noise_roi": [
+          82,
+          33,
+          92,
+          55
+        ],
+        "passes_declared_bounds": true,
+        "residual_mean": 0.00401063243820742,
+        "residual_pass": true,
+        "residual_std": 0.010225567509290967
+      },
+      "gamut": {
+        "boundary_coordinates_file": "out_of_gamut_boundary_coordinates.csv",
+        "boundary_definition": "Cube intersection of the neutral-to-input ray at constant luminance; for out-of-range luminance the nearest compressed-luminance cube boundary is recorded.",
+        "boundary_rgb_file": "boundary_rgb.npy",
+        "compression": "desaturation toward the achromatic axis, not channel clipping",
+        "converged": true,
+        "intent": "perceptual",
+        "max_excess": 0.22464514072875885,
+        "out_of_gamut_count": 1034,
+        "out_of_gamut_fraction": 0.08414713541666667,
+        "out_of_gamut_mask_file": "gamut_mask.npy"
+      },
+      "mode": "resume",
+      "ok": true,
+      "output": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/bad_segment_retry",
+      "params_version": "9ff7a8ef721c417360ebd9e5bf8e140c9cba39cc233ed177362e2fade9ab2e82",
+      "progress": "12/12",
+      "scene_id": "scene_00_neon_dusk"
+    },
+    "returncode": 0
+  },
+  "finished_at_utc": "2026-11-22T22:04:13.074626+00:00",
+  "forced_exit": {
+    "command": "mshdr run --dataset samples/dataset.json --scene scene_00_neon_dusk --start-mode fresh --checkpoint-root /home/liang/feedback/uid42a8691e-default-154/checkpoints/acceptance_crash --crash-after-commits 4",
+    "elapsed_seconds": 0.7553,
+    "payload": {},
+    "returncode": 91
+  },
+  "forced_resume": {
+    "command": "mshdr run --dataset samples/dataset.json --scene scene_00_neon_dusk --start-mode resume --checkpoint-root /home/liang/feedback/uid42a8691e-default-154/checkpoints/acceptance_crash --output /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/crash_resume",
+    "elapsed_seconds": 1.2057,
+    "payload": {
+      "checkpoint_invalid_reason": null,
+      "filtering_quality": {
+        "edge_fidelity": 0.8685206693741929,
+        "edge_pass": true,
+        "edge_roi": [
+          22,
+          36,
+          48,
+          62
+        ],
+        "max_residual_std": 0.012,
+        "min_edge_fidelity": 0.82,
+        "noise_roi": [
+          82,
+          33,
+          92,
+          55
+        ],
+        "passes_declared_bounds": true,
+        "residual_mean": 0.00401063243820742,
+        "residual_pass": true,
+        "residual_std": 0.010225567509290967
+      },
+      "gamut": {
+        "boundary_coordinates_file": "out_of_gamut_boundary_coordinates.csv",
+        "boundary_definition": "Cube intersection of the neutral-to-input ray at constant luminance; for out-of-range luminance the nearest compressed-luminance cube boundary is recorded.",
+        "boundary_rgb_file": "boundary_rgb.npy",
+        "compression": "desaturation toward the achromatic axis, not channel clipping",
+        "converged": true,
+        "intent": "perceptual",
+        "max_excess": 0.22464514072875885,
+        "out_of_gamut_count": 1034,
+        "out_of_gamut_fraction": 0.08414713541666667,
+        "out_of_gamut_mask_file": "gamut_mask.npy"
+      },
+      "mode": "resume",
+      "ok": true,
+      "output": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/crash_resume",
+      "params_version": "9ff7a8ef721c417360ebd9e5bf8e140c9cba39cc233ed177362e2fade9ab2e82",
+      "progress": "12/12",
+      "scene_id": "scene_00_neon_dusk"
+    },
+    "returncode": 0
+  },
+  "forced_resume_comparison": {
+    "command": "mshdr compare --left outputs/paths/full/scene_00_neon_dusk --right /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/crash_resume --report /home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/forced_resume_comparison.json",
+    "elapsed_seconds": 0.6347,
+    "payload": {
+      "checked_fields": [
+        "synthetic_rgb",
+        "fused_radiance",
+        "cleaned_detail",
+        "enhanced_detail",
+        "chroma_xyz",
+        "linear_rgb",
+        "gamut_mask",
+        "boundary_rgb",
+        "gamut_excess",
+        "stats.output_bit_depth",
+        "stats.filtering_quality.residual_std",
+        "stats.filtering_quality.edge_fidelity",
+        "stats.gamut.out_of_gamut_count",
+        "stats.gamut.max_excess"
+      ],
+      "code": null,
+      "first_mismatch": null,
+      "left": "outputs/paths/full/scene_00_neon_dusk",
+      "message": "Outputs are exactly equal",
+      "ok": true,
+      "reproduce_script": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/forced_resume_comparison.reproduce.sh",
+      "result_file": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/forced_resume_comparison.json",
+      "right": "/home/liang/feedback/uid42a8691e-default-154/outputs/acceptance/crash_resume",
+      "segment_size": [
+        32,
+        32
+      ],
+      "stats_fields": [
+        "output_bit_depth",
+        "filtering_quality.residual_std",
+        "filtering_quality.edge_fidelity",
+        "gamut.out_of_gamut_count",
+        "gamut.max_excess"
+      ]
+    },
+    "returncode": 0
+  },
+  "ok": true,
+  "project_root": "/home/liang/feedback/uid42a8691e-default-154",
+  "python": "3.11.18 (main, Nov 11 2026, 00:16:37) [Clang 23.1.3 ]",
+  "started_at_utc": "2026-11-22T22:03:50.608219+00:00",
+  "steps": {
+    "doctor": {
+      "command": "mshdr doctor",
+      "elapsed_seconds": 0.4926,
+      "payload": {
+        "algorithm_version": "mshdr-algo-1.0.0",
+        "dependencies": {
+          "PIL": {
+            "ok": true,
+            "version": "13.0.0"
+          },
+          "numpy": {
+            "ok": true,
+            "version": "2.4.6"
+          },
+          "scipy": {
+            "ok": true,
+            "version": "1.17.1"
+          },
+          "tkinter": {
+            "ok": true,
+            "version": "9.0"
+          }
+        },
+        "directories": {
+          "checkpoints": "/home/liang/feedback/uid42a8691e-default-154/checkpoints",
+          "outputs": "/home/liang/feedback/uid42a8691e-default-154/outputs",
+          "samples": "/home/liang/feedback/uid42a8691e-default-154/samples"
+        },
+        "external_service_required": false,
+        "gpu_required": false,
+        "network_required": false,
+        "ok": true,
+        "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+        "python": "3.11.18",
+        "python_executable": "/home/liang/feedback/uid42a8691e-default-154/.venv/bin/python",
+        "workbench_version": "1.0.0"
+      },
+      "returncode": 0
+    },
+    "generate": {
+      "command": "mshdr generate --seed 20261123 --out samples",
+      "elapsed_seconds": 0.9296,
+      "payload": {
+        "dataset": "samples/dataset.json",
+        "ok": true,
+        "verification": {
+          "dataset": "samples/dataset.json",
+          "scenes": [
+            {
+              "band_bit_depths": [
+                12,
+                12,
+                12,
+                12
+              ],
+              "band_count": 4,
+              "exposure_count": 3,
+              "pixel_size": [
+                96,
+                128
+              ],
+              "scene_id": "scene_00_neon_dusk",
+              "target_bit_depth": 10
+            },
+            {
+              "band_bit_depths": [
+                12,
+                12,
+                12,
+                12
+              ],
+              "band_count": 4,
+              "exposure_count": 3,
+              "pixel_size": [
+                96,
+                128
+              ],
+              "scene_id": "scene_01_forest_studio",
+              "target_bit_depth": 12
+            },
+            {
+              "band_bit_depths": [
+                12,
+                12,
+                12,
+                12
+              ],
+              "band_count": 4,
+              "exposure_count": 3,
+              "pixel_size": [
+                96,
+                128
+              ],
+              "scene_id": "scene_02_spectral_lab",
+              "target_bit_depth": 10
+            }
+          ]
+        }
+      },
+      "returncode": 0
+    },
+    "inspect": {
+      "command": "mshdr inspect --dataset samples/dataset.json",
+      "elapsed_seconds": 0.6445,
+      "payload": {
+        "ok": true,
+        "verification": {
+          "dataset": "samples/dataset.json",
+          "scenes": [
+            {
+              "band_bit_depths": [
+                12,
+                12,
+                12,
+                12
+              ],
+              "band_count": 4,
+              "exposure_count": 3,
+              "pixel_size": [
+                96,
+                128
+              ],
+              "scene_id": "scene_00_neon_dusk",
+              "target_bit_depth": 10
+            },
+            {
+              "band_bit_depths": [
+                12,
+                12,
+                12,
+                12
+              ],
+              "band_count": 4,
+              "exposure_count": 3,
+              "pixel_size": [
+                96,
+                128
+              ],
+              "scene_id": "scene_01_forest_studio",
+              "target_bit_depth": 12
+            },
+            {
+              "band_bit_depths": [
+                12,
+                12,
+                12,
+                12
+              ],
+              "band_count": 4,
+              "exposure_count": 3,
+              "pixel_size": [
+                96,
+                128
+              ],
+              "scene_id": "scene_02_spectral_lab",
+              "target_bit_depth": 10
+            }
+          ]
+        }
+      },
+      "returncode": 0
+    },
+    "three_paths": {
+      "command": "mshdr run-paths --dataset samples/dataset.json --out outputs/paths --checkpoint-root checkpoints/paths --workers 4",
+      "elapsed_seconds": 5.3183,
+      "payload": {
+        "comparison_result_file": "/home/liang/feedback/uid42a8691e-default-154/outputs/paths/paths_report.json",
+        "dataset": "samples/dataset.json",
+        "ok": true,
+        "paths": [
+          "full",
+          "realtime",
+          "resume"
+        ],
+        "scenes": [
+          {
+            "comparisons": {
+              "full_vs_realtime": true,
+              "full_vs_resume": true,
+              "realtime_vs_resume": true
+            },
+            "edge_fidelity": 0.8685206693741929,
+            "first_mismatch": {
+              "full_vs_realtime": null,
+              "full_vs_resume": null,
+              "realtime_vs_resume": null
+            },
+            "out_of_gamut_count": 1034,
+            "outputs": {
+              "full": "outputs/paths/full/scene_00_neon_dusk",
+              "realtime": "outputs/paths/realtime/scene_00_neon_dusk",
+              "resume": "outputs/paths/resume/scene_00_neon_dusk"
+            },
+            "progress": {
+              "realtime": "12/12",
+              "resume": "12/12"
+            },
+            "residual_std": 0.010225567509290967,
+            "scene_id": "scene_00_neon_dusk"
+          },
+          {
+            "comparisons": {
+              "full_vs_realtime": true,
+              "full_vs_resume": true,
+              "realtime_vs_resume": true
+            },
+            "edge_fidelity": 0.8701567015692292,
+            "first_mismatch": {
+              "full_vs_realtime": null,
+              "full_vs_resume": null,
+              "realtime_vs_resume": null
+            },
+            "out_of_gamut_count": 1093,
+            "outputs": {
+              "full": "outputs/paths/full/scene_01_forest_studio",
+              "realtime": "outputs/paths/realtime/scene_01_forest_studio",
+              "resume": "outputs/paths/resume/scene_01_forest_studio"
+            },
+            "progress": {
+              "realtime": "12/12",
+              "resume": "12/12"
+            },
+            "residual_std": 0.009148693206837253,
+            "scene_id": "scene_01_forest_studio"
+          },
+          {
+            "comparisons": {
+              "full_vs_realtime": true,
+              "full_vs_resume": true,
+              "realtime_vs_resume": true
+            },
+            "edge_fidelity": 0.8531244771063886,
+            "first_mismatch": {
+              "full_vs_realtime": null,
+              "full_vs_resume": null,
+              "realtime_vs_resume": null
+            },
+            "out_of_gamut_count": 1114,
+            "outputs": {
+              "full": "outputs/paths/full/scene_02_spectral_lab",
+              "realtime": "outputs/paths/realtime/scene_02_spectral_lab",
+              "resume": "outputs/paths/resume/scene_02_spectral_lab"
+            },
+            "progress": {
+              "realtime": "12/12",
+              "resume": "12/12"
+            },
+            "residual_std": 0.009176587203693435,
+            "scene_id": "scene_02_spectral_lab"
+          }
+        ]
+      },
+      "returncode": 0
+    }
+  },
+  "unit_tests": {
+    "elapsed_seconds": 6.6553,
+    "returncode": 0,
+    "summary": [
+      "----------------------------------------------------------------------",
+      "Ran 34 tests in 6.059s",
+      "OK"
+    ]
+  }
+}
