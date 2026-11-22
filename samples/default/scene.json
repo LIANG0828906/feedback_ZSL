@@ -1,0 +1,767 @@
+{
+  "format": "game-editor-scene/v1",
+  "seed": 424242,
+  "camera": {
+    "position": [
+      0,
+      7.5,
+      20.5
+    ],
+    "target": [
+      0,
+      1.7,
+      0
+    ],
+    "up": [
+      0,
+      1,
+      0
+    ],
+    "fieldOfViewYDegrees": 50,
+    "nearPlane": 0.1,
+    "farPlane": 120,
+    "viewportWidth": 1280,
+    "viewportHeight": 720
+  },
+  "nodes": [
+    {
+      "id": "root",
+      "parentId": null,
+      "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "rig-left",
+      "parentId": "root",
+      "localMatrix": [
+        0.99026805,
+        0,
+        0.1391731,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.1391731,
+        0,
+        0.99026805,
+        0,
+        -5.8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "left-crate-a",
+      "parentId": "rig-left",
+      "localMatrix": [
+        0.87693304,
+        0,
+        -0.20245597,
+        0,
+        0,
+        0.9,
+        0,
+        0,
+        0.20245597,
+        0,
+        0.87693304,
+        0,
+        -1.7,
+        1.1,
+        0.3,
+        1
+      ]
+    },
+    {
+      "id": "left-sphere-a",
+      "parentId": "rig-left",
+      "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.35,
+        2,
+        0.8,
+        1
+      ]
+    },
+    {
+      "id": "left-mesh-a",
+      "parentId": "rig-left",
+      "localMatrix": [
+        0.7417471,
+        0,
+        0.2996853,
+        0,
+        0,
+        0.8,
+        0,
+        0,
+        -0.2996853,
+        0,
+        0.7417471,
+        0,
+        -0.5,
+        0.5,
+        1.8,
+        1
+      ]
+    },
+    {
+      "id": "left-mesh-tip",
+      "parentId": "left-mesh-a",
+      "localMatrix": [
+        0.39944372,
+        0,
+        -0.12978715,
+        0,
+        0,
+        0.42,
+        0,
+        0,
+        0.12978715,
+        0,
+        0.39944372,
+        0,
+        0,
+        1.9,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "rig-right",
+      "parentId": "root",
+      "localMatrix": [
+        0.99254614,
+        0,
+        -0.121869355,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0.121869355,
+        0,
+        0.99254614,
+        0,
+        5.8,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "right-crate-a",
+      "parentId": "rig-right",
+      "localMatrix": [
+        0.81707245,
+        0,
+        0.23429176,
+        0,
+        0,
+        0.85,
+        0,
+        0,
+        -0.23429176,
+        0,
+        0.81707245,
+        0,
+        1.45,
+        1,
+        0.2,
+        1
+      ]
+    },
+    {
+      "id": "right-sphere-a",
+      "parentId": "rig-right",
+      "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -0.65,
+        2.15,
+        -0.2,
+        1
+      ]
+    },
+    {
+      "id": "right-mesh-a",
+      "parentId": "rig-right",
+      "localMatrix": [
+        0.6851591,
+        0,
+        -0.30505252,
+        0,
+        0,
+        0.75,
+        0,
+        0,
+        0.30505252,
+        0,
+        0.6851591,
+        0,
+        0.8,
+        0.55,
+        1.6,
+        1
+      ]
+    },
+    {
+      "id": "rig-center",
+      "parentId": "root",
+      "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "center-crate",
+      "parentId": "rig-center",
+      "localMatrix": [
+        1.05,
+        0,
+        0,
+        0,
+        0,
+        0.8,
+        0,
+        0,
+        0,
+        0,
+        1.05,
+        0,
+        0,
+        1.1,
+        0.1,
+        1
+      ]
+    },
+    {
+      "id": "center-mesh",
+      "parentId": "rig-center",
+      "localMatrix": [
+        0.7878462,
+        0,
+        0.13891855,
+        0,
+        0,
+        0.8,
+        0,
+        0,
+        -0.13891855,
+        0,
+        0.7878462,
+        0,
+        0,
+        1.7,
+        1.7,
+        1
+      ]
+    },
+    {
+      "id": "center-sphere",
+      "parentId": "rig-center",
+      "localMatrix": [
+        0.75,
+        0,
+        0,
+        0,
+        0,
+        0.75,
+        0,
+        0,
+        0,
+        0,
+        0.75,
+        0,
+        0,
+        3.15,
+        -0.7,
+        1
+      ]
+    },
+    {
+      "id": "rig-back",
+      "parentId": "root",
+      "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        -5.5,
+        1
+      ]
+    },
+    {
+      "id": "back-crate",
+      "parentId": "rig-back",
+      "localMatrix": [
+        0.68470335,
+        0,
+        -0.14553818,
+        0,
+        0,
+        0.7,
+        0,
+        0,
+        0.14553818,
+        0,
+        0.68470335,
+        0,
+        -2.2,
+        0.75,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "back-sphere",
+      "parentId": "rig-back",
+      "localMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2.1,
+        1.3,
+        -0.2,
+        1
+      ]
+    },
+    {
+      "id": "back-mesh",
+      "parentId": "rig-back",
+      "localMatrix": [
+        0.74613374,
+        0,
+        -0.5032736,
+        0,
+        0,
+        0.9,
+        0,
+        0,
+        0.5032736,
+        0,
+        0.74613374,
+        0,
+        0,
+        0.35,
+        0.8,
+        1
+      ]
+    }
+  ],
+  "geometries": [
+    {
+      "id": "g-left-crate-a",
+      "nodeId": "left-crate-a",
+      "kind": "aabb",
+      "boundsMin": [
+        -1.0065982,
+        -1,
+        -1
+      ],
+      "boundsMax": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "g-left-sphere-a",
+      "nodeId": "left-sphere-a",
+      "kind": "sphere",
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "radius": 0.95
+    },
+    {
+      "id": "g-left-mesh-a",
+      "nodeId": "left-mesh-a",
+      "kind": "triangleMesh",
+      "vertices": [
+        [
+          -1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          0
+        ]
+      ],
+      "indices": [
+        0,
+        1,
+        2,
+        0,
+        2,
+        3,
+        0,
+        1,
+        4,
+        1,
+        2,
+        4,
+        2,
+        3,
+        4,
+        3,
+        0,
+        4
+      ]
+    },
+    {
+      "id": "g-left-mesh-tip",
+      "nodeId": "left-mesh-tip",
+      "kind": "sphere",
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "radius": 0.8
+    },
+    {
+      "id": "g-right-crate-a",
+      "nodeId": "right-crate-a",
+      "kind": "aabb",
+      "boundsMin": [
+        -0.9991318,
+        -1,
+        -1
+      ],
+      "boundsMax": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "g-right-sphere-a",
+      "nodeId": "right-sphere-a",
+      "kind": "sphere",
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "radius": 0.85
+    },
+    {
+      "id": "g-right-mesh-a",
+      "nodeId": "right-mesh-a",
+      "kind": "triangleMesh",
+      "vertices": [
+        [
+          -1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          0
+        ]
+      ],
+      "indices": [
+        0,
+        1,
+        2,
+        0,
+        2,
+        3,
+        0,
+        1,
+        4,
+        1,
+        2,
+        4,
+        2,
+        3,
+        4,
+        3,
+        0,
+        4
+      ]
+    },
+    {
+      "id": "g-center-crate",
+      "nodeId": "center-crate",
+      "kind": "aabb",
+      "boundsMin": [
+        -0.99836636,
+        -1,
+        -1
+      ],
+      "boundsMax": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "g-center-orb",
+      "nodeId": "center-crate",
+      "kind": "sphere",
+      "center": [
+        0.65,
+        0.85,
+        0.45
+      ],
+      "radius": 0.32
+    },
+    {
+      "id": "g-center-mesh",
+      "nodeId": "center-mesh",
+      "kind": "triangleMesh",
+      "vertices": [
+        [
+          -1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          0
+        ]
+      ],
+      "indices": [
+        0,
+        1,
+        2,
+        0,
+        2,
+        3,
+        0,
+        1,
+        4,
+        1,
+        2,
+        4,
+        2,
+        3,
+        4,
+        3,
+        0,
+        4
+      ]
+    },
+    {
+      "id": "g-center-sphere",
+      "nodeId": "center-sphere",
+      "kind": "sphere",
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "radius": 1
+    },
+    {
+      "id": "g-back-crate",
+      "nodeId": "back-crate",
+      "kind": "aabb",
+      "boundsMin": [
+        -1.001942,
+        -1,
+        -1
+      ],
+      "boundsMax": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "g-back-sphere",
+      "nodeId": "back-sphere",
+      "kind": "sphere",
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "radius": 0.9
+    },
+    {
+      "id": "g-back-mesh",
+      "nodeId": "back-mesh",
+      "kind": "triangleMesh",
+      "vertices": [
+        [
+          -1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          -1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          -1,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          0
+        ]
+      ],
+      "indices": [
+        0,
+        1,
+        2,
+        0,
+        2,
+        3,
+        0,
+        1,
+        4,
+        1,
+        2,
+        4,
+        2,
+        3,
+        4,
+        3,
+        0,
+        4
+      ]
+    }
+  ],
+  "declaration": {
+    "nodeCount": 18,
+    "geometryCount": 14,
+    "contentHash": "df5db1233a27a6389d2b7f506715231e7da6b5cd6b9731cf0392a551d5d019ad",
+    "structureHash": "7d225cebbda59da5f37c54d26131518160660225da90abb4c9ca487e59e9f767",
+    "paramVersion": "hier-aabb/ray-moller/box-projected-aabb/snapshot-v1"
+  }
+}
