@@ -1,0 +1,162 @@
+{
+  "config": {
+    "base_step": 0.1,
+    "degrade_sequence": [
+      {
+        "name": "S0_FULL",
+        "shadow_samples": 2,
+        "step_multiplier": 1.0
+      },
+      {
+        "name": "S1_STEP_2X",
+        "shadow_samples": 2,
+        "step_multiplier": 2.0
+      },
+      {
+        "name": "S2_STEP_2X_SHADOW_1",
+        "shadow_samples": 1,
+        "step_multiplier": 2.0
+      },
+      {
+        "name": "S3_STEP_4X_SHADOW_1",
+        "shadow_samples": 1,
+        "step_multiplier": 4.0
+      }
+    ],
+    "limits": {
+      "max_parallelism": 8,
+      "max_sample_budget": 50000000
+    },
+    "max_parallelism": 4,
+    "min_step": 0.008,
+    "precision": "float",
+    "sample_budget": 2000000,
+    "seam": {
+      "enabled": true,
+      "tolerance": 0.0,
+      "truth_budget": 20000000,
+      "truth_stage": "S0_FULL"
+    },
+    "tile_size": 16
+  },
+  "generator": "volrender.samples.generate_samples",
+  "manifest_hash": "0d92c8636120ad7dff97671734afbf4d8f11eba4191ae12a83d99da3f0ffbca9",
+  "samples": [
+    {
+      "baseline": {
+        "budget": {
+          "max_pixel_samples": 150,
+          "per_tile": 2000000,
+          "total_consumed": 94980
+        },
+        "content_hash": "f00638978a9adbf5eb743df7f443f764868338f35d76dab548b780fd3264ac6d",
+        "degradation": {
+          "S0_FULL": 6
+        },
+        "image_hash": "1e69634ac04995ce88afdee03e25ad7eb43ff70a3a96a27d2ecaeb0ce243edff",
+        "pixel_hash": "f00638978a9adbf5eb743df7f443f764868338f35d76dab548b780fd3264ac6d",
+        "seam_check": {
+          "checked_pixels": 216,
+          "enabled": true,
+          "max_scatter_delta": 0.0,
+          "max_transmittance_delta": 0.0,
+          "tolerance": 0.0,
+          "truth_samples": 34732,
+          "truth_stage": "S0_FULL"
+        },
+        "summary_hash": "06d24d20981db15be864ec0b62f96f4dd85013a8e7b35cc8fc5c079281a07f8a"
+      },
+      "density_distributions": [
+        "gaussian_gradient"
+      ],
+      "description": "single gradient smoke box",
+      "media_count": 1,
+      "name": "gradient_smoke_48x32",
+      "resolution": [
+        48,
+        32
+      ],
+      "scene_file": "gradient_smoke_48x32.vscn",
+      "scene_hash": "6981cba4b29f5ff4091c97e08ecb8b09a5d1b3317dca8bae33f508b080104c05"
+    },
+    {
+      "baseline": {
+        "budget": {
+          "max_pixel_samples": 147,
+          "per_tile": 2000000,
+          "total_consumed": 157812
+        },
+        "content_hash": "075704b663a5f540fadf9b673303a06ca86685c8be74b740188649f75136d544",
+        "degradation": {
+          "S0_FULL": 12
+        },
+        "image_hash": "4eeb7455944f0f7f1d1e155be8b4921d8d29f12078fd3a09de3109b19b480635",
+        "pixel_hash": "075704b663a5f540fadf9b673303a06ca86685c8be74b740188649f75136d544",
+        "seam_check": {
+          "checked_pixels": 496,
+          "enabled": true,
+          "max_scatter_delta": 0.0,
+          "max_transmittance_delta": 0.0,
+          "tolerance": 0.0,
+          "truth_samples": 58236,
+          "truth_stage": "S0_FULL"
+        },
+        "summary_hash": "e938f5e7bf3f761dbdc701844b59d059207f053ea0b90441cc8c1d2738896cb4"
+      },
+      "density_distributions": [
+        "dual_blob",
+        "uniform_glass"
+      ],
+      "description": "two nested media with a glass sphere",
+      "media_count": 2,
+      "name": "smoke_in_glass_64x44",
+      "resolution": [
+        64,
+        44
+      ],
+      "scene_file": "smoke_in_glass_64x44.vscn",
+      "scene_hash": "bcf65226e1efce029fd40bdb395783e12a95a97fc389377631c2b248c25137e6"
+    },
+    {
+      "baseline": {
+        "budget": {
+          "max_pixel_samples": 177,
+          "per_tile": 2000000,
+          "total_consumed": 251256
+        },
+        "content_hash": "8ae599a13f269fe8241c60d7f5f9de040ff25855531e367e57c7e98d13b16fef",
+        "degradation": {
+          "S0_FULL": 6
+        },
+        "image_hash": "f581195c32995de8e8c8adcc902c1f3b3c3b3e932b16dbe92ff83a469dc66c31",
+        "pixel_hash": "8ae599a13f269fe8241c60d7f5f9de040ff25855531e367e57c7e98d13b16fef",
+        "seam_check": {
+          "checked_pixels": 328,
+          "enabled": true,
+          "max_scatter_delta": 0.0,
+          "max_transmittance_delta": 0.0,
+          "tolerance": 0.0,
+          "truth_samples": 90664,
+          "truth_stage": "S0_FULL"
+        },
+        "summary_hash": "55efa827094c7748a441add3c5fc4a987324a038ae2cd891a14a351b55e40a53"
+      },
+      "density_distributions": [
+        "layered",
+        "dual_blob",
+        "uniform_glass"
+      ],
+      "description": "three nested media with layered and blob fields",
+      "media_count": 3,
+      "name": "dual_plume_glass_72x48",
+      "resolution": [
+        72,
+        48
+      ],
+      "scene_file": "dual_plume_glass_72x48.vscn",
+      "scene_hash": "985c98b9163f4521097af06842217fd0dae985309aec94e7e03c713edce59077"
+    }
+  ],
+  "schema": "volrender.samples.v1",
+  "seed": 20261122
+}

@@ -1,0 +1,40 @@
+{
+  "base_step": 0.1,
+  "degrade_sequence": [
+    {
+      "name": "S0_FULL",
+      "shadow_samples": 2,
+      "step_multiplier": 1.0
+    },
+    {
+      "name": "S1_STEP_2X",
+      "shadow_samples": 2,
+      "step_multiplier": 2.0
+    },
+    {
+      "name": "S2_STEP_2X_SHADOW_1",
+      "shadow_samples": 1,
+      "step_multiplier": 2.0
+    },
+    {
+      "name": "S3_STEP_4X_SHADOW_1",
+      "shadow_samples": 1,
+      "step_multiplier": 4.0
+    }
+  ],
+  "limits": {
+    "max_parallelism": 8,
+    "max_sample_budget": 50000000
+  },
+  "max_parallelism": 4,
+  "min_step": 0.008,
+  "precision": "float",
+  "sample_budget": 2000000,
+  "seam": {
+    "enabled": true,
+    "tolerance": 0.0,
+    "truth_budget": 20000000,
+    "truth_stage": "S0_FULL"
+  },
+  "tile_size": 16
+}

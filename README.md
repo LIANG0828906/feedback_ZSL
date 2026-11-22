@@ -1,22 +1,140 @@
-离线渲染工具需要为含烟尘与玻璃罩的本地场景生成体积光散射预览图，场景以自定义二进制描述提供（相机内外参、若干轴对齐盒与球体透明介质、方向光、介质密度场分块索引）。渲染管线依次执行光线求交、介质边界穿越与分段、沿视线步进采样密度场、散射累积、透射率与阴影射线可见性估计。难点在于并行分块与资源预算双重约束：屏幕划分为分块渲染任务，任务可并行但同一分块内步进顺序固定；全局并行度与单任务采样预算来自配置文件；预算不足时须按声明序列降级或拒绝启动。运营中反复出现的问题是预算收紧后组件静默改变步长却无记录，导致同一视角两次渲染结果不同且无法判断降质来自哪一分块；某分块被预算拒绝后残留半合成结果；外部注入的损坏场景文件让渲染器静默返回部分图像。
+# Volumetric Light Preview Renderer
 
-任务环境与准备：
-安装 Python 3.10 及以上版本，使用 pip 安装 NumPy 与 PyQt5，版本以本地可离线安装的稳定版为准。
-确认操作系统为 Windows 且具备 OpenGL 兼容的图形环境用于 PyQt5 界面预览。
-准备本地合成场景与密度场样本生成脚本，所有输入由确定性种子在本地生成，不依赖外部数据集或网络。
-在任务开始前验证 Python 解释器可正常导入 NumPy 与 PyQt5，并确认工作目录可读写用于快照与轨迹日志输出。
+Deterministic offline preview renderer for local binary scenes containing
+smoke, transparent glass-like media, a directional light and chunked 3D density
+fields. The renderer is implemented in Python with NumPy and an optional PyQt5
+preview.
 
-业务要求：
-1. 实现场景二进制解析与介质几何构建：读取相机内外参、轴对齐盒与球体透明介质、方向光与密度场分块索引，校验矩阵可逆性、介质嵌套关系与密度索引范围；字段缺失、几何退化或索引越界返回业务码 E_SCENE_INVALID 并定位到字段与偏移，不得继续渲染。
-2. 实现分块渲染调度器：按配置分块尺寸切分屏幕任务，任务跨分块可并行但同一分块内步进采样顺序固定，可运行任务按提交序号稳定排序；全局并行度与单任务采样预算来自配置文件且不得运行时静默提高，超预算任务进入等待队列，调度决策写入轨迹。
-3. 实现介质内步进采样与散射累积：沿视线穿越介质边界得分段，按步长自适应采样密度场，累积散射与透射率并做阴影射线可见性估计；单任务采样数超出其预算时不得启动，须按声明降级序列（增大步长、降低可见性估计精度）逐级重试并记录降级阶段与预算用量，重试仍超限则返回 E_BUDGET_EXCEEDED 并保留最后一次已提交分块。
-4. 实现分块边界散射连续性与拼接：相邻分块共享边界像素的采样相位，拼接处散射累积与透射率偏差须在声明容差内；以整屏单块渲染结果为真值来源比对分块结果，超差时返回 E_SEAM_UNRESOLVED 并定位到分块对与边界像素坐标。
-5. 实现精度模式与误差摘要：提供浮点与定点两条散射累积路径，切换后重新渲染并输出两种模式的逐像素偏差统计与误差上界；每次渲染输出含分块层级、预算用量、降级阶段、步长与误差摘要的确定性摘要，固定视角与参数下连续两次渲染的像素缓冲与摘要须逐字节一致。
-6. 实现增量重渲染与依赖失效：相机、光源、介质参数或密度场某分块变化后，计算受影响屏幕分块集合并只重渲该集合，未受影响分块复用缓存结果与内容哈希；无法证明未受影响时必须保守重渲并标注原因，完成后以整体替换发布新版本，查询期间不得读到部分更新结果。
-7. 实现异常注入验证通道：通过运行参数注入损坏的分块索引、缺失介质条目、非有限相机矩阵、截断的密度场数据与超出预算的采样配置，每类异常返回独立业务码并附带注入点定位；注入发生在加载与配置入口且不修改渲染与调度源码，异常必须在写出任何图像文件前被拦截。
-8. 实现图形预览界面与确定性样本入口：界面展示渲染图、分块网格、降级阶段标记与预算占用曲线，支持调节分块尺寸、并行度、预算与精度模式并协作式取消；提供样本生成器产出多种分辨率、介质数与密度分布的场景及基线哈希，输出含分块号、预算用量、降级阶段、步长与内容哈希的轨迹日志，相同种子与操作序列下图像与日志逐字节一致。
+The implementation focuses on operational reproducibility:
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- all inputs are validated before rendering;
+- tile jobs may run in parallel, but each tile has a fixed row-major/sample-order
+  traversal;
+- budgets and degradation stages come from configuration and every decision is
+  recorded;
+- a rejected or failed update never publishes a partially composed image;
+- incremental updates replace a versioned snapshot atomically;
+- fixed-point and floating-point accumulation are both available with
+  deterministic hashes and precision error statistics;
+- fault injection lives at the loading/configuration boundary and is separate
+  from renderer and scheduler code.
 
-验收：
-使用本地样本验证体积光渲染、预算降级、分块拼接、异常注入与确定性复现，并附运行结果。
+## Requirements
+
+- Python 3.10 or newer
+- NumPy
+- PyQt5 for the graphical preview (the CLI and tests run headless)
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+The current verified environment is Ubuntu 26.04 with Python 3.14.4, NumPy 2.5.5
+and PyQt5. The code uses only cross-platform Python APIs. Windows verification
+still needs a local run with an OpenGL-compatible Qt environment.
+
+## Quick Start
+
+Generate deterministic local scenes and baseline renders:
+
+```bash
+python -m volrender samples --outdir samples
+python -m volrender samples --outdir samples --verify
+```
+
+Render one scene:
+
+```bash
+python -m volrender render \
+  --scene samples/gradient_smoke_48x32.vscn \
+  --config samples/render_config.json \
+  --outdir artifacts/example_render \
+  --compare-precision
+```
+
+Open the preview:
+
+```bash
+python -m volrender gui \
+  --scene samples/gradient_smoke_48x32.vscn \
+  --config samples/render_config.json
+```
+
+Run all automated tests:
+
+```bash
+python -m unittest discover -v -s tests -t .
+```
+
+Run the incremental update/rollback demonstration:
+
+```bash
+python scripts/incremental_demo.py --output artifacts/incremental_demo.json
+```
+
+## Outputs
+
+A successful render writes:
+
+- `image.ppm`: tone-mapped preview image;
+- `image.png`: the same preview in PNG form;
+- `scatter.npy`: floating-point scattering buffer;
+- `transmittance.npy`: per-pixel transmittance;
+- `precision_delta.npy`: per-pixel float/fixed difference when comparison is
+  requested;
+- `summary.json`: tile hierarchy, budget, degradation, step sizes, seam check,
+  precision error summary and deterministic hashes;
+- `trace.jsonl`: stable submission-order scheduler and tile trace;
+- `manifest.json`: artifact sizes and SHA-256 hashes.
+
+No image or summary is written when loading, validation, budget admission, seam
+validation or cancellation fails.
+
+## Business Codes
+
+| Code | Meaning |
+| --- | --- |
+| `E_SCENE_INVALID` | general malformed, degenerate or non-nested scene input |
+| `E_CHUNK_INDEX` | damaged/out-of-range/duplicate/missing density chunk index |
+| `E_MEDIA_MISSING` | declared media entry missing |
+| `E_CAMERA_NONFINITE` | non-finite camera matrix |
+| `E_DENSITY_TRUNCATED` | truncated density metadata or payload |
+| `E_CONFIG_INVALID` | malformed or non-monotonic configuration |
+| `E_CONFIG_BUDGET` | sampling budget exceeds declared hard limits |
+| `E_CONFIG_PARALLELISM` | parallelism exceeds declared hard limit |
+| `E_BUDGET_EXCEEDED` | no declared degradation stage fits a tile |
+| `E_SEAM_UNRESOLVED` | tiled output differs from whole-screen truth |
+| `E_CANCELLED` | cooperative cancellation |
+
+Every business error includes `field` and `offset` where an input location can
+be identified. CLI failures are emitted as JSON and return a non-zero status.
+
+## Fault Injection
+
+Injection is available only through the CLI:
+
+```bash
+python -m volrender render ... --inject chunk_index
+python -m volrender render ... --inject missing_media
+python -m volrender render ... --inject camera_nonfinite
+python -m volrender render ... --inject density_truncated
+python -m volrender render ... --inject config_budget
+```
+
+Injection transforms decoded scene metadata or configuration before validation.
+The renderer and scheduler never import `fault_injection.py`.
+
+## Documentation
+
+- [Binary format](docs/FORMAT.md)
+- [Rendering and scheduling design](docs/ARCHITECTURE.md)
+- [Actual verification record](VERIFICATION.md)
+
+## Scope Notes
+
+This is a deterministic preview renderer, not a production spectral path tracer.
+Transparent boundaries are traversed without Fresnel reflection. The fixed-point
+path uses Q20.20 integer accumulation while transcendental functions still use
+NumPy/Python floating point, matching common deterministic fixed-point emulation.
+The reported analytical error bound is conservative and is stored with every
+fixed-point render.

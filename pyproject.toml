@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "volrender"
+version = "1.0.0"
+description = "Deterministic offline volumetric light preview renderer"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24,<3"]
+
+[project.optional-dependencies]
+gui = ["PyQt5>=5.15,<6"]
+
+[project.scripts]
+volrender = "volrender.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["volrender*"]
