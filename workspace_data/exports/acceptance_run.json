@@ -1,0 +1,522 @@
+{
+  "runs": [
+    {
+      "sample_id": "s01-color-blocks",
+      "mode": "fine",
+      "factor": 1,
+      "complete": true,
+      "elapsed_seconds": 0.2033,
+      "reused_snapshot": false,
+      "recovered_stages": 0,
+      "checkpoint_dir": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/checkpoints/snapshot_e171b7769732b0aa2917",
+      "progress": "6/6",
+      "comparison": {
+        "region_count_truth": 4,
+        "region_count_predicted": 4,
+        "matched_count": 4,
+        "mean_centroid_error_px": 0.02427410948423387,
+        "mean_area_relative_error": 0.016199890122876117,
+        "mean_bbox_iou": 0.9789571048676148,
+        "mean_mask_iou": 0.9838001098771239,
+        "regions": [
+          {
+            "truth_region_id": 1,
+            "predicted_region_id": 3,
+            "centroid_error_px": 0.0,
+            "area_relative_error": 0.0008804754567466431,
+            "bbox_iou": 1.0,
+            "mask_iou": 0.9991195245432534,
+            "truth_area": 4543,
+            "predicted_area": 4539
+          },
+          {
+            "truth_region_id": 2,
+            "predicted_region_id": 1,
+            "centroid_error_px": 0.06835931151592056,
+            "area_relative_error": 0.010623841877702286,
+            "bbox_iou": 1.0,
+            "mask_iou": 0.9893761581222977,
+            "truth_area": 8095,
+            "predicted_area": 8009
+          },
+          {
+            "truth_region_id": 3,
+            "predicted_region_id": 2,
+            "centroid_error_px": 0.028737126421014916,
+            "area_relative_error": 0.05188679245283019,
+            "bbox_iou": 0.915828419470459,
+            "mask_iou": 0.9481132075471698,
+            "truth_area": 5088,
+            "predicted_area": 4824
+          },
+          {
+            "truth_region_id": 4,
+            "predicted_region_id": 4,
+            "centroid_error_px": 0.0,
+            "area_relative_error": 0.0014084507042253522,
+            "bbox_iou": 1.0,
+            "mask_iou": 0.9985915492957746,
+            "truth_area": 2840,
+            "predicted_area": 2836
+          }
+        ],
+        "tolerance": {
+          "centroid_px": 8.0,
+          "area_relative": 0.25,
+          "bbox_iou_min": 0.65,
+          "mask_iou_min": 0.55
+        },
+        "passed": true
+      },
+      "decision": {
+        "mode": "fine",
+        "downsample_factor": 1,
+        "block_size": 256,
+        "pixel_count": 98304,
+        "region_count": 4,
+        "estimated_fine_seconds": 0.8243,
+        "estimated_fine_mb": 4.5,
+        "estimated_seconds": 0.8243,
+        "estimated_mb": 4.5,
+        "reason": "像素数 98304、区域数 4；预测耗时 0.82s 和内存 4.5MB 均在预算内，选用逐像素精细生长",
+        "degradation_reason": null,
+        "impact_scope": [],
+        "considered": [
+          {
+            "factor": 1,
+            "mode": "fine",
+            "estimated_seconds": 0.8243,
+            "estimated_mb": 4.5,
+            "fits_time": true,
+            "fits_memory": true
+          }
+        ],
+        "budget": {
+          "time_seconds": 20.0,
+          "memory_mb": 512.0,
+          "max_workers": 4,
+          "tile_size": 256,
+          "block_buffer_mb": 4.0
+        }
+      },
+      "exports": {
+        "mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s01-color-blocks_fine_f1_mask.npy",
+        "initial_mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s01-color-blocks_fine_f1_initial.npy",
+        "report": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s01-color-blocks_fine_f1_report.json",
+        "overlay": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s01-color-blocks_fine_f1_overlay.npy",
+        "heatmap": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s01-color-blocks_fine_f1_heatmap.npy"
+      }
+    },
+    {
+      "sample_id": "s02-gradient",
+      "mode": "fine",
+      "factor": 1,
+      "complete": true,
+      "elapsed_seconds": 0.728,
+      "reused_snapshot": false,
+      "recovered_stages": 0,
+      "checkpoint_dir": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/checkpoints/snapshot_3c10fa55ccf046d44fcb",
+      "progress": "18/18",
+      "comparison": {
+        "region_count_truth": 3,
+        "region_count_predicted": 3,
+        "matched_count": 3,
+        "mean_centroid_error_px": 0.115354667526733,
+        "mean_area_relative_error": 0.0059505531085298664,
+        "mean_bbox_iou": 0.980798414325537,
+        "mean_mask_iou": 0.99404944689147,
+        "regions": [
+          {
+            "truth_region_id": 1,
+            "predicted_region_id": 1,
+            "centroid_error_px": 0.3423111191188234,
+            "area_relative_error": 0.017256156791040513,
+            "bbox_iou": 0.9603185136031851,
+            "mask_iou": 0.9827438432089595,
+            "truth_area": 17501,
+            "predicted_area": 17199
+          },
+          {
+            "truth_region_id": 2,
+            "predicted_region_id": 2,
+            "centroid_error_px": 0.0037528834613755704,
+            "area_relative_error": 0.00019292604501607716,
+            "bbox_iou": 0.9820767293734262,
+            "mask_iou": 0.9998070739549839,
+            "truth_area": 15550,
+            "predicted_area": 15547
+          },
+          {
+            "truth_region_id": 3,
+            "predicted_region_id": 3,
+            "centroid_error_px": 0.0,
+            "area_relative_error": 0.00040257648953301127,
+            "bbox_iou": 1.0,
+            "mask_iou": 0.999597423510467,
+            "truth_area": 9936,
+            "predicted_area": 9932
+          }
+        ],
+        "tolerance": {
+          "centroid_px": 8.0,
+          "area_relative": 0.25,
+          "bbox_iou_min": 0.65,
+          "mask_iou_min": 0.55
+        },
+        "passed": true
+      },
+      "decision": {
+        "mode": "fine",
+        "downsample_factor": 1,
+        "block_size": 256,
+        "pixel_count": 307200,
+        "region_count": 3,
+        "estimated_fine_seconds": 2.516,
+        "estimated_fine_mb": 14.062,
+        "estimated_seconds": 2.516,
+        "estimated_mb": 14.062,
+        "reason": "像素数 307200、区域数 3；预测耗时 2.52s 和内存 14.1MB 均在预算内，选用逐像素精细生长",
+        "degradation_reason": null,
+        "impact_scope": [],
+        "considered": [
+          {
+            "factor": 1,
+            "mode": "fine",
+            "estimated_seconds": 2.516,
+            "estimated_mb": 14.062,
+            "fits_time": true,
+            "fits_memory": true
+          }
+        ],
+        "budget": {
+          "time_seconds": 20.0,
+          "memory_mb": 512.0,
+          "max_workers": 4,
+          "tile_size": 256,
+          "block_buffer_mb": 4.0
+        }
+      },
+      "exports": {
+        "mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s02-gradient_fine_f1_mask.npy",
+        "initial_mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s02-gradient_fine_f1_initial.npy",
+        "report": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s02-gradient_fine_f1_report.json",
+        "overlay": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s02-gradient_fine_f1_overlay.npy",
+        "heatmap": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s02-gradient_fine_f1_heatmap.npy"
+      }
+    },
+    {
+      "sample_id": "s03-low-contrast",
+      "mode": "fine",
+      "factor": 1,
+      "complete": true,
+      "elapsed_seconds": 1.7903,
+      "reused_snapshot": false,
+      "recovered_stages": 0,
+      "checkpoint_dir": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/checkpoints/snapshot_b53b39b96a8733bb95bc",
+      "progress": "36/36",
+      "comparison": {
+        "region_count_truth": 2,
+        "region_count_predicted": 2,
+        "matched_count": 2,
+        "mean_centroid_error_px": 0.003233322721589838,
+        "mean_area_relative_error": 5.81327745874711e-05,
+        "mean_bbox_iou": 0.9896048397559742,
+        "mean_mask_iou": 0.9999418672254126,
+        "regions": [
+          {
+            "truth_region_id": 1,
+            "predicted_region_id": 1,
+            "centroid_error_px": 0.0,
+            "area_relative_error": 5.8042516143074804e-05,
+            "bbox_iou": 0.9865554587327275,
+            "mask_iou": 0.999941957483857,
+            "truth_area": 68915,
+            "predicted_area": 68911
+          },
+          {
+            "truth_region_id": 2,
+            "predicted_region_id": 2,
+            "centroid_error_px": 0.006466645443179676,
+            "area_relative_error": 5.8223033031867404e-05,
+            "bbox_iou": 0.9926542207792208,
+            "mask_iou": 0.9999417769669682,
+            "truth_area": 51526,
+            "predicted_area": 51523
+          }
+        ],
+        "tolerance": {
+          "centroid_px": 8.0,
+          "area_relative": 0.25,
+          "bbox_iou_min": 0.65,
+          "mask_iou_min": 0.55
+        },
+        "passed": true
+      },
+      "decision": {
+        "mode": "fine",
+        "downsample_factor": 1,
+        "block_size": 256,
+        "pixel_count": 691200,
+        "region_count": 2,
+        "estimated_fine_seconds": 5.5261,
+        "estimated_fine_mb": 31.641,
+        "estimated_seconds": 5.5261,
+        "estimated_mb": 31.641,
+        "reason": "像素数 691200、区域数 2；预测耗时 5.53s 和内存 31.6MB 均在预算内，选用逐像素精细生长",
+        "degradation_reason": null,
+        "impact_scope": [],
+        "considered": [
+          {
+            "factor": 1,
+            "mode": "fine",
+            "estimated_seconds": 5.5261,
+            "estimated_mb": 31.641,
+            "fits_time": true,
+            "fits_memory": true
+          }
+        ],
+        "budget": {
+          "time_seconds": 20.0,
+          "memory_mb": 512.0,
+          "max_workers": 4,
+          "tile_size": 256,
+          "block_buffer_mb": 4.0
+        }
+      },
+      "exports": {
+        "mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s03-low-contrast_fine_f1_mask.npy",
+        "initial_mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s03-low-contrast_fine_f1_initial.npy",
+        "report": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s03-low-contrast_fine_f1_report.json",
+        "overlay": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s03-low-contrast_fine_f1_overlay.npy",
+        "heatmap": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s03-low-contrast_fine_f1_heatmap.npy"
+      }
+    },
+    {
+      "sample_id": "s04-embedded-noise",
+      "mode": "fine",
+      "factor": 1,
+      "complete": true,
+      "elapsed_seconds": 3.6747,
+      "reused_snapshot": false,
+      "recovered_stages": 0,
+      "checkpoint_dir": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/checkpoints/snapshot_49be5aacd2785d980df9",
+      "progress": "60/60",
+      "comparison": {
+        "region_count_truth": 3,
+        "region_count_predicted": 3,
+        "matched_count": 3,
+        "mean_centroid_error_px": 0.01974023658237146,
+        "mean_area_relative_error": 0.00013356282825512922,
+        "mean_bbox_iou": 0.993095087169527,
+        "mean_mask_iou": 0.999866437171745,
+        "regions": [
+          {
+            "truth_region_id": 1,
+            "predicted_region_id": 1,
+            "centroid_error_px": 0.0,
+            "area_relative_error": 0.0,
+            "bbox_iou": 1.0,
+            "mask_iou": 1.0,
+            "truth_area": 127664,
+            "predicted_area": 127664
+          },
+          {
+            "truth_region_id": 2,
+            "predicted_region_id": 2,
+            "centroid_error_px": 0.03618671739228501,
+            "area_relative_error": 0.00021155424673994906,
+            "bbox_iou": 0.9896373741846372,
+            "mask_iou": 0.9997884457532601,
+            "truth_area": 118173,
+            "predicted_area": 118148
+          },
+          {
+            "truth_region_id": 3,
+            "predicted_region_id": 3,
+            "centroid_error_px": 0.023033992354829374,
+            "area_relative_error": 0.00018913423802543856,
+            "bbox_iou": 0.9896478873239437,
+            "mask_iou": 0.9998108657619745,
+            "truth_area": 84596,
+            "predicted_area": 84580
+          }
+        ],
+        "tolerance": {
+          "centroid_px": 8.0,
+          "area_relative": 0.25,
+          "bbox_iou_min": 0.65,
+          "mask_iou_min": 0.55
+        },
+        "passed": true
+      },
+      "decision": {
+        "mode": "fine",
+        "downsample_factor": 1,
+        "block_size": 256,
+        "pixel_count": 1228800,
+        "region_count": 3,
+        "estimated_fine_seconds": 10.0639,
+        "estimated_fine_mb": 56.25,
+        "estimated_seconds": 10.0639,
+        "estimated_mb": 56.25,
+        "reason": "像素数 1228800、区域数 3；预测耗时 10.06s 和内存 56.2MB 均在预算内，选用逐像素精细生长",
+        "degradation_reason": null,
+        "impact_scope": [],
+        "considered": [
+          {
+            "factor": 1,
+            "mode": "fine",
+            "estimated_seconds": 10.0639,
+            "estimated_mb": 56.25,
+            "fits_time": true,
+            "fits_memory": true
+          }
+        ],
+        "budget": {
+          "time_seconds": 20.0,
+          "memory_mb": 512.0,
+          "max_workers": 4,
+          "tile_size": 256,
+          "block_buffer_mb": 4.0
+        }
+      },
+      "exports": {
+        "mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s04-embedded-noise_fine_f1_mask.npy",
+        "initial_mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s04-embedded-noise_fine_f1_initial.npy",
+        "report": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s04-embedded-noise_fine_f1_report.json",
+        "overlay": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s04-embedded-noise_fine_f1_overlay.npy",
+        "heatmap": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s04-embedded-noise_fine_f1_heatmap.npy"
+      }
+    },
+    {
+      "sample_id": "s05-multi-overlap",
+      "mode": "downsampled",
+      "factor": 2,
+      "complete": true,
+      "elapsed_seconds": 8.2823,
+      "reused_snapshot": false,
+      "recovered_stages": 0,
+      "checkpoint_dir": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/checkpoints/snapshot_4b0a4b98f5ba0f6dfb9c",
+      "progress": "144/144",
+      "comparison": {
+        "region_count_truth": 5,
+        "region_count_predicted": 5,
+        "matched_count": 5,
+        "mean_centroid_error_px": 0.5026923935179568,
+        "mean_area_relative_error": 0.005718146421533029,
+        "mean_bbox_iou": 0.9827874164458293,
+        "mean_mask_iou": 0.9940614011916551,
+        "regions": [
+          {
+            "truth_region_id": 1,
+            "predicted_region_id": 1,
+            "centroid_error_px": 0.3338326720335517,
+            "area_relative_error": 0.007379888067303429,
+            "bbox_iou": 0.9407451114922813,
+            "mask_iou": 0.9925198209166994,
+            "truth_area": 417215,
+            "predicted_area": 414136
+          },
+          {
+            "truth_region_id": 2,
+            "predicted_region_id": 2,
+            "centroid_error_px": 0.7877937891535658,
+            "area_relative_error": 0.005505667259170341,
+            "bbox_iou": 0.9985272459499264,
+            "mask_iou": 0.9943101816587032,
+            "truth_area": 346552,
+            "predicted_area": 344644
+          },
+          {
+            "truth_region_id": 3,
+            "predicted_region_id": 3,
+            "centroid_error_px": 0.49387520608898783,
+            "area_relative_error": 0.006208135437184848,
+            "bbox_iou": 0.9908296482235229,
+            "mask_iou": 0.9936190561582833,
+            "truth_area": 334561,
+            "predicted_area": 332484
+          },
+          {
+            "truth_region_id": 4,
+            "predicted_region_id": 4,
+            "centroid_error_px": 0.40738651897015044,
+            "area_relative_error": 0.006658720046035595,
+            "bbox_iou": 0.9866205918837497,
+            "mask_iou": 0.9926962685225609,
+            "truth_area": 194632,
+            "predicted_area": 193336
+          },
+          {
+            "truth_region_id": 5,
+            "predicted_region_id": 5,
+            "centroid_error_px": 0.490573781343528,
+            "area_relative_error": 0.0028383212979709305,
+            "bbox_iou": 0.9972144846796658,
+            "mask_iou": 0.9971616787020291,
+            "truth_area": 151498,
+            "predicted_area": 151068
+          }
+        ],
+        "tolerance": {
+          "centroid_px": 8.0,
+          "area_relative": 0.25,
+          "bbox_iou_min": 0.65,
+          "mask_iou_min": 0.55
+        },
+        "passed": true
+      },
+      "decision": {
+        "mode": "downsampled",
+        "downsample_factor": 2,
+        "block_size": 256,
+        "pixel_count": 3145728,
+        "region_count": 5,
+        "estimated_fine_seconds": 26.9903,
+        "estimated_fine_mb": 144.0,
+        "estimated_seconds": 12.1268,
+        "estimated_mb": 61.5,
+        "reason": "精细模式预测耗时 26.99s 超过 20.00s；选择 2 倍降采样，预测耗时 12.13s、内存 61.5MB",
+        "degradation_reason": "精细模式预测耗时 26.99s 超过 20.00s",
+        "impact_scope": [
+          "区域生长在 1/2 分辨率进行",
+          "掩码确定性最近邻上采样回原尺寸",
+          "几何统计与轮廓始终基于上采样后的最终全分辨率掩码",
+          "分块提交与检查点粒度不变"
+        ],
+        "considered": [
+          {
+            "factor": 1,
+            "mode": "fine",
+            "estimated_seconds": 26.9903,
+            "estimated_mb": 144.0,
+            "fits_time": false,
+            "fits_memory": true
+          },
+          {
+            "factor": 2,
+            "mode": "downsampled",
+            "estimated_seconds": 12.1268,
+            "estimated_mb": 61.5,
+            "fits_time": true,
+            "fits_memory": true
+          }
+        ],
+        "budget": {
+          "time_seconds": 20.0,
+          "memory_mb": 512.0,
+          "max_workers": 4,
+          "tile_size": 256,
+          "block_buffer_mb": 4.0
+        }
+      },
+      "exports": {
+        "mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s05-multi-overlap_downsampled_f2_mask.npy",
+        "initial_mask": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s05-multi-overlap_downsampled_f2_initial.npy",
+        "report": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s05-multi-overlap_downsampled_f2_report.json",
+        "overlay": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s05-multi-overlap_downsampled_f2_overlay.npy",
+        "heatmap": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/exports/s05-multi-overlap_downsampled_f2_heatmap.npy"
+      }
+    }
+  ]
+}

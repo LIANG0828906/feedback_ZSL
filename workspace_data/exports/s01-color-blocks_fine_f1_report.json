@@ -1,0 +1,244 @@
+{
+  "algorithm_version": "seg-1.0.0",
+  "cancelled": false,
+  "checkpoint_dir": "/home/liang/feedback/uid42a8691e-default-163/workspace_data/checkpoints/snapshot_e171b7769732b0aa2917",
+  "checkpoint_invalidated": true,
+  "comparison": {
+    "matched_count": 4,
+    "mean_area_relative_error": 0.016199890122876117,
+    "mean_bbox_iou": 0.9789571048676148,
+    "mean_centroid_error_px": 0.02427410948423387,
+    "mean_mask_iou": 0.9838001098771239,
+    "passed": true,
+    "region_count_predicted": 4,
+    "region_count_truth": 4,
+    "regions": [
+      {
+        "area_relative_error": 0.0008804754567466431,
+        "bbox_iou": 1.0,
+        "centroid_error_px": 0.0,
+        "mask_iou": 0.9991195245432534,
+        "predicted_area": 4539,
+        "predicted_region_id": 3,
+        "truth_area": 4543,
+        "truth_region_id": 1
+      },
+      {
+        "area_relative_error": 0.010623841877702286,
+        "bbox_iou": 1.0,
+        "centroid_error_px": 0.06835931151592056,
+        "mask_iou": 0.9893761581222977,
+        "predicted_area": 8009,
+        "predicted_region_id": 1,
+        "truth_area": 8095,
+        "truth_region_id": 2
+      },
+      {
+        "area_relative_error": 0.05188679245283019,
+        "bbox_iou": 0.915828419470459,
+        "centroid_error_px": 0.028737126421014916,
+        "mask_iou": 0.9481132075471698,
+        "predicted_area": 4824,
+        "predicted_region_id": 2,
+        "truth_area": 5088,
+        "truth_region_id": 3
+      },
+      {
+        "area_relative_error": 0.0014084507042253522,
+        "bbox_iou": 1.0,
+        "centroid_error_px": 0.0,
+        "mask_iou": 0.9985915492957746,
+        "predicted_area": 2836,
+        "predicted_region_id": 4,
+        "truth_area": 2840,
+        "truth_region_id": 4
+      }
+    ],
+    "tolerance": {
+      "area_relative": 0.25,
+      "bbox_iou_min": 0.65,
+      "centroid_px": 8.0,
+      "mask_iou_min": 0.55
+    }
+  },
+  "complete": true,
+  "decision": {
+    "block_size": 256,
+    "budget": {
+      "block_buffer_mb": 4.0,
+      "max_workers": 4,
+      "memory_mb": 512.0,
+      "tile_size": 256,
+      "time_seconds": 20.0
+    },
+    "considered": [
+      {
+        "estimated_mb": 4.5,
+        "estimated_seconds": 0.8243,
+        "factor": 1,
+        "fits_memory": true,
+        "fits_time": true,
+        "mode": "fine"
+      }
+    ],
+    "degradation_reason": null,
+    "downsample_factor": 1,
+    "estimated_fine_mb": 4.5,
+    "estimated_fine_seconds": 0.8243,
+    "estimated_mb": 4.5,
+    "estimated_seconds": 0.8243,
+    "impact_scope": [],
+    "mode": "fine",
+    "pixel_count": 98304,
+    "reason": "像素数 98304、区域数 4；预测耗时 0.82s 和内存 4.5MB 均在预算内，选用逐像素精细生长",
+    "region_count": 4
+  },
+  "elapsed_seconds": 0.20327878099487862,
+  "factor": 1,
+  "mode": "fine",
+  "recovered_stages": 0,
+  "recovery_reason": "检查点文件损坏，整体作废：b00000_cleanup.npz: 'checkpoint_format_version is not a file in the archive'",
+  "regions": [
+    {
+      "area": 8009,
+      "bbox_h": 89,
+      "bbox_w": 115,
+      "bbox_x": 153,
+      "bbox_y": 36,
+      "centroid_x": 209.96216756149332,
+      "centroid_y": 80.05693594705956,
+      "label": 1,
+      "region_id": 1
+    },
+    {
+      "area": 4824,
+      "bbox_h": 89,
+      "bbox_w": 89,
+      "bbox_x": 254,
+      "bbox_y": 133,
+      "centroid_x": 298.2160033167496,
+      "centroid_y": 178.64531509121062,
+      "label": 2,
+      "region_id": 2
+    },
+    {
+      "area": 4539,
+      "bbox_h": 59,
+      "bbox_w": 77,
+      "bbox_x": 33,
+      "bbox_y": 34,
+      "centroid_x": 71.0,
+      "centroid_y": 63.0,
+      "label": 3,
+      "region_id": 3
+    },
+    {
+      "area": 2836,
+      "bbox_h": 40,
+      "bbox_w": 71,
+      "bbox_x": 90,
+      "bbox_y": 163,
+      "centroid_x": 125.0,
+      "centroid_y": 182.5,
+      "label": 4,
+      "region_id": 4
+    }
+  ],
+  "reused_snapshot": false,
+  "sample_id": "s01-color-blocks",
+  "scale_metrics": null,
+  "seed_source": "auto",
+  "seeds": [
+    [
+      199,
+      91
+    ],
+    [
+      295,
+      154
+    ],
+    [
+      103,
+      79
+    ],
+    [
+      94,
+      196
+    ]
+  ],
+  "state": {
+    "blocks": [
+      {
+        "block_index": 0,
+        "invalidated": false,
+        "rect": [
+          0,
+          0,
+          256,
+          256
+        ],
+        "stages": {
+          "cleanup": {
+            "error": null,
+            "sequence": 2,
+            "state": "committed"
+          },
+          "growth": {
+            "error": null,
+            "sequence": 1,
+            "state": "committed"
+          },
+          "statistics": {
+            "error": null,
+            "sequence": 3,
+            "state": "committed"
+          }
+        }
+      },
+      {
+        "block_index": 1,
+        "invalidated": false,
+        "rect": [
+          256,
+          0,
+          384,
+          256
+        ],
+        "stages": {
+          "cleanup": {
+            "error": null,
+            "sequence": 5,
+            "state": "committed"
+          },
+          "growth": {
+            "error": null,
+            "sequence": 4,
+            "state": "committed"
+          },
+          "statistics": {
+            "error": null,
+            "sequence": 6,
+            "state": "committed"
+          }
+        }
+      }
+    ],
+    "committed_stages": 6,
+    "grid": {
+      "block_count": 2,
+      "columns": 2,
+      "height": 256,
+      "rows": 1,
+      "stage_count": 6,
+      "tile_size": 256,
+      "width": 384
+    },
+    "progress": "6/6",
+    "total_stages": 6
+  },
+  "timings": {
+    "block_commit_seconds": 0.049234251004236285,
+    "segmentation_seconds": 0.14532304099702742,
+    "total_seconds": 0.20327878099487862
+  }
+}
