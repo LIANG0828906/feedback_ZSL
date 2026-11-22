@@ -1,0 +1,240 @@
+{
+ "sample_dir": "/home/liang/feedback/uid42a8691e-default-133/samples/voice_seed42",
+ "ckpt_dir": "/home/liang/feedback/uid42a8691e-default-133/checkpoints",
+ "export_dir": "/home/liang/feedback/uid42a8691e-default-133/exports",
+ "clean_state": "checkpoints/exports cleared",
+ "sample": {
+  "id": "voice_seed42",
+  "seed": 42,
+  "frames": 300,
+  "arrivals": 295,
+  "jitter_patterns": [
+   "delay",
+   "drop",
+   "duplicate",
+   "reorder",
+   "surge"
+  ]
+ },
+ "content_hash": "c09f0adf73d2207197b987b7cff533f301f4b18ec8bc93f5a3065a35617996d5",
+ "policy_version": "986382e894d7e015",
+ "three_path_consistency": {
+  "match": true,
+  "pairs": [
+   {
+    "match": true,
+    "paths": [
+     "realtime",
+     "offline"
+    ],
+    "samples": 48160,
+    "frames": 300,
+    "decisions": 18
+   },
+   {
+    "match": true,
+    "paths": [
+     "realtime",
+     "resume"
+    ],
+    "samples": 48160,
+    "frames": 300,
+    "decisions": 18
+   }
+  ]
+ },
+ "realtime_stats": {
+  "committed_windows": 300,
+  "gap_count": 12,
+  "avg_queue_delay_ms": 110.573,
+  "final_target_delay_ms": 180,
+  "dup_dropped": 5,
+  "late_dropped": 2,
+  "output_samples": 48160,
+  "declared_samples": 48160
+ },
+ "decisions": [
+  {
+   "tick": 150,
+   "reason": "water_high_low_latency",
+   "old": 120,
+   "new": 100,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "water 13 > 12 and late ratio 0.000 < 0.020"
+  },
+  {
+   "tick": 1100,
+   "reason": "jitter_surge",
+   "old": 100,
+   "new": 100,
+   "gaps": 0,
+   "avg_queue_ms": 101.45,
+   "rationale": "delay std 16.9ms > 2.5x baseline 6.1ms; no gaps -> hold low latency"
+  },
+  {
+   "tick": 1220,
+   "reason": "late_ratio_high",
+   "old": 100,
+   "new": 120,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend 3.0"
+  },
+  {
+   "tick": 1270,
+   "reason": "late_ratio_high",
+   "old": 120,
+   "new": 140,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend -1.0"
+  },
+  {
+   "tick": 1300,
+   "reason": "jitter_surge",
+   "old": 140,
+   "new": 160,
+   "gaps": 3,
+   "avg_queue_ms": 81.8,
+   "rationale": "delay std 34.7ms > 2.5x baseline 6.3ms; 3 gaps in window -> prefer continuity"
+  },
+  {
+   "tick": 1350,
+   "reason": "late_ratio_high",
+   "old": 160,
+   "new": 180,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend 0.0"
+  },
+  {
+   "tick": 1400,
+   "reason": "late_ratio_high",
+   "old": 180,
+   "new": 200,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend 0.0"
+  },
+  {
+   "tick": 1450,
+   "reason": "late_ratio_high",
+   "old": 200,
+   "new": 220,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend 0.0"
+  },
+  {
+   "tick": 1500,
+   "reason": "late_ratio_high",
+   "old": 220,
+   "new": 240,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend 0.0"
+  },
+  {
+   "tick": 1560,
+   "reason": "water_high_low_latency",
+   "old": 240,
+   "new": 220,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "water 21 > 12 and late ratio 0.000 < 0.010"
+  },
+  {
+   "tick": 1610,
+   "reason": "water_high_low_latency",
+   "old": 220,
+   "new": 200,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "water 18 > 12 and late ratio 0.000 < 0.020"
+  },
+  {
+   "tick": 1660,
+   "reason": "water_high_low_latency",
+   "old": 200,
+   "new": 180,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "water 16 > 12 and late ratio 0.000 < 0.020"
+  },
+  {
+   "tick": 1710,
+   "reason": "water_high_low_latency",
+   "old": 180,
+   "new": 160,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "water 15 > 12 and late ratio 0.000 < 0.020"
+  },
+  {
+   "tick": 2070,
+   "reason": "water_high_low_latency",
+   "old": 160,
+   "new": 140,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "water 14 > 12 and late ratio 0.000 < 0.020"
+  },
+  {
+   "tick": 2150,
+   "reason": "water_high_low_latency",
+   "old": 140,
+   "new": 120,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "water 13 > 12 and late ratio 0.000 < 0.020"
+  },
+  {
+   "tick": 3060,
+   "reason": "late_ratio_high",
+   "old": 120,
+   "new": 140,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend 0.0"
+  },
+  {
+   "tick": 3110,
+   "reason": "late_ratio_high",
+   "old": 140,
+   "new": 160,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.150 > 0.100; water trend -1.0"
+  },
+  {
+   "tick": 3160,
+   "reason": "late_ratio_high",
+   "old": 160,
+   "new": 180,
+   "gaps": 0,
+   "avg_queue_ms": 0.0,
+   "rationale": "late ratio 0.200 > 0.100; water trend -1.0"
+  }
+ ],
+ "parallel_equals_serial": {
+  "workers=1": true,
+  "workers=2": true,
+  "workers=4": true,
+  "workers=8": true
+ },
+ "resume_points": {
+  "stop=1": true,
+  "stop=50": true,
+  "stop=137": true,
+  "stop=250": true
+ },
+ "error_codes": {
+  "E_META": "OK",
+  "E_JITTER": "OK",
+  "E_DECODE": "OK",
+  "E_ORDER": "OK",
+  "E_DUP": "OK",
+  "E_PARA": "OK"
+ }
+}
