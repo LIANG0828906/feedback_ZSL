@@ -20,3 +20,22 @@
 
 验收：
 用本地样本验证字幕窗口与折行结果、并行与恢复路径一致及异常码，附运行记录。
+
+---
+
+## 项目交付说明（实现）
+
+本仓库已实现上述管线与验证工具，入口与文档：
+
+- 管线核心包：`caption_pipeline/`（加载校验、包络检测、窗口推导、折行切分、取舍、状态机、调度、检查点、引擎）
+- 样本生成器：`samplegen.py`；CLI：`main.py`；独立验证工具：`verify.py`；GUI：`gui.py`
+- 测试：`tests/`（33 项，含并行一致性、kill -9 恢复、E_SEG 重试、offscreen GUI）
+- 技术说明：`docs/TECHNICAL.md`；验收运行记录：`docs/VALIDATION.md`
+
+```bash
+uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt
+.venv/bin/python main.py gen --out samples
+.venv/bin/python main.py run --project samples/proj_0/manifest.json --persist ckpt0 --workers 4
+.venv/bin/python main.py verify --project samples/proj_0/manifest.json --persist ckpt0
+.venv/bin/python -m pytest tests -q
+```
