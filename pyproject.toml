@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "npr-workbench"
+version = "1.0.0"
+description = "Deterministic tile-based non-photorealistic rendering desktop workbench"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = ["numpy>=1.24,<3"]
+
+[project.scripts]
+npr-workbench = "npr_workbench.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["npr_workbench*"]
+
