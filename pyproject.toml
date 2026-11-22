@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mediaforge-workbench"
+version = "1.0.0"
+description = "Deterministic multimedia container and metadata workbench"
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = []
+
+[project.optional-dependencies]
+samples = ["numpy>=2.0,<3"]
+gui = ["PySide6>=6.7,<7"]
+
+[project.scripts]
+mediaforge = "mediaforge.cli:main"
+mediaforge-gui = "mediaforge.gui.main_window:run"
+
+[tool.setuptools.packages.find]
+include = ["mediaforge*"]

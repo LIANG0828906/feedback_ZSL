@@ -1,21 +1,91 @@
-当前是空白工作区，需要从零构建一套面向游戏与互动媒体素材的多媒体容器封装与元数据管理桌面工作台，并交付算法实现与可复现的实验环境。本地确定性样本生成器按固定种子产出多组多媒体素材：每组的音视频轨道以裸流描述给出（视频为逐帧网格图案与时间戳，音频为合成音调采样），另含多套不同版本与不同字段表达方式的容器元数据描述（时长单位、轨道语言标签、章节表、封面与自定义标签的存放位置各不相同），并附带解析真值（每轨采样/帧数、总时长、章节起止时刻），用于封装结果观测。工作台需把裸流与多版本元数据统一封装为内部容器模型，允许编辑轨道属性与章节表，再按目标版本导出封装结果，同时提供校验器仅从导出产物重算元数据并与真值比对。业务方核心诉求是可复现验证与异常注入：同一输入与参数在任何执行路径下必须得到逐字节一致的封装产物与一致的元数据统计；需要通过输入或参数注入元数据冲突、时间戳倒置、轨道缺失与分片损坏等异常，验证错误链路与恢复边界不被绕过。
+# MediaForge 多媒体容器工作台
 
-任务环境与准备：
-安装 Windows 10/11 与 Python 3.11，创建虚拟环境并安装 numpy 与 PySide6（版本由本地 wheel 提供，无需联网）。
-在工作区创建 samples 目录，用题目附带的本地确定性生成器脚本产出裸流描述、多版本元数据描述与真值清单，生成过程不依赖网络或外部素材。
-准备用于异常注入的参数文件与损坏分片样本，确认检查点目录可写且可清理，运行前置自检脚本确认样本数量与真值指纹一致。
+面向游戏与互动媒体素材的确定性容器封装、元数据版本映射、跨版本导出、检查点恢复与独立校验桌面工作台。项目从空工作区构建，核心算法只依赖 Python 标准库；桌面层优先使用 PySide6，并提供 PyQt5 兼容入口用于无 PySide6 环境的离屏烟测。
 
-业务要求：
-1. 实现多版本容器元数据描述加载与统一模型映射：读取本地确定性生成的至少三个版本的元数据描述，各版本在时长单位、轨道语言标签、章节表结构与自定义标签存放位置上互不相同；映射到内部容器模型后保留源版本标识，未知版本号或必填字段缺失返回 E_META 并指出字段路径。
-2. 实现裸流导入与轨道建模：把视频逐帧描述与音频采样描述导入为轨道，校验帧数与采样数与真值清单一致、帧时间戳单调且间隔为声明基准单位的整数倍；导入后每条轨道须记录采样数、基准时基与语言标签，轨道缺失或时基不一致返回 E_TRACK。
-3. 实现基于内部模型的确定性封装写出：按目标版本把轨道、章节表与标签封装为容器产物，同一内部模型重复封装须逐字节一致；章节表须按起止时刻排序且不重叠，重叠或越界返回 E_CHAP 并指出章节编号，未知目标版本返回 E_VER。
-4. 实现跨版本导出与损失报告：把内部模型导出到任一受支持的低版本时，对低版本无法表达的字段生成 E_LOSSY 警告清单并记录降级映射痕迹；降级映射不得丢弃轨道时基与章节起止时刻，且导出产物须能被对应版本加载器重新读回并与原内部模型在可表达字段上逐项等价。
-5. 实现元数据时间精度换算的一致性约束：各版本时长单位不同（如毫秒与分数时基），换算须使用整型有理运算并以声明基准单位对齐，禁止浮点累积误差；要求同一轨道经高版本到低版本再到高版本的往返后，采样数与时基严格不变，换算残差为零，出现不可整除非零残差返回 E_PREC。
-6. 实现独立校验器：仅从持久化的封装产物与真值指纹出发，重新解析轨道数、每轨采样/帧数、总时长、章节起止与标签集合，并与封装清单声明逐项比对；发现不一致时输出首个不一致字段路径、实测值与声明值，校验器不得依赖主链路的内存状态或编辑会话。
-7. 实现分段封装的检查点与断点恢复：封装按轨道分段推进，每完成并校验一段把该段产物、内容哈希、元数据版本、参数版本与算法版本原子且串行写入本地持久化存储，写入不得交错；重启加载时任一哈希或版本不匹配须整体作废快照并全量重封，禁止部分混用旧分段，强制终止后不得承诺生成完整封装报告。
-8. 实现异常注入与并发资源边界：支持通过输入或参数注入元数据冲突、时间戳倒置、轨道缺失与分片损坏四类异常，分别走 E_CONFLICT、E_ORDER、E_TRACK、E_CORRUPT 链路；单分段异常须置该段为失败并允许重试且不污染其他段；分段封装可在工作线程并行但须限制最大并行度与每线程缓冲上限，并发与串行对同一输入须产出逐字节一致的产物。
+## 交付内容
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- `mediaforge/`：统一模型、v1/v2/v3 元数据编解码、裸流导入、确定性封装、独立校验器、分段检查点、异常注入、CLI 与样本生成器。
+- `mediaforge/gui/`：可编辑轨道属性与章节表的 PySide6 桌面工作台。
+- `samples/`：固定种子 `20261123` 生成的 3 组音视频素材、每组 3 版元数据、真值指纹、异常参数和损坏分片样本。
+- `tests/`：49 项自动化测试，覆盖正常链路、精度边界、跨版本往返、异常码、并发、恢复与 Qt 烟测。
+- `scripts/`：Windows/Linux 环境准备、自检、端到端演示和测试入口。
+- `artifacts/demo/validation_report.json`：一次完整实测的机器可读报告。
 
-验收：
-使用本地确定性样本验证多版本封装、跨版本往返、独立校验与异常注入，并核对并发与恢复路径产物逐字节一致。
+## 快速开始
+
+Windows 10/11 + Python 3.11 的目标流程：
+
+```powershell
+.\scripts\setup_windows.ps1
+.\.venv\Scripts\python.exe run_workbench.py
+```
+
+本地 wheel 放入 `wheelhouse/`，安装命令使用 `--no-index --find-links wheelhouse`，样本生成与运行不下载任何素材或依赖。详见 `docs/WINDOWS_SETUP.md`。
+
+已有样本时可直接运行：
+
+```bash
+python -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
+python -m mediaforge gui
+python -m unittest discover -v
+python scripts/run_demo.py
+```
+
+## 常用 CLI
+
+```bash
+python -m mediaforge generate-samples --out samples --seed 20261123
+python -m mediaforge inspect --sample samples/g01_neon_city --source-version v3
+python -m mediaforge pack --sample samples/g01_neon_city --source-version v3 --target v1 --out artifacts/g01_v1.mfz
+python -m mediaforge pack --sample samples/g01_neon_city --source-version v3 --target v3 --out artifacts/g01_seg.mfz --segmented --workers 4 --checkpoint artifacts/checkpoints
+python -m mediaforge validate --artifact artifacts/g01_v1.mfz --truth samples/g01_neon_city/truth.json
+python -m mediaforge roundtrip --sample samples/g01_neon_city --source-version v3 --target v1
+python -m mediaforge readback --artifact artifacts/g01_v1.mfz
+```
+
+异常注入参数位于 `samples/injections/`：
+
+```bash
+python -m mediaforge pack --sample samples/g01_neon_city --target v3 --out /tmp/conflict.mfz --injection samples/injections/conflict.json
+python -m mediaforge pack --sample samples/g01_neon_city --target v3 --out /tmp/corrupt.mfz --segmented --checkpoint /tmp/checkpoints --injection samples/injections/corrupt_segment.json
+```
+
+## 确定性不变量
+
+- 规范 JSON 使用固定键排序、紧凑分隔符、UTF-8 和禁用 NaN；封装产物不含时间戳、绝对路径、线程调度信息或随机值。
+- 时间换算全部使用 `fractions.Fraction` 与整数 tick，不可整除时返回 `E_PREC`，绝不静默舍入。
+- 章节先按起止时刻规范化排序，再检查非重叠与容器边界；错误包含章节编号及字段路径。
+- 串行与并行使用同一分段信封、同一排序和同一最终装配函数；并发度不进入请求签名，因此不改变产物字节。
+- 检查点的段文件与清单均通过临时文件 + `fsync` + `os.replace` 原子写入；进程内互斥锁与跨进程文件锁保证写入不交错。
+
+## 样本布局
+
+```text
+samples/
+  index.json
+  g01_neon_city/
+    metadata/meta_v1.json
+    metadata/meta_v2.json
+    metadata/meta_v3.json
+    raw/video_main.json
+    raw/audio_main.json
+    truth.json
+  g02_clockwork/...
+  g03_tidal/...
+  injections/{conflict,order,missing_track,corrupt_segment}.json
+  anomalies/corrupt_audio_fragment.json
+```
+
+三组样本分别为 1.5s、1.2s、1.8s；视频为逐帧网格图案，音频为整数三角波合成 PCM；三版元数据分别使用毫秒、分数时基 tick、微秒与章节帧表表达时长/章节。
+
+## 文档
+
+- `docs/ARCHITECTURE.md`：模型、版本映射、封装格式、检查点与并发设计。
+- `docs/ERROR_CODES.md`：错误码、触发条件与字段路径约定。
+- `docs/VALIDATION_RESULTS.md`：实际环境、测试、哈希和异常链路结果。
+- `docs/REQUIREMENTS_TRACEABILITY.md`：逐条业务要求到实现与测试的追踪。
+- `docs/WINDOWS_SETUP.md`：Windows 10/11 + Python 3.11 本地 wheel 部署。
+
+## 当前验证环境
+
+交付容器为 WSL2 Linux，无法在本机执行 Windows 安装器；实际验证使用预置的 Python 3.11.18、PySide6 6.12.0、numpy 2.4.6 环境完成。核心链路同时通过系统 Python 3.14 标准库运行，Windows 脚本和本地 wheel 安装流程已提供但未在当前 WSL 主机执行。
