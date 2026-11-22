@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "colorworkbench"
+version = "1.0.0"
+description = "本地确定性的游戏贴图颜色空间转换编辑工作台"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy==2.4.6",
+    "PySide6==6.12.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["cwb*"]

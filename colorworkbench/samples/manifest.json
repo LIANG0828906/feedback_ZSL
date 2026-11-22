@@ -1,0 +1,174 @@
+{
+  "algorithm_version": "cwb-algo-1.0.0",
+  "corrupt": [
+    "corrupt/truncated.cimg",
+    "corrupt/badmagic.cimg"
+  ],
+  "images": [
+    {
+      "channels": 3,
+      "depth": 8,
+      "file": "images/tile_16x16_8_rgb.cimg",
+      "height": 16,
+      "name": "tile_16x16_8_rgb",
+      "sha256": "ba817f2d1a35d113002697fc94c0ff6db5160204a346e3cabe07cdcc9f8a64a5",
+      "width": 16
+    },
+    {
+      "channels": 1,
+      "depth": 8,
+      "file": "images/tile_24x32_8_gray.cimg",
+      "height": 24,
+      "name": "tile_24x32_8_gray",
+      "sha256": "59e18eb692a5712e3b03b33218ccbb3eca01ef725d31d81892041e3ed8f237bd",
+      "width": 32
+    },
+    {
+      "channels": 3,
+      "depth": 16,
+      "file": "images/tile_32x24_16_rgb.cimg",
+      "height": 32,
+      "name": "tile_32x24_16_rgb",
+      "sha256": "87eb3158ef545e643c0b69aa3c3035a25453192a8d6c57bbe2ac78a824341707",
+      "width": 24
+    },
+    {
+      "channels": 4,
+      "depth": 16,
+      "file": "images/tile_40x40_16_rgba.cimg",
+      "height": 40,
+      "name": "tile_40x40_16_rgba",
+      "sha256": "09a5a4f5a8b942bdcd227a8937b246bf84592d200750bea2072f8c079a54c0f2",
+      "width": 40
+    },
+    {
+      "channels": 2,
+      "depth": 8,
+      "file": "images/tile_48x32_8_rgba.cimg",
+      "height": 48,
+      "name": "tile_48x32_8_rgba",
+      "sha256": "e69749b8849b516d4abd1af25aeee882d572d6c8365173807dc1fbee95eb9c53",
+      "width": 32
+    },
+    {
+      "channels": 1,
+      "depth": 16,
+      "file": "images/tile_64x48_16_gray.cimg",
+      "height": 64,
+      "name": "tile_64x48_16_gray",
+      "sha256": "1ecee7d047a3df51531ed2b2243047a68d06031aa084555ee985fdecb442878d",
+      "width": 48
+    }
+  ],
+  "no_external_icc": true,
+  "no_network": true,
+  "profiles": [
+    {
+      "declared_default_wp": [
+        0.95047,
+        1.0,
+        1.08883
+      ],
+      "file": "profiles/src_v1.json",
+      "has_white_point": [
+        0.95047,
+        1.0,
+        1.08883
+      ],
+      "intent_token": 1,
+      "name": "src_v1",
+      "source_version": 1,
+      "trc_kind": "parametric"
+    },
+    {
+      "declared_default_wp": [
+        0.9642,
+        1.0,
+        0.8249
+      ],
+      "file": "profiles/dst_v1.json",
+      "has_white_point": [
+        0.9642,
+        1.0,
+        0.8249
+      ],
+      "intent_token": 1,
+      "name": "dst_v1",
+      "source_version": 1,
+      "trc_kind": "parametric"
+    },
+    {
+      "declared_default_wp": [
+        0.95047,
+        1.0,
+        1.08883
+      ],
+      "file": "profiles/src_v2.json",
+      "has_white_point": false,
+      "intent_token": "rel",
+      "name": "src_v2",
+      "source_version": 2,
+      "trc_kind": "table"
+    },
+    {
+      "declared_default_wp": [
+        0.9642,
+        1.0,
+        0.8249
+      ],
+      "file": "profiles/dst_v2.json",
+      "has_white_point": [
+        0.9642,
+        1.0,
+        0.8249
+      ],
+      "intent_token": "rel",
+      "name": "dst_v2",
+      "source_version": 2,
+      "trc_kind": "table"
+    },
+    {
+      "declared_default_wp": [
+        0.95047,
+        1.0,
+        1.08883
+      ],
+      "file": "profiles/src_v3.json",
+      "has_white_point": [
+        0.95047,
+        1.0,
+        1.08883
+      ],
+      "intent_token": "relative-colorimetric",
+      "name": "src_v3",
+      "source_version": "3.0",
+      "trc_kind": "parametric"
+    },
+    {
+      "declared_default_wp": [
+        0.9642,
+        1.0,
+        0.8249
+      ],
+      "file": "profiles/dst_v3.json",
+      "has_white_point": [
+        0.9642,
+        1.0,
+        0.8249
+      ],
+      "intent_token": "relative-colorimetric",
+      "name": "dst_v3",
+      "source_version": "3.0",
+      "trc_kind": "parametric"
+    }
+  ],
+  "seed": 20261123,
+  "trc_inversion_reference": {
+    "argmax_encoded": 0.9843711843711843,
+    "max_abs_diff": 0.0003212510095847998,
+    "mean_abs_diff": 0.0001790667195106527,
+    "parametric_kind": "parametric",
+    "samples": 4096,
+    "table_kind": "table"
+  }
+}
