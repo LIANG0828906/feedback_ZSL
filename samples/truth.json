@@ -1,0 +1,302 @@
+{
+  "schema_version": "roomreverb.truth.v1",
+  "algorithm_version": "roomreverb-solver-v1",
+  "precision": "Q16.16",
+  "speed_of_sound_mm_s": 343000,
+  "tolerance": {
+    "path_mm": 0.02,
+    "decay_ms": 0.02,
+    "early_energy": 0.000001
+  },
+  "listener_rooms": {
+    "l0": "r0",
+    "l1": "r1",
+    "l2": "r2",
+    "l3": "r3",
+    "l4": "r4",
+    "l5": "r5"
+  },
+  "pairs": [
+    {
+      "source_id": "s0",
+      "listener_id": "l0",
+      "reachable": true,
+      "room_path": [
+        "r0"
+      ],
+      "door_path": [],
+      "path_mm": 885.0988616943359,
+      "decay_ms": 871.297119140625,
+      "early_energy": 0.329559326171875
+    },
+    {
+      "source_id": "s1",
+      "listener_id": "l0",
+      "reachable": true,
+      "room_path": [
+        "r4",
+        "r1",
+        "r0"
+      ],
+      "door_path": [
+        "o14",
+        "o01"
+      ],
+      "path_mm": 2486.7639923095703,
+      "decay_ms": 949.8157196044922,
+      "early_energy": 0.207916259765625
+    },
+    {
+      "source_id": "s2",
+      "listener_id": "l0",
+      "reachable": true,
+      "room_path": [
+        "r2",
+        "r1",
+        "r0"
+      ],
+      "door_path": [
+        "o12",
+        "o01"
+      ],
+      "path_mm": 3001.893051147461,
+      "decay_ms": 1038.309310913086,
+      "early_energy": 0.179779052734375
+    },
+    {
+      "source_id": "s0",
+      "listener_id": "l1",
+      "reachable": true,
+      "room_path": [
+        "r0",
+        "r1"
+      ],
+      "door_path": [
+        "o01"
+      ],
+      "path_mm": 1908.5157623291016,
+      "decay_ms": 817.6065368652344,
+      "early_energy": 0.247650146484375
+    },
+    {
+      "source_id": "s1",
+      "listener_id": "l1",
+      "reachable": true,
+      "room_path": [
+        "r4",
+        "r1"
+      ],
+      "door_path": [
+        "o14"
+      ],
+      "path_mm": 1777.2195434570312,
+      "decay_ms": 984.6716003417969,
+      "early_energy": 0.2785797119140625
+    },
+    {
+      "source_id": "s2",
+      "listener_id": "l1",
+      "reachable": true,
+      "room_path": [
+        "r2",
+        "r1"
+      ],
+      "door_path": [
+        "o12"
+      ],
+      "path_mm": 1981.0019989013672,
+      "decay_ms": 1115.7533569335938,
+      "early_energy": 0.2581939697265625
+    },
+    {
+      "source_id": "s0",
+      "listener_id": "l2",
+      "reachable": true,
+      "room_path": [
+        "r0",
+        "r1",
+        "r2"
+      ],
+      "door_path": [
+        "o01",
+        "o12"
+      ],
+      "path_mm": 3545.7010955810547,
+      "decay_ms": 1039.894760131836,
+      "early_energy": 0.15826416015625
+    },
+    {
+      "source_id": "s1",
+      "listener_id": "l2",
+      "reachable": true,
+      "room_path": [
+        "r4",
+        "r1",
+        "r2"
+      ],
+      "door_path": [
+        "o14",
+        "o12"
+      ],
+      "path_mm": 2243.9827880859375,
+      "decay_ms": 1147.7315673828125,
+      "early_energy": 0.2336883544921875
+    },
+    {
+      "source_id": "s2",
+      "listener_id": "l2",
+      "reachable": true,
+      "room_path": [
+        "r2"
+      ],
+      "door_path": [],
+      "path_mm": 541.2947387695312,
+      "decay_ms": 1466.165756225586,
+      "early_energy": 0.4607696533203125
+    },
+    {
+      "source_id": "s0",
+      "listener_id": "l3",
+      "reachable": true,
+      "room_path": [
+        "r0",
+        "r3"
+      ],
+      "door_path": [
+        "o03"
+      ],
+      "path_mm": 2017.2429504394531,
+      "decay_ms": 895.5188446044922,
+      "early_energy": 0.2266845703125
+    },
+    {
+      "source_id": "s1",
+      "listener_id": "l3",
+      "reachable": true,
+      "room_path": [
+        "r4",
+        "r3"
+      ],
+      "door_path": [
+        "o34"
+      ],
+      "path_mm": 1730.2407531738281,
+      "decay_ms": 1062.1299591064453,
+      "early_energy": 0.2722625732421875
+    },
+    {
+      "source_id": "s2",
+      "listener_id": "l3",
+      "reachable": true,
+      "room_path": [
+        "r2",
+        "r1",
+        "r4",
+        "r3"
+      ],
+      "door_path": [
+        "o12",
+        "o14",
+        "o34"
+      ],
+      "path_mm": 3888.6770629882812,
+      "decay_ms": 1094.8689422607422,
+      "early_energy": 0.1547393798828125
+    },
+    {
+      "source_id": "s0",
+      "listener_id": "l4",
+      "reachable": true,
+      "room_path": [
+        "r0",
+        "r1",
+        "r4"
+      ],
+      "door_path": [
+        "o01",
+        "o14"
+      ],
+      "path_mm": 3014.213394165039,
+      "decay_ms": 951.3534698486328,
+      "early_energy": 0.1805877685546875
+    },
+    {
+      "source_id": "s1",
+      "listener_id": "l4",
+      "reachable": true,
+      "room_path": [
+        "r4"
+      ],
+      "door_path": [],
+      "path_mm": 457.93011474609375,
+      "decay_ms": 1204.9474334716797,
+      "early_energy": 0.5031585693359375
+    },
+    {
+      "source_id": "s2",
+      "listener_id": "l4",
+      "reachable": true,
+      "room_path": [
+        "r2",
+        "r1",
+        "r4"
+      ],
+      "door_path": [
+        "o12",
+        "o14"
+      ],
+      "path_mm": 2227.6241455078125,
+      "decay_ms": 1147.6838684082031,
+      "early_energy": 0.23486328125
+    },
+    {
+      "source_id": "s0",
+      "listener_id": "l5",
+      "reachable": true,
+      "room_path": [
+        "r0",
+        "r1",
+        "r2",
+        "r5"
+      ],
+      "door_path": [
+        "o01",
+        "o12",
+        "o25"
+      ],
+      "path_mm": 4534.981399536133,
+      "decay_ms": 989.4706115722656,
+      "early_energy": 0.12646484375
+    },
+    {
+      "source_id": "s1",
+      "listener_id": "l5",
+      "reachable": true,
+      "room_path": [
+        "r4",
+        "r5"
+      ],
+      "door_path": [
+        "o45"
+      ],
+      "path_mm": 2040.8640441894531,
+      "decay_ms": 1015.9182281494141,
+      "early_energy": 0.225921630859375
+    },
+    {
+      "source_id": "s2",
+      "listener_id": "l5",
+      "reachable": true,
+      "room_path": [
+        "r2",
+        "r5"
+      ],
+      "door_path": [
+        "o25"
+      ],
+      "path_mm": 1604.9947509765625,
+      "decay_ms": 1145.1351165771484,
+      "early_energy": 0.2606201171875
+    }
+  ]
+}

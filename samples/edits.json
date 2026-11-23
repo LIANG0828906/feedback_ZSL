@@ -1,0 +1,47 @@
+{
+  "level_id": "level-seed-42",
+  "algorithm_version": "roomreverb-solver-v1",
+  "edits": [
+    {
+      "kind": "set_room_params",
+      "room_id": "r1",
+      "params": {
+        "t60_ms": 940,
+        "early_density": 0.7,
+        "reverb_gain": 1.08
+      }
+    },
+    {
+      "kind": "remove_portal",
+      "portal_id": "o34"
+    },
+    {
+      "kind": "set_room_params",
+      "room_id": "r5",
+      "params": {
+        "t60_ms": 1280,
+        "early_density": 0.64,
+        "reverb_gain": 1.02
+      }
+    },
+    {
+      "kind": "add_portal",
+      "portal": {
+        "id": "o34b",
+        "wall_id": "w34",
+        "center": {
+          "x": 2200,
+          "y": 2860
+        },
+        "width": 260,
+        "active": true
+      }
+    },
+    {
+      "kind": "move_room_edge",
+      "room_id": "r3",
+      "edge": "bottom",
+      "delta_mm": -80
+    }
+  ]
+}

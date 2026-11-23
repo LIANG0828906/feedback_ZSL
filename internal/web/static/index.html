@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Room Reverb Workbench</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">RR</span>
+      <div>
+        <h1>Room Reverb Workbench</h1>
+        <p id="subtitle">关卡房间混响区划诊断台</p>
+      </div>
+    </div>
+    <div class="top-status">
+      <div class="progress-wrap">
+        <span class="metric-label">提交进度</span>
+        <strong id="progress">0 / 0</strong>
+        <div class="progress"><i id="progress-bar"></i></div>
+      </div>
+      <span id="algo-chip" class="chip">Q16.16</span>
+      <button id="btn-compare" class="btn primary">三路径比对</button>
+      <button id="btn-export" class="btn">导出</button>
+      <button id="btn-reset" class="btn danger">复位</button>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="panel plan-panel">
+      <div class="panel-head">
+        <div>
+          <h2>关卡平面与门洞连通</h2>
+          <p class="muted">点击房间 / 门洞定位；拖动选中房间的边界触发增量重算。</p>
+        </div>
+        <div class="legend">
+          <span><i class="dot state-committed"></i>已提交</span>
+          <span><i class="dot state-parameters"></i>求解中</span>
+          <span><i class="dot state-failed"></i>失败</span>
+          <span><i class="dot source"></i>声源</span>
+          <span><i class="dot listener"></i>听者</span>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="plan"></canvas>
+        <div id="plan-hint" class="plan-hint">选择房间以编辑参数与边界</div>
+      </div>
+      <div class="toolbar">
+        <label>听者
+          <select id="listener-select"></select>
+        </label>
+        <label>声源
+          <select id="source-select"></select>
+        </label>
+        <label>门洞
+          <select id="portal-select"></select>
+        </label>
+        <button id="btn-remove-portal" class="btn small">删除门洞</button>
+        <span class="toolbar-spacer"></span>
+        <span id="plan-summary" class="muted"></span>
+      </div>
+    </section>
+
+    <aside class="panel side-panel">
+      <div class="panel-head compact">
+        <div>
+          <h2>房间状态矩阵</h2>
+          <p class="muted" id="state-count"></p>
+        </div>
+        <span id="last-state" class="chip neutral">IDLE</span>
+      </div>
+      <div id="state-matrix" class="state-matrix"></div>
+
+      <div class="section-title">
+        <h3>失效传播</h3>
+        <span id="reuse-count" class="chip neutral">复用 0</span>
+      </div>
+      <div id="invalidation-list" class="invalidation-list empty">暂无编辑</div>
+
+      <div class="section-title">
+        <h3>运行预算</h3>
+        <span class="chip neutral">串行检查点</span>
+      </div>
+      <div id="budget" class="budget-grid"></div>
+      <div id="metrics" class="mini-metrics"></div>
+    </aside>
+
+    <section class="panel editor-panel">
+      <div class="panel-head compact">
+        <div>
+          <h2>编辑面板</h2>
+          <p class="muted" id="selection-label">未选择房间</p>
+        </div>
+        <button id="btn-retry" class="btn small" disabled>逐房间重试</button>
+      </div>
+      <div class="editor-grid">
+        <div class="edit-block">
+          <h3>混响参数</h3>
+          <label class="range-label">T60 <output id="t60-out">-</output>
+            <input id="t60" type="range" min="50" max="3000" step="1" disabled>
+          </label>
+          <label class="range-label">早期反射密度 <output id="density-out">-</output>
+            <input id="density" type="range" min="0" max="1" step="0.01" disabled>
+          </label>
+          <label class="range-label">混响增益 <output id="gain-out">-</output>
+            <input id="gain" type="range" min="0" max="3" step="0.01" disabled>
+          </label>
+          <button id="btn-apply-params" class="btn primary small" disabled>应用参数</button>
+        </div>
+        <div class="edit-block">
+          <h3>房间边界</h3>
+          <label>边
+            <select id="edge-select" disabled>
+              <option value="left">left</option>
+              <option value="right" selected>right</option>
+              <option value="top">top</option>
+              <option value="bottom">bottom</option>
+            </select>
+          </label>
+          <label>位移 mm
+            <input id="edge-delta" type="number" value="80" step="10" disabled>
+          </label>
+          <div class="button-row">
+            <button id="btn-edge-minus" class="btn small" disabled>- δ</button>
+            <button id="btn-edge-plus" class="btn small" disabled>+ δ</button>
+          </div>
+          <p class="muted tiny">拖动画布中的房间边界也可触发同一编辑。</p>
+        </div>
+        <div class="edit-block">
+          <h3>新增门洞</h3>
+          <label>墙体
+            <select id="wall-select"></select>
+          </label>
+          <div class="two-col">
+            <label>X <input id="portal-x" type="number" step="10" value="0"></label>
+            <label>Y <input id="portal-y" type="number" step="10" value="0"></label>
+          </div>
+          <label>宽度 mm <input id="portal-width" type="number" step="10" value="260" min="20"></label>
+          <button id="btn-add-portal" class="btn primary small">添加门洞</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel chart-panel">
+      <div class="panel-head compact">
+        <div>
+          <h2>逐听者曲线</h2>
+          <p class="muted" id="listener-caption">选择听者查看各声源结果</p>
+        </div>
+        <span id="listener-room-chip" class="chip neutral">-</span>
+      </div>
+      <div class="charts">
+        <div class="chart-card">
+          <h3>衰减时间 / ms</h3>
+          <canvas id="decay-chart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>早期反射能量</h3>
+          <canvas id="energy-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel results-panel">
+      <div class="panel-head compact">
+        <div>
+          <h2>路径与结果</h2>
+          <p class="muted">Q16.16 定点值逐项展示，路径为门洞串联房间链。</p>
+        </div>
+        <span id="pair-count" class="chip neutral">0 pairs</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>听者</th><th>声源</th><th>房间链</th><th>门洞链</th><th>路径 mm</th><th>衰减 ms</th><th>早期能量</th></tr>
+          </thead>
+          <tbody id="pair-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel compare-panel">
+      <div class="panel-head compact">
+        <div>
+          <h2>三路径一致性</h2>
+          <p class="muted">实时预览 / SQLite 断点恢复 / 全量重算逐项比对。</p>
+        </div>
+        <span id="compare-status" class="chip neutral">未运行</span>
+      </div>
+      <div id="compare-result" class="compare-result empty">点击“三路径比对”运行自动校验。</div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
