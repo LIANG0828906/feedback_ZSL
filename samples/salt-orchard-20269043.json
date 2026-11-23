@@ -1,0 +1,798 @@
+{
+  "schema_version": 1,
+  "id": "salt-orchard-20269043",
+  "title": "The Salt Orchard / Seed 20269043",
+  "seed": 20269043,
+  "initial_flags": {
+    "arrived": false,
+    "dawn": false,
+    "descent": false,
+    "ending": "unresolved",
+    "fragment_count": 0,
+    "gate_open": false,
+    "heard_whisper": false
+  },
+  "characters": {
+    "ivo": {
+      "name": "Ivo Sable",
+      "state": {
+        "focus": 1,
+        "resolve": 0,
+        "trust": 0
+      }
+    },
+    "mara": {
+      "name": "Mara Venn",
+      "state": {
+        "focus": 2,
+        "resolve": 1,
+        "trust": 0
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "arrival",
+      "title": "Arrival at the Relay",
+      "requires": [],
+      "mutex": [],
+      "join": [],
+      "events": [
+        {
+          "id": "ev-arrival-flag",
+          "kind": "set_flag",
+          "key": "arrived",
+          "value": true
+        },
+        {
+          "id": "ev-arrival-count",
+          "kind": "set_flag",
+          "key": "fragment_count",
+          "value": 0
+        },
+        {
+          "id": "ev-arrival-trust",
+          "kind": "inc_character",
+          "character": "mara",
+          "key": "trust",
+          "value": 1
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 1210,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "arrival: composition 1"
+        },
+        {
+          "duration_ms": 880,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "arrival: composition 2"
+        },
+        {
+          "duration_ms": 420,
+          "aspect_priority": [
+            "16:9",
+            "4:3"
+          ],
+          "description": "arrival: composition 3"
+        },
+        {
+          "duration_ms": 680,
+          "aspect_priority": [
+            "16:9",
+            "4:3"
+          ],
+          "description": "arrival: composition 4 / held"
+        }
+      ]
+    },
+    {
+      "id": "whisper",
+      "title": "The Copper Whisper",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "arrived",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "scope": "character",
+          "character": "mara",
+          "key": "focus",
+          "op": "gte",
+          "value": 2
+        }
+      ],
+      "mutex": [
+        "alt_betrayal"
+      ],
+      "join": [
+        "arrival"
+      ],
+      "events": [
+        {
+          "id": "ev-whisper-flag",
+          "kind": "set_flag",
+          "key": "heard_whisper",
+          "value": true
+        },
+        {
+          "id": "ev-whisper-count",
+          "kind": "inc_flag",
+          "key": "fragment_count",
+          "value": 1
+        },
+        {
+          "id": "ev-whisper-resolve",
+          "kind": "inc_character",
+          "character": "mara",
+          "key": "resolve",
+          "value": 1
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 880,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "whisper: composition 1"
+        },
+        {
+          "duration_ms": 760,
+          "aspect_priority": [
+            "2.39:1",
+            "16:9"
+          ],
+          "description": "whisper: composition 2 / held"
+        },
+        {
+          "duration_ms": 760,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "whisper: composition 3"
+        }
+      ]
+    },
+    {
+      "id": "alt_betrayal",
+      "title": "The Betrayal Corridor",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "arrived",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "mutex": [
+        "whisper"
+      ],
+      "join": [
+        "arrival"
+      ],
+      "events": [
+        {
+          "id": "ev-betray-flag",
+          "kind": "set_flag",
+          "key": "betrayed",
+          "value": true
+        },
+        {
+          "id": "ev-betray-trust",
+          "kind": "inc_character",
+          "character": "ivo",
+          "key": "trust",
+          "value": -2
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 1040,
+          "aspect_priority": [
+            "2.39:1",
+            "16:9"
+          ],
+          "description": "betrayal: composition 1"
+        },
+        {
+          "duration_ms": 880,
+          "aspect_priority": [
+            "2.39:1",
+            "16:9"
+          ],
+          "description": "betrayal: composition 2"
+        },
+        {
+          "duration_ms": 560,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "betrayal: composition 3"
+        },
+        {
+          "duration_ms": 680,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "betrayal: composition 4"
+        }
+      ]
+    },
+    {
+      "id": "archive",
+      "title": "Archive of Rain",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "fragment_count",
+          "op": "gte",
+          "value": 1
+        },
+        {
+          "scope": "character",
+          "character": "mara",
+          "key": "resolve",
+          "op": "gte",
+          "value": 2
+        }
+      ],
+      "mutex": [],
+      "join": [
+        "whisper"
+      ],
+      "events": [
+        {
+          "id": "ev-archive-key",
+          "kind": "set_flag",
+          "key": "archive_key",
+          "value": "brass"
+        },
+        {
+          "id": "ev-archive-count",
+          "kind": "inc_flag",
+          "key": "fragment_count",
+          "value": 2
+        },
+        {
+          "id": "ev-archive-trust",
+          "kind": "inc_character",
+          "character": "ivo",
+          "key": "trust",
+          "value": 1
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 1210,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "archive: composition 1"
+        },
+        {
+          "duration_ms": 1380,
+          "aspect_priority": [
+            "2.39:1",
+            "16:9"
+          ],
+          "description": "archive: composition 2"
+        },
+        {
+          "duration_ms": 880,
+          "aspect_priority": [
+            "2.39:1",
+            "16:9"
+          ],
+          "description": "archive: composition 3"
+        },
+        {
+          "duration_ms": 1210,
+          "aspect_priority": [
+            "2.39:1",
+            "16:9"
+          ],
+          "description": "archive: composition 4"
+        }
+      ]
+    },
+    {
+      "id": "archive_echo",
+      "title": "Echo Map",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "archive_key",
+          "op": "eq",
+          "value": "brass"
+        }
+      ],
+      "mutex": [],
+      "join": [
+        "archive"
+      ],
+      "events": [
+        {
+          "id": "ev-echo-flag",
+          "kind": "set_flag",
+          "key": "echo_mapped",
+          "value": true
+        },
+        {
+          "id": "ev-echo-focus",
+          "kind": "inc_character",
+          "character": "ivo",
+          "key": "focus",
+          "value": 1
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 1040,
+          "aspect_priority": [
+            "16:9",
+            "4:3"
+          ],
+          "description": "echo: composition 1"
+        },
+        {
+          "duration_ms": 1210,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "echo: composition 2 / held"
+        },
+        {
+          "duration_ms": 1380,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "echo: composition 3"
+        },
+        {
+          "duration_ms": 1380,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "echo: composition 4"
+        }
+      ]
+    },
+    {
+      "id": "gate",
+      "title": "The Convergence Gate",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "fragment_count",
+          "op": "gte",
+          "value": 3
+        },
+        {
+          "scope": "flag",
+          "key": "echo_mapped",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "scope": "character",
+          "character": "ivo",
+          "key": "trust",
+          "op": "gte",
+          "value": 1
+        }
+      ],
+      "mutex": [
+        "false_gate"
+      ],
+      "join": [
+        "whisper",
+        "archive",
+        "archive_echo"
+      ],
+      "events": [
+        {
+          "id": "ev-gate-flag",
+          "kind": "set_flag",
+          "key": "gate_open",
+          "value": true
+        },
+        {
+          "id": "ev-gate-resolve",
+          "kind": "inc_character",
+          "character": "mara",
+          "key": "resolve",
+          "value": 2
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 760,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "gate: composition 1 / held"
+        },
+        {
+          "duration_ms": 680,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "gate: composition 2 / held"
+        }
+      ]
+    },
+    {
+      "id": "false_gate",
+      "title": "The Dry Gate",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "archive_key",
+          "op": "exists"
+        }
+      ],
+      "mutex": [
+        "gate"
+      ],
+      "join": [
+        "whisper",
+        "archive"
+      ],
+      "events": [
+        {
+          "id": "ev-false-gate",
+          "kind": "set_flag",
+          "key": "false_gate_seen",
+          "value": true
+        },
+        {
+          "id": "ev-false-resolve",
+          "kind": "inc_character",
+          "character": "mara",
+          "key": "resolve",
+          "value": -1
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 1040,
+          "aspect_priority": [
+            "16:9",
+            "4:3"
+          ],
+          "description": "false-gate: composition 1 / held"
+        },
+        {
+          "duration_ms": 680,
+          "aspect_priority": [
+            "16:9",
+            "4:3"
+          ],
+          "description": "false-gate: composition 2 / held"
+        },
+        {
+          "duration_ms": 760,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "false-gate: composition 3"
+        }
+      ]
+    },
+    {
+      "id": "descent",
+      "title": "Descent Through Static",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "gate_open",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "scope": "character",
+          "character": "ivo",
+          "key": "focus",
+          "op": "gte",
+          "value": 2
+        }
+      ],
+      "mutex": [],
+      "join": [
+        "gate"
+      ],
+      "events": [
+        {
+          "id": "ev-descent-flag",
+          "kind": "set_flag",
+          "key": "descent",
+          "value": true
+        },
+        {
+          "id": "ev-descent-focus",
+          "kind": "inc_character",
+          "character": "ivo",
+          "key": "focus",
+          "value": 1
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 1040,
+          "aspect_priority": [
+            "1:1",
+            "9:16"
+          ],
+          "description": "descent: composition 1 / held"
+        },
+        {
+          "duration_ms": 420,
+          "aspect_priority": [
+            "1:1",
+            "9:16"
+          ],
+          "description": "descent: composition 2 / held"
+        }
+      ]
+    },
+    {
+      "id": "dawn",
+      "title": "Dawn Signal",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "descent",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "scope": "character",
+          "character": "mara",
+          "key": "resolve",
+          "op": "gte",
+          "value": 4
+        }
+      ],
+      "mutex": [
+        "ash_end"
+      ],
+      "join": [
+        "descent"
+      ],
+      "events": [
+        {
+          "id": "ev-dawn-flag",
+          "kind": "set_flag",
+          "key": "dawn",
+          "value": true
+        },
+        {
+          "id": "ev-dawn-ending",
+          "kind": "set_flag",
+          "key": "ending",
+          "value": "dawn"
+        },
+        {
+          "id": "ev-dawn-trust",
+          "kind": "inc_character",
+          "character": "mara",
+          "key": "trust",
+          "value": 1
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 680,
+          "aspect_priority": [
+            "16:9",
+            "4:3"
+          ],
+          "description": "dawn: composition 1"
+        },
+        {
+          "duration_ms": 1040,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "dawn: composition 2"
+        },
+        {
+          "duration_ms": 1210,
+          "aspect_priority": [
+            "4:3",
+            "16:9"
+          ],
+          "description": "dawn: composition 3 / held"
+        }
+      ]
+    },
+    {
+      "id": "ash_end",
+      "title": "Ash Ending",
+      "requires": [
+        {
+          "scope": "flag",
+          "key": "betrayed",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "mutex": [
+        "dawn"
+      ],
+      "join": [
+        "descent"
+      ],
+      "events": [
+        {
+          "id": "ev-ash-flag",
+          "kind": "set_flag",
+          "key": "ash",
+          "value": true
+        },
+        {
+          "id": "ev-ash-ending",
+          "kind": "set_flag",
+          "key": "ending",
+          "value": "ash"
+        }
+      ],
+      "shots": [
+        {
+          "duration_ms": 880,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "ash: composition 1 / held"
+        },
+        {
+          "duration_ms": 760,
+          "aspect_priority": [
+            "2.39:1",
+            "16:9"
+          ],
+          "description": "ash: composition 2"
+        },
+        {
+          "duration_ms": 1210,
+          "aspect_priority": [
+            "16:9",
+            "2.39:1"
+          ],
+          "description": "ash: composition 3"
+        }
+      ]
+    }
+  ],
+  "choices": [
+    {
+      "at_ms": 120,
+      "target": "arrival",
+      "label": "Step through the relay door"
+    },
+    {
+      "at_ms": 1280,
+      "target": "whisper",
+      "label": "Listen to the copper line"
+    },
+    {
+      "at_ms": 2440,
+      "target": "alt_betrayal",
+      "label": "Consider abandoning the signal"
+    },
+    {
+      "at_ms": 3610,
+      "target": "archive",
+      "label": "Open the rain archive"
+    },
+    {
+      "at_ms": 4870,
+      "target": "archive_echo",
+      "label": "Map the reflected corridor"
+    },
+    {
+      "at_ms": 6240,
+      "target": "gate",
+      "label": "Unseal the convergence gate"
+    },
+    {
+      "at_ms": 7310,
+      "target": "false_gate",
+      "label": "Try the dry gate anyway"
+    },
+    {
+      "at_ms": 8420,
+      "target": "descent",
+      "label": "Descend through the static"
+    },
+    {
+      "at_ms": 9680,
+      "target": "dawn",
+      "label": "Transmit the dawn sequence"
+    },
+    {
+      "at_ms": 10910,
+      "target": "ash_end",
+      "label": "Burn the ending protocol"
+    }
+  ],
+  "truth": {
+    "final_flags": {
+      "archive_key": "brass",
+      "arrived": true,
+      "dawn": true,
+      "descent": true,
+      "echo_mapped": true,
+      "ending": "dawn",
+      "fragment_count": 3,
+      "gate_open": true,
+      "heard_whisper": true
+    },
+    "final_characters": {
+      "ivo": {
+        "focus": 3,
+        "resolve": 0,
+        "trust": 1
+      },
+      "mara": {
+        "focus": 2,
+        "resolve": 4,
+        "trust": 2
+      }
+    },
+    "event_order": [
+      "ev-arrival-flag",
+      "ev-arrival-count",
+      "ev-arrival-trust",
+      "ev-whisper-flag",
+      "ev-whisper-count",
+      "ev-whisper-resolve",
+      "ev-archive-key",
+      "ev-archive-count",
+      "ev-archive-trust",
+      "ev-echo-flag",
+      "ev-echo-focus",
+      "ev-gate-flag",
+      "ev-gate-resolve",
+      "ev-descent-flag",
+      "ev-descent-focus",
+      "ev-dawn-flag",
+      "ev-dawn-ending",
+      "ev-dawn-trust"
+    ],
+    "reachable_nodes": [
+      "arrival",
+      "whisper",
+      "archive",
+      "archive_echo",
+      "gate",
+      "descent",
+      "dawn"
+    ],
+    "shot_count": 22,
+    "total_duration_ms": 21110
+  }
+}
