@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acoustic-workbench"
+version = "1.0.0"
+description = "Deterministic multichannel acoustic measurement and calibration workbench"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    "numpy==1.26.4",
+    "scipy==1.11.4",
+    "PyQt5==5.15.10",
+    "pyqtgraph==0.13.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.0.2"]
+
+[project.scripts]
+acoustic-workbench = "acoustic_workbench.cli:main"
+acoustic-workbench-gui = "acoustic_workbench.app:main"
+
+[tool.setuptools.packages.find]
+include = ["acoustic_workbench*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
