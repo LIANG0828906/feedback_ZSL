@@ -16,6 +16,7 @@
 本地离线验证（本工作区已具备解释器与依赖，无需联网、无需 pip）：
 
 ```bash
+export PYTHONPATH="$PWD/.deps${PYTHONPATH:+:$PYTHONPATH}"
 python3 run_workbench.py
 python3 -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
 python3 -m unittest discover -v
