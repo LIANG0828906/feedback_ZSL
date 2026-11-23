@@ -1,23 +1,97 @@
-当前只有一台干净的开发机，项目需要从零构建一套面向开放世界关卡的地形与地理空间渲染数据烘焙工作台。输入来自本地确定性生成的地形工程：若干地形网格分块，每块携带分层材质权重图、可通行性掩码与散点密度参数，分块之间存在显式的接缝约束（相邻块在共享边上的法线连续性与材质过渡带）；工程另外给出若干解析真值，包括若干指定格点的高程、材质覆盖比例、散点计数与接缝处的法线夹角。工作台需把工程烘焙为按块组织的渲染批次，每块包含顶点与法线缓冲、材质混合权重、视锥包围盒与接缝约束违反统计，并输出全局清单，同时提供本地诊断页面展示分块状态与失效情况。
+# terrain-bake
 
-任务环境与准备：
-确认 Windows 上已安装 Go 1.22 或更高版本，执行 go version 可输出对应版本；如未安装，从官方安装包安装后重新打开终端。
-在工作区根目录创建 Go module，命令为 go mod init terrain-bake，并使用标准库 net/http 提供本地诊断页面，不引入任何外部网络依赖。
-用本地确定性生成器脚本产出地形清单、各块分层材质权重图、可通行性掩码、散点参数与解析真值文件，全部放在工作区 data 目录下，随机种子与块网格参数在清单中固定。
-确认可执行 go build ./... 与 go test ./...，无需数据库、外部服务或网络下载。
-确认工作区内不存在需要修改的既有源代码文件，所有代码与数据均由本任务从零生成。
+Deterministic terrain/geospatial render-batch workbench for open-world chunks.
+It loads a local terrain project, validates layered material weights and
+passability masks, bakes vertex/normal/material/scatter buffers, enforces seam
+constraints, persists a versioned cache snapshot, incrementally rebakes a
+precise dependency component, and serves a standard-library-only diagnostic
+page.
 
-业务要求：
-1. 实现地形工程加载与结构校验：读取本地确定性生成的地形清单与各块分层材质权重图、可通行性掩码与散点参数，校验块网格尺寸与清单一致、材质层数匹配、权重为量化整型且在合法范围、掩码尺寸与网格对齐；字段缺失、块尺寸不一致与权重越界分别返回 E_SCHEMA、E_SIZE、E_WEIGHT 并给出块标识与字段名。
-2. 实现单块确定性烘焙：按可配置细分密度由高程数据生成顶点与法线，由材质权重图生成混合权重与材质覆盖比例，由散点参数与可通行性掩码生成剔除后的实例缓冲，并计算该块包围盒；顶点高程、材质覆盖比例与实例计数须与解析真值在声明容差内吻合，法线由差分确定性导出，同一块无论调用顺序如何产物逐字节一致。
-3. 实现接缝约束的依赖图与精确失效传播：显式记录相邻块之间因共享边法线连续性与材质过渡带形成的双向依赖，当某块高程或某层材质参数变化时，只标记该块及其全部下游依赖块失效，未受影响块必须复用持久化缓存；提供失效范围查询，输出含受影响块编号、失效原因与依赖路径的清单。
-4. 实现接缝约束的满足与统计：烘焙时对共享边两侧法线做连续性处理，使接缝法线夹角在声明阈值内、材质过渡带在边界处连续，并在每块产物中输出接缝约束违反计数与最大法线夹角；约束无法在声明迭代上限内满足时返回 E_SEAM 并指出接缝两侧块编号与实测夹角。
-5. 实现增量重烘焙调度与逐字节比对：对失效块按依赖拓扑序重烘焙并原子替换缓存产物，未失效块直接复用；增量路径与从空缓存全量重算的最终产物须逐字节一致，并提供自动比对定位首个不一致的块编号与产物类型，不一致时返回 E_DIFF。
-6. 实现持久化缓存快照与版本识别：每块产物连同缓存键、烘焙参数版本与依赖集合整体写入快照，写入须原子且串行不得交错；重启加载时若全局内容哈希或烘焙参数版本任一不匹配，须整体作废快照并全量重算，禁止部分混用旧块缓存。
-7. 实现可视化诊断页面与异常链路：通过 net/http 提供本地页面展示分块着色预览、失效传播示意、各块缓存命中状态与重烘焙耗时统计，允许编辑某块高程或材质参数触发增量重烘焙，已提交块不得被静默改写；单块烘焙内部异常须置该块失败并允许重试且不污染邻居缓存，工程文件损坏返回 E_DECODE。
-8. 实现并发与资源边界：失效块烘焙可在工作线程池并行推进，须限制最大并行度与每线程顶点缓冲上限，并发时快照写入须串行且产物替换顺序稳定；并行运行与单线程串行对同一编辑序列须产出逐字节一致的最终产物与相同提交顺序；用户取消或进程被强制终止后重启只能依据已持久化的版本匹配块恢复，不得承诺强制终止后仍生成完整清单。
+No database, container, network service, or third-party Go module is used.
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## Quick Start
 
-验收：
-用本地地形样本验证增量路径与全量重算产物逐字节一致、失效范围精确、接缝约束满足与断点恢复正确。
+Requires Go 1.22 or newer.
+
+```bash
+go version
+go mod download
+
+# Regenerate the deterministic local sample in data/.
+go run ./cmd/gen-data -out data -force
+
+# Build and test.
+go build ./...
+go test ./...
+go test -race ./...
+go vet ./...
+
+# Full validation bake plus analytic truth checks.
+go run ./cmd/terrain-bake bake -force -validate
+
+# Incremental diagnostic server.
+go run ./cmd/terrain-bake serve -addr 127.0.0.1:8090
+```
+
+Open `http://127.0.0.1:8090/`.
+
+The checked-in sample has six blocks in two disconnected terrain islands. The
+omitted grid column is an open-water gap. This intentionally demonstrates that
+editing one island leaves the other island's cache artifacts untouched.
+
+## Commands
+
+```text
+terrain-bake bake       [-force] [-validate] [-workers N] [-vertex-limit N]
+terrain-bake serve      [-addr 127.0.0.1:8090] [-no-bake]
+terrain-bake invalidate -block ID [-kind height|material]
+terrain-bake edit       -block ID -kind height|material -col N -row N [-layer N] -value V
+terrain-bake retry
+terrain-bake compare
+terrain-bake status
+```
+
+All commands also accept `-data`, `-cache`, and `-out`. Defaults are `data`,
+`cache`, and `build`.
+
+## Outputs
+
+- `cache/snapshot.json`: atomic, versioned cache snapshot containing every
+  committed block artifact, cache key, parameter version/hash, dependency set,
+  and checksum.
+- `build/blocks/<block>.json`: canonical per-block render batch files.
+- `build/manifest.json`: global render manifest with bounds, seam statistics,
+  buffer counts, cache-hit state, dependencies, timing, and artifact hashes.
+- `data/edits.json`: atomic edit overlay written before an incremental rebake;
+  absent for the original generated sample.
+
+The cache snapshot is authoritative after a hard process termination. Atomic
+snapshot replacement prevents mixed old/new entries. Per-block `build/` files
+are derived outputs; a process killed between individual output renames can
+leave an incomplete build directory, but the next startup only restores blocks
+from a fully valid version-matched snapshot.
+
+## Error Codes
+
+- `E_SCHEMA`: missing/invalid field, unsupported schema, layer mismatch.
+- `E_SIZE`: block/resource dimension or mask alignment mismatch.
+- `E_WEIGHT`: material weight outside the quantization range or bad sum.
+- `E_DECODE`: malformed JSON, truncated/non-finite binary project data, or a
+  corrupt edit overlay.
+- `E_SEAM`: seam normal/material constraints still violate after the declared
+  iteration limit.
+- `E_DIFF`: incremental artifacts differ from a fresh full bake.
+- `E_RESOURCE`: per-thread vertex buffer limit exceeded.
+- `E_CANCEL`: a bake batch was canceled before commit.
+- `E_CACHE`: snapshot/output persistence failure.
+- `E_TRUTH`: declared analytic truth failed validation.
+
+Errors carry `code`, `block`, `field`, `message`, and optional structured
+details. `E_SEAM` reports both seam block IDs and the measured angle/threshold;
+`E_DIFF` reports the first differing block and artifact type.
+
+## Documentation
+
+- [Technical design](docs/TECHNICAL.md)
+- [Data and cache format](docs/FORMAT.md)
+- [Actual verification record](docs/VERIFICATION.md)
