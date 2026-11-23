@@ -1,0 +1,1049 @@
+{
+  "schema_version": "1.0",
+  "targets": [
+    {
+      "id": "target-compact-01",
+      "skeleton": {
+        "id": "target-compact-01-rig",
+        "ground_plane": 0,
+        "nodes": [
+          {
+            "name": "root",
+            "role": "root",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_L",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0.13119999999999998
+            }
+          },
+          {
+            "name": "knee_L",
+            "parent": "hip_L",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.35259999999999997,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_L",
+            "parent": "knee_L",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.3444,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_L",
+            "parent": "ankle_L",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.041,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_1",
+            "parent": "ball_L",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.014759999999999999,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_R",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": -0.13119999999999998
+            }
+          },
+          {
+            "name": "knee_R",
+            "parent": "hip_R",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.35259999999999997,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_R",
+            "parent": "knee_R",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.3444,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_R",
+            "parent": "ankle_R",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.041,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_1",
+            "parent": "ball_R",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.014759999999999999,
+              "z": 0
+            }
+          }
+        ]
+      },
+      "leg_length_ratio": 0.82,
+      "ankle_rom": {
+        "min": -0.55,
+        "max": 0.45
+      },
+      "foot_reachable_height": {
+        "min": 0,
+        "max": 0.4756
+      },
+      "cycle_frames": [
+        44,
+        48,
+        46
+      ],
+      "legs": [
+        {
+          "foot": "left",
+          "hip": "hip_L",
+          "knee": "knee_L",
+          "ankle": "ankle_L",
+          "toes": [
+            "toe_L_1"
+          ]
+        },
+        {
+          "foot": "right",
+          "hip": "hip_R",
+          "knee": "knee_R",
+          "ankle": "ankle_R",
+          "toes": [
+            "toe_R_1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "target-human-02",
+      "skeleton": {
+        "id": "target-human-02-rig",
+        "ground_plane": 0,
+        "nodes": [
+          {
+            "name": "root",
+            "role": "root",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_L",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0.16
+            }
+          },
+          {
+            "name": "knee_L",
+            "parent": "hip_L",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.43,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_L",
+            "parent": "knee_L",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.42,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_L",
+            "parent": "ankle_L",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.05,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_1",
+            "parent": "ball_L",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.018,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_2",
+            "parent": "toe_L_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.066,
+              "y": -0.018,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_R",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": -0.16
+            }
+          },
+          {
+            "name": "knee_R",
+            "parent": "hip_R",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.43,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_R",
+            "parent": "knee_R",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.42,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_R",
+            "parent": "ankle_R",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.05,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_1",
+            "parent": "ball_R",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.018,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_2",
+            "parent": "toe_R_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.066,
+              "y": -0.018,
+              "z": 0
+            }
+          }
+        ]
+      },
+      "leg_length_ratio": 1,
+      "ankle_rom": {
+        "min": -0.51,
+        "max": 0.5
+      },
+      "foot_reachable_height": {
+        "min": 0,
+        "max": 0.58
+      },
+      "cycle_frames": [
+        54,
+        58,
+        56
+      ],
+      "legs": [
+        {
+          "foot": "left",
+          "hip": "hip_L",
+          "knee": "knee_L",
+          "ankle": "ankle_L",
+          "toes": [
+            "toe_L_1",
+            "toe_L_2"
+          ]
+        },
+        {
+          "foot": "right",
+          "hip": "hip_R",
+          "knee": "knee_R",
+          "ankle": "ankle_R",
+          "toes": [
+            "toe_R_1",
+            "toe_R_2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "target-stylized-03",
+      "skeleton": {
+        "id": "target-stylized-03-rig",
+        "ground_plane": 0,
+        "nodes": [
+          {
+            "name": "root",
+            "role": "root",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_L",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0.1888
+            }
+          },
+          {
+            "name": "knee_L",
+            "parent": "hip_L",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.5074,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_L",
+            "parent": "knee_L",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.49559999999999993,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_L",
+            "parent": "ankle_L",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.059,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_1",
+            "parent": "ball_L",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_2",
+            "parent": "toe_L_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.07788,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_3",
+            "parent": "toe_L_2",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.061360000000000005,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_R",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": -0.1888
+            }
+          },
+          {
+            "name": "knee_R",
+            "parent": "hip_R",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.5074,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_R",
+            "parent": "knee_R",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.49559999999999993,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_R",
+            "parent": "ankle_R",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.059,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_1",
+            "parent": "ball_R",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_2",
+            "parent": "toe_R_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.07788,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_3",
+            "parent": "toe_R_2",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.061360000000000005,
+              "y": -0.02124,
+              "z": 0
+            }
+          }
+        ]
+      },
+      "leg_length_ratio": 1.18,
+      "ankle_rom": {
+        "min": -0.47000000000000003,
+        "max": 0.55
+      },
+      "foot_reachable_height": {
+        "min": 0,
+        "max": 0.6844
+      },
+      "cycle_frames": [
+        64,
+        68,
+        66
+      ],
+      "legs": [
+        {
+          "foot": "left",
+          "hip": "hip_L",
+          "knee": "knee_L",
+          "ankle": "ankle_L",
+          "toes": [
+            "toe_L_1",
+            "toe_L_2",
+            "toe_L_3"
+          ]
+        },
+        {
+          "foot": "right",
+          "hip": "hip_R",
+          "knee": "knee_R",
+          "ankle": "ankle_R",
+          "toes": [
+            "toe_R_1",
+            "toe_R_2",
+            "toe_R_3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "target-compact-01-s2",
+      "skeleton": {
+        "id": "target-compact-01-s2-rig",
+        "ground_plane": 0,
+        "nodes": [
+          {
+            "name": "root",
+            "role": "root",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_L",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0.13119999999999998
+            }
+          },
+          {
+            "name": "knee_L",
+            "parent": "hip_L",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.35259999999999997,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_L",
+            "parent": "knee_L",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.3444,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_L",
+            "parent": "ankle_L",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.041,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_1",
+            "parent": "ball_L",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.014759999999999999,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_R",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": -0.13119999999999998
+            }
+          },
+          {
+            "name": "knee_R",
+            "parent": "hip_R",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.35259999999999997,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_R",
+            "parent": "knee_R",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.3444,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_R",
+            "parent": "ankle_R",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.041,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_1",
+            "parent": "ball_R",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.06559999999999999,
+              "y": -0.014759999999999999,
+              "z": 0
+            }
+          }
+        ]
+      },
+      "leg_length_ratio": 0.82,
+      "ankle_rom": {
+        "min": -0.55,
+        "max": 0.45
+      },
+      "foot_reachable_height": {
+        "min": 0,
+        "max": 0.4756
+      },
+      "cycle_frames": [
+        49,
+        51,
+        48
+      ],
+      "legs": [
+        {
+          "foot": "left",
+          "hip": "hip_L",
+          "knee": "knee_L",
+          "ankle": "ankle_L",
+          "toes": [
+            "toe_L_1"
+          ]
+        },
+        {
+          "foot": "right",
+          "hip": "hip_R",
+          "knee": "knee_R",
+          "ankle": "ankle_R",
+          "toes": [
+            "toe_R_1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "target-human-02-s2",
+      "skeleton": {
+        "id": "target-human-02-s2-rig",
+        "ground_plane": 0,
+        "nodes": [
+          {
+            "name": "root",
+            "role": "root",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_L",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0.16
+            }
+          },
+          {
+            "name": "knee_L",
+            "parent": "hip_L",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.43,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_L",
+            "parent": "knee_L",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.42,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_L",
+            "parent": "ankle_L",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.05,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_1",
+            "parent": "ball_L",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.018,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_2",
+            "parent": "toe_L_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.066,
+              "y": -0.018,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_R",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": -0.16
+            }
+          },
+          {
+            "name": "knee_R",
+            "parent": "hip_R",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.43,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_R",
+            "parent": "knee_R",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.42,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_R",
+            "parent": "ankle_R",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.05,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_1",
+            "parent": "ball_R",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.08,
+              "y": -0.018,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_2",
+            "parent": "toe_R_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.066,
+              "y": -0.018,
+              "z": 0
+            }
+          }
+        ]
+      },
+      "leg_length_ratio": 1,
+      "ankle_rom": {
+        "min": -0.51,
+        "max": 0.5
+      },
+      "foot_reachable_height": {
+        "min": 0,
+        "max": 0.58
+      },
+      "cycle_frames": [
+        60,
+        62,
+        58
+      ],
+      "legs": [
+        {
+          "foot": "left",
+          "hip": "hip_L",
+          "knee": "knee_L",
+          "ankle": "ankle_L",
+          "toes": [
+            "toe_L_1",
+            "toe_L_2"
+          ]
+        },
+        {
+          "foot": "right",
+          "hip": "hip_R",
+          "knee": "knee_R",
+          "ankle": "ankle_R",
+          "toes": [
+            "toe_R_1",
+            "toe_R_2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "target-stylized-03-s2",
+      "skeleton": {
+        "id": "target-stylized-03-s2-rig",
+        "ground_plane": 0,
+        "nodes": [
+          {
+            "name": "root",
+            "role": "root",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_L",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": 0.1888
+            }
+          },
+          {
+            "name": "knee_L",
+            "parent": "hip_L",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.5074,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_L",
+            "parent": "knee_L",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.49559999999999993,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_L",
+            "parent": "ankle_L",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.059,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_1",
+            "parent": "ball_L",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_2",
+            "parent": "toe_L_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.07788,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_L_3",
+            "parent": "toe_L_2",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.061360000000000005,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "hip_R",
+            "parent": "root",
+            "role": "hip",
+            "local_offset": {
+              "x": 0,
+              "y": 0,
+              "z": -0.1888
+            }
+          },
+          {
+            "name": "knee_R",
+            "parent": "hip_R",
+            "role": "knee",
+            "local_offset": {
+              "x": 0,
+              "y": -0.5074,
+              "z": 0
+            }
+          },
+          {
+            "name": "ankle_R",
+            "parent": "knee_R",
+            "role": "ankle",
+            "local_offset": {
+              "x": 0,
+              "y": -0.49559999999999993,
+              "z": 0
+            }
+          },
+          {
+            "name": "ball_R",
+            "parent": "ankle_R",
+            "role": "foot",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.059,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_1",
+            "parent": "ball_R",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.0944,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_2",
+            "parent": "toe_R_1",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.07788,
+              "y": -0.02124,
+              "z": 0
+            }
+          },
+          {
+            "name": "toe_R_3",
+            "parent": "toe_R_2",
+            "role": "toe",
+            "local_offset": {
+              "x": 0.061360000000000005,
+              "y": -0.02124,
+              "z": 0
+            }
+          }
+        ]
+      },
+      "leg_length_ratio": 1.18,
+      "ankle_rom": {
+        "min": -0.47000000000000003,
+        "max": 0.55
+      },
+      "foot_reachable_height": {
+        "min": 0,
+        "max": 0.6844
+      },
+      "cycle_frames": [
+        71,
+        73,
+        68
+      ],
+      "legs": [
+        {
+          "foot": "left",
+          "hip": "hip_L",
+          "knee": "knee_L",
+          "ankle": "ankle_L",
+          "toes": [
+            "toe_L_1",
+            "toe_L_2",
+            "toe_L_3"
+          ]
+        },
+        {
+          "foot": "right",
+          "hip": "hip_R",
+          "knee": "knee_R",
+          "ankle": "ankle_R",
+          "toes": [
+            "toe_R_1",
+            "toe_R_2",
+            "toe_R_3"
+          ]
+        }
+      ]
+    }
+  ]
+}
