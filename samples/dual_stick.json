@@ -1,0 +1,665 @@
+{
+  "schema_version": 1,
+  "id": "dual_stick",
+  "name": "Dual stick with combo, long press and double press",
+  "seed": 20261124,
+  "fixed_precision_version": "fx-1e4-v1",
+  "binding_version": "bind-v1",
+  "devices": [
+    {
+      "id": "dual_pad",
+      "name": "Dual stick deterministic pad",
+      "fixed_scale": 10000,
+      "axes": [
+        {
+          "id": "left_x",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": false,
+          "deadzone": 1200
+        },
+        {
+          "id": "left_y",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": false,
+          "deadzone": 1200
+        },
+        {
+          "id": "right_x",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": true,
+          "deadzone": 900
+        }
+      ],
+      "buttons": [
+        {
+          "id": "A"
+        },
+        {
+          "id": "B"
+        },
+        {
+          "id": "X"
+        },
+        {
+          "id": "Y"
+        },
+        {
+          "id": "LB"
+        },
+        {
+          "id": "RB"
+        },
+        {
+          "id": "START"
+        },
+        {
+          "id": "BACK"
+        }
+      ]
+    }
+  ],
+  "initial_device_id": "dual_pad",
+  "curves": [
+    {
+      "id": "aim",
+      "kind": "piecewise_linear",
+      "domain_scale": 10000,
+      "curvature_ppm": 90000,
+      "points": [
+        {
+          "x": -10000,
+          "y": -7000
+        },
+        {
+          "x": -4000,
+          "y": -3000
+        },
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 4000,
+          "y": 3000
+        },
+        {
+          "x": 10000,
+          "y": 7000
+        }
+      ]
+    },
+    {
+      "id": "linear",
+      "kind": "piecewise_linear",
+      "domain_scale": 10000,
+      "curvature_ppm": 10000,
+      "points": [
+        {
+          "x": -10000,
+          "y": -10000
+        },
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 10000,
+          "y": 10000
+        }
+      ]
+    }
+  ],
+  "bindings": [
+    {
+      "id": "b_move_x",
+      "action": "MoveX",
+      "type": "axis",
+      "device_id": "dual_pad",
+      "axis": "left_x",
+      "curve": "aim",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_move_y",
+      "action": "MoveY",
+      "type": "axis",
+      "device_id": "dual_pad",
+      "axis": "left_y",
+      "curve": "aim",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_look_x",
+      "action": "LookX",
+      "type": "axis",
+      "device_id": "dual_pad",
+      "axis": "right_x",
+      "curve": "linear",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_jump",
+      "action": "Jump",
+      "type": "button",
+      "device_id": "dual_pad",
+      "button": "A",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_overdrive",
+      "action": "Overdrive",
+      "type": "combo",
+      "device_id": "dual_pad",
+      "buttons": [
+        "LB",
+        "RB"
+      ],
+      "timing": {
+        "window_ms": 80,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 500
+      }
+    },
+    {
+      "id": "b_charge",
+      "action": "Charge",
+      "type": "long_press",
+      "device_id": "dual_pad",
+      "button": "X",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 120,
+        "max_threshold_ms": 500,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_dash",
+      "action": "Dash",
+      "type": "double_press",
+      "device_id": "dual_pad",
+      "button": "Y",
+      "timing": {
+        "window_ms": 200,
+        "min_gap_ms": 25,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 500
+      }
+    }
+  ],
+  "events": [
+    {
+      "seq": 1,
+      "time_ms": 0,
+      "kind": "axis",
+      "axis": "left_x",
+      "value": 0
+    },
+    {
+      "seq": 2,
+      "time_ms": 10,
+      "kind": "button_down",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 3,
+      "time_ms": 20,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 4,
+      "time_ms": 40,
+      "kind": "axis",
+      "axis": "left_x",
+      "value": 3482
+    },
+    {
+      "seq": 5,
+      "time_ms": 60,
+      "kind": "axis",
+      "axis": "left_y",
+      "value": -7919
+    },
+    {
+      "seq": 6,
+      "time_ms": 80,
+      "kind": "button_down",
+      "value": 0,
+      "button": "LB"
+    },
+    {
+      "seq": 7,
+      "time_ms": 100,
+      "kind": "button_down",
+      "value": 0,
+      "button": "RB"
+    },
+    {
+      "seq": 8,
+      "time_ms": 120,
+      "kind": "axis",
+      "axis": "right_x",
+      "value": 14816
+    },
+    {
+      "seq": 9,
+      "time_ms": 130,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "RB"
+    },
+    {
+      "seq": 10,
+      "time_ms": 150,
+      "kind": "button_down",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 11,
+      "time_ms": 280,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 12,
+      "time_ms": 300,
+      "kind": "button_up",
+      "value": 0,
+      "button": "LB"
+    },
+    {
+      "seq": 13,
+      "time_ms": 320,
+      "kind": "button_up",
+      "value": 0,
+      "button": "RB"
+    },
+    {
+      "seq": 14,
+      "time_ms": 340,
+      "kind": "button_up",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 15,
+      "time_ms": 360,
+      "kind": "button_up",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 16,
+      "time_ms": 380,
+      "kind": "axis",
+      "axis": "left_x",
+      "value": -8737
+    },
+    {
+      "seq": 17,
+      "time_ms": 400,
+      "kind": "axis",
+      "axis": "left_y",
+      "value": 0
+    },
+    {
+      "seq": 18,
+      "time_ms": 430,
+      "kind": "button_down",
+      "value": 0,
+      "button": "Y"
+    },
+    {
+      "seq": 19,
+      "time_ms": 460,
+      "kind": "button_up",
+      "value": 0,
+      "button": "Y"
+    },
+    {
+      "seq": 20,
+      "time_ms": 500,
+      "kind": "button_down",
+      "value": 0,
+      "button": "Y"
+    },
+    {
+      "seq": 21,
+      "time_ms": 530,
+      "kind": "button_up",
+      "value": 0,
+      "button": "Y"
+    },
+    {
+      "seq": 22,
+      "time_ms": 560,
+      "kind": "axis",
+      "axis": "right_x",
+      "value": 0
+    },
+    {
+      "seq": 23,
+      "time_ms": 600,
+      "kind": "button_down",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 24,
+      "time_ms": 650,
+      "kind": "button_up",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 25,
+      "time_ms": 700,
+      "kind": "axis",
+      "axis": "left_x",
+      "value": 0
+    }
+  ],
+  "truth": {
+    "axis_samples": [
+      {
+        "event_seq": 1,
+        "time_ms": 0,
+        "device_id": "dual_pad",
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "axis_id": "left_x",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 1200
+      },
+      {
+        "event_seq": 4,
+        "time_ms": 40,
+        "device_id": "dual_pad",
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "axis_id": "left_x",
+        "raw": 3482,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": -13705,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 137
+      },
+      {
+        "event_seq": 5,
+        "time_ms": 60,
+        "device_id": "dual_pad",
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "axis_id": "left_y",
+        "raw": -7919,
+        "normalized": -1813,
+        "quantization_residual": {
+          "num": 28095,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 1217
+      },
+      {
+        "event_seq": 8,
+        "time_ms": 120,
+        "device_id": "dual_pad",
+        "binding_id": "b_look_x",
+        "action_id": "LookX",
+        "axis_id": "right_x",
+        "raw": 14816,
+        "normalized": -4522,
+        "quantization_residual": {
+          "num": 19270,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 3622
+      },
+      {
+        "event_seq": 16,
+        "time_ms": 380,
+        "device_id": "dual_pad",
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "axis_id": "left_x",
+        "raw": -8737,
+        "normalized": -1999,
+        "quantization_residual": {
+          "num": -13690,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 1466
+      },
+      {
+        "event_seq": 17,
+        "time_ms": 400,
+        "device_id": "dual_pad",
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "axis_id": "left_y",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 1200
+      },
+      {
+        "event_seq": 22,
+        "time_ms": 560,
+        "device_id": "dual_pad",
+        "binding_id": "b_look_x",
+        "action_id": "LookX",
+        "axis_id": "right_x",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": -10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 900
+      },
+      {
+        "event_seq": 25,
+        "time_ms": 700,
+        "device_id": "dual_pad",
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "axis_id": "left_x",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 1200
+      }
+    ],
+    "actions": [
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 2,
+        "trigger_time_ms": 10,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 3,
+        "trigger_time_ms": 20,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "event_seq": 5,
+        "trigger_time_ms": 60,
+        "state": "pressed",
+        "axis_value": -1813
+      },
+      {
+        "binding_id": "b_overdrive",
+        "action_id": "Overdrive",
+        "event_seq": 7,
+        "trigger_time_ms": 100,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_look_x",
+        "action_id": "LookX",
+        "event_seq": 8,
+        "trigger_time_ms": 120,
+        "state": "pressed",
+        "axis_value": -4522
+      },
+      {
+        "binding_id": "b_overdrive",
+        "action_id": "Overdrive",
+        "event_seq": 9,
+        "trigger_time_ms": 130,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_charge",
+        "action_id": "Charge",
+        "event_seq": 11,
+        "trigger_time_ms": 270,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_charge",
+        "action_id": "Charge",
+        "event_seq": 11,
+        "trigger_time_ms": 280,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_overdrive",
+        "action_id": "Overdrive",
+        "event_seq": 12,
+        "trigger_time_ms": 300,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_charge",
+        "action_id": "Charge",
+        "event_seq": 14,
+        "trigger_time_ms": 340,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 15,
+        "trigger_time_ms": 360,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "event_seq": 16,
+        "trigger_time_ms": 380,
+        "state": "pressed",
+        "axis_value": -1999
+      },
+      {
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "event_seq": 17,
+        "trigger_time_ms": 400,
+        "state": "released",
+        "axis_value": 0
+      },
+      {
+        "binding_id": "b_dash",
+        "action_id": "Dash",
+        "event_seq": 21,
+        "trigger_time_ms": 530,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_look_x",
+        "action_id": "LookX",
+        "event_seq": 22,
+        "trigger_time_ms": 560,
+        "state": "released",
+        "axis_value": 0
+      },
+      {
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "event_seq": 25,
+        "trigger_time_ms": 700,
+        "state": "released",
+        "axis_value": 0
+      }
+    ],
+    "unmapped": []
+  }
+}

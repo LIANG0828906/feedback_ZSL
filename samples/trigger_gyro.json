@@ -1,0 +1,686 @@
+{
+  "schema_version": 1,
+  "id": "trigger_gyro",
+  "name": "Unipolar triggers, inversion and gyro curve",
+  "seed": 20261124,
+  "fixed_precision_version": "fx-1e4-v2",
+  "binding_version": "bind-v2",
+  "devices": [
+    {
+      "id": "gyro_pad",
+      "name": "Trigger and gyro variant",
+      "fixed_scale": 10000,
+      "axes": [
+        {
+          "id": "lt",
+          "min": 0,
+          "max": 255,
+          "bipolar": false,
+          "direction": "positive",
+          "invert": false,
+          "deadzone": 500
+        },
+        {
+          "id": "rt",
+          "min": 0,
+          "max": 255,
+          "bipolar": false,
+          "direction": "negative",
+          "invert": false,
+          "deadzone": 500
+        },
+        {
+          "id": "gyro_x",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": true,
+          "deadzone": 300
+        }
+      ],
+      "buttons": [
+        {
+          "id": "A"
+        },
+        {
+          "id": "B"
+        },
+        {
+          "id": "GYRO"
+        }
+      ]
+    }
+  ],
+  "initial_device_id": "gyro_pad",
+  "curves": [
+    {
+      "id": "throttle",
+      "kind": "piecewise_linear",
+      "domain_scale": 10000,
+      "curvature_ppm": 50000,
+      "points": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 5000,
+          "y": 3500
+        },
+        {
+          "x": 10000,
+          "y": 10000
+        }
+      ]
+    },
+    {
+      "id": "brake",
+      "kind": "piecewise_linear",
+      "domain_scale": 10000,
+      "curvature_ppm": 50000,
+      "points": [
+        {
+          "x": -10000,
+          "y": -10000
+        },
+        {
+          "x": -5000,
+          "y": -4000
+        },
+        {
+          "x": 0,
+          "y": 0
+        }
+      ]
+    },
+    {
+      "id": "gyro",
+      "kind": "piecewise_linear",
+      "domain_scale": 10000,
+      "curvature_ppm": 120000,
+      "points": [
+        {
+          "x": -10000,
+          "y": -9000
+        },
+        {
+          "x": -2000,
+          "y": -1500
+        },
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 2000,
+          "y": 1500
+        },
+        {
+          "x": 10000,
+          "y": 9000
+        }
+      ]
+    }
+  ],
+  "bindings": [
+    {
+      "id": "b_accel",
+      "action": "Accelerate",
+      "type": "axis",
+      "device_id": "gyro_pad",
+      "axis": "lt",
+      "curve": "throttle",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_brake",
+      "action": "Brake",
+      "type": "axis",
+      "device_id": "gyro_pad",
+      "axis": "rt",
+      "curve": "brake",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_tilt",
+      "action": "Tilt",
+      "type": "axis",
+      "device_id": "gyro_pad",
+      "axis": "gyro_x",
+      "curve": "gyro",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_fire",
+      "action": "Fire",
+      "type": "button",
+      "device_id": "gyro_pad",
+      "button": "A",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_charge",
+      "action": "Charge",
+      "type": "long_press",
+      "device_id": "gyro_pad",
+      "button": "A",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 100,
+        "max_threshold_ms": 500,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_recenter",
+      "action": "Recenter",
+      "type": "double_press",
+      "device_id": "gyro_pad",
+      "button": "B",
+      "timing": {
+        "window_ms": 100,
+        "min_gap_ms": 5,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 300
+      }
+    }
+  ],
+  "events": [
+    {
+      "seq": 1,
+      "time_ms": 0,
+      "kind": "axis",
+      "axis": "lt",
+      "value": 0
+    },
+    {
+      "seq": 2,
+      "time_ms": 20,
+      "kind": "axis",
+      "axis": "rt",
+      "value": 0
+    },
+    {
+      "seq": 3,
+      "time_ms": 40,
+      "kind": "axis",
+      "axis": "gyro_x",
+      "value": 0
+    },
+    {
+      "seq": 4,
+      "time_ms": 60,
+      "kind": "axis",
+      "axis": "lt",
+      "value": 79
+    },
+    {
+      "seq": 5,
+      "time_ms": 100,
+      "kind": "axis",
+      "axis": "gyro_x",
+      "value": 11920
+    },
+    {
+      "seq": 6,
+      "time_ms": 140,
+      "kind": "button_down",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 7,
+      "time_ms": 200,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 8,
+      "time_ms": 260,
+      "kind": "button_up",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 9,
+      "time_ms": 280,
+      "kind": "axis",
+      "axis": "lt",
+      "value": 255
+    },
+    {
+      "seq": 10,
+      "time_ms": 320,
+      "kind": "axis",
+      "axis": "rt",
+      "value": 201
+    },
+    {
+      "seq": 11,
+      "time_ms": 360,
+      "kind": "axis",
+      "axis": "gyro_x",
+      "value": -8872
+    },
+    {
+      "seq": 12,
+      "time_ms": 400,
+      "kind": "button_down",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 13,
+      "time_ms": 402,
+      "kind": "button_up",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 14,
+      "time_ms": 440,
+      "kind": "button_down",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 15,
+      "time_ms": 445,
+      "kind": "button_up",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 16,
+      "time_ms": 480,
+      "kind": "button_down",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 17,
+      "time_ms": 500,
+      "kind": "button_up",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 18,
+      "time_ms": 530,
+      "kind": "button_down",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 19,
+      "time_ms": 550,
+      "kind": "button_up",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 20,
+      "time_ms": 580,
+      "kind": "axis",
+      "axis": "rt",
+      "value": 0
+    },
+    {
+      "seq": 21,
+      "time_ms": 600,
+      "kind": "axis",
+      "axis": "lt",
+      "value": 0
+    },
+    {
+      "seq": 22,
+      "time_ms": 620,
+      "kind": "axis",
+      "axis": "gyro_x",
+      "value": 0
+    }
+  ],
+  "truth": {
+    "axis_samples": [
+      {
+        "event_seq": 1,
+        "time_ms": 0,
+        "device_id": "gyro_pad",
+        "binding_id": "b_accel",
+        "action_id": "Accelerate",
+        "axis_id": "lt",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 500
+      },
+      {
+        "event_seq": 2,
+        "time_ms": 20,
+        "device_id": "gyro_pad",
+        "binding_id": "b_brake",
+        "action_id": "Brake",
+        "axis_id": "rt",
+        "raw": 0,
+        "normalized": -10000,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 9500
+      },
+      {
+        "event_seq": 3,
+        "time_ms": 40,
+        "device_id": "gyro_pad",
+        "binding_id": "b_tilt",
+        "action_id": "Tilt",
+        "axis_id": "gyro_x",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": -10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 300
+      },
+      {
+        "event_seq": 4,
+        "time_ms": 60,
+        "device_id": "gyro_pad",
+        "binding_id": "b_accel",
+        "action_id": "Accelerate",
+        "axis_id": "lt",
+        "raw": 79,
+        "normalized": 2169,
+        "quantization_residual": {
+          "num": 10,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 2598
+      },
+      {
+        "event_seq": 5,
+        "time_ms": 100,
+        "device_id": "gyro_pad",
+        "binding_id": "b_tilt",
+        "action_id": "Tilt",
+        "axis_id": "gyro_x",
+        "raw": 11920,
+        "normalized": -3036,
+        "quantization_residual": {
+          "num": 6330,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 3338
+      },
+      {
+        "event_seq": 9,
+        "time_ms": 280,
+        "device_id": "gyro_pad",
+        "binding_id": "b_accel",
+        "action_id": "Accelerate",
+        "axis_id": "lt",
+        "raw": 255,
+        "normalized": 10000,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 9500
+      },
+      {
+        "event_seq": 10,
+        "time_ms": 320,
+        "device_id": "gyro_pad",
+        "binding_id": "b_brake",
+        "action_id": "Brake",
+        "axis_id": "rt",
+        "raw": 201,
+        "normalized": -1694,
+        "quantization_residual": {
+          "num": 90,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 1618
+      },
+      {
+        "event_seq": 11,
+        "time_ms": 360,
+        "device_id": "gyro_pad",
+        "binding_id": "b_tilt",
+        "action_id": "Tilt",
+        "axis_id": "gyro_x",
+        "raw": -8872,
+        "normalized": 2163,
+        "quantization_residual": {
+          "num": 26755,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 2407
+      },
+      {
+        "event_seq": 20,
+        "time_ms": 580,
+        "device_id": "gyro_pad",
+        "binding_id": "b_brake",
+        "action_id": "Brake",
+        "axis_id": "rt",
+        "raw": 0,
+        "normalized": -10000,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 9500
+      },
+      {
+        "event_seq": 21,
+        "time_ms": 600,
+        "device_id": "gyro_pad",
+        "binding_id": "b_accel",
+        "action_id": "Accelerate",
+        "axis_id": "lt",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 500
+      },
+      {
+        "event_seq": 22,
+        "time_ms": 620,
+        "device_id": "gyro_pad",
+        "binding_id": "b_tilt",
+        "action_id": "Tilt",
+        "axis_id": "gyro_x",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": -10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 300
+      }
+    ],
+    "actions": [
+      {
+        "binding_id": "b_brake",
+        "action_id": "Brake",
+        "event_seq": 2,
+        "trigger_time_ms": 20,
+        "state": "pressed",
+        "axis_value": -10000
+      },
+      {
+        "binding_id": "b_accel",
+        "action_id": "Accelerate",
+        "event_seq": 4,
+        "trigger_time_ms": 60,
+        "state": "pressed",
+        "axis_value": 2169
+      },
+      {
+        "binding_id": "b_tilt",
+        "action_id": "Tilt",
+        "event_seq": 5,
+        "trigger_time_ms": 100,
+        "state": "pressed",
+        "axis_value": -3036
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 6,
+        "trigger_time_ms": 140,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 7,
+        "trigger_time_ms": 200,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_charge",
+        "action_id": "Charge",
+        "event_seq": 8,
+        "trigger_time_ms": 240,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_charge",
+        "action_id": "Charge",
+        "event_seq": 8,
+        "trigger_time_ms": 260,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 8,
+        "trigger_time_ms": 260,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_accel",
+        "action_id": "Accelerate",
+        "event_seq": 9,
+        "trigger_time_ms": 280,
+        "state": "held",
+        "axis_value": 10000
+      },
+      {
+        "binding_id": "b_brake",
+        "action_id": "Brake",
+        "event_seq": 10,
+        "trigger_time_ms": 320,
+        "state": "held",
+        "axis_value": -1694
+      },
+      {
+        "binding_id": "b_tilt",
+        "action_id": "Tilt",
+        "event_seq": 11,
+        "trigger_time_ms": 360,
+        "state": "held",
+        "axis_value": 2163
+      },
+      {
+        "binding_id": "b_recenter",
+        "action_id": "Recenter",
+        "event_seq": 15,
+        "trigger_time_ms": 445,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_recenter",
+        "action_id": "Recenter",
+        "event_seq": 19,
+        "trigger_time_ms": 550,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_brake",
+        "action_id": "Brake",
+        "event_seq": 20,
+        "trigger_time_ms": 580,
+        "state": "held",
+        "axis_value": -10000
+      },
+      {
+        "binding_id": "b_accel",
+        "action_id": "Accelerate",
+        "event_seq": 21,
+        "trigger_time_ms": 600,
+        "state": "released",
+        "axis_value": 0
+      },
+      {
+        "binding_id": "b_tilt",
+        "action_id": "Tilt",
+        "event_seq": 22,
+        "trigger_time_ms": 620,
+        "state": "released",
+        "axis_value": 0
+      }
+    ],
+    "unmapped": []
+  }
+}

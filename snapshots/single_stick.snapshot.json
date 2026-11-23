@@ -1,0 +1,738 @@
+{
+  "schema_version": 1,
+  "scenario_id": "single_stick",
+  "event_hash": "4a9dcd75d552a3a16959f88d8f1932ad1901a9655d90c51f7e4634979d9532df",
+  "config_hash": "0460c2948f9eb6818a742d2c6efa7d98125b41e18236f694518291eb6ad5edd3",
+  "fixed_precision_version": "fx-1e3-v1",
+  "binding_version": "bind-v1",
+  "cache_hash": "c1f982ebc0bb55994b1212925ccfa1e6dc75e41ea1c8fee9144abc849f598494",
+  "nodes": [
+    {
+      "node_id": "curve:combat",
+      "kind": "curve",
+      "cache_key": "84fbc75b740ab839c21a68a23cefb1d05f4de8df8e6b88e821abee5cf480db36",
+      "params_hash": "177fe586b94101635a759b0d3f2f2648ef6abd19991097abad7eb9711bc02141",
+      "dependencies": null,
+      "value": {
+        "digest": "177fe586b94101635a759b0d3f2f2648ef6abd19991097abad7eb9711bc02141"
+      }
+    },
+    {
+      "node_id": "curve:trigger",
+      "kind": "curve",
+      "cache_key": "00749f4c0ad223444b3d3200a3679da6c2ac23435ac8730e40e3a91e1fac948f",
+      "params_hash": "c2001a6e410c70e355bee80694743e8846f3eac45a1c80bfacba975ea762d46a",
+      "dependencies": null,
+      "value": {
+        "digest": "c2001a6e410c70e355bee80694743e8846f3eac45a1c80bfacba975ea762d46a"
+      }
+    },
+    {
+      "node_id": "device:single_pad",
+      "kind": "device",
+      "cache_key": "156fc216ec78c8c34fbbc4cc57b120aa01edb91697eb2c12af877120a30ca3dd",
+      "params_hash": "32d1606d503458aad21ed7203e4c320346c69a57324749b25d06fe6c7f0c110f",
+      "dependencies": null,
+      "value": {
+        "digest": "32d1606d503458aad21ed7203e4c320346c69a57324749b25d06fe6c7f0c110f"
+      }
+    },
+    {
+      "node_id": "axis:single_pad/stick",
+      "kind": "axis",
+      "cache_key": "3426d38660d85ab59ed154e373c0f14db91cd4f3f418e65cfdc6b5ba506fca2d",
+      "params_hash": "facf3186f3e201ec8553a872fca382d3909d080f80f8ab7e963267fca58b3bba",
+      "dependencies": [
+        "device:single_pad"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 1,
+            "time_ms": 0,
+            "device_id": "single_pad",
+            "axis_id": "stick",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 0,
+              "den": 2000
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 80
+          },
+          {
+            "event_seq": 5,
+            "time_ms": 100,
+            "device_id": "single_pad",
+            "axis_id": "stick",
+            "raw": 612,
+            "base_normalized": 612,
+            "quantization_residual": {
+              "num": 0,
+              "den": 2000
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 532
+          },
+          {
+            "event_seq": 12,
+            "time_ms": 380,
+            "device_id": "single_pad",
+            "axis_id": "stick",
+            "raw": -1000,
+            "base_normalized": -1000,
+            "quantization_residual": {
+              "num": 0,
+              "den": 2000
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 920
+          },
+          {
+            "event_seq": 18,
+            "time_ms": 560,
+            "device_id": "single_pad",
+            "axis_id": "stick",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 0,
+              "den": 2000
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 80
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "axis:single_pad/trigger",
+      "kind": "axis",
+      "cache_key": "b7a791038e8bb1e2d19be8e607557a8339b058c14f2a603bbde4b2ec50731377",
+      "params_hash": "93e08dc390eeea3c6a458821d68f28b99a4d2b22eff79ca83593ea40989cb4d4",
+      "dependencies": [
+        "device:single_pad"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 2,
+            "time_ms": 20,
+            "device_id": "single_pad",
+            "axis_id": "trigger",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 80
+          },
+          {
+            "event_seq": 7,
+            "time_ms": 140,
+            "device_id": "single_pad",
+            "axis_id": "trigger",
+            "raw": 179,
+            "base_normalized": 702,
+            "quantization_residual": {
+              "num": -10,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 622
+          },
+          {
+            "event_seq": 8,
+            "time_ms": 180,
+            "device_id": "single_pad",
+            "axis_id": "trigger",
+            "raw": 255,
+            "base_normalized": 1000,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 920
+          },
+          {
+            "event_seq": 17,
+            "time_ms": 520,
+            "device_id": "single_pad",
+            "axis_id": "trigger",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 80
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "binding:b_boost",
+      "kind": "binding",
+      "cache_key": "86cf8e4b718b238bdaae39404e5067ccc869d87d38841fe02d73f962e20ec27c",
+      "params_hash": "4043c6cbd8d4174a2266686f770ecace62f268df926620eab5134babca898828",
+      "dependencies": [
+        "device:single_pad"
+      ],
+      "value": {
+        "digest": "4043c6cbd8d4174a2266686f770ecace62f268df926620eab5134babca898828"
+      }
+    },
+    {
+      "node_id": "binding:b_dodge",
+      "kind": "binding",
+      "cache_key": "61f7b1acd9b972aefbbe73c8afcbb02d890075bc7b2f5e1bcf9c7b05ca219365",
+      "params_hash": "c6e16f9120ce85b9fcae8fcae3314950f7eb0d7224c8d7eb798813b71a8a8d25",
+      "dependencies": [
+        "device:single_pad"
+      ],
+      "value": {
+        "digest": "c6e16f9120ce85b9fcae8fcae3314950f7eb0d7224c8d7eb798813b71a8a8d25"
+      }
+    },
+    {
+      "node_id": "binding:b_fire",
+      "kind": "binding",
+      "cache_key": "6cc9d1005be7885618abd62b16240343c7f1b62e9d83c63574109c144fead596",
+      "params_hash": "39121adf2a25bfacc456379a1a2d8d75a95cdf56707075ca4d99435f067287d4",
+      "dependencies": [
+        "device:single_pad"
+      ],
+      "value": {
+        "digest": "39121adf2a25bfacc456379a1a2d8d75a95cdf56707075ca4d99435f067287d4"
+      }
+    },
+    {
+      "node_id": "binding:b_look",
+      "kind": "binding",
+      "cache_key": "4983a514cd574a25c991c5c2109d2d141160f37b40bf46cd08e818f065729537",
+      "params_hash": "7c66f2882e35d6e7c0738bccdc31315adad7f7a7235f6332d2fb54ab38cb4e17",
+      "dependencies": [
+        "axis:single_pad/stick",
+        "curve:combat",
+        "device:single_pad"
+      ],
+      "value": {
+        "digest": "7c66f2882e35d6e7c0738bccdc31315adad7f7a7235f6332d2fb54ab38cb4e17"
+      }
+    },
+    {
+      "node_id": "binding:b_throttle",
+      "kind": "binding",
+      "cache_key": "56ba96e8ec941ffdb6b411f5ebb64e60564bc05c6b6f53c6a4bc32dcd1160993",
+      "params_hash": "45f8d99c2ec29592eeb3dc2b36ea006378063026555dac2d9b8b1465517031f2",
+      "dependencies": [
+        "axis:single_pad/trigger",
+        "curve:trigger",
+        "device:single_pad"
+      ],
+      "value": {
+        "digest": "45f8d99c2ec29592eeb3dc2b36ea006378063026555dac2d9b8b1465517031f2"
+      }
+    },
+    {
+      "node_id": "timing:b_boost",
+      "kind": "timing",
+      "cache_key": "702808adcf2f59309094fde92981eff4e9af598647a445fe74ae64b425849d0b",
+      "params_hash": "17479a9c73a06d1785848fbffd3dd8e3cae34901503edd88898651560a8d0e36",
+      "dependencies": [
+        "binding:b_boost"
+      ],
+      "value": {
+        "digest": "17479a9c73a06d1785848fbffd3dd8e3cae34901503edd88898651560a8d0e36"
+      }
+    },
+    {
+      "node_id": "action:b_boost",
+      "kind": "action",
+      "cache_key": "1b3c8a97d7fe7fcb7364f96ff2523a488dfe5f27b06821ab2efda082841973e7",
+      "params_hash": "cd561ae1f99432ee6cb3965267159e57d4e44dd57f6e90a6f0b066469e9cee90",
+      "dependencies": [
+        "binding:b_boost",
+        "timing:b_boost"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 10,
+              "trigger_time_ms": 300,
+              "binding_id": "b_boost",
+              "action_id": "Boost",
+              "device_id": "single_pad",
+              "state": "pressed",
+              "ordinal": 0
+            },
+            {
+              "event_seq": 10,
+              "trigger_time_ms": 330,
+              "binding_id": "b_boost",
+              "action_id": "Boost",
+              "device_id": "single_pad",
+              "state": "held",
+              "ordinal": 1
+            },
+            {
+              "event_seq": 11,
+              "trigger_time_ms": 360,
+              "binding_id": "b_boost",
+              "action_id": "Boost",
+              "device_id": "single_pad",
+              "state": "released",
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": [
+            {
+              "event_seq": 9,
+              "time_ms": 200,
+              "binding_id": "b_boost",
+              "kind": "long_press_threshold",
+              "margin_ms": 100,
+              "window_ms": 100,
+              "event_gap_ms": 20
+            }
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_dodge",
+      "kind": "timing",
+      "cache_key": "65e62ebca8ff70efd7b1f4f36bf64a19f6e0c40571eb01426c43990e050c3877",
+      "params_hash": "894f353f4f829afa4c647af2dbe4f0af944db6664cdd8cc1d18814518167f8f1",
+      "dependencies": [
+        "binding:b_dodge"
+      ],
+      "value": {
+        "digest": "894f353f4f829afa4c647af2dbe4f0af944db6664cdd8cc1d18814518167f8f1"
+      }
+    },
+    {
+      "node_id": "action:b_dodge",
+      "kind": "action",
+      "cache_key": "62f43ef1072acfce5b2294a23f2376ca5328acd3c810e7c1e0eadad13bf8988b",
+      "params_hash": "2be44bd5e6bafa70b586446791bc7a0252be1d7339c0ef68e21a524d743e9bec",
+      "dependencies": [
+        "binding:b_dodge",
+        "timing:b_dodge"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 16,
+              "trigger_time_ms": 480,
+              "binding_id": "b_dodge",
+              "action_id": "Dodge",
+              "device_id": "single_pad",
+              "state": "pressed",
+              "ordinal": 0
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": [
+            {
+              "event_seq": 14,
+              "time_ms": 440,
+              "binding_id": "b_dodge",
+              "kind": "double_press_window",
+              "margin_ms": 100,
+              "window_ms": 120,
+              "event_gap_ms": 20
+            },
+            {
+              "event_seq": 15,
+              "time_ms": 460,
+              "binding_id": "b_dodge",
+              "kind": "double_press_window",
+              "margin_ms": 80,
+              "window_ms": 120,
+              "event_gap_ms": 20
+            },
+            {
+              "event_seq": 16,
+              "time_ms": 480,
+              "binding_id": "b_dodge",
+              "kind": "double_press_window",
+              "margin_ms": 60,
+              "window_ms": 120,
+              "event_gap_ms": 20
+            }
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_fire",
+      "kind": "timing",
+      "cache_key": "a45cfd5882aa6762a4b57790e3ac80116dc00820020d067b7736bf4cbc35af53",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_fire"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_fire",
+      "kind": "action",
+      "cache_key": "92712fdf0a47e80703a0ee041570ad6e0675dcaec8f4c5408adb5327cc7a9720",
+      "params_hash": "a9bd4336653c65ff4b42787d791e3a92b4a8715832d4803a425b55f093f86bcb",
+      "dependencies": [
+        "binding:b_fire",
+        "timing:b_fire"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 3,
+              "trigger_time_ms": 40,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "single_pad",
+              "state": "pressed",
+              "ordinal": 0
+            },
+            {
+              "event_seq": 4,
+              "trigger_time_ms": 70,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "single_pad",
+              "state": "held",
+              "ordinal": 1
+            },
+            {
+              "event_seq": 6,
+              "trigger_time_ms": 120,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "single_pad",
+              "state": "released",
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_look",
+      "kind": "timing",
+      "cache_key": "a87ebbd164a7a3f6cd6dd50f00e2703b4aabf63cf64e4c5fd1cd0469e5a4486a",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_look"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_look",
+      "kind": "action",
+      "cache_key": "27e1e7249ee7f144c0dd558975b4a6dcbca5bb22e66044db5fa425ce0dba1a2e",
+      "params_hash": "ba3837368c15bb3514a69d00df28b9cedd3a065b83cdff979a953a14f5ea4d5a",
+      "dependencies": [
+        "binding:b_look",
+        "timing:b_look"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 5,
+              "trigger_time_ms": 100,
+              "binding_id": "b_look",
+              "action_id": "Look",
+              "device_id": "single_pad",
+              "state": "pressed",
+              "axis_value": 451,
+              "quantization_residual": {
+                "num": 0,
+                "den": 2000
+              },
+              "curve_linearization_error": 5,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 12,
+              "trigger_time_ms": 380,
+              "binding_id": "b_look",
+              "action_id": "Look",
+              "device_id": "single_pad",
+              "state": "held",
+              "axis_value": -700,
+              "quantization_residual": {
+                "num": 0,
+                "den": 2000
+              },
+              "curve_linearization_error": 5,
+              "ordinal": 1
+            },
+            {
+              "event_seq": 18,
+              "trigger_time_ms": 560,
+              "binding_id": "b_look",
+              "action_id": "Look",
+              "device_id": "single_pad",
+              "state": "released",
+              "axis_value": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 2000
+              },
+              "curve_linearization_error": 1,
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 1,
+              "time_ms": 0,
+              "device_id": "single_pad",
+              "binding_id": "b_look",
+              "action_id": "Look",
+              "axis_id": "stick",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 2000
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 80,
+              "curve_linearization_error": 1
+            },
+            {
+              "event_seq": 5,
+              "time_ms": 100,
+              "device_id": "single_pad",
+              "binding_id": "b_look",
+              "action_id": "Look",
+              "axis_id": "stick",
+              "raw": 612,
+              "base_normalized": 612,
+              "normalized": 451,
+              "quantization_residual": {
+                "num": 0,
+                "den": 2000
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 532,
+              "curve_linearization_error": 5
+            },
+            {
+              "event_seq": 12,
+              "time_ms": 380,
+              "device_id": "single_pad",
+              "binding_id": "b_look",
+              "action_id": "Look",
+              "axis_id": "stick",
+              "raw": -1000,
+              "base_normalized": -1000,
+              "normalized": -700,
+              "quantization_residual": {
+                "num": 0,
+                "den": 2000
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 920,
+              "curve_linearization_error": 5
+            },
+            {
+              "event_seq": 18,
+              "time_ms": 560,
+              "device_id": "single_pad",
+              "binding_id": "b_look",
+              "action_id": "Look",
+              "axis_id": "stick",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 2000
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 80,
+              "curve_linearization_error": 1
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_throttle",
+      "kind": "timing",
+      "cache_key": "8f037584ef88573e797cfe2122feca0d30176628a9eb0affe35fe10e34ae62c6",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_throttle"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_throttle",
+      "kind": "action",
+      "cache_key": "be49520137d6076aa96beeaf198c20089c7d72130448288671602078719ae7ee",
+      "params_hash": "6f5f532b0f989f2b435a2010fb5d728f64d7bda7638670090528d3caf553a1f2",
+      "dependencies": [
+        "binding:b_throttle",
+        "timing:b_throttle"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 7,
+              "trigger_time_ms": 140,
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "device_id": "single_pad",
+              "state": "pressed",
+              "axis_value": 642,
+              "quantization_residual": {
+                "num": -10,
+                "den": 255
+              },
+              "curve_linearization_error": 2,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 8,
+              "trigger_time_ms": 180,
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "device_id": "single_pad",
+              "state": "held",
+              "axis_value": 1000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 2,
+              "ordinal": 1
+            },
+            {
+              "event_seq": 17,
+              "trigger_time_ms": 520,
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "device_id": "single_pad",
+              "state": "released",
+              "axis_value": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 2,
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 2,
+              "time_ms": 20,
+              "device_id": "single_pad",
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "axis_id": "trigger",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 80,
+              "curve_linearization_error": 2
+            },
+            {
+              "event_seq": 7,
+              "time_ms": 140,
+              "device_id": "single_pad",
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "axis_id": "trigger",
+              "raw": 179,
+              "base_normalized": 702,
+              "normalized": 642,
+              "quantization_residual": {
+                "num": -10,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 622,
+              "curve_linearization_error": 2
+            },
+            {
+              "event_seq": 8,
+              "time_ms": 180,
+              "device_id": "single_pad",
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "axis_id": "trigger",
+              "raw": 255,
+              "base_normalized": 1000,
+              "normalized": 1000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 920,
+              "curve_linearization_error": 2
+            },
+            {
+              "event_seq": 17,
+              "time_ms": 520,
+              "device_id": "single_pad",
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "axis_id": "trigger",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 80,
+              "curve_linearization_error": 2
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    }
+  ]
+}

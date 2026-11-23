@@ -1,0 +1,986 @@
+{
+  "schema_version": 1,
+  "scenario_id": "trigger_gyro",
+  "event_hash": "6904ba8e43c045e03f63a69cd00b02dc691f615b418006092280361820e33f38",
+  "config_hash": "5d1903db8c705957342bbfa85466684a342938123fbeed193eeb64b2db9c8080",
+  "fixed_precision_version": "fx-1e4-v2",
+  "binding_version": "bind-v2",
+  "cache_hash": "9f6b2bc91fcc512992f7b4834c168b23d7a9e30c950a29ad5edf0dce74ac539e",
+  "nodes": [
+    {
+      "node_id": "curve:brake",
+      "kind": "curve",
+      "cache_key": "3739ae4ef453c6c2ad582d86023548e250784e121480c51b0a8061aa571602a0",
+      "params_hash": "e56a7688ef38f45bf038ac2790b1f96de6419a200a91283c4f48a5ce2ab72e72",
+      "dependencies": null,
+      "value": {
+        "digest": "e56a7688ef38f45bf038ac2790b1f96de6419a200a91283c4f48a5ce2ab72e72"
+      }
+    },
+    {
+      "node_id": "curve:gyro",
+      "kind": "curve",
+      "cache_key": "6c119190a9bdcd4c6f5eca3f972c7666830cf37ef2bd257c13da568631531042",
+      "params_hash": "7dbe71566998903cb3012ee1e6faea18253ae635101e8ba1ffe037d5ddaa3985",
+      "dependencies": null,
+      "value": {
+        "digest": "7dbe71566998903cb3012ee1e6faea18253ae635101e8ba1ffe037d5ddaa3985"
+      }
+    },
+    {
+      "node_id": "curve:throttle",
+      "kind": "curve",
+      "cache_key": "ff3d73d0b3d9db675fe9858e41d64bae84c1c70cc18de827b904d0e87afd5920",
+      "params_hash": "10614d7e5b515f3f27d6bc485d245cffb964511cdad4c0449627726012a77f4c",
+      "dependencies": null,
+      "value": {
+        "digest": "10614d7e5b515f3f27d6bc485d245cffb964511cdad4c0449627726012a77f4c"
+      }
+    },
+    {
+      "node_id": "device:gyro_pad",
+      "kind": "device",
+      "cache_key": "302f8ca015eede5a234d465244118bac6c4cca86d733c24b8075890e20b5d02e",
+      "params_hash": "a7120b46cf74624458e7fa60d266c7a718e21af7a25eb3669b0cb5eb5ccfdddf",
+      "dependencies": null,
+      "value": {
+        "digest": "a7120b46cf74624458e7fa60d266c7a718e21af7a25eb3669b0cb5eb5ccfdddf"
+      }
+    },
+    {
+      "node_id": "axis:gyro_pad/gyro_x",
+      "kind": "axis",
+      "cache_key": "babbb8a391b8183f3560244a65e82a8fe2e016438c902787d903f2440aedc71b",
+      "params_hash": "aaf17a7034fa83fc7ef83dee270a6a966880aed267a59d681a95149889f8fc27",
+      "dependencies": [
+        "device:gyro_pad"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 3,
+            "time_ms": 40,
+            "device_id": "gyro_pad",
+            "axis_id": "gyro_x",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": -10000,
+              "den": 65535
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 300
+          },
+          {
+            "event_seq": 5,
+            "time_ms": 100,
+            "device_id": "gyro_pad",
+            "axis_id": "gyro_x",
+            "raw": 11920,
+            "base_normalized": -3638,
+            "quantization_residual": {
+              "num": 6330,
+              "den": 65535
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 3338
+          },
+          {
+            "event_seq": 11,
+            "time_ms": 360,
+            "device_id": "gyro_pad",
+            "axis_id": "gyro_x",
+            "raw": -8872,
+            "base_normalized": 2707,
+            "quantization_residual": {
+              "num": 26755,
+              "den": 65535
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 2407
+          },
+          {
+            "event_seq": 22,
+            "time_ms": 620,
+            "device_id": "gyro_pad",
+            "axis_id": "gyro_x",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": -10000,
+              "den": 65535
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 300
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "axis:gyro_pad/lt",
+      "kind": "axis",
+      "cache_key": "6c829f9cbc3b307c158dc286d671add71da88d5b8e7cf8839063b6cb1fc340a1",
+      "params_hash": "73091cccdfb9b368ca514602a6b3dc03b7497abcf919f06d60b865b9cd611d94",
+      "dependencies": [
+        "device:gyro_pad"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 1,
+            "time_ms": 0,
+            "device_id": "gyro_pad",
+            "axis_id": "lt",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 500
+          },
+          {
+            "event_seq": 4,
+            "time_ms": 60,
+            "device_id": "gyro_pad",
+            "axis_id": "lt",
+            "raw": 79,
+            "base_normalized": 3098,
+            "quantization_residual": {
+              "num": 10,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 2598
+          },
+          {
+            "event_seq": 9,
+            "time_ms": 280,
+            "device_id": "gyro_pad",
+            "axis_id": "lt",
+            "raw": 255,
+            "base_normalized": 10000,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 9500
+          },
+          {
+            "event_seq": 21,
+            "time_ms": 600,
+            "device_id": "gyro_pad",
+            "axis_id": "lt",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 500
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "axis:gyro_pad/rt",
+      "kind": "axis",
+      "cache_key": "012375bbf835c91be9b60e1eb4eb58d6e7b86fa9701138f021a3d3d3faa6e572",
+      "params_hash": "9d77c9771baf7819a2de43c452887c3f8f72c9451ba391ce45185dde2cd83475",
+      "dependencies": [
+        "device:gyro_pad"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 2,
+            "time_ms": 20,
+            "device_id": "gyro_pad",
+            "axis_id": "rt",
+            "raw": 0,
+            "base_normalized": -10000,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 9500
+          },
+          {
+            "event_seq": 10,
+            "time_ms": 320,
+            "device_id": "gyro_pad",
+            "axis_id": "rt",
+            "raw": 201,
+            "base_normalized": -2118,
+            "quantization_residual": {
+              "num": 90,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 1618
+          },
+          {
+            "event_seq": 20,
+            "time_ms": 580,
+            "device_id": "gyro_pad",
+            "axis_id": "rt",
+            "raw": 0,
+            "base_normalized": -10000,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 9500
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "binding:b_accel",
+      "kind": "binding",
+      "cache_key": "4be4f7df61cf1074a1579c7c0750a9351580d7071bb8e2e237ce85247147a966",
+      "params_hash": "a5f636c857fa12fc98a4d46672f5206143821f9b64b2db030a57aa619f5b264c",
+      "dependencies": [
+        "axis:gyro_pad/lt",
+        "curve:throttle",
+        "device:gyro_pad"
+      ],
+      "value": {
+        "digest": "a5f636c857fa12fc98a4d46672f5206143821f9b64b2db030a57aa619f5b264c"
+      }
+    },
+    {
+      "node_id": "binding:b_brake",
+      "kind": "binding",
+      "cache_key": "953b84445792b7c869e0b8df8384e2d3a11aa9da5f48f87650f92a05c98f00f4",
+      "params_hash": "3409a38e0c589697fc584575fa07818c14f64ee3fddf862295e388459d65faac",
+      "dependencies": [
+        "axis:gyro_pad/rt",
+        "curve:brake",
+        "device:gyro_pad"
+      ],
+      "value": {
+        "digest": "3409a38e0c589697fc584575fa07818c14f64ee3fddf862295e388459d65faac"
+      }
+    },
+    {
+      "node_id": "binding:b_charge",
+      "kind": "binding",
+      "cache_key": "9d70e809040d1693c6ec585d4b826eb5a4155fc323d5c628979f55c1de4b3978",
+      "params_hash": "81ff86a6a702d5c80a5413c6b993c49ba5a691f7c2e8eeae39e4cb8bab536af9",
+      "dependencies": [
+        "device:gyro_pad"
+      ],
+      "value": {
+        "digest": "81ff86a6a702d5c80a5413c6b993c49ba5a691f7c2e8eeae39e4cb8bab536af9"
+      }
+    },
+    {
+      "node_id": "binding:b_fire",
+      "kind": "binding",
+      "cache_key": "54fa5171be275a1a1771c26f5d5a6f2734d53d7d92d4a77a5aab7fc84b0aa465",
+      "params_hash": "8ab584dacdf72ec373e435ce84261b69ff43d7b25342a739c1c89db19862e769",
+      "dependencies": [
+        "device:gyro_pad"
+      ],
+      "value": {
+        "digest": "8ab584dacdf72ec373e435ce84261b69ff43d7b25342a739c1c89db19862e769"
+      }
+    },
+    {
+      "node_id": "binding:b_recenter",
+      "kind": "binding",
+      "cache_key": "fd870e40d7c3ede64c82d1aac73bed22e8d60a9b8a9eb6461ee4c3eeddaaec1a",
+      "params_hash": "9011453ce687551ee5c68a86b9f5af79f6f8305885b7231b3ced682625f25e5c",
+      "dependencies": [
+        "device:gyro_pad"
+      ],
+      "value": {
+        "digest": "9011453ce687551ee5c68a86b9f5af79f6f8305885b7231b3ced682625f25e5c"
+      }
+    },
+    {
+      "node_id": "binding:b_tilt",
+      "kind": "binding",
+      "cache_key": "1d8209ab0a73e5b39a61d226a112bb75a3a3ca3e67966a2024848e0008b68d05",
+      "params_hash": "281b333c309793d159dfb00d22d54246e13ac8ca52a89339f97b8d58120d4448",
+      "dependencies": [
+        "axis:gyro_pad/gyro_x",
+        "curve:gyro",
+        "device:gyro_pad"
+      ],
+      "value": {
+        "digest": "281b333c309793d159dfb00d22d54246e13ac8ca52a89339f97b8d58120d4448"
+      }
+    },
+    {
+      "node_id": "timing:b_accel",
+      "kind": "timing",
+      "cache_key": "f80e37ced9d75a87fe6fc8cfc89799d97ce190cf657dc453057763c09d925670",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_accel"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_accel",
+      "kind": "action",
+      "cache_key": "2f16b984d16b9ccc1a6445a7528f6c53fe101ae6c620471db7074c7b769331d3",
+      "params_hash": "5341b6dc111177314d2b3606de6a605055676537ae6879dd6b5256ee367acd9b",
+      "dependencies": [
+        "binding:b_accel",
+        "timing:b_accel"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 4,
+              "trigger_time_ms": 60,
+              "binding_id": "b_accel",
+              "action_id": "Accelerate",
+              "device_id": "gyro_pad",
+              "state": "pressed",
+              "axis_value": 2169,
+              "quantization_residual": {
+                "num": 10,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 9,
+              "trigger_time_ms": 280,
+              "binding_id": "b_accel",
+              "action_id": "Accelerate",
+              "device_id": "gyro_pad",
+              "state": "held",
+              "axis_value": 10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 1
+            },
+            {
+              "event_seq": 21,
+              "trigger_time_ms": 600,
+              "binding_id": "b_accel",
+              "action_id": "Accelerate",
+              "device_id": "gyro_pad",
+              "state": "released",
+              "axis_value": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 1,
+              "time_ms": 0,
+              "device_id": "gyro_pad",
+              "binding_id": "b_accel",
+              "action_id": "Accelerate",
+              "axis_id": "lt",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 500,
+              "curve_linearization_error": 16
+            },
+            {
+              "event_seq": 4,
+              "time_ms": 60,
+              "device_id": "gyro_pad",
+              "binding_id": "b_accel",
+              "action_id": "Accelerate",
+              "axis_id": "lt",
+              "raw": 79,
+              "base_normalized": 3098,
+              "normalized": 2169,
+              "quantization_residual": {
+                "num": 10,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 2598,
+              "curve_linearization_error": 16
+            },
+            {
+              "event_seq": 9,
+              "time_ms": 280,
+              "device_id": "gyro_pad",
+              "binding_id": "b_accel",
+              "action_id": "Accelerate",
+              "axis_id": "lt",
+              "raw": 255,
+              "base_normalized": 10000,
+              "normalized": 10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 9500,
+              "curve_linearization_error": 16
+            },
+            {
+              "event_seq": 21,
+              "time_ms": 600,
+              "device_id": "gyro_pad",
+              "binding_id": "b_accel",
+              "action_id": "Accelerate",
+              "axis_id": "lt",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 500,
+              "curve_linearization_error": 16
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_brake",
+      "kind": "timing",
+      "cache_key": "7c315f8c8b098e50f402eea54206bfcac73d6d66d1c3a757b1a305bb4ce6ec6c",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_brake"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_brake",
+      "kind": "action",
+      "cache_key": "e83cc48076f44cf0bd58919c98e5f7c97b182bf4aa18d27b8a8443fcbbdc27e2",
+      "params_hash": "d11b5f4e8c3131ff1ee91b96b07b28f12e010eca9319e73c09bbd201794a0d23",
+      "dependencies": [
+        "binding:b_brake",
+        "timing:b_brake"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 2,
+              "trigger_time_ms": 20,
+              "binding_id": "b_brake",
+              "action_id": "Brake",
+              "device_id": "gyro_pad",
+              "state": "pressed",
+              "axis_value": -10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 10,
+              "trigger_time_ms": 320,
+              "binding_id": "b_brake",
+              "action_id": "Brake",
+              "device_id": "gyro_pad",
+              "state": "held",
+              "axis_value": -1694,
+              "quantization_residual": {
+                "num": 90,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 1
+            },
+            {
+              "event_seq": 20,
+              "trigger_time_ms": 580,
+              "binding_id": "b_brake",
+              "action_id": "Brake",
+              "device_id": "gyro_pad",
+              "state": "held",
+              "axis_value": -10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 2,
+              "time_ms": 20,
+              "device_id": "gyro_pad",
+              "binding_id": "b_brake",
+              "action_id": "Brake",
+              "axis_id": "rt",
+              "raw": 0,
+              "base_normalized": -10000,
+              "normalized": -10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 9500,
+              "curve_linearization_error": 16
+            },
+            {
+              "event_seq": 10,
+              "time_ms": 320,
+              "device_id": "gyro_pad",
+              "binding_id": "b_brake",
+              "action_id": "Brake",
+              "axis_id": "rt",
+              "raw": 201,
+              "base_normalized": -2118,
+              "normalized": -1694,
+              "quantization_residual": {
+                "num": 90,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 1618,
+              "curve_linearization_error": 16
+            },
+            {
+              "event_seq": 20,
+              "time_ms": 580,
+              "device_id": "gyro_pad",
+              "binding_id": "b_brake",
+              "action_id": "Brake",
+              "axis_id": "rt",
+              "raw": 0,
+              "base_normalized": -10000,
+              "normalized": -10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 9500,
+              "curve_linearization_error": 16
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_charge",
+      "kind": "timing",
+      "cache_key": "b982805356809636fb0bf190c214a8e52771b81738838595494f543d70a4bc58",
+      "params_hash": "f102db2eecc507b8068cd14a7b21171a6f85368e6c256d174d9cb6523b1c39c6",
+      "dependencies": [
+        "binding:b_charge"
+      ],
+      "value": {
+        "digest": "f102db2eecc507b8068cd14a7b21171a6f85368e6c256d174d9cb6523b1c39c6"
+      }
+    },
+    {
+      "node_id": "action:b_charge",
+      "kind": "action",
+      "cache_key": "4b632424c412831cf6b869399bf79a40ee4805eb81f9f69b1dd473156f597be0",
+      "params_hash": "eca70246e05a1668c9e31274e4367ce8fb35e36334a6fbba51680cff2e055b14",
+      "dependencies": [
+        "binding:b_charge",
+        "timing:b_charge"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 8,
+              "trigger_time_ms": 240,
+              "binding_id": "b_charge",
+              "action_id": "Charge",
+              "device_id": "gyro_pad",
+              "state": "pressed",
+              "ordinal": 0
+            },
+            {
+              "event_seq": 8,
+              "trigger_time_ms": 260,
+              "binding_id": "b_charge",
+              "action_id": "Charge",
+              "device_id": "gyro_pad",
+              "state": "released",
+              "ordinal": 1
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": [
+            {
+              "event_seq": 6,
+              "time_ms": 140,
+              "binding_id": "b_charge",
+              "kind": "long_press_threshold",
+              "margin_ms": 100,
+              "window_ms": 100,
+              "event_gap_ms": 40
+            },
+            {
+              "event_seq": 7,
+              "time_ms": 200,
+              "binding_id": "b_charge",
+              "kind": "long_press_threshold",
+              "margin_ms": 40,
+              "window_ms": 100,
+              "event_gap_ms": 60
+            }
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_fire",
+      "kind": "timing",
+      "cache_key": "a28cbfc7e285b690a0b9a894cb9af244db2356be2bdc7d8e92221341ddbde5f1",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_fire"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_fire",
+      "kind": "action",
+      "cache_key": "1feb944f8bef2508cca425c21ed9d00d8a50f10fe5dd8ecb1939cb644715ead2",
+      "params_hash": "a7f8f073f00094a98914812cd7fa5f3be096ed6f5bf3ae2f5ae2ea8c06b85fd5",
+      "dependencies": [
+        "binding:b_fire",
+        "timing:b_fire"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 6,
+              "trigger_time_ms": 140,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "gyro_pad",
+              "state": "pressed",
+              "ordinal": 0
+            },
+            {
+              "event_seq": 7,
+              "trigger_time_ms": 200,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "gyro_pad",
+              "state": "held",
+              "ordinal": 1
+            },
+            {
+              "event_seq": 8,
+              "trigger_time_ms": 260,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "gyro_pad",
+              "state": "released",
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_recenter",
+      "kind": "timing",
+      "cache_key": "5d1f5c76be8980f23023bd9fddb6ee2d1aa8033c81a402bcc20fc9e4e04f2254",
+      "params_hash": "7169a450642bd635c35fa53addb3497d4bf4aac66a783c6c192488c2ee8c4a50",
+      "dependencies": [
+        "binding:b_recenter"
+      ],
+      "value": {
+        "digest": "7169a450642bd635c35fa53addb3497d4bf4aac66a783c6c192488c2ee8c4a50"
+      }
+    },
+    {
+      "node_id": "action:b_recenter",
+      "kind": "action",
+      "cache_key": "a7a788f6c7ad141aec5669fecb08844d4d2d87c615ea63086c9f4f194d0f6d97",
+      "params_hash": "998070d65d5978578718b6468095d0dc24c35c34a85789321f6a01b0bbb8dde9",
+      "dependencies": [
+        "binding:b_recenter",
+        "timing:b_recenter"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 15,
+              "trigger_time_ms": 445,
+              "binding_id": "b_recenter",
+              "action_id": "Recenter",
+              "device_id": "gyro_pad",
+              "state": "pressed",
+              "ordinal": 0
+            },
+            {
+              "event_seq": 19,
+              "trigger_time_ms": 550,
+              "binding_id": "b_recenter",
+              "action_id": "Recenter",
+              "device_id": "gyro_pad",
+              "state": "pressed",
+              "ordinal": 1
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": [
+            {
+              "event_seq": 13,
+              "time_ms": 402,
+              "binding_id": "b_recenter",
+              "kind": "double_press_window",
+              "margin_ms": 98,
+              "window_ms": 100,
+              "event_gap_ms": 2
+            },
+            {
+              "event_seq": 14,
+              "time_ms": 440,
+              "binding_id": "b_recenter",
+              "kind": "double_press_window",
+              "margin_ms": 60,
+              "window_ms": 100,
+              "event_gap_ms": 38
+            },
+            {
+              "event_seq": 15,
+              "time_ms": 445,
+              "binding_id": "b_recenter",
+              "kind": "double_press_window",
+              "margin_ms": 55,
+              "window_ms": 100,
+              "event_gap_ms": 5
+            },
+            {
+              "event_seq": 17,
+              "time_ms": 500,
+              "binding_id": "b_recenter",
+              "kind": "double_press_window",
+              "margin_ms": 80,
+              "window_ms": 100,
+              "event_gap_ms": 20
+            },
+            {
+              "event_seq": 18,
+              "time_ms": 530,
+              "binding_id": "b_recenter",
+              "kind": "double_press_window",
+              "margin_ms": 50,
+              "window_ms": 100,
+              "event_gap_ms": 30
+            },
+            {
+              "event_seq": 19,
+              "time_ms": 550,
+              "binding_id": "b_recenter",
+              "kind": "double_press_window",
+              "margin_ms": 30,
+              "window_ms": 100,
+              "event_gap_ms": 20
+            }
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_tilt",
+      "kind": "timing",
+      "cache_key": "6f74d2043af6e316e0e579508f262ddb24d77d470ffd57506a4bdde56576f75a",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_tilt"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_tilt",
+      "kind": "action",
+      "cache_key": "66dc1fb409d2d8b3b6f39515542573854602a7cb843e1da4f500a36f24c3de04",
+      "params_hash": "32fa6c89a6690d06b87fe52a0c883a3e03056dac2c523e223ce750dc0ee0c5e8",
+      "dependencies": [
+        "binding:b_tilt",
+        "timing:b_tilt"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 5,
+              "trigger_time_ms": 100,
+              "binding_id": "b_tilt",
+              "action_id": "Tilt",
+              "device_id": "gyro_pad",
+              "state": "pressed",
+              "axis_value": -3036,
+              "quantization_residual": {
+                "num": 6330,
+                "den": 65535
+              },
+              "curve_linearization_error": 96,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 11,
+              "trigger_time_ms": 360,
+              "binding_id": "b_tilt",
+              "action_id": "Tilt",
+              "device_id": "gyro_pad",
+              "state": "held",
+              "axis_value": 2163,
+              "quantization_residual": {
+                "num": 26755,
+                "den": 65535
+              },
+              "curve_linearization_error": 96,
+              "ordinal": 1
+            },
+            {
+              "event_seq": 22,
+              "trigger_time_ms": 620,
+              "binding_id": "b_tilt",
+              "action_id": "Tilt",
+              "device_id": "gyro_pad",
+              "state": "released",
+              "axis_value": 0,
+              "quantization_residual": {
+                "num": -10000,
+                "den": 65535
+              },
+              "curve_linearization_error": 6,
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 3,
+              "time_ms": 40,
+              "device_id": "gyro_pad",
+              "binding_id": "b_tilt",
+              "action_id": "Tilt",
+              "axis_id": "gyro_x",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": -10000,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 300,
+              "curve_linearization_error": 6
+            },
+            {
+              "event_seq": 5,
+              "time_ms": 100,
+              "device_id": "gyro_pad",
+              "binding_id": "b_tilt",
+              "action_id": "Tilt",
+              "axis_id": "gyro_x",
+              "raw": 11920,
+              "base_normalized": -3638,
+              "normalized": -3036,
+              "quantization_residual": {
+                "num": 6330,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 3338,
+              "curve_linearization_error": 96
+            },
+            {
+              "event_seq": 11,
+              "time_ms": 360,
+              "device_id": "gyro_pad",
+              "binding_id": "b_tilt",
+              "action_id": "Tilt",
+              "axis_id": "gyro_x",
+              "raw": -8872,
+              "base_normalized": 2707,
+              "normalized": 2163,
+              "quantization_residual": {
+                "num": 26755,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 2407,
+              "curve_linearization_error": 96
+            },
+            {
+              "event_seq": 22,
+              "time_ms": 620,
+              "device_id": "gyro_pad",
+              "binding_id": "b_tilt",
+              "action_id": "Tilt",
+              "axis_id": "gyro_x",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": -10000,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 300,
+              "curve_linearization_error": 6
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    }
+  ]
+}

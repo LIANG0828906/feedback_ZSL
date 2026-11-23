@@ -1,0 +1,1002 @@
+{
+  "schema_version": 1,
+  "scenario_id": "hot_switch",
+  "event_hash": "a02c994d10da03b4633f751a0592c25b72337e82143d27c28e94fce39aedab29",
+  "config_hash": "70c6c699b45323f376ec0b63433399ff0f5434c977c343d21d866e4569319cee",
+  "fixed_precision_version": "fx-1e4-v3",
+  "binding_version": "bind-v3",
+  "cache_hash": "c2e5456d9b232c69d57e08e7229a45bfd0dab95fd8558e0c96424606811c04d6",
+  "nodes": [
+    {
+      "node_id": "curve:aim",
+      "kind": "curve",
+      "cache_key": "02676e4f32489835bfab623a92a34171fddd6c82cb65024ccb011dd49e40fda8",
+      "params_hash": "709697b1ddabb14a9c5c2dfa9b447598b7667b0e8fee1e70a719c0032248282a",
+      "dependencies": null,
+      "value": {
+        "digest": "709697b1ddabb14a9c5c2dfa9b447598b7667b0e8fee1e70a719c0032248282a"
+      }
+    },
+    {
+      "node_id": "curve:throttle",
+      "kind": "curve",
+      "cache_key": "4a6d5a0894f298302b6fa2247f982805c8ab273c61b7f3c4430fb99b81f1b82a",
+      "params_hash": "10614d7e5b515f3f27d6bc485d245cffb964511cdad4c0449627726012a77f4c",
+      "dependencies": null,
+      "value": {
+        "digest": "10614d7e5b515f3f27d6bc485d245cffb964511cdad4c0449627726012a77f4c"
+      }
+    },
+    {
+      "node_id": "device:pad_dual",
+      "kind": "device",
+      "cache_key": "f64a9e1c9b26dc439a74af2cfb5c181f7d1f1e7cbfef26028f2e8acd55c1b24d",
+      "params_hash": "83ea372f2f4c2cdb438f75644bf788e505edb1f2c3038011ca5647a328870233",
+      "dependencies": null,
+      "value": {
+        "digest": "83ea372f2f4c2cdb438f75644bf788e505edb1f2c3038011ca5647a328870233"
+      }
+    },
+    {
+      "node_id": "axis:pad_dual/lx",
+      "kind": "axis",
+      "cache_key": "6607399cd428f6ca1bd238dbe535ee400e1299f174ba219ab0adc26918edeb4d",
+      "params_hash": "c84cdc382d38ad7899ab5b5fc1755f853e79a7c7a8d5f07350b87f73a9403ced",
+      "dependencies": [
+        "device:pad_dual"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 1,
+            "time_ms": 0,
+            "device_id": "pad_dual",
+            "axis_id": "lx",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 10000,
+              "den": 65535
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 800
+          },
+          {
+            "event_seq": 4,
+            "time_ms": 40,
+            "device_id": "pad_dual",
+            "axis_id": "lx",
+            "raw": 5124,
+            "base_normalized": 1564,
+            "quantization_residual": {
+              "num": -6740,
+              "den": 65535
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 764
+          },
+          {
+            "event_seq": 9,
+            "time_ms": 120,
+            "device_id": "pad_dual",
+            "axis_id": "lx",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 10000,
+              "den": 65535
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 800
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "axis:pad_dual/ly",
+      "kind": "axis",
+      "cache_key": "8ab406761c811de06bf1742f1d19b1376006550d781509a71726578c59c42c35",
+      "params_hash": "639849d5464a46487ad3a0d36cb6841c3a140df59d3ba7dc00ea3a9228f5fbde",
+      "dependencies": [
+        "device:pad_dual"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 5,
+            "time_ms": 60,
+            "device_id": "pad_dual",
+            "axis_id": "ly",
+            "raw": -3917,
+            "base_normalized": -1195,
+            "quantization_residual": {
+              "num": -15675,
+              "den": 65535
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 395
+          },
+          {
+            "event_seq": 10,
+            "time_ms": 150,
+            "device_id": "pad_dual",
+            "axis_id": "ly",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 10000,
+              "den": 65535
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 800
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "binding:b_dash_old",
+      "kind": "binding",
+      "cache_key": "1afe6fd57c17e9dba1ecb897a5dcb52b7693256d5551ee5061ba33590f22227f",
+      "params_hash": "c14778e7a9b4414a1a46dbb8798f89a0590b83ad62a07ca093604be09cee49fe",
+      "dependencies": [
+        "device:pad_dual"
+      ],
+      "value": {
+        "digest": "c14778e7a9b4414a1a46dbb8798f89a0590b83ad62a07ca093604be09cee49fe"
+      }
+    },
+    {
+      "node_id": "binding:b_jump",
+      "kind": "binding",
+      "cache_key": "eb06f21956c29813b5f71e3513b6db6c424d9fbbda1482b0629c6f7bb5f64fcd",
+      "params_hash": "c07fe6f2d7e3f6d0437764061be8f6e8ec793618f5aa5cb9cd85c17118cf93ec",
+      "dependencies": [
+        "device:pad_dual"
+      ],
+      "value": {
+        "digest": "c07fe6f2d7e3f6d0437764061be8f6e8ec793618f5aa5cb9cd85c17118cf93ec"
+      }
+    },
+    {
+      "node_id": "binding:b_move_x",
+      "kind": "binding",
+      "cache_key": "5e3597b45f6591bfbf78248f4b8957a068fb2c8bd85fb11561c57f9d6231ae98",
+      "params_hash": "aac4d2446a892f387b6350c6af4fd774ebc8d64186418fd3a33b8eccb3f0c81c",
+      "dependencies": [
+        "axis:pad_dual/lx",
+        "curve:aim",
+        "device:pad_dual"
+      ],
+      "value": {
+        "digest": "aac4d2446a892f387b6350c6af4fd774ebc8d64186418fd3a33b8eccb3f0c81c"
+      }
+    },
+    {
+      "node_id": "binding:b_move_y",
+      "kind": "binding",
+      "cache_key": "0efdfabcb7c6055333c3a6649a84f310af1bf41737bfb6cf07df082069f76076",
+      "params_hash": "91b65c38ac9a1dce06eaab2eb6f12690e9c193617bc28b408052736e88ce20de",
+      "dependencies": [
+        "axis:pad_dual/ly",
+        "curve:aim",
+        "device:pad_dual"
+      ],
+      "value": {
+        "digest": "91b65c38ac9a1dce06eaab2eb6f12690e9c193617bc28b408052736e88ce20de"
+      }
+    },
+    {
+      "node_id": "device:pad_trigger_gyro",
+      "kind": "device",
+      "cache_key": "29d0e275475c3f3477681de4539a33df96c1755f190c9827029504ad9fe41978",
+      "params_hash": "2df683677d6742ef81e49e2530d3a501e939cd4862bfa7c0c74d95e6a4ecce2f",
+      "dependencies": null,
+      "value": {
+        "digest": "2df683677d6742ef81e49e2530d3a501e939cd4862bfa7c0c74d95e6a4ecce2f"
+      }
+    },
+    {
+      "node_id": "axis:pad_trigger_gyro/gyro_x",
+      "kind": "axis",
+      "cache_key": "00f7730bd67b18dc0595a871876755e79b50b886462f71e059b203f2ba20fbe5",
+      "params_hash": "d78edd6621a9f25d4376b3ce7ad83ab1bf07b2d7da7c8abc7a2997eb1d47e350",
+      "dependencies": [
+        "device:pad_trigger_gyro"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 15,
+            "time_ms": 280,
+            "device_id": "pad_trigger_gyro",
+            "axis_id": "gyro_x",
+            "raw": 6118,
+            "base_normalized": -1867,
+            "quantization_residual": {
+              "num": -16155,
+              "den": 65535
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 1667
+          },
+          {
+            "event_seq": 23,
+            "time_ms": 420,
+            "device_id": "pad_trigger_gyro",
+            "axis_id": "gyro_x",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": -10000,
+              "den": 65535
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 200
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "axis:pad_trigger_gyro/gyro_y",
+      "kind": "axis",
+      "cache_key": "14fcb349ca52b104bef0e2fe75fc08d35c4645599a2e2fed54cc4f1e05f903db",
+      "params_hash": "653dcdc9b34fd53a505e92aa59a4d9a04a25a3e30ba0a980f481bcbb6432e99e",
+      "dependencies": [
+        "device:pad_trigger_gyro"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 22,
+            "time_ms": 400,
+            "device_id": "pad_trigger_gyro",
+            "axis_id": "gyro_y",
+            "raw": -2935,
+            "base_normalized": -896,
+            "quantization_residual": {
+              "num": 29360,
+              "den": 65535
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 696
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "axis:pad_trigger_gyro/trigger",
+      "kind": "axis",
+      "cache_key": "7d99ae9e2d49317e0394ea0135743d697042451d9874673ccfee61fadca5f747",
+      "params_hash": "306a4d5515559325c0ab6f003f5117513160be48bfda9858e5a11f3f052403b5",
+      "dependencies": [
+        "device:pad_trigger_gyro"
+      ],
+      "value": {
+        "axis_observations": [
+          {
+            "event_seq": 14,
+            "time_ms": 260,
+            "device_id": "pad_trigger_gyro",
+            "axis_id": "trigger",
+            "raw": 99,
+            "base_normalized": 3882,
+            "quantization_residual": {
+              "num": 90,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 3482
+          },
+          {
+            "event_seq": 21,
+            "time_ms": 380,
+            "device_id": "pad_trigger_gyro",
+            "axis_id": "trigger",
+            "raw": 255,
+            "base_normalized": 10000,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": false,
+            "deadzone_margin": 9600
+          },
+          {
+            "event_seq": 24,
+            "time_ms": 440,
+            "device_id": "pad_trigger_gyro",
+            "axis_id": "trigger",
+            "raw": 0,
+            "base_normalized": 0,
+            "quantization_residual": {
+              "num": 0,
+              "den": 255
+            },
+            "deadzone_inside": true,
+            "deadzone_margin": 400
+          }
+        ]
+      }
+    },
+    {
+      "node_id": "binding:b_dash_new",
+      "kind": "binding",
+      "cache_key": "bcd5650a39b93ac4482bcb7274773cd670d42e4296494c24e1822680cc5170a5",
+      "params_hash": "4678c971c8822f2f2d550206ca09530e15bd25102d0c38eef04e7bd0bd7642c1",
+      "dependencies": [
+        "device:pad_trigger_gyro"
+      ],
+      "value": {
+        "digest": "4678c971c8822f2f2d550206ca09530e15bd25102d0c38eef04e7bd0bd7642c1"
+      }
+    },
+    {
+      "node_id": "binding:b_fire",
+      "kind": "binding",
+      "cache_key": "e07de5f98674d06b30bafd288651a5451058a20005fb23a5b9927898e90b4583",
+      "params_hash": "81251e3f57df3bc7c6df2043a255f314dc3cc4006bd8445f749df8c8be168b45",
+      "dependencies": [
+        "device:pad_trigger_gyro"
+      ],
+      "value": {
+        "digest": "81251e3f57df3bc7c6df2043a255f314dc3cc4006bd8445f749df8c8be168b45"
+      }
+    },
+    {
+      "node_id": "binding:b_throttle",
+      "kind": "binding",
+      "cache_key": "d9108ef5fa03a7b59f946df3436896ca542e2dfd973dff561c2365a2af7b0ed7",
+      "params_hash": "4a1a15989ca9eb734b526fc3faaa603d14814889695c0db624b2352e4de9127a",
+      "dependencies": [
+        "axis:pad_trigger_gyro/trigger",
+        "curve:throttle",
+        "device:pad_trigger_gyro"
+      ],
+      "value": {
+        "digest": "4a1a15989ca9eb734b526fc3faaa603d14814889695c0db624b2352e4de9127a"
+      }
+    },
+    {
+      "node_id": "timing:b_dash_new",
+      "kind": "timing",
+      "cache_key": "37c9fc9f6f80ac08a617c95867b827b6bda72da2710f1d3dad337894b24a78d7",
+      "params_hash": "894f353f4f829afa4c647af2dbe4f0af944db6664cdd8cc1d18814518167f8f1",
+      "dependencies": [
+        "binding:b_dash_new"
+      ],
+      "value": {
+        "digest": "894f353f4f829afa4c647af2dbe4f0af944db6664cdd8cc1d18814518167f8f1"
+      }
+    },
+    {
+      "node_id": "action:b_dash_new",
+      "kind": "action",
+      "cache_key": "cc1ede30aa0a3a457fcffbf5d9953e03a80315cf1d0632d33f99491785e58745",
+      "params_hash": "c3df5247861e9a92534eaea38642c4b87c2ace00fd08940d70c49744f6e0f73d",
+      "dependencies": [
+        "binding:b_dash_new",
+        "timing:b_dash_new"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 28,
+              "trigger_time_ms": 500,
+              "binding_id": "b_dash_new",
+              "action_id": "DashNew",
+              "device_id": "pad_trigger_gyro",
+              "state": "pressed",
+              "ordinal": 0
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": [
+            {
+              "event_seq": 19,
+              "time_ms": 360,
+              "binding_id": "b_dash_new",
+              "kind": "double_press_window",
+              "margin_ms": 80,
+              "window_ms": 120,
+              "event_gap_ms": 20
+            },
+            {
+              "event_seq": 26,
+              "time_ms": 470,
+              "binding_id": "b_dash_new",
+              "kind": "double_press_window",
+              "margin_ms": 110,
+              "window_ms": 120,
+              "event_gap_ms": 10
+            },
+            {
+              "event_seq": 27,
+              "time_ms": 490,
+              "binding_id": "b_dash_new",
+              "kind": "double_press_window",
+              "margin_ms": 90,
+              "window_ms": 120,
+              "event_gap_ms": 20
+            },
+            {
+              "event_seq": 28,
+              "time_ms": 500,
+              "binding_id": "b_dash_new",
+              "kind": "double_press_window",
+              "margin_ms": 80,
+              "window_ms": 120,
+              "event_gap_ms": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_dash_old",
+      "kind": "timing",
+      "cache_key": "0f7c5aa3a3fc5094acf2916f9d32397353ef0985966f0663e78494029af501e0",
+      "params_hash": "894f353f4f829afa4c647af2dbe4f0af944db6664cdd8cc1d18814518167f8f1",
+      "dependencies": [
+        "binding:b_dash_old"
+      ],
+      "value": {
+        "digest": "894f353f4f829afa4c647af2dbe4f0af944db6664cdd8cc1d18814518167f8f1"
+      }
+    },
+    {
+      "node_id": "action:b_dash_old",
+      "kind": "action",
+      "cache_key": "b1046ff76aaef0ebd8e4a3ca88d4ef0c77414652ba9abcf437f6641ba1916e46",
+      "params_hash": "6769fc577aaf894dabc41dd244461948ca0f4e4308c61ef81a60cdd992aa4be9",
+      "dependencies": [
+        "binding:b_dash_old",
+        "timing:b_dash_old"
+      ],
+      "value": {
+        "action": {
+          "outputs": null,
+          "axis_samples": null,
+          "timing_checks": [
+            {
+              "event_seq": 8,
+              "time_ms": 100,
+              "binding_id": "b_dash_old",
+              "kind": "double_press_window",
+              "margin_ms": 30,
+              "window_ms": 120,
+              "event_gap_ms": 10
+            },
+            {
+              "event_seq": 12,
+              "time_ms": 210,
+              "binding_id": "b_dash_old",
+              "kind": "double_press_window",
+              "margin_ms": 110,
+              "window_ms": 120,
+              "event_gap_ms": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_fire",
+      "kind": "timing",
+      "cache_key": "5ea89147cd6b8ee6384fa9973baed4f7aaa584367646ea832421028dd3da50a2",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_fire"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_fire",
+      "kind": "action",
+      "cache_key": "7056618bfe01a6e098cc4554a2b618eb285df98953bf2a17468c3d17f99b9c9a",
+      "params_hash": "c309689eed7c8fe44edb24c911f3ade0b27f3ccd4cc07b643888dfb9bf81c466",
+      "dependencies": [
+        "binding:b_fire",
+        "timing:b_fire"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 17,
+              "trigger_time_ms": 320,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "pad_trigger_gyro",
+              "state": "pressed",
+              "ordinal": 0
+            },
+            {
+              "event_seq": 18,
+              "trigger_time_ms": 340,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "pad_trigger_gyro",
+              "state": "held",
+              "ordinal": 1
+            },
+            {
+              "event_seq": 19,
+              "trigger_time_ms": 360,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "pad_trigger_gyro",
+              "state": "released",
+              "ordinal": 2
+            },
+            {
+              "event_seq": 25,
+              "trigger_time_ms": 460,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "pad_trigger_gyro",
+              "state": "pressed",
+              "ordinal": 3
+            },
+            {
+              "event_seq": 26,
+              "trigger_time_ms": 470,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "pad_trigger_gyro",
+              "state": "released",
+              "ordinal": 4
+            },
+            {
+              "event_seq": 27,
+              "trigger_time_ms": 490,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "pad_trigger_gyro",
+              "state": "pressed",
+              "ordinal": 5
+            },
+            {
+              "event_seq": 28,
+              "trigger_time_ms": 500,
+              "binding_id": "b_fire",
+              "action_id": "Fire",
+              "device_id": "pad_trigger_gyro",
+              "state": "released",
+              "ordinal": 6
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_jump",
+      "kind": "timing",
+      "cache_key": "ae8010c508f3c0555e26de03134c70d0a3ddfd7ca9fbfb7520b9ae5ab04ab3e7",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_jump"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_jump",
+      "kind": "action",
+      "cache_key": "ef885c89e7ff504599288770fba5e6ca8b86c4c8729a19e5e268563dcc2cd9af",
+      "params_hash": "a8e848ba832e0557c92e67991b7c640157c79c45fd874e9fa315a1f5a8738a97",
+      "dependencies": [
+        "binding:b_jump",
+        "timing:b_jump"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 2,
+              "trigger_time_ms": 10,
+              "binding_id": "b_jump",
+              "action_id": "Jump",
+              "device_id": "pad_dual",
+              "state": "pressed",
+              "ordinal": 0
+            },
+            {
+              "event_seq": 3,
+              "trigger_time_ms": 20,
+              "binding_id": "b_jump",
+              "action_id": "Jump",
+              "device_id": "pad_dual",
+              "state": "held",
+              "ordinal": 1
+            },
+            {
+              "event_seq": 8,
+              "trigger_time_ms": 100,
+              "binding_id": "b_jump",
+              "action_id": "Jump",
+              "device_id": "pad_dual",
+              "state": "released",
+              "ordinal": 2
+            },
+            {
+              "event_seq": 11,
+              "trigger_time_ms": 200,
+              "binding_id": "b_jump",
+              "action_id": "Jump",
+              "device_id": "pad_dual",
+              "state": "pressed",
+              "ordinal": 3
+            },
+            {
+              "event_seq": 12,
+              "trigger_time_ms": 210,
+              "binding_id": "b_jump",
+              "action_id": "Jump",
+              "device_id": "pad_dual",
+              "state": "released",
+              "ordinal": 4
+            }
+          ],
+          "axis_samples": null,
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_move_x",
+      "kind": "timing",
+      "cache_key": "da1802b21ed1042e444f41b5bc9aedec980293c11d8969499ba95a182003d2b6",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_move_x"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_move_x",
+      "kind": "action",
+      "cache_key": "2c2ba9582acec30ab489a577d8df8626d4069f3567a5895514901575acd911e3",
+      "params_hash": "168ab16570653483c401d5d537272ff4849086fa25d6d7d8b278c8e33c5a79fb",
+      "dependencies": [
+        "binding:b_move_x",
+        "timing:b_move_x"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 4,
+              "trigger_time_ms": 40,
+              "binding_id": "b_move_x",
+              "action_id": "MoveX",
+              "device_id": "pad_dual",
+              "state": "pressed",
+              "axis_value": 1173,
+              "quantization_residual": {
+                "num": -6740,
+                "den": 65535
+              },
+              "curve_linearization_error": 18,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 9,
+              "trigger_time_ms": 120,
+              "binding_id": "b_move_x",
+              "action_id": "MoveX",
+              "device_id": "pad_dual",
+              "state": "released",
+              "axis_value": 0,
+              "quantization_residual": {
+                "num": 10000,
+                "den": 65535
+              },
+              "curve_linearization_error": 18,
+              "ordinal": 1
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 1,
+              "time_ms": 0,
+              "device_id": "pad_dual",
+              "binding_id": "b_move_x",
+              "action_id": "MoveX",
+              "axis_id": "lx",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 10000,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 800,
+              "curve_linearization_error": 18
+            },
+            {
+              "event_seq": 4,
+              "time_ms": 40,
+              "device_id": "pad_dual",
+              "binding_id": "b_move_x",
+              "action_id": "MoveX",
+              "axis_id": "lx",
+              "raw": 5124,
+              "base_normalized": 1564,
+              "normalized": 1173,
+              "quantization_residual": {
+                "num": -6740,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 764,
+              "curve_linearization_error": 18
+            },
+            {
+              "event_seq": 9,
+              "time_ms": 120,
+              "device_id": "pad_dual",
+              "binding_id": "b_move_x",
+              "action_id": "MoveX",
+              "axis_id": "lx",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 10000,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 800,
+              "curve_linearization_error": 18
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_move_y",
+      "kind": "timing",
+      "cache_key": "ebbd502ab21fbd0238347837908e5ee10402b3e941e0055fff602405980bc192",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_move_y"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_move_y",
+      "kind": "action",
+      "cache_key": "4e64bee0b730edf5f3f01402d92c45905065f6cc513dc2ca222b09234509e285",
+      "params_hash": "55fdeee3ae790ed65bd6ae07984e45bbf6d67eeaefce21cbf26f3707545c7c3c",
+      "dependencies": [
+        "binding:b_move_y",
+        "timing:b_move_y"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 5,
+              "trigger_time_ms": 60,
+              "binding_id": "b_move_y",
+              "action_id": "MoveY",
+              "device_id": "pad_dual",
+              "state": "pressed",
+              "axis_value": -896,
+              "quantization_residual": {
+                "num": -15675,
+                "den": 65535
+              },
+              "curve_linearization_error": 18,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 10,
+              "trigger_time_ms": 150,
+              "binding_id": "b_move_y",
+              "action_id": "MoveY",
+              "device_id": "pad_dual",
+              "state": "released",
+              "axis_value": 0,
+              "quantization_residual": {
+                "num": 10000,
+                "den": 65535
+              },
+              "curve_linearization_error": 18,
+              "ordinal": 1
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 5,
+              "time_ms": 60,
+              "device_id": "pad_dual",
+              "binding_id": "b_move_y",
+              "action_id": "MoveY",
+              "axis_id": "ly",
+              "raw": -3917,
+              "base_normalized": -1195,
+              "normalized": -896,
+              "quantization_residual": {
+                "num": -15675,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 395,
+              "curve_linearization_error": 18
+            },
+            {
+              "event_seq": 10,
+              "time_ms": 150,
+              "device_id": "pad_dual",
+              "binding_id": "b_move_y",
+              "action_id": "MoveY",
+              "axis_id": "ly",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 10000,
+                "den": 65535
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 800,
+              "curve_linearization_error": 18
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    },
+    {
+      "node_id": "timing:b_throttle",
+      "kind": "timing",
+      "cache_key": "ea9e36e90a7a03203390a1c08a900985fdc338e6e9683a80fcc4bb886f3745a8",
+      "params_hash": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64",
+      "dependencies": [
+        "binding:b_throttle"
+      ],
+      "value": {
+        "digest": "7d421bf46c8044f64faf605714b79f5102ffeef32dc70cf153cef8df2aa07e64"
+      }
+    },
+    {
+      "node_id": "action:b_throttle",
+      "kind": "action",
+      "cache_key": "373b0cf75ddba83e7d8e09da412d1b618ce2a651817eaf7cabacad0383c3023c",
+      "params_hash": "c8427414a8e4acde6848402a6edc03e28873d3eb91526442ca41cbaa5863a5de",
+      "dependencies": [
+        "binding:b_throttle",
+        "timing:b_throttle"
+      ],
+      "value": {
+        "action": {
+          "outputs": [
+            {
+              "event_seq": 14,
+              "trigger_time_ms": 260,
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "device_id": "pad_trigger_gyro",
+              "state": "pressed",
+              "axis_value": 2717,
+              "quantization_residual": {
+                "num": 90,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 0
+            },
+            {
+              "event_seq": 21,
+              "trigger_time_ms": 380,
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "device_id": "pad_trigger_gyro",
+              "state": "held",
+              "axis_value": 10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 1
+            },
+            {
+              "event_seq": 24,
+              "trigger_time_ms": 440,
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "device_id": "pad_trigger_gyro",
+              "state": "released",
+              "axis_value": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "curve_linearization_error": 16,
+              "ordinal": 2
+            }
+          ],
+          "axis_samples": [
+            {
+              "event_seq": 14,
+              "time_ms": 260,
+              "device_id": "pad_trigger_gyro",
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "axis_id": "trigger",
+              "raw": 99,
+              "base_normalized": 3882,
+              "normalized": 2717,
+              "quantization_residual": {
+                "num": 90,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 3482,
+              "curve_linearization_error": 16
+            },
+            {
+              "event_seq": 21,
+              "time_ms": 380,
+              "device_id": "pad_trigger_gyro",
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "axis_id": "trigger",
+              "raw": 255,
+              "base_normalized": 10000,
+              "normalized": 10000,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": false,
+              "deadzone_margin": 9600,
+              "curve_linearization_error": 16
+            },
+            {
+              "event_seq": 24,
+              "time_ms": 440,
+              "device_id": "pad_trigger_gyro",
+              "binding_id": "b_throttle",
+              "action_id": "Throttle",
+              "axis_id": "trigger",
+              "raw": 0,
+              "base_normalized": 0,
+              "normalized": 0,
+              "quantization_residual": {
+                "num": 0,
+                "den": 255
+              },
+              "quantization_error_bound": 1,
+              "deadzone_inside": true,
+              "deadzone_margin": 400,
+              "curve_linearization_error": 16
+            }
+          ],
+          "timing_checks": null
+        }
+      }
+    }
+  ]
+}

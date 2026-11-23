@@ -1,0 +1,786 @@
+{
+  "schema_version": 1,
+  "id": "hot_switch",
+  "name": "Deterministic hot device switch with unmapped controls",
+  "seed": 20261124,
+  "fixed_precision_version": "fx-1e4-v3",
+  "binding_version": "bind-v3",
+  "devices": [
+    {
+      "id": "pad_dual",
+      "name": "Dual pad before switch",
+      "fixed_scale": 10000,
+      "axes": [
+        {
+          "id": "lx",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": false,
+          "deadzone": 800
+        },
+        {
+          "id": "ly",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": false,
+          "deadzone": 800
+        }
+      ],
+      "buttons": [
+        {
+          "id": "A"
+        },
+        {
+          "id": "B"
+        },
+        {
+          "id": "LB"
+        },
+        {
+          "id": "RB"
+        }
+      ]
+    },
+    {
+      "id": "pad_trigger_gyro",
+      "name": "Trigger gyro pad after switch",
+      "fixed_scale": 10000,
+      "axes": [
+        {
+          "id": "trigger",
+          "min": 0,
+          "max": 255,
+          "bipolar": false,
+          "direction": "positive",
+          "invert": false,
+          "deadzone": 400
+        },
+        {
+          "id": "gyro_x",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": true,
+          "deadzone": 200
+        },
+        {
+          "id": "gyro_y",
+          "min": -32768,
+          "max": 32767,
+          "bipolar": true,
+          "direction": "both",
+          "invert": false,
+          "deadzone": 200
+        }
+      ],
+      "buttons": [
+        {
+          "id": "X"
+        },
+        {
+          "id": "Y"
+        },
+        {
+          "id": "MENU"
+        }
+      ]
+    }
+  ],
+  "initial_device_id": "pad_dual",
+  "curves": [
+    {
+      "id": "aim",
+      "kind": "piecewise_linear",
+      "domain_scale": 10000,
+      "curvature_ppm": 90000,
+      "points": [
+        {
+          "x": -10000,
+          "y": -7000
+        },
+        {
+          "x": -4000,
+          "y": -3000
+        },
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 4000,
+          "y": 3000
+        },
+        {
+          "x": 10000,
+          "y": 7000
+        }
+      ]
+    },
+    {
+      "id": "throttle",
+      "kind": "piecewise_linear",
+      "domain_scale": 10000,
+      "curvature_ppm": 50000,
+      "points": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 5000,
+          "y": 3500
+        },
+        {
+          "x": 10000,
+          "y": 10000
+        }
+      ]
+    }
+  ],
+  "bindings": [
+    {
+      "id": "b_move_x",
+      "action": "MoveX",
+      "type": "axis",
+      "device_id": "pad_dual",
+      "axis": "lx",
+      "curve": "aim",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_move_y",
+      "action": "MoveY",
+      "type": "axis",
+      "device_id": "pad_dual",
+      "axis": "ly",
+      "curve": "aim",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_jump",
+      "action": "Jump",
+      "type": "button",
+      "device_id": "pad_dual",
+      "button": "A",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_dash_old",
+      "action": "DashOld",
+      "type": "double_press",
+      "device_id": "pad_dual",
+      "button": "A",
+      "timing": {
+        "window_ms": 120,
+        "min_gap_ms": 10,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 300
+      }
+    },
+    {
+      "id": "b_throttle",
+      "action": "Throttle",
+      "type": "axis",
+      "device_id": "pad_trigger_gyro",
+      "axis": "trigger",
+      "curve": "throttle",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_fire",
+      "action": "Fire",
+      "type": "button",
+      "device_id": "pad_trigger_gyro",
+      "button": "X",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_dash_new",
+      "action": "DashNew",
+      "type": "double_press",
+      "device_id": "pad_trigger_gyro",
+      "button": "X",
+      "timing": {
+        "window_ms": 120,
+        "min_gap_ms": 10,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 300
+      }
+    }
+  ],
+  "events": [
+    {
+      "seq": 1,
+      "time_ms": 0,
+      "kind": "axis",
+      "axis": "lx",
+      "value": 0
+    },
+    {
+      "seq": 2,
+      "time_ms": 10,
+      "kind": "button_down",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 3,
+      "time_ms": 20,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 4,
+      "time_ms": 40,
+      "kind": "axis",
+      "axis": "lx",
+      "value": 5124
+    },
+    {
+      "seq": 5,
+      "time_ms": 60,
+      "kind": "axis",
+      "axis": "ly",
+      "value": -3917
+    },
+    {
+      "seq": 6,
+      "time_ms": 80,
+      "kind": "button_down",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 7,
+      "time_ms": 90,
+      "kind": "button_up",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 8,
+      "time_ms": 100,
+      "kind": "button_up",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 9,
+      "time_ms": 120,
+      "kind": "axis",
+      "axis": "lx",
+      "value": 0
+    },
+    {
+      "seq": 10,
+      "time_ms": 150,
+      "kind": "axis",
+      "axis": "ly",
+      "value": 0
+    },
+    {
+      "seq": 11,
+      "time_ms": 200,
+      "kind": "button_down",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 12,
+      "time_ms": 210,
+      "kind": "button_up",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 13,
+      "time_ms": 240,
+      "kind": "device_switch",
+      "value": 0,
+      "device": "pad_trigger_gyro"
+    },
+    {
+      "seq": 14,
+      "time_ms": 260,
+      "kind": "axis",
+      "axis": "trigger",
+      "value": 99
+    },
+    {
+      "seq": 15,
+      "time_ms": 280,
+      "kind": "axis",
+      "axis": "gyro_x",
+      "value": 6118
+    },
+    {
+      "seq": 16,
+      "time_ms": 300,
+      "kind": "button_down",
+      "value": 0,
+      "button": "MENU"
+    },
+    {
+      "seq": 17,
+      "time_ms": 320,
+      "kind": "button_down",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 18,
+      "time_ms": 340,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 19,
+      "time_ms": 360,
+      "kind": "button_up",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 20,
+      "time_ms": 370,
+      "kind": "button_up",
+      "value": 0,
+      "button": "MENU"
+    },
+    {
+      "seq": 21,
+      "time_ms": 380,
+      "kind": "axis",
+      "axis": "trigger",
+      "value": 255
+    },
+    {
+      "seq": 22,
+      "time_ms": 400,
+      "kind": "axis",
+      "axis": "gyro_y",
+      "value": -2935
+    },
+    {
+      "seq": 23,
+      "time_ms": 420,
+      "kind": "axis",
+      "axis": "gyro_x",
+      "value": 0
+    },
+    {
+      "seq": 24,
+      "time_ms": 440,
+      "kind": "axis",
+      "axis": "trigger",
+      "value": 0
+    },
+    {
+      "seq": 25,
+      "time_ms": 460,
+      "kind": "button_down",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 26,
+      "time_ms": 470,
+      "kind": "button_up",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 27,
+      "time_ms": 490,
+      "kind": "button_down",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 28,
+      "time_ms": 500,
+      "kind": "button_up",
+      "value": 0,
+      "button": "X"
+    }
+  ],
+  "truth": {
+    "axis_samples": [
+      {
+        "event_seq": 1,
+        "time_ms": 0,
+        "device_id": "pad_dual",
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "axis_id": "lx",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 800
+      },
+      {
+        "event_seq": 4,
+        "time_ms": 40,
+        "device_id": "pad_dual",
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "axis_id": "lx",
+        "raw": 5124,
+        "normalized": 1173,
+        "quantization_residual": {
+          "num": -6740,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 764
+      },
+      {
+        "event_seq": 5,
+        "time_ms": 60,
+        "device_id": "pad_dual",
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "axis_id": "ly",
+        "raw": -3917,
+        "normalized": -896,
+        "quantization_residual": {
+          "num": -15675,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 395
+      },
+      {
+        "event_seq": 9,
+        "time_ms": 120,
+        "device_id": "pad_dual",
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "axis_id": "lx",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 800
+      },
+      {
+        "event_seq": 10,
+        "time_ms": 150,
+        "device_id": "pad_dual",
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "axis_id": "ly",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 10000,
+          "den": 65535
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 800
+      },
+      {
+        "event_seq": 14,
+        "time_ms": 260,
+        "device_id": "pad_trigger_gyro",
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "axis_id": "trigger",
+        "raw": 99,
+        "normalized": 2717,
+        "quantization_residual": {
+          "num": 90,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 3482
+      },
+      {
+        "event_seq": 21,
+        "time_ms": 380,
+        "device_id": "pad_trigger_gyro",
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "axis_id": "trigger",
+        "raw": 255,
+        "normalized": 10000,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 9600
+      },
+      {
+        "event_seq": 24,
+        "time_ms": 440,
+        "device_id": "pad_trigger_gyro",
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "axis_id": "trigger",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 400
+      }
+    ],
+    "actions": [
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 2,
+        "trigger_time_ms": 10,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 3,
+        "trigger_time_ms": 20,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "event_seq": 4,
+        "trigger_time_ms": 40,
+        "state": "pressed",
+        "axis_value": 1173
+      },
+      {
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "event_seq": 5,
+        "trigger_time_ms": 60,
+        "state": "pressed",
+        "axis_value": -896
+      },
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 8,
+        "trigger_time_ms": 100,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_move_x",
+        "action_id": "MoveX",
+        "event_seq": 9,
+        "trigger_time_ms": 120,
+        "state": "released",
+        "axis_value": 0
+      },
+      {
+        "binding_id": "b_move_y",
+        "action_id": "MoveY",
+        "event_seq": 10,
+        "trigger_time_ms": 150,
+        "state": "released",
+        "axis_value": 0
+      },
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 11,
+        "trigger_time_ms": 200,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_jump",
+        "action_id": "Jump",
+        "event_seq": 12,
+        "trigger_time_ms": 210,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "event_seq": 14,
+        "trigger_time_ms": 260,
+        "state": "pressed",
+        "axis_value": 2717
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 17,
+        "trigger_time_ms": 320,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 18,
+        "trigger_time_ms": 340,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 19,
+        "trigger_time_ms": 360,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "event_seq": 21,
+        "trigger_time_ms": 380,
+        "state": "held",
+        "axis_value": 10000
+      },
+      {
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "event_seq": 24,
+        "trigger_time_ms": 440,
+        "state": "released",
+        "axis_value": 0
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 25,
+        "trigger_time_ms": 460,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 26,
+        "trigger_time_ms": 470,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 27,
+        "trigger_time_ms": 490,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_dash_new",
+        "action_id": "DashNew",
+        "event_seq": 28,
+        "trigger_time_ms": 500,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 28,
+        "trigger_time_ms": 500,
+        "state": "released"
+      }
+    ],
+    "unmapped": [
+      {
+        "event_seq": 6,
+        "time_ms": 80,
+        "device_id": "pad_dual",
+        "control": "B",
+        "kind": "button_down"
+      },
+      {
+        "event_seq": 7,
+        "time_ms": 90,
+        "device_id": "pad_dual",
+        "control": "B",
+        "kind": "button_up"
+      },
+      {
+        "event_seq": 15,
+        "time_ms": 280,
+        "device_id": "pad_trigger_gyro",
+        "control": "gyro_x",
+        "kind": "axis"
+      },
+      {
+        "event_seq": 16,
+        "time_ms": 300,
+        "device_id": "pad_trigger_gyro",
+        "control": "MENU",
+        "kind": "button_down"
+      },
+      {
+        "event_seq": 20,
+        "time_ms": 370,
+        "device_id": "pad_trigger_gyro",
+        "control": "MENU",
+        "kind": "button_up"
+      },
+      {
+        "event_seq": 22,
+        "time_ms": 400,
+        "device_id": "pad_trigger_gyro",
+        "control": "gyro_y",
+        "kind": "axis"
+      },
+      {
+        "event_seq": 23,
+        "time_ms": 420,
+        "device_id": "pad_trigger_gyro",
+        "control": "gyro_x",
+        "kind": "axis"
+      }
+    ]
+  }
+}

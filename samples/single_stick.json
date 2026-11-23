@@ -1,0 +1,542 @@
+{
+  "schema_version": 1,
+  "id": "single_stick",
+  "name": "Single stick and unipolar trigger",
+  "seed": 20261124,
+  "fixed_precision_version": "fx-1e3-v1",
+  "binding_version": "bind-v1",
+  "devices": [
+    {
+      "id": "single_pad",
+      "name": "Single stick with positive trigger",
+      "fixed_scale": 1000,
+      "axes": [
+        {
+          "id": "stick",
+          "min": -1000,
+          "max": 1000,
+          "bipolar": true,
+          "direction": "both",
+          "invert": false,
+          "deadzone": 80
+        },
+        {
+          "id": "trigger",
+          "min": 0,
+          "max": 255,
+          "bipolar": false,
+          "direction": "positive",
+          "invert": false,
+          "deadzone": 80
+        }
+      ],
+      "buttons": [
+        {
+          "id": "A"
+        },
+        {
+          "id": "B"
+        },
+        {
+          "id": "X"
+        },
+        {
+          "id": "Y"
+        }
+      ]
+    }
+  ],
+  "initial_device_id": "single_pad",
+  "curves": [
+    {
+      "id": "combat",
+      "kind": "piecewise_linear",
+      "domain_scale": 1000,
+      "curvature_ppm": 70000,
+      "points": [
+        {
+          "x": -1000,
+          "y": -700
+        },
+        {
+          "x": -300,
+          "y": -250
+        },
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 300,
+          "y": 250
+        },
+        {
+          "x": 1000,
+          "y": 700
+        }
+      ]
+    },
+    {
+      "id": "trigger",
+      "kind": "piecewise_linear",
+      "domain_scale": 1000,
+      "curvature_ppm": 40000,
+      "points": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 500,
+          "y": 400
+        },
+        {
+          "x": 1000,
+          "y": 1000
+        }
+      ]
+    }
+  ],
+  "bindings": [
+    {
+      "id": "b_look",
+      "action": "Look",
+      "type": "axis",
+      "device_id": "single_pad",
+      "axis": "stick",
+      "curve": "combat",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_throttle",
+      "action": "Throttle",
+      "type": "axis",
+      "device_id": "single_pad",
+      "axis": "trigger",
+      "curve": "trigger",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_fire",
+      "action": "Fire",
+      "type": "button",
+      "device_id": "single_pad",
+      "button": "A",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_boost",
+      "action": "Boost",
+      "type": "long_press",
+      "device_id": "single_pad",
+      "button": "B",
+      "timing": {
+        "window_ms": 0,
+        "min_gap_ms": 0,
+        "threshold_ms": 100,
+        "max_threshold_ms": 400,
+        "max_window_ms": 0
+      }
+    },
+    {
+      "id": "b_dodge",
+      "action": "Dodge",
+      "type": "double_press",
+      "device_id": "single_pad",
+      "button": "X",
+      "timing": {
+        "window_ms": 120,
+        "min_gap_ms": 10,
+        "threshold_ms": 0,
+        "max_threshold_ms": 0,
+        "max_window_ms": 300
+      }
+    }
+  ],
+  "events": [
+    {
+      "seq": 1,
+      "time_ms": 0,
+      "kind": "axis",
+      "axis": "stick",
+      "value": 0
+    },
+    {
+      "seq": 2,
+      "time_ms": 20,
+      "kind": "axis",
+      "axis": "trigger",
+      "value": 0
+    },
+    {
+      "seq": 3,
+      "time_ms": 40,
+      "kind": "button_down",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 4,
+      "time_ms": 70,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 5,
+      "time_ms": 100,
+      "kind": "axis",
+      "axis": "stick",
+      "value": 612
+    },
+    {
+      "seq": 6,
+      "time_ms": 120,
+      "kind": "button_up",
+      "value": 0,
+      "button": "A"
+    },
+    {
+      "seq": 7,
+      "time_ms": 140,
+      "kind": "axis",
+      "axis": "trigger",
+      "value": 179
+    },
+    {
+      "seq": 8,
+      "time_ms": 180,
+      "kind": "axis",
+      "axis": "trigger",
+      "value": 255
+    },
+    {
+      "seq": 9,
+      "time_ms": 200,
+      "kind": "button_down",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 10,
+      "time_ms": 330,
+      "kind": "button_repeat",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 11,
+      "time_ms": 360,
+      "kind": "button_up",
+      "value": 0,
+      "button": "B"
+    },
+    {
+      "seq": 12,
+      "time_ms": 380,
+      "kind": "axis",
+      "axis": "stick",
+      "value": -1000
+    },
+    {
+      "seq": 13,
+      "time_ms": 420,
+      "kind": "button_down",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 14,
+      "time_ms": 440,
+      "kind": "button_up",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 15,
+      "time_ms": 460,
+      "kind": "button_down",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 16,
+      "time_ms": 480,
+      "kind": "button_up",
+      "value": 0,
+      "button": "X"
+    },
+    {
+      "seq": 17,
+      "time_ms": 520,
+      "kind": "axis",
+      "axis": "trigger",
+      "value": 0
+    },
+    {
+      "seq": 18,
+      "time_ms": 560,
+      "kind": "axis",
+      "axis": "stick",
+      "value": 0
+    }
+  ],
+  "truth": {
+    "axis_samples": [
+      {
+        "event_seq": 1,
+        "time_ms": 0,
+        "device_id": "single_pad",
+        "binding_id": "b_look",
+        "action_id": "Look",
+        "axis_id": "stick",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 0,
+          "den": 2000
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 80
+      },
+      {
+        "event_seq": 2,
+        "time_ms": 20,
+        "device_id": "single_pad",
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "axis_id": "trigger",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 80
+      },
+      {
+        "event_seq": 5,
+        "time_ms": 100,
+        "device_id": "single_pad",
+        "binding_id": "b_look",
+        "action_id": "Look",
+        "axis_id": "stick",
+        "raw": 612,
+        "normalized": 451,
+        "quantization_residual": {
+          "num": 0,
+          "den": 2000
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 532
+      },
+      {
+        "event_seq": 7,
+        "time_ms": 140,
+        "device_id": "single_pad",
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "axis_id": "trigger",
+        "raw": 179,
+        "normalized": 642,
+        "quantization_residual": {
+          "num": -10,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 622
+      },
+      {
+        "event_seq": 8,
+        "time_ms": 180,
+        "device_id": "single_pad",
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "axis_id": "trigger",
+        "raw": 255,
+        "normalized": 1000,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 920
+      },
+      {
+        "event_seq": 12,
+        "time_ms": 380,
+        "device_id": "single_pad",
+        "binding_id": "b_look",
+        "action_id": "Look",
+        "axis_id": "stick",
+        "raw": -1000,
+        "normalized": -700,
+        "quantization_residual": {
+          "num": 0,
+          "den": 2000
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": false,
+        "deadzone_margin": 920
+      },
+      {
+        "event_seq": 17,
+        "time_ms": 520,
+        "device_id": "single_pad",
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "axis_id": "trigger",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 0,
+          "den": 255
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 80
+      },
+      {
+        "event_seq": 18,
+        "time_ms": 560,
+        "device_id": "single_pad",
+        "binding_id": "b_look",
+        "action_id": "Look",
+        "axis_id": "stick",
+        "raw": 0,
+        "normalized": 0,
+        "quantization_residual": {
+          "num": 0,
+          "den": 2000
+        },
+        "quantization_error_bound": 1,
+        "deadzone_inside": true,
+        "deadzone_margin": 80
+      }
+    ],
+    "actions": [
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 3,
+        "trigger_time_ms": 40,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 4,
+        "trigger_time_ms": 70,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_look",
+        "action_id": "Look",
+        "event_seq": 5,
+        "trigger_time_ms": 100,
+        "state": "pressed",
+        "axis_value": 451
+      },
+      {
+        "binding_id": "b_fire",
+        "action_id": "Fire",
+        "event_seq": 6,
+        "trigger_time_ms": 120,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "event_seq": 7,
+        "trigger_time_ms": 140,
+        "state": "pressed",
+        "axis_value": 642
+      },
+      {
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "event_seq": 8,
+        "trigger_time_ms": 180,
+        "state": "held",
+        "axis_value": 1000
+      },
+      {
+        "binding_id": "b_boost",
+        "action_id": "Boost",
+        "event_seq": 10,
+        "trigger_time_ms": 300,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_boost",
+        "action_id": "Boost",
+        "event_seq": 10,
+        "trigger_time_ms": 330,
+        "state": "held"
+      },
+      {
+        "binding_id": "b_boost",
+        "action_id": "Boost",
+        "event_seq": 11,
+        "trigger_time_ms": 360,
+        "state": "released"
+      },
+      {
+        "binding_id": "b_look",
+        "action_id": "Look",
+        "event_seq": 12,
+        "trigger_time_ms": 380,
+        "state": "held",
+        "axis_value": -700
+      },
+      {
+        "binding_id": "b_dodge",
+        "action_id": "Dodge",
+        "event_seq": 16,
+        "trigger_time_ms": 480,
+        "state": "pressed"
+      },
+      {
+        "binding_id": "b_throttle",
+        "action_id": "Throttle",
+        "event_seq": 17,
+        "trigger_time_ms": 520,
+        "state": "released",
+        "axis_value": 0
+      },
+      {
+        "binding_id": "b_look",
+        "action_id": "Look",
+        "event_seq": 18,
+        "trigger_time_ms": 560,
+        "state": "released",
+        "axis_value": 0
+      }
+    ],
+    "unmapped": []
+  }
+}
