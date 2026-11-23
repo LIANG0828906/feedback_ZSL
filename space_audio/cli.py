@@ -13,7 +13,7 @@ from .errors import WorkbenchError
 from .export import export_bundle
 from .faults import FaultKind, inject_fault
 from .generator import generate_dataset, generate_demo
-from .loader import load_sample
+from .loader import load_analysis_profile, load_sample
 from .pipeline import (
     RunResult,
     compare_results,
@@ -23,10 +23,26 @@ from .pipeline import (
 )
 
 
-def _default_config() -> WorkbenchConfig:
+def _resolve_analysis_config(
+    args: argparse.Namespace,
+    profile: dict[str, Any] | None,
+) -> AnalysisConfig:
+    values = AnalysisConfig().to_dict()
+    if profile is not None:
+        for key in values:
+            if key in profile:
+                values[key] = profile[key]
+    for key in ("frame_len", "hop", "window_len"):
+        cli_value = getattr(args, key, None)
+        if cli_value is not None:
+            values[key] = cli_value
+    return AnalysisConfig(**values)
+
+
+def _workbench_config(analysis: AnalysisConfig) -> WorkbenchConfig:
     return WorkbenchConfig(
-        analysis=AnalysisConfig(),
-        render=RenderConfig(),
+        analysis=analysis,
+        render=RenderConfig(interpolation_order=analysis.interpolation_order),
         max_workers=2,
     )
 
@@ -116,7 +132,8 @@ def command_generate(args: argparse.Namespace) -> int:
 
 def command_run(args: argparse.Namespace) -> int:
     sample = load_sample(args.manifest, sample_id=args.sample_id)
-    config = _default_config()
+    profile = load_analysis_profile(args.manifest)
+    config = _workbench_config(_resolve_analysis_config(args, profile))
     checkpoint = Path(args.checkpoint)
     if args.mode == "realtime":
         result = run_realtime(
@@ -165,16 +182,18 @@ def command_verify(args: argparse.Namespace) -> int:
     workdir = Path(args.workdir)
     _clear_dir(workdir)
     demo_dir = workdir / "sample"
+    generate_analysis = _resolve_analysis_config(args, None)
     generated = generate_demo(
         demo_dir,
         seed=args.seed,
-        frame_len=args.frame_len,
-        hop=args.hop,
-        window_len=args.window_len,
+        frame_len=generate_analysis.frame_len,
+        hop=generate_analysis.hop,
+        window_len=generate_analysis.window_len,
         frame_count=args.frames,
     )
     sample = load_sample(generated.manifest_path, sample_id=generated.sample_id)
-    config = _default_config()
+    profile = load_analysis_profile(generated.manifest_path)
+    config = _workbench_config(_resolve_analysis_config(args, profile))
     checkpoint_a = workdir / "realtime.sqlite"
     checkpoint_b = workdir / "resume.sqlite"
 
@@ -392,15 +411,18 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--stop-after", type=int, default=None)
     run_parser.add_argument("--fresh", action="store_true")
     run_parser.add_argument("--report", default=None)
+    run_parser.add_argument("--frame-len", type=int, default=None)
+    run_parser.add_argument("--hop", type=int, default=None)
+    run_parser.add_argument("--window-len", type=int, default=None)
     run_parser.set_defaults(func=command_run)
 
     verify_parser = subparsers.add_parser("verify")
     verify_parser.add_argument("--workdir", default="artifacts/verification")
     verify_parser.add_argument("--seed", type=int, default=20261123)
     verify_parser.add_argument("--frames", type=int, default=8)
-    verify_parser.add_argument("--frame-len", type=int, default=2048)
-    verify_parser.add_argument("--hop", type=int, default=1024)
-    verify_parser.add_argument("--window-len", type=int, default=768)
+    verify_parser.add_argument("--frame-len", type=int, default=None)
+    verify_parser.add_argument("--hop", type=int, default=None)
+    verify_parser.add_argument("--window-len", type=int, default=None)
     verify_parser.set_defaults(func=command_verify)
 
     gui_parser = subparsers.add_parser("gui")

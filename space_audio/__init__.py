@@ -3,7 +3,7 @@
 from .config import AnalysisConfig, RenderConfig, WorkbenchConfig
 from .errors import ErrorCode, WorkbenchError
 from .generator import GeneratedDataset, GeneratedSample, generate_dataset, generate_demo
-from .loader import load_manifest, load_sample
+from .loader import load_analysis_profile, load_manifest, load_sample
 from .pipeline import (
     ComparisonSummary,
     ProcessingSession,
@@ -28,6 +28,7 @@ __all__ = [
     "compare_results",
     "generate_dataset",
     "generate_demo",
+    "load_analysis_profile",
     "load_manifest",
     "load_sample",
     "run_full_recompute",

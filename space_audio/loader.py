@@ -40,6 +40,16 @@ def load_manifest(path: str | Path) -> dict[str, Any]:
     return payload
 
 
+def load_analysis_profile(manifest_path: str | Path) -> dict[str, Any] | None:
+    payload, _ = _read_json(Path(manifest_path))
+    profile = payload.get("analysis_profile")
+    if profile is None:
+        return None
+    if not isinstance(profile, dict):
+        raise meta_error("analysis_profile must be an object", "analysis_profile")
+    return profile
+
+
 def _sample_payload(payload: dict[str, Any], sample_id: str | None) -> dict[str, Any]:
     samples = payload.get("samples")
     if not isinstance(samples, list):

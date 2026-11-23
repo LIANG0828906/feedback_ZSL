@@ -27,6 +27,9 @@ python -m pip install --no-index --find-links .\wheelhouse numpy PyQt5
 .\scripts\run_verify.ps1
 ```
 
+上述脚本会自动定位仓库根目录，不要求从特定目录启动；未创建 `.venv` 时回退
+到仓库内 `.deps/` 中的离线依赖（通过 `PYTHONPATH` 注入）。
+
 不安装包时，在源码根目录直接执行 `python -m space_audio ...` 也可以。若依赖已
 解包到本地 `.deps/`，可运行：
 
@@ -49,6 +52,10 @@ python -m space_audio verify --workdir artifacts/verification --frames 8
 # 启动 PyQt5 面板
 python -m space_audio gui
 ```
+
+`run` 与 `verify` 的分帧几何按“显式 CLI 参数 > manifest `analysis_profile` >
+内置默认（2048/1024/768）”的顺序解析；`--frame-len`、`--hop`、`--window-len`
+只覆盖显式给出的项，其余来自样本 manifest 中记录的生成配置。
 
 `verify` 会清空目标工作目录中的旧结果，只保留本次生成的样本、报告、CSV、WAV
 与 NPZ。当前仓库中的实际结果位于：

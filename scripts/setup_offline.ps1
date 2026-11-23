@@ -5,12 +5,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$Root = Split-Path -Parent $PSScriptRoot
+Set-Location $Root
+
 if (-not (Test-Path $Wheelhouse)) {
     throw "Wheelhouse not found: $Wheelhouse"
 }
 
 Invoke-Expression "$Python -m venv .venv"
-$venvPython = Join-Path (Get-Location) ".venv\\Scripts\\python.exe"
+$venvPython = Join-Path $Root ".venv\Scripts\python.exe"
 if (-not (Test-Path $venvPython)) {
     throw "Virtual environment creation failed."
 }
