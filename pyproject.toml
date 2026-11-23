@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "panoworkbench"
+version = "1.0.0"
+description = "Deterministic panorama registration and stitching desktop workbench"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.0",
+    "opencv-python-headless>=4.9",
+    "PyQt5>=5.15",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+panoworkbench = "panoworkbench.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["panoworkbench*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+pythonpath = ["."]

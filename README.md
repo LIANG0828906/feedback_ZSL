@@ -1,22 +1,300 @@
-当前是空白工作区，需要从零构建一套面向游戏场景截图与多媒体素材的图像拼接与配准桌面工作台，并交付算法实现与可复现的实验环境。本地确定性样本生成器按固定种子产出多组待拼接图像集合：每组含若干张存在平移、旋转与轻微亮度差异的局部图像（尺寸从数百像素到数千像素、数量从几张到几十张变化），并附带解析真值，包括每张图相对基准图的精确单应变换矩阵、重叠区对应点坐标与拼接后全景画布的理论尺寸。工作台需完成从局部图像集合到全景输出的完整链路：特征检测与匹配、鲁棒单应估计、图像配准、曝光补偿、缝合线选择与多分辨率融合，最终输出全景图与逐张配准参数报告；同时需按图像数量与分辨率变化在精度与耗时之间做可解释的取舍，并支持可暂停、可中断、可重启续接的分组处理。
+# PanoWorkbench
 
-任务环境与准备：
-安装 Python 3.10 或以上版本，并用 pip 安装 NumPy、OpenCV、PyQt5 等依赖，版本锁定在本地 requirements 文件中。
-准备本地确定性样本生成器：按固定种子生成多组尺寸与数量变化的局部图像、单应真值矩阵与理论画布尺寸清单。
-无需网络与真实图像库；所有样本与真值清单由本地脚本生成，运行前先执行一次生成步骤。
-在 Windows 上以命令行启动工作台 GUI，并保留命令行运行模式用于一致性比对与异常注入。
+面向游戏场景截图与多媒体素材的确定性图像拼接/配准桌面工作台。项目从本地生成器造出的局部视图出发，完成：
 
-业务要求：
-1. 实现局部图像集合加载与结构校验：读取本地确定性生成器产出的图像集合与真值清单，校验每张图像尺寸、通道数与清单声明一致，校验单应真值矩阵数值有限且可逆；图像损坏或清单缺失返回 E_DECODE，尺寸通道不匹配返回 E_META 并指出文件名与字段名，失败图像不得进入后续配准。
-2. 实现特征检测、描述与匹配阶段：对每张图像按可配置特征数量上限、尺度层数与响应阈值提取关键点与描述子，并做双向最近邻匹配与比率测试；特征数量或尺度层数越界返回 E_PARA 并指出字段，匹配对数量低于可配置下限时返回 E_MATCH 并标记该图像对无法配准，不得静默以空匹配继续拼接。
-3. 实现鲁棒单应估计与配准质量评估：对匹配对用可配置重投影阈值与迭代次数做鲁棒估计，剔除误匹配并输出内点数、残差中位数与协方差条件数；估计结果与真值单应在可配置容差内吻合，容差收紧时内点残差统计单调不增；估计失败或内点数不足返回 E_HOMO 并保留该图像对未配准状态。
-4. 实现可变规模下的算法取舍策略：图像数量少或分辨率低的小规模集合采用高特征预算与全对匹配保证精度，大规模集合自动切换为按重叠候选筛选的受限匹配并降低特征预算以控制耗时，取舍规则可解释并记录实际选用的特征预算、候选对数量与匹配模式；同一集合分别以两种模式运行时全景理论画布尺寸须一致，配准参数差异须在声明容差内，且该取舍模式须计入参数版本以避免与检查点版本混淆。
-5. 实现曝光补偿、缝合线选择与融合：先按重叠区亮度与增益统计做全局曝光补偿，再在重叠区按代价最小路径选择缝合线，最后做多分辨率融合生成全景；输出全景尺寸与真值理论画布尺寸一致，重叠区接缝处梯度跳变低于可配置阈值，参数越界或补偿溢出返回 E_PARA 或 E_CLIP，融合不得改变非重叠区像素。
-6. 实现图像对与全景的分层状态机及提交边界：每张图像对经历待配准、配准中、已提交、失败四态，全景合成经历待合成、合成中、已提交、失败四态，只能沿合法迁移推进；进度以已提交图像对数与是否完成合成表示，已提交配准结果的单应不得被后续重估静默改写，非法迁移返回 E_STATE 并保持原状态。
-7. 实现可暂停可重启的检查点与三条路径一致性：每提交一个图像对把单应、内点统计、内容哈希、参数版本与算法版本原子且串行写入本地持久化存储，写入不得交错；重启加载时内容哈希或参数版本不匹配则整体快照作废并全量重算，禁止部分混用旧图像对；实时逐对处理、断点恢复处理与一次性全量重算三条路径须产出逐像素一致的全景与相同配准报告，并提供自动比对定位首个不一致像素坐标与所属图像对编号。
-8. 实现配准报告、可视化诊断与异常并发边界：输出逐图像对单应参数、内点率、残差与累计配准误差热力图，界面展示特征匹配连线、配准叠加与缝合线示意，允许逐对查看并重试失败对；配准与融合可在工作线程并行但限制最大并行度与每线程图像缓冲上限，共享检查点写入串行且顺序稳定；单图像对内部异常置该对失败并允许重试且不污染其他对，用户取消或进程强制终止后重启只能依据已持久化且版本匹配的图像对恢复，不得声称强制终止后仍生成完整报告。
+- 数据加载与结构校验
+- SIFT 特征检测、双向最近邻与比率匹配
+- 确定性 RANSAC 单应估计与质量统计
+- 按规模自动选择全对匹配或受限候选匹配
+- 全局曝光补偿、最小代价缝合线、多分辨率融合
+- 图像对/全景分层状态机
+- 原子检查点、暂停/取消/断点续接
+- 实时、续接、全量重算三条路径逐像素一致性验证
+- PyQt5 GUI 与命令行（CLI）双入口
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+不依赖网络、真实图库、Docker 或其他容器环境。
 
-验收：
-用本地样本验证配准精度、全景一致性、规模取舍与断点恢复，并附运行结果。
+## 环境
+
+- Python 3.10+
+- NumPy、OpenCV、PyQt5、pytest
+- 当前实测环境：CPython 3.14.4、NumPy 2.5.5、OpenCV 5.1.0、PyQt5 5.15.11
+
+Windows PowerShell：
+
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m panoworkbench generate --output data\samples --seed 20261123 --sets all
+python -m panoworkbench gui --dataset data\samples\large
+```
+
+也可双击 `run_gui.bat`，或执行：
+
+```bat
+run_gui.bat data\samples\large
+```
+
+Linux/WSL：
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python -m panoworkbench generate --output data/samples --seed 20261123 --sets all
+python -m panoworkbench gui --dataset data/samples/large
+```
+
+## 快速验证
+
+```bash
+pytest -q
+
+# 三路径一致性：实时处理、暂停后重启续接、一次性全量重算
+python -m panoworkbench verify \
+  --dataset data/samples/large \
+  --output-root artifacts/verification-large
+
+# 同一集合的全对模式与受限模式取舍对比
+python -m panoworkbench compare-modes \
+  --dataset data/samples/large \
+  --output-root artifacts/mode-comparison-large \
+  --mode-tolerance 3
+```
+
+`verify` 会核对：
+
+- 暂停时存在已提交图像对检查点，且尚无可声称完成的全景
+- 续接仅恢复内容哈希、参数版本、算法版本全部匹配的图像对
+- 三条路径的全景 PNG 逐像素一致
+- 三条路径的配准报告（去除输出路径等易变字段后）完全一致
+- 若不一致，报告首个不一致像素坐标、两侧 BGR 值及所属图像对编号
+
+## 样本集
+
+`generate` 使用固定种子生成 5 组数据：
+
+| 集合 | 图像数 | 单图尺寸 | 理论画布 | 说明 |
+|---|---:|---:|---:|---|
+| tiny | 3 | 560×420 | 692×499 | 最小回归集 |
+| small | 6 | 720×540 | 892×624 | 小规模全对模式 |
+| medium | 12 | 760×570 | 997×773 | 中等规模 |
+| large | 24 | 640×480 | 898×737 | 大规模受限候选模式 |
+| highres | 4 | 1800×1200 | 2067×1467 | 数千像素级画布 |
+
+每个集合包含：
+
+```text
+dataset/
+  dataset.json
+  images/
+    view_000.png
+    ...
+```
+
+`dataset.json` 中的关键真值：
+
+- 每张图 `homography_to_base`：局部图像坐标到基准图像坐标的精确 3×3 单应
+- `overlap_with_base`：重叠区对应点坐标
+- `canvas`：理论全景宽、高与原点
+- 每张图尺寸、通道数、SHA-256、合成曝光与旋转/尺度参数
+
+生成器使用同一合成主场景，通过已知单应采样出带平移、旋转、轻微透视和亮度差异的局部视图。所有内容由固定随机种子确定。
+
+## CLI
+
+```bash
+python -m panoworkbench --version
+python -m panoworkbench generate --output data/samples --seed 20261123 --sets all
+python -m panoworkbench validate --dataset data/samples/small
+
+python -m panoworkbench run \
+  --dataset data/samples/large \
+  --output output/large \
+  --mode auto \
+  --workers 4 \
+  --cache-images 8
+
+python -m panoworkbench run \
+  --dataset data/samples/large \
+  --output output/large \
+  --pause-after 3
+
+# 重启续接：同一输出目录、同一参数版本
+python -m panoworkbench run \
+  --dataset data/samples/large \
+  --output output/large
+```
+
+主要参数：
+
+- `--max-features`：SIFT 特征数量上限
+- `--octave-layers`：尺度层数
+- `--contrast-threshold`：响应阈值
+- `--ratio-test`：双向比率测试阈值
+- `--min-matches`：图像对最低匹配数，低于此值返回 `E_MATCH`
+- `--reproj-threshold`：RANSAC 重投影阈值
+- `--consensus-threshold`：固定共识模型包络；最终内点仍按 `--reproj-threshold` 裁剪
+- `--ransac-iterations`：RANSAC 最大迭代数
+- `--min-inliers`：最低内点数，低于此值返回 `E_HOMO`
+- `--mode auto|full|restricted`
+- `--workers`、`--cache-images`、`--buffer-pairs`：并行度与缓冲上限
+- `--no-resume`：忽略本地检查点并全量重算
+- `--cancel-after`：指定秒数后发出取消请求
+
+## GUI
+
+启动：
+
+```bash
+python -m panoworkbench gui --dataset data/samples/large
+```
+
+界面功能：
+
+- 加载并校验本地数据集
+- 调整特征预算、尺度层数、响应阈值、比率、RANSAC 阈值/迭代、并行度
+- 逐对表格展示待配准/配准中/已提交/失败状态
+- 特征匹配连线、配准叠加、缝合线示意、累计配准误差热力图
+- Pause 在当前图像对提交边界暂停
+- Cancel 取消但不把未持久化结果声明为已提交
+- Retry failed 从已提交检查点继续并重试失败对
+
+![GUI](artifacts/gui_screenshot.png)
+
+## 算法取舍
+
+自动策略使用 `work_units = 图像数 × 平均百万像素` 衡量工作量：
+
+```text
+if 图像数 <= small_max_images or work_units <= work_unit_threshold_mp:
+    高特征预算 + 全对匹配
+else:
+    低特征预算 + 重叠候选筛选
+```
+
+受限模式：
+
+- 强制保留所有“基准图—其他图”候选，保证全局连通
+- 保留相邻采集序号边作为连通骨架
+- 对全对图像计算轻量 ORB 重叠分数
+- 按分数补充候选，候选数上限为 `min(max_restricted_pairs, 2N)`
+
+每个报告记录：
+
+- 实际模式与选择原因
+- 实际特征预算
+- 候选图像对数量
+- 粗筛考虑的图像对数量
+- 选择模式参与 `parameter_version`，避免与检查点版本混淆
+
+## 错误码
+
+| 错误码 | 含义 |
+|---|---|
+| `E_DECODE` | 图像损坏、清单缺失或无法解析 |
+| `E_META` | 尺寸/通道/清单字段不匹配，单应非法 |
+| `E_PARA` | 参数越界或曝光估计参数越界 |
+| `E_MATCH` | 匹配数低于下限，图像对失败 |
+| `E_HOMO` | 单应估计失败或内点不足 |
+| `E_CLIP` | 曝光补偿溢出或融合质量门限失败 |
+| `E_STATE` | 非法状态迁移 |
+| `E_IO` | 持久化/输出 I/O 失败 |
+| `E_CANCEL` | 取消保留码 |
+
+图像级校验失败不会阻断其他有效图像，失败图像不会进入配准。图像对内部异常只将当前对置为 `failed`，其他对不受污染，可在 GUI/CLI 中重试。
+
+## 输出
+
+每次运行输出：
+
+```text
+output/
+  panorama.png
+  owner.npz
+  registration_error_heatmap.png
+  seams.json
+  report.json
+  checkpoint.json
+  checkpoint.json.lock
+  run_state.json
+```
+
+- `panorama.png`：最终全景
+- `owner.npz`：每个像素归属图像编号与原始覆盖计数
+- `registration_error_heatmap.png`：累计配准误差热力图
+- `seams.json`：逐图像对缝合线路径
+- `report.json`：逐图像对单应、内点率、残差、协方差条件数、真值误差，逐图像全局单应与画布报告
+- `checkpoint.json`：只含已提交图像对的版本化快照
+- `run_state.json`：`running/paused/cancelled/failed/completed` 运行状态
+
+每次运行开始时先清除旧全景产物并写入 `running` 报告。强制终止后，`run_state.json` 与 `report.json` 不会声称全景已完成；重启只使用版本匹配的已持久化图像对。
+
+## 本次实际验收
+
+环境：WSL2/Linux，CPython 3.14.4，NumPy 2.5.5，OpenCV 5.1.0，PyQt5 5.15.11，24 vCPU。
+
+自动化测试：
+
+```text
+40 passed in 8.35s
+```
+
+三路径一致性：
+
+| 集合 | 图像数 | 模式 | 理论/实际画布 | 最大真值角点误差 | 接缝梯度 p95 | 三路径结果 |
+|---|---:|---|---:|---:|---:|---|
+| tiny | 3 | full | 692×499 / 692×499 | 0.156 px | 16.0 | 像素与报告完全一致 |
+| small | 6 | full | 892×624 / 892×624 | 0.079 px | 16.0 | 像素与报告完全一致 |
+| large | 24 | restricted | 898×737 / 898×737 | 0.792 px | 20.0 | 像素与报告完全一致 |
+| highres | 4 | full | 2067×1467 / 2067×1467 | 0.109 px | 11.0 | 像素与报告完全一致 |
+
+大规模双模式取舍：
+
+| 模式 | 特征预算 | 候选对 | 耗时 | 画布 |
+|---|---:|---:|---:|---:|
+| full | 5000 | 276 | 58.07 s | 898×737 |
+| restricted | 900 | 48 | 8.86 s | 898×737 |
+
+受限模式约快 6.6 倍；两种模式理论画布一致，逐图像角点单应差异最大 `0.582 px`（声明容差 `3 px`），`parameter_version` 不同。
+
+详细机读结果：
+
+- `artifacts/VALIDATION_REPORT.md`
+- `artifacts/verification-tiny/verification.json`
+- `artifacts/verification-small/verification.json`
+- `artifacts/verification-large/verification.json`
+- `artifacts/verification-highres/verification.json`
+- `artifacts/mode-comparison-large/mode_comparison.json`
+
+## 项目结构
+
+```text
+panoworkbench/
+  sample_generator.py  确定性样本与真值生成
+  dataset.py           清单加载、结构校验、内容哈希
+  features.py          SIFT/双向匹配
+  homography.py        确定性 RANSAC、残差与协方差统计
+  strategy.py          规模策略与候选筛选
+  exposure.py          全局曝光拟合
+  seam.py              最小代价缝合线
+  blending.py          多分辨率融合
+  state.py             图像对/全景状态机
+  checkpoint.py        原子版本化检查点
+  pipeline.py          端到端管线
+  report.py            报告、全局配准图、输出比对
+  diagnostics.py       匹配/叠加/缝合/误差可视化
+  cli.py               CLI
+  gui.py               PyQt5 工作台
+tests/                 40 项自动化测试
+docs/TECHNICAL.md      实现与一致性设计说明
+```
+
+## 已知边界
+
+- 当前样本为平面场景，单应模型与生成器一致；真实非平面/强视差素材需要额外深度或局部模型。
+- 画布四角可能为黑色，因为旋转矩形并集的包围盒不一定被图像完全覆盖。
+- 全局配准采用已提交图像对图上的最短路径到基准图，不做全局光束法平差。
+- 当前环境为 WSL2/Linux；“Windows 原生 GUI”由纯 PyQt5 路径和 `run_gui.bat` 提供，但未在本机 Windows 会话中实际启动验证。
