@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>OCR Workbench · Game Media Lab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark"><span></span><span></span><span></span><span></span></div>
+        <div>
+          <div class="brand-name">OCR<span>//</span>WORKBENCH</div>
+          <div class="brand-sub">DETERMINISTIC MEDIA TEXT LAB</div>
+        </div>
+      </div>
+      <div class="topbar-meta">
+        <span class="chip"><i class="dot dot-live"></i><span id="runtime-mode">LOCAL HTTP LAB</span></span>
+        <span class="chip mono" id="algorithm-chip">ocr-workbench/1.0.0</span>
+        <span class="chip mono" id="template-chip">bitmap5x7-v1</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn ghost" id="btn-generate" title="按固定种子重建全部本地样本">生成样本</button>
+        <button class="btn ghost" id="btn-export" title="导出结构化识别结果">导出 JSON</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel left-panel">
+        <section class="panel-section samples-section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">DATASET</span>
+              <h2>确定性样本</h2>
+            </div>
+            <span class="counter" id="sample-count">0</span>
+          </div>
+          <div class="sample-list" id="sample-list"></div>
+          <div class="seed-line mono" id="seed-line">seed —</div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">DETECTION</span>
+              <h2>处理参数</h2>
+            </div>
+            <button class="icon-btn" id="btn-reset-params" title="恢复默认参数">↺</button>
+          </div>
+          <div class="field-grid">
+            <label class="field"><span>瓦片尺寸</span><input id="p-tile" type="number" min="64" max="4096" step="1"></label>
+            <label class="field"><span>边带系数</span><input id="p-band-factor" type="number" min="0.1" max="32" step="0.1"></label>
+            <label class="field"><span>合并 IoU</span><input id="p-merge-iou" type="number" min="0" max="1" step="0.01"></label>
+            <label class="field"><span>笔画一致性</span><input id="p-stroke" type="number" min="0" max="1" step="0.01"></label>
+            <label class="field"><span>候选下限 / 瓦片</span><input id="p-min-candidates" type="number" min="0" step="1"></label>
+            <label class="field"><span>置信度下限</span><input id="p-confidence" type="number" min="0" max="1" step="0.01"></label>
+            <label class="field"><span>行数容差</span><input id="p-tolerance" type="number" min="0" step="1"></label>
+            <label class="field"><span>最小连通域</span><input id="p-min-area" type="number" min="1" step="1"></label>
+          </div>
+          <details class="advanced">
+            <summary>切分与模板参数</summary>
+            <div class="field-grid">
+              <label class="field"><span>模板宽</span><input id="p-template-w" type="number" min="8" step="1"></label>
+              <label class="field"><span>模板高</span><input id="p-template-h" type="number" min="8" step="1"></label>
+              <label class="field"><span>去倾斜上限°</span><input id="p-deskew" type="number" min="0" max="20" step="0.5"></label>
+              <label class="field"><span>去倾斜步长°</span><input id="p-deskew-step" type="number" min="0.05" max="2" step="0.05"></label>
+            </div>
+          </details>
+          <div class="button-grid">
+            <button class="btn primary" id="btn-run">实时处理</button>
+            <button class="btn secondary" id="btn-pause">暂停</button>
+            <button class="btn secondary" id="btn-resume">恢复</button>
+            <button class="btn secondary" id="btn-recompute">全量重算</button>
+            <button class="btn danger" id="btn-cancel">取消</button>
+          </div>
+          <button class="btn wide ghost" id="btn-tune">应用参数调整（仅未提交单元）</button>
+          <button class="btn wide outline" id="btn-compare">运行三路径一致性比对</button>
+        </section>
+      </aside>
+
+      <section class="center-column">
+        <section class="panel canvas-panel">
+          <div class="canvas-toolbar">
+            <div class="run-identity">
+              <span class="eyebrow">ACTIVE FRAME</span>
+              <h1 id="active-title">选择一个样本</h1>
+              <div class="run-sub mono" id="active-sub">—</div>
+            </div>
+            <div class="toolbar-controls">
+              <label class="toggle"><input type="checkbox" id="ov-lines" checked><span>文本行</span></label>
+              <label class="toggle"><input type="checkbox" id="ov-candidates" checked><span>候选</span></label>
+              <label class="toggle"><input type="checkbox" id="ov-tiles"><span>瓦片</span></label>
+              <label class="toggle"><input type="checkbox" id="ov-truth"><span>真值</span></label>
+            </div>
+          </div>
+          <div class="canvas-wrap" id="canvas-wrap">
+            <canvas id="viewport"></canvas>
+            <div class="canvas-empty" id="canvas-empty">
+              <div class="reticle"></div>
+              <strong>LOCAL FRAME BUFFER</strong>
+              <span>选择样本后加载确定性 PNG 与真值清单</span>
+            </div>
+            <div class="hud hud-top mono" id="hud-top">—</div>
+            <div class="hud hud-bottom mono" id="hud-bottom">IDLE</div>
+          </div>
+          <div class="progress-strip">
+            <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+            <span class="mono" id="progress-text">等待样本</span>
+          </div>
+          <div class="metric-row">
+            <div class="metric"><span class="metric-label">COMMITTED TILES</span><strong id="m-tiles">0 / 0</strong><small id="m-candidates">0 candidates</small></div>
+            <div class="metric"><span class="metric-label">COMMITTED LINES</span><strong id="m-lines">0 / 0</strong><small id="m-chars">0 chars</small></div>
+            <div class="metric"><span class="metric-label">AVG CONFIDENCE</span><strong id="m-conf">—</strong><small id="m-minconf">min —</small></div>
+            <div class="metric"><span class="metric-label">TRUTH MATCH</span><strong id="m-accuracy">—</strong><small id="m-iou">IoU —</small></div>
+          </div>
+        </section>
+
+        <section class="panel lower-panel">
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="lines">文本行 <span id="tab-lines-count">0</span></button>
+            <button class="tab" data-tab="tiles">瓦片矩阵 <span id="tab-tiles-count">0</span></button>
+            <button class="tab" data-tab="commits">提交序列 <span id="tab-commits-count">0</span></button>
+            <button class="tab" data-tab="compare">三路径比对</button>
+            <button class="tab" data-tab="errors">异常链 <span id="tab-errors-count">0</span></button>
+          </div>
+          <div class="tab-body">
+            <div class="tab-pane active" id="pane-lines">
+              <div class="table-head lines-grid"><span>#</span><span>状态</span><span>识别文本</span><span>置信度</span><span>字符</span><span>提交</span></div>
+              <div class="scroll-body" id="lines-body"></div>
+            </div>
+            <div class="tab-pane" id="pane-tiles">
+              <div class="tile-matrix" id="tile-matrix"></div>
+              <div class="legend-row">
+                <span><i class="swatch state-pending"></i>待处理</span>
+                <span><i class="swatch state-detecting"></i>检测中</span>
+                <span><i class="swatch state-committed"></i>已提交</span>
+                <span><i class="swatch state-failed"></i>失败</span>
+              </div>
+            </div>
+            <div class="tab-pane" id="pane-commits">
+              <div class="table-head commit-grid"><span>SEQ</span><span>TYPE</span><span>UNIT</span><span>PAYLOAD HASH</span></div>
+              <div class="scroll-body" id="commits-body"></div>
+            </div>
+            <div class="tab-pane" id="pane-compare">
+              <div id="compare-body" class="compare-empty">
+                <div class="compare-orbit"><span></span><span></span><span></span></div>
+                <strong>REPLAY CONSISTENCY HARNESS</strong>
+                <p>实时处理、暂停后重启恢复、全量重算将在独立 SQLite 库中重放，并逐项比较瓦片、文本行、逐字符置信度与提交序列。</p>
+              </div>
+            </div>
+            <div class="tab-pane" id="pane-errors">
+              <div id="errors-body" class="errors-empty">当前没有异常。</div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="panel inspector">
+        <div class="inspector-head">
+          <div>
+            <span class="eyebrow">SELECTED LINE</span>
+            <h2 id="inspector-title">等待选择</h2>
+          </div>
+          <span class="state-pill" id="inspector-state">—</span>
+        </div>
+        <div class="inspector-scroll">
+          <div class="inspector-card">
+            <div class="inspector-label">RECOGNIZED TEXT</div>
+            <div class="recognized-text" id="inspector-text">—</div>
+            <div class="confidence-large"><span id="inspector-conf">—</span><small>line confidence</small></div>
+          </div>
+          <div class="inspector-card">
+            <div class="inspector-label">CHARACTER MATCHES</div>
+            <div class="char-list" id="char-list"><span class="muted">选择文本行后显示</span></div>
+          </div>
+          <div class="inspector-card">
+            <div class="inspector-label">GEOMETRY & SNAPSHOT</div>
+            <dl class="kv" id="line-kv"></dl>
+            <pre class="json-preview" id="line-json">—</pre>
+          </div>
+          <div class="inspector-card" id="truth-card">
+            <div class="inspector-label">CONSTRUCTION TRUTH</div>
+            <dl class="kv" id="truth-kv"></dl>
+          </div>
+          <div class="inspector-card danger-card" id="unit-error-card" hidden>
+            <div class="inspector-label">UNIT ERROR</div>
+            <div id="unit-error-body"></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="toast-stack" id="toast-stack"></div>
+  <div class="modal-backdrop" id="modal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <span class="eyebrow" id="modal-eyebrow">PIPELINE EVENT</span>
+          <h2 id="modal-title">Details</h2>
+        </div>
+        <button class="icon-btn" id="modal-close">×</button>
+      </div>
+      <pre id="modal-body"></pre>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
