@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TEXEL FORGE · 位深与通道工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">TF</span>
+        <div>
+          <h1>TEXEL FORGE</h1>
+          <p>BIT DEPTH / CHANNEL ROUTING / RECOVERY LAB</p>
+        </div>
+      </div>
+      <div class="top-status" id="topStatus">
+        <span class="status-pill" id="healthPill">连接中</span>
+        <span class="status-pill" id="seedPill">SEED —</span>
+        <span class="status-pill" id="algoPill">ALGO —</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="control-rail">
+        <section class="panel">
+          <div class="panel-heading">
+            <span>01 / SOURCE</span>
+            <span class="micro" id="sampleMeta">—</span>
+          </div>
+          <label class="field">
+            <span>确定性样本</span>
+            <select id="sampleSelect"></select>
+          </label>
+          <label class="field">
+            <span>目标描述模板</span>
+            <select id="descriptorSelect"></select>
+          </label>
+          <div class="source-facts" id="sourceFacts"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <span>02 / TARGET</span>
+            <span class="micro">DESCRIPTOR</span>
+          </div>
+          <div class="field-grid">
+            <label class="field">
+              <span>目标位深</span>
+              <select id="depthSelect">
+                <option value="8">8 bit</option>
+                <option value="16">16 bit</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>目标布局</span>
+              <select id="layoutSelect">
+                <option value="gray">GRAY</option>
+                <option value="rgb">RGB</option>
+                <option value="rgba">RGBA</option>
+                <option value="bgr">BGR</option>
+                <option value="bgra">BGRA</option>
+              </select>
+            </label>
+          </div>
+          <label class="field">
+            <span>填充策略</span>
+            <select id="fillSelect">
+              <option value="zero">zero · 补零</option>
+              <option value="repeat_alpha">repeat_alpha · 重复最近通道</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>置换顺序 target ← source index</span>
+            <input id="permutationInput" type="text" value="0,1,2" spellcheck="false">
+          </label>
+          <label class="field">
+            <span>参数版本</span>
+            <input id="parameterInput" type="text" value="params-v1" spellcheck="false">
+          </label>
+          <div class="button-row">
+            <button class="btn btn-primary" id="applyButton">应用描述</button>
+            <button class="btn" id="identityButton">源序置换</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <span>03 / EXECUTION</span>
+            <span class="micro">BOUNDED POOL</span>
+          </div>
+          <div class="field-grid compact">
+            <label class="field">
+              <span>块宽</span>
+              <input id="blockWidthInput" type="number" min="1" max="4096" value="32">
+            </label>
+            <label class="field">
+              <span>块高</span>
+              <input id="blockHeightInput" type="number" min="1" max="4096" value="32">
+            </label>
+            <label class="field">
+              <span>最大并行</span>
+              <input id="workersInput" type="number" min="1" max="64" value="4">
+            </label>
+            <label class="field">
+              <span>每线程像素</span>
+              <input id="bufferInput" type="number" min="1" value="1024">
+            </label>
+            <label class="field">
+              <span>队列深度</span>
+              <input id="queueInput" type="number" min="1" max="1024" value="2">
+            </label>
+          </div>
+          <p class="hint">工作线程上限、每线程像素缓冲与阻塞队列均写入诊断。块尺寸变更在新建会话时生效。</p>
+        </section>
+
+        <section class="panel action-panel">
+          <div class="panel-heading">
+            <span>04 / ACTIONS</span>
+            <span class="micro" id="actionMeta">IDLE</span>
+          </div>
+          <div class="button-row">
+            <button class="btn btn-primary" id="runButton" disabled>开始 / 继续</button>
+            <button class="btn" id="pauseButton" disabled>暂停</button>
+            <button class="btn" id="cancelButton" disabled>取消</button>
+          </div>
+          <div class="button-row">
+            <button class="btn" id="compareButton" disabled>三路径比对</button>
+            <button class="btn" id="faultButton" disabled>注入单块故障</button>
+          </div>
+          <div class="button-row">
+            <button class="btn" id="exportPngButton" disabled>导出 PNG</button>
+            <button class="btn" id="exportRawButton" disabled>导出 TEX</button>
+          </div>
+          <div class="preflight" id="preflight">检查本地读写…</div>
+        </section>
+      </aside>
+
+      <section class="stage">
+        <div class="stage-head">
+          <div>
+            <span class="eyebrow">LIVE CONVERSION SURFACE</span>
+            <h2 id="stageTitle">等待加载样本</h2>
+          </div>
+          <div class="session-facts" id="sessionFacts">
+            <span>SESSION <b>—</b></span>
+            <span>DESC <b>—</b></span>
+            <span>PARAM <b>—</b></span>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span id="progressText">0 / 0 blocks committed</span>
+            <span id="progressState">NO SESSION</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <div class="preview-grid">
+          <article class="preview-card">
+            <header><span>SOURCE</span><span id="sourceLabel">—</span></header>
+            <div class="image-well checker">
+              <img id="sourceImage" alt="源图像预览">
+              <div class="image-placeholder" id="sourcePlaceholder">SELECT SAMPLE</div>
+            </div>
+            <footer id="sourceFooter">—</footer>
+          </article>
+          <article class="preview-card target-card">
+            <header><span>CONVERTED</span><span id="targetLabel">—</span></header>
+            <div class="image-well checker">
+              <img id="targetImage" alt="转换结果预览">
+              <div class="image-placeholder" id="targetPlaceholder">COMMIT BLOCKS TO PREVIEW</div>
+            </div>
+            <footer id="targetFooter">—</footer>
+          </article>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric">
+            <span>COMMITTED</span>
+            <strong id="metricCommitted">0</strong>
+            <small>blocks</small>
+          </article>
+          <article class="metric">
+            <span>QUANT MEAN ABS</span>
+            <strong id="metricMean">—</strong>
+            <small>source LSB units</small>
+          </article>
+          <article class="metric">
+            <span>QUANT MAX ABS</span>
+            <strong id="metricMax">—</strong>
+            <small>per sample</small>
+          </article>
+          <article class="metric">
+            <span>CACHE HITS</span>
+            <strong id="metricCache">0</strong>
+            <small>restored blocks</small>
+          </article>
+          <article class="metric">
+            <span>RETRIES</span>
+            <strong id="metricRetries">0</strong>
+            <small>failed → processing</small>
+          </article>
+          <article class="metric">
+            <span>BUFFER WAITS</span>
+            <strong id="metricWaits">0</strong>
+            <small>queued, never dropped</small>
+          </article>
+        </div>
+
+        <div class="diagnostic-grid">
+          <article class="diag-card wide">
+            <header>
+              <div><span class="eyebrow">CHANNEL HISTOGRAM / WAVEFORM</span><h3>逐通道分布</h3></div>
+              <div class="channel-legend" id="channelLegend"></div>
+            </header>
+            <canvas id="histogramCanvas" width="900" height="260"></canvas>
+          </article>
+          <article class="diag-card">
+            <header>
+              <div><span class="eyebrow">QUANTIZATION ERROR</span><h3>误差热力图</h3></div>
+              <span class="micro" id="heatmapScale">MAX —</span>
+            </header>
+            <div class="image-well heatmap-well checker">
+              <img id="heatmapImage" alt="量化误差热力图">
+              <div class="image-placeholder" id="heatmapPlaceholder">WAITING FOR COMPLETE RESULT</div>
+            </div>
+          </article>
+        </div>
+
+        <article class="diag-card block-card">
+          <header>
+            <div><span class="eyebrow">PIXEL BLOCK STATE MATRIX</span><h3>像素块状态与失效标记</h3></div>
+            <div class="matrix-legend">
+              <span><i class="swatch pending"></i>待处理</span>
+              <span><i class="swatch processing"></i>处理中</span>
+              <span><i class="swatch committed"></i>已提交</span>
+              <span><i class="swatch failed"></i>失败</span>
+              <span><i class="swatch cache"></i>缓存恢复</span>
+              <span><i class="swatch invalid"></i>已失效</span>
+            </div>
+          </header>
+          <div class="matrix-scroll"><div class="block-matrix" id="blockMatrix"></div></div>
+          <footer class="matrix-footer" id="matrixFooter">无块数据</footer>
+        </article>
+
+        <div class="diagnostic-grid">
+          <article class="diag-card">
+            <header>
+              <div><span class="eyebrow">PATH DIAGNOSTICS</span><h3>三路径重算与耗时</h3></div>
+              <span class="micro" id="compareStatus">NOT RUN</span>
+            </header>
+            <div class="path-list" id="pathList">
+              <div class="empty-note">运行自动比对以区分实时分段、断点恢复与全量重算。</div>
+            </div>
+          </article>
+          <article class="diag-card">
+            <header>
+              <div><span class="eyebrow">CHANNEL ROUTING</span><h3>逆映射与损失约束</h3></div>
+              <span class="micro" id="mappingStatus">—</span>
+            </header>
+            <div class="mapping-list" id="mappingList">
+              <div class="empty-note">尚无目标描述。</div>
+            </div>
+          </article>
+        </div>
+
+        <article class="diag-card">
+          <header>
+            <div><span class="eyebrow">DIAGNOSTIC STREAM</span><h3>异常链路 / 版本 / 状态演进</h3></div>
+            <span class="micro" id="logCount">0 EVENTS</span>
+          </header>
+          <div class="log-stream" id="logStream"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div class="toast-stack" id="toastStack"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
+
