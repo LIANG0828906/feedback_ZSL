@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stitch Workbench</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SW</div>
+        <div>
+          <h1>Stitch Workbench</h1>
+          <p>local registration &amp; panorama studio</p>
+        </div>
+      </div>
+      <div class="set-picker">
+        <label>样本集</label>
+        <select id="setSelect"></select>
+        <span id="setMeta" class="muted"></span>
+      </div>
+      <div class="runtime">
+        <span class="dot" id="healthDot"></span>
+        <span id="healthText">本机服务</span>
+        <span class="version" id="algoVersion"></span>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>参数快照</h2>
+          <span class="pill" id="versionPill">v1</span>
+        </div>
+        <div class="param-grid" id="params"></div>
+        <div class="sidebar-actions">
+          <button id="applyParams" class="btn secondary">生成本版本预览</button>
+          <button id="exactBtn" class="btn primary">精确重算</button>
+        </div>
+        <p class="hint">拖动时只读最新快照并走低预算/降采样预览；停止后锁定同一版本做全精度重算。</p>
+      </section>
+
+      <section class="panel compact">
+        <h2>资源边界</h2>
+        <div class="kv"><span>内容哈希</span><code id="contentHash">—</code></div>
+        <div class="kv"><span>预览倍率</span><code id="previewDown">—</code></div>
+        <div class="kv"><span>预览预算</span><code id="previewBudget">—</code></div>
+        <div class="kv"><span>工作线程</span><code id="workers">—</code></div>
+        <div class="kv"><span>提交冻结</span><code id="committedCount">0</code></div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <section class="canvas-panel">
+        <div class="canvas-toolbar">
+          <div class="segmented" id="viewTabs">
+            <button data-view="preview" class="active">预览</button>
+            <button data-view="exact">精算</button>
+          </div>
+          <div class="canvas-meta">
+            <span id="canvasSize">—</span>
+            <span id="canvasMode" class="pill">等待样本</span>
+          </div>
+          <div class="canvas-actions">
+            <button id="pauseBtn" class="btn danger" disabled>暂停</button>
+            <button id="commitAllBtn" class="btn secondary" disabled>提交全部结果对</button>
+            <button id="resetBtn" class="btn ghost" title="清除所有冻结对">重置提交</button>
+          </div>
+        </div>
+        <div class="canvas-stage" id="canvasStage">
+          <img id="canvasImage" alt="panorama preview">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-glyph">⌁</div>
+            <h3>选择样本集开始</h3>
+            <p>参数变化会立即生成粗略配准占位，停止交互后执行精算并校验一致性。</p>
+          </div>
+          <div class="loading" id="canvasLoading"><span></span><span></span><span></span></div>
+        </div>
+        <div class="status-strip">
+          <div><strong>路径</strong><span id="pathBadge">—</span></div>
+          <div><strong>判定一致</strong><span id="divergeBadge">—</span></div>
+          <div><strong>覆盖率偏差</strong><span id="coverageBadge">—</span></div>
+          <div><strong>耗时</strong><span id="timingBadge">—</span></div>
+        </div>
+      </section>
+
+      <section class="diagnostics panel">
+        <div class="panel-head">
+          <h2>诊断视图</h2>
+          <div class="tabs" id="diagTabs">
+            <button data-src="matches" class="active">匹配连线</button>
+            <button data-src="overlay">配准叠加</button>
+            <button data-src="seam">缝合线</button>
+            <button data-src="heatmap">误差热力图</button>
+          </div>
+        </div>
+        <div class="diag-stage">
+          <img id="diagImage" alt="diagnostic">
+          <div class="empty-state small" id="diagEmpty"><p>精算完成后显示可视化诊断。</p></div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="inspector">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>配准报告</h2>
+          <span class="pill" id="pairCount">0 对</span>
+        </div>
+        <div class="report-summary" id="reportSummary">
+          <div><span>任务</span><strong id="taskState">空闲</strong></div>
+          <div><span>任务版本</span><strong id="taskVersion">—</strong></div>
+          <div><span>最大累计误差</span><strong id="cumError">—</strong></div>
+          <div><span>接缝 P95</span><strong id="seamMetric">—</strong></div>
+        </div>
+        <div class="pair-list" id="pairList"></div>
+      </section>
+      <section class="panel log-panel">
+        <div class="panel-head">
+          <h2>事件</h2>
+          <button id="clearLog" class="link">清空</button>
+        </div>
+        <div id="log" class="log"></div>
+      </section>
+    </aside>
+  </div>
+  <div id="errorBanner" class="error-banner hidden"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
