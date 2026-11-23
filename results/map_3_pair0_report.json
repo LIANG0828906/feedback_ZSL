@@ -1,0 +1,451 @@
+{
+  "map": "map_3",
+  "pair": 0,
+  "start": [
+    16,
+    16
+  ],
+  "goal": [
+    47,
+    30
+  ],
+  "cost_fp": 74522,
+  "corners_grid": [
+    [
+      16,
+      16
+    ],
+    [
+      17,
+      16
+    ],
+    [
+      20,
+      19
+    ],
+    [
+      21,
+      19
+    ],
+    [
+      22,
+      18
+    ],
+    [
+      23,
+      18
+    ],
+    [
+      25,
+      20
+    ],
+    [
+      30,
+      20
+    ],
+    [
+      31,
+      21
+    ],
+    [
+      31,
+      22
+    ],
+    [
+      32,
+      23
+    ],
+    [
+      35,
+      23
+    ],
+    [
+      36,
+      24
+    ],
+    [
+      37,
+      24
+    ],
+    [
+      39,
+      26
+    ],
+    [
+      44,
+      26
+    ],
+    [
+      45,
+      27
+    ],
+    [
+      45,
+      28
+    ],
+    [
+      47,
+      30
+    ]
+  ],
+  "corners_world": [
+    [
+      16500,
+      16500
+    ],
+    [
+      17500,
+      16500
+    ],
+    [
+      20500,
+      19500
+    ],
+    [
+      21500,
+      19500
+    ],
+    [
+      22500,
+      18500
+    ],
+    [
+      23500,
+      18500
+    ],
+    [
+      25500,
+      20500
+    ],
+    [
+      30500,
+      20500
+    ],
+    [
+      31500,
+      21500
+    ],
+    [
+      31500,
+      22500
+    ],
+    [
+      32500,
+      23500
+    ],
+    [
+      35500,
+      23500
+    ],
+    [
+      36500,
+      24500
+    ],
+    [
+      37500,
+      24500
+    ],
+    [
+      39500,
+      26500
+    ],
+    [
+      44500,
+      26500
+    ],
+    [
+      45500,
+      27500
+    ],
+    [
+      45500,
+      28500
+    ],
+    [
+      47500,
+      30500
+    ]
+  ],
+  "ticks": 202,
+  "three_path_consistency": "OK",
+  "frame_rate_check": {
+    "max_deviation_fp": 0,
+    "bound_fp": 2
+  },
+  "report": {
+    "statistics": {
+      "cost_accumulation": {
+        "items": [
+          {
+            "cell": [
+              13,
+              3
+            ],
+            "truth_fp": 37382,
+            "measured_fp": 37382,
+            "error_fp": 0
+          },
+          {
+            "cell": [
+              2,
+              14
+            ],
+            "truth_fp": 39140,
+            "measured_fp": 39140,
+            "error_fp": 0
+          },
+          {
+            "cell": [
+              29,
+              25
+            ],
+            "truth_fp": 33382,
+            "measured_fp": 33382,
+            "error_fp": 0
+          },
+          {
+            "cell": [
+              33,
+              35
+            ],
+            "truth_fp": 60796,
+            "measured_fp": 60796,
+            "error_fp": 0
+          }
+        ],
+        "max_error_fp": 0,
+        "bound_fp": 0,
+        "cumulative_bound": "0 (exact integer accumulation)"
+      },
+      "heuristic_deviation": {
+        "items": [
+          {
+            "cell": [
+              13,
+              3
+            ],
+            "h_fp": 45178,
+            "true_remaining_fp": 111248,
+            "overestimate_fp": 0
+          },
+          {
+            "cell": [
+              2,
+              14
+            ],
+            "h_fp": 51624,
+            "true_remaining_fp": 110420,
+            "overestimate_fp": 0
+          },
+          {
+            "cell": [
+              29,
+              25
+            ],
+            "h_fp": 20070,
+            "true_remaining_fp": 54624,
+            "overestimate_fp": 0
+          },
+          {
+            "cell": [
+              33,
+              35
+            ],
+            "h_fp": 16070,
+            "true_remaining_fp": 44210,
+            "overestimate_fp": 0
+          }
+        ],
+        "max_overestimate_fp": 0,
+        "bound_fp": 0,
+        "cumulative_bound": "0 (admissible by construction)"
+      },
+      "smoothing_cost": {
+        "min_cost_fp": 74522,
+        "smoothed_cost_fp": 74522,
+        "diff_fp": 0,
+        "bound_fp": 345436,
+        "cumulative_bound": "constant per path: cells_walked * max_cost * DIAG - min_cost"
+      },
+      "advance_quantization": {
+        "ticks": 202,
+        "max_residual_micro": 0,
+        "max_residual_tick": null,
+        "bound_micro_per_tick": 1000000,
+        "cumulative_bound": "1 fp unit, constant: position is recomputed from arc length every tick, residuals do not accumulate",
+        "frame_rate_position_bound_fp": 2
+      }
+    },
+    "violations": [],
+    "truth_check": {
+      "goal_cost": {
+        "truth_fp": 74522,
+        "measured_fp": 74522,
+        "error_fp": 0
+      },
+      "path_len": {
+        "truth": 34,
+        "measured": 34
+      },
+      "corners": {
+        "truth": [
+          [
+            16,
+            16
+          ],
+          [
+            17,
+            16
+          ],
+          [
+            20,
+            19
+          ],
+          [
+            21,
+            19
+          ],
+          [
+            22,
+            18
+          ],
+          [
+            23,
+            18
+          ],
+          [
+            25,
+            20
+          ],
+          [
+            30,
+            20
+          ],
+          [
+            31,
+            21
+          ],
+          [
+            31,
+            22
+          ],
+          [
+            32,
+            23
+          ],
+          [
+            35,
+            23
+          ],
+          [
+            36,
+            24
+          ],
+          [
+            37,
+            24
+          ],
+          [
+            39,
+            26
+          ],
+          [
+            44,
+            26
+          ],
+          [
+            45,
+            27
+          ],
+          [
+            45,
+            28
+          ],
+          [
+            47,
+            30
+          ]
+        ],
+        "measured": [
+          [
+            16,
+            16
+          ],
+          [
+            17,
+            16
+          ],
+          [
+            20,
+            19
+          ],
+          [
+            21,
+            19
+          ],
+          [
+            22,
+            18
+          ],
+          [
+            23,
+            18
+          ],
+          [
+            25,
+            20
+          ],
+          [
+            30,
+            20
+          ],
+          [
+            31,
+            21
+          ],
+          [
+            31,
+            22
+          ],
+          [
+            32,
+            23
+          ],
+          [
+            35,
+            23
+          ],
+          [
+            36,
+            24
+          ],
+          [
+            37,
+            24
+          ],
+          [
+            39,
+            26
+          ],
+          [
+            44,
+            26
+          ],
+          [
+            45,
+            27
+          ],
+          [
+            45,
+            28
+          ],
+          [
+            47,
+            30
+          ]
+        ],
+        "match": true
+      }
+    }
+  }
+}

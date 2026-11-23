@@ -1,0 +1,531 @@
+{
+  "map": "map_2",
+  "pair": 0,
+  "start": [
+    5,
+    16
+  ],
+  "goal": [
+    38,
+    5
+  ],
+  "cost_fp": 80420,
+  "corners_grid": [
+    [
+      5,
+      16
+    ],
+    [
+      6,
+      16
+    ],
+    [
+      7,
+      15
+    ],
+    [
+      8,
+      15
+    ],
+    [
+      8,
+      14
+    ],
+    [
+      9,
+      13
+    ],
+    [
+      11,
+      13
+    ],
+    [
+      13,
+      11
+    ],
+    [
+      14,
+      11
+    ],
+    [
+      17,
+      8
+    ],
+    [
+      18,
+      9
+    ],
+    [
+      20,
+      9
+    ],
+    [
+      21,
+      8
+    ],
+    [
+      25,
+      8
+    ],
+    [
+      26,
+      7
+    ],
+    [
+      27,
+      7
+    ],
+    [
+      28,
+      6
+    ],
+    [
+      29,
+      7
+    ],
+    [
+      32,
+      7
+    ],
+    [
+      33,
+      6
+    ],
+    [
+      35,
+      6
+    ],
+    [
+      36,
+      5
+    ],
+    [
+      37,
+      6
+    ],
+    [
+      38,
+      5
+    ]
+  ],
+  "corners_world": [
+    [
+      5500,
+      16500
+    ],
+    [
+      6500,
+      16500
+    ],
+    [
+      7500,
+      15500
+    ],
+    [
+      8500,
+      15500
+    ],
+    [
+      8500,
+      14500
+    ],
+    [
+      9500,
+      13500
+    ],
+    [
+      11500,
+      13500
+    ],
+    [
+      13500,
+      11500
+    ],
+    [
+      14500,
+      11500
+    ],
+    [
+      17500,
+      8500
+    ],
+    [
+      18500,
+      9500
+    ],
+    [
+      20500,
+      9500
+    ],
+    [
+      21500,
+      8500
+    ],
+    [
+      25500,
+      8500
+    ],
+    [
+      26500,
+      7500
+    ],
+    [
+      27500,
+      7500
+    ],
+    [
+      28500,
+      6500
+    ],
+    [
+      29500,
+      7500
+    ],
+    [
+      32500,
+      7500
+    ],
+    [
+      33500,
+      6500
+    ],
+    [
+      35500,
+      6500
+    ],
+    [
+      36500,
+      5500
+    ],
+    [
+      37500,
+      6500
+    ],
+    [
+      38500,
+      5500
+    ]
+  ],
+  "ticks": 215,
+  "three_path_consistency": "OK",
+  "frame_rate_check": {
+    "max_deviation_fp": 0,
+    "bound_fp": 2
+  },
+  "report": {
+    "statistics": {
+      "cost_accumulation": {
+        "items": [
+          {
+            "cell": [
+              11,
+              43
+            ],
+            "truth_fp": 88280,
+            "measured_fp": 88280,
+            "error_fp": 0
+          },
+          {
+            "cell": [
+              23,
+              12
+            ],
+            "truth_fp": 38898,
+            "measured_fp": 38898,
+            "error_fp": 0
+          },
+          {
+            "cell": [
+              28,
+              5
+            ],
+            "truth_fp": 57038,
+            "measured_fp": 57038,
+            "error_fp": 0
+          },
+          {
+            "cell": [
+              30,
+              20
+            ],
+            "truth_fp": 65038,
+            "measured_fp": 65038,
+            "error_fp": 0
+          }
+        ],
+        "max_error_fp": 0,
+        "bound_fp": 0,
+        "cumulative_bound": "0 (exact integer accumulation)"
+      },
+      "heuristic_deviation": {
+        "items": [
+          {
+            "cell": [
+              11,
+              43
+            ],
+            "h_fp": 49178,
+            "true_remaining_fp": 118732,
+            "overestimate_fp": 0
+          },
+          {
+            "cell": [
+              23,
+              12
+            ],
+            "h_fp": 17898,
+            "true_remaining_fp": 44350,
+            "overestimate_fp": 0
+          },
+          {
+            "cell": [
+              28,
+              5
+            ],
+            "h_fp": 10000,
+            "true_remaining_fp": 26382,
+            "overestimate_fp": 0
+          },
+          {
+            "cell": [
+              30,
+              20
+            ],
+            "h_fp": 18312,
+            "true_remaining_fp": 50866,
+            "overestimate_fp": 0
+          }
+        ],
+        "max_overestimate_fp": 0,
+        "bound_fp": 0,
+        "cumulative_bound": "0 (admissible by construction)"
+      },
+      "smoothing_cost": {
+        "min_cost_fp": 80420,
+        "smoothed_cost_fp": 80420,
+        "diff_fp": 0,
+        "bound_fp": 352264,
+        "cumulative_bound": "constant per path: cells_walked * max_cost * DIAG - min_cost"
+      },
+      "advance_quantization": {
+        "ticks": 215,
+        "max_residual_micro": 0,
+        "max_residual_tick": null,
+        "bound_micro_per_tick": 1000000,
+        "cumulative_bound": "1 fp unit, constant: position is recomputed from arc length every tick, residuals do not accumulate",
+        "frame_rate_position_bound_fp": 2
+      }
+    },
+    "violations": [],
+    "truth_check": {
+      "goal_cost": {
+        "truth_fp": 80420,
+        "measured_fp": 80420,
+        "error_fp": 0
+      },
+      "path_len": {
+        "truth": 35,
+        "measured": 35
+      },
+      "corners": {
+        "truth": [
+          [
+            5,
+            16
+          ],
+          [
+            6,
+            16
+          ],
+          [
+            7,
+            15
+          ],
+          [
+            8,
+            15
+          ],
+          [
+            8,
+            14
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            11,
+            13
+          ],
+          [
+            13,
+            11
+          ],
+          [
+            14,
+            11
+          ],
+          [
+            17,
+            8
+          ],
+          [
+            18,
+            9
+          ],
+          [
+            20,
+            9
+          ],
+          [
+            21,
+            8
+          ],
+          [
+            25,
+            8
+          ],
+          [
+            26,
+            7
+          ],
+          [
+            27,
+            7
+          ],
+          [
+            28,
+            6
+          ],
+          [
+            29,
+            7
+          ],
+          [
+            32,
+            7
+          ],
+          [
+            33,
+            6
+          ],
+          [
+            35,
+            6
+          ],
+          [
+            36,
+            5
+          ],
+          [
+            37,
+            6
+          ],
+          [
+            38,
+            5
+          ]
+        ],
+        "measured": [
+          [
+            5,
+            16
+          ],
+          [
+            6,
+            16
+          ],
+          [
+            7,
+            15
+          ],
+          [
+            8,
+            15
+          ],
+          [
+            8,
+            14
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            11,
+            13
+          ],
+          [
+            13,
+            11
+          ],
+          [
+            14,
+            11
+          ],
+          [
+            17,
+            8
+          ],
+          [
+            18,
+            9
+          ],
+          [
+            20,
+            9
+          ],
+          [
+            21,
+            8
+          ],
+          [
+            25,
+            8
+          ],
+          [
+            26,
+            7
+          ],
+          [
+            27,
+            7
+          ],
+          [
+            28,
+            6
+          ],
+          [
+            29,
+            7
+          ],
+          [
+            32,
+            7
+          ],
+          [
+            33,
+            6
+          ],
+          [
+            35,
+            6
+          ],
+          [
+            36,
+            5
+          ],
+          [
+            37,
+            6
+          ],
+          [
+            38,
+            5
+          ]
+        ],
+        "match": true
+      }
+    }
+  }
+}
