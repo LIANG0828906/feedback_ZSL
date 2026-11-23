@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, replace
 from typing import Any, Iterable
 
-from .errors import E_CHAP, E_CONFLICT, E_TRACK, fail
+from .errors import E_CHAP, E_CONFLICT, E_CORRUPT, E_TRACK, fail
 from .jsonutil import canonical_json_bytes, sha256_bytes
 from .timebase import Timebase
 

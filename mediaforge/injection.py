@@ -50,6 +50,20 @@ class InjectionConfig:
             "parameter_version": self.parameter_version,
         }
 
+    def without_input_corruption(self) -> "InjectionConfig":
+        """Keep every input-stage fault while deferring corruption to the segment stage.
+
+        The segmented packer injects ``corrupt_track`` itself when serializing each
+        segment, so the raw-stream mutation must be skipped during sample import.
+        Dropping the whole configuration instead would silently discard the other
+        requested injections (metadata conflict, timestamp inversion, missing track).
+        """
+        return replace(
+            self,
+            corrupt_track=None,
+            corrupt_offset=17,
+        )
+
     @classmethod
     def from_dict(cls, value: Any) -> "InjectionConfig":
         if value is None:

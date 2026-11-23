@@ -32,7 +32,7 @@ def _error_json(exc: WorkbenchError) -> str:
 def _load(args: argparse.Namespace):
     injection = InjectionConfig.from_file(args.injection) if args.injection else None
     if injection is not None and getattr(args, "segmented", False) and injection.corrupt_track:
-        injection = None
+        injection = injection.without_input_corruption()
     return load_sample(
         args.sample,
         args.source_version,

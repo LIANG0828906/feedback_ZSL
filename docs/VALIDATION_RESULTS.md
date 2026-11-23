@@ -3,10 +3,11 @@
 ## 环境
 
 - 主机：WSL2 Linux，`/home/liang/feedback/uid42a8691e-default-132`
-- Python：3.11.18
+- 本地离线解释器：`/usr/bin/python3`（Python 3.14.4，核心链路仅用标准库）
+- 目标离线解释器：Windows + Python 3.11，依赖从仓库内 `wheelhouse/` 以 `--no-index --find-links wheelhouse` 安装
 - GUI：PySide6 6.12.0（Qt 离屏烟测）
-- 数值依赖：numpy 2.4.6
-- 核心算法：仅 Python 标准库；系统 Python 3.14 也通过无 GUI 测试
+- 数值依赖：numpy 2.5.5（本地解释器预装；离线 wheel 安装路径见 `docs/WINDOWS_SETUP.md`）
+- 核心算法：仅 Python 标准库，无需联网或 pip
 - 样本种子：`20261123`
 
 Windows 10/11 安装脚本、Python 3.11 venv 和本地 wheel 离线安装命令已交付；当前 WSL2 主机无法执行 Windows 安装器本身。
@@ -16,13 +17,13 @@ Windows 10/11 安装脚本、Python 3.11 venv 和本地 wheel 离线安装命令
 命令：
 
 ```bash
-QT_QPA_PLATFORM=offscreen python -m unittest discover -v
+QT_QPA_PLATFORM=offscreen python3 -m unittest discover -v
 ```
 
 结果：
 
 ```text
-Ran 49 tests in ~0.7s
+Ran 57 tests in ~1.1s
 OK
 ```
 
@@ -31,6 +32,8 @@ OK
 - 三组样本和两套独立生成目录逐文件哈希一致；
 - 三版本映射同核心模型、未知版本/缺字段 `E_META`；
 - 四类异常注入分别进入 `E_CONFLICT`、`E_ORDER`、`E_TRACK`、`E_CORRUPT`；
+- 非 PNG 封面在 `validate_model` 与 CLI `pack` 链路返回 `E_CORRUPT`（`$.cover`），不再泄漏 `NameError`；
+- 分段 `corrupt_segment` 与元数据冲突/时间戳倒置/缺失轨道组合注入时，每一项故障都被校验并报告，不会被静默丢弃；
 - 章节排序、重叠、越界、`E_VER`、`E_PREC`；
 - 三目标版本独立校验；
 - 负载/声明/真值差异定位到首个字段；
@@ -44,7 +47,7 @@ OK
 命令：
 
 ```bash
-python -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
+python3 -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
 ```
 
 结果：`ok=true`，40 项检查全部通过，`failure_count=0`。包括 3 个样本组、3 个元数据版本、所有 truth 指纹和文件哈希、三版本导入、独立校验、检查点写入/清理、注入损坏与单段重试。
@@ -64,7 +67,7 @@ python -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoi
 命令：
 
 ```bash
-python scripts/run_demo.py
+python3 scripts/run_demo.py
 ```
 
 `g01_neon_city` 从 v3 内部模型导出：
@@ -108,4 +111,4 @@ Qt 离屏启动 `MainWindow`，加载 `g01_neon_city`：
 
 ## 已知环境差异
 
-当前 WSL2 主机没有本地 Windows wheelhouse，验证使用预置 Python 3.11 环境中的 PySide6/numpy；仓库内 `scripts/setup_windows.ps1` 和 `wheelhouse/README.md` 给出目标 Windows 环境的离线安装路径。
+当前 WSL2 主机没有可用于 Windows 的 wheel，验证直接使用本地离线解释器 `/usr/bin/python3`（预装 PySide6/numpy）；仓库内 `scripts/setup_windows.ps1`、`scripts/setup_linux.sh` 和 `wheelhouse/README.md` 给出目标环境的离线安装路径，安装统一使用 `--no-index --find-links wheelhouse`。

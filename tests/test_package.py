@@ -3,8 +3,9 @@ from __future__ import annotations
 import unittest
 from dataclasses import replace
 
-from mediaforge.errors import E_CHAP, E_PREC, E_VER
+from mediaforge.errors import E_CHAP, E_CORRUPT, E_PREC, E_VER
 from mediaforge.metadata import export_metadata, load_metadata_dict, project_model
+from mediaforge.model import validate_model
 from mediaforge.package import build_package, parse_package_bytes, read_artifact_model
 from mediaforge.timebase import Timebase
 
@@ -106,6 +107,11 @@ class PackageTests(unittest.TestCase):
         corrupted = bytearray(result.artifact)
         corrupted[-40] ^= 0x01
         self.assertNotEqual(bytes(corrupted), result.artifact)
+
+    def test_non_png_cover_returns_e_corrupt_without_name_error(self) -> None:
+        model = self.model.copy(cover=b"NOT-A-PNG-FILE")
+        exc = expect_error(E_CORRUPT, lambda: validate_model(model, require_payload=True))
+        self.assertEqual(exc.field_path, "$.cover")
 
 
 if __name__ == "__main__":

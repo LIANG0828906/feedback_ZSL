@@ -14,9 +14,11 @@
 ## 验收命令
 
 ```bash
-python -m unittest discover -v
-python -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
-python scripts/run_demo.py
+python3 -m unittest discover -v
+python3 -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
+python3 scripts/run_demo.py
 ```
+
+本地离线运行直接使用工作区可用的 `python3` 解释器；独立环境的依赖通过仓库内 `wheelhouse/` 以 `--no-index --find-links wheelhouse` 离线安装，运行期不访问网络。
 
 可复现结果记录见 `docs/VALIDATION_RESULTS.md` 与 `artifacts/demo/validation_report.json`。

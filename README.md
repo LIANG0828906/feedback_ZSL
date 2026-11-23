@@ -13,6 +13,17 @@
 
 ## 快速开始
 
+本地离线验证（本工作区已具备解释器与依赖，无需联网、无需 pip）：
+
+```bash
+python3 run_workbench.py
+python3 -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
+python3 -m unittest discover -v
+python3 scripts/run_demo.py
+```
+
+`python3` 解析为本机已安装的离线解释器（当前 WSL 主机为 `/usr/bin/python3`，Python 3.14，预装 numpy 与 PySide6）；核心算法只依赖标准库，GUI/样本依赖已在该解释器中就绪。如需独立虚拟环境，可从本地 `wheelhouse/` 离线安装，见 `docs/WINDOWS_SETUP.md` 与 `scripts/setup_linux.sh`，安装命令统一使用 `--no-index --find-links wheelhouse`。
+
 Windows 10/11 + Python 3.11 的目标流程：
 
 ```powershell
@@ -22,33 +33,26 @@ Windows 10/11 + Python 3.11 的目标流程：
 
 本地 wheel 放入 `wheelhouse/`，安装命令使用 `--no-index --find-links wheelhouse`，样本生成与运行不下载任何素材或依赖。详见 `docs/WINDOWS_SETUP.md`。
 
-已有样本时可直接运行：
-
-```bash
-python -m mediaforge selfcheck --samples samples --checkpoint artifacts/checkpoints
-python -m mediaforge gui
-python -m unittest discover -v
-python scripts/run_demo.py
-```
-
 ## 常用 CLI
 
 ```bash
-python -m mediaforge generate-samples --out samples --seed 20261123
-python -m mediaforge inspect --sample samples/g01_neon_city --source-version v3
-python -m mediaforge pack --sample samples/g01_neon_city --source-version v3 --target v1 --out artifacts/g01_v1.mfz
-python -m mediaforge pack --sample samples/g01_neon_city --source-version v3 --target v3 --out artifacts/g01_seg.mfz --segmented --workers 4 --checkpoint artifacts/checkpoints
-python -m mediaforge validate --artifact artifacts/g01_v1.mfz --truth samples/g01_neon_city/truth.json
-python -m mediaforge roundtrip --sample samples/g01_neon_city --source-version v3 --target v1
-python -m mediaforge readback --artifact artifacts/g01_v1.mfz
+python3 -m mediaforge generate-samples --out samples --seed 20261123
+python3 -m mediaforge inspect --sample samples/g01_neon_city --source-version v3
+python3 -m mediaforge pack --sample samples/g01_neon_city --source-version v3 --target v1 --out artifacts/g01_v1.mfz
+python3 -m mediaforge pack --sample samples/g01_neon_city --source-version v3 --target v3 --out artifacts/g01_seg.mfz --segmented --workers 4 --checkpoint artifacts/checkpoints
+python3 -m mediaforge validate --artifact artifacts/g01_v1.mfz --truth samples/g01_neon_city/truth.json
+python3 -m mediaforge roundtrip --sample samples/g01_neon_city --source-version v3 --target v1
+python3 -m mediaforge readback --artifact artifacts/g01_v1.mfz
 ```
 
 异常注入参数位于 `samples/injections/`：
 
 ```bash
-python -m mediaforge pack --sample samples/g01_neon_city --target v3 --out /tmp/conflict.mfz --injection samples/injections/conflict.json
-python -m mediaforge pack --sample samples/g01_neon_city --target v3 --out /tmp/corrupt.mfz --segmented --checkpoint /tmp/checkpoints --injection samples/injections/corrupt_segment.json
+python3 -m mediaforge pack --sample samples/g01_neon_city --target v3 --out artifacts/injected/conflict.mfz --injection samples/injections/conflict.json
+python3 -m mediaforge pack --sample samples/g01_neon_city --target v3 --out artifacts/injected/corrupt.mfz --segmented --checkpoint artifacts/injected/checkpoints --injection samples/injections/corrupt_segment.json
 ```
+
+组合注入（例如分段损坏与元数据冲突/时间戳倒置/缺失轨道同时存在）时，每一项请求的故障都会被校验并报告，不会因为存在分段 `corrupt_segment` 而被静默丢弃。
 
 ## 确定性不变量
 
@@ -88,4 +92,4 @@ samples/
 
 ## 当前验证环境
 
-交付容器为 WSL2 Linux，无法在本机执行 Windows 安装器；实际验证使用预置的 Python 3.11.18、PySide6 6.12.0、numpy 2.4.6 环境完成。核心链路同时通过系统 Python 3.14 标准库运行，Windows 脚本和本地 wheel 安装流程已提供但未在当前 WSL 主机执行。
+交付容器为 WSL2 Linux，无法在本机执行 Windows 安装器；实际验证使用本地离线解释器 `/usr/bin/python3`（Python 3.14.4，预装 PySide6 6.12.0、numpy 2.5.5）完成，核心链路仅依赖标准库。Windows 目标环境的 Python 3.11 脚本与本地 `wheelhouse/` 离线安装流程已提供，但未在当前 WSL 主机执行。
