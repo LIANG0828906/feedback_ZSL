@@ -5,7 +5,7 @@ import pytest
 
 from panoworkbench.config import FeatureConfig, HomographyConfig
 from panoworkbench.errors import ErrorCode, WorkbenchError
-from panoworkbench.features import detect_features, match_features
+from panoworkbench.features import MatchSet, detect_features, match_features
 from panoworkbench.geometry import invert_homography
 from panoworkbench.homography import estimate_homography
 
@@ -97,3 +97,47 @@ def test_insufficient_inliers_is_e_homo(sample_dataset) -> None:
         )
     assert context.value.code is ErrorCode.HOMO
     assert context.value.field == "homography.min_inliers"
+
+
+def _match_set(points_a: np.ndarray, points_b: np.ndarray) -> MatchSet:
+    count = len(points_a)
+    return MatchSet(
+        points_a=np.asarray(points_a, dtype=np.float64),
+        points_b=np.asarray(points_b, dtype=np.float64),
+        source_indices=np.arange(count, dtype=np.int32),
+        target_indices=np.arange(count, dtype=np.int32),
+        distances=np.ones(count, dtype=np.float64),
+    )
+
+
+@pytest.mark.parametrize(
+    "points_a,points_b",
+    [
+        (
+            np.column_stack(
+                [np.linspace(10.0, 200.0, 24), np.linspace(20.0, 410.0, 24)]
+            ),
+            np.column_stack(
+                [np.linspace(15.0, 205.0, 24), np.linspace(22.0, 412.0, 24)]
+            ),
+        ),
+        (
+            np.repeat(np.array([[80.0, 60.0], [120.0, 90.0]]), 12, axis=0),
+            np.repeat(np.array([[90.0, 70.0], [130.0, 100.0]]), 12, axis=0),
+        ),
+        (
+            np.full((20, 2), [100.0, 100.0]),
+            np.full((20, 2), [110.0, 120.0]),
+        ),
+    ],
+)
+def test_degenerate_ransac_samples_are_e_homo(points_a, points_b) -> None:
+    config = HomographyConfig(max_iterations=120, min_inliers=4)
+    with pytest.raises(WorkbenchError) as context:
+        estimate_homography(
+            _match_set(points_a, points_b),
+            (500, 400),
+            config,
+            pair_key="degenerate",
+        )
+    assert context.value.code is ErrorCode.HOMO

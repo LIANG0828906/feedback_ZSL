@@ -11,7 +11,7 @@ import numpy as np
 from .config import ExposureConfig
 from .dataset import Dataset
 from .errors import ErrorCode, WorkbenchError
-from .geometry import warp_to_canvas
+from .geometry import invert_homography, warp_to_canvas
 
 
 @dataclass(frozen=True)
@@ -88,10 +88,11 @@ def estimate_exposure(
     config.validate()
     if dataset.base_index not in homographies_to_canvas:
         raise WorkbenchError(ErrorCode.HOMO, "base image is not registered")
-    base_image = dataset.read_image(dataset.base_index, color=False)
-    base_warped, base_mask = warp_to_canvas(
+    base_image = dataset.read_image(dataset.base_index, color=True)
+    base_homography = homographies_to_canvas[dataset.base_index]
+    _, base_mask = warp_to_canvas(
         base_image,
-        homographies_to_canvas[dataset.base_index],
+        base_homography,
         canvas_size,
         interpolation=cv2.INTER_LINEAR,
     )
@@ -104,14 +105,46 @@ def estimate_exposure(
     for index in sorted(dataset.images):
         if index == dataset.base_index:
             continue
-        gray = dataset.read_image(index, color=False)
+        meta = dataset.images[index]
+        image = dataset.read_image(index, color=True)
+        image_homography = homographies_to_canvas[index]
         warped, mask = warp_to_canvas(
-            gray,
-            homographies_to_canvas[index],
+            image,
+            image_homography,
             canvas_size,
             interpolation=cv2.INTER_LINEAR,
         )
-        overlap = mask & base_mask
+        base_to_image = invert_homography(image_homography) @ base_homography
+        image_size = (meta.width, meta.height)
+        base_in_image = cv2.warpPerspective(
+            base_image,
+            base_to_image,
+            image_size,
+            flags=cv2.INTER_LINEAR,
+            borderMode=cv2.BORDER_CONSTANT,
+            borderValue=(0, 0, 0),
+        )
+        base_in_image_mask = cv2.warpPerspective(
+            np.full(base_image.shape[:2], 255, dtype=np.uint8),
+            base_to_image,
+            image_size,
+            flags=cv2.INTER_NEAREST,
+            borderMode=cv2.BORDER_CONSTANT,
+            borderValue=0,
+        )
+        reference, _ = warp_to_canvas(
+            base_in_image,
+            image_homography,
+            canvas_size,
+            interpolation=cv2.INTER_LINEAR,
+        )
+        reference_valid, _ = warp_to_canvas(
+            base_in_image_mask,
+            image_homography,
+            canvas_size,
+            interpolation=cv2.INTER_NEAREST,
+        )
+        overlap = mask & base_mask & (reference_valid > 0)
         ys, xs = np.nonzero(overlap)
         if len(xs) < 100:
             raise WorkbenchError(
@@ -123,8 +156,10 @@ def estimate_exposure(
             )
         stride = max(1, int(config.sample_stride))
         sample_indices = np.arange(0, len(xs), stride)
-        x = warped[ys[sample_indices], xs[sample_indices]].astype(np.float64)
-        y = base_warped[ys[sample_indices], xs[sample_indices]].astype(np.float64)
+        x = warped[ys[sample_indices], xs[sample_indices], :].astype(np.float64)
+        y = reference[ys[sample_indices], xs[sample_indices], :].astype(np.float64)
+        x = x.reshape(-1)
+        y = y.reshape(-1)
         non_saturated = (x > 1.0) & (x < 254.0) & (y > 1.0) & (y < 254.0)
         if int(np.count_nonzero(non_saturated)) >= 50:
             x_fit = x[non_saturated]

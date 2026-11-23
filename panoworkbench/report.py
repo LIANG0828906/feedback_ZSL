@@ -165,6 +165,12 @@ def make_report(
         for record in registry.ordered()
         if record.result is not None and record.result.truth_corner_error is not None
     ]
+    pair_truth_checks: list[bool] = []
+    for record in registry.ordered():
+        if record.state is PairState.FAILED:
+            pair_truth_checks.append(False)
+        elif record.result is not None:
+            pair_truth_checks.append(bool(record.result.truth_ok))
     image_truth_errors = [
         entry["truth_corner_error_px"]
         for entry in image_entries
@@ -206,12 +212,8 @@ def make_report(
             "max_image_truth_corner_error_px": (
                 max(image_truth_errors) if image_truth_errors else None
             ),
-            "all_pair_truth_ok": all(
-                record.result.truth_ok
-                for record in registry.ordered()
-                if record.result is not None and record.result.truth_ok is not None
-            )
-            if truth_errors
+            "all_pair_truth_ok": all(pair_truth_checks)
+            if pair_truth_checks
             else None,
             "all_images_truth_ok": all(
                 entry["truth_ok"]

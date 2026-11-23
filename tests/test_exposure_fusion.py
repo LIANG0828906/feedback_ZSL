@@ -47,9 +47,11 @@ def test_exposure_estimates_recover_synthetic_brightness(sample_dataset) -> None
     for index in (1, 2):
         synthetic = sample_dataset.images[index].synthetic_exposure
         expected = 1.0 / synthetic["gain"]
+        expected_offset = -synthetic["offset"] / synthetic["gain"]
         estimated = exposure.images[index].gain
-        assert abs(estimated - expected) / expected < 0.06
-        assert exposure.images[index].fit_rms < 10.0
+        assert abs(estimated - expected) / expected < 0.005
+        assert abs(exposure.images[index].offset - expected_offset) < 0.5
+        assert exposure.images[index].fit_rms < 3.0
 
 
 def test_panorama_dimensions_seam_quality_and_single_source_invariance(

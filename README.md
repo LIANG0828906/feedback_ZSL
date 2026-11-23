@@ -20,6 +20,14 @@
 - NumPy、OpenCV、PyQt5、pytest
 - 当前实测环境：CPython 3.14.4、NumPy 2.5.5、OpenCV 5.1.0、PyQt5 5.15.11
 
+当前 WSL 工作区已提供 CPython 3.14 与离线依赖。若依赖解包在仓库的
+`.deps/`，`python -m panoworkbench` 会自动把它加入模块搜索路径；也可显式
+指定其他目录：
+
+```bash
+PANOWORKBENCH_DEPS=/path/to/site-packages python3 -m panoworkbench --version
+```
+
 Windows PowerShell：
 
 ```powershell
@@ -40,17 +48,23 @@ run_gui.bat data\samples\large
 Linux/WSL：
 
 ```bash
+python3 -m panoworkbench --version
+python3 -m panoworkbench generate --output data/samples --seed 20261123 --sets all
+python3 -m panoworkbench gui --dataset data/samples/large
+```
+
+需要隔离安装时仍可创建 `.venv` 并从本地 wheelhouse 离线安装：
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-python -m panoworkbench generate --output data/samples --seed 20261123 --sets all
-python -m panoworkbench gui --dataset data/samples/large
+pip install --no-index --find-links wheelhouse -r requirements.txt
 ```
 
 ## 快速验证
 
 ```bash
-pytest -q
+PYTHONPATH=.deps python3 -m pytest -q
 
 # 三路径一致性：实时处理、暂停后重启续接、一次性全量重算
 python -m panoworkbench verify \
@@ -70,6 +84,7 @@ python -m panoworkbench compare-modes \
 - 续接仅恢复内容哈希、参数版本、算法版本全部匹配的图像对
 - 三条路径的全景 PNG 逐像素一致
 - 三条路径的配准报告（去除输出路径等易变字段后）完全一致
+- 任一运行路径中存在失败图像对即判失败，并在 `failed_pairs` 中列出
 - 若不一致，报告首个不一致像素坐标、两侧 BGR 值及所属图像对编号
 
 ## 样本集

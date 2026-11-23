@@ -384,11 +384,25 @@ def _command_verify(args: argparse.Namespace) -> int:
         "resume": resumed.status,
         "full_recompute": full.status,
     }
+    failed_pairs = {
+        name: sorted(
+            pair["pair_id"]
+            for pair in result.report.get("pairs", [])
+            if pair.get("state") == "failed"
+        )
+        for name, result in (
+            ("realtime", realtime),
+            ("partial", partial),
+            ("resume", resumed),
+            ("full_recompute", full),
+        )
+    }
     passed = (
         realtime.status == "completed"
         and resumed.status == "completed"
         and full.status == "completed"
         and partial.status == "paused"
+        and not any(failed_pairs.values())
         and checkpoint_exists_at_pause
         and no_panorama_at_pause
         and all(item["identical"] for item in pixel_checks.values())
@@ -412,6 +426,7 @@ def _command_verify(args: argparse.Namespace) -> int:
         "mode": realtime.report["strategy"]["mode"],
         "parameter_version": realtime.report["parameter_version"],
         "statuses": all_statuses,
+        "failed_pairs": failed_pairs,
         "partial_checkpoint": {
             "pause_after_pairs": pause_after,
             "committed_pairs": partial.report["progress"]["committed_pairs"],

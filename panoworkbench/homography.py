@@ -95,6 +95,40 @@ def _dlt(src: np.ndarray, dst: np.ndarray) -> np.ndarray | None:
     return h
 
 
+def _sample_is_degenerate(points: np.ndarray) -> bool:
+    """Return whether four sample points cannot determine a homography."""
+
+    pts = np.asarray(points, dtype=np.float64).reshape(-1, 2)
+    if len(pts) != 4 or len(np.unique(pts, axis=0)) < 4:
+        return True
+    spread = float(max(np.ptp(pts[:, 0]), np.ptp(pts[:, 1])))
+    if not np.isfinite(spread) or spread <= 1e-12:
+        return True
+    normalized = (pts - np.mean(pts, axis=0)) / spread
+    for first in range(2):
+        for second in range(first + 1, 3):
+            for third in range(second + 1, 4):
+                edge_a = normalized[second] - normalized[first]
+                edge_b = normalized[third] - normalized[first]
+                area = abs(edge_a[0] * edge_b[1] - edge_a[1] * edge_b[0])
+                if area <= 1e-8:
+                    return True
+    return False
+
+
+def _configuration_is_degenerate(points: np.ndarray) -> bool:
+    """Return whether a point set is collinear or has fewer than four points."""
+
+    pts = np.asarray(points, dtype=np.float64).reshape(-1, 2)
+    if len(pts) < 4 or len(np.unique(pts, axis=0)) < 4:
+        return True
+    centered = pts - np.mean(pts, axis=0)
+    singular_values = np.linalg.svd(centered, compute_uv=False)
+    if len(singular_values) < 2 or singular_values[0] <= 1e-12:
+        return True
+    return bool(singular_values[1] <= 1e-9 * singular_values[0])
+
+
 def _project(h: np.ndarray, points: np.ndarray) -> np.ndarray:
     pts = np.asarray(points, dtype=np.float64).reshape(-1, 2)
     homogeneous = np.column_stack([pts, np.ones(len(pts))])
@@ -214,10 +248,14 @@ def estimate_homography(
         sample = rng.choice(len(src), size=4, replace=False)
         if len(np.unique(sample)) < 4:
             continue
+        sample_src = src[sample]
+        sample_dst = dst[sample]
+        if _sample_is_degenerate(sample_src) or _sample_is_degenerate(sample_dst):
+            continue
         try:
             sampled, _ = cv2.findHomography(
-                src[sample].reshape(4, 1, 2),
-                dst[sample].reshape(4, 1, 2),
+                sample_src.reshape(4, 1, 2),
+                sample_dst.reshape(4, 1, 2),
                 0,
             )
         except cv2.error:
@@ -226,9 +264,9 @@ def estimate_homography(
             try:
                 h = normalize_homography(sampled)
             except WorkbenchError:
-                h = _dlt(src[sample], dst[sample])
+                h = _dlt(sample_src, sample_dst)
         else:
-            h = _dlt(src[sample], dst[sample])
+            h = _dlt(sample_src, sample_dst)
         if h is None:
             continue
         errors = _forward_errors(h, src, dst)
@@ -286,6 +324,15 @@ def estimate_homography(
             f"only {inlier_count} inliers, minimum is {config.min_inliers}",
             field="homography.min_inliers",
             details={"inliers": inlier_count, "minimum": config.min_inliers},
+        )
+    if _configuration_is_degenerate(src[inlier_mask]) or _configuration_is_degenerate(
+        dst[inlier_mask]
+    ):
+        raise WorkbenchError(
+            ErrorCode.HOMO,
+            "RANSAC inliers are degenerate and cannot determine a homography",
+            field="homography",
+            details={"inliers": inlier_count},
         )
     condition = _covariance_condition(
         best_h,

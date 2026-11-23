@@ -6,9 +6,13 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+import pytest
 
+import panoworkbench.pipeline as pipeline_module
+from panoworkbench.cli import main
 from panoworkbench.config import FeatureConfig, PipelineConfig
 from panoworkbench.dataset import load_dataset
+from panoworkbench.errors import ErrorCode, WorkbenchError
 from panoworkbench.pipeline import StitchPipeline
 from panoworkbench.report import canonical_report, compare_panorama_outputs
 
@@ -138,3 +142,54 @@ def test_new_run_removes_stale_completion_before_pausing(
     assert not (output / "panorama.png").exists()
     run_state = json.loads((output / "run_state.json").read_text())
     assert run_state["status"] == "paused"
+
+
+def _fail_pair(monkeypatch: pytest.MonkeyPatch, pair_id: str) -> None:
+    original = pipeline_module.estimate_homography
+
+    def forced_failure(*args, **kwargs):
+        if str(kwargs.get("pair_key", "")).startswith(f"{pair_id}|"):
+            raise WorkbenchError(
+                ErrorCode.HOMO,
+                "forced pair failure for regression coverage",
+                field="homography",
+            )
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(pipeline_module, "estimate_homography", forced_failure)
+
+
+def test_failed_pair_makes_all_pair_truth_not_ok(
+    sample_dataset, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _fail_pair(monkeypatch, "P0002_1_2")
+    result = StitchPipeline(
+        sample_dataset, PipelineConfig(), tmp_path / "failed-pair", resume=False
+    ).run()
+    assert result.status == "completed"
+    pairs = {pair["pair_id"]: pair for pair in result.report["pairs"]}
+    assert pairs["P0002_1_2"]["state"] == "failed"
+    assert result.report["registration"]["all_pair_truth_ok"] is False
+
+
+def test_verify_fails_when_any_pair_failed(
+    sample_root: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _fail_pair(monkeypatch, "P0002_1_2")
+    output_root = tmp_path / "verify"
+    code = main(
+        [
+            "verify",
+            "--dataset",
+            str(sample_root),
+            "--output-root",
+            str(output_root),
+            "--interrupt-after",
+            "1",
+        ]
+    )
+    report = json.loads((output_root / "verification.json").read_text())
+    assert code == 1
+    assert report["status"] == "failed"
+    assert report["failed_pairs"]["realtime"] == ["P0002_1_2"]
+    assert report["registration"]["all_pair_truth_ok"] is False
