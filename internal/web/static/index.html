@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mocap Retarget Diagnostics</title>
+  <style>
+    :root {
+      --bg:#091018; --panel:#111c28; --panel2:#152434; --line:#2a4054;
+      --text:#e8f1f7; --muted:#86a0b4; --cyan:#51d6ff; --green:#68e0a2;
+      --amber:#ffc35c; --red:#ff6b7a; --violet:#b49aff;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; background:
+        radial-gradient(circle at 12% 0%, #123049 0, transparent 28rem),
+        radial-gradient(circle at 88% 8%, #201c42 0, transparent 24rem), var(--bg);
+      color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+      min-height:100vh;
+    }
+    header {
+      padding:18px 24px 14px; display:flex; align-items:center; gap:18px;
+      border-bottom:1px solid var(--line); background:rgba(9,16,24,.82);
+      position:sticky; top:0; z-index:8; backdrop-filter:blur(14px);
+    }
+    .brand { font-weight:800; letter-spacing:.08em; font-size:15px; }
+    .brand span { color:var(--cyan); }
+    .ids { color:var(--muted); font-size:13px; display:flex; gap:14px; flex-wrap:wrap; }
+    .mode {
+      margin-left:auto; border:1px solid var(--amber); color:#201402;
+      background:linear-gradient(135deg,#ffd980,#ffaf3f); padding:8px 14px;
+      border-radius:999px; font-size:12px; font-weight:900; letter-spacing:.08em;
+      box-shadow:0 0 24px #ffaf3f55;
+    }
+    .mode.exact { border-color:var(--green); background:linear-gradient(135deg,#8af0b8,#44c989); box-shadow:0 0 24px #44c98933; }
+    .layout { display:grid; grid-template-columns:minmax(280px,340px) minmax(430px,1fr) minmax(300px,360px); gap:14px; padding:14px; }
+    .panel {
+      background:linear-gradient(180deg,rgba(24,38,53,.96),rgba(15,27,39,.96));
+      border:1px solid var(--line); border-radius:14px; padding:14px;
+      box-shadow:0 14px 36px #00000030;
+    }
+    .panel h2 { margin:0 0 10px; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; }
+    .stack { display:flex; flex-direction:column; gap:14px; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 14px 2px; }
+    .metric { background:#0c1722; border:1px solid var(--line); border-radius:12px; padding:11px 12px; }
+    .metric b { display:block; font-size:20px; color:var(--cyan); margin-bottom:3px; font-variant-numeric:tabular-nums; }
+    .metric small { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
+    .canvas-wrap { position:relative; background:#07111b; border:1px solid #1d3346; border-radius:11px; overflow:hidden; }
+    canvas { display:block; width:100%; }
+    #stage { height:440px; }
+    #skeleton { height:330px; }
+    .toolbar { display:flex; gap:8px; align-items:center; margin-top:10px; }
+    button, select, input {
+      font:inherit; color:var(--text); background:#173047; border:1px solid #31526e;
+      border-radius:8px; padding:7px 10px;
+    }
+    button { cursor:pointer; font-weight:700; font-size:12px; }
+    button:hover { border-color:var(--cyan); background:#1d3d58; }
+    button.primary { background:#0d6680; border-color:var(--cyan); }
+    input[type=range] { flex:1; padding:0; accent-color:var(--cyan); }
+    .badge { display:inline-flex; align-items:center; gap:6px; border:1px solid #34516a; border-radius:7px; padding:3px 7px; font-size:10px; color:var(--muted); }
+    .badge.ok { border-color:#287154; color:var(--green); background:#0b2a20; }
+    .badge.warn { border-color:#7b5d27; color:var(--amber); background:#2a210e; }
+    .badge.bad { border-color:#7d3140; color:var(--red); background:#2c1118; }
+    .frame-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .frame-title strong { font-size:16px; }
+    .kv { display:grid; grid-template-columns:1fr auto; gap:6px 12px; font-size:12px; }
+    .kv span:nth-child(odd) { color:var(--muted); }
+    .kv span:nth-child(even) { font-variant-numeric:tabular-nums; text-align:right; }
+    .joint-list { max-height:242px; overflow:auto; margin:2px -4px 0; }
+    .joint-row { display:grid; grid-template-columns:1fr 74px; align-items:center; gap:8px; padding:5px 4px; border-bottom:1px solid #1d3042; font-size:11px; }
+    .joint-row .bar { height:5px; background:#193247; border-radius:4px; overflow:hidden; }
+    .joint-row .bar i { display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--amber),var(--red)); }
+    .timeline { height:42px; position:relative; background:#07111b; border:1px solid #1d3346; border-radius:8px; overflow:hidden; cursor:crosshair; }
+    .timeline .frame-line { position:absolute; top:0; bottom:0; width:1px; background:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+    .timeline .span { position:absolute; height:9px; background:var(--cyan); opacity:.75; border-radius:4px; }
+    .timeline .span.r { background:var(--violet); }
+    .heat { display:flex; gap:4px; align-items:stretch; margin-top:9px; }
+    .heat-row { display:grid; grid-template-columns:108px 1fr; gap:8px; align-items:center; margin-top:6px; }
+    .heat-row span { color:var(--muted); font:10px ui-monospace,monospace; }
+    .heat canvas { height:26px; border-radius:5px; border:1px solid #1d3346; }
+    .legend { display:flex; justify-content:space-between; color:var(--muted); font-size:10px; margin-top:4px; }
+    .decisions { max-height:210px; overflow:auto; }
+    .decision { border-left:2px solid var(--amber); padding:5px 8px; margin:5px 0; background:#1c1b12; border-radius:0 6px 6px 0; font-size:11px; }
+    .decision b { color:var(--amber); }
+    .decision small { color:var(--muted); display:block; margin-top:2px; }
+    .tree { max-height:230px; overflow:auto; font-family:ui-monospace,Consolas,monospace; font-size:11px; line-height:1.75; }
+    .tree div { white-space:nowrap; color:#bcd3e2; }
+    .tree em { color:var(--muted); font-style:normal; }
+    .paths { display:grid; gap:6px; }
+    .path { display:grid; grid-template-columns:1fr auto; gap:6px; font-size:11px; padding:6px 8px; background:#0d1924; border-radius:6px; }
+    .path span:first-child { color:var(--muted); }
+    .reason { color:var(--muted); font-size:11px; line-height:1.55; border-top:1px solid #1d3042; padding-top:8px; margin-top:8px; }
+    .reason b { color:var(--text); }
+    .unmapped { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+    .unmapped span { font-size:10px; color:var(--amber); border:1px solid #715a2c; border-radius:999px; padding:2px 7px; }
+    footer { padding:0 18px 20px; color:#587187; font-size:10px; text-align:right; }
+    .toast { position:fixed; right:18px; bottom:18px; background:#142535; border:1px solid var(--cyan); color:var(--text); padding:10px 14px; border-radius:10px; box-shadow:0 12px 30px #0008; display:none; z-index:20; font-size:12px; }
+    @media (max-width:1180px) {
+      .layout { grid-template-columns:300px 1fr; }
+      .layout > .panel:last-child { grid-column:1 / -1; }
+    }
+    @media (max-width:760px) {
+      .layout { grid-template-columns:1fr; }
+      .metrics { grid-template-columns:repeat(2,1fr); }
+      header { align-items:flex-start; flex-wrap:wrap; }
+      .mode { margin-left:0; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="brand">MOCAP <span>RETARGET</span> / CONSTRAINT WORKBENCH</div>
+    <div class="ids" id="ids">loading…</div>
+  </div>
+  <div class="mode" id="modeBadge">AUTO / —</div>
+</header>
+
+<div class="metrics" id="metrics"></div>
+
+<main class="layout">
+  <section class="stack">
+    <div class="panel">
+      <h2>Skeleton hierarchy &amp; joint state</h2>
+      <div class="canvas-wrap"><canvas id="skeleton"></canvas></div>
+      <div class="reason" id="mappingSummary"></div>
+      <div class="unmapped" id="unmapped"></div>
+      <div class="tree" id="tree" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <div class="panel">
+      <h2>Frame inspector</h2>
+      <div class="frame-title">
+        <strong id="frameLabel">Frame —</strong>
+        <span class="badge ok" id="frameState">committed</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="stage"></canvas></div>
+      <div class="toolbar">
+        <button id="prev">◀</button>
+        <input type="range" id="slider" min="0" max="0" value="0">
+        <button id="next">▶</button>
+        <button id="play" class="primary">Play</button>
+        <button id="retry">Retry frame</button>
+        <a id="export" href="/api/export"><button>Export</button></a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Contact timeline</h2>
+      <div class="timeline" id="timeline"></div>
+      <div class="legend"><span>frame 0</span><span>click / drag to seek</span><span id="lastFrame"></span></div>
+      <h2 style="margin-top:14px">Path difference heatmap</h2>
+      <div id="heatmaps"></div>
+      <div class="legend"><span>equal</span><span>first divergent field</span><span>different</span></div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <div class="panel">
+      <h2>Constraint telemetry</h2>
+      <div class="kv" id="stats"></div>
+      <h2 style="margin-top:16px">Joint angles</h2>
+      <div class="joint-list" id="joints"></div>
+    </div>
+    <div class="panel">
+      <h2>Trade-off decisions</h2>
+      <div class="decisions" id="decisions"></div>
+    </div>
+    <div class="panel">
+      <h2>Three-path consistency</h2>
+      <div class="paths" id="paths"></div>
+      <div class="reason" id="adaptiveReason"></div>
+    </div>
+  </section>
+</main>
+<footer id="footer">Deterministic local sample · no external services</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const state = { data:null, frame:0, playing:false, timer:null };
+const palette = { cyan:'#51d6ff', green:'#68e0a2', amber:'#ffc35c', red:'#ff6b7a', violet:'#b49aff', muted:'#86a0b4' };
+
+async function boot() {
+  const response = await fetch('/api/state');
+  if (!response.ok) throw new Error('state request failed');
+  state.data = await response.json();
+  state.frame = 0;
+  renderStatic();
+  selectFrame(0);
+  requestAnimationFrame(() => drawAll());
+}
+
+function renderStatic() {
+  const d = state.data;
+  $('ids').innerHTML = `<span>clip <b style="color:#d8ecfa">${esc(d.clip_id)}</b></span>
+    <span>target <b style="color:#d8ecfa">${esc(d.target_id)}</b></span>
+    <span>${d.skeleton.length} joints · ${d.frames.length} frames · ${d.fps} fps</span>
+    <span>${esc(d.algorithm_version)}</span>`;
+  const auto = d.plan.requested_mode === 'auto' || d.plan.requested_mode === 'preview';
+  const mode = auto ? `AUTO → ${d.mode.toUpperCase()}` : (d.mode === 'sampled' ? 'SAMPLED / EXPLICIT' : 'EXACT / PER-FRAME');
+  $('modeBadge').textContent = mode;
+  $('modeBadge').className = 'mode ' + (d.mode === 'sampled' ? '' : 'exact');
+  $('slider').max = Math.max(0, d.frames.length - 1);
+  $('lastFrame').textContent = `frame ${Math.max(0,d.frames.length-1)}`;
+  $('metrics').innerHTML = [
+    metric(d.frames.length, 'frames'),
+    metric(d.summary.max_residual.toFixed(4), 'max residual / tol'),
+    metric(d.summary.max_contact_drift.toFixed(6), 'max foot drift m'),
+    metric(d.summary.decision_count, 'trade-off decisions')
+  ].join('');
+  renderTree();
+  renderTimeline();
+  renderHeatmaps();
+  renderPaths();
+  renderAdaptiveReason();
+  $('mappingSummary').innerHTML = `<b>Mapping trace</b> · ${d.mapping.rules.length} target rules · root scale ${d.mapping.root_scale.toFixed(4)} · source height ${d.mapping.source_height.toFixed(3)} m → target ${d.mapping.target_height.toFixed(3)} m`;
+  $('unmapped').innerHTML = d.mapping.unmapped_sources.map(x => `<span title="${esc(x.reason)}">unmapped: ${esc(x.joint)}</span>`).join('');
+}
+
+function metric(value, label) {
+  return `<div class="metric"><b>${esc(String(value))}</b><small>${esc(label)}</small></div>`;
+}
+
+function renderTree() {
+  const d = state.data;
+  const children = {};
+  d.skeleton.forEach(n => { (children[n.parent || '__root'] ||= []).push(n); });
+  let html = '';
+  const walk = (parent, depth) => {
+    (children[parent] || []).forEach(node => {
+      const pad = '&nbsp;'.repeat(depth * 3);
+      const branch = depth ? '└─ ' : '● ';
+      html += `<div>${pad}${branch}${esc(node.name)} <em>${node.offset.x.toFixed(2)},${node.offset.y.toFixed(2)},${node.offset.z.toFixed(2)}</em></div>`;
+      walk(node.name, depth + 1);
+    });
+  };
+  walk('__root', 0);
+  $('tree').innerHTML = html;
+}
+
+function renderTimeline() {
+  const d = state.data;
+  const total = Math.max(1, d.frames.length - 1);
+  let html = '';
+  const feet = Object.keys(d.contact_spans).sort();
+  const y = {foot_l:3, foot_r:22};
+  feet.forEach((foot, i) => {
+    (d.contact_spans[foot] || []).forEach(span => {
+      const left = 100 * span.start / total;
+      const width = Math.max(.35, 100 * (span.end - span.start + 1) / total);
+      html += `<div class="span ${i%2?'r':''}" style="left:${left}%;width:${width}%;top:${4+i*16}px" title="${esc(foot)} ${span.start}-${span.end}"></div>`;
+    });
+  });
+  html += `<div class="frame-line" id="timelineCursor" style="left:0%"></div>`;
+  $('timeline').innerHTML = html;
+  const seek = (event) => {
+    const rect = $('timeline').getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    selectFrame(Math.round(ratio * total));
+  };
+  $('timeline').onclick = seek;
+  $('timeline').onpointermove = event => { if (event.buttons) seek(event); };
+}
+
+function renderHeatmaps() {
+  if (!state.data.report) { $('heatmaps').innerHTML = '<span style="color:var(--muted);font-size:11px">no comparison report</span>'; return; }
+  $('heatmaps').innerHTML = state.data.report.comparisons.map((c, i) => `<div class="heat-row"><span>${esc(c.name)}</span><div class="heat"><canvas id="heat${i}" width="240" height="26" title="${esc(c.name)}"></canvas></div></div>`).join('');
+  state.data.report.comparisons.forEach((c, i) => {
+    const canvas = $('heat' + i);
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width / Math.max(1, c.heatmap.length);
+    c.heatmap.forEach((v, f) => {
+      ctx.fillStyle = heatColor(v);
+      ctx.fillRect(f*w,0,Math.max(1,w+0.4),canvas.height);
+    });
+  });
+}
+
+function heatColor(v) {
+  if (v < 1e-12) return '#193246';
+  const t = Math.min(1, Math.max(0, v));
+  const r = Math.round(40 + 215*t), g = Math.round(120 - 70*t), b = Math.round(190 - 120*t);
+  return `rgb(${r},${g},${b})`;
+}
+
+function renderPaths() {
+  if (!state.data.report) return;
+  $('paths').innerHTML = state.data.report.comparisons.map(c => {
+    const badge = c.equal ? '<span class="badge ok">MATCH</span>' : `<span class="badge bad">DIFF F${c.first_diff?.frame}</span>`;
+    return `<div class="path"><span>${esc(c.name)}</span>${badge}</div>`;
+  }).join('') + `<div class="path"><span>snapshot</span><span class="badge ${state.data.report.resume_action==='resumed'?'ok':'warn'}">${esc(state.data.report.resume_action)}</span></div>`;
+}
+
+function renderAdaptiveReason() {
+  const d = state.data;
+  const audit = d.scale_audit ? `<br><b>Scale audit:</b> contact Δ ${d.scale_audit.contact_delta}, root start Δ ${d.scale_audit.root_start_delta.toFixed(8)}, root end Δ ${d.scale_audit.root_end_delta.toFixed(8)} → ${d.scale_audit.within_tolerance?'within tolerance':'OUT OF TOLERANCE'}` : '';
+  $('adaptiveReason').innerHTML = `<b>Plan:</b> ${esc(d.plan.strategy)} · stride ${d.plan.stride} · solve ${d.plan.solve_frames}/${d.plan.frame_count} · smooth ${d.plan.smooth_window}<br>${d.plan.reason.map(esc).join('<br>')}${audit}`;
+}
+
+function selectFrame(frame) {
+  if (!state.data) return;
+  state.frame = Math.max(0, Math.min(state.data.frames.length - 1, frame));
+  const f = state.data.frames[state.frame];
+  $('slider').value = state.frame;
+  $('frameLabel').textContent = `Frame ${String(f.frame).padStart(3,'0')} / ${state.data.frames.length-1}`;
+  $('frameState').textContent = f.state;
+  $('frameState').className = 'badge ' + (f.state === 'committed' ? 'ok' : f.state === 'failed' ? 'bad' : 'warn');
+  $('stats').innerHTML = [
+    ['iterations', f.stats.iterations],
+    ['interpolated', f.stats.interpolated ? 'yes' : 'no'],
+    ['angle violation', f.stats.angle_violation_deg.toFixed(6) + '°'],
+    ['reach violation', f.stats.reach_violation.toFixed(6) + ' m'],
+    ['contact drift', f.stats.contact_drift.toFixed(9) + ' m'],
+    ['residual / tolerance', f.stats.residual.toFixed(5)],
+    ['contacts', f.contacts.length ? f.contacts.join(', ') : '—'],
+    ['root', `${f.root_translation.x.toFixed(3)}, ${f.root_translation.y.toFixed(3)}, ${f.root_translation.z.toFixed(3)}`]
+  ].map(([k,v]) => `<span>${k}</span><span>${esc(String(v))}</span>`).join('');
+  renderJointList();
+  renderDecisions();
+  const cursor = $('timelineCursor');
+  if (cursor) cursor.style.left = `${100 * state.frame / Math.max(1,state.data.frames.length-1)}%`;
+  drawAll();
+}
+
+function renderJointList() {
+  const d = state.data, f = d.frames[state.frame];
+  $('joints').innerHTML = d.skeleton.map((node, i) => {
+    const q = f.rotations[i];
+    const angle = 2 * Math.acos(Math.min(1, Math.abs(q.w))) * 180 / Math.PI;
+    const pct = Math.min(100, 100 * angle / node.max_angle_deg);
+    return `<div class="joint-row"><span>${esc(node.name)} <em style="color:var(--muted);font-style:normal">${angle.toFixed(1)}° / ${node.max_angle_deg}°</em></span><span class="bar"><i style="width:${pct}%"></i></span></div>`;
+  }).join('');
+}
+
+function renderDecisions() {
+  const f = state.data.frames[state.frame];
+  if (!f.decisions.length) { $('decisions').innerHTML = '<div style="color:var(--muted);font-size:11px">No trade-off recorded on this frame.</div>'; return; }
+  $('decisions').innerHTML = f.decisions.map(x => `<div class="decision"><b>${esc(x.constraint)}</b> · ${esc(x.action)}<small>${esc(x.reason)}${x.joint ? ' · '+esc(x.joint) : ''}${x.before !== undefined ? ' · '+Number(x.before).toFixed(6)+' → '+Number(x.after).toFixed(6) : ''}</small></div>`).join('');
+}
+
+function drawAll() {
+  drawSkeleton();
+  drawStage();
+}
+
+function drawSkeleton() {
+  const canvas = $('skeleton');
+  fit(canvas);
+  const ctx = canvas.getContext('2d');
+  const d = state.data, f = d.frames[state.frame];
+  if (!f) return;
+  const all = f.world;
+  const xs = all.map(v=>v.x), ys = all.map(v=>v.y);
+  const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
+  const pad=30, scale=Math.min((canvas.width-2*pad)/Math.max(.1,maxX-minX),(canvas.height-2*pad)/Math.max(.1,maxY-minY));
+  const map=(v)=>({x:pad+(v.x-minX)*scale, y:canvas.height-pad-(v.y-minY)*scale});
+  d.skeleton.forEach((node,i)=>{
+    if (!node.parent) return;
+    const pi = d.skeleton.findIndex(n=>n.name===node.parent);
+    const a=map(f.world[pi]), b=map(f.world[i]);
+    ctx.strokeStyle='#416985'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+  });
+  d.skeleton.forEach((node,i)=>{
+    const p=map(f.world[i]);
+    const contact = (node.name.endsWith('foot_l') || node.name==='toe_l') && f.contacts.includes('foot_l') ||
+                    (node.name.endsWith('foot_r') || node.name==='toe_r') && f.contacts.includes('foot_r');
+    const q=f.rotations[i];
+    const angle=2*Math.acos(Math.min(1,Math.abs(q.w)))*180/Math.PI;
+    const ratio=Math.min(1,angle/node.max_angle_deg);
+    ctx.fillStyle=contact?palette.green:ratio>.9?palette.red:node.end_effector?palette.amber:palette.cyan;
+    ctx.beginPath(); ctx.arc(p.x,p.y,node.end_effector?5:3.5,0,Math.PI*2); ctx.fill();
+    if (node.end_effector || ratio>.8 || node.name==='pelvis') {
+      ctx.fillStyle='#b8ccda'; ctx.font='10px ui-monospace'; ctx.fillText(node.name,p.x+6,p.y-4);
+    }
+  });
+  ctx.fillStyle=palette.muted; ctx.font='10px ui-monospace';
+  ctx.fillText('green = support · red = near limit · amber = end effector', pad, 16);
+}
+
+function drawStage() {
+  const canvas = $('stage');
+  fit(canvas);
+  const ctx = canvas.getContext('2d');
+  const d=state.data, f=d.frames[state.frame];
+  if (!f) return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawGrid(ctx,canvas);
+  const all=f.world;
+  const minX=Math.min(...all.map(v=>v.x)), maxX=Math.max(...all.map(v=>v.x));
+  const minY=Math.min(...all.map(v=>v.y)), maxY=Math.max(...all.map(v=>v.y));
+  const minZ=Math.min(...all.map(v=>v.z)), maxZ=Math.max(...all.map(v=>v.z));
+  const pad=45;
+  const scale=Math.min((canvas.width-2*pad)/Math.max(.2,maxX-minX), (canvas.height-2*pad)/Math.max(.2,maxY-minY));
+  const map=(v)=>{
+    const depth=(v.z-minZ)/Math.max(.2,maxZ-minZ);
+    return {x:canvas.width/2+(v.x-(minX+maxX)/2)*scale*1.4+depth*34, y:canvas.height-pad-(v.y-minY)*scale-depth*10};
+  };
+  d.skeleton.forEach((node,i)=>{
+    if(!node.parent) return;
+    const pi=d.skeleton.findIndex(n=>n.name===node.parent);
+    const a=map(all[pi]), b=map(all[i]);
+    const contact = node.name.includes('foot') || node.name.includes('toe');
+    ctx.strokeStyle=contact?'#396b61':'#36617f'; ctx.lineWidth=contact?3:2;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+  });
+  d.skeleton.forEach((node,i)=>{
+    const p=map(all[i]);
+    const q=f.rotations[i], angle=2*Math.acos(Math.min(1,Math.abs(q.w)))*180/Math.PI;
+    const ratio=Math.min(1,angle/node.max_angle_deg);
+    ctx.fillStyle=ratio>.9?palette.red:node.end_effector?palette.amber:palette.cyan;
+    ctx.beginPath();ctx.arc(p.x,p.y,node.end_effector?4.5:3,0,Math.PI*2);ctx.fill();
+  });
+  ctx.fillStyle=palette.muted;ctx.font='11px ui-monospace';
+  ctx.fillText(`frame ${f.frame}`,16,20);
+  ctx.fillText(`residual ${f.stats.residual.toFixed(4)}`,16,36);
+  if(f.contacts.length){
+    ctx.fillStyle=palette.green;ctx.fillText(`support: ${f.contacts.join(', ')}`,16,52);
+  }
+}
+
+function drawGrid(ctx,canvas) {
+  const horizon=canvas.height*.75;
+  ctx.strokeStyle='#163044';ctx.lineWidth=1;
+  for(let i=0;i<9;i++){
+    const y=horizon+(canvas.height-horizon)*(i/8);
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();
+  }
+  for(let i=-5;i<=5;i++){
+    ctx.beginPath();ctx.moveTo(canvas.width/2+i*45,horizon);ctx.lineTo(canvas.width/2+i*120,canvas.height);ctx.stroke();
+  }
+}
+
+function fit(canvas) {
+  const rect=canvas.getBoundingClientRect();
+  const dpr=window.devicePixelRatio||1;
+  const w=Math.round(rect.width*dpr), h=Math.round(rect.height*dpr);
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+}
+
+function togglePlay() {
+  state.playing=!state.playing;
+  $('play').textContent=state.playing?'Pause':'Play';
+  if(state.playing){
+    state.timer=setInterval(()=>{
+      selectFrame(state.frame+1>=state.data.frames.length?0:state.frame+1);
+    },1000/state.data.fps);
+  } else {
+    clearInterval(state.timer);
+  }
+}
+
+async function retryFrame() {
+  const response=await fetch('/api/retry',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({frame:state.frame})});
+  const result=await response.json();
+  toast(result.ok ? `Frame ${state.frame} retry: ${result.equal?'deterministic MATCH':'DIFF'}` : `Retry failed: ${result.error||'unknown'}`);
+}
+
+function toast(message) {
+  const el=$('toast'); el.textContent=message; el.style.display='block';
+  clearTimeout(el._timer); el._timer=setTimeout(()=>el.style.display='none',3200);
+}
+
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+$('slider').oninput=e=>selectFrame(Number(e.target.value));
+$('prev').onclick=()=>selectFrame(state.frame-1);
+$('next').onclick=()=>selectFrame(state.frame+1);
+$('play').onclick=togglePlay;
+$('retry').onclick=retryFrame;
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'){e.preventDefault();selectFrame(state.frame-1);}
+  if(e.key==='ArrowRight'){e.preventDefault();selectFrame(state.frame+1);}
+  if(e.key===' '){e.preventDefault();togglePlay();}
+});
+window.addEventListener('resize',()=>requestAnimationFrame(drawAll));
+boot().catch(err=>{document.body.innerHTML='<pre style="color:#ff6b7a;padding:20px">'+esc(err.stack||err)+'</pre>';});
+</script>
+</body>
+</html>
