@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from edgepipe.config import PipelineConfig
+from edgepipe.engine import PipelineEngine
 from edgepipe.errors import EdgePipeError, ErrorCode
 
 
@@ -60,6 +61,41 @@ def test_image_dtype_and_channel_validation():
     with pytest.raises(EdgePipeError) as caught:
         config.validate_image(np.zeros((8, 8, 2), dtype=np.uint8))
     assert caught.value.field == "image.shape"
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        (0, 8),
+        (8, 0),
+        (0, 0),
+        (0, 8, 1),
+        (8, 0, 1),
+        (0, 8, 3),
+        (8, 0, 3),
+    ],
+)
+def test_empty_image_dimensions_return_para(shape):
+    config = PipelineConfig()
+    with pytest.raises(EdgePipeError) as caught:
+        config.validate_image(np.zeros(shape, dtype=np.uint8))
+    assert caught.value.code == ErrorCode.PARA
+    assert caught.value.field == "image.shape"
+    assert caught.value.details["shape"] == list(shape)
+
+
+@pytest.mark.parametrize("shape", [(0, 8), (8, 0), (0, 8, 3), (8, 0, 3)])
+def test_engine_run_rejects_empty_image_before_creating_checkpoints(
+    tmp_path, shape
+):
+    checkpoint_dir = tmp_path / "checkpoints"
+    engine = PipelineEngine(PipelineConfig(), checkpoint_dir)
+    with pytest.raises(EdgePipeError) as caught:
+        engine.run(np.zeros(shape, dtype=np.uint8), mode="full")
+    assert caught.value.code == ErrorCode.PARA
+    assert caught.value.field == "image.shape"
+    assert caught.value.details["shape"] == list(shape)
+    assert not checkpoint_dir.exists()
 
 
 def test_unknown_mapping_field_returns_para():

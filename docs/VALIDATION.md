@@ -1,6 +1,6 @@
 # 实际验证记录
 
-- 生成时间（UTC）：`2026-11-22T16:53:39.734349+00:00`
+- 生成时间（UTC）：`2026-11-22T17:09:28.938458+00:00`
 - 算法版本：`edgepipe-1.0.0`
 - Python：`3.11.18 (main, Nov 11 2026, 00:16:37) [Clang 23.1.3 ]`
 - NumPy/OpenCV：`2.4.6` / `5.1.0`
@@ -19,18 +19,18 @@
 
 | 样本 | 路径 | 复用提交 | 新提交 | 耗时(s) |
 |---|---|---:|---:|---:|
-| `gray_lines_lowcontrast_96x128` | `full` | 0 | 30 | 0.262492 |
-| `gray_lines_lowcontrast_96x128` | `incremental` | 7 | 23 | 0.154566 |
-| `gray_lines_lowcontrast_96x128` | `resume` | 7 | 23 | 0.137488 |
-| `gray_noisy_131x97` | `full` | 0 | 45 | 0.242408 |
-| `gray_noisy_131x97` | `incremental` | 7 | 38 | 0.236584 |
-| `gray_noisy_131x97` | `resume` | 7 | 38 | 0.214500 |
-| `color_shapes_120x160` | `full` | 0 | 60 | 0.469949 |
-| `color_shapes_120x160` | `incremental` | 7 | 53 | 0.435015 |
-| `color_shapes_120x160` | `resume` | 7 | 53 | 0.432731 |
-| `color_lowcontrast_150x110` | `full` | 0 | 60 | 0.532868 |
-| `color_lowcontrast_150x110` | `incremental` | 7 | 53 | 0.526463 |
-| `color_lowcontrast_150x110` | `resume` | 7 | 53 | 0.579130 |
+| `gray_lines_lowcontrast_96x128` | `full` | 0 | 30 | 0.211981 |
+| `gray_lines_lowcontrast_96x128` | `incremental` | 7 | 23 | 0.154173 |
+| `gray_lines_lowcontrast_96x128` | `resume` | 7 | 23 | 0.150087 |
+| `gray_noisy_131x97` | `full` | 0 | 45 | 0.229244 |
+| `gray_noisy_131x97` | `incremental` | 7 | 38 | 0.205191 |
+| `gray_noisy_131x97` | `resume` | 7 | 38 | 0.207553 |
+| `color_shapes_120x160` | `full` | 0 | 60 | 0.434344 |
+| `color_shapes_120x160` | `incremental` | 7 | 53 | 0.384721 |
+| `color_shapes_120x160` | `resume` | 7 | 53 | 0.384332 |
+| `color_lowcontrast_150x110` | `full` | 0 | 60 | 0.509876 |
+| `color_lowcontrast_150x110` | `incremental` | 7 | 53 | 0.619547 |
+| `color_lowcontrast_150x110` | `resume` | 7 | 53 | 0.491677 |
 
 ## 几何真值统计
 

@@ -211,16 +211,22 @@ class PipelineConfig:
                 field="image.dtype",
                 details={"dtype": str(image.dtype)},
             )
-        if image.ndim == 2:
-            return
-        if image.ndim == 3 and image.shape[2] in (1, 3):
-            return
-        raise EdgePipeError(
-            ErrorCode.PARA,
-            "图像必须是 HxW 单通道或 HxWx1/HxWx3 三通道",
-            field="image.shape",
-            details={"shape": list(image.shape)},
-        )
+        if image.ndim != 2 and not (
+            image.ndim == 3 and image.shape[2] in (1, 3)
+        ):
+            raise EdgePipeError(
+                ErrorCode.PARA,
+                "图像必须是 HxW 单通道或 HxWx1/HxWx3 三通道",
+                field="image.shape",
+                details={"shape": list(image.shape)},
+            )
+        if image.shape[0] == 0 or image.shape[1] == 0:
+            raise EdgePipeError(
+                ErrorCode.PARA,
+                "图像高度和宽度必须大于 0",
+                field="image.shape",
+                details={"shape": list(image.shape)},
+            )
 
 
 def _finite_number(value: Any, field_name: str) -> float:
