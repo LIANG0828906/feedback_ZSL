@@ -11,3 +11,18 @@ node_modules/
 .venv/
 venv/
 __pycache__/
+# Local tooling and build products
+.tools/
+desktop/build/
+desktop/desktop
+desktop/frontend/wailsjs/
+
+# Runtime checkpoints and logs
+artifacts/*.db
+artifacts/*.db-wal
+artifacts/*.db-shm
+*.log
+
+# Go test and coverage output
+*.test
+coverage.out

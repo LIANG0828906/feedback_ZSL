@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tactical Formation Workbench</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">DETERMINISTIC TACTICAL LAB</div>
+      <h1>编队协同寻路 / 战术决策工作台</h1>
+    </div>
+    <div class="toolbar">
+      <button id="refreshBtn">刷新</button>
+      <button id="pauseBtn">暂停</button>
+      <button id="restartBtn">重启续跑</button>
+      <span id="statusPill" class="pill">连接中</span>
+    </div>
+  </header>
+
+  <div id="errorBanner" class="error-banner hidden"></div>
+
+  <main class="layout">
+    <section class="map-panel">
+      <div class="panel-head">
+        <div>
+          <span class="section-kicker">MAP / COST / PATHS</span>
+          <h2 id="mapTitle">战术栅格</h2>
+        </div>
+        <div class="legend">
+          <span><i class="swatch road"></i>道路</span>
+          <span><i class="swatch urban"></i>城区</span>
+          <span><i class="swatch marsh"></i>沼泽</span>
+          <span><i class="swatch blocked"></i>封锁</span>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="mapCanvas"></canvas>
+      </div>
+      <div class="edit-strip">
+        <div id="cellReadout">点击格子选择编辑目标</div>
+        <label>代价 <input id="costInput" type="number" min="1" max="1000000000" value="1"></label>
+        <button id="applyCostBtn">应用代价</button>
+        <label class="muted">Shift + 点击可快速切换所属封锁区域</label>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="card">
+        <div class="card-head">
+          <span class="section-kicker">RUNTIME</span>
+          <span id="modeBadge" class="badge">full</span>
+        </div>
+        <div class="metrics">
+          <div><b id="cacheHits">0</b><span>路径命中</span></div>
+          <div><b id="cacheMisses">0</b><span>路径重算</span></div>
+          <div><b id="reusedIntervals">0</b><span>区间复用</span></div>
+          <div><b id="commitSeq">0</b><span>提交序号</span></div>
+        </div>
+        <div class="kv"><span>地图哈希</span><code id="mapHash">-</code></div>
+        <div class="kv"><span>总耗时</span><code id="totalMicros">-</code></div>
+        <div class="kv"><span>算法版本</span><code id="algorithmVersion">-</code></div>
+      </section>
+
+      <section class="card grow">
+        <div class="card-head">
+          <span class="section-kicker">MEMBERS</span>
+          <span id="memberCount" class="badge">0</span>
+        </div>
+        <div id="memberList" class="member-list"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <span class="section-kicker">INVALIDATION</span>
+          <span id="invalidationCount" class="badge">0</span>
+        </div>
+        <div id="invalidationList" class="scroll-list"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <span class="section-kicker">LOCKDOWN REGIONS</span>
+        </div>
+        <div id="regionList" class="region-list"></div>
+      </section>
+    </aside>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
