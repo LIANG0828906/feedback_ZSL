@@ -70,6 +70,7 @@ class FrameScheduler:
         self.log: list[FrameRecord] = []
         self._last_input_frame = None
         self._correction_frame = None
+        self._correction_violations: list[int] = []
 
     def note_input(self, frame):
         self._last_input_frame = frame
@@ -81,11 +82,22 @@ class FrameScheduler:
     def decide(self, frame, tick, has_unacked_inputs):
         p = self.policy
         correction_pending = self._correction_frame is not None
+        correction_late = (
+            correction_pending
+            and frame - self._correction_frame > p.correction_window_frames
+        )
         recent_input = (
             self._last_input_frame is not None
             and frame - self._last_input_frame <= p.max_input_delay_frames
         )
-        if correction_pending and recent_input:
+        if correction_late:
+            # The authoritative correction was not displayed within
+            # ``correction_window_frames`` of its arrival: record the
+            # violation and force it on screen immediately.
+            mode = MODE_AUTHORITATIVE
+            reason = "correction_delayed_beyond_window"
+            self._correction_violations.append(self._correction_frame)
+        elif correction_pending and recent_input:
             mode = MODE_AUTHORITATIVE
             reason = "conflict:correction_priority(consistency>responsiveness)"
         elif correction_pending:
@@ -109,8 +121,12 @@ class FrameScheduler:
             r.frame
             for r in self.log
             if r.reason.startswith("conflict:")
-            or r.reason.startswith("correction_applied")
+            or r.reason.startswith("correction_")
         ]
+
+    def correction_delay_violations(self):
+        """Arrival frames of corrections shown after the allowed window."""
+        return list(self._correction_violations)
 
     def input_delay_violations(self, input_frames):
         """Inputs not reflected by a predicted frame within the bound."""

@@ -61,12 +61,17 @@ def _cmd_verify(args):
     runner.compare(realtime, resumed)
     runner.compare(realtime, replay)
 
-    truth = sample.truth
-    if truth["settlement"] != realtime.settlement:
-        raise SyncError("settlement does not match generated truth")
+    # Cross-check the run against the independently generated truth:
+    # key-tick authoritative states, per-client visible states, settlement.
+    runner.compare_truth(realtime, sample.truth)
 
     print("three-path consistency: OK (realtime == resumed == replay)")
+    print("truth check: OK (key states + client visible + settlement)")
     print(f"settlement: {realtime.settlement}")
+    input_violations = realtime.input_delay_violations or []
+    correction_violations = realtime.correction_delay_violations or []
+    print(f"input delay violations: {input_violations or 'none'}")
+    print(f"correction delay violations: {correction_violations or 'none'}")
     for cid, corr in realtime.corrections.items():
         total = sum(c.total for c in corr)
         print(f"client {cid}: rollbacks={len(corr)} "

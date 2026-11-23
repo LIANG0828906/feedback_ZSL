@@ -3,12 +3,16 @@
 本仓库已实现下述任务。快速开始：
 
 ```bash
-python3 -m pip install -r requirements.txt
-python3 -m syncdemo generate --out sample     # 确定性样本（默认种子 20261123）
-python3 -m syncdemo verify --sample sample    # 实时/断点恢复/重放三路径校验
-python3 -m syncdemo demo --sample sample      # 可交互同步演示（pygame）
-python3 -m pytest tests/ -q                   # 测试套件，覆盖全部异常码
+python3 -m venv .venv                          # 工作区本地环境（或 uv venv .venv）
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m syncdemo generate --out sample     # 确定性样本（默认种子 20261123）
+.venv/bin/python -m syncdemo verify --sample sample    # 三路径一致 + 独立真值校验
+.venv/bin/python -m syncdemo demo --sample sample      # 可交互同步演示（pygame）
+.venv/bin/python -m pytest tests/ -q                   # 测试套件，覆盖全部异常码
 ```
+
+所有依赖安装进工作区本地 `.venv` 后，上述启动与验证命令完全离线运行，
+不需要网络或外部服务。
 
 设计与实测验证结果见 [TECH_NOTES.md](TECH_NOTES.md)。
 

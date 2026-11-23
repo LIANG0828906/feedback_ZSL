@@ -66,6 +66,8 @@ class RunResult:
     corrections: dict             # cid -> [Correction]
     settlement: dict
     status: str = "ok"            # "ok" | "cancelled"
+    input_delay_violations: list = None      # input frames past the bound
+    correction_delay_violations: list = None  # corrections shown too late
 
 
 def _latency_table(client):
@@ -79,7 +81,8 @@ def _tier_at(table, tick, default=0):
     return table[max(earlier)] if earlier else default
 
 
-def _snapshot(tick, state, history, views, clients, inflight, scheduler):
+def _snapshot(tick, state, history, views, clients, inflight, scheduler,
+              input_frames):
     auth_core = {
         "tick": tick,
         "input_offset": tick,
@@ -103,6 +106,8 @@ def _snapshot(tick, state, history, views, clients, inflight, scheduler):
         "inflight": copy.deepcopy(inflight),
         "frame_log": [vars(r) for r in scheduler.log],
         "last_input_frame": scheduler._last_input_frame,
+        "correction_violations": scheduler.correction_delay_violations(),
+        "input_frames": list(input_frames),
     }
 
 
@@ -141,6 +146,7 @@ def run(sample, rcfg: RunConfig | None = None, ecfg: engine.EngineConfig | None 
     scheduler = FrameScheduler(rcfg.frame_policy)
     inflight = {cid: [] for cid in clients}   # cid -> [(deliver_tick, state)]
     views = {cid: [] for cid in clients}
+    input_frames = []               # render frames with primary-client input
     frame_no = 0
     start_tick = 0
 
@@ -158,6 +164,10 @@ def run(sample, rcfg: RunConfig | None = None, ecfg: engine.EngineConfig | None 
             scheduler.log = [FrameRecord(**r) for r in snap["frame_log"]]
             frame_no = len(scheduler.log)
             scheduler._last_input_frame = snap.get("last_input_frame")
+            scheduler._correction_violations = list(
+                snap.get("correction_violations", [])
+            )
+            input_frames = list(snap.get("input_frames", []))
         else:
             # metadata mismatch -> whole store discarded -> full recompute
             state = engine.initial_state(sample.units)
@@ -187,6 +197,7 @@ def run(sample, rcfg: RunConfig | None = None, ecfg: engine.EngineConfig | None 
                     client.apply_local_input(tick, intent)
                     if cid == primary:
                         scheduler.note_input(frame_no)
+                        input_frames.append(frame_no)
 
         for cid, client in clients.items():
             tier = _tier_at(latency[cid], tick) + latency_offset.get(cid, 0)
@@ -210,7 +221,7 @@ def run(sample, rcfg: RunConfig | None = None, ecfg: engine.EngineConfig | None 
         if store is not None and tick % rcfg.window_ticks == 0:
             window = tick // rcfg.window_ticks
             snap = _snapshot(tick, state, history, views, clients, inflight,
-                             scheduler)
+                             scheduler, input_frames)
             if pool is not None:
                 pool.submit(window, _encode_and_commit, store, window, snap)
                 commits += 1
@@ -252,6 +263,8 @@ def run(sample, rcfg: RunConfig | None = None, ecfg: engine.EngineConfig | None 
         corrections={cid: c.corrections for cid, c in clients.items()},
         settlement=settlement,
         status=status,
+        input_delay_violations=scheduler.input_delay_violations(input_frames),
+        correction_delay_violations=scheduler.correction_delay_violations(),
     )
 
 
@@ -330,3 +343,45 @@ def compare(a: RunResult, b: RunResult):
             min(len(modes_a), len(modes_b)),
         )
         raise DivergeError("frame mode diverges", tick=idx, field="frame_mode")
+
+
+def compare_truth(result: RunResult, truth: dict):
+    """Check a run against the independently generated ground truth.
+
+    Compares the key-tick authoritative states, the per-client visible
+    states (``tick`` is the match tick after which the state was observed,
+    i.e. index ``tick - 1`` of the visible sequence) and the final
+    settlement.  Raises DivergeError (E_DIVERGE) localising the first
+    mismatch.
+    """
+    for entry in truth["key_states"]:
+        tick = entry["tick"]
+        if not 0 <= tick < len(result.states):
+            raise DivergeError(
+                "truth key tick outside run", tick=tick, field="tick"
+            )
+        _compare_units(tick, result.states[tick]["units"], entry["units"],
+                       "truth key-state")
+
+    for entry in truth["client_visible"]:
+        cid, tick = entry["client"], entry["tick"]
+        views = result.client_views.get(cid)
+        if views is None or not 1 <= tick <= len(views):
+            raise DivergeError(
+                f"truth client '{cid}' tick outside run",
+                tick=tick, unit=cid, field="client_view",
+            )
+        view = views[tick - 1]
+        if view is None:
+            raise DivergeError(
+                f"client '{cid}' visible state missing at truth tick",
+                tick=tick, unit=cid, field="client_view",
+            )
+        _compare_units(tick, view["units"], entry["units"],
+                       f"truth client '{cid}'")
+
+    if truth["settlement"] != result.settlement:
+        raise DivergeError(
+            "settlement does not match generated truth",
+            field="settlement", tick=result.settlement.get("tick"),
+        )

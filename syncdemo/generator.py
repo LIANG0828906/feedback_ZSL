@@ -9,8 +9,10 @@ Produces, from a fixed seed (configurable, default DEFAULT_SEED):
                      per-client expected visible states, final settlement
 * ``manifest.json``— seed, algorithm version, input stream fingerprint
 
-The ground truth is produced by running the authoritative engine and the
-client simulation itself, so it always agrees with the verifier.
+The ground truth is produced by :mod:`syncdemo.truth`, an independent
+reference implementation that shares neither the engine nor the client
+simulation code, so ``verify`` genuinely cross-checks both
+implementations against each other.
 """
 
 from __future__ import annotations
@@ -20,13 +22,13 @@ from pathlib import Path
 
 import numpy as np
 
-from . import engine, runner
+from . import engine, runner, truth
 from .checkpoint import content_hash
 
 DEFAULT_SEED = 20261123
 DEFAULT_TICKS = 120
 DEFAULT_PLAYERS = 4
-KEY_STATE_EVERY = 20
+KEY_STATE_EVERY = truth.KEY_STATE_EVERY
 
 
 def _gen_units(rng, num_players):
@@ -91,40 +93,6 @@ def _gen_clients(rng, units, ticks, frames_per_tick):
     return clients
 
 
-def _truth(sample_view, ecfg, rcfg):
-    result = runner.run_replay(sample_view, rcfg, ecfg)
-    key_states = [
-        {"tick": t, "units": result.states[t]["units"]}
-        for t in range(0, len(result.states), KEY_STATE_EVERY)
-    ]
-    if (len(result.states) - 1) % KEY_STATE_EVERY != 0:
-        key_states.append(
-            {"tick": len(result.states) - 1, "units": result.states[-1]["units"]}
-        )
-    client_visible = []
-    for cid, views in result.client_views.items():
-        for i in range(0, len(views), KEY_STATE_EVERY):
-            if views[i] is not None:
-                client_visible.append(
-                    {"client": cid, "tick": i, "units": views[i]["units"]}
-                )
-    return {
-        "key_states": key_states,
-        "client_visible": client_visible,
-        "settlement": result.settlement,
-    }
-
-
-class _SampleView:
-    """Minimal duck-typed Sample for truth generation before files exist."""
-
-    def __init__(self, seed, units, inputs, clients):
-        self.seed = seed
-        self.units = units
-        self.inputs = inputs
-        self.clients = clients
-
-
 def generate(outdir="sample", seed=DEFAULT_SEED, num_players=DEFAULT_PLAYERS,
              ticks=DEFAULT_TICKS, ecfg=None, rcfg=None):
     """Generate a deterministic sample directory.  Returns its path."""
@@ -136,9 +104,8 @@ def generate(outdir="sample", seed=DEFAULT_SEED, num_players=DEFAULT_PLAYERS,
     inputs = _gen_inputs(rng, units, ticks)
     clients = _gen_clients(rng, units, ticks, rcfg.frame_policy.frames_per_tick)
 
-    sample_view = _SampleView(seed=seed, units=units, inputs=inputs,
-                              clients=clients)
-    truth = _truth(sample_view, ecfg, rcfg)
+    truth_doc = truth.generate_truth(seed, units, inputs, clients, ecfg,
+                                     KEY_STATE_EVERY)
     fingerprint = content_hash({"ticks": inputs})
 
     outdir = Path(outdir)
@@ -147,7 +114,7 @@ def generate(outdir="sample", seed=DEFAULT_SEED, num_players=DEFAULT_PLAYERS,
     (outdir / "inputs.json").write_text(json.dumps({"ticks": inputs}, indent=1))
     (outdir / "clients.json").write_text(json.dumps({"clients": clients},
                                                     indent=1))
-    (outdir / "truth.json").write_text(json.dumps(truth, indent=1))
+    (outdir / "truth.json").write_text(json.dumps(truth_doc, indent=1))
     manifest = {
         "seed": seed,
         "algo_version": ecfg.algo_version,

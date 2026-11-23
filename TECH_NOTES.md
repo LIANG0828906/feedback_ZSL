@@ -5,7 +5,9 @@
 - Python 3.14.4（兼容 3.11+），NumPy 2.5.5，pygame-ce 2.5.8（提供 `pygame`
   API；上游 pygame 暂无 cp314 预编译轮，pygame-ce 为直接替代品），pytest 9.2.0。
 - 无 Docker/容器，无外部服务与账号；客户端时延通过内存模拟（回环语义）。
-- 安装：`python3 -m pip install -r requirements.txt`
+- 工作区本地离线环境：`python3 -m venv .venv &&
+  .venv/bin/python -m pip install -r requirements.txt`；依赖装入 `.venv`
+  后，generate/verify/demo/pytest 全部离线运行。
 
 ## 模块与需求映射
 
@@ -22,7 +24,10 @@
 
 样本生成器：`syncdemo/generator.py`，默认种子 `20261123`、输出目录 `sample/`，
 均可通过 CLI 参数覆盖。真值（关键 tick 权威状态、各客户端可见状态、结算）由
-引擎与客户端模拟自身产出，保证与验证器同源。
+`syncdemo/truth.py` 产出：该模块是与 `engine.py`/`client.py`/`runner.py`
+完全独立的参考实现（仅共享规格级的 `derive_rng` 派生规则），`verify` 因此是
+两套独立实现的交叉校验，而非自证。`client_visible` 条目的 `tick` 表示观测
+该可见状态时比赛刚推进完的 tick（即可见序列下标 +1）。
 
 ## 错误码
 
@@ -52,6 +57,11 @@
 - 帧调度：输入后 `max_input_delay_frames` 内显示预测态（响应性）；权威校正在
   `correction_window_frames` 内上屏；冲突时一致性优先，帧日志记录
   `conflict:correction_priority(consistency>responsiveness)` 作为取舍依据。
+  校正帧超过 `correction_window_frames` 才上屏时，调度器以
+  `correction_delayed_beyond_window` 强制上屏并记入
+  `correction_delay_violations()`；输入未在限期内以预测态响应的帧号记入
+  `input_delay_violations()`。运行器将两类违例纳入 `RunResult`
+  （跨断点恢复保持一致），`verify` 报告其计数。
 
 ## 检查点与恢复
 
@@ -85,11 +95,14 @@
 
 ## 验证结果（2026-11-23 实测）
 
-- `python3 -m pytest tests/ -q`：**41 passed**（覆盖 E_SCHEMA/E_UNIT/E_PARA/
+- `.venv/bin/python -m pytest tests/ -q`：**53 passed**（覆盖 E_SCHEMA/E_UNIT/E_PARA/
   E_DIVERGE 全部异常码、回滚一致性、三路径一致、检查点作废与不可改写、
-  线程池阻塞/失败隔离/取消、UI 无头冒烟与注入拒绝）。
-- `python3 -m syncdemo generate --out sample && python3 -m syncdemo verify
-  --sample sample`：三路径一致 OK；结算
+  线程池阻塞/失败隔离/取消、UI 无头冒烟与注入拒绝、校正窗口计时与延迟校正
+  违例、运行器输入延迟报告、独立真值生成与关键 tick 状态失配定位）。
+- `.venv/bin/python -m syncdemo generate --out sample && .venv/bin/python -m
+  syncdemo verify --sample sample`：三路径一致 OK；独立真值校验 OK
+  （关键 tick 权威状态 + 各客户端可见状态 + 结算）；输入延迟违例与校正
+  延迟违例均为 none；结算
   `p0 res=57 hp=64 / p1 res=31 hp=84 / p2 res=56 hp=12 / p3 res=93 hp=100`，
   winner=p3；各客户端回滚 120 次，修正量随档位递增（c0 22876 / c1 33339 /
   c2 44841）。
