@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>ForensicLab · 图像取证工作台</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">FL</div>
+        <div>
+          <h1>ForensicLab</h1>
+          <p>确定性图像取证 · 增量完整性分析</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <select id="sampleSelect" title="样本"></select>
+        <span id="runStatus" class="pill idle">空闲</span>
+        <span id="versionTag" class="mono subtle">algo forensiclab-algo-v1</span>
+      </div>
+    </header>
+
+    <div class="progress-shell" aria-hidden="true">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <main class="layout">
+      <aside class="panel controls">
+        <div class="panel-title">
+          <span>分析参数</span>
+          <span class="subtle mono">E_PARA / E_META / E_HASH</span>
+        </div>
+
+        <label class="field">
+          <span>篡改判定阈值 <b id="thresholdValue">0.45</b></span>
+          <input id="threshold" type="range" min="0" max="1" step="0.01" value="0.45" />
+          <small>分数 ≥ 阈值判为篡改；数值越低越敏感</small>
+        </label>
+
+        <div class="grid-two">
+          <label class="field">
+            <span>窗口尺寸</span>
+            <select id="window">
+              <option value="3">3 × 3</option>
+              <option value="5">5 × 5</option>
+              <option value="7">7 × 7</option>
+              <option value="9">9 × 9</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>分块尺寸</span>
+            <select id="blockSize">
+              <option value="8">8 px</option>
+              <option value="16" selected>16 px</option>
+              <option value="32">32 px</option>
+              <option value="64">64 px</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid-two">
+          <label class="field">
+            <span>内容哈希</span>
+            <select id="hashAlgorithm">
+              <option value="sha256">SHA-256</option>
+              <option value="sha512">SHA-512</option>
+              <option value="sha1">SHA-1</option>
+              <option value="fnv64a">FNV-64a</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>指纹粒度</span>
+            <select id="fingerprintGrid">
+              <option value="2">2 × 2</option>
+              <option value="4" selected>4 × 4</option>
+              <option value="8">8 × 8</option>
+              <option value="16">16 × 16</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid-two">
+          <label class="field">
+            <span>最大并行度</span>
+            <input id="workerCount" type="number" min="1" max="64" value="4" />
+          </label>
+          <label class="field">
+            <span>队列容量</span>
+            <input id="queueCapacity" type="number" min="1" max="4096" value="8" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>像素缓冲上限</span>
+          <input id="pixelBufferLimit" type="number" min="1" step="1024" value="2097152" />
+          <small>单位字节；缓冲耗尽会阻塞排队并记录原因</small>
+        </label>
+
+        <div class="button-stack">
+          <button id="runBtn" class="primary">运行 / 增量更新</button>
+          <button id="retryBtn">重试选中块 <span id="selectedCount">0</span></button>
+        </div>
+        <div class="button-row">
+          <button id="pauseBtn">暂停</button>
+          <button id="resumeBtn">继续</button>
+          <button id="cancelBtn" class="danger-ghost">取消</button>
+        </div>
+        <div class="button-row">
+          <button id="verifyBtn">三路径比对</button>
+          <button id="hashCheckBtn">哈希核验</button>
+        </div>
+        <div class="button-row">
+          <button id="exportBtn">导出报告</button>
+          <button id="resetBtn" class="danger-ghost">清空检查点</button>
+        </div>
+
+        <div class="meta-box">
+          <div><span>工作区</span><code id="dbPath" class="mono">-</code></div>
+          <div><span>样本</span><code id="imageMeta" class="mono">-</code></div>
+          <div><span>参数版本</span><code id="paramsVersion" class="mono">-</code></div>
+        </div>
+      </aside>
+
+      <section class="content">
+        <section class="panel viewer-panel">
+          <div class="panel-title">
+            <span>原图与篡改热力图</span>
+            <div class="legend">
+              <span><i class="swatch blue"></i>复用</span>
+              <span><i class="swatch amber"></i>失效</span>
+              <span><i class="swatch red"></i>篡改</span>
+              <label class="inline">热力图透明度 <input id="opacity" type="range" min="0" max="1" step="0.05" value="0.72" /></label>
+            </div>
+          </div>
+          <div id="imageStage" class="image-stage">
+            <img id="originalImage" alt="原图" />
+            <img id="heatmapImage" alt="篡改热力图" />
+            <canvas id="gridCanvas"></canvas>
+            <div id="emptyStage" class="empty-stage">运行分析以生成热力图</div>
+          </div>
+          <div class="stage-caption mono" id="heatmapCaption">heatmap -</div>
+        </section>
+
+        <section class="metrics">
+          <article class="metric"><span>分块总数</span><strong id="mTotal">-</strong><small id="mBlockSize">-</small></article>
+          <article class="metric"><span>判定篡改</span><strong id="mTampered">-</strong><small id="mMeanScore">-</small></article>
+          <article class="metric"><span>复用缓存</span><strong id="mReused">-</strong><small id="mRecomputed">-</small></article>
+          <article class="metric"><span>真值吻合</span><strong id="mAgreement">-</strong><small id="mTruth">-</small></article>
+          <article class="metric"><span>热力图 SHA</span><strong id="mHeatHash" class="mono small-value">-</strong><small id="mHeatState">-</small></article>
+        </section>
+
+        <section class="panel matrix-panel">
+          <div class="panel-title">
+            <span>分块状态矩阵</span>
+            <span class="subtle">点击选择块；数字为块编号</span>
+          </div>
+          <div id="blockMatrix" class="block-matrix"></div>
+        </section>
+
+        <section class="two-col">
+          <section class="panel">
+            <div class="panel-title">
+              <span>精确失效传播</span>
+              <span id="invalidationCount" class="badge">0</span>
+            </div>
+            <div id="depGraph" class="dep-chain">hash → analysis → summary → heatmap</div>
+            <div id="invalidationList" class="event-list"></div>
+            <div class="subhead">上游复用</div>
+            <div id="reuseList" class="event-list compact-list"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-title">
+              <span>三路径一致性</span>
+              <span id="compareBadge" class="badge muted">未运行</span>
+            </div>
+            <div id="comparePane" class="compare-pane">
+              <p class="subtle">增量路径、空缓存全量和单线程串行将在这里逐像素、逐块比对。</p>
+            </div>
+            <div class="subhead">资源排队诊断</div>
+            <div id="queueEvents" class="event-list compact-list"></div>
+          </section>
+        </section>
+
+        <section class="panel table-panel">
+          <div class="panel-title">
+            <span>逐块哈希与统计摘要</span>
+            <span class="subtle">精确结果只读展示</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>块</th><th>区域</th><th>内容哈希</th><th>指纹</th>
+                  <th>噪声方差</th><th>残差覆盖</th><th>边缘一致性</th><th>局部对比度</th><th>分数</th><th>判定</th><th>提交序</th>
+                </tr>
+              </thead>
+              <tbody id="blockTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
