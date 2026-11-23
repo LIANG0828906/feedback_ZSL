@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070b11">
+  <title>SPECTRA / Multispectral HDR Workbench</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div>
+          <div class="brand-name">SPECTRA</div>
+          <div class="brand-sub">Multispectral · HDR Fusion Workbench</div>
+        </div>
+      </div>
+      <div class="topbar-meta">
+        <div class="live-pill" id="livePill"><i></i><span>OFFLINE</span></div>
+        <div class="version-tag" id="algorithmTag">ALGORITHM —</div>
+        <div class="clock" id="clock">--:--:--</div>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <section class="panel scene-panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">SCENE LIBRARY</div>
+            <h2>Deterministic samples</h2>
+          </div>
+          <span class="count-badge" id="sceneCount">0</span>
+        </div>
+        <div class="preset-grid" id="presetGrid"></div>
+        <div class="scene-list" id="sceneList"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">SCENE MANIFEST</div>
+            <h2 id="sceneTitle">No scene</h2>
+          </div>
+        </div>
+        <div class="manifest-grid">
+          <div><span>Pixels</span><strong id="metaPixels">—</strong></div>
+          <div><span>Bands</span><strong id="metaBands">—</strong></div>
+          <div><span>Exposures</span><strong id="metaExposures">—</strong></div>
+          <div><span>Bit depth</span><strong id="metaBitDepth">—</strong></div>
+          <div><span>Pixel pitch</span><strong id="metaPitch">—</strong></div>
+          <div><span>White point</span><strong id="metaWhite">—</strong></div>
+        </div>
+        <div class="band-chips" id="bandChips"></div>
+      </section>
+
+      <section class="panel controls-panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">PROCESSING</div>
+            <h2>Parameter rack</h2>
+          </div>
+          <span class="version-badge" id="paramVersion">p—</span>
+        </div>
+        <label class="field">
+          <span>Scale strategy</span>
+          <select id="pathSelect">
+            <option value="auto">Auto · explainable</option>
+            <option value="full">High precision · full</option>
+            <option value="tiled">Tiled · downsample</option>
+          </select>
+        </label>
+        <label class="field range-field">
+          <span>Registration order <output id="orderOut">3</output></span>
+          <input type="range" id="orderRange" min="1" max="5" step="1" value="3">
+        </label>
+        <label class="field range-field">
+          <span>Weight bias <output id="biasOut">0.00</output></span>
+          <input type="range" id="biasRange" min="-1" max="1" step="0.05" value="0">
+        </label>
+        <label class="field range-field">
+          <span>Weight sharpness <output id="sharpOut">1.00</output></span>
+          <input type="range" id="sharpRange" min="0.25" max="8" step="0.05" value="1">
+        </label>
+        <label class="field range-field">
+          <span>Detail strength <output id="detailOut">0.25</output></span>
+          <input type="range" id="detailRange" min="0" max="2" step="0.01" value="0.25">
+        </label>
+        <label class="field">
+          <span>Gamut intent</span>
+          <select id="intentSelect">
+            <option value="compress">Compress to boundary</option>
+            <option value="strict">Strict · surface E_GAMUT</option>
+          </select>
+        </label>
+        <div class="two-fields">
+          <label class="field">
+            <span>Workers</span>
+            <input type="number" id="workersInput" min="1" max="16" value="4">
+          </label>
+          <label class="field">
+            <span>Buffer / thread</span>
+            <input type="number" id="bufferInput" min="256" step="1024" value="262144">
+          </label>
+        </div>
+        <button class="button button-ghost full-width" id="applyParams">Apply to pending segments</button>
+      </section>
+
+      <section class="panel policy-panel">
+        <div class="eyebrow">ADAPTIVE DECISION</div>
+        <div class="policy-title">
+          <span class="path-orb" id="pathOrb"></span>
+          <strong id="policyPath">—</strong>
+          <span id="policyDownsample"></span>
+        </div>
+        <div class="policy-metrics">
+          <div><span>Tile</span><b id="policyTile">—</b></div>
+          <div><span>Est. memory</span><b id="policyMemory">—</b></div>
+          <div><span>Est. full pass</span><b id="policyTime">—</b></div>
+          <div><span>Coarse px</span><b id="policyCoarse">—</b></div>
+        </div>
+        <p id="policyRationale">Waiting for scene.</p>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="summary-grid">
+        <article class="metric-card metric-main">
+          <div class="metric-label">COMMIT PROGRESS</div>
+          <div class="progress-head">
+            <strong id="progressText">0 / 0</strong>
+            <span id="progressPct">0%</span>
+          </div>
+          <div class="progress-track"><i id="progressBar"></i></div>
+          <div class="metric-foot" id="stateLine">Awaiting scene</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-label">PEAK RADIANCE</div>
+          <strong class="metric-value" id="peakValue">—</strong>
+          <div class="metric-foot" id="peakTruth">truth —</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-label">OUT OF GAMUT</div>
+          <strong class="metric-value" id="gamutValue">—</strong>
+          <div class="metric-foot" id="gamutHash">set hash —</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-label">CHECKPOINT</div>
+          <strong class="metric-value" id="checkpointValue">—</strong>
+          <div class="metric-foot" id="checkpointLine">not loaded</div>
+        </article>
+      </section>
+
+      <section class="actionbar panel">
+        <div class="action-group">
+          <button class="button button-primary" id="startBtn"><span class="play-icon"></span>Start</button>
+          <button class="button" id="pauseBtn">Pause</button>
+          <button class="button" id="resumeBtn">Resume</button>
+          <button class="button" id="stepBtn">Step +1</button>
+        </div>
+        <div class="action-group">
+          <button class="button button-accent" id="compareBtn">Three-path compare</button>
+          <button class="button" id="exportBtn">Export ZIP</button>
+        </div>
+      </section>
+
+      <section class="panel segments-panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">COMMIT BOUNDARIES</div>
+            <h2>Segment state matrix</h2>
+          </div>
+          <div class="legend">
+            <span><i class="dot pending"></i>pending</span>
+            <span><i class="dot processing"></i>processing</span>
+            <span><i class="dot committed"></i>committed</span>
+            <span><i class="dot failed"></i>failed</span>
+          </div>
+        </div>
+        <div class="segment-grid" id="segmentGrid"></div>
+        <div class="segment-hint" id="segmentHint">Click a failed segment to clear its fault and retry.</div>
+      </section>
+
+      <section class="viz-grid">
+        <article class="panel viewer-panel">
+          <div class="panel-head">
+            <div>
+              <div class="eyebrow">PIXEL INSPECTOR</div>
+              <h2 id="viewerTitle">Fused radiance</h2>
+            </div>
+            <div class="viewer-meta" id="viewerMeta">—</div>
+          </div>
+          <div class="view-tabs" id="viewTabs"></div>
+          <div class="viewer-stage">
+            <div class="scanlines"></div>
+            <img id="viewerImage" alt="Rendered spectral view">
+            <div class="viewer-empty" id="viewerEmpty">Start processing to reveal fused output</div>
+            <div class="crosshair" aria-hidden="true"></div>
+          </div>
+          <div class="viewer-footer">
+            <span id="viewerCaption">Deterministic native-radiance synthesis</span>
+            <span class="mono" id="viewerDimensions">—</span>
+          </div>
+        </article>
+
+        <div class="side-viz">
+          <article class="panel instrument-panel">
+            <div class="panel-head compact">
+              <div>
+                <div class="eyebrow">SIGNAL</div>
+                <h2>Histogram</h2>
+              </div>
+              <div class="mini-toggle">
+                <button class="active" data-hist="fused">Fused</button>
+                <button data-hist="rgb">RGB</button>
+              </div>
+            </div>
+            <canvas id="histCanvas" width="620" height="240"></canvas>
+            <div class="instrument-foot" id="histFoot">—</div>
+          </article>
+
+          <article class="panel instrument-panel">
+            <div class="panel-head compact">
+              <div>
+                <div class="eyebrow">CHROMATICITY</div>
+                <h2>Scope · xy</h2>
+              </div>
+              <span class="micro-tag" id="chromaTag">—</span>
+            </div>
+            <canvas id="chromaCanvas" width="620" height="320"></canvas>
+            <div class="scope-legend">
+              <span><i class="scope-dot in"></i>in gamut</span>
+              <span><i class="scope-dot out"></i>out of gamut</span>
+              <span><i class="scope-dot white"></i>white point</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lower-grid">
+        <article class="panel diff-panel">
+          <div class="panel-head compact">
+            <div>
+              <div class="eyebrow">RESIDUAL</div>
+              <h2>Path difference heat map</h2>
+            </div>
+            <span class="micro-tag">live vs one-shot</span>
+          </div>
+          <div class="diff-stage">
+            <img id="diffImage" alt="Difference heat map">
+            <span id="diffCaption">Difference becomes available after completion.</span>
+          </div>
+        </article>
+
+        <article class="panel compare-panel">
+          <div class="panel-head compact">
+            <div>
+              <div class="eyebrow">VERIFICATION</div>
+              <h2>Three-path comparison</h2>
+            </div>
+            <span class="result-pill" id="comparePill">not run</span>
+          </div>
+          <div id="compareBody" class="compare-body">
+            <p>Live processing, checkpoint resume and full recompute are compared pixel by pixel.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="lower-grid second">
+        <article class="panel truth-panel">
+          <div class="panel-head compact">
+            <div>
+              <div class="eyebrow">GENERATOR TRUTH</div>
+              <h2>Known color patches</h2>
+            </div>
+            <span class="result-pill" id="truthPill">—</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Patch</th><th>Truth linear RGB</th><th>Measured</th><th>Max Δ</th><th>Status</th></tr>
+              </thead>
+              <tbody id="patchRows">
+                <tr><td colspan="5" class="empty-cell">Complete processing to evaluate truth patches.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel log-panel">
+          <div class="panel-head compact">
+            <div>
+              <div class="eyebrow">EVENT STREAM</div>
+              <h2>Engine log</h2>
+            </div>
+            <span class="micro-tag" id="workerTag">0 workers</span>
+          </div>
+          <div class="log-stream" id="logStream"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
