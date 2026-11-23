@@ -1,0 +1,98 @@
+{
+  "axes": [
+    {
+      "curve": {
+        "exponent": 1.4,
+        "kind": "power",
+        "points": []
+      },
+      "deadzone": 0.1,
+      "id": "stick_x",
+      "inverted": false,
+      "kind": "stick",
+      "maximum": 1.0,
+      "minimum": -1.0,
+      "trigger_direction": "increasing"
+    },
+    {
+      "curve": {
+        "exponent": 1.0,
+        "kind": "linear",
+        "points": []
+      },
+      "deadzone": 0.1,
+      "id": "stick_y",
+      "inverted": true,
+      "kind": "stick",
+      "maximum": 1.0,
+      "minimum": -1.0,
+      "trigger_direction": "increasing"
+    },
+    {
+      "curve": {
+        "exponent": 1.0,
+        "kind": "linear",
+        "points": []
+      },
+      "deadzone": 0.04,
+      "id": "trigger_l",
+      "inverted": false,
+      "kind": "trigger",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "trigger_direction": "decreasing"
+    },
+    {
+      "curve": {
+        "exponent": 1.0,
+        "kind": "linear",
+        "points": []
+      },
+      "deadzone": 0.04,
+      "id": "trigger_r",
+      "inverted": false,
+      "kind": "trigger",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "trigger_direction": "increasing"
+    },
+    {
+      "curve": {
+        "exponent": 1.0,
+        "kind": "linear",
+        "points": []
+      },
+      "deadzone": 0.03,
+      "id": "gyro_x",
+      "inverted": false,
+      "kind": "gyro",
+      "maximum": 4.0,
+      "minimum": -4.0,
+      "trigger_direction": "increasing"
+    },
+    {
+      "curve": {
+        "exponent": 1.0,
+        "kind": "linear",
+        "points": []
+      },
+      "deadzone": 0.03,
+      "id": "gyro_y",
+      "inverted": false,
+      "kind": "gyro",
+      "maximum": 4.0,
+      "minimum": -4.0,
+      "trigger_direction": "increasing"
+    }
+  ],
+  "buttons": [
+    "a",
+    "b",
+    "lb",
+    "rb",
+    "menu"
+  ],
+  "id": "hybrid_trigger_gyro",
+  "name": "Vector Trigger + Gyro",
+  "schema_version": 1
+}
