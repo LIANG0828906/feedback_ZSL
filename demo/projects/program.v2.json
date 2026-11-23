@@ -1,0 +1,108 @@
+{
+  "assets": [
+    {
+      "assetId": "asset-01",
+      "contentSha256": "2561f4af30a7fc4b79a90d09592352f491bd52e25f0ab48cdf1d753e6533a07e",
+      "sampleRateHz": 48000,
+      "wavPath": "../audio/seg-01-tonal-bed.wav"
+    },
+    {
+      "assetId": "asset-02",
+      "contentSha256": "423c4044d724eaaa9fcfd1e23dd0451dd61915889041c4cda22b879b60f750b4",
+      "sampleRateHz": 48000,
+      "wavPath": "../audio/seg-02-speech.wav"
+    },
+    {
+      "assetId": "asset-03",
+      "contentSha256": "ce0606c3d6dba5d7a8c0694ceb396c4bee0aa32a659a2cd6e0bed05314664012",
+      "sampleRateHz": 48000,
+      "wavPath": "../audio/seg-03-transients.wav"
+    },
+    {
+      "assetId": "asset-04",
+      "contentSha256": "5bb0b764b5c4e9b224dc4d6ea85ab86e1a34b3095226825f98afa412797c298b",
+      "sampleRateHz": 48000,
+      "wavPath": "../audio/seg-04-gated.wav"
+    },
+    {
+      "assetId": "asset-05",
+      "contentSha256": "74f8fdbe30b6b447b048d73568e03237e9aae09f6d917a9f4e9286be3336a1c4",
+      "sampleRateHz": 48000,
+      "wavPath": "../audio/seg-05-wide-music.wav"
+    },
+    {
+      "assetId": "asset-06",
+      "contentSha256": "6365353a114c95b10032124c7fdea1d03b566f76affb6466549d6f0e395f08ce",
+      "sampleRateHz": 48000,
+      "wavPath": "../audio/seg-06-quiet.wav"
+    }
+  ],
+  "compressor": {
+    "attackMs": 20,
+    "ratio": 3,
+    "releaseMs": 250,
+    "thresholdDbfs": -20
+  },
+  "frameMs": 400,
+  "gating": {
+    "absoluteLufs": -70,
+    "relativeDropLu": 10
+  },
+  "hopMs": 100,
+  "limiter": {
+    "ceilingDbtp": -1,
+    "lookaheadMs": 5
+  },
+  "programId": "game-audio-demo-20261124",
+  "sampleRateHz": 48000,
+  "schemaVersion": "2.0",
+  "segments": [
+    {
+      "assetRef": "asset-01",
+      "channels": 2,
+      "frameCount": 153600,
+      "id": "seg-01-tonal-bed",
+      "offsetSamples": 0
+    },
+    {
+      "assetRef": "asset-02",
+      "channels": 1,
+      "frameCount": 134400,
+      "id": "seg-02-speech",
+      "offsetSamples": 0
+    },
+    {
+      "assetRef": "asset-03",
+      "channels": 2,
+      "frameCount": 144000,
+      "id": "seg-03-transients",
+      "offsetSamples": 0
+    },
+    {
+      "assetRef": "asset-04",
+      "channels": 1,
+      "frameCount": 124800,
+      "id": "seg-04-gated",
+      "offsetSamples": 0
+    },
+    {
+      "assetRef": "asset-05",
+      "channels": 2,
+      "frameCount": 163200,
+      "id": "seg-05-wide-music",
+      "offsetSamples": 0
+    },
+    {
+      "assetRef": "asset-06",
+      "channels": 1,
+      "frameCount": 120000,
+      "id": "seg-06-quiet",
+      "offsetSamples": 0
+    }
+  ],
+  "stageOrder": [
+    "compressor",
+    "limiter"
+  ],
+  "targetLufs": -23
+}

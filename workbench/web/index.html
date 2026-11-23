@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Broadcast Loudness Workbench</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">LOCAL DETERMINISTIC AUDIO</p>
+      <h1>广播响度与动态范围工作台</h1>
+      <p id="program-meta" class="muted">正在载入节目工程…</p>
+    </div>
+    <div class="status-chip" id="run-status">IDLE</div>
+  </header>
+
+  <main>
+    <section class="panel controls">
+      <div class="control-grid">
+        <label>工程版本
+          <select id="version"></select>
+        </label>
+        <label>处理路径
+          <select id="mode">
+            <option value="full">全量并行</option>
+            <option value="realtime">实时串行</option>
+            <option value="resume">断点恢复</option>
+          </select>
+        </label>
+        <label>最大并行度
+          <input id="parallel" type="number" min="1" max="16" value="4">
+        </label>
+        <label>每线程缓冲 (MiB)
+          <input id="buffer" type="number" min="1" max="1024" value="16">
+        </label>
+      </div>
+      <div class="actions">
+        <button id="run" class="primary">开始处理</button>
+        <button id="cancel" class="ghost" disabled>取消</button>
+        <button id="verify" class="ghost">三路径比对</button>
+        <button id="reset" class="ghost">重置工程</button>
+      </div>
+      <div id="error" class="error hidden"></div>
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">PROGRAM TIMELINE</p>
+          <h2>节目段时间轴与状态</h2>
+        </div>
+        <div class="legend">
+          <span><i class="dot pending"></i>待处理</span>
+          <span><i class="dot processing"></i>处理中</span>
+          <span><i class="dot committed"></i>已提交</span>
+          <span><i class="dot failed"></i>失败</span>
+        </div>
+      </div>
+      <canvas id="timeline" height="150"></canvas>
+      <div id="segment-table"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">LOUDNESS / TRUE PEAK</p>
+          <h2>逐段响度与真峰值</h2>
+        </div>
+        <span class="muted">LUFS / dBTP</span>
+      </div>
+      <canvas id="loudness-chart" height="260"></canvas>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">COMPRESSOR ENVELOPE</p>
+          <h2>压缩增益曲线</h2>
+        </div>
+        <select id="curve-segment"></select>
+      </div>
+      <canvas id="gain-chart" height="220"></canvas>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">PATH DIVERGENCE</p>
+          <h2>三路径差异热力图</h2>
+        </div>
+        <span id="diff-label" class="muted">尚未运行三路径比对</span>
+      </div>
+      <canvas id="heatmap" height="130"></canvas>
+      <div id="diff-details" class="muted"></div>
+    </section>
+
+    <section class="panel config">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">DETERMINISTIC PARAMETERS</p>
+          <h2>响度与动态参数</h2>
+        </div>
+        <button id="apply" class="secondary">应用参数</button>
+      </div>
+      <div class="control-grid parameter-grid">
+        <label>目标响度 (LUFS)<input id="target" type="number" step="0.1"></label>
+        <label>帧长 (ms)<input id="frame" type="number" step="1"></label>
+        <label>帧移 (ms)<input id="hop" type="number" step="1"></label>
+        <label>绝对门限 (LUFS)<input id="gate-abs" type="number" step="0.1"></label>
+        <label>相对门限 (LU)<input id="gate-rel" type="number" step="0.1"></label>
+        <label>压缩阈值 (dBFS)<input id="threshold" type="number" step="0.1"></label>
+        <label>压缩比<input id="ratio" type="number" step="0.1"></label>
+        <label>启动 (ms)<input id="attack" type="number" step="1"></label>
+        <label>释放 (ms)<input id="release" type="number" step="1"></label>
+        <label>限幅上限 (dBTP)<input id="ceiling" type="number" step="0.1"></label>
+        <label>前瞻 (ms)<input id="lookahead" type="number" step="0.5"></label>
+      </div>
+      <p class="muted">已提交段不可变；参数调整仅作用于尚未提交段。需要重算已提交工程时使用“重置工程”。</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
