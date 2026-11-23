@@ -21,3 +21,39 @@
 
 验收：
 使用本地确定性样本验证三路径逐块指标一致、误差上界可复算及首个偏差可定位，附运行结果。
+
+---
+
+## 交付实现与运行指南
+
+模块名 `vqa`，Go 1.21+，仅用标准库。详细设计见 `TECH_NOTES.md`。
+
+### 目录
+
+- `internal/`：错误码、定点运算、样本/编解码、指标、传播、状态机、检查点、管线、独立验证器
+- `cmd/`：`generator`、`pipeline`、`compare`、`verify` 四个入口
+- `scripts/`：`realtime/resume/rebuild/verify/compare/acceptance` 的 `.sh` 与 Windows `.cmd`
+- `data/`：本地确定性样本与真值清单；`store/`：块检查点；`bin/`：编译产物
+
+### 快速开始
+
+```bash
+go mod tidy            # 无第三方依赖，仅校验模块
+go build ./...
+go run ./cmd/generator -data data
+go run ./cmd/pipeline  -data data -store store/realtime -quality 70 -mode realtime
+go run ./cmd/pipeline  -data data -store store/rebuild  -quality 70 -mode rebuild -workers 1
+go run ./cmd/compare   -a store/realtime -b store/rebuild
+go run ./cmd/verify    -data data -store store/realtime -quality 70
+bash scripts/run_acceptance.sh
+```
+
+### 实际验证结果（工作区实测，Go 1.22.12 linux/amd64）
+
+- `go vet ./...` 无告警；`go test ./...` 与 `go test -race ./...` 全部包通过。
+- 6 帧 64×64 单通道样本：每帧 64 块、共 384 块；实时(2 线程)/全量重算(单线程)/崩溃后续跑三路径 `compare` 均返回 `identical`。
+- 崩溃注入 `-crash-after 40` 后检查点恰好保留 40 条块记录，`resume` 续跑到 384/384，与实时路径逐像素逐指标一致。
+- 独立验证器复算 6 帧 PSNR/SSIM、解析下界与真值分位数全部通过，`violations=null`。
+- 三档质量实测平均 PSNR 单调劣化：q90≈53.9 dB → q70≈47.1 dB → q50≈43.2 dB，且全部高于对应解析下界。
+- 错误码整数退出码实测：`E_SCHEMA=10`、`E_DECODE=11`、`E_PARA=12`、`E_BAND=14`，其余映射见 `TECH_NOTES.md`。
+- 3 通道 64×64×4 帧样本端到端 256 块验证通过；篡改单块首个像素时 `E_DIVERGE` 精确定位到帧 0、块(1,1)、像素(8,8)、字段 `recon_pixels`。
