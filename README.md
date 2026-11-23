@@ -1,22 +1,235 @@
-这项需求没有既有代码，需要从零构建一套面向舞台演出与互动媒体场景的舞台灯光演出控制工作台，作为可集成的领域组件与完整示例。本地确定性样本生成器按固定种子产出多种规模的灯光演出工程：每份工程包含若干灯具（帕灯、摇头灯、染色灯），每盏灯带可配置的 RGB 混色、亮度、位置与调焦参数；另含一组按逻辑时间戳排列的灯光变化点（色温切换、位置移动、频闪、渐变），以及场景序列与分组控制关系。工程规模从数十个变化点到数万个变化点变化，并附带解析真值（若干采样时刻各灯光的期望输出颜色与位置、变化点总耗时、分组生效顺序），真值仅由生成器在构造工程时记录。工作台需按逻辑时间窗口并行推进调度，在受限的并行槽位与内存预算下计算每帧每灯输出，并把已提交窗口持久化到 SQLite 检查点。业务核心是并行调度与资源预算：并发生成顺序不得影响最终结果，预算不足时须阻塞排队并记录原因，实时调度、断点恢复与全量重算三条路径必须逐帧一致。
+# StageCue Workbench
 
-任务环境与准备：
-Windows 10 或以上，安装 Go 1.22 或以上版本，并执行 go env -w GOOS=windows 与 go env -w CGO_ENABLED=1。
-安装 Wails CLI：执行 go install github.com/wailsapp/wails/v2/cmd/wails@latest，并将 GOPATH 下的 bin 目录加入 PATH。
-安装 SQLite 驱动依赖：执行 go get modernc.org/sqlite（纯 Go 驱动，无需系统安装 SQLite）。
-准备本地确定性样本生成器与真值清单，样本与真值全部由本地固定随机种子生成，不依赖任何线上资源或外部账号。
+面向舞台演出与互动媒体场景的确定性灯光演出控制工作台。项目同时提供可集成的 Go 领域组件、本地确定性样本生成器、SQLite 检查点、三路径一致性校验，以及基于 Wails 的桌面诊断界面。
 
-业务要求：
-1. 实现灯光演出工程加载与结构校验：读取本地确定性生成器产出的灯具清单、各灯参数范围、变化点序列、分组关系与真值清单；校验变化点逻辑时间戳单调不减、灯具引用完整、参数在声明范围内、分组关系无环、变化点总耗时与真值声明一致；字段缺失、引用越界或成环分别返回 E_SCHEMA、E_REF、E_CYCLE 并给出定位对象。
-2. 实现逐变化点的确定性调度核心：按逻辑时间推进变化点，计算每帧每灯的 RGB 混色、亮度、位置与调焦输出，变化点之间按可配置插值方式过渡；同一工程与同一参数下调度结果只依赖工程内容与逻辑时间，不得受线程标识、遍历顺序或完成顺序影响；插值参数越界返回 E_PARA 并指出字段名。
-3. 实现可变规模下的调度算法取舍策略：依据变化点数量、灯具数量与预览帧率预算，自动在逐变化点精确调度与按时间窗口合并近似调度两种模式间选择，合并时须记录被合并的变化点范围、近似误差上界与选用依据；同一工程在两种模式下关键采样时刻的输出颜色与位置须落在声明容差内，超差返回 E_SCALE 并给出超差时刻与灯具标识。
-4. 实现分组控制与优先级冲突的确定性裁决：分组可对成员灯批量设值，单灯变化点可覆盖分组值；当同一逻辑时刻分组与单灯、多个分组同时作用时，须按可解释的优先级规则裁决并记录裁决明细，不得依赖遍历顺序；存在循环覆盖或无法裁决的冲突时返回 E_CONFLICT 并列出冲突对象与两侧取值。
-5. 实现时间窗口状态机与提交边界：调度按固定逻辑时间窗口推进，每窗口经历待调度、调度中、已提交、失败四类状态，只能沿合法迁移推进；窗口内变化点未被全部消费时不得提交，非法迁移返回 E_STATE 并保持原状态；进度以已提交窗口数与总窗口数表示，已提交窗口冻结其灯具参数快照与输出结果。
-6. 实现可暂停可退出可重启续跑的 SQLite 检查点机制：每提交一个窗口把该窗口内各灯输出、变化点消费偏移、分组快照、内容哈希、参数版本与算法版本原子且串行写入 SQLite，写入不得交错且窗口顺序稳定；重启加载时若内容哈希或参数版本不匹配则整体快照作废并全量重算，禁止部分混用旧窗口结果。
-7. 保证实时调度、断点恢复调度与一次性全量重算三条路径输出一致：三者对同一工程与同一取舍配置须产出逐帧相同的各灯输出、相同的变化点消费序列与相同的窗口提交序列；提供自动比对功能定位首个不一致帧号、灯具标识与差异字段名，不一致时返回 E_DIVERGE 并给出三项定位信息。
-8. 实现领域可视化与诊断工作台界面及并发资源边界：通过 Wails 展示舞台灯具布局与实时光效预览、变化点时间轴、逐帧灯光状态与分组裁决明细、规模与取舍模式统计，允许编辑变化点与分组并触发增量调度，已提交窗口结果不得被静默改写；调度任务在工作线程池并行推进，须限制最大并行度与每线程缓冲上限，预算耗尽时阻塞排队并记录原因，共享检查点写入串行化且窗口提交顺序稳定，并行运行与单线程串行对同一编辑序列须产出逐帧一致的输出与相同提交序列，单窗口内部异常须置该窗口为失败并允许重试且不污染其他窗口。
+核心约束是：**输出只由工程内容与逻辑时间决定**。工作线程数量、任务完成顺序、SQLite 恢复位置和遍历顺序都不会改变逐帧灯光结果、变化点消费序列或窗口提交序列。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 功能
 
-验收：
-使用本地样本验证实时、断点恢复与全量重算三条路径逐帧一致，并核对预算排队记录与异常链路定位。
+- 固定种子生成 `tiny / small / medium / large / stress` 五档工程，最多 50,000+ 变化点、120 盏灯。
+- 完整结构校验：时间戳、引用、参数范围、分组环、真值总时长、同刻不可裁决冲突。
+- 逐字段插值与 RGB/亮度/色温/频闪渲染，支持 `linear / step / ease_in_out`。
+- 基于变化点数、灯具数、帧数与预览 FPS 预算自动选择精确或窗口合并近似模式。
+- 分组优先级裁决：单灯覆盖分组；分组按优先级，再按 group id 确定性排序。
+- 窗口状态机：`pending → scheduling → committed / failed`，失败可重试。
+- SQLite 单写事务检查点，内容哈希、参数版本、算法版本不匹配时整体作废。
+- 实时、断点恢复、全量重算三路径逐帧比对，首个差异返回 `E_DIVERGE`。
+- 受限并行槽位、总内存预算、每线程缓冲、按窗口顺序的公平排队与阻塞原因记录。
+- 工作台展示舞台布局、当前帧 RGB、时间轴、分组裁决、窗口状态、合并段与预算日志。
+- 编辑变化点或分组后显式重定基/作废检查点；不会静默改写已提交窗口输出。
+
+## 快速开始
+
+### Windows 10+
+
+```powershell
+go version   # 需要 1.22+
+go env -w GOOS=windows
+go env -w CGO_ENABLED=1
+
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
+$env:Path += ";" + (go env GOPATH) + "\bin"
+
+go get modernc.org/sqlite
+go mod tidy
+```
+
+仓库已锁定兼容 Go 1.22 的 `modernc.org/sqlite v1.34.5`，无需安装系统 SQLite。
+
+### 生成并验证本地样本
+
+```bash
+go run ./cmd/stagecue generate --preset small --seed 42 --out samples/small-42
+go run ./cmd/stagecue validate --project samples/small-42/project.json
+
+go run ./cmd/stagecue verify \
+  --project samples/small-42/project.json \
+  --workers 3 \
+  --buffer 250000 \
+  --memory 300000 \
+  --work-dir /tmp/verify-small
+```
+
+仓库内已包含：
+
+- `samples/tiny-42/`：54 个变化点、6 盏灯、24 个真值样本。
+- `samples/small-42/`：692 个变化点、16 盏灯、64 个真值样本。
+
+所有更大规模样本可由固定种子在本地重新生成，不访问网络资源。
+
+```bash
+# 自动取舍，large 会进入 merged 模式
+go run ./cmd/stagecue generate --preset large --seed 42 --out /tmp/show-large
+go run ./cmd/stagecue run --project /tmp/show-large/project.json --db /tmp/show-large.db
+```
+
+### 启动 Wails 工作台
+
+```bash
+wails dev
+# 或
+wails build
+```
+
+本项目默认入口即 Wails。`main_headless.go` 提供 `headless` 构建标签，供没有桌面链接库的 CI 使用：`go test -tags headless ./...`。Linux 无显示容器中已验证默认 Go 桌面目标可完成编译；Wails CLI 也成功完成前端和绑定生成，但本沙箱缺少 `pkg-config/GTK` 系统开发包，原生 Wails 链接阶段无法在该沙箱完成。Windows 按上方前置条件构建。
+
+也可以不使用 Wails，直接运行完整 CLI：
+
+```bash
+go run ./cmd/stagecue --help
+```
+
+### 作为 Go 领域组件
+
+`pkg/stage` 与 `pkg/generator` 不是 `internal` 包，可直接被其他 Go 模块集成：
+
+```go
+import (
+    "context"
+    "stageworkbench/pkg/generator"
+    "stageworkbench/pkg/stage"
+)
+
+project, err := generator.Generate(generator.Options{Preset: "small", Seed: 42})
+if err != nil {
+    return err
+}
+params := stage.DefaultParams().WithDefaults(project)
+runner, err := stage.NewRunner(project, params)
+if err != nil {
+    return err
+}
+result, err := runner.Run(context.Background(), stage.RunOptions{
+    Mode:           stage.RunRealtime,
+    CheckpointPath: "show.db",
+})
+```
+
+若只需要单帧输出，可构造 `stage.NewEvaluator` 后调用 `Frame(frame)`；若需要回归验收，可调用 `stage.VerifyThreePaths`。
+
+## 领域语义
+
+### 工程与变化点
+
+每盏灯包含布局、基础 RGB/亮度/Pan/Tilt/Focus/色温/频闪值，以及逐字段声明范围。变化点按 `time_ms` 单调不减排列，目标必须是单灯或分组之一，并携带稀疏的目标字段、过渡时长、缓动、曲线幂和优先级。
+
+字段插值在逻辑时间上计算：
+
+- `step`：变化点时刻直接取目标值。
+- `linear`：从变化点时刻的状态线性过渡到目标。
+- `ease_in_out`：`smoothstep`，再应用 `curve_power`。
+- 过渡重叠时，后一个变化点从其逻辑时刻的当前插值状态继续。
+
+渲染输出为：
+
+```text
+effective_intensity = intensity × strobe_gate
+rgb_output           = rgb × effective_intensity × color_temperature_tint
+```
+
+所有数值在输出前按 6 位小数确定性归一，比较时不受线程调度影响。
+
+### 优先级与裁决
+
+同一逻辑时刻、同一灯、同一字段：
+
+1. 单灯变化点覆盖任意分组。
+2. 多个分组先比 `Group.Priority`，高者胜。
+3. 同优先级再比较 cue 优先级。
+4. 仍相同则 group id 字典序较小者胜。
+5. 同一单灯或同一分组、同一优先级、不同目标值且无法由业务规则继续排序时返回 `E_CONFLICT`，并列出两侧 cue、取值和字段。
+
+每次发生同刻竞争都会记录 `single_overrides_group` 或 `group_priority_then_group_id` 裁决明细。分组父子关系有环时在加载阶段返回 `E_CYCLE`。
+
+### 精确与合并模式
+
+自动取舍依据：
+
+```text
+estimated_ops = cue_count × light_count + frame_count × light_count
+preview_capacity = (duration_seconds × preview_fps + 1) × light_count × 8
+```
+
+超过精确变化点上限、总操作预算或预览 FPS 容量时选择 `merged`。合并模式按预览步长生成关键帧，并强制包含：
+
+- 每个窗口的首尾帧；
+- 变化点帧及其前一帧；
+- 真值关键采样帧。
+
+每个合并段记录覆盖的 cue 索引/ID 范围、关键帧、误差上界和选用依据。关键采样若超出声明容差返回 `E_SCALE`，定位到时刻、灯具和字段。
+
+### 窗口与检查点
+
+逻辑窗口只允许以下迁移：
+
+```text
+pending → scheduling → committed
+                   ↘ failed → scheduling(重试)
+```
+
+窗口内 cue offset 未完全推进时拒绝提交，非法迁移返回 `E_STATE` 且保持原状态。提交时冻结灯光输出、cue offset、分组快照和合并信息。
+
+SQLite 检查点要求：
+
+- 单连接、互斥写、每窗口一个事务；
+- 窗口号必须连续提交；
+- 每次写入内容哈希、参数版本、算法版本；
+- 重启时任一版本/哈希不匹配则删除整个工程的检查点并全量重算；
+- 编辑只允许发生在已提交时间边界之后，且应用层显式执行检查点版本重定基；否则返回 `E_COMMITTED`。
+
+### 并发与内存
+
+- 最大并行度由 `max_workers` 限制。
+- 未提交窗口数不超过并行槽位，避免后续窗口抢占资源饿死最早窗口。
+- 每个任务按帧数 × 灯具数估算内存，使用总内存预算和每线程缓冲双重限制。
+- 内存不足时阻塞并记录 `blocked`，包含窗口号、所需/可用字节、等待时间和原因。
+- 内存与调度启动都按窗口号公平排序，检查点写入固定由提交循环串行执行。
+- 单窗口异常只标记该窗口 `failed`，已提交窗口不污染；恢复时从连续提交边界续跑。
+
+## 错误码
+
+| 错误码 | 含义 |
+| --- | --- |
+| `E_SCHEMA` | 字段缺失、时间戳逆序、结构不完整 |
+| `E_REF` | 灯具/分组/场景/真值引用不存在 |
+| `E_CYCLE` | 分组父子关系成环 |
+| `E_PARA` | 参数或插值参数越界，带字段名 |
+| `E_SCALE` | 精确/合并关键采样超差，带时刻与灯具 |
+| `E_CONFLICT` | 同刻冲突无法确定性裁决 |
+| `E_STATE` | 非法窗口迁移、提交不完整、资源状态错误 |
+| `E_DIVERGE` | 三路径不一致，带帧、灯具、字段 |
+| `E_COMMITTED` | 编辑触及已提交窗口 |
+| `E_STORAGE` | SQLite 打开、事务或序列化错误 |
+
+## 组件布局
+
+```text
+pkg/stage/            可集成模型、校验、求值器、分组裁决、窗口状态、资源池、SQLite
+pkg/generator/        可集成固定种子生成器 + 独立参考真值求值器
+cmd/stagecue/         generate / validate / run / verify CLI
+app.go                Wails 绑定服务与编辑/恢复 API
+main.go               Wails 桌面入口（默认构建）
+main_headless.go      headless 构建入口
+frontend/dist/        无构建依赖的静态诊断工作台
+frontend/wailsjs/     Wails CLI 生成的运行时与绑定声明
+samples/              固定种子 tiny/small 工程与真值
+docs/                 架构与验证记录
+```
+
+## 验证
+
+```bash
+go test ./...
+go test -race ./...
+go vet ./...
+go build -o /tmp/stagecue-workbench .
+```
+
+实际验证结果见 [docs/VALIDATION.md](docs/VALIDATION.md)。最近一次本地结果：
+
+- small / exact：1,801 帧、31 窗口、90 次预算阻塞，三路径逐帧一致。
+- small / merged：1,801 帧、31 窗口、91 次预算阻塞，三路径逐帧一致。
+- large / 自动 merged：34,614 个变化点、80 盏灯、7,201 帧、25 窗口，三路径逐帧一致。
+- `go test -race ./...` 全部通过。
+
+本工作区未使用 Docker、容器或外部服务。

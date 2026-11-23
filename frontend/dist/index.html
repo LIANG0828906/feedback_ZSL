@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StageCue Workbench</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <div>
+          <h1>StageCue <span>Workbench</span></h1>
+          <p>确定性舞台灯光调度 / 检查点 / 诊断</p>
+        </div>
+      </div>
+      <div class="run-controls">
+        <button id="runBtn" class="primary">实时调度</button>
+        <button id="pauseBtn">暂停</button>
+        <button id="resumeBtn">断点续跑</button>
+        <button id="fullBtn">全量重算</button>
+        <button id="verifyBtn" class="accent">三路径比对</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel sidebar">
+        <section>
+          <h2>样本</h2>
+          <div class="form-row">
+            <select id="preset">
+              <option value="tiny">Tiny · 48 cues</option>
+              <option value="small" selected>Small · 600 cues</option>
+              <option value="medium">Medium · 5k cues</option>
+              <option value="large">Large · 30k cues</option>
+              <option value="stress">Stress · 50k cues</option>
+            </select>
+            <input id="seed" type="number" value="42" title="固定随机种子" />
+          </div>
+          <button id="generateBtn" class="wide">生成确定性工程</button>
+          <button id="editGroupsBtn" class="wide ghost">编辑分组控制</button>
+          <div class="path-row">
+            <input id="projectPath" placeholder="project.json 路径" />
+            <button id="loadBtn">加载</button>
+          </div>
+          <div class="path-row">
+            <input id="savePath" placeholder="导出目录" />
+            <button id="saveBtn">保存</button>
+          </div>
+        </section>
+
+        <section>
+          <h2>资源预算</h2>
+          <label>并行槽位 <input id="workers" type="number" min="1" max="128" value="4" /></label>
+          <label>每线程缓冲 <input id="buffer" type="number" min="4096" step="4096" value="16777216" /></label>
+          <label>总内存预算 <input id="memoryBudget" type="number" min="4096" step="4096" value="0" placeholder="0 = 槽位 × 缓冲" /></label>
+          <label>逻辑窗口 ms <input id="windowMs" type="number" min="100" step="100" value="0" placeholder="工程默认" /></label>
+          <label>预览 FPS <input id="previewFps" type="number" min="1" max="240" value="24" /></label>
+          <label>算法模式
+            <select id="forceMode">
+              <option value="">自动取舍</option>
+              <option value="exact">强制精确</option>
+              <option value="merged">强制合并</option>
+            </select>
+          </label>
+          <button id="applyParamsBtn" class="wide">应用预算参数</button>
+        </section>
+
+        <section>
+          <h2>运行进度</h2>
+          <div class="progress-shell"><div id="progressBar" class="progress-bar"></div></div>
+          <div id="progressText" class="muted">0 / 0 windows</div>
+          <div id="runningBadge" class="badge hidden">scheduling</div>
+          <div id="truthBadge" class="badge warn hidden">truth dirty · samples skipped</div>
+          <div id="lastNotice" class="notice hidden"></div>
+        </section>
+
+        <section>
+          <h2>取舍统计</h2>
+          <dl class="stats-list">
+            <dt>模式</dt><dd id="modeValue">-</dd>
+            <dt>Cues</dt><dd id="cueValue">-</dd>
+            <dt>Lights</dt><dd id="lightValue">-</dd>
+            <dt>Frames</dt><dd id="frameValue">-</dd>
+            <dt>Ops</dt><dd id="opsValue">-</dd>
+            <dt>预算容量</dt><dd id="capacityValue">-</dd>
+          </dl>
+          <p id="modeReason" class="mode-reason"></p>
+        </section>
+
+        <section>
+          <h2>预算队列</h2>
+          <div id="budgetSummary" class="muted">未发生阻塞</div>
+          <table class="mini-table"><thead><tr><th>窗口</th><th>事件</th><th>等待</th><th>原因</th></tr></thead><tbody id="budgetRows"></tbody></table>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <article class="panel stage-panel">
+          <div class="panel-head">
+            <div>
+              <h2>舞台光效</h2>
+              <span id="frameLabel" class="muted">frame 0 · 0 ms</span>
+            </div>
+            <div class="frame-controls">
+              <button id="playBtn" class="ghost">播放</button>
+              <input id="frameSlider" type="range" min="0" max="0" value="0" />
+              <input id="frameInput" type="number" min="0" value="0" />
+            </div>
+          </div>
+          <div id="stage" class="stage"></div>
+        </article>
+
+        <article class="panel timeline-panel">
+          <div class="panel-head">
+            <div>
+              <h2>变化点时间轴</h2>
+              <span class="muted">点击标记编辑；彩色标记按变化类型区分</span>
+            </div>
+            <div class="legend">
+              <span><i class="dot color"></i>色温</span>
+              <span><i class="dot move"></i>位置</span>
+              <span><i class="dot strobe"></i>频闪</span>
+              <span><i class="dot fade"></i>渐变</span>
+              <span><i class="dot group"></i>分组</span>
+            </div>
+          </div>
+          <canvas id="timeline" height="150"></canvas>
+        </article>
+
+        <div class="lower-grid">
+          <article class="panel">
+            <div class="panel-head"><h2>逐帧灯光状态</h2><span id="frameTimeLabel" class="muted"></span></div>
+            <div class="table-scroll"><table><thead><tr><th>灯具</th><th>RGB</th><th>亮度</th><th>Pan</th><th>Tilt</th><th>Focus</th><th>K</th><th>Hz</th></tr></thead><tbody id="lightRows"></tbody></table></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><h2>分组裁决明细</h2><span class="muted">单灯 &gt; 分组优先级 &gt; group id</span></div>
+            <div class="table-scroll"><table><thead><tr><th>时刻</th><th>灯具</th><th>字段</th><th>胜出</th><th>规则</th><th>候选</th></tr></thead><tbody id="decisionRows"></tbody></table></div>
+          </article>
+        </div>
+
+        <div class="lower-grid">
+          <article class="panel">
+            <div class="panel-head"><h2>窗口状态</h2><span class="muted">pending → scheduling → committed / failed</span></div>
+            <div class="table-scroll"><table><thead><tr><th>#</th><th>范围</th><th>状态</th><th>尝试</th><th>cue offset</th><th>错误</th></tr></thead><tbody id="windowRows"></tbody></table></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><h2>合并窗口与误差上界</h2><span id="mergeSummary" class="muted"></span></div>
+            <div class="table-scroll"><table><thead><tr><th>窗口范围</th><th>变化点范围</th><th>误差上界</th><th>依据</th></tr></thead><tbody id="mergeRows"></tbody></table></div>
+          </article>
+        </div>
+
+        <article id="editorPanel" class="panel editor-panel hidden">
+          <div class="panel-head">
+            <h2>编辑 <span id="editorTitle"></span></h2>
+            <button id="closeEditorBtn" class="ghost">关闭</button>
+          </div>
+          <form id="cueForm" class="editor-grid">
+            <label>逻辑时间 ms <input id="editTime" type="number" min="0" /></label>
+            <label>过渡 ms <input id="editTransition" type="number" min="0" /></label>
+            <label>优先级 <input id="editPriority" type="number" min="0" max="9999" /></label>
+            <label>Easing
+              <select id="editEasing"><option value="linear">linear</option><option value="step">step</option><option value="ease_in_out">ease_in_out</option></select>
+            </label>
+            <label>亮度 <input id="editIntensity" type="number" min="0" max="1" step="0.01" placeholder="不改" /></label>
+            <label>R <input id="editR" type="number" min="0" max="255" step="0.1" placeholder="不改" /></label>
+            <label>G <input id="editG" type="number" min="0" max="255" step="0.1" placeholder="不改" /></label>
+            <label>B <input id="editB" type="number" min="0" max="255" step="0.1" placeholder="不改" /></label>
+            <button type="submit" class="primary">提交编辑并作废旧检查点</button>
+          </form>
+          <form id="groupForm" class="editor-grid">
+            <label>分组
+              <select id="editGroupSelect"></select>
+            </label>
+            <label>成员（逗号分隔）<input id="editMembers" /></label>
+            <label>优先级 <input id="editGroupPriority" type="number" min="0" max="9999" /></label>
+            <button type="submit">提交分组编辑</button>
+          </form>
+        </article>
+
+        <article id="verifyPanel" class="panel verify-panel">
+          <div class="panel-head"><h2>三路径一致性</h2><span id="verifyResult" class="muted">尚未执行</span></div>
+          <div id="verifyContent" class="verify-content">
+            <p class="muted">实时调度、SQLite 断点恢复与一次性全量重算将逐帧、逐 cue offset、逐窗口提交序列比对。</p>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>
