@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "sample_id": "seed-42-512x320",
+  "seed": 42,
+  "width": 512,
+  "height": 320,
+  "channels": 3,
+  "tile_size": 64,
+  "preview_deadline_ms": 300,
+  "algorithm_version": "maskpipe/v1",
+  "tolerances": {
+    "region_count": 0,
+    "centroid_px": 1.5,
+    "area_rel": 0.05
+  },
+  "default_params": {
+    "color_tolerance": 26,
+    "gradient_threshold": 6,
+    "structure_element_size": 5
+  },
+  "image": {
+    "path": "image.rgb",
+    "sha256": "ffad4a2f635d7e53459270007648ea0afdc6829f01e96c71c9e2bb9476256267"
+  },
+  "truth": {
+    "region_count": 3,
+    "mask_path": "masks/truth_labels.png",
+    "mask_sha256": "daff0a7b9c612c5e940015bd7b87d527225afef2e4552b1483f5fb74417db95d",
+    "fingerprint": "ccc17c4b69695b722379c491ed1835050cc3605568ae8811414f4bbe538a910b"
+  },
+  "regions": [
+    {
+      "id": 1,
+      "name": "high_contrast_rectangle",
+      "seed": {
+        "x": 112,
+        "y": 111
+      },
+      "rgb": [
+        232,
+        72,
+        61
+      ],
+      "area": 13407,
+      "centroid": {
+        "x": 112,
+        "y": 111
+      },
+      "bbox": {
+        "x": 51,
+        "y": 57,
+        "w": 123,
+        "h": 109
+      },
+      "mask_path": "masks/region_01.png",
+      "mask_sha256": "50b3933adb8f1b674bd9b7f3b0b89cf18b6310650f33809cd47a10eebe718352"
+    },
+    {
+      "id": 2,
+      "name": "low_contrast_ellipse",
+      "seed": {
+        "x": 327,
+        "y": 121
+      },
+      "rgb": [
+        104,
+        87,
+        143
+      ],
+      "area": 13237,
+      "centroid": {
+        "x": 327,
+        "y": 121
+      },
+      "bbox": {
+        "x": 261,
+        "y": 57,
+        "w": 133,
+        "h": 129
+      },
+      "mask_path": "masks/region_02.png",
+      "mask_sha256": "b3f8c0cf27fceefaf1ab9b5c22c81659fdacea3b96475e958e8ff94dcca42650"
+    },
+    {
+      "id": 3,
+      "name": "medium_contrast_circle",
+      "seed": {
+        "x": 322,
+        "y": 246
+      },
+      "rgb": [
+        59,
+        187,
+        149
+      ],
+      "area": 5261,
+      "centroid": {
+        "x": 322,
+        "y": 246
+      },
+      "bbox": {
+        "x": 281,
+        "y": 205,
+        "w": 83,
+        "h": 83
+      },
+      "mask_path": "masks/region_03.png",
+      "mask_sha256": "bb85c8704f65dad7115f8d321949658eb29d9dbcf3cc82b07ecfd5ecdb2d3cbf"
+    }
+  ]
+}
