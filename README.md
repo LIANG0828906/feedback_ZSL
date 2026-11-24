@@ -1,23 +1,151 @@
-当前只有一台干净的开发机，需要从零构建一套面向 CAD 曲面显示的领域可视化与诊断工作台。输入由本地确定性样本生成器按固定种子产出：若干参数曲面片（控制点网格、节点向量、权重与裁剪边界）及若干细分网格，真实值包含控制点对应的曲面采样点坐标、曲面片包围盒与裁剪边界内外判定点，作为渲染结果观测的独立依据。工作台需把曲面加载为内部模型，生成细分三角网格与法线，支持交互预览与精确重算双路径渲染；用户编辑控制点、材质或细分参数时，只有真正被影响的曲面片与屏幕分块才允许重算，其余必须复用持久化结果。核心矛盾在于编辑触发的依赖传播必须精确到分块，同时增量路径与全量渲染、断点恢复渲染三者的像素与几何统计必须完全一致，且全过程须在受限并行度与缓冲预算下完成可复现的异常注入与诊断。
+# CADLab 曲面可视化与诊断工作台
 
-任务环境与准备：
-在 Windows 开发机上安装 Go 1.22 或以上版本，使用 winget install GoLang.Go 或从官方安装包安装，并确认 go version 可执行。
-安装 Wails CLI：执行 go install github.com/wailsapp/wails/v2/cmd/wails@latest，并将 GOPATH 下的 bin 目录加入 PATH。
-SQLite 通过纯 Go 驱动 modernc.org/sqlite 引入，无需安装系统级数据库服务；初始化数据库文件放在项目本地目录。
-本地确定性样本生成器以 Go 代码内置，固定随机种子产出曲面与细分网格及真值清单，不依赖任何外部下载或网络资源。
-任务执行前先运行 go mod tidy 拉取 Wails、SQLite 驱动与测试依赖；测试使用 go test 与内置样本，不依赖真实账号、线上站点或付费资源。
+从零构建的本地 CAD 曲面工作台：固定种子生成 NURBS 曲面片、细分网格与解析真值；CPU 软件渲染器提供低 LOD 预览和高 LOD 精确帧；屏幕分块缓存、依赖失效、增量重算、SQLite 检查点、预算调度、剖面测量和异常注入均可复现。
 
-业务要求：
-1. 实现参数曲面与细分网格加载及结构校验：读取本地确定性生成器产出的曲面描述，含控制点网格、节点向量、权重、裁剪边界与解析真值清单；校验节点向量单调不减且长度与控制点数满足声明关系、权重为正有限、裁剪边界闭合、细分网格索引范围合法；字段缺失、权重非正或裁剪边界不闭合分别返回 E_SCHEMA、E_WEIGHT、E_CLIP 并指出曲面片编号与字段名。
-2. 实现曲面细分与法线估计核心：按可配置细分密度在参数域采样生成三角网格，由参数偏导确定性导出逐顶点法线与曲率近似，细分密度须随曲率联动且收紧时面数单调不减；采样点坐标与真值采样点各轴偏差须在声明容差内，法线方向与真值在夹角容差内；密度或曲率参数越界返回 E_PARA 并指出字段名。
-3. 实现预览与精确双路径渲染：交互期间以低细分 LOD 与简化着色在 50ms 内输出预览帧，停止交互后以高细分 LOD 与完整光照材质输出精确帧；两路径必须使用同一相机内外参、同一裁剪平面与同一版本快照，并在每帧记录所用 LOD 等级、快照版本与路径标识，混用版本时返回 E_VER 并指出两侧版本号。
-4. 实现曲面片级与屏幕分块级依赖图及精确失效传播：显式记录控制点、材质参数、细分密度与受影响曲面片、屏幕分块之间的依赖关系；编辑某控制点或参数时仅将实际覆盖该几何变化的分块及其下游着色阶段标记失效，未受影响分块必须复用持久化缓存，并输出含分块编号、失效曲面片标识与失效原因的清单；不得整屏重渲染，误标范围时返回 E_SCOPE 并列出被误标分块。
-5. 实现增量重算调度与全量重算逐像素一致性比对：对失效分块按依赖拓扑序重算并原子替换缓存，未失效分块直接复用；增量路径与从空缓存全量重算的精确帧须逐像素相等，逐分块轮廓覆盖率与明暗分层统计相等，并提供自动比对功能定位首个不一致像素坐标、分块编号与差异字段名，不一致时返回 E_DIFF。
-6. 实现版本化持久化检查点与断点恢复：每提交一个精确分块把颜色缓冲、深度缓冲、快照版本、场景内容哈希与算法版本原子且串行写入 SQLite，写入不得交错且分块顺序稳定；重启加载时若内容哈希或版本不匹配须整体作废快照并全量重算，禁止部分混用旧分块结果，混用时返回 E_SNAP 并指出冲突分块。
-7. 实现受限预算下的并行调度与强制终止恢复边界：精确渲染分块可在工作线程池并行推进，须限制最大并行分块数与每线程像素缓冲及网格缓冲上限，预算耗尽时阻塞排队并记录排队原因与等待时长，不得静默丢块；用户取消或进程被强制终止后重启只能依据已持久化且版本匹配的分块恢复，不得承诺强制终止后仍能生成完整渲染帧，恢复不完整时返回 E_RECOVER。
-8. 实现剖面测量、异常注入链路与可交互诊断界面：在精确帧上放置剖面平面提取曲面交线并支持双端点标注给出世界坐标与参数域坐标双读数，剖切结果随版本冻结锁定；注入控制点缺失、节点向量非单调、细分参数越界与单分块内部失败四类异常分别走 E_GEOM、E_KNOT、E_PARA、E_STAGE 并定位分块与曲面片；界面展示曲面着色预览、分块状态矩阵、失效传播示意、缓存命中与三路径比对结果，允许逐分块重试与导出。
+项目不依赖 Docker、系统数据库服务、账号或线上资源。运行时唯一本地状态文件是项目目录下的 `workbench.sqlite`。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速验收
 
-验收：
-用本地样本验证细分精度、增量与全量逐像素一致、断点恢复及异常链路，附运行与比对结果。
+环境要求：Go 1.22+。本仓库固定使用 `modernc.org/sqlite v1.34.5` 和 `github.com/wailsapp/wails/v2 v2.10.2`，二者均兼容 Go 1.22，避免自动升级到要求 Go 1.26 的新版本。
+
+```bash
+go mod tidy
+go test ./...
+go run ./cmd/verify -out artifacts/verification.json
+```
+
+本机实际结果：`verification PASSED in 416ms`。
+
+启动本地诊断页：
+
+```bash
+go run ./cmd/workbench -listen 127.0.0.1:34117
+```
+
+浏览器打开 `http://127.0.0.1:34117`。SQLite 默认写入当前目录的 `workbench.sqlite`，也可用 `-db` 指定。
+
+Windows Wails 桌面构建：
+
+```powershell
+go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2
+wails build -platform windows/amd64 -tags wails -s
+```
+
+`-s` 表示跳过前端构建：诊断界面是原生 HTML/CSS/JS，不需要 Node/npm。本次已在当前环境交叉构建出约 14MB 的 Windows 可执行文件；Linux 桌面构建需要额外安装 GTK/WebKit 开发库，未安装时可使用上面的 HTTP 诊断页。
+
+## 已实现能力
+
+| 任务要求 | 实现位置 | 验证 |
+|---|---|---|
+| 确定性 NURBS 样本、控制网格、节点、权重、裁剪边界、细分网格、真值 | `internal/sample` | `internal/model/validation_test.go` |
+| 结构校验与 `E_SCHEMA` / `E_WEIGHT` / `E_CLIP` / `E_KNOT` / `E_GEOM` | `internal/model/validation.go` | 错误码、曲面片编号、字段名断言 |
+| 解析偏导、逐顶点法线、曲率联动细分、裁剪三角形 | `internal/geom` | 真值坐标/法线容差、面数单调性、`E_PARA` 测试 |
+| 预览与精确双路径、同一相机/裁剪/版本、LOD 与路径记录 | `internal/render`, `internal/engine` | 同版本元数据校验、预览 50ms 测试 |
+| 曲面片/控制点/材质/密度/分块/着色阶段依赖图 | `internal/deps` | 显式节点和边、分块覆盖失效、`E_SCOPE` 审计 |
+| 精确分块增量重算、未失效块复用、全量逐像素比对 | `internal/engine/render_paths.go` | 像素、覆盖率、明暗直方图全等 |
+| 首个不一致像素、分块、字段定位 | `internal/render/full.go` | `E_DIFF` 定位测试 |
+| SQLite 逐块事务、稳定顺序、场景+缓冲检查点 | `internal/store` | 写入顺序 0..39、重启恢复测试 |
+| 内容哈希/版本冲突整体作废、`E_SNAP` 冲突块 | `internal/store/sqlite.go` | 篡改单块后返回冲突分块并全量重算 |
+| 强制中断/不完整快照 `E_RECOVER` | `internal/engine`, `internal/store` | 只提交部分分块后重启测试 |
+| 最大并行数、像素/网格缓冲预算、排队原因与等待时长 | `internal/sched` | 峰值、预算、取消、无丢块测试 |
+| 用户取消界面入口、取消后仅信任已提交检查点 | `internal/app`, `frontend/dist` | 取消映射为 `E_RECOVER`，不产生半成品完成帧 |
+| 剖面平面交线、世界坐标+UV 双读数、版本冻结 | `internal/engine/profile.go` | 106 个交线段、A/B 双端点和锁定版本 |
+| 四类异常注入与逐块重试 | `internal/engine/anomaly.go` | `E_GEOM` / `E_KNOT` / `E_PARA` / `E_STAGE` |
+| 分块矩阵、失效传播、缓存命中、三路径一致性和导出 | `frontend/dist`, `internal/app` | HTTP API 与桌面 UI 共用 |
+
+## 架构
+
+```text
+cmd/workbench      HTTP 诊断服务，无 GUI 依赖
+cmd/verify         可复现验收命令，输出 artifacts/verification.json
+main_wails.go      //go:build wails 的桌面入口
+frontend/dist      无框架诊断界面
+internal/app       统一 Call(action, payload) API
+internal/engine    快照、双路径、增量、恢复、剖面、异常
+internal/render    CPU 光栅化、分块、相机、统计和逐像素比较
+internal/deps      控制点/材质/密度/曲面片/分块/着色依赖图
+internal/sched     确定性结果收集、受限并发和缓冲预算
+internal/store     modernc.org/sqlite 检查点
+internal/geom      NURBS 求值、解析偏导、曲率和裁剪细分
+internal/sample    固定种子样本和独立真值求值
+internal/model     数据模型、校验和稳定诊断错误
+```
+
+## 渲染与失效语义
+
+- 屏幕固定切分为 8×5（可配置）分块。每次精确渲染只重算依赖图标记失效的块，其余块直接复用内存缓存。
+- 控制点编辑按 B 样条控制点支撑域筛选三角形；材质只影响覆盖曲面片的分块的着色阶段；密度编辑只使对应曲面片覆盖块及其下游着色阶段失效。
+- 增量结果完全组装后，与从空缓存渲染的全量参考帧逐像素、逐块轮廓像素数、分块覆盖率、16 档亮度直方图比较。
+- 若未失效块出现差异，返回 `E_SCOPE` 并列出误标分块；若已重算块仍不一致，返回 `E_DIFF`，附带首个差异像素、分块和字段。
+- 预览和精确帧共享同一 `SceneState` 版本、相机内外参数和裁剪平面。混用不同快照时诊断中带出两侧版本号。
+
+## 持久化与恢复语义
+
+SQLite 表：
+
+- `snapshots`：版本、内容哈希、算法版本、视口/分块参数、场景 JSON、完整标记。
+- `tile_checkpoints`：分块颜色缓冲、深度缓冲、统计、内容哈希、算法版本和稳定序号。
+
+每次精确/增量提交都先写新快照元数据，再按分块序号执行独立事务，最后标记完整。写入由互斥锁串行化；颜色和深度缓冲使用 gzip 存储。
+
+重启时通过保存的场景 JSON 恢复最后编辑版本。任何快照级或逐块级内容哈希/算法版本冲突都会删除整个快照并触发全量重算，返回 `E_SNAP`；只有已提交但未标记完整时返回 `E_RECOVER`，不会承诺强制终止后仍能生成完整帧。
+
+## 异常与诊断
+
+稳定错误码：
+
+- `E_SCHEMA`, `E_WEIGHT`, `E_CLIP`, `E_GEOM`, `E_KNOT`, `E_PARA`
+- `E_VER`, `E_SCOPE`, `E_DIFF`, `E_SNAP`, `E_RECOVER`, `E_STAGE`
+
+诊断对象统一包含 `code`、`message`、`patchId`、`tileId`、`field`，按适用情况附 `versionA/versionB`、`conflictingTiles`、`mislabeledTiles`、`reasons`、`firstPixel`。
+
+界面左侧的故障注入按钮不会破坏当前有效快照；单分块失败可在右侧矩阵选中该块后重试，重试结果写回缓存并更新检查点。
+
+## 本次实际验收结果
+
+完整机器可读结果见 `artifacts/verification.json`。关键数值：
+
+```text
+seed                         20261124
+patches / meshes             3 / 2
+truth samples                243
+max coordinate error         0
+max normal angle error       0.00000148 deg
+preview                      LOD 10, 40 tiles, 17.221 ms render / 21.340 ms incl. PNG
+exact                        LOD 48, 40 tiles, 33.725 ms
+material edit P2             invalid 2 / reused 38, pixel/coverage/shading equal
+control edit P1              invalid 3 / reused 37, pixel/coverage/shading equal
+density edit P3              invalid 3 / reused 37, pixel/coverage/shading equal
+resume                       version 4, 40 committed tiles, pixel equal
+checkpoint order             [0..39] stable
+queue                        peak parallel 2, pixel 0.121 MB, mesh 0.944 MB
+profile                      106 segments, locked to version 4
+anomalies                    E_GEOM, E_KNOT, E_PARA, E_STAGE
+```
+
+验收命令同时比较重启恢复帧与全量精确帧，结果为逐像素相等；所有编辑路径的分块轮廓覆盖率和明暗直方图均相等。
+
+验收命令同时生成 `artifacts/preview-frame.png` 和 `artifacts/exact-frame.png`，可直接查看两条渲染路径的实际画面。
+
+计时会随机器负载小幅波动，以最新 `artifacts/verification.json` 为准。
+
+## 界面使用
+
+1. 点击“预览帧”检查低 LOD 响应，点击“精确帧”建立完整分块缓存。
+2. 修改控制点/密度/材质后应用；右侧矩阵黄色块为本次失效块，绿色块表示缓存复用。
+3. 点击“三路径比对”查看全量、增量、恢复帧的一致性及首个差异位置。
+4. 调整剖面 Y 偏移并提取交线；下方显示 A/B 端点的世界坐标与参数域 UV 读数。
+5. 注入异常查看错误码、曲面片和分块定位；选中失败块可逐块重试。
+6. 渲染遮罩上的“取消当前渲染”会中止当前任务；取消后只能恢复已提交且版本匹配的检查点。
+7. “导出”下载包含场景、依赖图、失效清单、队列、比较结果和帧元数据的 JSON。
+
+## 测试
+
+```bash
+go test ./... -count=1
+go test -race ./internal/... -count=1
+go test ./internal/engine -run TestPreviewExactIncrementalAndResume -v
+go run ./cmd/verify -out artifacts/verification.json
+```
+
+测试覆盖细分真值精度、法线夹角、密度单调性、四类校验错误、预览时限、双路径元数据、增量/全量一致性、错误范围审计、版本错误、差异定位、检查点顺序、快照冲突、不完整恢复、预算并行、取消、剖面和异常链路。
