@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "tool": "maskpipe-independent-verifier",
+  "database": "reports/threeway-low-contrast/dbs/full.db",
+  "snapshot_id": "low-contrast-pv-eb23fade9110",
+  "algorithm_version": "maskpipe-algo-1.0.0",
+  "param_version": "pv-eb23fade9110",
+  "reconstructed_mask_hash": "b9dd2e8fcb7a305e0d64e2716d4694c2dc9f948d7df90a9367e94b02a3fa29d9",
+  "region_count": 3,
+  "regions": [
+    {
+      "id": 1,
+      "centroid": {
+        "x": 121.0385629531971,
+        "y": 38.96539222148978
+      },
+      "area": 1517,
+      "bbox": {
+        "min_x": 101,
+        "min_y": 20,
+        "max_x": 140,
+        "max_y": 57,
+        "width": 40,
+        "height": 38
+      }
+    },
+    {
+      "id": 2,
+      "centroid": {
+        "x": 40,
+        "y": 40
+      },
+      "area": 1252,
+      "bbox": {
+        "min_x": 18,
+        "min_y": 22,
+        "max_x": 61,
+        "max_y": 57,
+        "width": 44,
+        "height": 36
+      }
+    },
+    {
+      "id": 3,
+      "centroid": {
+        "x": 200.1324655436447,
+        "y": 120.0114854517611
+      },
+      "area": 1306,
+      "bbox": {
+        "min_x": 178,
+        "min_y": 101,
+        "max_x": 221,
+        "max_y": 138,
+        "width": 44,
+        "height": 38
+      }
+    }
+  ],
+  "expected_stages": 18,
+  "stored_stages": 18,
+  "truth_check": {
+    "ok": true,
+    "predicted_count": 3,
+    "truth_count": 3,
+    "items": [
+      {
+        "region_id": 1,
+        "centroid_error_px": 0.05181505276166651,
+        "area_relative_error": 0.001973684210526316,
+        "bbox_error_px": 0
+      },
+      {
+        "region_id": 2,
+        "centroid_error_px": 0,
+        "area_relative_error": 0,
+        "bbox_error_px": 0
+      },
+      {
+        "region_id": 3,
+        "centroid_error_px": 0.13296253553255527,
+        "area_relative_error": 0.010606060606060607,
+        "bbox_error_px": 0
+      }
+    ]
+  },
+  "note": ""
+}

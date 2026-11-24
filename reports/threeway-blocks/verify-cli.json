@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "tool": "maskpipe-independent-verifier",
+  "database": "reports/threeway-blocks/dbs/full.db",
+  "snapshot_id": "blocks-pv-d149f424c9ba",
+  "algorithm_version": "maskpipe-algo-1.0.0",
+  "param_version": "pv-d149f424c9ba",
+  "reconstructed_mask_hash": "56726e5778d60f1010442d0d38f9ad85f6cc0d77c5ea0e9366b31d45137df31c",
+  "region_count": 3,
+  "regions": [
+    {
+      "id": 1,
+      "centroid": {
+        "x": 159.96374216651745,
+        "y": 32.068487018800354
+      },
+      "area": 1117,
+      "bbox": {
+        "min_x": 141,
+        "min_y": 13,
+        "max_x": 178,
+        "max_y": 50,
+        "width": 38,
+        "height": 38
+      }
+    },
+    {
+      "id": 2,
+      "centroid": {
+        "x": 32,
+        "y": 34
+      },
+      "area": 1152,
+      "bbox": {
+        "min_x": 14,
+        "min_y": 18,
+        "max_x": 49,
+        "max_y": 49,
+        "width": 36,
+        "height": 32
+      }
+    },
+    {
+      "id": 3,
+      "centroid": {
+        "x": 97,
+        "y": 95
+      },
+      "area": 1292,
+      "bbox": {
+        "min_x": 78,
+        "min_y": 78,
+        "max_x": 115,
+        "max_y": 111,
+        "width": 38,
+        "height": 34
+      }
+    }
+  ],
+  "expected_stages": 18,
+  "stored_stages": 18,
+  "truth_check": {
+    "ok": true,
+    "predicted_count": 3,
+    "truth_count": 3,
+    "items": [
+      {
+        "region_id": 1,
+        "centroid_error_px": 0.07749259469787108,
+        "area_relative_error": 0.006227758007117438,
+        "bbox_error_px": 0
+      },
+      {
+        "region_id": 2,
+        "centroid_error_px": 0,
+        "area_relative_error": 0,
+        "bbox_error_px": 0
+      },
+      {
+        "region_id": 3,
+        "centroid_error_px": 0,
+        "area_relative_error": 0,
+        "bbox_error_px": 0
+      }
+    ]
+  },
+  "note": ""
+}

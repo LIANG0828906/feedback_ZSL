@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MaskPipe 并行掩码诊断台</title>
+<style>
+:root{--bg:#0f172a;--panel:#111c33;--line:#26344f;--text:#e5edff;--muted:#93a4c3;--ok:#22c55e;--run:#38bdf8;--wait:#64748b;--fail:#ef4444;--warn:#f59e0b}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#0b1224}
+h1{font-size:18px;margin:0 12px 0 0} h2{font-size:14px;margin:0 0 10px;color:#c7d6f5}
+button,a.btn{border:1px solid #344767;background:#1b2a47;color:var(--text);padding:7px 11px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block;font-size:13px}
+button:hover,a.btn:hover{border-color:#60a5fa} button.danger{border-color:#7f1d1d;background:#3b1212}
+main{padding:16px 20px;display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.span3{grid-column:span 3}.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span12{grid-column:span 12}
+.images{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.images figure{margin:0;background:#0b1224;border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center}.images img{max-width:100%;width:100%;height:150px;object-fit:contain;image-rendering:pixelated;background:repeating-conic-gradient(#111827 0% 25%,#0b1220 0% 50%) 50%/16px 16px}
+table{border-collapse:collapse;width:100%;font-size:12px} th,td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top} th{color:var(--muted);font-weight:600}
+.matrix td.stage{cursor:pointer;text-align:center;font-family:ui-monospace,monospace;min-width:58px}.pending{background:#334155}.processing{background:#0369a1;animation:pulse 1s infinite}.committed{background:#166534}.failed{background:#991b1b}
+@keyframes pulse{50%{opacity:.55}} .muted{color:var(--muted)} .ok{color:#86efac}.bad{color:#fca5a5}.warn{color:#fcd34d}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 10px}.kv div:nth-child(odd){color:var(--muted)}
+pre{background:#0b1224;border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto;max-height:300px;font-size:11px}
+.bar{height:10px;background:#0b1224;border-radius:999px;overflow:hidden;border:1px solid var(--line)}.bar i{display:block;height:100%;background:linear-gradient(90deg,#38bdf8,#22c55e)}
+canvas{width:100%;height:auto;background:#0b1224;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pill{border-radius:999px;padding:2px 8px;font-size:12px;border:1px solid var(--line)}
+.scroll{max-height:360px;overflow:auto}.small{font-size:12px}.right{margin-left:auto}
+@media(max-width:1100px){.span3,.span4,.span5,.span6,.span7,.span8{grid-column:span 12}.images{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>MaskPipe 诊断台</h1>
+  <button onclick="startRun('full')">全量重算</button>
+  <button onclick="startRun('incremental')">实时增量</button>
+  <button onclick="startRun('resume')">断点恢复</button>
+  <button onclick="post('/api/pause')">暂停</button>
+  <button onclick="post('/api/resume-control')">继续</button>
+  <button class="danger" onclick="post('/api/cancel')">取消</button>
+  <button onclick="loadThreeWay()">运行三路径比对</button>
+  <a class="btn" href="/api/export/mask.png" download="mask.png">导出掩码</a>
+  <a class="btn" href="/api/export/report.json" download="diagnostic-report.json">导出报告</a>
+  <span id="runPill" class="pill">idle</span>
+</header>
+<main>
+  <section class="card span12">
+    <h2>参数拖动粗略预览与同版本精确重算</h2>
+    <div style="display:grid;grid-template-columns:1.2fr 1.2fr .8fr 180px;gap:16px;align-items:center">
+      <label>颜色容差 <span id="colorValue" class="pill"></span>
+        <input id="colorTolerance" type="range" min="1" max="220" step="1" style="width:100%" oninput="onParamInput()" onchange="applyParams(true)">
+      </label>
+      <label>梯度阈值 <span id="gradientValue" class="pill"></span>
+        <input id="gradientThreshold" type="range" min="1" max="255" step="1" style="width:100%" oninput="onParamInput()" onchange="applyParams(true)">
+      </label>
+      <label>结构元素 <span id="structureValue" class="pill"></span>
+        <input id="structureSize" type="range" min="1" max="15" step="2" style="width:100%" oninput="onParamInput()" onchange="applyParams(true)">
+      </label>
+      <img id="imgPreview" src="/preview.png" alt="coarse preview" style="width:180px;height:110px;object-fit:contain;background:#0b1224;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated">
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button onclick="applyParams(true)">停止拖动并全精度重算</button>
+      <span id="previewBasis" class="small muted">拖动参数时以降采样倍率和减少迭代生成预览。</span>
+      <span id="previewCompare" class="small"></span>
+    </div>
+  </section>
+
+  <section class="card span5">
+    <h2>原图 / 真值 / 最终叠加</h2>
+    <div class="images">
+      <figure><img id="imgOriginal" src="/image/original" alt="original"><figcaption>原图</figcaption></figure>
+      <figure><img id="imgTruth" src="/image/truth" alt="truth"><figcaption>真值掩码</figcaption></figure>
+      <figure><img id="imgOverlay" src="/image/overlay" alt="overlay"><figcaption>最终掩码叠加</figcaption></figure>
+    </div>
+    <p class="muted small">所有样本、分块、预算和容差均来自本地 manifest；页面不访问网络。</p>
+    <div id="sceneKv" class="kv small"></div>
+  </section>
+
+  <section class="card span7">
+    <h2>进度与预算占用</h2>
+    <div class="row"><div class="bar" style="flex:1"><i id="progressBar" style="width:0%"></i></div><span id="progressText" class="pill">0/0</span></div>
+    <div id="budgetKv" class="kv small" style="margin-top:12px"></div>
+    <h2 style="margin-top:14px">排队明细</h2>
+    <div class="scroll"><table id="queueTable"><thead><tr><th>时间</th><th>块</th><th>阶段</th><th>原因</th><th>队列预算</th><th>等待ms</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="card span7">
+    <h2>块 × 阶段状态矩阵（点击阶段格查看块）</h2>
+    <div class="scroll"><table class="matrix" id="matrix"></table></div>
+  </section>
+
+  <section class="card span5">
+    <h2>逐块诊断 <span id="chunkTitle" class="muted"></span></h2>
+    <div class="row" style="margin-bottom:10px">
+      <img id="artifactGrow" style="width:48%;background:#0b1224;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated" alt="grow stage">
+      <img id="artifactClean" style="width:48%;background:#0b1224;border:1px solid var(--line);border-radius:8px;image-rendering:pixelated" alt="clean stage">
+    </div>
+    <div class="row">
+      <button onclick="retryStage('grow')">重试 grow</button>
+      <button onclick="retryStage('clean')">重试 clean</button>
+      <button onclick="retryStage('stats')">重试 stats</button>
+    </div>
+    <pre id="chunkJson">选择一个块...</pre>
+  </section>
+
+  <section class="card span6">
+    <h2>逐区域偏差热力图</h2>
+    <canvas id="heatmap" width="384" height="256"></canvas>
+    <div id="qualitySummary" class="small" style="margin-top:8px"></div>
+  </section>
+
+  <section class="card span6">
+    <h2>独立验证与三路径结果</h2>
+    <div id="verification" class="small"></div>
+    <h2 style="margin-top:14px">三路径比对</h2>
+    <div id="threeWay" class="small muted">点击“运行三路径比对”执行实时增量、断点恢复、全量重算。</div>
+  </section>
+</main>
+
+<script>
+let state=null, selected={x:0,y:0}, threeWay=null;
+let paramsReady=false, previewTimer=null;
+const $=id=>document.getElementById(id);
+async function api(url,opts){const r=await fetch(url,opts); const ct=r.headers.get('content-type')||''; const v=ct.includes('json')?await r.json():await r.text(); if(!r.ok) throw v; return v;}
+async function post(url){try{await api(url,{method:'POST'}); setTimeout(refresh,120);}catch(e){alert(JSON.stringify(e,null,2));}}
+async function startRun(mode){await post('/api/start?mode='+mode);}
+function stageId(x,y,s){return `c${String(x).padStart(2,'0')}_${String(y).padStart(2,'0')}.${s}`;}
+function statusMap(){
+  const m={}; const rows=(state&&state.running&&state.live_states)?state.live_states:(state?.result?.states||[]);
+  rows.forEach(r=>m[r.key.id]=r.status); return m;
+}
+function renderScene(){
+  const s=state.scene,d=s.declared;
+  $('sceneKv').innerHTML=kv([
+    ['场景',`${s.id} / ${s.scene_type}`],['尺寸',`${s.width}×${s.height}, ${s.channels}通道`],
+    ['分块',`${s.tile.width}×${s.tile.height}, ${s.cols}×${s.rows}=${s.chunk_count}`],
+    ['线程/缓冲',`${d.budget.worker_count} / ${d.budget.pixel_buffer_per_thread} px`],
+    ['预览延迟',`${d.preview_latency_ms} ms`],['真值区域',s.truth_region_count],
+    ['快照',state.snapshot_id||'-']
+  ]);
+}
+function kv(rows){return rows.map(([k,v])=>`<div>${k}</div><div>${v??'-'}</div>`).join('');}
+function renderProgress(){
+  const p=state.progress||(state.result?{committed:state.result.stage_sequence.length,total:state.scene.chunk_count*3}:null);
+  const committed=p?.committed||0,total=p?.total||state.scene.chunk_count*3;
+  const pct=total?Math.round(100*committed/total):0;
+  $('progressBar').style.width=pct+'%'; $('progressText').textContent=`${committed}/${total} · ${pct}%`;
+  $('runPill').textContent=state.running?'running':(state.last_error?'error':'committed');
+  $('runPill').className='pill '+(state.running?'processing':state.last_error?'failed':'committed');
+}
+function renderBudget(){
+  const m=state.result?.budget_metrics;
+  if(!m){$('budgetKv').innerHTML='<div class="muted">尚无预算数据</div>'; return;}
+  $('budgetKv').innerHTML=kv([
+    ['worker budget / peak',`${m.worker_budget} / ${m.max_active_workers_observed}`],
+    ['queue budget / peak depth',`${m.queue_task_budget} / ${m.peak_queued_tasks_observed}`],
+    ['pixel cap / peak thread',`${m.pixel_buffer_per_thread} / ${m.peak_thread_buffer_pixels}`],
+    ['processed tasks',m.processed_tasks],['queue events',(m.queue_events||[]).length],
+    ['elapsed ms',state.result.elapsed_ms],['mask hash',short(state.result.mask_hash)]
+  ]);
+  const tb=$('queueTable').querySelector('tbody'); tb.innerHTML=(m.queue_events||[]).map(e=>`<tr><td>${e.time}</td><td>${e.chunk}</td><td>${e.stage}</td><td class="warn">${e.reason}</td><td>${e.queue_budget}</td><td>${e.waiting_ms}</td></tr>`).join('');
+}
+function short(x){return x?x.slice(0,12):'-'}
+function renderMatrix(){
+  const sm=statusMap(), s=state.scene, stages=['grow','clean','stats'];
+  let html='<thead><tr><th>块</th>'+stages.map(x=>`<th>${x}</th>`).join('')+'</tr></thead><tbody>';
+  for(let y=0;y<s.rows;y++) for(let x=0;x<s.cols;x++){
+    html+=`<tr><td>(${x},${y})</td>`+stages.map(st=>{const id=stageId(x,y,st),v=sm[id]||'pending';return `<td class="stage ${v}" onclick="selectChunk(${x},${y},'${st}')" title="${id}">${v}</td>`}).join('')+'</tr>';
+  }
+  $('matrix').innerHTML=html+'</tbody>';
+}
+async function selectChunk(x,y,stage){
+  selected={x,y}; $('chunkTitle').textContent=`(${x},${y})`;
+  const t=Date.now();
+  $('artifactGrow').src=`/artifact?x=${x}&y=${y}&stage=grow&t=${t}`;
+  $('artifactClean').src=`/artifact?x=${x}&y=${y}&stage=clean&t=${t}`;
+  try{const j=await api(`/api/chunk?x=${x}&y=${y}`); $('chunkJson').textContent=JSON.stringify(j,null,2);}catch(e){$('chunkJson').textContent=String(e);}
+}
+async function retryStage(stage){
+  await post(`/api/retry?x=${selected.x}&y=${selected.y}&stage=${stage}`);
+  setTimeout(()=>selectChunk(selected.x,selected.y),300);
+}
+function renderVerification(){
+  const v=state.verification;
+  if(!v){$('verification').innerHTML='<span class=muted>运行中或暂无验证结果。</span>';return;}
+  const viol=v.first_violation?`<pre>${JSON.stringify(v.first_violation,null,2)}</pre>`:'<span class=ok>无哈希/版本/几何违规</span>';
+  $('verification').innerHTML=`<div class="row"><span class="pill ${v.ok?'committed':'failed'}">verify ${v.ok?'OK':'FAIL'}</span><span>stages ${v.stored_stages}/${v.expected_stages}</span><span>regions ${v.region_count}</span><span>hash ${short(v.reconstructed_mask_hash)}</span></div>${viol}`;
+}
+async function loadThreeWay(){
+  $('threeWay').textContent='运行中...';
+  try{threeWay=await api('/api/threeway'); renderThreeWay();}catch(e){$('threeWay').innerHTML=`<pre class=bad>${JSON.stringify(e,null,2)}</pre>`;}
+}
+function renderThreeWay(){
+  if(!threeWay)return;
+  let html=`<div class="row"><span class="pill ${threeWay.ok?'committed':'failed'}">${threeWay.ok?'三路径一致':'存在分歧'}</span></div><table style="margin-top:8px"><thead><tr><th>路径</th><th>OK</th><th>掩码</th><th>序列</th><th>首不一致像素</th><th>阶段</th></tr></thead><tbody>`;
+  threeWay.comparisons.forEach(c=>{html+=`<tr><td>${c.name}</td><td class="${c.ok?'ok':'bad'}">${c.ok}</td><td>${short(c.mask_hash)}</td><td>${c.sequence_length}</td><td>${c.first_mask_mismatch?`${c.first_mask_mismatch.x},${c.first_mask_mismatch.y}`:'-'}</td><td>${c.first_stage_difference||'-'}</td></tr>`});
+  $('threeWay').innerHTML=html+'</tbody></table>';
+}
+function renderHeatmap(){
+  const canvas=$('heatmap'), ctx=canvas.getContext('2d'), s=state.scene;
+  canvas.width=s.width; canvas.height=s.height;
+  ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#0b1224'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const r=state.result; if(!r)return;
+  const q=r.quality; const match={}; (q?.matches||[]).forEach(m=>match[m.predicted_id]=m);
+  r.regions.forEach(reg=>{
+    const m=match[reg.id]; let heat=0;
+    if(m){heat=Math.max(m.centroid_error_px/s.declared.quality.centroid_pixels,m.area_relative_error/s.declared.quality.area_relative,m.bbox_error_px/s.declared.quality.bbox_pixels);}
+    const color=heatColor(Math.min(1,heat));
+    drawContour(ctx,reg.contour,color);
+    ctx.fillStyle='#fff'; ctx.font='10px monospace'; ctx.fillText(String(reg.id),reg.centroid.x+3,reg.centroid.y-3);
+  });
+  $('qualitySummary').innerHTML=q?`pred=${q.predicted_count}, truth=${q.truth_count}, ok=${q.ok}; 颜色：绿=低于容差，红=接近/超过容差`:'暂无质量报告';
+}
+function drawContour(ctx,points,color){
+  if(!points||points.length<3)return; ctx.beginPath(); ctx.moveTo(points[0].x,points[0].y); points.slice(1).forEach(p=>ctx.lineTo(p.x,p.y)); ctx.closePath(); ctx.fillStyle=color.replace('ALPHA','0.42'); ctx.strokeStyle=color.replace('ALPHA','0.95'); ctx.lineWidth=1; ctx.fill(); ctx.stroke();
+}
+function heatColor(t){const r=Math.round(34+t*(239-34)),g=Math.round(197-t*(197-68)),b=Math.round(94-t*(94-68));return `rgba(${r},${g},${b},ALPHA)`;}
+function initParams(){
+  if(paramsReady||!state)return;
+  const p=state.scene.parameters;
+  $('colorTolerance').value=p.color_tolerance;
+  $('gradientThreshold').value=p.gradient_threshold;
+  $('structureSize').value=p.structure_size;
+  updateParamLabels(); paramsReady=true; refreshPreview();
+}
+function updateParamLabels(){
+  $('colorValue').textContent=$('colorTolerance').value;
+  $('gradientValue').textContent=$('gradientThreshold').value;
+  $('structureValue').textContent=$('structureSize').value+'×'+$('structureSize').value;
+}
+function paramQuery(compare){
+  const q=new URLSearchParams({
+    color_tolerance:$('colorTolerance').value,
+    gradient_threshold:$('gradientThreshold').value,
+    structure_size:$('structureSize').value
+  });
+  if(compare)q.set('compare','1');
+  return q.toString();
+}
+function onParamInput(){
+  updateParamLabels();
+  clearTimeout(previewTimer);
+  previewTimer=setTimeout(refreshPreview,160);
+}
+async function refreshPreview(){
+  const q=paramQuery(true);
+  $('imgPreview').src='/preview.png?'+q.replace('compare=1','')+'&t='+Date.now();
+  try{
+    const p=await api('/api/preview?'+q);
+    const b=p.basis;
+    $('previewBasis').textContent=`实际倍率=${p.scale} (${p.downsampled_width}×${p.downsampled_height})；迭代 ${b.full_iterations}→${b.preview_iterations}；耗时 ${p.elapsed_ms}ms / 上限 ${p.latency_budget_ms}ms；依据：${b.rule}`;
+    if(p.comparison){
+      const c=p.comparison;
+      $('previewCompare').innerHTML=`<span class="pill ${c.ok?'committed':'failed'}">预览一致性 ${c.ok?'PASS':'DIVERGE'}</span> countΔ=${c.region_count_delta} centroid=${c.max_centroid_error_px.toFixed(3)} area=${(c.max_area_relative_error*100).toFixed(2)}% pixels=${(c.pixel_mismatch_ratio*100).toFixed(2)}% maxDiff=(${c.max_difference_pixel?.x??'-'},${c.max_difference_pixel?.y??'-'})`;
+    }else{
+      $('previewCompare').innerHTML='<span class="muted">全精度结果仍为旧参数版本；停止拖动后将用相同版本快照重算并比对。</span>';
+    }
+  }catch(e){$('previewCompare').innerHTML=`<span class=bad>${JSON.stringify(e)}</span>`;}
+}
+async function applyParams(){
+  await post('/api/start?mode=full&'+paramQuery(false));
+  setTimeout(async()=>{ await refresh(); await refreshPreview(); },1800);
+}
+async function refresh(){
+  try{
+    state=await api('/api/state');
+    initParams();renderScene();renderProgress();renderBudget();renderMatrix();renderVerification();renderHeatmap();renderThreeWay();
+    const t=Date.now(); ['imgOriginal','imgTruth'].forEach(()=>{});
+    $('imgOverlay').src=`/image/overlay?t=${t}`;
+    if(selected) selectChunk(selected.x,selected.y);
+  }catch(e){console.error(e);}
+}
+refresh(); setInterval(refresh,1200);
+</script>
+</body>
+</html>

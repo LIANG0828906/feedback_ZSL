@@ -1,0 +1,110 @@
+{
+  "ok": true,
+  "tool": "maskpipe-independent-verifier",
+  "database": "reports/threeway-embedded-noise/dbs/full.db",
+  "snapshot_id": "embedded-noise-pv-6a3b5fc5386b",
+  "algorithm_version": "maskpipe-algo-1.0.0",
+  "param_version": "pv-6a3b5fc5386b",
+  "reconstructed_mask_hash": "8107ee26d73b928d69bf0035585f0ca5db45a2c73ddeba15bbc73459dad1d48d",
+  "region_count": 4,
+  "regions": [
+    {
+      "id": 1,
+      "centroid": {
+        "x": 32,
+        "y": 32
+      },
+      "area": 1020,
+      "bbox": {
+        "min_x": 14,
+        "min_y": 14,
+        "max_x": 49,
+        "max_y": 49,
+        "width": 36,
+        "height": 36
+      }
+    },
+    {
+      "id": 2,
+      "centroid": {
+        "x": 160,
+        "y": 32
+      },
+      "area": 1020,
+      "bbox": {
+        "min_x": 142,
+        "min_y": 14,
+        "max_x": 177,
+        "max_y": 49,
+        "width": 36,
+        "height": 36
+      }
+    },
+    {
+      "id": 3,
+      "centroid": {
+        "x": 96,
+        "y": 96
+      },
+      "area": 1296,
+      "bbox": {
+        "min_x": 78,
+        "min_y": 78,
+        "max_x": 113,
+        "max_y": 113,
+        "width": 36,
+        "height": 36
+      }
+    },
+    {
+      "id": 4,
+      "centroid": {
+        "x": 223.98387096774192,
+        "y": 160.0073313782991
+      },
+      "area": 1023,
+      "bbox": {
+        "min_x": 205,
+        "min_y": 143,
+        "max_x": 242,
+        "max_y": 176,
+        "width": 38,
+        "height": 34
+      }
+    }
+  ],
+  "expected_stages": 36,
+  "stored_stages": 36,
+  "truth_check": {
+    "ok": true,
+    "predicted_count": 4,
+    "truth_count": 4,
+    "items": [
+      {
+        "region_id": 1,
+        "centroid_error_px": 0,
+        "area_relative_error": 0,
+        "bbox_error_px": 0
+      },
+      {
+        "region_id": 2,
+        "centroid_error_px": 0,
+        "area_relative_error": 0,
+        "bbox_error_px": 0
+      },
+      {
+        "region_id": 3,
+        "centroid_error_px": 0,
+        "area_relative_error": 0,
+        "bbox_error_px": 0
+      },
+      {
+        "region_id": 4,
+        "centroid_error_px": 0.017717076207626435,
+        "area_relative_error": 0.0009765625,
+        "bbox_error_px": 0
+      }
+    ]
+  },
+  "note": ""
+}
