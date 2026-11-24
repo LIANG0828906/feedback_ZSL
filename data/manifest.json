@@ -1,0 +1,389 @@
+{
+  "seed": 1118333214,
+  "generator_version": "generator-1.0.0",
+  "algorithm_version": "algo-1.0.0",
+  "data_dir": "data",
+  "budget": {
+    "tile_size": 64,
+    "worker_threads": 4,
+    "pixel_buffer_per_thread": 65536,
+    "preview_delay_ms": 250,
+    "seed": 1118333214
+  },
+  "tolerances": {
+    "mask_iou_min": 0.93,
+    "mask_mismatch_ratio_max": 0.08,
+    "centroid_px": 2.5,
+    "area_rel": 0.08,
+    "hole_count": 0,
+    "preview_region_count": 0,
+    "preview_centroid_px": 3.5,
+    "preview_area_rel": 0.14
+  },
+  "images": [
+    {
+      "id": "icon_grid_128",
+      "file": "images/icon_grid_128.png",
+      "mask_file": "masks/icon_grid_128.mask.png",
+      "width": 128,
+      "height": 128,
+      "channels": 4,
+      "sha256": "df82841fd76613267612187484a58951920d2deb61da2a01888aee093afe8e75",
+      "mask_sha256": "0813d6fc15d038da37080766a9ede399778e871578c5869e218b8479dfdacdfd",
+      "reference_mask_png_base64": "iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAAAAADmVT4XAAAB70lEQVR4nOya21LGIAyEreP7v3K80rElR7oBnNlc1SndfMTA35R8fmw2AhCAAAQgAAEIsB3gy7knv1dXH4ApLdmB4ZO+iqGrieQQPPeaiqpqiSQQIv+DiJaEpkisHo94DlEAHJGEftVGANdJQJACFB8A4aJiT4DQAZpg+074AKhnMRhgvd0BJrIYC7DBCEAAAtwBUi892BfEwyKQmR34Dfm0CMTzQ5cIQwQCB/ASZfwXuC4QeFcA4Kk0lGhaEppuYv/1VXRmaaYJLS5OH0qN5fl2O24nJAABCEAAAhCAAAQgAAEIQAACLDfv8PqtparrqPCW2dI8+32hKQLjRwprJsH8ZOrrROXwuyEC9icaLQr+KhBfsOhfvQlfhtWzZxdAUpoV/+MAD0DSqnn/mQaGteYAiHrp2sTRb+dW/LPwXSx7l5HkOPORP8+YNzojcN2uzSiYOSDunzhDroIbpHcsIAmAYcbFEAw5YyXRqfuAMt+mLDg0Aupse0JQiUALgQoA8JReRch+QnOte3vEiUkIamgU0a9jgHm7dISn+9uw8dfQf6utFQmJiGFzAHF8v7ul86XVj+/RPaXlHhT4PlBt8sD3lBZ7UFo6AyrleVNrQr4FpK03IvuJprM543+0gJz4c0wAAhCAAARYa98BAAD//9AnZ9kEZdEbAAAAAElFTkSuQmCC",
+      "truth_fingerprint": "eebb374e1c8efe0f49ace8c2931b89844291c12577c7386321da0dcaffe10f89",
+      "regions": [
+        {
+          "id": "R1",
+          "index": 0,
+          "centroid_x": 31.5,
+          "centroid_y": 31.5,
+          "area": 956,
+          "bbox": {
+            "x": 13,
+            "y": 16,
+            "width": 38,
+            "height": 32
+          },
+          "holes": 0
+        },
+        {
+          "id": "R2",
+          "index": 1,
+          "centroid_x": 95.5,
+          "centroid_y": 31.5,
+          "area": 1092,
+          "bbox": {
+            "x": 77,
+            "y": 17,
+            "width": 38,
+            "height": 30
+          },
+          "holes": 0
+        },
+        {
+          "id": "R3",
+          "index": 2,
+          "centroid_x": 95.5,
+          "centroid_y": 95.5,
+          "area": 1032,
+          "bbox": {
+            "x": 75,
+            "y": 77,
+            "width": 42,
+            "height": 38
+          },
+          "holes": 1
+        },
+        {
+          "id": "R4",
+          "index": 3,
+          "centroid_x": 31.51863857374392,
+          "centroid_y": 99.19611021069692,
+          "area": 617,
+          "bbox": {
+            "x": 14,
+            "y": 78,
+            "width": 36,
+            "height": 33
+          },
+          "holes": 0
+        }
+      ]
+    },
+    {
+      "id": "icon_wide_192x128",
+      "file": "images/icon_wide_192x128.png",
+      "mask_file": "masks/icon_wide_192x128.mask.png",
+      "width": 192,
+      "height": 128,
+      "channels": 4,
+      "sha256": "ca6a2ec7c83a7e5a5ec2230662c84f87b8b097e750cc4d582d14be2a8a5603eb",
+      "mask_sha256": "f133b93d239cb6b3eb62271e14485da9e08231c897c4d56759900af38c282344",
+      "reference_mask_png_base64": "iVBORw0KGgoAAAANSUhEUgAAAMAAAACACAAAAAB47zm3AAACb0lEQVR4nOybW3KFIAyGq9P9b5m+dHoqJCGR3GDyvZxaY/AnoBLg/tqcEhBNCYimBERTAqIpAdFsL+Db0nn7/b0My7Dz3XzKsXLcvEoy6gPj/UP/4jiaXTb0gdkFrIoEnTSTGPQRmNYTpyIRmxcxaNOrbnEZcxPU4l0rornlJcyMiPNSBW1+0f3CP21GntWPQeo3cXv8wKgLmNSxJASNc1HqCHDQFqDyGB4siYsqAmY09OCBsgCVF6GItBFo5OGHtAK4ZBUw1DgWgqwC2CQVwB8QJRXAJ6cAeEQHmuYUICClAMmQVFkAY9w+NxENSVNGQEJCAbIxtbaAaQPRTg7li4AwKaAuYFLD6tm5dBGQJgUeApjVQ5uRZ/XTo7fc/8yIOL/wDsAMbmkJDBPUwiI9Pfi0S6/bTHEYzZtACmyKMnoKATdrVFU1yUfhMc26PenexFJKQDQlIJoSEE0JiKYERFMCoikB0ZSAaEpANCUgmhIQTQmIhtrB8clueucGBel59NZ6H44a8CkKftLbL7/PKpq4CfCuMB8eEqQzRFAndl3/vwogQHH9v5zVWUr/9f+rDAIUl8+/QL7y12QTkCcWm4BcOexTAn799uuwU006Ut9C199vsmbzH6IJXeCf2cD3kV3oQap4bN+JUQEXeZiHcyOwC+cK4O4iiuasCOBPe/wNEQ0RAd5mzGjovBD4MZeLp4CL03VTtaDDOrHS0mNX+gi478BYZWhC3hsYxO47k7EPOK//XwXoxEvr/1cRN2HoKeS6/n+VM9PrkJ/NJjg6R4mnmLbntE+J/SgB0ZSAaEpANCUgmhIQzfYCfgIAAP//ng5z1+rfYRMAAAAASUVORK5CYII=",
+      "truth_fingerprint": "0c04beefe566b625d35745c26fe281cb2b1f556c48da87852722c00ab2898fd0",
+      "regions": [
+        {
+          "id": "R1",
+          "index": 0,
+          "centroid_x": 95.5,
+          "centroid_y": 31.5,
+          "area": 1132,
+          "bbox": {
+            "x": 78,
+            "y": 12,
+            "width": 36,
+            "height": 40
+          },
+          "holes": 0
+        },
+        {
+          "id": "R2",
+          "index": 1,
+          "centroid_x": 159.5,
+          "centroid_y": 35.52758620689655,
+          "area": 580,
+          "bbox": {
+            "x": 143,
+            "y": 15,
+            "width": 34,
+            "height": 32
+          },
+          "holes": 0
+        },
+        {
+          "id": "R3",
+          "index": 2,
+          "centroid_x": 31.5,
+          "centroid_y": 31.5,
+          "area": 1240,
+          "bbox": {
+            "x": 12,
+            "y": 16,
+            "width": 40,
+            "height": 32
+          },
+          "holes": 0
+        },
+        {
+          "id": "R4",
+          "index": 3,
+          "centroid_x": 31.5,
+          "centroid_y": 95.5,
+          "area": 956,
+          "bbox": {
+            "x": 12,
+            "y": 78,
+            "width": 40,
+            "height": 36
+          },
+          "holes": 1
+        },
+        {
+          "id": "R5",
+          "index": 4,
+          "centroid_x": 159.5,
+          "centroid_y": 95.5,
+          "area": 1212,
+          "bbox": {
+            "x": 142,
+            "y": 78,
+            "width": 36,
+            "height": 36
+          },
+          "holes": 0
+        }
+      ]
+    },
+    {
+      "id": "icon_tall_128x192",
+      "file": "images/icon_tall_128x192.png",
+      "mask_file": "masks/icon_tall_128x192.mask.png",
+      "width": 128,
+      "height": 192,
+      "channels": 4,
+      "sha256": "a9c50a84510065c0be8336a63710b5539080c720fc3214e6e189b6822d6b5483",
+      "mask_sha256": "ad298669b8e82bdf6cf17ebf0a77958dc7a1cec3521fd8977449342e436b5d5c",
+      "reference_mask_png_base64": "iVBORw0KGgoAAAANSUhEUgAAAIAAAADACAAAAADpDTR7AAAClElEQVR4nOyc2xLjIAiGa2ff/5XZi53ZaZVjgMSxP1dNNfCFqFFkfL8eFgAAAAAAAAAAAPDHKKfXuKyb/v9SdFgABdb/XUgMxvORXcU2r5pq8QBnXnqbeiMkWV3YvlDQ0AsUYKZIBSBTY8w+V6gBkEtnxD5T/PhApAAQ+9MQs+ZcodgDDlLyAsxDWZPs2wZIvfTd5Km0rQeWZ+lqBbt6gHneJhds6gH2aXtcwAIIploIal+Ba/Y2TIDQjCYrOzbC2JTqWxzvYJgAKTEJ5gorQHBOl5XyNmC4YCleAKKTyhjBWtjQCxQCpmgGCE8qIwRcQcvacAQWp9dX/4bMCBeX50UMnVaysuO3AAAAAAAAAAAAAAAAAAAAAAB+DODGrVt+jaqtWy+ubrUQxqpIVO1d34fsM2p4vbwSF4MVwrHjhLloeTjGxDRCWUcmn0OS4khpwc5pOlAZlI44YQYg7sJagAtbr7UAD8hXN5RGv3kju7IzKh+j8fGrL39ABBjT1R2b1yTan/6ohHm8EQoATDNrinjv6gEA/GgGhdrV1UEiIeJISG1DjxPgE6HP/AQwfPlbpUPSVo3wUhJKLcCFFIxigHgKRjVAOAOiHCCaARErX6sw44A8/eqYErDdUDDksR9uQ5sGKGZVT4RoMnJnG0rLZt8CAAAAAAAAAAAAAAAAAAAAADgQgKwY4+keIDPMuoRoogkIWRkx80EEsm84e+/Yc3zAm7nBqddfT7vh5G7oOz7gYA84jw841wPe4wOO9YD7+IBTPeDf/D7UA4HjA1oAIgmRR76Cpw9EisneJzLdIfUAhUdC3SLlAKkzqZxLjq1zSJJnUj2QQ7Joyy1Oi9eWd8h53RAAAAAAAAAAAABE5W8AAAD//7FmkUxGs88bAAAAAElFTkSuQmCC",
+      "truth_fingerprint": "80ca4dcbc4a9a3ec262b5f4a3d6305f390d91403ab7f48c5680d1aed1570fae6",
+      "regions": [
+        {
+          "id": "R1",
+          "index": 0,
+          "centroid_x": 31.5,
+          "centroid_y": 35.52577319587629,
+          "area": 582,
+          "bbox": {
+            "x": 15,
+            "y": 15,
+            "width": 34,
+            "height": 32
+          },
+          "holes": 0
+        },
+        {
+          "id": "R2",
+          "index": 1,
+          "centroid_x": 95.5,
+          "centroid_y": 31.5,
+          "area": 1024,
+          "bbox": {
+            "x": 77,
+            "y": 15,
+            "width": 38,
+            "height": 34
+          },
+          "holes": 0
+        },
+        {
+          "id": "R3",
+          "index": 2,
+          "centroid_x": 95.5,
+          "centroid_y": 95.5,
+          "area": 1300,
+          "bbox": {
+            "x": 78,
+            "y": 77,
+            "width": 36,
+            "height": 38
+          },
+          "holes": 0
+        },
+        {
+          "id": "R4",
+          "index": 3,
+          "centroid_x": 31.5,
+          "centroid_y": 95.5,
+          "area": 968,
+          "bbox": {
+            "x": 11,
+            "y": 78,
+            "width": 42,
+            "height": 36
+          },
+          "holes": 1
+        },
+        {
+          "id": "R5",
+          "index": 4,
+          "centroid_x": 95.5,
+          "centroid_y": 163.19417475728156,
+          "area": 618,
+          "bbox": {
+            "x": 78,
+            "y": 142,
+            "width": 36,
+            "height": 33
+          },
+          "holes": 0
+        },
+        {
+          "id": "R6",
+          "index": 5,
+          "centroid_x": 31.5,
+          "centroid_y": 159.5,
+          "area": 1168,
+          "bbox": {
+            "x": 12,
+            "y": 145,
+            "width": 40,
+            "height": 30
+          },
+          "holes": 0
+        }
+      ]
+    },
+    {
+      "id": "icon_strip_256x128",
+      "file": "images/icon_strip_256x128.png",
+      "mask_file": "masks/icon_strip_256x128.mask.png",
+      "width": 256,
+      "height": 128,
+      "channels": 4,
+      "sha256": "dc4b7096001fc4c76ac66641e385c039e10b8ecbdb2ec0fe05ef638716d5ac1f",
+      "mask_sha256": "60d10ac7fb54661531518d027a04fb5d20dc4587eb2aab12fbee72f795449890",
+      "reference_mask_png_base64": "iVBORw0KGgoAAAANSUhEUgAAAQAAAACACAAAAADB3ujWAAADMklEQVR4nOyc0XqsIAyEl359/1emF213PzWERBImYP6LnnaNMI456iLh6/Vw0gC0ADRpAFoAmjQALQBNGoAWgCYNQAtAkwagBaD55jbWv3/LHC0Q2sdWhXGL0zywKg0MjCSDG9vOh99rhtGAck6YwfQ1gDr+V51zKGTfb6Qazq00TwT5cUuD3oGq3Ys/fKkIuhVyT+o22BTRVzeKoIf7IeTHhAFMD1oHqnInUWg3SHUCN3wQ0p3AqwGswboUqMqdhIF8mFK/ZwbUdrcTOhVuvtwGew2s9UBUukfkmAGV/NWZQ0+lfH62pGx4EXxTLr8QnA24f49hA2deBf4p5K9nNssA/VOSmwGV/XMCpfnHgc0yQI+XAZczjrgKSMgM8GmWON9BUyAzwKVVekTJpSuZhnbfLgZoBiRsEXxTOYWcDei2sM6XIdl3EY8MAA6p0d1x/e52ETx+86ufn2QANR5QhoeluSGp2f+B+jm3Wwb0ztBl89UAtoWxBDB668GHKfVvlwGsA8QmwgBdA2e0g5La9kfu1NQGKgNUDdiif5BRhJAf07GKd2vm+Lwc1bli+Hoch/D1eE6Q6O7db2Np2AN7wiSpx7Phg5CONAAtAE0agBaAJg1AC0CTBqAFoEkD0ALQpAFoAWjSALQANGkAWgCaNAAtAE0agBaAJg1AC0CTBqAFoHm8AewCCrdBzi9Q4iGqPcVhvgXd8n2HDDCbJ/hpyNE4+6ZtprgYTdDol++bZ4BJ5Sldb+GSByHvAmbT7QXl+9YGGBRe1vZsc4fp5vEyYHL5fjgDhmaaNmJXqhewq10WEswAm0VULoGTS2aWIpYBNqvIEGGTy+ZWIpQBJqvI0EHNfUIZgGBXA8Tl+7saIGZTA+Tl+5saIGdPAxTl+3saoCCUASaVo+MLKi7Pwgsq2lSOqohlgAmjK0pCsSmd1RDMAIM1TAItqXkL7QIIo4QzYHQBB+2gqrUBBsvwlHahs8O7oXgZoK50P6AeVTZ/Nzi+Cs1v1KzqdYd2OQee8Ho81gSJLj6SFpoi83hC3gVmkgagBaBJA9AC0KQBaAFo0gC0ADRpAFoAmjQALQDNTwAAAP//xTKlwqq06JIAAAAASUVORK5CYII=",
+      "truth_fingerprint": "ae9bb4718cd14dde3c40b812aeb883dd803053ff888de362697dfe51f7e1803f",
+      "regions": [
+        {
+          "id": "R1",
+          "index": 0,
+          "centroid_x": 31.5,
+          "centroid_y": 31.5,
+          "area": 1024,
+          "bbox": {
+            "x": 15,
+            "y": 13,
+            "width": 34,
+            "height": 38
+          },
+          "holes": 0
+        },
+        {
+          "id": "R2",
+          "index": 1,
+          "centroid_x": 223.5,
+          "centroid_y": 31.5,
+          "area": 784,
+          "bbox": {
+            "x": 206,
+            "y": 15,
+            "width": 36,
+            "height": 34
+          },
+          "holes": 1
+        },
+        {
+          "id": "R3",
+          "index": 2,
+          "centroid_x": 95.5,
+          "centroid_y": 35.206225680933855,
+          "area": 514,
+          "bbox": {
+            "x": 80,
+            "y": 16,
+            "width": 32,
+            "height": 30
+          },
+          "holes": 0
+        },
+        {
+          "id": "R4",
+          "index": 3,
+          "centroid_x": 159.5,
+          "centroid_y": 31.5,
+          "area": 1152,
+          "bbox": {
+            "x": 140,
+            "y": 17,
+            "width": 40,
+            "height": 30
+          },
+          "holes": 0
+        },
+        {
+          "id": "R5",
+          "index": 4,
+          "centroid_x": 95.5,
+          "centroid_y": 95.5,
+          "area": 1156,
+          "bbox": {
+            "x": 79,
+            "y": 78,
+            "width": 34,
+            "height": 36
+          },
+          "holes": 0
+        },
+        {
+          "id": "R6",
+          "index": 5,
+          "centroid_x": 223.5,
+          "centroid_y": 99.52758620689656,
+          "area": 580,
+          "bbox": {
+            "x": 207,
+            "y": 79,
+            "width": 34,
+            "height": 32
+          },
+          "holes": 0
+        },
+        {
+          "id": "R7",
+          "index": 6,
+          "centroid_x": 159.5,
+          "centroid_y": 95.5,
+          "area": 1008,
+          "bbox": {
+            "x": 140,
+            "y": 80,
+            "width": 40,
+            "height": 32
+          },
+          "holes": 0
+        }
+      ]
+    }
+  ]
+}

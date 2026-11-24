@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IconBench 前景分离工作台</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>IconBench 分水岭分离工作台</h1>
+      <p>确定性样本 · 标记分水岭 · RAG 合并 · SQLite 原子检查点 · 三路径一致性</p>
+    </div>
+    <div class="top-actions">
+      <span id="health" class="chip">检查本地服务…</span>
+      <button id="curveBtn" class="secondary">容差收紧曲线</button>
+      <button id="verifyBtn" class="secondary">独立验证持久层</button>
+      <button id="recomputeBtn">停止交互：全精度重算</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel controls">
+      <h2>样本</h2>
+      <div id="imageTabs" class="tabs"></div>
+
+      <h2>参数快照</h2>
+      <div class="version-line">
+        <span>版本 <b id="versionLabel">v1</b></span>
+        <span>哈希 <code id="hashLabel">—</code></span>
+      </div>
+
+      <label class="slider">
+        <span>淹没阈值 <b id="floodValue">72</b></span>
+        <input id="flood_threshold" type="range" min="1" max="255" step="1" value="72" />
+        <small>合法区间 [1, 255]；越低越多高梯度屏障</small>
+      </label>
+
+      <label class="slider">
+        <span>合并代价上限 <b id="mergeValue">42</b></span>
+        <input id="merge_cost_cap" type="range" min="0" max="200" step="1" value="42" />
+        <small>完整合法区间 [0, 1000]；收紧时区域数单调不减</small>
+      </label>
+
+      <label class="slider">
+        <span>最小区域面积 <b id="minAreaValue">24</b></span>
+        <input id="min_region_area" type="range" min="1" max="1000" step="1" value="24" />
+        <small>合法区间 [1, 100000]</small>
+      </label>
+
+      <label class="slider">
+        <span>面积差上限 <b id="areaDiffValue">2500</b></span>
+        <input id="area_diff_cap" type="range" min="0" max="10000" step="50" value="2500" />
+        <small>完整合法区间 [0, 1000000]</small>
+      </label>
+
+      <div class="grid-2">
+        <label>梯度算子
+          <select id="gradient_operator">
+            <option value="sobel">Sobel</option>
+            <option value="scharr">Scharr</option>
+          </select>
+        </label>
+        <label>平滑核
+          <select id="smooth_kernel">
+            <option value="0">0 / 关闭</option>
+            <option value="3" selected>3×3</option>
+            <option value="5">5×5</option>
+          </select>
+        </label>
+        <label>清理半径
+          <select id="morph_radius">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </label>
+        <label>预览降采样
+          <select id="factor">
+            <option value="1">1×（精确）</option>
+            <option value="2" selected>2×</option>
+            <option value="3">3×</option>
+            <option value="4">4×</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="budget" class="budget"></div>
+      <div id="paramError" class="error-box hidden"></div>
+    </aside>
+
+    <section class="workspace">
+      <div id="judgmentBanner" class="banner idle">等待样本与重算…</div>
+
+      <div class="image-grid">
+        <figure class="image-card">
+          <figcaption>原始图标 / 加载校验</figcaption>
+          <div class="canvas-wrap"><img id="originalImg" alt="原始图标" /></div>
+        </figure>
+        <figure class="image-card preview">
+          <figcaption>拖动时粗略预览 <span id="previewMeta" class="meta"></span></figcaption>
+          <div class="canvas-wrap"><img id="previewImg" alt="预览叠加" /></div>
+          <div id="basisLine" class="basis-line">尚未生成预览。</div>
+        </figure>
+        <figure class="image-card exact">
+          <figcaption>停止后精确掩码叠加 <span id="exactMeta" class="meta"></span></figcaption>
+          <div class="canvas-wrap"><img id="exactImg" alt="精确结果叠加" /></div>
+        </figure>
+        <figure class="image-card truth">
+          <figcaption>解析真值参考掩码</figcaption>
+          <div class="canvas-wrap"><img id="truthImg" alt="真值掩码" /></div>
+        </figure>
+      </div>
+
+      <div class="metric-cards">
+        <div><span>预测/真值区域</span><b id="regionCount">—</b></div>
+        <div><span>掩码 IoU</span><b id="iouValue">—</b></div>
+        <div><span>差异像素</span><b id="mismatchValue">—</b></div>
+        <div><span>最大重心偏差</span><b id="centroidValue">—</b></div>
+        <div><span>最大面积误差</span><b id="areaValue">—</b></div>
+        <div><span>提交层数</span><b id="commitValue">—</b></div>
+      </div>
+
+      <div class="bottom-grid">
+        <section class="panel table-panel">
+          <h2>逐区域偏差报告</h2>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>真值</th><th>预测</th><th>重心 px</th><th>面积误差</th><th>孔洞</th><th>IoU</th></tr></thead>
+              <tbody id="regionRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel table-panel">
+          <h2>一致性判定历史</h2>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>#</th><th>版本</th><th>结果</th><th>区域</th><th>重心</th><th>面积</th><th>首异区/坐标</th></tr></thead>
+              <tbody id="judgmentRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel table-panel">
+          <h2>块/层提交序列与资源排队</h2>
+          <div class="two-col">
+            <div class="table-scroll short">
+              <table>
+                <thead><tr><th>seq</th><th>块</th><th>层</th><th>hash</th></tr></thead>
+                <tbody id="sequenceRows"></tbody>
+              </table>
+            </div>
+            <div>
+              <h3>排队记录</h3>
+              <pre id="queueLog" class="log">—</pre>
+              <h3>验证输出</h3>
+              <pre id="verifyLog" class="log">尚未运行独立验证。</pre>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
