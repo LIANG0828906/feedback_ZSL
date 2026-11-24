@@ -1,23 +1,149 @@
-从无到有搭建时，需要构建一套面向游戏与互动媒体的点云与三维重建显示桌面应用，交付可交互的专业应用与可重复演示。本地确定性样本生成器按固定种子产出多组点云：分别以 PLY ascii、PLY binary_little_endian 与自定义紧凑二进制三种格式版本表达，版本在字段顺序、可选属性（法向、颜色、强度）有无、坐标量化方式与头部元数据上不同，并附带点总数、包围盒、特征点坐标等解析真值。应用需完成点云加载与统一映射、去噪与法向估计、均匀重采样与分块表面重建，并支持旋转缩放与剖面查看。业务核心是交互延迟与计算结果一致性：拖动视角时须在 50ms 内给出粗略预览，停止交互后精确重算的最终网格必须与预览在几何轮廓与拓扑统计上一致，且多版本往返与增量重建结果逐顶点一致。
+# STRATA — Point Cloud Reconstruction Studio
 
-任务环境与准备：
-安装 Go 1.22 或更高版本，配置 Windows 下可用的 GOPATH 与模块缓存目录。
-安装 Wails CLI（v2）并准备其所需的前端构建依赖 Node.js 18 与 WebView2 运行时，用于启动桌面窗口。
-安装 SQLite 驱动依赖（如 modernc.org/sqlite 或 mattn/go-sqlite3 及对应 C 工具链），确保可创建本地数据库文件。
-准备本地确定性样本生成器所需目录，运行生成器产出三版本点云样本与真值清单；无需联网或外部账号。
-保留足够本地磁盘用于 SQLite 检查点与导出产物，构建与运行均在 Windows 本地完成。
+STRATA is a local-first desktop point-cloud and surface-reconstruction application for game and interactive-media workflows. It ships with a deterministic sample generator, three source encodings, an incremental chunked reconstruction pipeline, a preview/exact dual rendering path, SQLite checkpoints, format round-tripping, and a Wails v2 desktop shell.
 
-业务要求：
-1. 实现三版本点云加载器：读取 PLY ascii、PLY binary_little_endian 与自定义紧凑二进制描述，统一映射到内部模型并保留源版本标识；未知版本号、必填字段缺失或二进制字长不符返回 E_VER 并指出字段路径与偏移，字段顺序与可选属性须在映射时可查询。
-2. 实现点云预处理与分块表面重建管线：对内部模型执行去噪、法向估计、均匀重采样与局部拟合网格化，各阶段参数可独立配置且越界返回 E_PARA；重建面片数与特征点坐标须与解析真值在声明容差内吻合，重建网格包围盒不得越出采样点包围盒外扩范围。
-3. 实现数据分块与增量重建依赖失效：把点云划分到固定空间分块，当编辑某分块内点或调整影响该分块的参数时，仅重算该分块及其空间邻接影响分块，未受影响分块复用持久化缓存并输出含分块编号、失效原因与复用状态的清单；不得整云重建。
-4. 实现交互延迟与精确重算的双路径：拖动视角或编辑参数期间以降低采样密度与简化法向着色在 50ms 内产出预览帧，停止交互后以全精度重建与完整着色渲染精确帧；两路径须使用相同相机、裁剪平面与分块包围盒，并记录各自所用的采样率与算法模式。
-5. 实现预览与精确结果的自动一致性比对：停止交互后比较最后一次预览与精确帧的网格轮廓像素覆盖率、包围盒投影范围与面片法向直方图，任一指标超出声明容差返回 E_DIVERGE 并给出三项偏差实测值与首个不一致像素坐标及所属分块编号。
-6. 实现参数版本快照与提交边界：每次编辑点或调整重建参数生成新版本号，预览任务只读最新版本快照，精确任务启动时锁定其版本快照，两任务不得混用版本；已提交精确分块其版本与结果被冻结，后续编辑只作用于新版本，违反时返回 E_STATE 并保持原版本不变。
-7. 实现可暂停可退出可重启续跑的检查点与三条路径一致性：每提交一个重建分块把该分块点索引、重建顶点与面片、内容哈希、参数版本与算法版本原子且串行写入 SQLite，写入不得交错；实时预览、断点恢复与一次性全量重建须产出逐顶点相同的网格与相同的分块提交序列，比对不一致返回 E_DIFF 并定位首个不一致分块编号。
-8. 实现多版本格式导出与异常并发边界：把内部模型与重建结果导出为任一受支持目标版本，低版本无法表达的属性须生成 E_LOSSY 警告清单并记录降级映射痕迹，导出产物须能被对应版本加载器读回；点云文件损坏返回 E_DECODE，单分块重建异常置该分块失败并允许重试，重采样与重建可在工作线程池并行但须限制最大并行度与每线程顶点缓冲上限。
+The browser entrypoint and the Windows desktop shell share one Go service and one frontend. No Docker, external account, or network service is required at runtime.
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+![STRATA exact reconstruction](artifacts/strata-ui.png)
 
-验收：
-用本地点云样本验证三版本加载、分块增量重建与预览一致，并检查异常码与断点恢复。
+## Quick Start
+
+### Browser review (works in this WSL workspace)
+
+```bash
+go test ./...
+go run ./cmd/strata generate -seed 195 -out data/samples
+go run ./cmd/strata validate -dir data/samples -json artifacts/validation.json
+go run -tags web . -addr 127.0.0.1:4173
+```
+
+Open `http://127.0.0.1:4173`.
+
+### Windows desktop prerequisites
+
+```powershell
+go version                       # require Go >= 1.22
+go env -w GOPATH=C:\Users\<you>\go
+go env -w GOMODCACHE=C:\Users\<you>\go\pkg\mod
+node --version                   # Node.js 18+ for frontend development
+npm --version
+go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2
+wails doctor
+```
+
+Install the Microsoft WebView2 Evergreen Runtime if it is not already present. SQLite uses `modernc.org/sqlite` (pure Go), so no C toolchain is required.
+
+The checked-in `frontend/dist` is already built and the Wails config skips npm install/build. To build the native desktop binary:
+
+```powershell
+wails build -s -skipbindings
+.\build\bin\strata.exe
+```
+
+The default build selects `main_desktop.go`. The `web` build tag selects `main.go`, which serves the same UI locally for browser review.
+
+## Deterministic Samples
+
+`go run ./cmd/strata generate -seed 195 -out data/samples` writes:
+
+| Version | File | Mapping |
+|---|---|---|
+| `ply-ascii/v1` | `scene-ascii-v1.ply` | `x y z nx ny nz red green blue intensity`, text float64 |
+| `ply-binary/v1` | `scene-binary-v1.ply` | `z x y red green blue intensity`, float32 positions, no normals |
+| `pcbin/v1` | `scene-compact-v1.pcbin` | `x y z intensity`, bounding-box u16 positions, no RGB/normals |
+
+`truth.json` records the point count, source and clean bounds, extrema/features, expected face count, and per-chunk expectations. The seed-195 sample intentionally contains 24 outliers: 1,837 source points become 1,813 pipeline points.
+
+## Pipeline
+
+1. **Load and map** — PLY ASCII, PLY binary little-endian, and PCZ1 compact binary are mapped into one canonical point model. Source version, field order, offsets, optional attributes, quantization, and header metadata remain queryable.
+2. **Denoise** — statistical k-nearest-neighbour filtering (`outlierSigma`, `normalK`).
+3. **Canonicalize** — positions snap to a cross-format internal grid so ASCII, float32, and bbox-u16 inputs produce a vertex-identical reconstruction.
+4. **Uniform resample** — each 1.2 × 1.2 spatial chunk becomes a 13 × 13 grid at 0.1 spacing.
+5. **Local surface fit** — each grid face is triangulated; normals come from central differences. The 12 chunks produce 2,028 vertices and 3,456 triangles.
+6. **Incremental invalidation** — a point edit rebuilds its chunk plus Chebyshev-neighbour chunks. In the seed-195 C00 case: 4 rebuilt, 8 reused, and SQLite cache hits for unchanged chunk content.
+
+All stage parameters validate independently and return `E_PARA` when outside their declared ranges. Chunk work is bounded by `maxWorkers` and `vertexBufferLimit`.
+
+## Preview / Exact Consistency
+
+- Dragging renders a local flat-normal preview immediately; the UI also samples a backend preview at a throttled rate.
+- The backend preview uses the same camera, clipping plane, chunk bounds, and topology as the exact frame, with a reduced shading sample rate (`0.35` by default).
+- Stopping interaction triggers a full exact reconstruction and render.
+- The automatic comparison measures:
+  - silhouette coverage deviation (`<= 2%`),
+  - projected bounding-box delta (`<= 1%`),
+  - face-normal histogram L1 (`<= 18%`).
+- Failure returns `E_DIVERGE` with all three measured deviations plus the first mismatching pixel and its chunk ID.
+
+## Versions and Persistence
+
+- Every point edit or parameter change creates a new immutable snapshot.
+- Preview always reads the latest snapshot.
+- An exact task captures its snapshot before work begins, so concurrent edits can only affect newer versions.
+- Committed exact chunks are frozen; SQLite uniqueness and the service state machine return `E_STATE` on an attempted mutation of stale/frozen state.
+- Every committed chunk is serialized through one transaction containing point indices, chunk-local vertices/faces, content key/hash, parameter version, algorithm version, reason, and sequence number.
+- Pause/exit/restart resumes from committed rows. The verification suite compares full, incremental, restarted-resume, and preview paths by mesh hash and checkpoint sequence; a mismatch returns `E_DIFF` with the first differing chunk.
+
+## Export and Error Codes
+
+Clouds and meshes can be exported to any of the three target versions. Each export is immediately loaded back and checked for point/face counts. Attribute loss produces structured `E_LOSSY` warnings and downgrade traces, for example:
+
+- normals omitted by `ply-binary/v1`,
+- normals/RGB omitted by `pcbin/v1`,
+- float64 → float32,
+- float64 → bbox-u16.
+
+| Code | Meaning |
+|---|---|
+| `E_VER` | unknown format/version, missing required field, invalid record width |
+| `E_DECODE` | corrupt/truncated input or checksum failure |
+| `E_PARA` | stage/camera/clip/export parameter out of range |
+| `E_STATE` | stale snapshot, frozen chunk mutation, invalid task state |
+| `E_DIVERGE` | preview/exact metric exceeds tolerance |
+| `E_DIFF` | path mesh or checkpoint sequence mismatch |
+| `E_LOSSY` | successful export with downgrade warnings |
+
+## UI Actions
+
+The right rail exposes pipeline parameters, point edits, and the chunk ledger. The bottom bar exposes:
+
+- `PREVIEW` — low-cost flat-normal frame.
+- `FINALIZE EXACT` — full reconstruction, SQLite commit, and consistency comparison.
+- `RUN INCREMENTAL` — edit plus neighbor-aware partial rebuild.
+- `PAUSE` / `RESUME` — SQLite checkpoint continuation.
+- `VERIFY 4 PATHS` — full vs incremental vs restart-resume vs preview.
+
+Orbit with drag, zoom with the wheel, pan with Shift-drag. The section-plane control clips along X/Y/Z. Source cards switch among the three encodings; `OPEN LOCAL POINT CLOUD` accepts `.ply`/`.pcbin` in browser mode.
+
+## Verification
+
+Run:
+
+```bash
+go test ./...
+go test -race ./...
+go test -tags web .
+go run ./cmd/strata validate -dir data/samples -json artifacts/validation.json
+```
+
+The latest local validation report is [artifacts/validation.json](artifacts/validation.json). It contains measured preview/exact latency, comparison metrics, incremental reuse counts, all four path hashes/sequences, export readback results, and error-code checks.
+
+The native Wails link step requires platform WebView development libraries. In this Linux/WSL workspace the core, HTTP UI, and default desktop-package compile checks pass; the actual Windows `.exe` link/build is performed from a Windows Go toolchain as documented above.
+
+## Project Layout
+
+```text
+cmd/strata/              generator + validation CLI
+frontend/dist/           checked-in interactive UI
+internal/formats/        PLY ASCII/binary and PCZ1 codecs
+internal/generator/      deterministic terrain/outlier generator
+internal/pipeline/       denoise, resample, chunked mesh, invalidation
+internal/render/         shared camera, clipping, raster, comparison
+internal/service/        snapshots, jobs, exports, path verification
+internal/store/          atomic SQLite checkpoints and chunk cache
+internal/web/            local HTTP transport
+main.go                  browser entrypoint
+main_desktop.go          Wails v2 desktop entrypoint
+wails.json               desktop build configuration
+```
