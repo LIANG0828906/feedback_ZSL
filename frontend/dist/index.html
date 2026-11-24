@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resource Distribution Workbench</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="sigil"></div>
+        <div>
+          <h1>Resource Distribution Workbench</h1>
+          <p id="subtitle">Deterministic stratified reconstruction and bias diagnostics</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span id="run-mode" class="badge">not loaded</span>
+        <button id="btn-refresh" class="ghost">Refresh</button>
+        <button id="btn-compare" class="ghost">Compare full</button>
+        <button id="btn-export" class="primary">Export report</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>Workspace</h2>
+          <label>Region JSON path
+            <input id="region-path" placeholder="(embedded deterministic sample)" />
+          </label>
+          <label>SQLite checkpoint path
+            <input id="db-path" placeholder="user config / resource-workbench" />
+          </label>
+          <button id="btn-load" class="primary wide">Load workspace</button>
+          <p class="hint">Leave the region blank for the embedded seed-42 sample. Use <code>none</code> as the DB path to disable checkpoints.</p>
+        </section>
+
+        <section class="panel stats" id="stats"></section>
+
+        <section class="panel">
+          <h2>Zone editing</h2>
+          <label>Zone
+            <select id="zone-select"></select>
+          </label>
+          <label>Density limit
+            <input id="density-limit" type="number" min="0" step="0.001" />
+          </label>
+          <label>Rarity override
+            <input id="rarity-mix" placeholder="common=0.6,uncommon=0.3,rare=0.1" />
+          </label>
+          <label class="check"><input id="clear-rarity" type="checkbox" /> Clear rarity override</label>
+          <div class="button-row">
+            <button id="btn-apply-zone" class="primary">Apply edit</button>
+            <button id="btn-retry-zone" class="ghost">Retry zone</button>
+          </div>
+          <p class="hint">Only this zone and its declared downstream zones are invalidated.</p>
+        </section>
+
+        <section class="panel">
+          <h2>Layers</h2>
+          <label class="check"><input id="show-heat" type="checkbox" checked /> Density heat surface</label>
+          <label class="check"><input id="show-points" type="checkbox" checked /> Reconstructed points</label>
+          <label class="check"><input id="show-samples" type="checkbox" checked /> Sampling sites</label>
+          <label class="check"><input id="drag-nocollect" type="checkbox" checked /> Drag no-collect polygons</label>
+          <div class="legend">
+            <span><i class="swatch sample"></i>sample</span>
+            <span><i class="swatch point"></i>reconstructed</span>
+            <span><i class="swatch forbidden"></i>no-collect</span>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Invalidation trace</h2>
+          <div id="invalidations" class="trace"></div>
+        </section>
+      </aside>
+
+      <main class="content">
+        <section class="panel map-panel">
+          <div class="panel-heading">
+            <h2>Region diagnostics</h2>
+            <span id="map-meta" class="muted"></span>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="map-canvas"></canvas>
+            <div id="heat-legend" class="heat-legend"><span>0</span><div class="ramp"></div><span id="heat-max">max</span></div>
+          </div>
+        </section>
+
+        <section class="grid-two">
+          <div class="panel">
+            <div class="panel-heading">
+              <h2>Cumulative bias upper bounds</h2>
+              <span id="bias-status" class="badge"></span>
+            </div>
+            <div class="chart-wrap"><canvas id="bias-canvas"></canvas></div>
+            <div class="legend bias-legend">
+              <span><i class="swatch q"></i>quantization</span>
+              <span><i class="swatch se"></i>std error</span>
+              <span><i class="swatch rr"></i>rarity rounding</span>
+              <span><i class="swatch hm"></i>heatmap</span>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading">
+              <h2>Dependency propagation</h2>
+              <span id="dependency-meta" class="muted"></span>
+            </div>
+            <div id="dependency" class="dependency"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h2>Zone checkpoint summary</h2>
+            <span id="compare-result" class="muted"></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Zone</th><th>Density</th><th>SE</th><th>Samples</th><th>Area</th>
+                  <th>Points</th><th>Cache</th><th>Generation</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="zone-table"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>
