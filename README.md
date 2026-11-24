@@ -1,22 +1,191 @@
-美术组现有的贴图采样管线在降采样与色彩空间转换后频繁出现色带与精度累积偏差，团队需要在空目录中从零交付一套可诊断的定点采样与重算验证管线。本地确定性样本生成器按固定种子产出多组贴图工程：每张源贴图以声明色度采样的平面格式给出，附一组按逻辑顺序排列的采样配置变更（重采样核、下采样倍率、色彩空间转换意图与量化位深），并记录解析真值，包括若干已知采样点的期望定点值、降采样后色块边界坐标与每级处理后的误差上界。真值只来源于生成器的解析构造，不从任何处理输出反推。管线需按配置顺序逐级执行采样链，并支持编辑某一级配置后只重算真正受影响的分块。
+# Fixed-Sampler：定点贴图采样与增量重算验证管线
 
-任务环境与准备：
-安装 Go 1.22 或以上版本，并在 Windows 上确认 go build 可用。
-准备纯 Go 的 SQLite 驱动依赖，在项目内通过 go mod tidy 拉取，避免 CGO 编译问题。
-执行本地示例前先运行样本生成器按固定种子产出多组贴图工程、采样配置序列与真值清单。
-确认工作线程数、每线程采样缓冲上限与分块尺寸可从命令行注入，便于复现资源耗尽与异常链路。
+一套从空目录交付的纯 Go、无 CGO、SQLite 持久化诊断管线。它使用固定种子生成贴图工程、
+有序采样配置和解析真值，逐级执行定点重采样、色彩空间转换与位深量化，输出误差上界、
+依赖图、精确失效清单、增量/全量比对和版本化检查点。
 
-业务要求：
-1. 实现贴图工程与采样配置序列的加载校验：读取源贴图平面格式描述、有序采样配置变更与真值清单，校验平面尺寸与色度采样声明相容、下采样倍率能整除对应平面、量化位深在支持范围、配置变更序号连续；字段缺失返回 E_SCHEMA，尺寸或倍率不相容返回 E_DIM 并指出平面与倍率。
-2. 实现定点重采样核的逐级采样执行：按配置声明的重采样核与下采样倍率逐级处理各平面，权重与累加全程使用声明定点刻度并记录每步截断位置，禁止浮点累积；同一级在相同输入与配置下逐采样点输出相同，不随分块完成顺序或线程标识改变；核类型未知或刻度越界返回 E_KERNEL 并给出配置序号。
-3. 实现色彩空间转换意图的确定性执行：按声明的转换意图在色彩空间之间变换，变换矩阵以定点整型给出，逐阶段记录量化残差；要求已知采样点的期望定点值与真值偏差落在声明容差内，容差收紧时残差统计单调不增，转换意图不可达返回 E_CONV 并指出源与目标空间。
-4. 建立并输出逐级采样链的误差传播报告：逐级记录重采样权重归一化残差、下采样累加截断误差、色彩转换量化残差与位深取舍误差，并给出四项随配置序号累积的误差上界估计；上界只能由已观测的定点刻度、倍率、位深与核参数推导，不得从真值反推，报告中须逐项标明所依赖的观测值。
-5. 实现配置级依赖图与精确失效传播：显式记录每级配置、受影响平面区域、下游转换级与实际覆盖分块之间的依赖，缓存键由输入区域内容哈希、配置序号、参数值与上游缓存键共同决定；编辑某级配置或调整其顺序时仅将实际受影响分块及下游级标记失效，未失效分块复用持久化结果并输出含分块编号、失效级与原因的清单。
-6. 实现增量重算调度与全量一致性比对：对失效分块按依赖拓扑序重算并原子替换缓存，未失效分块直接复用；增量路径与从空缓存按当前完整配置序列全量重算的最终贴图、各级中间平面与分块提交序列须逐项相等，并提供自动比对功能定位首个不一致分块坐标、级序号与字段名，不一致返回 E_DIFF。
-7. 实现基于 SQLite 的版本化检查点与强制终止恢复边界：每提交一个分块须把该分块在各级的输出摘要、缓存键、内容哈希、配置序列指纹、参数版本与算法版本原子且串行写入数据库，写入不得交错；重启加载时任一内容哈希或版本不匹配须整体作废快照并全量重算，禁止混用旧级结果；用户取消可保留已完成分块，进程被强制终止后的恢复只能依据已持久化且版本匹配的分块，不得承诺一定生成退出报告。
-8. 实现独立结果验证工具与并发资源边界：验证工具仅从持久化的分块级产物、配置清单与真值指纹出发重算最终贴图与已知采样点偏差，不调用采样主路径，发现不一致时输出首个违规分块坐标、级序号与字段名；采样任务可在工作线程池并行，须限制最大并行度与每线程采样缓冲上限，缓冲耗尽时阻塞排队并记录排队原因而非静默丢弃，共享检查点写入串行且分块提交顺序稳定。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+要求 Go 1.22+。SQLite 驱动使用纯 Go 的 `modernc.org/sqlite`：
 
-验收：
-使用本地样本验证定点采样精度、增量与全量一致、误差上界与版本化恢复边界。
+```bash
+go mod tidy
+bash scripts/validate.sh
+```
+
+也可以手动执行：
+
+```bash
+go run ./cmd/gen-samples -out samples -seed 20261125
+
+go run ./cmd/sample-pipeline run \
+  --project samples/blocks420/project.json \
+  --db .validation/blocks.db \
+  --out .validation/blocks-out \
+  --workers 4 --buffer 2 --chunk-size 8
+
+go run ./cmd/verify-result \
+  --project samples/blocks420/project.json \
+  --truth samples/blocks420/truth.json \
+  --db .validation/blocks.db
+```
+
+Windows PowerShell：
+
+```powershell
+$env:CGO_ENABLED = "0"
+go build ./...
+powershell -ExecutionPolicy Bypass -File scripts\validate-windows.ps1
+```
+
+当前仓库已在 WSL Go 1.22.12 与便携版原生 Windows Go 1.22.12 上验证；详见
+`docs/VALIDATION.md`。
+
+## 生成的样本工程
+
+固定种子 `20261125` 生成三组工程：
+
+- `samples/blocks420`：48×32、4:2:0、两级 box 2× 降采样、12bit→8bit，包含色块边界。
+- `samples/rampcolor444`：36×24、4:4:4、box 3×、BT.601 YCbCr→RGB 定点矩阵、10bit→8bit。
+- `samples/mixed422`：64×32、4:2:2、nearest 2× 后 box 2×、12bit→10bit。
+
+每个目录包含 `project.json` 与 `truth.json`。真值由生成器内独立整数参考和解析几何构造，
+不读取采样引擎输出。
+
+## 命令
+
+### 运行管线
+
+```bash
+go run ./cmd/sample-pipeline run \
+  --project <project.json> \
+  --db <checkpoint.db> \
+  --out <report-dir> \
+  --workers <最大并行度> \
+  --buffer <每 worker 采样任务缓冲上限> \
+  --chunk-size <全分辨率坐标分块边长> \
+  [--fresh] \
+  [--crash-after-commit N]
+```
+
+当每线程缓冲已满，调度器记录
+`per_worker_sampling_buffer_full_blocking_enqueue` 事件，然后阻塞排队；不会静默丢弃任务。
+
+### 编辑配置与调整顺序
+
+```bash
+go run ./cmd/sample-pipeline edit \
+  --in samples/blocks420/project.json \
+  --out .validation/depth10.json \
+  --seq 3 --bit-depth 10
+
+go run ./cmd/sample-pipeline swap-order \
+  --in samples/mixed422/project.json \
+  --out .validation/reordered.json --a 1 --b 2
+```
+
+也可以直接编辑 JSON。缓存键包含配置序号和完整参数，因此交换顺序会使位置变化的级失效。
+
+### 增量/全量比对
+
+```bash
+go run ./cmd/sample-pipeline run --project edited.json --db incremental.db ...
+go run ./cmd/sample-pipeline run --project edited.json --db full.db --fresh ...
+go run ./cmd/sample-pipeline compare --a incremental.db --b full.db --project-id blocks420
+```
+
+不一致时输出首个 `chunk_index`、`chunk_x/y`、`stage_seq` 与字段路径，并返回 `E_DIFF`。
+
+### 独立验证工具
+
+`cmd/verify-result` 不导入 `internal/engine` 或 `internal/checkpoint`。它只：
+
+1. 从 SQLite 读取已持久化分块产物和版本/哈希元数据；
+2. 从 `project.json` 读取有序配置；
+3. 校验 `truth.json` 指纹；
+4. 用 `internal/verifier` 自己的定点参考重算各级；
+5. 逐分块、逐级、逐字段比对；
+6. 检查已知采样点偏差和降采样边界坐标。
+
+## 校验错误码
+
+- `E_SCHEMA`：必填字段缺失、序号不连续、位深不在支持集合等。
+- `E_DIM`：平面尺寸与色度采样声明不相容，或倍率不能整除当前平面；错误含 `plane` 与 `factor`。
+- `E_KERNEL`：核类型未知或定点刻度越界；错误含 `config_seq`。
+- `E_CONV`：转换意图在声明的源/目标空间之间不可达；错误含 `config_seq`、源空间和目标空间。
+- `E_DIFF`：增量/全量或独立验证发现字段、分块、级或真值偏差不一致。
+
+## 定点与误差报告
+
+所有权重、矩阵、累加和量化均使用 `int64` 整数运算；代码路径没有浮点累加。
+
+- 权重刻度：每级 `fixed_scale`，允许范围 `[256, 1<<30]`。
+- 像素值刻度：`project.value_scale=1000000`，一个整数码值等于 `value_scale` 个定点单位。
+- 每个输出像素记录截断分子、分母和余数；权重归一化也记录余数。
+- `report.json` 给出四类统计和累积上界：
+  - `resample_weight_normalization`
+  - `downsample_accumulation_truncation`
+  - `color_conversion_quantization`
+  - `bit_depth_rounding`
+
+每条上界都列出所依赖的观测值：`value_scale`、`fixed_scale`、`factor_x/y`、`tap_count`、
+输入/输出位深、矩阵行 L1 和等。上界不使用真值反推。
+
+## 依赖图与精确失效
+
+缓存键由以下内容的规范 JSON SHA-256 得到：
+
+- 算法版本与参数版本；
+- 配置序号和完整 stage 参数；
+- 分块坐标与分块尺寸；
+- 实际核支撑区域的内容哈希；
+- 与支撑区域相交的上游分块节点缓存键。
+
+输出目录包含：
+
+- `dependency_graph.json`：级、平面区域、覆盖分块、下游级和精确边；
+- `invalidation.json`：分块编号、坐标、失效级、原因、旧/新缓存键；
+- `report.json`：队列事件、提交顺序、残差和误差上界；
+- `commit_sequence.json`：稳定分块提交顺序；
+- `final_texture.json` 与 `levels/*.json`：最终和中间平面。
+
+全局参数（核、倍率、矩阵、位深）通常影响该级所有非空分块；未与实际支撑区域相交的上游
+分块不会进入缓存键。对齐样本中可验证依赖边保持 `from_chunk == to_chunk`，不向邻块扩散。
+
+## SQLite 检查点与恢复
+
+数据库包含：
+
+- `chunk_checkpoints`：每个分块一行，原子保存各级产物、摘要、缓存键、内容/输入哈希、
+  上游键、配置指纹、参数版本和算法版本；
+- `node_cache`：内容寻址的级节点产物；
+- `snapshots`：当前配置指纹的 `open/complete` 状态；
+- `meta`：项目清单元数据。
+
+`database/sql` 连接池限制为 1，且 `Store` 有互斥锁；每个分块的所有行在一个事务中提交，
+因此写入串行且不会交错。重启时：
+
+- 相同配置指纹的已提交分块可复用；
+- 缺失分块按拓扑级重算；
+- 任一行的内容哈希、参数版本或算法版本不匹配，会删除该项目的全部检查点和节点缓存并全量重算；
+- 当元数据表明上次运行的配置指纹与当前相同时，行内配置指纹不一致也按快照损坏整体作废；
+- 显式编辑配置后，旧指纹仅作为依赖规划输入；只有缓存键完全匹配的旧节点可复用，不会在同一
+  新快照中混用未经验证的旧级结果。
+
+`--crash-after-commit N` 在第 N 个分块事务提交后立即以 137 退出，用来复现强制终止边界。
+用户 Ctrl-C 时，已提交分块保留；未提交事务由 SQLite 回滚。强杀后不承诺生成退出报告。
+
+## 主要包
+
+- `internal/model`：JSON 契约、错误码、分块产物和报告结构。
+- `internal/samplegen`：固定种子样本与独立整数真值构造。
+- `internal/loader`：schema、色度尺寸、倍率、位深、序号和转换可达性校验。
+- `internal/engine`：定点计算、worker pool、依赖键、失效规划、调度、比对和误差报告。
+- `internal/checkpoint`：纯 Go SQLite 事务与恢复/作废。
+- `internal/verifier`：不依赖采样主路径的独立参考实现。
+- `cmd/gen-samples`、`cmd/sample-pipeline`、`cmd/verify-result`：三个可执行入口。
+
+## 验证结论
+
+最近一次完整 `go test ./...`、`go vet ./...`、Linux/Windows 构建、三组样本独立验证、
+增量/全量比对和崩溃恢复均通过。精确命令与摘要见 `docs/VALIDATION.md`。

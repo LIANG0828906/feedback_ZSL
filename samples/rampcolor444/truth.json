@@ -1,0 +1,168 @@
+{
+  "schema_version": "truth/v1",
+  "project_id": "rampcolor444",
+  "seed": 20262134,
+  "fingerprint": "ba76412470a62d73f31c400fe581cdd42f0d660b65747010cabaad158e56e486",
+  "known_points": [
+    {
+      "id": "R-2-2",
+      "stage_seq": 3,
+      "plane": "R",
+      "x": 2,
+      "y": 2,
+      "expected_fixed": 77000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "R-7-5",
+      "stage_seq": 3,
+      "plane": "R",
+      "x": 7,
+      "y": 5,
+      "expected_fixed": 92000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "R-10-6",
+      "stage_seq": 3,
+      "plane": "R",
+      "x": 10,
+      "y": 6,
+      "expected_fixed": 101000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "G-2-2",
+      "stage_seq": 3,
+      "plane": "G",
+      "x": 2,
+      "y": 2,
+      "expected_fixed": 80000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "G-7-5",
+      "stage_seq": 3,
+      "plane": "G",
+      "x": 7,
+      "y": 5,
+      "expected_fixed": 95000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "G-10-6",
+      "stage_seq": 3,
+      "plane": "G",
+      "x": 10,
+      "y": 6,
+      "expected_fixed": 104000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "B-2-2",
+      "stage_seq": 3,
+      "plane": "B",
+      "x": 2,
+      "y": 2,
+      "expected_fixed": 83000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "B-7-5",
+      "stage_seq": 3,
+      "plane": "B",
+      "x": 7,
+      "y": 5,
+      "expected_fixed": 98000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "B-10-6",
+      "stage_seq": 3,
+      "plane": "B",
+      "x": 10,
+      "y": 6,
+      "expected_fixed": 107000000,
+      "tolerance_fixed": 100000
+    }
+  ],
+  "block_boundaries": null,
+  "error_bounds": [
+    {
+      "stage_seq": 1,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 9207,
+      "basis": "Vmax=1023000000 FX, taps=9, weight_scale=1000003, truncation divisor=1000003"
+    },
+    {
+      "stage_seq": 1,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 1,
+      "basis": "Vmax=1023000000 FX, taps=9, weight_scale=1000003, truncation divisor=1000003"
+    },
+    {
+      "stage_seq": 1,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 0,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 1,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 0,
+      "basis": "no bit-depth stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 2,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 25522,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 2,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 3,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 2,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 1,
+      "basis": "matrix_scale=1000000, one floor division per component"
+    },
+    {
+      "stage_seq": 2,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 0,
+      "basis": "no bit-depth stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 3,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 25522,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 3,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 3,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 3,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 1,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 3,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 500000,
+      "basis": "value_scale=1000000, nearest rounding \u003c= half output code"
+    }
+  ],
+  "analytic_notes": [
+    "BT.601 inverse matrix is stored as integer coefficients at value_scale.",
+    "Known points are recomputed by the generator's independent integer reference."
+  ]
+}

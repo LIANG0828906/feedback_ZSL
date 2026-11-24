@@ -1,0 +1,137 @@
+{
+  "schema_version": "truth/v1",
+  "project_id": "mixed422",
+  "seed": 20263143,
+  "fingerprint": "338124ba672bb14fe1019114a1f06f0dbed9f83a52ccb165e26c87d2f3656ab9",
+  "known_points": [
+    {
+      "id": "Y-2-3",
+      "stage_seq": 3,
+      "plane": "Y",
+      "x": 2,
+      "y": 3,
+      "expected_fixed": 385000000,
+      "tolerance_fixed": 125000
+    },
+    {
+      "id": "Y-11-4",
+      "stage_seq": 3,
+      "plane": "Y",
+      "x": 11,
+      "y": 4,
+      "expected_fixed": 754000000,
+      "tolerance_fixed": 125000
+    },
+    {
+      "id": "Cb-5-7",
+      "stage_seq": 3,
+      "plane": "Cb",
+      "x": 5,
+      "y": 7,
+      "expected_fixed": 682000000,
+      "tolerance_fixed": 125000
+    },
+    {
+      "id": "Cr-6-4",
+      "stage_seq": 3,
+      "plane": "Cr",
+      "x": 6,
+      "y": 4,
+      "expected_fixed": 514000000,
+      "tolerance_fixed": 125000
+    }
+  ],
+  "block_boundaries": [
+    {
+      "id": "Y-bar-left",
+      "after_seq": 2,
+      "plane": "Y",
+      "axis": "x",
+      "coordinate": 4
+    },
+    {
+      "id": "Y-bar-right",
+      "after_seq": 2,
+      "plane": "Y",
+      "axis": "x",
+      "coordinate": 12
+    }
+  ],
+  "error_bounds": [
+    {
+      "stage_seq": 1,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 4096,
+      "basis": "Vmax=4095000000 FX, taps=1, weight_scale=999991, truncation divisor=999991"
+    },
+    {
+      "stage_seq": 1,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 1,
+      "basis": "Vmax=4095000000 FX, taps=1, weight_scale=999991, truncation divisor=999991"
+    },
+    {
+      "stage_seq": 1,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 0,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 1,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 0,
+      "basis": "no bit-depth stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 2,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 20477,
+      "basis": "Vmax=4095000000 FX, taps=4, weight_scale=999983, truncation divisor=999983"
+    },
+    {
+      "stage_seq": 2,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 2,
+      "basis": "Vmax=4095000000 FX, taps=4, weight_scale=999983, truncation divisor=999983"
+    },
+    {
+      "stage_seq": 2,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 0,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 2,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 0,
+      "basis": "no bit-depth stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 3,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 20477,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 3,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 2,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 3,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 0,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 3,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 500000,
+      "basis": "value_scale=1000000, nearest rounding \u003c= half output code"
+    }
+  ],
+  "analytic_notes": [
+    "Nearest followed by box exercises two kernels and 4:2:2 geometry."
+  ]
+}

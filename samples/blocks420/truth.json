@@ -1,0 +1,190 @@
+{
+  "schema_version": "truth/v1",
+  "project_id": "blocks420",
+  "seed": 20261125,
+  "fingerprint": "95e278f1ac02f023448cdbc6e92a8c3c4c1f7344624e87364635163d8fe5e672",
+  "known_points": [
+    {
+      "id": "y-level1-edge",
+      "stage_seq": 1,
+      "plane": "Y",
+      "x": 9,
+      "y": 5,
+      "expected_fixed": 3437000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "y-final-block",
+      "stage_seq": 3,
+      "plane": "Y",
+      "x": 5,
+      "y": 3,
+      "expected_fixed": 214000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "y-final-base",
+      "stage_seq": 3,
+      "plane": "Y",
+      "x": 1,
+      "y": 1,
+      "expected_fixed": 42000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "cb-final-block",
+      "stage_seq": 3,
+      "plane": "Cb",
+      "x": 3,
+      "y": 2,
+      "expected_fixed": 196000000,
+      "tolerance_fixed": 100000
+    },
+    {
+      "id": "cr-final-block",
+      "stage_seq": 3,
+      "plane": "Cr",
+      "x": 3,
+      "y": 2,
+      "expected_fixed": 72000000,
+      "tolerance_fixed": 100000
+    }
+  ],
+  "block_boundaries": [
+    {
+      "id": "Y-x-8-s1",
+      "after_seq": 1,
+      "plane": "Y",
+      "axis": "x",
+      "coordinate": 8
+    },
+    {
+      "id": "Y-x-16-s1",
+      "after_seq": 1,
+      "plane": "Y",
+      "axis": "x",
+      "coordinate": 16
+    },
+    {
+      "id": "Y-y-4-s1",
+      "after_seq": 1,
+      "plane": "Y",
+      "axis": "y",
+      "coordinate": 4
+    },
+    {
+      "id": "Y-y-12-s1",
+      "after_seq": 1,
+      "plane": "Y",
+      "axis": "y",
+      "coordinate": 12
+    },
+    {
+      "id": "Y-x-4-s2",
+      "after_seq": 2,
+      "plane": "Y",
+      "axis": "x",
+      "coordinate": 4
+    },
+    {
+      "id": "Y-x-8-s2",
+      "after_seq": 2,
+      "plane": "Y",
+      "axis": "x",
+      "coordinate": 8
+    },
+    {
+      "id": "Y-y-2-s2",
+      "after_seq": 2,
+      "plane": "Y",
+      "axis": "y",
+      "coordinate": 2
+    },
+    {
+      "id": "Y-y-6-s2",
+      "after_seq": 2,
+      "plane": "Y",
+      "axis": "y",
+      "coordinate": 6
+    }
+  ],
+  "error_bounds": [
+    {
+      "stage_seq": 1,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 16381,
+      "basis": "Vmax=4095000000 FX, taps=4, weight_scale=999983, truncation divisor=999983"
+    },
+    {
+      "stage_seq": 1,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 1,
+      "basis": "Vmax=4095000000 FX, taps=4, weight_scale=999983, truncation divisor=999983"
+    },
+    {
+      "stage_seq": 1,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 0,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 1,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 0,
+      "basis": "no bit-depth stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 2,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 32762,
+      "basis": "Vmax=4095000000 FX, taps=4, weight_scale=999983, truncation divisor=999983"
+    },
+    {
+      "stage_seq": 2,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 2,
+      "basis": "Vmax=4095000000 FX, taps=4, weight_scale=999983, truncation divisor=999983"
+    },
+    {
+      "stage_seq": 2,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 0,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 2,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 0,
+      "basis": "no bit-depth stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 3,
+      "category": "resample_weight_normalization",
+      "cumulative_bound_fixed": 32762,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 3,
+      "category": "downsample_accumulation_truncation",
+      "cumulative_bound_fixed": 2,
+      "basis": "cumulative fixed-point propagation; no new bound at this stage"
+    },
+    {
+      "stage_seq": 3,
+      "category": "color_conversion_quantization",
+      "cumulative_bound_fixed": 0,
+      "basis": "no color conversion stage has contributed a residual yet"
+    },
+    {
+      "stage_seq": 3,
+      "category": "bit_depth_rounding",
+      "cumulative_bound_fixed": 500000,
+      "basis": "value_scale=1000000, nearest rounding \u003c= half output code"
+    }
+  ],
+  "analytic_notes": [
+    "Values are integer fixed-point units: one source code equals value_scale units.",
+    "Box truth is the exact arithmetic mean of the declared source block; no pipeline output is read.",
+    "Block edges are chosen on cumulative factor boundaries, so analytic coordinates are exact."
+  ]
+}
