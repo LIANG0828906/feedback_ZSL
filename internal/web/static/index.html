@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MFX Forge · 媒体资产转码工作台</title>
+<style>
+:root {
+  --bg: #071018;
+  --panel: #0d1822;
+  --panel-2: #111f2b;
+  --line: #203647;
+  --text: #d9e6ef;
+  --muted: #7f96a6;
+  --cyan: #4ce0d2;
+  --blue: #62a8ff;
+  --amber: #ffc857;
+  --green: #58d68d;
+  --red: #ff6b7a;
+  --violet: #b58cff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: radial-gradient(circle at 15% 0%, #12293a 0, var(--bg) 42%);
+  color: var(--text); font: 14px/1.45 "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  min-height: 100vh;
+}
+button, select, input, textarea { font: inherit; }
+button {
+  border: 1px solid var(--line); background: #152a39; color: var(--text);
+  border-radius: 7px; padding: 8px 12px; cursor: pointer;
+}
+button:hover { border-color: var(--cyan); background: #193646; }
+button.primary { background: #0e5d59; border-color: #2dbcb2; color: #eafffb; }
+button.warn { background: #4b3a17; border-color: #8d6e24; color: #ffe5a3; }
+button.danger { background: #4a2028; border-color: #8f3543; color: #ffd8dd; }
+button:disabled { opacity: .42; cursor: not-allowed; }
+input, select, textarea {
+  background: #07131c; color: var(--text); border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px 9px; outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--cyan); }
+code, .mono { font-family: "Cascadia Code", Consolas, monospace; font-size: 12px; }
+.topbar {
+  height: 62px; display: flex; align-items: center; gap: 20px; padding: 0 22px;
+  border-bottom: 1px solid var(--line); background: rgba(7,16,24,.9); backdrop-filter: blur(8px);
+  position: sticky; top: 0; z-index: 10;
+}
+.brand { font-weight: 700; letter-spacing: .12em; color: var(--cyan); }
+.brand small { color: var(--muted); letter-spacing: 0; font-weight: 400; margin-left: 8px; }
+.status { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); box-shadow: 0 0 12px currentColor; }
+.dot.live { background: var(--green); color: var(--green); animation: pulse 1.3s infinite; }
+@keyframes pulse { 50% { opacity: .3; } }
+.layout { display: grid; grid-template-columns: 300px minmax(0,1fr); min-height: calc(100vh - 62px); }
+.sidebar { border-right: 1px solid var(--line); padding: 18px; background: rgba(8,18,27,.62); }
+.main { padding: 22px; max-width: 1620px; }
+.panel {
+  background: linear-gradient(150deg, rgba(17,32,44,.95), rgba(10,21,31,.95));
+  border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.16);
+}
+h1,h2,h3 { margin: 0; font-weight: 600; }
+h1 { font-size: 20px; }
+h2 { font-size: 15px; letter-spacing: .02em; margin-bottom: 12px; }
+h3 { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .09em; margin-bottom: 8px; }
+.sub { color: var(--muted); font-size: 12px; }
+.project-list { display: grid; gap: 8px; margin-top: 12px; }
+.project {
+  text-align: left; width: 100%; padding: 10px; background: transparent; border: 1px solid transparent;
+}
+.project.active { background: #112c39; border-color: #2c6070; }
+.project b { display: block; font-size: 13px; }
+.project span { color: var(--muted); font-size: 11px; }
+.asset-list { display: grid; gap: 9px; margin-top: 12px; }
+.asset {
+  border: 1px solid var(--line); border-radius: 8px; padding: 9px; background: #09151e;
+}
+.asset-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.asset img { width: 100%; max-height: 92px; object-fit: cover; border-radius: 5px; margin-top: 7px; image-rendering: pixelated; }
+.asset audio { width: 100%; margin-top: 6px; height: 28px; }
+.tag {
+  display: inline-block; border: 1px solid var(--line); border-radius: 99px; padding: 2px 8px;
+  font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
+}
+.tag.cyan { color: var(--cyan); border-color: #286b68; background: #0b2b2b; }
+.tag.green { color: var(--green); border-color: #2e6b48; background: #0c2a1b; }
+.tag.amber { color: var(--amber); border-color: #775d23; background: #2b2310; }
+.tag.red { color: var(--red); border-color: #74313b; background: #2b1217; }
+.tag.blue { color: var(--blue); border-color: #2a527f; background: #0d2035; }
+.grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+.grid.two { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.grid.three { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.metric { border: 1px solid var(--line); border-radius: 9px; padding: 12px; background: #091721; }
+.metric .value { font-size: 25px; font-weight: 650; margin-top: 3px; }
+.metric .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; }
+.bar { height: 8px; background: #061019; border-radius: 99px; overflow: hidden; border: 1px solid #1b3040; }
+.bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.controls .spacer { flex: 1; }
+.notice {
+  border: 1px solid #673039; background: #2a1115; color: #ffcbd0; padding: 10px 12px;
+  border-radius: 8px; margin-bottom: 12px; white-space: pre-wrap;
+}
+.notice.ok { border-color: #296545; background: #0d2a1c; color: #bef5d2; }
+.notice.info { border-color: #28536b; background: #0b2230; color: #c4e7fa; }
+.variant { border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.variant-main { display: grid; grid-template-columns: 130px 120px 1fr auto; gap: 12px; align-items: center; padding: 12px; }
+.variant-id { font-weight: 650; font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.kv { display: grid; grid-template-columns: 130px 1fr; gap: 6px 10px; font-size: 12px; }
+.kv span:nth-child(odd) { color: var(--muted); }
+.actions { display: flex; gap: 6px; }
+.reason { color: #9eb6c5; font-size: 12px; border-left: 2px solid #285269; padding-left: 9px; margin-top: 8px; }
+.table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.table th, .table td { border-bottom: 1px solid #182b38; text-align: left; padding: 7px 6px; vertical-align: top; }
+.table th { color: var(--muted); font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+.empty { color: var(--muted); font-size: 12px; padding: 18px 0; text-align: center; }
+.heat-grid { display: grid; grid-template-columns: repeat(16,1fr); width: 196px; gap: 2px; }
+.heat-cell { aspect-ratio: 1; border-radius: 1px; background: #10212d; }
+.heat-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 9px; }
+.heat-meta { flex: 1; font-size: 12px; color: var(--muted); }
+.event-log { max-height: 260px; overflow: auto; display: grid; gap: 4px; }
+.event { display: grid; grid-template-columns: 78px 110px 1fr; gap: 8px; font-size: 11px; padding: 4px 0; border-bottom: 1px solid #142531; }
+.event .time { color: #557080; }
+.event .msg { color: #a9c1cf; }
+.key { color: var(--muted); }
+.split { display: grid; grid-template-columns: 1.3fr .7fr; gap: 16px; }
+.path-card { border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: #091721; }
+.path-card h4 { margin: 0 0 5px; font-size: 12px; text-transform: uppercase; color: var(--cyan); letter-spacing: .08em; }
+.danger-text { color: var(--red); }
+.ok-text { color: var(--green); }
+.editor { display: grid; grid-template-columns: 1fr 1.1fr 1.2fr auto; gap: 8px; align-items: end; }
+.editor label { display: grid; gap: 4px; color: var(--muted); font-size: 11px; }
+textarea { min-height: 38px; resize: vertical; font-family: "Cascadia Code", Consolas, monospace; }
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
+  .grid, .grid.three { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .split { grid-template-columns: 1fr; }
+  .editor { grid-template-columns: 1fr 1fr; }
+  .variant-main { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">MFX FORGE <small>media asset diagnostics</small></div>
+  <div class="status"><span id="liveDot" class="dot"></span><span id="liveText">idle</span></div>
+  <div class="spacer" style="flex:1"></div>
+  <div class="sub mono" id="fingerprint">no project</div>
+</div>
+<div class="layout">
+  <aside class="sidebar">
+    <h1>资产工程</h1>
+    <div class="sub">固定种子 · 本地回环 · 确定性检查点</div>
+    <div class="project-list" id="projects"></div>
+    <h3 style="margin-top:22px">源素材</h3>
+    <div class="asset-list" id="assets"></div>
+  </aside>
+  <main class="main">
+    <div id="globalNotice"></div>
+    <section class="panel">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div>
+          <h1 id="projectName">未选择工程</h1>
+          <div class="sub mono" id="projectPath"></div>
+        </div>
+        <div style="flex:1"></div>
+        <div class="controls">
+          <select id="runMode" title="运行模式">
+            <option value="realtime">实时转码</option>
+            <option value="full">全量重转</option>
+            <option value="resume">断点续跑</option>
+          </select>
+          <select id="workers" title="工作线程"></select>
+          <input id="pauseAfter" type="number" min="0" placeholder="暂停于 N" style="width:100px" title="提交 N 个后暂停">
+          <button id="runBtn" class="primary">开始批处理</button>
+          <button id="pauseBtn" class="warn">暂停</button>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:16px">
+        <div class="metric"><div class="label">提交进度</div><div class="value" id="progressValue">0 / 0</div><div class="bar" style="margin-top:8px"><i id="progressBar" style="width:0"></i></div></div>
+        <div class="metric"><div class="label">规模路径</div><div class="value" id="scalePath">—</div><div class="sub" id="scaleHint">等待工程</div></div>
+        <div class="metric"><div class="label">预算</div><div class="value" id="budgetValue">—</div><div class="sub" id="budgetHint">线程 / 内存 / 单变体时长</div></div>
+        <div class="metric"><div class="label">状态</div><div class="value" id="stateValue">—</div><div class="sub" id="stateHint">持久化检查点</div></div>
+      </div>
+    </section>
+
+    <div class="split">
+      <section class="panel">
+        <h2>变体队列</h2>
+        <div id="variants" class="empty">尚无变体</div>
+      </section>
+      <section class="panel">
+        <h2>规模取舍依据</h2>
+        <div id="scaleReasons" class="empty">尚无判定</div>
+        <h3 style="margin-top:16px">资源等待</h3>
+        <div id="stalls" class="empty">无缓冲等待</div>
+        <h3 style="margin-top:16px">检查点失效记录</h3>
+        <div id="invalidations" class="empty">无失效记录</div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>交互式配方编辑 <span class="sub">仅未提交变体可修改</span></h2>
+      <div class="editor">
+        <label>变体<select id="editVariant"></select></label>
+        <label>字段<select id="editField">
+          <option value="targetWidth">targetWidth</option>
+          <option value="targetHeight">targetHeight</option>
+          <option value="imageChannels">imageChannels</option>
+          <option value="imageBitDepth">imageBitDepth</option>
+          <option value="chromaSampling">chromaSampling</option>
+          <option value="audioSampleRate">audioSampleRate</option>
+          <option value="audioBitDepth">audioBitDepth</option>
+          <option value="metadataPolicy">metadataPolicy</option>
+          <option value="metadataFields">metadataFields</option>
+        </select></label>
+        <label>JSON 值<textarea id="editValue" spellcheck="false">128</textarea></label>
+        <button id="applyRecipe" class="primary">应用并重算真值</button>
+      </div>
+      <div class="sub" style="margin-top:8px">字符串需 JSON 引号，例如 <code>"4:2:0"</code>；数组例如 <code>["title","author"]</code>。</div>
+    </section>
+
+    <div class="split">
+      <section class="panel">
+        <div style="display:flex;align-items:center;gap:10px">
+          <h2 style="margin:0">三路径一致性</h2><div style="flex:1"></div>
+          <button id="compareBtn">运行三路径比对</button>
+        </div>
+        <div id="compareResult" class="empty" style="margin-top:12px">尚未比对</div>
+        <h3 style="margin-top:16px">差异热力图</h3>
+        <div id="heatmaps" class="empty">比对后显示</div>
+      </section>
+      <section class="panel">
+        <div style="display:flex;align-items:center;gap:10px">
+          <h2 style="margin:0">独立结果验证</h2><div style="flex:1"></div>
+          <button id="verifyBtn">验证 SQLite 产物</button>
+        </div>
+        <div id="verifyResult" class="empty" style="margin-top:12px">尚未验证</div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>诊断事件</h2>
+      <div id="events" class="event-log empty">尚无事件</div>
+    </section>
+  </main>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const fieldMap = {
+  targetWidth: 128, targetHeight: 128, imageChannels: 4, imageBitDepth: 10,
+  chromaSampling: "4:2:0", audioSampleRate: 48000, audioBitDepth: 16,
+  metadataPolicy: "preserve", metadataFields: ["title","author"]
+};
+let app = null;
+let busy = false;
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function shortHash(v) { return v ? esc(String(v).slice(0, 14)) + "…" : "—"; }
+function fmtBytes(n) {
+  n = Number(n || 0);
+  if (n < 1024) return n + " B";
+  if (n < 1048576) return (n/1024).toFixed(1) + " KiB";
+  if (n < 1073741824) return (n/1048576).toFixed(1) + " MiB";
+  return (n/1073741824).toFixed(2) + " GiB";
+}
+function stateClass(s) {
+  return ({pending:"",decoding:"blue",encoding:"amber",committed:"green",failed:"red"})[s] || "";
+}
+function stateLabel(s) {
+  return ({pending:"待转码",decoding:"解码中",encoding:"编码中",committed:"已提交",failed:"失败"})[s] || s;
+}
+async function api(path, opts={}) {
+  const res = await fetch(path, {headers: {"Content-Type":"application/json"}, ...opts});
+  let data = null;
+  try { data = await res.json(); } catch (_) {}
+  if (!res.ok) {
+    const err = data?.error || {code:"E_HTTP", message:`HTTP ${res.status}`};
+    const e = new Error(`${err.code}: ${err.message}${err.field ? " ["+err.field+"]" : ""}`);
+    e.payload = err;
+    throw e;
+  }
+  return data;
+}
+function showNotice(msg, kind="info") {
+  $("#globalNotice").innerHTML = msg ? `<div class="notice ${kind}">${esc(msg)}</div>` : "";
+}
+
+async function refresh() {
+  try {
+    app = await api("/api/state");
+    render();
+    if (app.lastRunError) showNotice(app.lastRunError.message, "error");
+  } catch (e) {
+    showNotice(e.message, "error");
+  }
+}
+
+function render() {
+  const sel = app?.selected;
+  $("#liveDot").className = "dot " + (app?.running ? "live" : "");
+  $("#liveText").textContent = app?.running ? "batch running" : (sel ? "checkpoint ready" : "idle");
+  $("#projects").innerHTML = (app?.projects || []).map(p => `
+    <button class="project ${sel?.project?.id===p.id?"active":""}" onclick="selectProject('${esc(p.path).replace(/'/g,"\\'")}')">
+      <b>${esc(p.name)}</b><span class="mono">${esc(p.id)}</span>
+    </button>`).join("") || `<div class="empty">未发现工程</div>`;
+  if (!sel) {
+    $("#projectName").textContent = "未选择工程";
+    return;
+  }
+  const p = sel.project;
+  $("#projectName").textContent = p.name;
+  $("#projectPath").textContent = sel.path;
+  $("#fingerprint").textContent = "project " + shortHash(sel.fingerprint);
+  const progress = sel.progress || {};
+  const total = progress.total || 0, committed = progress.committed || 0;
+  $("#progressValue").textContent = `${committed} / ${total}`;
+  $("#progressBar").style.width = total ? `${(committed/total)*100}%` : "0";
+  $("#scalePath").textContent = (sel.scale?.path || "—").toUpperCase();
+  $("#scalePath").style.color = sel.scale?.path === "fine" ? "var(--green)" : "var(--amber)";
+  $("#scaleHint").textContent = sel.scale?.path === "fine" ? "逐像素精细路径" : "分块精确输出 + 预览降采样";
+  $("#budgetValue").textContent = `${p.budget.maxWorkers}w`;
+  $("#budgetHint").textContent = `${fmtBytes(p.budget.memoryBytes)} · ${p.budget.perVariantMillis}ms/变体`;
+  $("#stateValue").textContent = progress.failed ? "ATTENTION" : (progress.active ? "ACTIVE" : "STABLE");
+  $("#stateValue").style.color = progress.failed ? "var(--red)" : (progress.active ? "var(--amber)" : "var(--green)");
+  $("#stateHint").textContent = `失败 ${progress.failed||0} · 排队 ${progress.pending||0} · 活动 ${progress.active||0}`;
+  $("#runBtn").disabled = !!app.running;
+  $("#pauseBtn").disabled = !app.running;
+  $("#compareBtn").disabled = !!app.compare?.running || !committed;
+  $("#verifyBtn").disabled = !!app.verify?.running || !committed;
+  renderWorkers(p.budget.maxWorkers);
+  renderAssets(sel);
+  renderVariants(sel);
+  renderScale(sel);
+  renderCompare();
+  renderVerify();
+  renderEvents();
+  renderEditor(sel);
+}
+
+function renderWorkers(max) {
+  const el = $("#workers");
+  if (el.dataset.max == String(max)) return;
+  el.dataset.max = String(max);
+  const current = el.value || String(max);
+  el.innerHTML = Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1} 线程</option>`).join("");
+  el.value = Math.min(Number(current)||max, max);
+}
+
+function renderAssets(sel) {
+  const sources = sel.project.sources || [];
+  $("#assets").innerHTML = sources.map(s => {
+    const isImage = s.kind === "image";
+    const size = isImage ? `${s.width}×${s.height} · ${s.channels}ch` : `${s.sampleRate} Hz · ${s.audioChannels}ch · ${s.audioBitDepth}bit`;
+    const meta = Object.entries(s.metadata || {}).map(([k,v]) => `<div><span class="key">${esc(k)}</span> = ${esc(v)}</div>`).join("");
+    return `<div class="asset">
+      <div class="asset-head"><b class="mono">${esc(s.id)}</b><span class="tag ${isImage?"cyan":"blue"}">${esc(s.kind)}</span></div>
+      <div class="sub">${esc(size)} · ${esc(s.path)}</div>
+      ${isImage ? `<img loading="lazy" src="/api/source?id=${encodeURIComponent(s.id)}" alt="${esc(s.id)}">` :
+        `<audio controls preload="none" src="/api/source?id=${encodeURIComponent(s.id)}"></audio>`}
+      <details style="margin-top:6px"><summary class="sub">metadata (${Object.keys(s.metadata||{}).length})</summary><div class="sub">${meta || "none"}</div></details>
+    </div>`;
+  }).join("");
+}
+
+function renderVariants(sel) {
+  const vs = sel.variants || [];
+  if (!vs.length) { $("#variants").className = "empty"; $("#variants").textContent = "尚无变体"; return; }
+  $("#variants").className = "";
+  $("#variants").innerHTML = vs.map(v => {
+    const recipe = v.recipe || {};
+    const truth = v.truth || {};
+    const committed = v.state === "committed";
+    return `<div class="variant">
+      <div class="variant-main">
+        <div><div class="variant-id">${esc(v.id)}</div><span class="tag ${stateClass(v.state)}">${esc(stateLabel(v.state))}</span></div>
+        <div><div class="sub">commit #${v.commitSeq||"—"}</div><div class="sub">${v.path ? esc(v.path) : "path pending"}</div></div>
+        <div class="chips">
+          <span class="tag">${recipe.targetWidth||"?"}×${recipe.targetHeight||"?"}</span>
+          <span class="tag">${recipe.imageBitDepth||"?"}bit</span>
+          <span class="tag">${esc(recipe.chromaSampling||"")}</span>
+          <span class="tag">${recipe.audioSampleRate||"?"}Hz</span>
+          <span class="tag">${recipe.audioBitDepth||"?"}bit audio</span>
+          ${v.blockRows ? `<span class="tag amber">rows ${v.blockRows}</span>` : ""}
+          ${v.decision?.preview ? `<span class="tag amber">preview ${v.decision.preview.width}×${v.decision.preview.height} @${v.decision.preview.downsample}×</span>` : ""}
+        </div>
+        <div class="actions">
+          ${v.state === "failed" ? `<button onclick="retryVariant('${esc(v.id)}')">重试</button>` : ""}
+          ${committed ? `<button onclick="location.href='/api/export?variant=${encodeURIComponent(v.id)}'">导出</button>` : ""}
+        </div>
+      </div>
+      <div style="padding:0 12px 12px">
+        <div class="kv">
+          <span>output SHA-256</span><span class="mono">${esc(v.outputSha256 || "—")}</span>
+          <span>output size</span><span>${fmtBytes(v.outputSize)}</span>
+          <span>metadata fields</span><span class="mono">${esc((v.metadataFields||truth.metadataFields||[]).join(", ") || "none")}</span>
+          <span>input hash</span><span class="mono">${shortHash(v.inputHash)}</span>
+          <span>recipe version</span><span class="mono">${shortHash(v.recipeVersion)}</span>
+          ${v.errorMessage ? `<span>error</span><span class="danger-text">${esc(v.errorCode)} · ${esc(v.errorMessage)}</span>` : ""}
+        </div>
+        ${v.decision?.reason ? `<div class="reason">${esc(v.decision.reason)}</div>` : ""}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderScale(sel) {
+  const reasons = sel.scale?.reasons || [];
+  $("#scaleReasons").className = reasons.length ? "" : "empty";
+  $("#scaleReasons").innerHTML = reasons.map(r=>`<div class="reason">${esc(r)}</div>`).join("") || "尚无判定";
+  const stalls = sel.stalls || [];
+  $("#stalls").className = stalls.length ? "" : "empty";
+  $("#stalls").innerHTML = stalls.slice(0,8).map(s=>`
+    <div class="sub"><b>${esc(s.variant)}</b> · ${esc(s.reason)} · ${fmtBytes(s.bytes)}</div>`).join("") || "无缓冲等待";
+  const inv = sel.invalidations || [];
+  $("#invalidations").className = inv.length ? "" : "empty";
+  $("#invalidations").innerHTML = inv.slice(0,5).map(s=>`
+    <div class="sub"><span class="danger-text">${esc(s.reason)}</span><br>${esc(s.at)}</div>`).join("") || "无失效记录";
+}
+
+function renderEditor(sel) {
+  const vs = sel.variants || [];
+  const editable = vs.filter(v=>v.state !== "committed");
+  const el = $("#editVariant");
+  const signature = vs.map(v=>`${v.id}:${v.state}`).join("|");
+  if (el.dataset.signature === signature) return;
+  el.dataset.signature = signature;
+  const previous = el.value;
+  el.innerHTML = vs.map(v=>`<option value="${esc(v.id)}" ${v.state==="committed"?"disabled":""}>${esc(v.id)} · ${esc(stateLabel(v.state))}</option>`).join("");
+  if (vs.some(v=>v.id===previous && v.state!=="committed")) el.value = previous;
+  else if (editable.length) el.value = editable[0].id;
+  if (el.value) fillEditorValue();
+}
+function fillEditorValue() {
+  if (!app?.selected) return;
+  const v = app.selected.variants.find(x=>x.id === $("#editVariant").value);
+  const field = $("#editField").value;
+  if (v?.recipe && Object.prototype.hasOwnProperty.call(v.recipe, field)) {
+    $("#editValue").value = JSON.stringify(v.recipe[field]);
+  } else {
+    $("#editValue").value = JSON.stringify(fieldMap[field]);
+  }
+}
+$("#editVariant").addEventListener("change", fillEditorValue);
+$("#editField").addEventListener("change", fillEditorValue);
+
+function renderCompare() {
+  const c = app?.compare || {};
+  const r = c.report;
+  if (c.running) { $("#compareResult").className = "notice info"; $("#compareResult").textContent = "三路径比对运行中…"; }
+  else if (c.error) { $("#compareResult").className = "notice"; $("#compareResult").textContent = `${c.error.code}: ${c.error.message}`; }
+  else if (!r) { $("#compareResult").className = "empty"; $("#compareResult").textContent = "尚未比对"; }
+  else {
+    $("#compareResult").className = "";
+    const paths = Object.entries(r.paths || {}).map(([name,p])=>`
+      <div class="path-card"><h4>${esc(name)}</h4><div>${p.committed}/${p.total} committed</div>
+      <div class="sub mono">${(p.variants||[]).map(v=>`${v.id}#${v.commitSeq}:${String(v.outputSha256).slice(0,8)}`).join("<br>")}</div></div>`).join("");
+    const mm = r.firstMismatch;
+    $("#compareResult").innerHTML = `<div class="notice ${r.equivalent?"ok":""}">
+      ${r.equivalent ? "三路径产物、元数据与提交序列逐字节一致" : `首个差异 · ${esc(mm?.variant||"—")} / ${esc(mm?.field||"—")} · actual=${esc(JSON.stringify(mm?.actual))} expected=${esc(JSON.stringify(mm?.expected))}`}
+      <span class="mono"> · ${r.elapsedMs||0}ms</span></div>
+      <div class="grid three">${paths}</div>`;
+  }
+  const hms = r?.heatmaps || [];
+  $("#heatmaps").className = hms.length ? "" : "empty";
+  $("#heatmaps").innerHTML = hms.map(h => {
+    const max = Math.max(1, ...(h.cells||[]));
+    const cells = (h.cells||[]).map(v => {
+      const ratio = v / max;
+      const color = v === 0 ? "#10212d" : `rgba(${Math.round(255)}, ${Math.round(80+100*(1-ratio))}, 80, ${0.22+0.78*ratio})`;
+      return `<div class="heat-cell" title="${v} changed samples" style="background:${color}"></div>`;
+    }).join("");
+    return `<div class="heat-row"><div class="heat-grid">${cells}</div><div class="heat-meta"><b>${esc(h.variant)}</b><br>max Δ ${h.maxDelta}<br>${h.changed} changed samples<br>grid ${h.grid}×${h.grid}</div></div>`;
+  }).join("") || "比对后显示";
+}
+
+function renderVerify() {
+  const v = app?.verify || {};
+  if (v.running) { $("#verifyResult").className = "notice info"; $("#verifyResult").textContent = "独立验证运行中…"; return; }
+  if (v.error) {
+    const f = v.report?.firstFailure;
+    $("#verifyResult").className = "notice";
+    $("#verifyResult").innerHTML = `${esc(v.error.code)}: ${esc(v.error.message)}${f?`<br>首个违规 · ${esc(f.variant)} / ${esc(f.item)} · actual=${esc(JSON.stringify(f.actual))} expected=${esc(JSON.stringify(f.expected))}`:""}`;
+    return;
+  }
+  if (!v.report) { $("#verifyResult").className = "empty"; $("#verifyResult").textContent = "尚未验证"; return; }
+  const r = v.report;
+  $("#verifyResult").className = "";
+  $("#verifyResult").innerHTML = `<div class="notice ok">${r.checked} 个已提交变体全部通过独立解析与真值核对</div>
+    <table class="table"><thead><tr><th>变体</th><th>尺寸</th><th>采样点</th><th>指纹</th></tr></thead><tbody>
+    ${(r.variants||[]).map(x=>`<tr><td>${esc(x.id)}</td><td>${x.pixelCount}px</td><td>${x.audioSamples}</td><td class="mono">${shortHash(x.fingerprint)}</td></tr>`).join("")}
+    </tbody></table>`;
+}
+
+function renderEvents() {
+  const evs = (app?.events || []).slice().reverse();
+  $("#events").className = evs.length ? "event-log" : "event-log empty";
+  $("#events").innerHTML = evs.map(e=>`<div class="event"><span class="time">${esc(e.time.slice(11,19))}</span><span>${esc(e.variant||"")} ${e.state?`<span class="tag ${stateClass(e.state)}">${esc(stateLabel(e.state))}</span>`:""}</span><span class="msg">${esc(e.message)}</span></div>`).join("") || "尚无事件";
+}
+
+async function selectProject(path) {
+  try {
+    await api("/api/select", {method:"POST", body:JSON.stringify({path})});
+    showNotice("");
+    await refresh();
+  } catch (e) { showNotice(e.message, "error"); }
+}
+function selectedRecipeSnapshot() {
+  const v = app?.selected?.variants.find(x=>x.id === $("#editVariant").value);
+  return v?.recipe || {};
+}
+async function runBatch() {
+  const mode = $("#runMode").value;
+  const workers = Number($("#workers").value);
+  const pauseAfter = Number($("#pauseAfter").value || 0);
+  try {
+    await api("/api/run", {method:"POST", body:JSON.stringify({mode,workers,pauseAfter})});
+    showNotice(`批处理已启动 · ${mode}`, "info");
+    await refresh();
+  } catch (e) { showNotice(e.message, "error"); }
+}
+async function pauseBatch() {
+  try { await api("/api/pause", {method:"POST", body:"{}"}); showNotice("已请求暂停，未提交活动任务将回滚为待转码", "info"); await refresh(); }
+  catch (e) { showNotice(e.message, "error"); }
+}
+async function applyRecipe() {
+  let value;
+  try { value = JSON.parse($("#editValue").value); }
+  catch (e) { showNotice("配方值不是合法 JSON: " + e.message, "error"); return; }
+  try {
+    await api("/api/recipe", {method:"POST", body:JSON.stringify({
+      variant:$("#editVariant").value, field:$("#editField").value, value
+    })});
+    showNotice("配方已更新，真值指纹已重算；仅该未提交变体受影响", "ok");
+    await refresh();
+    fillEditorValue();
+  } catch (e) { showNotice(e.message, "error"); }
+}
+async function retryVariant(id) {
+  try { await api("/api/retry", {method:"POST", body:JSON.stringify({variant:id})}); showNotice(`变体 ${id} 已进入重试`, "info"); await refresh(); }
+  catch (e) { showNotice(e.message, "error"); }
+}
+async function runVerify() {
+  try { await api("/api/verify", {method:"POST", body:"{}"}); await refresh(); }
+  catch (e) { showNotice(e.message, "error"); }
+}
+async function runCompare() {
+  const workers = Number($("#workers").value);
+  try { await api("/api/compare-paths", {method:"POST", body:JSON.stringify({workers})}); await refresh(); }
+  catch (e) { showNotice(e.message, "error"); }
+}
+
+$("#runBtn").addEventListener("click", runBatch);
+$("#pauseBtn").addEventListener("click", pauseBatch);
+$("#applyRecipe").addEventListener("click", applyRecipe);
+$("#verifyBtn").addEventListener("click", runVerify);
+$("#compareBtn").addEventListener("click", runCompare);
+
+refresh();
+setInterval(refresh, 1200);
+</script>
+</body>
+</html>

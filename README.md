@@ -1,22 +1,317 @@
-在全新工作区中，需要从零构建一套面向游戏与互动媒体素材的媒体资产管理与批量转码桌面工作台，交付领域可视化与诊断应用。本地确定性样本生成器按固定种子产出多组媒体资产工程：每组含若干源图像与短音频片段、一份转码配方（目标尺寸、图像量化位深与色度采样、音频重采样率与位深、元数据规整策略）以及一组按逻辑时间排列的编辑操作序列（替换素材、调整配方参数、增删输出变体），并附带解析真值（每个变体的期望像素尺寸、通道数、采样点数、元数据字段集合与内容指纹）。素材规模从数百 KB 到数百 MB 变化，转码流程需依次完成素材校验、解码归一、规格转换与编码封装，并支持交互式参数调整与批量重跑。业务核心矛盾是数据规模变化与算法取舍：小素材要求逐像素精确处理与完整元数据保留，大素材要求在受限工作线程、内存预算与单变体处理时长内完成，二者共用同一确定性代码路径，任何取舍都不得让同一素材在不同规模档位下产出不一致的输出，且已提交变体的结果与转码配方必须可追溯、可诊断。
+# MFX Forge
 
-任务环境与准备：
-Windows 10/11 64 位开发机，安装 Go 1.22 或以上版本并确认 go version 可执行。
-安装 SQLite 动态库与 Go 的 SQLite 驱动所需 CGO 构建环境（如 MinGW-w64 的 gcc），设置 CGO_ENABLED=1。
-准备本地测试输出目录用于 SQLite 检查点与变体产物，确保进程对该目录有读写权限。
-工作区无需外部网络服务，本地样本生成器与本地 HTTP 服务均在回环地址运行；首次构建前执行 go mod tidy 拉取依赖。
+面向游戏与互动媒体素材的本地媒体资产管理与批量转码工作台。项目在全新工作区中从零构建，包含确定性样本生成器、逐变体转码核心、规模自适应策略、SQLite 检查点、三路径一致性比对、独立验证器和 `net/http` 诊断界面。
 
-业务要求：
-1. 实现媒体资产工程加载与结构校验：读取本地确定性生成器产出的源素材清单、转码配方、编辑操作序列与真值清单，校验素材尺寸通道与配方声明相容、量化位深与色度采样取值合法、操作逻辑时间戳单调且目标变体存在、内容指纹与清单声明一致；字段缺失或素材损坏返回 E_DECODE，参数越界返回 E_PARA 并指出字段名。
-2. 实现逐变体的确定性转码核心：按配方对每个变体依次执行素材校验、解码归一、尺寸与位深转换、色度采样与编码封装，输出像素尺寸、通道数、采样点数与元数据字段集合须与真值在声明容差内吻合；同一素材与同一配方下重复转码须逐字节一致，不得受线程标识、变体完成顺序或墙钟时间影响。
-3. 实现数据规模自适应的算法取舍策略：依据素材像素总数、音频采样点数、变体数与时间内存预算，自动在逐像素精细转码与分块加降采样预览两条路径间选择，取舍规则可解释并记录实际选用的路径、分块尺寸、降采样倍率与判定依据；小规模素材必须走精细路径，同一素材在两种路径下的输出差异须满足声明的一致性约束，超差返回 E_SCALE 并给出超差项与两侧实测值。
-4. 实现变体级状态机与提交边界：每个输出变体经历待转码、解码中、编码中、已提交、失败等状态，只能沿合法迁移推进，进度以已提交变体数与总变体数表示；已提交变体冻结其输出、配方快照与内容指纹，后续配方编辑只作用于未提交变体，非法迁移返回 E_STATE 并保持原状态不变。
-5. 实现可暂停、可退出、可重启续跑的持久化检查点：每提交一个变体把其输出摘要、配方快照、输入内容哈希、配方参数版本与算法版本原子且串行写入 SQLite，写入不得交错且变体提交顺序稳定；重启加载时若输入内容哈希或任一版本不匹配须整体作废快照并由源素材重算，禁止部分混用旧产物，强制终止后不得承诺生成退出报告。
-6. 保证实时转码、断点恢复转码与一次性全量重转码三条路径输出一致：三者对同一工程、同一操作序列与同一配方须产出逐字节相同的变体产物、相同的元数据字段集合与相同的提交序列；提供自动比对功能定位首个不一致变体标识、产物类型与差异字段名，不一致时返回 E_DIFF。
-7. 实现独立结果验证工具：仅从 SQLite 中持久化的变体产物与真值指纹出发，重新核对像素尺寸、通道数、采样点数、元数据字段集合与内容指纹，并与转码主链路记录逐项比对且不得调用主转码路径；发现不一致时输出首个违规变体标识、违规项名称、实测值与声明值，验证器自身异常返回 E_VERIFY 并给出原因。
-8. 实现可视化诊断界面、并发资源边界与异常隔离：通过 net/http 提供本地页面展示素材清单、变体列表与各自状态、配方编辑、批处理进度、规模路径与取舍依据、差异热力图与三路径比对结果，允许逐变体重试与导出；变体转码可在工作线程池并行，须限制最大并行度与每线程像素及采样缓冲上限，缓冲耗尽时阻塞排队并记录原因而非静默丢弃，共享检查点写入串行且变体顺序稳定；单变体内部异常须置该变体为失败并允许重试且不污染其他变体与已提交结果，用户取消后重启只能依据已持久化且版本匹配的变体恢复。
+## 功能概览
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 工程加载与结构校验：源素材 SHA-256、PNG/WAV 实际规格、配方边界、编辑时间戳、目标变体、真值清单。
+- 确定性转码：PNG/JPEG 解码归一、固定点面积重采样、8/10/16 位量化、4:4:4 / 4:2:2 / 4:2:0 色度采样、WAV PCM 重采样与位深转换、元数据规整、确定性 MFX 封装。
+- 双规模路径：`fine` 逐像素精细路径；`adaptive` 分块精确输出并生成降采样预览摘要。两条路径共享同一像素与采样函数，输出逐字节一致。
+- 变体状态机：`pending -> decoding -> encoding -> committed`，异常进入 `failed`，支持失败重试；已提交变体冻结产物与配方快照。
+- SQLite 检查点：每个变体在一个事务中持久化产物 BLOB、摘要、真值、输入哈希、配方版本、算法版本与稳定提交序号。
+- 三模式运行：`realtime` 处理未提交变体、`full` 整体作废后全量重算、`resume` 从匹配检查点续跑。
+- 三路径比对：实时、全量、暂停后续跑三条路径逐变体比较产物指纹、元数据字段和提交序列，并输出 16×16 差异热力图数据。
+- 独立验证器：只读取 SQLite 中的产物、主链路摘要和真值快照，独立解析 MFX，不导入转码包。
+- 本地诊断台：项目/素材/变体、配方编辑、进度、路径依据、缓冲等待、失败重试、导出、验证和三路径结果。
 
-验收：
-用本地样本验证转码产物、规模取舍与三路径一致性，并检查异常码与诊断界面。
+## 环境
+
+- Windows 10/11 64 位或兼容的 Linux/WSL 环境。
+- Go 1.22 或以上。
+- CGO 与 SQLite 动态库构建环境。Windows 建议 MinGW-w64 `gcc`，并设置：
+
+```powershell
+$env:CGO_ENABLED = "1"
+go version
+gcc --version
+go mod tidy
+go build -o bin\mediaforge.exe .\cmd\mediaforge
+```
+
+Linux/WSL：
+
+```bash
+export CGO_ENABLED=1
+go version
+gcc --version
+go mod tidy
+go build -o bin/mediaforge ./cmd/mediaforge
+```
+
+SQLite 驱动为 `github.com/mattn/go-sqlite3`，需要 CGO。无外部网络服务；样本生成、HTTP 服务和 SQLite 都在本机运行。
+
+## 快速开始
+
+```bash
+# 1. 生成三组固定种子工程（约 20 MiB，含小/中/大规模判定样本）
+./bin/mediaforge sample --out data --seed 42 --profile demo
+
+# 2. 校验工程并查看自动规模判定
+./bin/mediaforge validate --project data/open-world/project.json
+
+# 3. 实时批处理，写入 SQLite 并导出 MFX
+./bin/mediaforge run \
+  --project data/open-world/project.json \
+  --db work/open-world.sqlite \
+  --out exports/open-world \
+  --mode realtime --workers 2
+
+# 4. 独立验证 SQLite 中的产物
+./bin/mediaforge verify --db work/open-world.sqlite
+
+# 5. 三路径比对
+./bin/mediaforge compare-paths \
+  --project data/open-world/project.json \
+  --workers 2
+
+# 6. 启动诊断台
+./bin/mediaforge serve --data data --db work --addr 127.0.0.1:8787
+```
+
+浏览器打开 `http://127.0.0.1:8787`。界面只监听回环地址，不提供外部服务。
+
+## 样本档位
+
+`sample --profile` 支持：
+
+- `small`：单工程，源素材数百 KiB，验证逐像素路径和完整元数据。
+- `demo`：三工程，包含 `arcade-hud`、`boss-arena`、`open-world`，用于小/中/大规模自动取舍。
+- `large`：单工程，源图 `8192×5120` + 备用图，素材总量达到数百 MiB 量级；适合手工压测，不建议在 CI 中运行。
+
+固定种子相同则图片、WAV、工程清单和真值指纹完全相同。生成器会在写入真值前用共享确定性核心计算 MFX 指纹，再执行完整工程校验，防止清单与真值自相矛盾。
+
+## 工程格式
+
+每个工程目录包含：
+
+```text
+<project>/
+  project.json
+  assets/*.png
+  assets/*.wav
+```
+
+`project.json` 的核心字段：
+
+```json
+{
+  "schemaVersion": 1,
+  "id": "open-world",
+  "sources": [
+    {
+      "id": "image-base",
+      "kind": "image",
+      "path": "assets/image_base.png",
+      "sha256": "...",
+      "width": 2048,
+      "height": 1280,
+      "channels": 4,
+      "metadata": {"title": "...", "author": "..."}
+    }
+  ],
+  "baseRecipe": {
+    "targetWidth": 1024,
+    "targetHeight": 640,
+    "imageChannels": 4,
+    "imageBitDepth": 10,
+    "chromaSampling": "4:2:0",
+    "audioSampleRate": 48000,
+    "audioBitDepth": 16,
+    "metadataPolicy": "preserve"
+  },
+  "variants": [
+    {"id": "v-main", "imageSource": "image-base", "audioSource": "audio-base"}
+  ],
+  "operations": [
+    {"seq": 1, "time": 100, "type": "replace_source",
+      "variant": "v-alt", "media": "image", "source": "image-alt"},
+    {"seq": 2, "time": 200, "type": "set_recipe",
+      "field": "imageBitDepth", "value": 10},
+    {"seq": 3, "time": 300, "type": "add_variant",
+      "newVariant": {"id": "v-preview", "imageSource": "image-base", "audioSource": "audio-base"}},
+    {"seq": 4, "time": 400, "type": "remove_variant", "variant": "v-draft"}
+  ],
+  "truth": {"variants": []},
+  "budget": {
+    "maxWorkers": 2,
+    "memoryBytes": 268435456,
+    "perVariantMillis": 8000,
+    "maxPixelsPerWorker": 4000000,
+    "maxSamplesPerWorker": 4000000,
+    "fineMaxPixels": 4000000,
+    "fineMaxSamples": 8000000,
+    "fineMaxVariants": 4,
+    "adaptiveBlockPixels": 2000000,
+    "maxDownsample": 8
+  },
+  "consistency": {
+    "maxPixelValueDelta": 0,
+    "maxSampleValueDelta": 0,
+    "requireByteIdentical": true
+  }
+}
+```
+
+支持的操作：
+
+- `replace_source`：替换目标变体的图像或音频源。
+- `set_recipe`：修改全局或指定变体的配方字段。
+- `add_variant`：增加输出变体。
+- `remove_variant`：删除输出变体。
+
+操作 `seq` 与逻辑时间 `time` 必须严格递增；目标变体必须在操作发生时存在。
+
+## MFX 产物
+
+每个变体输出一个确定性二进制包：
+
+```text
+8 bytes   "MFXPKG01"
+4 bytes   big-endian header length
+JSON      canonical MFX header
+payload   image samples: uint16 little-endian, W x H x channels
+payload   audio samples: uint32 little-endian, samples x channels
+```
+
+Header 包含：
+
+- `width`、`height`、`pixelCount`
+- `imageChannels`、`imageBitDepth`、`chromaSampling`
+- `audioSampleRate`、`audioBitDepth`、`audioChannels`、`audioSamples`
+- `metadata` 与排序后的 `metadataFields`
+- `algorithmVersion`
+
+完整文件 SHA-256 即变体内容指纹。包内不含墙钟时间、线程 ID、随机数或完成顺序字段。
+
+## 规模自适应
+
+批量判定依据：
+
+- 全部变体的源像素总数；
+- 音频采样点总数；
+- 变体数；
+- 估算工作集与内存预算；
+- 单变体估算毫秒与 `perVariantMillis` 时间预算；
+- 精细阈值和分块阈值。
+
+小规模满足全部精细阈值时固定选择 `fine`。否则选择 `adaptive`，块高受 `adaptiveBlockPixels` 与 `maxPixelsPerWorker` 约束；`4:2:0` 时块高对齐偶数行，保证色度块不会在分块边界重新配对。自适应路径还会生成采样预览摘要，并记录预览尺寸、倍率和 SHA-256。
+
+自适应路径输出仍走同一面积重采样、色度采样、位深量化与音频重采样函数。启用 `requireByteIdentical` 时，运行器会额外执行精细路径并调用 `CompareProducts`；像素值、采样值或整包字节超差返回 `E_SCALE`，并带 `field/actual/expected`。
+
+## 状态与检查点
+
+合法状态迁移：
+
+```text
+pending -> decoding -> encoding -> committed
+decoding/encoding -> failed
+failed -> pending -> decoding
+decoding/encoding -> pending        # 用户暂停或取消
+```
+
+`committed` 是冻结终态。非法迁移返回 `E_STATE`，事务会保持原状态不变。
+
+SQLite 主要表：
+
+- `variants`：状态、路径决策、配方快照、输入哈希、配方版本、算法版本、产物摘要、真值、产物 BLOB、提交序号。
+- `invalidations`：检查点整体作废原因。
+- `stalls`：像素/采样缓冲等待记录。
+- `meta`：工程指纹、工程 ID、算法版本。
+
+每次提交使用单写事务，`SetMaxOpenConns(1)` 与进程内互斥保证写入串行。工作线程可以并行解码/编码，但协调器严格按变体序号提交，因此线程完成顺序不会改变提交序列。
+
+重启续跑时：
+
+1. 比较工程指纹、工程 ID、算法版本。
+2. 比较每个已提交变体的输入哈希、配方版本和算法版本。
+3. 任一不匹配则整体删除产物与快照，全部变体回到 `pending`。
+4. `decoding`/`encoding` 中间态统一回滚为 `pending`。
+
+不会只复用一部分旧产物。强制终止不承诺产生退出报告；只有已提交且版本匹配的变体可恢复。
+
+## 错误码
+
+| 错误码 | 含义 |
+|---|---|
+| `E_DECODE` | 清单缺失/损坏、素材损坏、哈希/尺寸/通道/音频参数不一致、操作目标不存在、时间戳非法 |
+| `E_PARA` | 配方或操作参数越界，错误对象包含字段名 |
+| `E_SCALE` | 精细与自适应路径超出一致性约束 |
+| `E_STATE` | 非法状态迁移、提交后修改、无运行任务暂停 |
+| `E_DIFF` | 真值不一致、三路径不一致、独立验证发现数据差异 |
+| `E_VERIFY` | 验证器自身无法读取/解析持久化产物或缺少检查点 |
+| `E_IO` / `E_BUDGET` / `E_CANCEL` / `E_INTERNAL` | 本地 I/O、资源预算、取消、内部异常 |
+
+CLI 将错误以 JSON 输出到 stderr，例如：
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "E_PARA",
+    "message": "must be 8, 10 or 16",
+    "field": "baseRecipe.imageBitDepth"
+  }
+}
+```
+
+## CLI
+
+```text
+mediaforge sample        --out DIR [--seed N] [--profile small|demo|large]
+mediaforge validate      --project PROJECT.json
+mediaforge run           --project PROJECT.json --db CHECKPOINT.sqlite
+                         [--out DIR] [--mode realtime|full|resume]
+                         [--workers N] [--pause-after N] [--force-path fine|adaptive]
+                         [--only VARIANT]
+mediaforge serve         [--data DIR] [--db DIR] [--addr 127.0.0.1:8787]
+mediaforge verify        --db CHECKPOINT.sqlite
+mediaforge compare-paths --project PROJECT.json [--workers N] [--pause-after N]
+mediaforge export        --db CHECKPOINT.sqlite --variant ID --out FILE
+mediaforge state         --db CHECKPOINT.sqlite
+```
+
+模式语义：
+
+- `realtime`：初始化或继续现有检查点，只处理 `pending` 变体；已提交结果保持冻结。
+- `full`：整体作废快照并从源素材重算全部变体。
+- `resume`：只使用版本匹配的已提交检查点，回滚中断活动态后继续。
+
+## 诊断 HTTP API
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/` | 诊断界面 |
+| GET | `/api/projects` | 工程列表 |
+| POST | `/api/select` | `{"path":"..."}` 切换工程 |
+| GET | `/api/state` | 项目、素材、变体、进度、路径、热力图、事件 |
+| POST | `/api/run` | `{"mode":"...","workers":2,"pauseAfter":0}` |
+| POST | `/api/pause` | 暂停当前批处理 |
+| POST | `/api/recipe` | 修改未提交变体配方并重算真值 |
+| POST | `/api/retry` | 单变体重试 |
+| GET | `/api/export?variant=ID` | 下载已提交 MFX |
+| GET | `/api/source?id=ID` | 本地回环预览源素材 |
+| POST | `/api/verify` | 启动独立验证 |
+| POST | `/api/compare-paths` | 启动三路径比对 |
+
+## 测试
+
+```bash
+go test ./...
+go vet ./...
+go test -race ./internal/codec ./internal/state ./internal/integration
+```
+
+测试覆盖：
+
+- 精细/自适应重复转码逐字节一致；
+- 4:2:0 分块边界与预览摘要；
+- `E_SCALE` 超差；
+- `E_PARA`、`E_DECODE` 字段定位；
+- 状态机合法/非法迁移；
+- 实时全量重转、暂停、关闭数据库、重启续跑产物一致；
+- 检查点版本篡改后整体失效；
+- 独立验证器发现真值差异与自身解析异常；
+- 三路径比对及零差异热力图；
+- HTTP 页面、批处理、冻结提交拒绝与验证流程。
+
+实际验收结果记录在 `artifacts/validation.json`。
