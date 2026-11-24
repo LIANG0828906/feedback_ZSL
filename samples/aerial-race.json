@@ -1,0 +1,2686 @@
+{
+  "schema_version": "expression-workspace/v1",
+  "id": "aerial-race",
+  "name": "Aerial Race",
+  "seed": 20261124,
+  "samples_per_beat": 4,
+  "duration_beats": 12,
+  "segments": [
+    {
+      "id": "seg-01",
+      "start_beat": 0,
+      "end_beat": 4,
+      "tempo_bpm": 143.05,
+      "note_density": 3.179,
+      "channels": [
+        {
+          "id": "velocity.main",
+          "name": "Velocity Main",
+          "target": "velocity",
+          "layers": [
+            {
+              "id": "base",
+              "points": [
+                {
+                  "beat": 0,
+                  "value": 0.3917
+                },
+                {
+                  "beat": 1,
+                  "value": 0.3426
+                },
+                {
+                  "beat": 2,
+                  "value": 0.5352
+                },
+                {
+                  "beat": 3,
+                  "value": 0.5605
+                },
+                {
+                  "beat": 4,
+                  "value": 0.5426
+                }
+              ]
+            },
+            {
+              "id": "phrase",
+              "points": [
+                {
+                  "beat": 0.32,
+                  "value": 0.1371
+                },
+                {
+                  "beat": 1.48,
+                  "value": 0.0833
+                },
+                {
+                  "beat": 2.64,
+                  "value": 0.0648
+                },
+                {
+                  "beat": 3.8,
+                  "value": 0.1677
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "velocity.accent",
+          "name": "Velocity Accent Override",
+          "target": "velocity",
+          "layers": [
+            {
+              "id": "accents",
+              "points": [
+                {
+                  "beat": 0,
+                  "value": 0.069
+                },
+                {
+                  "beat": 1,
+                  "value": 0.1691
+                },
+                {
+                  "beat": 2,
+                  "value": 0.1047
+                },
+                {
+                  "beat": 3,
+                  "value": 0.2394
+                },
+                {
+                  "beat": 4,
+                  "value": 0.0627
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vibrato.main",
+          "name": "Vibrato Main",
+          "target": "vibrato",
+          "layers": [
+            {
+              "id": "lfo",
+              "points": [
+                {
+                  "beat": 0,
+                  "value": 0.2375
+                },
+                {
+                  "beat": 0.25,
+                  "value": 0.22381
+                },
+                {
+                  "beat": 0.5,
+                  "value": 0.22678
+                },
+                {
+                  "beat": 0.75,
+                  "value": 0.21458
+                },
+                {
+                  "beat": 1,
+                  "value": 0.11222
+                },
+                {
+                  "beat": 1.25,
+                  "value": -0.01715
+                },
+                {
+                  "beat": 1.5,
+                  "value": 0.08251
+                },
+                {
+                  "beat": 1.75,
+                  "value": 0.18378
+                },
+                {
+                  "beat": 2,
+                  "value": 0.22389
+                },
+                {
+                  "beat": 2.25,
+                  "value": 0.29133
+                },
+                {
+                  "beat": 2.5,
+                  "value": 0.13846
+                },
+                {
+                  "beat": 2.75,
+                  "value": 0.01053
+                },
+                {
+                  "beat": 3,
+                  "value": 0.04504
+                },
+                {
+                  "beat": 3.25,
+                  "value": 0.16396
+                },
+                {
+                  "beat": 3.5,
+                  "value": 0.20747
+                },
+                {
+                  "beat": 3.75,
+                  "value": 0.27492
+                },
+                {
+                  "beat": 4,
+                  "value": 0.29141
+                }
+              ]
+            },
+            {
+              "id": "phrase",
+              "points": [
+                {
+                  "beat": 0,
+                  "value": 0.0882
+                },
+                {
+                  "beat": 1.333,
+                  "value": 0.094
+                },
+                {
+                  "beat": 2.667,
+                  "value": 0.1322
+                },
+                {
+                  "beat": 4,
+                  "value": 0.1382
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vibrato.delay",
+          "name": "Vibrato Delay Source",
+          "target": "vibrato",
+          "layers": [
+            {
+              "id": "delayed",
+              "points": [
+                {
+                  "beat": 0.72,
+                  "value": 0.1127
+                },
+                {
+                  "beat": 1.813,
+                  "value": 0.1243
+                },
+                {
+                  "beat": 2.907,
+                  "value": 0.1234
+                },
+                {
+                  "beat": 4,
+                  "value": 0.1265
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pitchbend.main",
+          "name": "Pitch Bend",
+          "target": "pitchbend",
+          "layers": [
+            {
+              "id": "gesture",
+              "points": [
+                {
+                  "beat": 0,
+                  "value": 0
+                },
+                {
+                  "beat": 1.4,
+                  "value": -0.0504
+                },
+                {
+                  "beat": 2.6,
+                  "value": -0.2068
+                },
+                {
+                  "beat": 4,
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sustain.main",
+          "name": "Sustain Pedal",
+          "target": "sustain",
+          "layers": [
+            {
+              "id": "pedal",
+              "points": [
+                {
+                  "beat": 0,
+                  "value": 0
+                },
+                {
+                  "beat": 0.48,
+                  "value": 1
+                },
+                {
+                  "beat": 2.32,
+                  "value": 0
+                },
+                {
+                  "beat": 3.04,
+                  "value": 1
+                },
+                {
+                  "beat": 4,
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "priorities": [
+        {
+          "higher": "velocity.accent",
+          "lower": "velocity.main",
+          "basis": "accent-track-overrides-main"
+        },
+        {
+          "higher": "vibrato.main",
+          "lower": "vibrato.delay",
+          "basis": "main-vibrato-overrides-delay"
+        },
+        {
+          "higher": "vibrato.main",
+          "lower": "velocity.accent",
+          "basis": "expression-balance-rank"
+        },
+        {
+          "higher": "pitchbend.main",
+          "lower": "vibrato.main",
+          "basis": "expression-balance-rank"
+        },
+        {
+          "higher": "sustain.main",
+          "lower": "pitchbend.main",
+          "basis": "expression-balance-rank"
+        }
+      ],
+      "truth": {
+        "interpolation": "linear",
+        "tolerance": 1e-9,
+        "samples": [
+          {
+            "tick": 0,
+            "beat": 0,
+            "values": {
+              "pitchbend": 0,
+              "sustain": 0,
+              "velocity": 0.069,
+              "vibrato": 0.3257
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 0,
+                "beat": 0,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5287999999999999,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 0,
+                "beat": 0,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1127,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 1,
+            "beat": 0.25,
+            "values": {
+              "pitchbend": -0.009000000000000001,
+              "sustain": 0.5208333333333334,
+              "velocity": 0.094025,
+              "vibrato": 0.31309777194298577
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 1,
+                "beat": 0.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.516525,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 1,
+                "beat": 0.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1127,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 2,
+            "beat": 0.5,
+            "values": {
+              "pitchbend": -0.018000000000000002,
+              "sustain": 0.9891304347826086,
+              "velocity": 0.11905,
+              "vibrato": 0.3171555438859715
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 2,
+                "beat": 0.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.495901724137931,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 2,
+                "beat": 0.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1127,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 3,
+            "beat": 0.75,
+            "values": {
+              "pitchbend": -0.027,
+              "sustain": 0.8532608695652174,
+              "velocity": 0.144075,
+              "vibrato": 0.3060433158289572
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 3,
+                "beat": 0.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.4720318965517241,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 3,
+                "beat": 0.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.11301838975297346,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 4,
+            "beat": 1,
+            "values": {
+              "pitchbend": -0.036000000000000004,
+              "sustain": 0.717391304347826,
+              "velocity": 0.1691,
+              "vibrato": 0.20477108777194297
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 4,
+                "beat": 1,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.44816206896551725,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 4,
+                "beat": 1,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.11567163769441903,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 5,
+            "beat": 1.25,
+            "values": {
+              "pitchbend": -0.045000000000000005,
+              "sustain": 0.5815217391304348,
+              "velocity": 0.153,
+              "vibrato": 0.07648885971492875
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 5,
+                "beat": 1.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.4847172413793104,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 5,
+                "beat": 1.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.11832488563586459,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 6,
+            "beat": 1.5,
+            "values": {
+              "pitchbend": -0.06343333333333334,
+              "sustain": 0.44565217391304346,
+              "velocity": 0.1369,
+              "vibrato": 0.18129215892053974
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 6,
+                "beat": 1.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5218810344827587,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 6,
+                "beat": 1.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12097813357731015,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 7,
+            "beat": 1.75,
+            "values": {
+              "pitchbend": -0.09601666666666667,
+              "sustain": 0.3097826086956521,
+              "velocity": 0.1208,
+              "vibrato": 0.28972107946026987
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 7,
+                "beat": 1.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5660439655172413,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 7,
+                "beat": 1.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12363138151875572,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 8,
+            "beat": 2,
+            "values": {
+              "pitchbend": -0.1286,
+              "sustain": 0.17391304347826075,
+              "velocity": 0.1047,
+              "vibrato": 0.33699
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 8,
+                "beat": 2,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6102068965517241,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 8,
+                "beat": 2,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1241461608775137,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 9,
+            "beat": 2.25,
+            "values": {
+              "pitchbend": -0.16118333333333335,
+              "sustain": 0.03804347826086951,
+              "velocity": 0.138375,
+              "vibrato": 0.4115889205397301
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 9,
+                "beat": 2.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6125448275862069,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 9,
+                "beat": 2.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12394049360146252,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 10,
+            "beat": 2.5,
+            "values": {
+              "pitchbend": -0.19376666666666667,
+              "sustain": 0.25000000000000017,
+              "velocity": 0.17204999999999998,
+              "vibrato": 0.2658778410794603
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 10,
+                "beat": 2.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6148827586206896,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 10,
+                "beat": 2.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12373482632541133,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 11,
+            "beat": 2.75,
+            "values": {
+              "pitchbend": -0.18464285714285716,
+              "sustain": 0.5972222222222223,
+              "velocity": 0.205725,
+              "vibrato": 0.1431035933983496
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 11,
+                "beat": 2.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6287327586206897,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 11,
+                "beat": 2.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12352915904936014,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 12,
+            "beat": 3,
+            "values": {
+              "pitchbend": -0.14771428571428574,
+              "sustain": 0.9444444444444444,
+              "velocity": 0.2394,
+              "vibrato": 0.17873887471867966
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 12,
+                "beat": 3,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6572344827586207,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 12,
+                "beat": 3,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12366376944190302,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 13,
+            "beat": 3.25,
+            "values": {
+              "pitchbend": -0.1107857142857143,
+              "sustain": 0.78125,
+              "velocity": 0.195225,
+              "vibrato": 0.29878415603900976
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 13,
+                "beat": 3.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6749362068965516,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 13,
+                "beat": 3.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12437282708142726,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 14,
+            "beat": 3.5,
+            "values": {
+              "pitchbend": -0.07385714285714287,
+              "sustain": 0.5208333333333334,
+              "velocity": 0.15105000000000002,
+              "vibrato": 0.34341943735933983
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 14,
+                "beat": 3.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6926379310344828,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 14,
+                "beat": 3.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1250818847209515,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 15,
+            "beat": 3.75,
+            "values": {
+              "pitchbend": -0.03692857142857145,
+              "sustain": 0.26041666666666663,
+              "velocity": 0.106875,
+              "vibrato": 0.4119947186796699
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 15,
+                "beat": 3.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.7103396551724137,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 15,
+                "beat": 3.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.12579094236047575,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "seg-02",
+      "start_beat": 4,
+      "end_beat": 8,
+      "tempo_bpm": 139.535,
+      "note_density": 3.113,
+      "channels": [
+        {
+          "id": "velocity.main",
+          "name": "Velocity Main",
+          "target": "velocity",
+          "layers": [
+            {
+              "id": "base",
+              "points": [
+                {
+                  "beat": 4,
+                  "value": 0.2741
+                },
+                {
+                  "beat": 5,
+                  "value": 0.4352
+                },
+                {
+                  "beat": 6,
+                  "value": 0.3291
+                },
+                {
+                  "beat": 7,
+                  "value": 0.3401
+                },
+                {
+                  "beat": 8,
+                  "value": 0.3264
+                }
+              ]
+            },
+            {
+              "id": "phrase",
+              "points": [
+                {
+                  "beat": 4.32,
+                  "value": 0.2144
+                },
+                {
+                  "beat": 5.48,
+                  "value": 0.1823
+                },
+                {
+                  "beat": 6.64,
+                  "value": 0.1537
+                },
+                {
+                  "beat": 7.8,
+                  "value": 0.0843
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "velocity.accent",
+          "name": "Velocity Accent Override",
+          "target": "velocity",
+          "layers": [
+            {
+              "id": "accents",
+              "points": [
+                {
+                  "beat": 4,
+                  "value": 0.0834
+                },
+                {
+                  "beat": 5,
+                  "value": 0.1794
+                },
+                {
+                  "beat": 6,
+                  "value": 0.1281
+                },
+                {
+                  "beat": 7,
+                  "value": 0.2221
+                },
+                {
+                  "beat": 8,
+                  "value": 0.0888
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vibrato.main",
+          "name": "Vibrato Main",
+          "target": "vibrato",
+          "layers": [
+            {
+              "id": "lfo",
+              "points": [
+                {
+                  "beat": 4,
+                  "value": 0.12582
+                },
+                {
+                  "beat": 4.25,
+                  "value": 0.23018
+                },
+                {
+                  "beat": 4.5,
+                  "value": 0.24248
+                },
+                {
+                  "beat": 4.75,
+                  "value": 0.15931
+                },
+                {
+                  "beat": 5,
+                  "value": 0.13324
+                },
+                {
+                  "beat": 5.25,
+                  "value": 0.05968
+                },
+                {
+                  "beat": 5.5,
+                  "value": 0.08001
+                },
+                {
+                  "beat": 5.75,
+                  "value": 0.16084
+                },
+                {
+                  "beat": 6,
+                  "value": 0.30827
+                },
+                {
+                  "beat": 6.25,
+                  "value": 0.22992
+                },
+                {
+                  "beat": 6.5,
+                  "value": 0.11196
+                },
+                {
+                  "beat": 6.75,
+                  "value": 0.01846
+                },
+                {
+                  "beat": 7,
+                  "value": 0.12567
+                },
+                {
+                  "beat": 7.25,
+                  "value": 0.21217
+                },
+                {
+                  "beat": 7.5,
+                  "value": 0.18601
+                },
+                {
+                  "beat": 7.75,
+                  "value": 0.20928
+                },
+                {
+                  "beat": 8,
+                  "value": 0.16255
+                }
+              ]
+            },
+            {
+              "id": "phrase",
+              "points": [
+                {
+                  "beat": 4,
+                  "value": 0.1131
+                },
+                {
+                  "beat": 5.333,
+                  "value": 0.1323
+                },
+                {
+                  "beat": 6.667,
+                  "value": 0.0682
+                },
+                {
+                  "beat": 8,
+                  "value": 0.0806
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vibrato.delay",
+          "name": "Vibrato Delay Source",
+          "target": "vibrato",
+          "layers": [
+            {
+              "id": "delayed",
+              "points": [
+                {
+                  "beat": 4.72,
+                  "value": 0.0623
+                },
+                {
+                  "beat": 5.813,
+                  "value": 0.168
+                },
+                {
+                  "beat": 6.907,
+                  "value": 0.1087
+                },
+                {
+                  "beat": 8,
+                  "value": 0.0913
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pitchbend.main",
+          "name": "Pitch Bend",
+          "target": "pitchbend",
+          "layers": [
+            {
+              "id": "gesture",
+              "points": [
+                {
+                  "beat": 4,
+                  "value": 0
+                },
+                {
+                  "beat": 5.4,
+                  "value": -0.1377
+                },
+                {
+                  "beat": 6.6,
+                  "value": -0.1579
+                },
+                {
+                  "beat": 8,
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sustain.main",
+          "name": "Sustain Pedal",
+          "target": "sustain",
+          "layers": [
+            {
+              "id": "pedal",
+              "points": [
+                {
+                  "beat": 4,
+                  "value": 0
+                },
+                {
+                  "beat": 4.48,
+                  "value": 1
+                },
+                {
+                  "beat": 6.32,
+                  "value": 0
+                },
+                {
+                  "beat": 7.04,
+                  "value": 1
+                },
+                {
+                  "beat": 8,
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "priorities": [
+        {
+          "higher": "velocity.accent",
+          "lower": "velocity.main",
+          "basis": "accent-track-overrides-main"
+        },
+        {
+          "higher": "vibrato.main",
+          "lower": "vibrato.delay",
+          "basis": "main-vibrato-overrides-delay"
+        },
+        {
+          "higher": "vibrato.main",
+          "lower": "velocity.accent",
+          "basis": "expression-balance-rank"
+        },
+        {
+          "higher": "pitchbend.main",
+          "lower": "vibrato.main",
+          "basis": "expression-balance-rank"
+        },
+        {
+          "higher": "sustain.main",
+          "lower": "pitchbend.main",
+          "basis": "expression-balance-rank"
+        }
+      ],
+      "truth": {
+        "interpolation": "linear",
+        "tolerance": 1e-9,
+        "samples": [
+          {
+            "tick": 16,
+            "beat": 4,
+            "values": {
+              "pitchbend": 0,
+              "sustain": 0,
+              "velocity": 0.0834,
+              "vibrato": 0.23892
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 16,
+                "beat": 4,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.48850000000000005,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 16,
+                "beat": 4,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.0623,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 17,
+            "beat": 4.25,
+            "values": {
+              "pitchbend": -0.024589285714285706,
+              "sustain": 0.5208333333333329,
+              "velocity": 0.1074,
+              "vibrato": 0.34688090022505624
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 17,
+                "beat": 4.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.528775,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 17,
+                "beat": 4.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.0623,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 18,
+            "beat": 4.5,
+            "values": {
+              "pitchbend": -0.04917857142857141,
+              "sustain": 0.989130434782609,
+              "velocity": 0.13140000000000002,
+              "vibrato": 0.36278180045011255
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 18,
+                "beat": 4.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5640689655172414,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 18,
+                "beat": 4.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.0623,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 19,
+            "beat": 4.75,
+            "values": {
+              "pitchbend": -0.07376785714285712,
+              "sustain": 0.8532608695652176,
+              "velocity": 0.1554,
+              "vibrato": 0.2832127006751688
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 19,
+                "beat": 4.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5974258620689655,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 19,
+                "beat": 4.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.06520118938700827,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 20,
+            "beat": 5,
+            "values": {
+              "pitchbend": -0.09835714285714282,
+              "sustain": 0.7173913043478263,
+              "velocity": 0.1794,
+              "vibrato": 0.2607436009002251
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 20,
+                "beat": 5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6307827586206897,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 20,
+                "beat": 5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.08937776761207689,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 21,
+            "beat": 5.25,
+            "values": {
+              "pitchbend": -0.12294642857142854,
+              "sustain": 0.581521739130435,
+              "velocity": 0.166575,
+              "vibrato": 0.19078450112528134
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 21,
+                "beat": 5.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5973396551724138,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 21,
+                "beat": 5.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1135543458371455,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 22,
+            "beat": 5.5,
+            "values": {
+              "pitchbend": -0.13938333333333333,
+              "sustain": 0.4456521739130437,
+              "velocity": 0.15375,
+              "vibrato": 0.2042854872563718
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 22,
+                "beat": 5.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5639568965517241,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 22,
+                "beat": 5.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.13773092406221413,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 23,
+            "beat": 5.75,
+            "values": {
+              "pitchbend": -0.14359166666666667,
+              "sustain": 0.30978260869565233,
+              "velocity": 0.140925,
+              "vibrato": 0.27310274362818593
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 23,
+                "beat": 5.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5312681034482758,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 23,
+                "beat": 5.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.16190750228728276,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 24,
+            "beat": 6,
+            "values": {
+              "pitchbend": -0.1478,
+              "sustain": 0.1739130434782611,
+              "velocity": 0.1281,
+              "vibrato": 0.40852
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 24,
+                "beat": 6,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.4985793103448276,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 24,
+                "beat": 6,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.15786371115173675,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 25,
+            "beat": 6.25,
+            "values": {
+              "pitchbend": -0.15200833333333336,
+              "sustain": 0.038043478260869734,
+              "velocity": 0.15159999999999998,
+              "vibrato": 0.31815725637181413
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 25,
+                "beat": 6.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.49516551724137925,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 25,
+                "beat": 6.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.14431252285191956,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 26,
+            "beat": 6.5,
+            "values": {
+              "pitchbend": -0.15621666666666667,
+              "sustain": 0.2499999999999997,
+              "velocity": 0.17509999999999998,
+              "vibrato": 0.18818451274362819
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 26,
+                "beat": 6.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.491751724137931,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 26,
+                "beat": 6.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.13076133455210237,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 27,
+            "beat": 6.75,
+            "values": {
+              "pitchbend": -0.14098214285714283,
+              "sustain": 0.597222222222222,
+              "velocity": 0.1986,
+              "vibrato": 0.08743209302325582
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 27,
+                "beat": 6.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.4844689655172414,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 27,
+                "beat": 6.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1172101462522852,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 28,
+            "beat": 7,
+            "values": {
+              "pitchbend": -0.11278571428571427,
+              "sustain": 0.9444444444444444,
+              "velocity": 0.2221,
+              "vibrato": 0.19696767441860466
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 28,
+                "beat": 7,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.47226206896551726,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 28,
+                "beat": 7,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.10721948764867338,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 29,
+            "beat": 7.25,
+            "values": {
+              "pitchbend": -0.0845892857142857,
+              "sustain": 0.78125,
+              "velocity": 0.188775,
+              "vibrato": 0.2857932558139535
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 29,
+                "beat": 7.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.4538801724137931,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 29,
+                "beat": 7.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.10323961573650503,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 30,
+            "beat": 7.5,
+            "values": {
+              "pitchbend": -0.05639285714285713,
+              "sustain": 0.5208333333333334,
+              "velocity": 0.15545,
+              "vibrato": 0.26195883720930235
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 30,
+                "beat": 7.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.435498275862069,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 30,
+                "beat": 7.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.0992597438243367,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 31,
+            "beat": 7.75,
+            "values": {
+              "pitchbend": -0.028196428571428567,
+              "sustain": 0.26041666666666663,
+              "velocity": 0.12212500000000001,
+              "vibrato": 0.28755441860465114
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 31,
+                "beat": 7.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.41711637931034484,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 31,
+                "beat": 7.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.09527987191216836,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "seg-03",
+      "start_beat": 8,
+      "end_beat": 12,
+      "tempo_bpm": 144.726,
+      "note_density": 2.944,
+      "channels": [
+        {
+          "id": "velocity.main",
+          "name": "Velocity Main",
+          "target": "velocity",
+          "layers": [
+            {
+              "id": "base",
+              "points": [
+                {
+                  "beat": 8,
+                  "value": 0.255
+                },
+                {
+                  "beat": 9,
+                  "value": 0.3645
+                },
+                {
+                  "beat": 10,
+                  "value": 0.3955
+                },
+                {
+                  "beat": 11,
+                  "value": 0.4929
+                },
+                {
+                  "beat": 12,
+                  "value": 0.5864
+                }
+              ]
+            },
+            {
+              "id": "phrase",
+              "points": [
+                {
+                  "beat": 8.32,
+                  "value": 0.0803
+                },
+                {
+                  "beat": 9.48,
+                  "value": 0.0689
+                },
+                {
+                  "beat": 10.64,
+                  "value": 0.1108
+                },
+                {
+                  "beat": 11.8,
+                  "value": 0.1205
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "velocity.accent",
+          "name": "Velocity Accent Override",
+          "target": "velocity",
+          "layers": [
+            {
+              "id": "accents",
+              "points": [
+                {
+                  "beat": 8,
+                  "value": 0.0639
+                },
+                {
+                  "beat": 9,
+                  "value": 0.1827
+                },
+                {
+                  "beat": 10,
+                  "value": 0.1007
+                },
+                {
+                  "beat": 11,
+                  "value": 0.2
+                },
+                {
+                  "beat": 12,
+                  "value": 0.0657
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vibrato.main",
+          "name": "Vibrato Main",
+          "target": "vibrato",
+          "layers": [
+            {
+              "id": "lfo",
+              "points": [
+                {
+                  "beat": 8,
+                  "value": 0.20996
+                },
+                {
+                  "beat": 8.25,
+                  "value": 0.36311
+                },
+                {
+                  "beat": 8.5,
+                  "value": 0.27815
+                },
+                {
+                  "beat": 8.75,
+                  "value": 0.15043
+                },
+                {
+                  "beat": 9,
+                  "value": 0.14122
+                },
+                {
+                  "beat": 9.25,
+                  "value": 0.01556
+                },
+                {
+                  "beat": 9.5,
+                  "value": 0.08816
+                },
+                {
+                  "beat": 9.75,
+                  "value": 0.23628
+                },
+                {
+                  "beat": 10,
+                  "value": 0.30702
+                },
+                {
+                  "beat": 10.25,
+                  "value": 0.30725
+                },
+                {
+                  "beat": 10.5,
+                  "value": 0.14328
+                },
+                {
+                  "beat": 10.75,
+                  "value": 0.02853
+                },
+                {
+                  "beat": 11,
+                  "value": 0.06177
+                },
+                {
+                  "beat": 11.25,
+                  "value": 0.21359
+                },
+                {
+                  "beat": 11.5,
+                  "value": 0.3194
+                },
+                {
+                  "beat": 11.75,
+                  "value": 0.32661
+                },
+                {
+                  "beat": 12,
+                  "value": 0.22395
+                }
+              ]
+            },
+            {
+              "id": "phrase",
+              "points": [
+                {
+                  "beat": 8,
+                  "value": 0.1344
+                },
+                {
+                  "beat": 9.333,
+                  "value": 0.1201
+                },
+                {
+                  "beat": 10.667,
+                  "value": 0.077
+                },
+                {
+                  "beat": 12,
+                  "value": 0.1108
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vibrato.delay",
+          "name": "Vibrato Delay Source",
+          "target": "vibrato",
+          "layers": [
+            {
+              "id": "delayed",
+              "points": [
+                {
+                  "beat": 8.72,
+                  "value": 0.1642
+                },
+                {
+                  "beat": 9.813,
+                  "value": 0.1308
+                },
+                {
+                  "beat": 10.907,
+                  "value": 0.1524
+                },
+                {
+                  "beat": 12,
+                  "value": 0.1626
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pitchbend.main",
+          "name": "Pitch Bend",
+          "target": "pitchbend",
+          "layers": [
+            {
+              "id": "gesture",
+              "points": [
+                {
+                  "beat": 8,
+                  "value": 0
+                },
+                {
+                  "beat": 9.4,
+                  "value": -0.1192
+                },
+                {
+                  "beat": 10.6,
+                  "value": 0.1962
+                },
+                {
+                  "beat": 12,
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sustain.main",
+          "name": "Sustain Pedal",
+          "target": "sustain",
+          "layers": [
+            {
+              "id": "pedal",
+              "points": [
+                {
+                  "beat": 8,
+                  "value": 0
+                },
+                {
+                  "beat": 8.48,
+                  "value": 1
+                },
+                {
+                  "beat": 10.32,
+                  "value": 0
+                },
+                {
+                  "beat": 11.04,
+                  "value": 1
+                },
+                {
+                  "beat": 12,
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "priorities": [
+        {
+          "higher": "velocity.accent",
+          "lower": "velocity.main",
+          "basis": "accent-track-overrides-main"
+        },
+        {
+          "higher": "vibrato.main",
+          "lower": "vibrato.delay",
+          "basis": "main-vibrato-overrides-delay"
+        },
+        {
+          "higher": "vibrato.main",
+          "lower": "velocity.accent",
+          "basis": "expression-balance-rank"
+        },
+        {
+          "higher": "pitchbend.main",
+          "lower": "vibrato.main",
+          "basis": "expression-balance-rank"
+        },
+        {
+          "higher": "sustain.main",
+          "lower": "pitchbend.main",
+          "basis": "expression-balance-rank"
+        }
+      ],
+      "truth": {
+        "interpolation": "linear",
+        "tolerance": 1e-9,
+        "samples": [
+          {
+            "tick": 32,
+            "beat": 8,
+            "values": {
+              "pitchbend": 0,
+              "sustain": 0,
+              "velocity": 0.0639,
+              "vibrato": 0.34436
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 32,
+                "beat": 8,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.3353,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 32,
+                "beat": 8,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1642,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 33,
+            "beat": 8.25,
+            "values": {
+              "pitchbend": -0.02128571428571428,
+              "sustain": 0.5208333333333329,
+              "velocity": 0.0936,
+              "vibrato": 0.49482807951987995
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 33,
+                "beat": 8.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.36267499999999997,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 33,
+                "beat": 8.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1642,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 34,
+            "beat": 8.5,
+            "values": {
+              "pitchbend": -0.04257142857142856,
+              "sustain": 0.989130434782609,
+              "velocity": 0.12329999999999999,
+              "vibrato": 0.40718615903975997
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 34,
+                "beat": 8.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.3882810344827586,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 34,
+                "beat": 8.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1642,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 35,
+            "beat": 8.75,
+            "values": {
+              "pitchbend": -0.06385714285714285,
+              "sustain": 0.8532608695652176,
+              "velocity": 0.153,
+              "vibrato": 0.2767842385596399
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 35,
+                "beat": 8.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.41319913793103447,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 35,
+                "beat": 8.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.16328325709057642,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 36,
+            "beat": 9,
+            "values": {
+              "pitchbend": -0.08514285714285712,
+              "sustain": 0.7173913043478263,
+              "velocity": 0.1827,
+              "vibrato": 0.2648923180795199
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 36,
+                "beat": 9,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.43811724137931035,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 36,
+                "beat": 9,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.15564373284537972,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 37,
+            "beat": 9.25,
+            "values": {
+              "pitchbend": -0.10642857142857141,
+              "sustain": 0.581521739130435,
+              "velocity": 0.1622,
+              "vibrato": 0.13655039759939985
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 37,
+                "beat": 9.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.4434103448275862,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 37,
+                "beat": 9.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.148004208600183,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 38,
+            "beat": 9.5,
+            "values": {
+              "pitchbend": -0.09291666666666674,
+              "sustain": 0.4456521739130437,
+              "velocity": 0.1417,
+              "vibrato": 0.2028644227886057
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 38,
+                "beat": 9.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.4496224137931034,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 38,
+                "beat": 9.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1403646843549863,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 39,
+            "beat": 9.75,
+            "values": {
+              "pitchbend": -0.027208333333333376,
+              "sustain": 0.30978260869565233,
+              "velocity": 0.1212,
+              "vibrato": 0.34290721139430286
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 39,
+                "beat": 9.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.46640258620689656,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 39,
+                "beat": 9.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.13272516010978958,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 40,
+            "beat": 10,
+            "values": {
+              "pitchbend": 0.038500000000000006,
+              "sustain": 0.1739130434782611,
+              "velocity": 0.1007,
+              "vibrato": 0.40557
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 40,
+                "beat": 10,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.48318275862068966,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 40,
+                "beat": 10,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.13449213893967094,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 41,
+            "beat": 10.25,
+            "values": {
+              "pitchbend": 0.1042083333333334,
+              "sustain": 0.038043478260869734,
+              "velocity": 0.125525,
+              "vibrato": 0.39772278860569715
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 41,
+                "beat": 10.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5165629310344827,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 41,
+                "beat": 10.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.13942815356489946,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 42,
+            "beat": 10.5,
+            "values": {
+              "pitchbend": 0.1699166666666668,
+              "sustain": 0.25,
+              "velocity": 0.15035,
+              "vibrato": 0.22567557721139428
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 42,
+                "beat": 10.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5499431034482759,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 42,
+                "beat": 10.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.14436416819012798,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 43,
+            "beat": 10.75,
+            "values": {
+              "pitchbend": 0.1751785714285714,
+              "sustain": 0.5972222222222228,
+              "velocity": 0.17517500000000003,
+              "vibrato": 0.10763457614403601
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 43,
+                "beat": 10.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.5802698275862069,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 43,
+                "beat": 10.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1493001828153565,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 44,
+            "beat": 11,
+            "values": {
+              "pitchbend": 0.14014285714285712,
+              "sustain": 0.9444444444444455,
+              "velocity": 0.2,
+              "vibrato": 0.1472136609152288
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 44,
+                "beat": 11,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6067103448275862,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 44,
+                "beat": 11,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1532678865507777,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 45,
+            "beat": 11.25,
+            "values": {
+              "pitchbend": 0.10510714285714284,
+              "sustain": 0.7812499999999993,
+              "velocity": 0.166425,
+              "vibrato": 0.3053727456864216
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 45,
+                "beat": 11.25,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6321758620689656,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 45,
+                "beat": 11.25,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.15560091491308325,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 46,
+            "beat": 11.5,
+            "values": {
+              "pitchbend": 0.07007142857142856,
+              "sustain": 0.5208333333333328,
+              "velocity": 0.13285,
+              "vibrato": 0.41752183045761443
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 46,
+                "beat": 11.5,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6576413793103448,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 46,
+                "beat": 11.5,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.15793394327538884,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          },
+          {
+            "tick": 47,
+            "beat": 11.75,
+            "values": {
+              "pitchbend": 0.03503571428571428,
+              "sustain": 0.2604166666666664,
+              "velocity": 0.09927499999999999,
+              "vibrato": 0.4310709152288072
+            },
+            "sources": {
+              "pitchbend": "pitchbend.main",
+              "sustain": "sustain.main",
+              "velocity": "velocity.accent",
+              "vibrato": "vibrato.main"
+            },
+            "decisions": [
+              {
+                "tick": 47,
+                "beat": 11.75,
+                "target": "velocity",
+                "higher": "velocity.accent",
+                "overridden": "velocity.main",
+                "overridden_value": 0.6831068965517242,
+                "basis": "accent-track-overrides-main"
+              },
+              {
+                "tick": 47,
+                "beat": 11.75,
+                "target": "vibrato",
+                "higher": "vibrato.main",
+                "overridden": "vibrato.delay",
+                "overridden_value": 0.1602669716376944,
+                "basis": "main-vibrato-overrides-delay"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
