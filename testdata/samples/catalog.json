@@ -1,0 +1,678 @@
+{
+  "seed": 20261124,
+  "ruleVersion": "mapping-v1",
+  "branches": [
+    "aurora",
+    "ember",
+    "nova"
+  ],
+  "mappings": {
+    "version": "mapping-v1",
+    "branches": [
+      {
+        "id": "aurora",
+        "displayName": "Aurora PC",
+        "fields": [
+          {
+            "role": "level",
+            "path": "progress.level"
+          },
+          {
+            "role": "coins",
+            "path": "stats.valueA"
+          },
+          {
+            "role": "experience",
+            "path": "stats.valueB"
+          },
+          {
+            "role": "coordinate.x",
+            "path": "world.pos.x"
+          },
+          {
+            "role": "coordinate.y",
+            "path": "world.pos.y"
+          }
+        ],
+        "lists": [
+          {
+            "role": "items",
+            "path": "inventory.primary"
+          },
+          {
+            "role": "quests",
+            "path": "inventory.secondary"
+          }
+        ],
+        "time": {
+          "path": "clock.ticks",
+          "epochSeconds": 1700000000,
+          "tickNanos": 1000000,
+          "rounding": "floor"
+        },
+        "flags": [
+          {
+            "semantic": "event_enabled",
+            "path": "flags.eventOn",
+            "invert": false
+          }
+        ],
+        "conditions": [
+          {
+            "id": "event_on",
+            "op": "flag",
+            "flag": "event_enabled"
+          }
+        ],
+        "conditionals": [
+          {
+            "path": "bonus.coins",
+            "role": "coins",
+            "conditionId": "event_on",
+            "default": 0
+          },
+          {
+            "path": "bonus.exp",
+            "role": "experience",
+            "conditionId": "event_on",
+            "default": 0
+          }
+        ],
+        "conflictRules": [
+          {
+            "action": "preserve",
+            "priority": 10
+          },
+          {
+            "action": "default",
+            "priority": 20
+          },
+          {
+            "action": "reject",
+            "priority": 30
+          }
+        ]
+      },
+      {
+        "id": "ember",
+        "displayName": "Ember Console",
+        "fields": [
+          {
+            "role": "level",
+            "path": "progress.level"
+          },
+          {
+            "role": "coins",
+            "path": "stats.valueB"
+          },
+          {
+            "role": "experience",
+            "path": "stats.valueA"
+          },
+          {
+            "role": "coordinate.x",
+            "path": "world.pos.x"
+          },
+          {
+            "role": "coordinate.y",
+            "path": "world.pos.y"
+          }
+        ],
+        "lists": [
+          {
+            "role": "items",
+            "path": "inventory.secondary"
+          },
+          {
+            "role": "quests",
+            "path": "inventory.primary"
+          }
+        ],
+        "time": {
+          "path": "clock.ticks",
+          "epochSeconds": 1600000000,
+          "tickNanos": 1000000000,
+          "rounding": "floor"
+        },
+        "flags": [
+          {
+            "semantic": "event_enabled",
+            "path": "flags.eventOn",
+            "invert": true
+          }
+        ],
+        "conditions": [
+          {
+            "id": "event_on",
+            "op": "flag",
+            "flag": "event_enabled"
+          }
+        ],
+        "conditionals": [
+          {
+            "path": "bonus.coins",
+            "role": "coins",
+            "conditionId": "event_on",
+            "default": 0
+          },
+          {
+            "path": "bonus.exp",
+            "role": "experience",
+            "conditionId": "event_on",
+            "default": 0
+          }
+        ],
+        "conflictRules": [
+          {
+            "action": "preserve",
+            "priority": 10
+          },
+          {
+            "action": "default",
+            "priority": 20
+          },
+          {
+            "action": "reject",
+            "priority": 30
+          }
+        ]
+      },
+      {
+        "id": "nova",
+        "displayName": "Nova Handheld",
+        "fields": [
+          {
+            "role": "level",
+            "path": "progress.level"
+          },
+          {
+            "role": "coins",
+            "path": "wallet.amountA"
+          },
+          {
+            "role": "experience",
+            "path": "wallet.amountB"
+          },
+          {
+            "role": "coordinate.x",
+            "path": "world.pos.x"
+          },
+          {
+            "role": "coordinate.y",
+            "path": "world.pos.y"
+          }
+        ],
+        "lists": [
+          {
+            "role": "items",
+            "path": "bags.listA"
+          },
+          {
+            "role": "quests",
+            "path": "bags.listB"
+          }
+        ],
+        "time": {
+          "path": "timestamp.raw",
+          "epochSeconds": 946684800,
+          "tickNanos": 1000,
+          "rounding": "floor"
+        },
+        "flags": [
+          {
+            "semantic": "event_enabled",
+            "path": "switches.eventState",
+            "invert": false
+          },
+          {
+            "semantic": "legacy_enabled",
+            "path": "switches.legacyOk",
+            "invert": false
+          }
+        ],
+        "conditions": [
+          {
+            "id": "event_on",
+            "op": "flag",
+            "flag": "event_enabled"
+          },
+          {
+            "id": "legacy_event_on",
+            "op": "and",
+            "refs": [
+              "event_on",
+              "legacy_ok"
+            ]
+          },
+          {
+            "id": "legacy_ok",
+            "op": "flag",
+            "flag": "legacy_enabled"
+          }
+        ],
+        "conditionals": [
+          {
+            "path": "modifiers.coinValue",
+            "role": "coins",
+            "conditionId": "legacy_event_on",
+            "default": 7
+          },
+          {
+            "path": "modifiers.expValue",
+            "role": "experience",
+            "conditionId": "event_on",
+            "default": 3
+          }
+        ],
+        "conflictRules": [
+          {
+            "action": "preserve",
+            "priority": 10
+          },
+          {
+            "action": "default",
+            "priority": 20
+          },
+          {
+            "action": "reject",
+            "priority": 30
+          }
+        ]
+      }
+    ]
+  },
+  "samples": [
+    {
+      "id": "sample-01",
+      "branches": {
+        "aurora": {
+          "level": 4,
+          "coins": 1449,
+          "experience": 512,
+          "items": [
+            "potion:00",
+            "key:00",
+            "relic:00"
+          ],
+          "quests": [
+            "quest:main:01",
+            "quest:side:00"
+          ],
+          "coordinate": {
+            "x": -40,
+            "y": 85
+          },
+          "timeNanos": 1730000062000000000,
+          "timeScaleNanos": 1
+        },
+        "ember": {
+          "level": 4,
+          "coins": 1449,
+          "experience": 512,
+          "items": [
+            "potion:00",
+            "key:00",
+            "relic:00"
+          ],
+          "quests": [
+            "quest:main:01",
+            "quest:side:00"
+          ],
+          "coordinate": {
+            "x": -40,
+            "y": 85
+          },
+          "timeNanos": 1730000062000000000,
+          "timeScaleNanos": 1
+        },
+        "nova": {
+          "level": 4,
+          "coins": 1449,
+          "experience": 512,
+          "items": [
+            "potion:00",
+            "key:00",
+            "relic:00"
+          ],
+          "quests": [
+            "quest:main:01",
+            "quest:side:00"
+          ],
+          "coordinate": {
+            "x": -40,
+            "y": 85
+          },
+          "timeNanos": 1730000062000000000,
+          "timeScaleNanos": 1
+        }
+      }
+    },
+    {
+      "id": "sample-02",
+      "branches": {
+        "aurora": {
+          "level": 5,
+          "coins": 1686,
+          "experience": 634,
+          "items": [
+            "potion:01",
+            "key:01",
+            "relic:01"
+          ],
+          "quests": [
+            "quest:main:02",
+            "quest:side:01"
+          ],
+          "coordinate": {
+            "x": -23,
+            "y": 108
+          },
+          "timeNanos": 1730003665000000000,
+          "timeScaleNanos": 1
+        },
+        "ember": {
+          "level": 5,
+          "coins": 1686,
+          "experience": 634,
+          "items": [
+            "potion:01",
+            "key:01",
+            "relic:01"
+          ],
+          "quests": [
+            "quest:main:02",
+            "quest:side:01"
+          ],
+          "coordinate": {
+            "x": -23,
+            "y": 108
+          },
+          "timeNanos": 1730003665000000000,
+          "timeScaleNanos": 1
+        },
+        "nova": {
+          "level": 5,
+          "coins": 1686,
+          "experience": 634,
+          "items": [
+            "potion:01",
+            "key:01",
+            "relic:01"
+          ],
+          "quests": [
+            "quest:main:02",
+            "quest:side:01"
+          ],
+          "coordinate": {
+            "x": -23,
+            "y": 108
+          },
+          "timeNanos": 1730003665000000000,
+          "timeScaleNanos": 1
+        }
+      }
+    },
+    {
+      "id": "sample-03",
+      "branches": {
+        "aurora": {
+          "level": 6,
+          "coins": 1721,
+          "experience": 585,
+          "items": [
+            "potion:02",
+            "key:02",
+            "relic:02"
+          ],
+          "quests": [
+            "quest:main:03",
+            "quest:side:02"
+          ],
+          "coordinate": {
+            "x": -6,
+            "y": 131
+          },
+          "timeNanos": 1730007284000000000,
+          "timeScaleNanos": 1
+        },
+        "ember": {
+          "level": 6,
+          "coins": 1721,
+          "experience": 585,
+          "items": [
+            "potion:02",
+            "key:02",
+            "relic:02"
+          ],
+          "quests": [
+            "quest:main:03",
+            "quest:side:02"
+          ],
+          "coordinate": {
+            "x": -6,
+            "y": 131
+          },
+          "timeNanos": 1730007284000000000,
+          "timeScaleNanos": 1
+        },
+        "nova": {
+          "level": 6,
+          "coins": 1721,
+          "experience": 585,
+          "items": [
+            "potion:02",
+            "key:02",
+            "relic:02"
+          ],
+          "quests": [
+            "quest:main:03",
+            "quest:side:02"
+          ],
+          "coordinate": {
+            "x": -6,
+            "y": 131
+          },
+          "timeNanos": 1730007284000000000,
+          "timeScaleNanos": 1
+        }
+      }
+    },
+    {
+      "id": "sample-04",
+      "branches": {
+        "aurora": {
+          "level": 7,
+          "coins": 1972,
+          "experience": 627,
+          "items": [
+            "potion:03",
+            "key:00",
+            "relic:03"
+          ],
+          "quests": [
+            "quest:main:04",
+            "quest:side:03"
+          ],
+          "coordinate": {
+            "x": 11,
+            "y": 154
+          },
+          "timeNanos": 1730010849000000000,
+          "timeScaleNanos": 1
+        },
+        "ember": {
+          "level": 7,
+          "coins": 1972,
+          "experience": 627,
+          "items": [
+            "potion:03",
+            "key:00",
+            "relic:03"
+          ],
+          "quests": [
+            "quest:main:04",
+            "quest:side:03"
+          ],
+          "coordinate": {
+            "x": 11,
+            "y": 154
+          },
+          "timeNanos": 1730010849000000000,
+          "timeScaleNanos": 1
+        },
+        "nova": {
+          "level": 7,
+          "coins": 1972,
+          "experience": 627,
+          "items": [
+            "potion:03",
+            "key:00",
+            "relic:03"
+          ],
+          "quests": [
+            "quest:main:04",
+            "quest:side:03"
+          ],
+          "coordinate": {
+            "x": 11,
+            "y": 154
+          },
+          "timeNanos": 1730010849000000000,
+          "timeScaleNanos": 1
+        }
+      }
+    },
+    {
+      "id": "sample-05",
+      "branches": {
+        "aurora": {
+          "level": 8,
+          "coins": 2274,
+          "experience": 838,
+          "items": [
+            "potion:00",
+            "key:01",
+            "relic:04"
+          ],
+          "quests": [
+            "quest:main:05",
+            "quest:side:04"
+          ],
+          "coordinate": {
+            "x": 28,
+            "y": 177
+          },
+          "timeNanos": 1730014490000000000,
+          "timeScaleNanos": 1
+        },
+        "ember": {
+          "level": 8,
+          "coins": 2274,
+          "experience": 838,
+          "items": [
+            "potion:00",
+            "key:01",
+            "relic:04"
+          ],
+          "quests": [
+            "quest:main:05",
+            "quest:side:04"
+          ],
+          "coordinate": {
+            "x": 28,
+            "y": 177
+          },
+          "timeNanos": 1730014490000000000,
+          "timeScaleNanos": 1
+        },
+        "nova": {
+          "level": 8,
+          "coins": 2274,
+          "experience": 838,
+          "items": [
+            "potion:00",
+            "key:01",
+            "relic:04"
+          ],
+          "quests": [
+            "quest:main:05",
+            "quest:side:04"
+          ],
+          "coordinate": {
+            "x": 28,
+            "y": 177
+          },
+          "timeNanos": 1730014490000000000,
+          "timeScaleNanos": 1
+        }
+      }
+    },
+    {
+      "id": "sample-06",
+      "branches": {
+        "aurora": {
+          "level": 9,
+          "coins": 2192,
+          "experience": 759,
+          "items": [
+            "potion:01",
+            "key:02",
+            "relic:00"
+          ],
+          "quests": [
+            "quest:main:06",
+            "quest:side:05"
+          ],
+          "coordinate": {
+            "x": 45,
+            "y": 200
+          },
+          "timeNanos": 1730018106000000000,
+          "timeScaleNanos": 1
+        },
+        "ember": {
+          "level": 9,
+          "coins": 2192,
+          "experience": 759,
+          "items": [
+            "potion:01",
+            "key:02",
+            "relic:00"
+          ],
+          "quests": [
+            "quest:main:06",
+            "quest:side:05"
+          ],
+          "coordinate": {
+            "x": 45,
+            "y": 200
+          },
+          "timeNanos": 1730018106000000000,
+          "timeScaleNanos": 1
+        },
+        "nova": {
+          "level": 9,
+          "coins": 2192,
+          "experience": 759,
+          "items": [
+            "potion:01",
+            "key:02",
+            "relic:00"
+          ],
+          "quests": [
+            "quest:main:06",
+            "quest:side:05"
+          ],
+          "coordinate": {
+            "x": 45,
+            "y": 200
+          },
+          "timeNanos": 1730018106000000000,
+          "timeScaleNanos": 1
+        }
+      }
+    }
+  ],
+  "truthPath": "truth.json",
+  "mappingPath": "mappings.json"
+}

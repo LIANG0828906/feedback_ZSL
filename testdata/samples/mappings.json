@@ -1,0 +1,275 @@
+{
+  "version": "mapping-v1",
+  "branches": [
+    {
+      "id": "aurora",
+      "displayName": "Aurora PC",
+      "fields": [
+        {
+          "role": "level",
+          "path": "progress.level"
+        },
+        {
+          "role": "coins",
+          "path": "stats.valueA"
+        },
+        {
+          "role": "experience",
+          "path": "stats.valueB"
+        },
+        {
+          "role": "coordinate.x",
+          "path": "world.pos.x"
+        },
+        {
+          "role": "coordinate.y",
+          "path": "world.pos.y"
+        }
+      ],
+      "lists": [
+        {
+          "role": "items",
+          "path": "inventory.primary"
+        },
+        {
+          "role": "quests",
+          "path": "inventory.secondary"
+        }
+      ],
+      "time": {
+        "path": "clock.ticks",
+        "epochSeconds": 1700000000,
+        "tickNanos": 1000000,
+        "rounding": "floor"
+      },
+      "flags": [
+        {
+          "semantic": "event_enabled",
+          "path": "flags.eventOn",
+          "invert": false
+        }
+      ],
+      "conditions": [
+        {
+          "id": "event_on",
+          "op": "flag",
+          "flag": "event_enabled"
+        }
+      ],
+      "conditionals": [
+        {
+          "path": "bonus.coins",
+          "role": "coins",
+          "conditionId": "event_on",
+          "default": 0
+        },
+        {
+          "path": "bonus.exp",
+          "role": "experience",
+          "conditionId": "event_on",
+          "default": 0
+        }
+      ],
+      "conflictRules": [
+        {
+          "action": "preserve",
+          "priority": 10
+        },
+        {
+          "action": "default",
+          "priority": 20
+        },
+        {
+          "action": "reject",
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "id": "ember",
+      "displayName": "Ember Console",
+      "fields": [
+        {
+          "role": "level",
+          "path": "progress.level"
+        },
+        {
+          "role": "coins",
+          "path": "stats.valueB"
+        },
+        {
+          "role": "experience",
+          "path": "stats.valueA"
+        },
+        {
+          "role": "coordinate.x",
+          "path": "world.pos.x"
+        },
+        {
+          "role": "coordinate.y",
+          "path": "world.pos.y"
+        }
+      ],
+      "lists": [
+        {
+          "role": "items",
+          "path": "inventory.secondary"
+        },
+        {
+          "role": "quests",
+          "path": "inventory.primary"
+        }
+      ],
+      "time": {
+        "path": "clock.ticks",
+        "epochSeconds": 1600000000,
+        "tickNanos": 1000000000,
+        "rounding": "floor"
+      },
+      "flags": [
+        {
+          "semantic": "event_enabled",
+          "path": "flags.eventOn",
+          "invert": true
+        }
+      ],
+      "conditions": [
+        {
+          "id": "event_on",
+          "op": "flag",
+          "flag": "event_enabled"
+        }
+      ],
+      "conditionals": [
+        {
+          "path": "bonus.coins",
+          "role": "coins",
+          "conditionId": "event_on",
+          "default": 0
+        },
+        {
+          "path": "bonus.exp",
+          "role": "experience",
+          "conditionId": "event_on",
+          "default": 0
+        }
+      ],
+      "conflictRules": [
+        {
+          "action": "preserve",
+          "priority": 10
+        },
+        {
+          "action": "default",
+          "priority": 20
+        },
+        {
+          "action": "reject",
+          "priority": 30
+        }
+      ]
+    },
+    {
+      "id": "nova",
+      "displayName": "Nova Handheld",
+      "fields": [
+        {
+          "role": "level",
+          "path": "progress.level"
+        },
+        {
+          "role": "coins",
+          "path": "wallet.amountA"
+        },
+        {
+          "role": "experience",
+          "path": "wallet.amountB"
+        },
+        {
+          "role": "coordinate.x",
+          "path": "world.pos.x"
+        },
+        {
+          "role": "coordinate.y",
+          "path": "world.pos.y"
+        }
+      ],
+      "lists": [
+        {
+          "role": "items",
+          "path": "bags.listA"
+        },
+        {
+          "role": "quests",
+          "path": "bags.listB"
+        }
+      ],
+      "time": {
+        "path": "timestamp.raw",
+        "epochSeconds": 946684800,
+        "tickNanos": 1000,
+        "rounding": "floor"
+      },
+      "flags": [
+        {
+          "semantic": "event_enabled",
+          "path": "switches.eventState",
+          "invert": false
+        },
+        {
+          "semantic": "legacy_enabled",
+          "path": "switches.legacyOk",
+          "invert": false
+        }
+      ],
+      "conditions": [
+        {
+          "id": "event_on",
+          "op": "flag",
+          "flag": "event_enabled"
+        },
+        {
+          "id": "legacy_event_on",
+          "op": "and",
+          "refs": [
+            "event_on",
+            "legacy_ok"
+          ]
+        },
+        {
+          "id": "legacy_ok",
+          "op": "flag",
+          "flag": "legacy_enabled"
+        }
+      ],
+      "conditionals": [
+        {
+          "path": "modifiers.coinValue",
+          "role": "coins",
+          "conditionId": "legacy_event_on",
+          "default": 7
+        },
+        {
+          "path": "modifiers.expValue",
+          "role": "experience",
+          "conditionId": "event_on",
+          "default": 3
+        }
+      ],
+      "conflictRules": [
+        {
+          "action": "preserve",
+          "priority": 10
+        },
+        {
+          "action": "default",
+          "priority": 20
+        },
+        {
+          "action": "reject",
+          "priority": 30
+        }
+      ]
+    }
+  ]
+}
