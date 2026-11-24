@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HDR Proof Workbench</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">HDR</span>
+      <div>
+        <h1>合规输出与自证工作台</h1>
+        <p id="truth-fingerprint">truth fingerprint · —</p>
+      </div>
+    </div>
+    <div class="paths">
+      <label>Root <input id="root-path" spellcheck="false"></label>
+      <label>Samples <input id="samples-path" spellcheck="false"></label>
+      <label>SQLite <input id="db-path" spellcheck="false"></label>
+      <button id="btn-open" class="ghost">打开</button>
+      <button id="btn-generate" class="ghost">生成样本</button>
+    </div>
+  </header>
+
+  <section class="controls">
+    <label>Target nits <input id="target-peak" type="number" min="50" max="300" step="1" value="100"></label>
+    <label>Exposure EV <input id="exposure" type="number" min="-4" max="4" step="0.1" value="0"></label>
+    <label>Tone map <select id="tone-map"><option value="aces">ACES</option><option value="reinhard">Reinhard</option></select></label>
+    <label>Gamut <select id="gamut"><option value="desaturate">Desaturate</option><option value="clip">Clip</option></select></label>
+    <label>Workers <input id="workers" type="number" min="1" max="16" value="4"></label>
+    <label>Frame buffer <input id="buffer" type="number" min="1" max="32" value="2"></label>
+    <div class="control-actions">
+      <button id="btn-realtime">实时处理</button>
+      <button id="btn-resume" class="alt">断点恢复</button>
+      <button id="btn-full" class="alt">全量复算</button>
+      <button id="btn-cancel" class="danger">取消</button>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="panel routes-panel">
+      <div class="panel-head">
+        <h2>多路状态</h2>
+        <span id="progress-pill" class="pill">0 / 0 路</span>
+      </div>
+      <div id="routes" class="routes"></div>
+      <div class="resource-box">
+        <h3>并发资源边界</h3>
+        <div id="resource-grid" class="mini-grid"></div>
+        <p id="buffer-reason" class="muted">尚未发生缓冲阻塞。</p>
+      </div>
+    </aside>
+
+    <section class="panel compare-panel">
+      <div class="panel-head">
+        <h2>HDR / SDR 帧对照</h2>
+        <div class="frame-nav">
+          <button id="btn-prev" class="ghost small">←</button>
+          <span id="frame-label">未选择帧</span>
+          <button id="btn-next" class="ghost small">→</button>
+        </div>
+      </div>
+      <div class="preview-grid">
+        <figure>
+          <figcaption><span class="tag hdr">HDR</span><span id="hdr-meta">—</span></figcaption>
+          <div class="canvas-wrap"><img id="hdr-image" alt="HDR preview"></div>
+        </figure>
+        <figure>
+          <figcaption><span class="tag sdr">SDR</span><span id="sdr-meta">—</span></figcaption>
+          <div class="canvas-wrap"><img id="sdr-image" alt="SDR output"></div>
+        </figure>
+      </div>
+      <div class="frame-facts" id="frame-facts"></div>
+    </section>
+
+    <aside class="panel proof-panel">
+      <div class="panel-head">
+        <h2>自证与真值偏差</h2>
+        <span id="record-hash" class="mono truncate">—</span>
+      </div>
+      <div id="patch-table" class="patch-table"></div>
+      <details>
+        <summary>完整 proof JSON</summary>
+        <pre id="proof-json" class="code-block">—</pre>
+      </details>
+      <div class="button-row">
+        <button id="btn-retry">重试未提交分段</button>
+        <button id="btn-export" class="alt">导出</button>
+      </div>
+    </aside>
+  </main>
+
+  <section class="panel bottom-panel">
+    <div class="panel-head">
+      <h2>审计、差异与事件</h2>
+      <div class="button-row compact">
+        <button id="btn-audit" class="ghost small">独立审计</button>
+        <button id="btn-compare" class="ghost small">差异比对</button>
+        <span id="compare-right-wrap"><input id="compare-right" placeholder="右侧 DB 路径" spellcheck="false"></span>
+      </div>
+    </div>
+    <div class="bottom-grid">
+      <div>
+        <h3>操作结果</h3>
+        <pre id="operation-result" class="code-block result-block">等待操作。</pre>
+      </div>
+      <div>
+        <h3>处理事件</h3>
+        <div id="event-log" class="event-log"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>

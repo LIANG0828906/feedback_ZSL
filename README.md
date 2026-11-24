@@ -1,23 +1,196 @@
-团队准备新建一个项目，面向游戏直播与互动媒体分发场景构建一套游戏画面 HDR 转 SDR 的合规输出与自证验证管线：把实时捕获的高动态范围游戏帧按目标标准输出 SDR 帧，并生成可供第三方复核的转换自证记录。本地确定性样本生成器按固定种子产出多路 HDR 帧序列，包含线性浮点与 10 位整型两种输入表达、不同峰值亮度、不同色域与不同帧率，并附带逐帧解析真值（若干已知色块在目标色域中的期望线性 RGB 值、峰值亮度与色域边界坐标），真值仅来自生成器构造。业务方要求任意帧源异常或参数异常都能被受控注入并走明确错误链路，且同一输入在实时处理、断点恢复与全量复算下产出逐帧逐像素一致的自证记录，可用于复核比对。
+# HDR Proof Workbench
 
-任务环境与准备：
-安装 Go 1.22 及以上（go version 验证），并确保 GOFLAGS 与模块代理可用以拉取依赖。
-安装 Wails CLI（go install github.com/wailsapp/wails/v2/cmd/wails@latest）与 WebView2 运行时，执行 wails doctor 确认 Windows 桌面构建可用。
-SQLite 采用纯 Go 驱动（如 modernc.org/sqlite），无需额外安装数据库服务。
-运行本地确定性样本生成器生成多路 HDR 帧序列、真值清单与异常注入用例，全部落在工作区本地目录，不依赖网络、账号、付费资源或 GPU。
-在 Windows 上以 go test 与 wails dev 运行，日志落本地文件，确认无外部依赖。
+面向游戏直播与互动媒体分发的 HDR→SDR 合规输出管线。项目包含确定性样本生成、结构校验、转换与逐帧自证、路/分段状态机、SQLite 原子检查点、异常注入、三路径一致性比对、独立审计、CLI 与 Wails 桌面工作台。
 
-业务要求：
-1. 实现多路 HDR 帧源加载与结构校验：读取本地确定性生成器产出的多路帧序列与真值清单，校验每路帧尺寸、通道数、输入表达、峰值亮度、帧率与色彩空间声明互相一致且逐帧时间戳单调；帧数据损坏返回 E_DECODE，声明矛盾或缺失返回 E_META 并指出路标识、字段名与期望值。
-2. 实现 HDR 到 SDR 的转换链并输出可复核自证记录：按可配置转换参数把源帧转为 SDR 帧，同时为每帧生成含输入声明、所用参数、转换链摘要与输出统计的自证记录条目；参数越界返回 E_PARA 并指出字段，要求自证记录条目与输出帧一一对应、不重不漏，且同一输入重复转换生成的自证记录逐字节一致。
-3. 实现路级与分段级状态机：每路帧序列按固定时长分段推进，路与分段各自仅有合法迁移，非法迁移返回 E_STATE 并保持原状态；已提交分段的输出帧与自证记录被冻结，后续参数调整只作用于未提交分段，进度分别以已提交路数与已提交分段数表示。
-4. 实现异常注入与错误隔离链路：通过输入或参数注入坏帧、声明矛盾、参数越界与分段内部失败四类异常，分别走 E_FRAME、E_META、E_PARA、E_SEG 链路并给出路标识、分段编号与字段名；单分段内部异常须置该段为失败并允许重试且不污染其他路与分段，注入点须由外部输入描述而非改动实现代码。
-5. 实现原子检查点与整体版本识别：每提交一个分段把该段输出帧摘要、自证记录摘要、内容哈希、参数版本与算法版本原子写入 SQLite，写入不得交错且提交顺序稳定；重启加载时任一内容哈希或版本不匹配须整体作废快照并全量重算，禁止部分混用旧分段结果，取消或强制终止后只依据已持久化且版本匹配的分段恢复。
-6. 保证实时处理、断点恢复处理与一次性全量复算三条路径输出逐帧逐条一致：三者对同一多路输入与同一参数须产出相同 SDR 像素、相同自证记录条目与相同路级统计；提供自动比对功能定位首个不一致的路标识、帧号、条目字段与所属分段，不一致时返回 E_DIFF。
-7. 实现独立自证复核工具：仅凭 SQLite 中持久化的自证记录与样本真值指纹，重新核对每路每帧的输出统计、真值偏差与记录完整性，不调用转换链主路径；发现不一致时输出首个违规路标识、帧号与违规项名称，并对自证记录缺失或重复返回 E_AUDIT。
-8. 实现桌面工作台与并发资源边界：展示多路列表与路/分段状态、HDR 与 SDR 帧对照、自证记录条目与真值偏差明细、差异比对结果，允许调整参数触发重算、逐段重试与导出；路与分段处理可在工作线程池并行，须限制最大并行度与每线程帧缓冲上限，缓冲耗尽时阻塞排队并记录原因，共享 SQLite 写入串行且提交顺序稳定。
+核心实现只依赖 Go 标准库与纯 Go SQLite 驱动 `modernc.org/sqlite`。样本、检查点、日志和导出均落在本地，不需要账号、GPU、数据库服务或运行时网络。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 已交付能力
 
-验收：
-用本地多路样本验证三条路径逐像素与逐条自证记录一致、独立复核通过、异常注入错误链路与并发边界，并附运行结果。
+- 4 路确定性样本：32×24/24×16/16×16/20×12，共 95 帧、18 段。
+- 两种输入表达：`linear_float32_le` 与 `rgb10le`。
+- 三种输入色域：BT.2020、Display-P3、BT.709；峰值覆盖 600/1000/1500/4000 nits，帧率覆盖 24/30/50/60 fps。
+- 逐帧真值：目标色域 BT.709 中 4 个色块的期望线性 RGB、峰值亮度、色域边界坐标。
+- 结构校验：尺寸、通道、编码、峰值、帧率、色彩空间、文件头、CRC32、时间戳单调与真值对齐。
+- HDR→SDR：曝光、源色域→BT.709 矩阵、ACES/Reinhard 色调映射、色域 desaturate/clip、8 位 sRGB 输出。
+- 逐帧自证：输入声明、参数、转换链摘要、输出统计、色块真值偏差、记录哈希。
+- 路/分段状态机：非法迁移返回 `E_STATE` 且保持原状态；已提交分段不可覆盖。
+- 外部 JSON 注入：坏帧、声明矛盾、参数越界、分段内部失败，分别进入 `E_FRAME`、`E_META`、`E_PARA`、`E_SEG`。
+- SQLite 原子提交：帧与分段元数据同事务写入；版本/内容哈希失配时整体作废并全量重算。
+- 并发边界：路级工作池、最大并行度、每线程有界帧缓冲；耗尽时阻塞并记录 `frame_buffer_full` 事件。
+- 三路径比对：实时、断点恢复、全量复算逐像素、逐 proof 字节一致；差异返回 `E_DIFF` 并定位首个路/帧/字段/分段。
+- 独立审计：只读取 SQLite proof、持久化像素、样本清单/真值与指纹，不调用转换链；缺失/重复记录返回 `E_AUDIT`。
+- 桌面工作台：多路/分段状态、HDR/SDR 对照、真值偏差、proof、审计/比对、参数重算、未提交段重试与导出。
+
+## 目录
+
+```text
+cmd/hdrproof/             CLI
+internal/apperr/          稳定错误码与上下文字段
+internal/sample/          HDRSEQ01 读写、生成器、校验
+internal/color/           线性光矩阵、传递函数、sRGB 编解码
+internal/convert/         转换链与逐帧自证
+internal/state/           路/分段状态迁移
+internal/engine/          并行执行、注入、重试、原子提交编排
+internal/snapshot/        SQLite schema、版本识别、哈希校验
+internal/compare/         快照逐帧/逐条差异定位
+internal/audit/           独立只读审计
+internal/exporter/        SDR/HDR 预览、proof 与索引导出
+internal/verify/          可复现验收矩阵
+desktop/                  Wails 桌面模块（独立 Go module）
+artifacts/demo/           已生成的样本、数据库、日志与验收报告
+docs/                     架构与验收说明
+scripts/                  Windows/本地验证脚本
+```
+
+## 快速验证
+
+环境要求：Go 1.22+。本仓库实际验证使用 `go1.22.12`，`GOPROXY=https://proxy.golang.org,direct`。
+
+```bash
+go version
+go env GOFLAGS GOPROXY
+
+go test ./...
+go test -race ./...
+go vet ./...
+
+go run ./cmd/hdrproof demo --root artifacts/demo --workers 4 --buffer 2
+```
+
+`demo` 会重建样本并执行：
+
+1. 实时处理；
+2. 提交 5 个分段后取消，再从已持久化分段恢复；
+3. 一次性全量复算；
+4. 三组逐帧/逐条比对；
+5. 独立审计；
+6. 四类异常注入与失败分段重试。
+
+机器可读结果见 `artifacts/demo/report.json`，事件日志见 `artifacts/demo/demo.log`。
+
+## CLI
+
+```bash
+# 生成样本
+go run ./cmd/hdrproof generate --out artifacts/demo/samples --seed 42
+
+# 实时/恢复/全量
+go run ./cmd/hdrproof run \
+  --samples artifacts/demo/samples \
+  --db artifacts/demo/full.db \
+  --mode full \
+  --target-peak 100 --exposure 0 --tone-map aces --gamut desaturate \
+  --workers 4 --buffer 2
+
+# 比较两个快照
+go run ./cmd/hdrproof compare \
+  --left artifacts/demo/realtime.db \
+  --right artifacts/demo/full.db
+
+# 独立审计
+go run ./cmd/hdrproof audit \
+  --samples artifacts/demo/samples \
+  --db artifacts/demo/full.db
+
+# 导出 SDR、HDR 预览、proof 与 index
+go run ./cmd/hdrproof export \
+  --db artifacts/demo/full.db \
+  --samples artifacts/demo/samples \
+  --out artifacts/demo/export
+```
+
+注入运行示例：
+
+```bash
+go run ./cmd/hdrproof run \
+  --samples artifacts/demo/samples \
+  --db artifacts/demo/injection-bad_frame.db \
+  --mode full \
+  --inject artifacts/demo/samples/injections/bad_frame.json
+```
+
+参数更新计划通过外部 JSON 提供，作用于未提交分段：
+
+```json
+[
+  {
+    "route_id": "arena-linear-bt2020",
+    "from_segment": 2,
+    "params": {
+      "target_peak_nits": 150,
+      "exposure_ev": 0,
+      "tone_map": "aces",
+      "gamut_mapping": "desaturate",
+      "output_bits": 8
+    }
+  }
+]
+```
+
+```bash
+go run ./cmd/hdrproof run --samples artifacts/demo/samples \
+  --db artifacts/demo/full.db --mode full \
+  --param-schedule docs/sample-param-schedule.json
+```
+
+## 错误码
+
+| 错误码 | 含义 | 必需上下文 |
+|---|---|---|
+| `E_DECODE` | 样本容器、CRC、载荷或数值损坏 | route/frame/field |
+| `E_META` | 声明矛盾、缺失或真值不对齐 | route/segment/field/expected |
+| `E_PARA` | 参数越界或不支持 | route/segment/field/expected |
+| `E_STATE` | 非法路/分段迁移 | route/segment/field |
+| `E_FRAME` | 受控坏帧注入 | route/segment/frame/field |
+| `E_SEG` | 分段内部失败 | route/segment/field |
+| `E_DIFF` | 三路径或快照首个差异 | route/frame/field/segment |
+| `E_AUDIT` | 独立复核失败、record 缺失/重复/篡改 | route/frame/field |
+
+## 确定性与哈希
+
+- 参数版本：`SHA-256(canonical JSON(params))`。
+- 算法版本：`hdr2sdr-2026.11.1`。
+- 记录哈希：去掉 `record_sha256` 后对 proof JSON 做规范化 SHA-256，再写回字段。
+- 内容哈希：覆盖分段计划、输入/输出/自证摘要、参数/算法/真值版本。
+- SQLite `commit_order = route_order × 1,000,000 + segment_index`，写入由单连接与互斥锁串行化。
+- 任一版本、像素 hash、proof hash、分段内容 hash 或计划不一致时，整库快照作废并全量重算。
+
+## Wails 桌面
+
+桌面端位于 `desktop/`，使用静态 HTML/CSS/JS，不需要 Node 或 npm。Windows 上：
+
+```powershell
+go version
+wails doctor
+
+Push-Location desktop
+go test ./internal/workbench
+wails dev 2>&1 | Tee-Object -FilePath ..\artifacts\wails-dev.log
+```
+
+构建 Windows 桌面产物：
+
+```powershell
+Push-Location desktop
+wails build -platform windows/amd64 -skipbindings
+```
+
+当前 Linux 环境已完成 `GOOS=windows CGO_ENABLED=0 go build` 与完整 `wails build -platform windows/amd64 -skipbindings`，均成功。Linux 的 `wails doctor` 报告缺少 `libwebkit`，因此本机未启动 GUI；Windows 运行时验证脚本见 `scripts/verify-windows.ps1`。
+
+## 实际验证摘要
+
+最终验收时间：`2026-11-24T02:36:45Z`（UTC）。
+
+- 样本真值指纹：`26a1a5e4e3302d05e1491eb2e14951adcad0e4a89a8b95c5a89799f77756e263`
+- 实时：95 帧、95 条 proof、18/18 段、4/4 路。
+- 断点中断：5 段、28 帧已持久化；恢复完成后 18/18 段，且复用匹配快照。
+- 全量：95 帧、95 条 proof、18/18 段。
+- 三组比对：全部相等，95 帧。
+- 独立审计：4/4 路、18/18 段、95/95 帧与记录通过。
+- 四类注入：`E_FRAME`、`E_META`、`E_PARA`、`E_SEG` 全部命中；失败分段重试通过。
+- 帧缓冲阻塞总计 110 次（实时 35、中断恢复 20、继续恢复 22、全量 33）。
+- 根模块 `go test ./...`、`go test -race ./...`、`go vet ./...` 通过。
+- 桌面业务层 `go test ./internal/workbench` 通过。
+- Windows Wails 构建成功：`desktop/build/bin/hdrproof-workbench.exe`。
+
+更详细的架构与验收记录见 `docs/ARCHITECTURE.md` 和 `docs/ACCEPTANCE.md`。
