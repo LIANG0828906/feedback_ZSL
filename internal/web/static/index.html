@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>房间混响区划工作台</title>
+  <style>
+    :root {
+      --bg: #0f172a; --panel: #111c33; --panel2: #17243f; --line: #2b3b5f;
+      --text: #e5edff; --muted: #9db0d0; --accent: #67e8f9; --good: #34d399;
+      --warn: #fbbf24; --bad: #fb7185; --pending: #64748b; --run: #38bdf8;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font:14px/1.45 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif; background:#eef3fb; color:#172033; }
+    header { background:linear-gradient(120deg,#10213f,#1e3a8a); color:white; padding:16px 22px; display:flex; gap:18px; align-items:center; flex-wrap:wrap; }
+    header h1 { font-size:20px; margin:0 12px 0 0; }
+    .pill { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); border-radius:999px; padding:5px 11px; }
+    main { padding:16px; display:grid; grid-template-columns:minmax(520px,1.45fr) minmax(360px,.8fr); gap:16px; }
+    .panel { background:white; border:1px solid #d9e2f1; border-radius:14px; box-shadow:0 8px 24px rgba(30,58,138,.08); padding:14px; margin-bottom:16px; }
+    .panel h2 { font-size:15px; margin:0 0 12px; display:flex; align-items:center; gap:8px; }
+    .panel h2 .hint { color:#71809f; font-weight:400; font-size:12px; }
+    svg { width:100%; height:auto; background:#f8fbff; border:1px solid #d9e2f1; border-radius:10px; }
+    .room { cursor:pointer; stroke:#334155; stroke-width:2; }
+    .room.selected { stroke:#0ea5e9; stroke-width:5; }
+    .room-label { font-size:18px; font-weight:800; fill:#10213f; pointer-events:none; }
+    .room-param { font-size:11px; fill:#334155; pointer-events:none; }
+    .wall { stroke:#1e293b; stroke-width:7; stroke-linecap:square; }
+    .door { stroke:#10b981; stroke-width:9; stroke-linecap:round; }
+    .path-line { fill:none; stroke-width:3; stroke-dasharray:8 6; opacity:.72; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid #e4ebf7; padding:7px 6px; text-align:left; vertical-align:top; }
+    th { color:#52617d; background:#f5f8fe; position:sticky; top:0; }
+    .badge { display:inline-block; border-radius:999px; padding:2px 8px; color:white; font-size:11px; font-weight:700; }
+    .state-pending { background:#64748b; } .state-connectivity_analyzing,.state-parameter_solving { background:#0284c7; }
+    .state-committed { background:#059669; } .state-failed { background:#e11d48; }
+    .reuse-true { color:#047857; font-weight:700; } .reuse-false { color:#be123c; font-weight:700; }
+    .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .stat { background:#f4f7fd; border:1px solid #dde7f7; border-radius:10px; padding:9px; }
+    .stat b { display:block; font-size:18px; color:#1d4ed8; }
+    label { display:block; font-size:12px; color:#52617d; margin:8px 0 3px; }
+    input,select,textarea { width:100%; border:1px solid #cbd8ee; border-radius:8px; padding:8px; font:inherit; background:white; }
+    button { border:0; border-radius:9px; padding:8px 11px; background:#1d4ed8; color:white; font-weight:700; cursor:pointer; margin:6px 6px 0 0; }
+    button.secondary { background:#475569; } button.good { background:#059669; } button.danger { background:#e11d48; }
+    button.mini { padding:3px 7px; font-size:11px; margin:0; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .scroll { max-height:260px; overflow:auto; border:1px solid #e4ebf7; border-radius:10px; }
+    .msg { border-radius:10px; padding:10px; margin:8px 0; white-space:pre-wrap; font-size:12px; }
+    .msg.error { background:#fff1f2; border:1px solid #fecdd3; color:#9f1239; }
+    .msg.ok { background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; }
+    .bar-row { display:grid; grid-template-columns:110px 1fr 70px; gap:8px; align-items:center; margin:6px 0; font-size:12px; }
+    .bar-track { background:#e8eef9; border-radius:999px; height:14px; overflow:hidden; }
+    .bar { height:100%; background:linear-gradient(90deg,#38bdf8,#1d4ed8); }
+    code { background:#eef2ff; padding:1px 4px; border-radius:4px; }
+    @media (max-width:1100px){ main { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>房间混响区划工作台</h1>
+  <span class="pill" id="progress">进度 -</span>
+  <span class="pill" id="profile">精度 -</span>
+  <span class="pill" id="parallel">并行 -</span>
+  <span class="pill" id="recovery">检查点 -</span>
+  <span class="pill" id="updated">更新 -</span>
+</header>
+<main>
+  <section>
+    <div class="panel">
+      <h2>关卡俯视 / 区域着色 / 门洞连通 <span class="hint">点击房间载入参数；虚线为声源—听者求解折线</span></h2>
+      <svg id="map" viewBox="0 0 1040 680" role="img" aria-label="关卡平面图"></svg>
+    </div>
+    <div class="panel">
+      <h2>逐听者衰减曲线 <span class="hint" id="curveHint">蓝线定点结果，灰线解析真值</span></h2>
+      <div class="row">
+        <label>路径
+          <select id="pathSelect"></select>
+        </label>
+        <label>曲线指标
+          <select id="curveMode"><option value="curve_db">dB 衰减曲线</option><option value="error">与真值偏差</option></select>
+        </label>
+      </div>
+      <svg id="chart" viewBox="0 0 720 260"></svg>
+    </div>
+    <div class="panel">
+      <h2>声压级剖面</h2>
+      <div id="splBars"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel">
+      <h2>缓存与调度边界</h2>
+      <div class="grid3" id="stats"></div>
+      <div id="actionMessage"></div>
+      <button class="good" onclick="compareAll()">自动比对增量/全量/恢复</button>
+      <button class="secondary" onclick="scopeAll()">检查整关失效范围</button>
+      <button class="secondary" onclick="refresh()">立即刷新</button>
+    </div>
+
+    <div class="panel">
+      <h2>房间参数编辑 <span class="hint">已提交房间会建立新草稿修订</span></h2>
+      <div class="row">
+        <label>房间 <input id="roomId" value="R2" /></label>
+        <label>RT60(s) <input id="rt60" type="number" step="0.01" value="1.1" /></label>
+      </div>
+      <div class="row">
+        <label>早期反射密度 <input id="density" type="number" step="0.01" value="0.9" /></label>
+        <label>混响增益 <input id="gain" type="number" step="0.01" value="1.0" /></label>
+      </div>
+      <label>每门洞遮挡(dB) <input id="occ" type="number" step="0.1" value="1.2" /></label>
+      <button onclick="saveParams()">触发增量重算</button>
+    </div>
+
+    <div class="panel">
+      <h2>增删门洞 / 移动墙线</h2>
+      <div class="row">
+        <label>新门洞 ID <input id="doorId" value="D14" /></label>
+        <label>墙段 ID <input id="doorWall" value="W14" /></label>
+      </div>
+      <div class="row">
+        <label>中心沿线坐标 <input id="doorCenter" type="number" value="200" /></label>
+        <label>宽度 <input id="doorWidth" type="number" value="40" /></label>
+      </div>
+      <button onclick="addDoor()">添加门洞</button>
+      <div class="row">
+        <label>删除门洞 ID <input id="deleteDoorId" value="D25" /></label>
+        <button class="danger" onclick="deleteDoor()">删除并重算</button>
+      </div>
+      <div class="row">
+        <label>移动墙段 ID <input id="wallId" value="W25" /></label>
+        <label>新固定坐标 <input id="wallCoord" type="number" value="360" /></label>
+      </div>
+      <button class="secondary" onclick="moveWall()">拖动边界/墙线</button>
+    </div>
+
+    <div class="panel">
+      <h2>房间状态矩阵</h2>
+      <div class="scroll"><table id="stateTable"></table></div>
+    </div>
+
+    <div class="panel">
+      <h2>失效传播清单</h2>
+      <div class="scroll"><table id="invalidationTable"></table></div>
+    </div>
+
+    <div class="panel">
+      <h2>缓冲排队记录 <span class="hint">缓冲耗尽时阻塞等待，不丢弃任务</span></h2>
+      <div class="scroll"><table id="queueTable"></table></div>
+    </div>
+  </section>
+</main>
+
+<script>
+let state = null;
+let selectedPath = null;
+const colors = ['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#6366f1','#a855f7','#ec4899','#64748b'];
+
+async function api(path, body) {
+  const opts = { method:'POST', headers:{'Content-Type':'application/json'} };
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  const resp = await fetch(path, opts);
+  let data = null;
+  try { data = await resp.json(); } catch (e) { data = { error:{message:await resp.text()} }; }
+  if (data && data.snapshot) { state = data.snapshot; render(); }
+  return data;
+}
+
+async function refresh() {
+  const resp = await fetch('/api/state');
+  state = await resp.json();
+  render();
+}
+
+function showMessage(data, fallback) {
+  const box = document.getElementById('actionMessage');
+  const err = data && (data.error || data.compare);
+  if (err) {
+    const details = err.details ? '\n' + JSON.stringify(err.details, null, 2) : '';
+    box.innerHTML = `<div class="msg error"><b>${err.code || 'ERROR'}</b> ${err.ref ? '['+err.ref+'] ' : ''}${err.message}${details}</div>`;
+  } else {
+    box.innerHTML = `<div class="msg ok">${fallback || '操作成功，增量结果已与全量算法保持同一数据模型。'}</div>`;
+  }
+}
+
+function render() {
+  if (!state) return;
+  document.getElementById('progress').textContent = `提交进度 ${state.progress}`;
+  const p = state.config.profiles[state.config.precision_profile] || {};
+  document.getElementById('profile').textContent = `精度 ${state.config.precision_profile} / ${p.decimals} 位小数`;
+  document.getElementById('parallel').textContent = `最大并行 ${state.config.max_parallelism} / 缓冲 ${state.config.sample_buffer_limit}`;
+  document.getElementById('recovery').textContent = state.snapshot_invalid ? '旧快照版本/哈希不匹配，已整体作废' : `恢复房间 ${state.recovered_rooms}`;
+  document.getElementById('updated').textContent = new Date(state.updated_at).toLocaleTimeString();
+  renderStats(); renderMap(); renderStateTable(); renderInvalidation(); renderQueue(); renderPathSelect(); renderChart(); renderSPL();
+}
+
+function renderStats() {
+  const c = state.cache_stats || {};
+  const items = [
+    ['房间命中', c.room_hits || 0], ['房间重算', c.room_misses || 0],
+    ['听者命中', c.listener_hits || 0], ['听者重算', c.listener_misses || 0],
+    ['折线路径复用', c.path_reused || 0], ['路径重算', c.path_recomputed || 0]
+  ];
+  document.getElementById('stats').innerHTML = items.map(x=>`<div class="stat"><b>${x[1]}</b><span>${x[0]}</span></div>`).join('');
+}
+
+function svgEl(tag, attrs, text) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+function renderMap() {
+  const svg = document.getElementById('map');
+  svg.innerHTML = '';
+  const level = state.level;
+  const stateByRoom = Object.fromEntries(state.states.map(x=>[x.id,x]));
+  const stateColors = { pending:'#e2e8f0', connectivity_analyzing:'#bae6fd', parameter_solving:'#7dd3fc', committed:'#bbf7d0', failed:'#fecdd3' };
+  level.rooms.forEach((r,i) => {
+    const st = stateByRoom[r.id]?.state || 'pending';
+    const rect = svgEl('rect', { x:r.rect.min.x, y:r.rect.min.y, width:r.rect.max.x-r.rect.min.x, height:r.rect.max.y-r.rect.min.y, rx:8,
+      class:'room '+(document.getElementById('roomId').value===r.id?'selected':''), fill:stateColors[st] || '#e2e8f0' });
+    rect.onclick = () => selectRoom(r.id);
+    svg.appendChild(rect);
+    svg.appendChild(svgEl('text',{x:r.rect.min.x+14,y:r.rect.min.y+28,class:'room-label'},r.id));
+    svg.appendChild(svgEl('text',{x:r.rect.min.x+14,y:r.rect.min.y+48,class:'room-param'},`RT60 ${r.rt60_seconds.toFixed(2)} / d ${r.early_reflection_density.toFixed(2)} / g ${r.reverb_gain.toFixed(2)}`));
+  });
+  (state.result?.paths || []).forEach((path,i) => {
+    if (selectedPath && path.key !== selectedPath) return;
+    const pts = path.polyline.map(p=>`${p.x},${p.y}`).join(' ');
+    svg.appendChild(svgEl('polyline',{points:pts,class:'path-line',stroke:colors[i%colors.length]}));
+  });
+  level.walls.forEach(w => svg.appendChild(svgEl('line',{x1:w.a.x,y1:w.a.y,x2:w.b.x,y2:w.b.y,class:'wall'})));
+  level.doors.forEach(d => svg.appendChild(svgEl('line',{x1:d.a.x,y1:d.a.y,x2:d.b.x,y2:d.b.y,class:'door'})));
+  level.sources.forEach(s => {
+    svg.appendChild(svgEl('circle',{cx:s.pos.x,cy:s.pos.y,r:11,fill:'#f97316',stroke:'white','stroke-width':3}));
+    svg.appendChild(svgEl('text',{x:s.pos.x+14,y:s.pos.y-10,'font-size':15,'font-weight':800,fill:'#9a3412'},s.id));
+  });
+  level.listeners.forEach(l => {
+    const pts = `${l.pos.x},${l.pos.y-12} ${l.pos.x-11},${l.pos.y+9} ${l.pos.x+11},${l.pos.y+9}`;
+    svg.appendChild(svgEl('polygon',{points:pts,fill:'#2563eb',stroke:'white','stroke-width':3}));
+    svg.appendChild(svgEl('text',{x:l.pos.x+14,y:l.pos.y+18,'font-size':15,'font-weight':800,fill:'#1e3a8a'},l.id));
+  });
+}
+
+function selectRoom(id) {
+  const r = state.level.rooms.find(x=>x.id===id);
+  document.getElementById('roomId').value = id;
+  document.getElementById('rt60').value = r.rt60_seconds.toFixed(3);
+  document.getElementById('density').value = r.early_reflection_density.toFixed(3);
+  document.getElementById('gain').value = r.reverb_gain.toFixed(3);
+  document.getElementById('occ').value = (r.occlusion_per_door_db || 1.2).toFixed(2);
+  renderMap();
+}
+
+function renderStateTable() {
+  document.getElementById('stateTable').innerHTML = `<tr><th>房间</th><th>状态</th><th>Rev</th><th>错误/操作</th></tr>` +
+    state.states.map(r => `<tr><td><b>${r.id}</b></td><td><span class="badge state-${r.state}">${r.state}</span></td><td>${r.revision}</td>
+      <td>${r.error ? `<span class="reuse-false">${r.error}</span><br><button class="mini good" onclick="retry('${r.id}')">重试</button>` : '—'}</td></tr>`).join('');
+}
+
+function renderInvalidation() {
+  const plan = state.last_plan;
+  if (!plan) { document.getElementById('invalidationTable').innerHTML = '<tr><td>尚无编辑；基线全部为缓存未命中。</td></tr>'; return; }
+  document.getElementById('invalidationTable').innerHTML = `<tr><th>ID</th><th>类型</th><th>原因</th><th>缓存</th></tr>` +
+    plan.items.map(i => `<tr><td><b>${i.id}</b></td><td>${i.kind}</td><td>${i.reason}</td><td class="${i.reused?'reuse-true':'reuse-false'}">${i.reused?'复用':'失效'}</td></tr>`).join('');
+}
+
+function renderQueue() {
+  const events = state.queue_events || [];
+  document.getElementById('queueTable').innerHTML = `<tr><th>时间</th><th>任务</th><th>原因</th><th>等待ms</th></tr>` +
+    (events.length ? events.slice().reverse().map(e=>`<tr><td>${new Date(e.time).toLocaleTimeString()}</td><td>${e.task_id}</td><td>${e.reason}</td><td>${e.waited_ms}</td></tr>`).join('') : '<tr><td colspan="4">当前样本未耗尽缓冲；压测/验收中可观测等待记录。</td></tr>');
+}
+
+function allPaths() { return state.result?.paths || []; }
+function renderPathSelect() {
+  const sel = document.getElementById('pathSelect');
+  const paths = allPaths();
+  if (!selectedPath && paths.length) selectedPath = 'S1->L1';
+  sel.innerHTML = paths.map(p=>`<option ${p.key===selectedPath?'selected':''}>${p.key}</option>`).join('');
+  sel.onchange = () => { selectedPath = sel.value; renderMap(); renderChart(); };
+}
+
+function renderChart() {
+  const svg = document.getElementById('chart'); svg.innerHTML='';
+  const path = allPaths().find(p=>p.key===document.getElementById('pathSelect').value) || allPaths()[0];
+  if (!path) return;
+  selectedPath = path.key;
+  const mode = document.getElementById('curveMode').value;
+  document.getElementById('curveMode').onchange = renderChart;
+  const truth = (state.level.truth?.paths || []).find(p=>`${p.source_id}->${p.listener_id}`===path.key);
+  let actual = path.curve_db;
+  let expected = truth?.curve_db || [];
+  if (mode === 'error') actual = actual.map((v,i)=>Math.abs(v-(expected[i] ?? v)));
+  const vals = mode==='error' ? actual : actual.concat(expected);
+  let min = Math.min(...vals), max = Math.max(...vals);
+  if (mode !== 'error') { min = Math.floor(min/10)*10; max = Math.ceil(max/10)*10; } else { max = Math.max(max*1.2, .001); min=0; }
+  const x0=48,y0=16,w=640,h=190;
+  const X=i=>x0 + i*w/Math.max(actual.length-1,1);
+  const Y=v=>y0+h-(v-min)*h/Math.max(max-min,1e-9);
+  for (let g=0;g<=5;g++) {
+    const y=y0+g*h/5, val=max-g*(max-min)/5;
+    svg.appendChild(svgEl('line',{x1:x0,y1:y,x2:x0+w,y2:y,stroke:'#e2e8f0'}));
+    svg.appendChild(svgEl('text',{x:8,y:y+4,'font-size':11,fill:'#64748b'},val.toFixed(mode==='error'?4:0)));
+  }
+  const line = arr => arr.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  if (mode !== 'error' && expected.length) svg.appendChild(svgEl('path',{d:line(expected),fill:'none',stroke:'#94a3b8','stroke-width':2.5}));
+  svg.appendChild(svgEl('path',{d:line(actual),fill:'none',stroke:'#2563eb','stroke-width':3}));
+  actual.forEach((v,i)=>{ if(i%4===0) svg.appendChild(svgEl('circle',{cx:X(i),cy:Y(v),r:3,fill:'#2563eb'})); });
+  svg.appendChild(svgEl('text',{x:x0,y:250,'font-size':12,fill:'#475569'},`采样点 ${actual.length} 个；链 ${path.room_chain.join(' → ')}；长度 ${path.length.toFixed(2)}`));
+}
+
+function renderSPL() {
+  const paths = allPaths();
+  const min = Math.min(...paths.map(p=>p.spl_db), 60), max = Math.max(...paths.map(p=>p.spl_db), 100);
+  document.getElementById('splBars').innerHTML = paths.map((p,i)=>{
+    const pct = ((p.spl_db-min)/Math.max(max-min,1))*100;
+    return `<div class="bar-row"><span title="${p.room_chain.join('→')}">${p.key}</span><div class="bar-track"><div class="bar" style="width:${Math.max(4,pct)}%;background:${colors[i%colors.length]}"></div></div><b>${p.spl_db.toFixed(2)} dB</b></div>`;
+  }).join('');
+}
+
+function numericValue(id) { const v = parseFloat(document.getElementById(id).value); return Number.isFinite(v)?v:null; }
+async function saveParams() {
+  const data = await api('/api/edit/params', {
+    room_id: document.getElementById('roomId').value,
+    rt60_seconds: numericValue('rt60'), early_reflection_density: numericValue('density'),
+    reverb_gain: numericValue('gain'), occlusion_per_door_db: numericValue('occ')
+  });
+  showMessage(data, '参数已增量提交，只有该房间及其听者失效。');
+}
+async function addDoor() {
+  const wall = state.level.walls.find(w=>w.id===document.getElementById('doorWall').value);
+  if (!wall) return showMessage({error:{code:'E_SCHEMA',message:'未知墙段'}}, '');
+  const center = parseFloat(document.getElementById('doorCenter').value), width = parseFloat(document.getElementById('doorWidth').value);
+  let a,b;
+  if (wall.a.x === wall.b.x) { const x=wall.a.x; a={x,y:center-width/2}; b={x,y:center+width/2}; }
+  else { const y=wall.a.y; a={x:center-width/2,y}; b={x:center+width/2,y}; }
+  const data = await api('/api/doors/add',{id:document.getElementById('doorId').value,wall_id:wall.id,a,b,kind:'door'});
+  showMessage(data, '门洞已添加，拓扑签名变化的房间与下游听者已重算。');
+}
+async function deleteDoor() {
+  const data = await api('/api/doors/delete',{door_id:document.getElementById('deleteDoorId').value});
+  showMessage(data, '门洞已删除；若产生不可达路径，可在状态矩阵重试或恢复门洞。');
+}
+async function moveWall() {
+  const data = await api('/api/walls/move',{wall_id:document.getElementById('wallId').value,coordinate:parseInt(document.getElementById('wallCoord').value,10)});
+  showMessage(data, '墙线/边界已移动，几何相关路径已精确失效。');
+}
+async function retry(room) {
+  const data = await api('/api/rooms/retry',{room_id:room});
+  showMessage(data, `房间 ${room} 已重试并提交。`);
+}
+async function compareAll() {
+  const data = await api('/api/compare',{});
+  showMessage(data, '一致：增量合并结果与空缓存全量重算逐项相等；重启恢复路径由 Go 验收测试逐项比对。');
+}
+async function scopeAll() {
+  const rooms = state.states.map(x=>x.id);
+  const data = await api('/api/scope-check',{rooms});
+  showMessage(data, '若请求整关失效，后端会指出首个应复用而被误失效的房间。');
+}
+
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>

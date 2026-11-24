@@ -1,3 +1,26 @@
+# 房间混响区划工作台
+
+可运行实现位于 `cmd/roomreverb` 与 `internal/`。快速验证：
+
+```bash
+CGO_ENABLED=0 go test ./... -count=1
+CGO_ENABLED=0 go run ./cmd/roomreverb verify
+CGO_ENABLED=0 go run ./cmd/roomreverb generate
+CGO_ENABLED=0 go run ./cmd/roomreverb solve
+CGO_ENABLED=0 go run ./cmd/roomreverb serve
+# 打开 http://127.0.0.1:8088
+```
+
+- 实现与需求映射：`docs/IMPLEMENTATION.md`
+- 实际验证结果：`docs/VERIFICATION.md`
+- 结构化验收报告：`artifacts/verification-report.json`
+- HTTP 冒烟记录：`artifacts/http-smoke.txt`
+- 示例配置：`configs/example.json`
+
+以下为原始任务说明。
+
+---
+
 一位音频方向开发者接到关卡小组的完整需求，要在空工作区里从零做出一套可编辑的房间混响区划工作台，供音频与关卡设计师重划区域时立即观察混响变化并核对多路径计算结果。本地确定性样本生成器按固定种子产出一张二维关卡平面：若干矩形房间由共享墙体线段分隔，每个房间声明目标混响时间、早期反射密度与混响增益；墙体可开洞形成门洞与穿墙开口，另有若干声源与听者采样点分布在各房间内。生成器同时给出解析真值：每个听者采样点所在房间、从各声源到听者的有效连通路径长度（沿门洞串联的房间链）、按房间混响时间与路径长度推导的衰减曲线采样值、以及遮挡衰减后的期望声压级，真值仅来自生成器的几何与参数构造，是唯一观测来源。
 
 任务环境与准备：

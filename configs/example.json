@@ -1,0 +1,40 @@
+{
+  "seed": 42,
+  "level_path": "generated/level.json",
+  "database_path": "data/workbench.sqlite",
+  "listen_addr": "127.0.0.1:8088",
+  "precision_profile": "standard",
+  "profiles": {
+    "coarse": {
+      "decimals": 3,
+      "length_tol": 0.25,
+      "curve_tol_db": 0.08,
+      "spl_tol_db": 0.12
+    },
+    "standard": {
+      "decimals": 6,
+      "length_tol": 0.05,
+      "curve_tol_db": 0.004,
+      "spl_tol_db": 0.008
+    },
+    "tight": {
+      "decimals": 9,
+      "length_tol": 0.01,
+      "curve_tol_db": 0.0008,
+      "spl_tol_db": 0.0015
+    }
+  },
+  "max_parallelism": 4,
+  "sample_buffer_limit": 64,
+  "commit_order": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6"
+  ],
+  "algorithm_version": "topology-dsp-v1",
+  "parameter_version": "params-v1",
+  "strict_scope": true
+}
