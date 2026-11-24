@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>叙事分镜工作台</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>叙事分镜工作台</h1>
+      <p id="health">正在连接本地确定性核心…</p>
+    </div>
+    <div class="actions">
+      <button id="runBtn">连续推进</button>
+      <button id="verifyBtn">核验三路径</button>
+      <button id="checkpointBtn">在中间镜中断</button>
+      <button id="resumeBtn">从存档续演</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel projects">
+      <h2>样本工程</h2>
+      <div id="projectList" class="project-list"></div>
+      <h2>存档列表</h2>
+      <div id="sessionList" class="session-list"></div>
+    </aside>
+
+    <section class="panel graph-panel">
+      <div class="panel-head">
+        <h2>因果图布局</h2>
+        <span id="projectMeta" class="meta"></span>
+      </div>
+      <div id="graph" class="graph"></div>
+      <h2>选择序列时间轴</h2>
+      <div id="choiceTimeline" class="timeline"></div>
+    </section>
+
+    <aside class="panel node-panel">
+      <h2>节点镜头与编辑</h2>
+      <div id="nodeDetail" class="node-detail"><p class="muted">选择因果图节点查看镜头。</p></div>
+    </aside>
+
+    <section class="panel preview-panel">
+      <div class="panel-head">
+        <h2>玩家视角分镜预览</h2>
+        <label>导出版本
+          <select id="exportVersion">
+            <option value="1.0">v1 / 十分之一秒</option>
+            <option value="2.0">v2 / 毫秒 URN</option>
+            <option value="3.0" selected>v3 / 微秒 URI</option>
+          </select>
+        </label>
+        <button id="exportBtn">导出当前节点</button>
+      </div>
+      <div id="preview" class="preview-grid"></div>
+      <h2>失效清单 / 比对结果</h2>
+      <pre id="report" class="report">尚未运行。</pre>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

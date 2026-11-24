@@ -1,0 +1,147 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: #10131a;
+  color: #e8edf7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 1200px; }
+button, input, select, textarea { font: inherit; }
+button {
+  border: 1px solid #3b82f6;
+  background: #1d4ed8;
+  color: white;
+  border-radius: 8px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+button:hover { background: #2563eb; }
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #2b3344;
+  background: #121826;
+  color: #e8edf7;
+  border-radius: 8px;
+  padding: 7px;
+}
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  padding: 16px 22px;
+  border-bottom: 1px solid #263044;
+  background: rgba(15, 23, 42, .96);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.topbar h1 { font-size: 20px; margin: 0 0 4px; }
+.topbar p { margin: 0; color: #93a4bf; font-size: 13px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.layout {
+  display: grid;
+  grid-template-columns: 250px minmax(430px, 1.1fr) 330px minmax(430px, 1.2fr);
+  gap: 14px;
+  padding: 14px;
+}
+.panel {
+  background: #151c2b;
+  border: 1px solid #263044;
+  border-radius: 14px;
+  padding: 14px;
+  min-height: 200px;
+}
+.panel h2 { font-size: 15px; margin: 14px 0 10px; color: #bfd3ff; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.panel-head h2 { margin-top: 0; }
+.meta, .muted { color: #8292ad; font-size: 12px; }
+.project-list, .session-list { display: flex; flex-direction: column; gap: 7px; }
+.project-item, .session-item { text-align: left; background: #1c2940; border-color: #31466b; }
+.session-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; align-items: center; }
+.session-resume { padding: 7px 9px; }
+.graph {
+  position: relative;
+  overflow: auto;
+  min-height: 430px;
+  border: 1px solid #222c3f;
+  border-radius: 12px;
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.graph-canvas {
+  position: relative;
+  width: 1450px;
+  height: 430px;
+}
+.graph svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.edge {
+  stroke: #5f83c4;
+  stroke-width: 2;
+  fill: none;
+}
+.edge.mutex {
+  stroke: #fb923c;
+  stroke-dasharray: 6 5;
+}
+.node-card {
+  position: absolute;
+  width: 158px;
+  min-height: 92px;
+  padding: 10px;
+  border: 1px solid #34435f;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #1b2740, #141c2d);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+.node-card strong { font-size: 12px; color: #9ec1ff; }
+.node-card span { font-size: 13px; }
+.node-card small { color: #8ea0bd; font-size: 11px; }
+.node-card.dirty, .shot-card.invalid {
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, .18);
+}
+.timeline { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-chip {
+  border: 1px solid #36507d;
+  background: #18253d;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.node-detail { display: flex; flex-direction: column; gap: 10px; }
+.shot-edit { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+.shot-edit label { font-size: 12px; color: #aebbd1; display: grid; gap: 4px; }
+.preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.shot-card {
+  border: 1px solid #2b3a55;
+  background: #101827;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.shot-card header { color: #7dd3fc; font-size: 12px; }
+.shot-card strong { font-size: 13px; word-break: break-all; }
+.shot-card div { color: #c7d2fe; font-size: 12px; }
+.shot-card small, .shot-card p { color: #8fa2c0; font-size: 11px; margin: 0; }
+.report {
+  background: #0b1020;
+  border: 1px solid #263044;
+  border-radius: 10px;
+  padding: 10px;
+  max-height: 360px;
+  overflow: auto;
+  font-size: 11px;
+  white-space: pre-wrap;
+}

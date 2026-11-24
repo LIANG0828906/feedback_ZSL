@@ -1,22 +1,99 @@
-立项材料已经定稿但尚未落下一行代码，交互式叙事与分镜编辑工具需要先交付首个可运行版本。面向叙事游戏的分镜编排场景，本地确定性样本生成器按固定种子产出多份叙事工程：剧情节点组成有向事件因果图，节点声明前置标志位、互斥与汇聚关系、事件后果与角色状态变更，并挂载分镜描述（镜头数、每镜时长与画幅路径版本）；同时产出玩家选择序列与逐镜解析真值，包括每个可观测剧情状态的终态标志位、事件到达顺序、关键节点可达集合与逐镜期望呈现采样点。真值只来源于生成器构造，是观测与判定的唯一依据。工具需把工程加载为内部模型，随选择推进情节并逐镜生成分镜，同时在用户编辑某节点前置条件或镜头时长时只重算真正受影响的下游分镜，并在会话中断后从已提交镜头边界继续。
+# 交互式叙事与分镜工作台
 
-任务环境与准备：
-安装 Go 1.22 及以上版本并确认 go env 可用。
-安装 Wails CLI（go install github.com/wailsapp/wails/v2/cmd/wails@latest）并确认 Windows 上 WebView2 运行时可用。
-SQLite 使用纯 Go 驱动（如 modernc.org/sqlite），由 go mod tidy 拉取，无需额外安装数据库服务。
-样本由题面所述固定种子生成器在本地产出并写入工作区，不使用外部素材或网络资源。
+首个可运行版本：Go 1.22 确定性叙事引擎、节点级失效传播、SQLite 镜头边界检查点、三版本分镜描述互操作、原生 JavaScript 工作台，以及可在 Windows/WebView2 构建的 Wails v2 入口。
 
-业务要求：
-1. 实现叙事工程加载与结构校验：读取剧情节点、前置标志位、互斥与汇聚关系、事件后果、分镜镜头参数、玩家选择序列与真值清单，校验节点引用完整、因果图无环、镜头时长为非负定点整型且画幅路径取值合法；字段缺失返回 E_SCHEMA，成环或引用越界返回 E_REF 并指出首个冲突节点。
-2. 实现确定性情节推进核心：按选择序列在因果图中推进，依据前置条件评估节点可达性，按事件后果更新角色与剧情标志位，并逐镜计算呈现采样点与所属节点；推进结果只依赖工程内容、选择序列与参数，不受线程标识、遍历顺序或墙钟影响，逐镜采样点与真值偏差落在声明容差内。
-3. 实现节点级依赖图与精确失效传播：显式记录前置条件、事件后果、镜头时长与下游分镜呈现之间的依赖关系；编辑某节点前置条件、后果或镜头时长时，仅将该节点及其全部下游节点与受影响分镜标记失效，未受影响且已提交的分镜必须复用持久化缓存，并输出含节点标识、分镜序号与失效原因的清单。
-4. 实现失效后重演与连续推进的一致性比对：对失效节点按因果拓扑序重演后续情节并原子替换其结果，未失效分镜直接复用；重演路径与从工程起点按同一选择序列全量推进的分镜呈现顺序、终态标志位、事件到达顺序与逐镜采样点须逐项相等，并提供自动比对定位首个不一致的分镜序号与字段名。
-5. 实现基于 SQLite 的镜头边界检查点与断点恢复：每呈现到一个已校验的镜头边界，把该镜进度、已消费选择偏移、标志位快照、节点终态摘要、内容哈希、工程结构版本与算法版本原子且串行写入数据库，写入不得交错；重启加载时任一内容哈希或版本不匹配须整体作废快照并全量重演，禁止部分混用旧镜头结果。
-6. 保证连续推进、存档续演与编辑后重演三条路径结果一致：三者对同一工程、同一选择序列与同一编辑序列须产出逐镜相同的呈现顺序、相同的终态标志位与相同的事件到达顺序；从存档续演的剩余分镜须与不中断推进逐镜对齐，并提供自动比对输出首个不一致镜头序号、差异字段与两侧取值。
-7. 实现跨版本分镜描述互操作：分镜描述以至少三个结构版本存在，版本差异体现在字段命名、镜头时长单位与画幅路径表达上；低版本升级时按声明默认值补齐并记录转换痕迹，导出到低版本时对无法表达的字段生成 E_LOSSY 清单，同一内部模型重复导出须逐字节一致且能被对应版本加载器读回。
-8. 实现可交互的分镜工作台界面与并发资源边界：界面展示因果图布局、节点镜头列表、选择序列时间轴、玩家视角分镜预览与存档列表、失效分镜高亮，允许编辑前置条件与镜头时长触发重演、从存档续演、逐节点查看与导出；重演与推进可在工作线程池并行，须限制最大并行度与每线程状态缓冲上限，缓冲耗尽时阻塞排队而非静默丢弃，共享检查点写入串行且镜头顺序稳定。
+样本由固定种子本地生成，不依赖外部素材、网络资源或 Docker。SQLite 使用 `modernc.org/sqlite` 纯 Go 驱动，因此核心命令建议统一使用 `CGO_ENABLED=0`。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速验证
 
-验收：
-用本地样本核验逐镜分镜结果、三条路径一致性与断点续演；注入版本与选择异常时错误码可辨。
+```bash
+go version          # 需要 go1.22+
+make samples        # 生成 samples/project-25200{1,2,3}.json
+make test           # 全量单元/集成测试
+make verify         # 真值、断点续演、三路径一致性
+make negative       # E_SCHEMA/E_REF/E_CHOICE/E_VERSION 负向用例
+make serve          # http://127.0.0.1:8787
+```
+
+也可以直接运行：
+
+```bash
+CGO_ENABLED=0 go run ./cmd/storyboard verify --samples samples
+CGO_ENABLED=0 go run ./cmd/storyboard run --file samples/project-252002.json
+CGO_ENABLED=0 go run ./cmd/storyboard export --file samples/project-252002.json --node n00_world --version 1.0
+```
+
+## 已实现能力
+
+- **加载与校验**：`internal/model/validate.go` 校验必填字段、引用、DAG、非负定点毫秒时长与 `aspect://WxH` 画幅路径。字段缺失返回 `E_SCHEMA`；悬空引用或成环返回 `E_REF`，并给出首个冲突节点。
+- **确定性推进**：`internal/engine/engine.go` 使用排序后的 Kahn 拓扑序，依据 `all/any/none` 标志位、互斥节点和 `all/any` 汇聚策略推进；事件后果写入剧情标志与角色状态，按固定间隔生成逐镜采样点。
+- **真值判定**：固定种子生成器在 `internal/sample/generator.go` 中构造终态标志、事件顺序、可达集合和逐镜样本；`internal/engine/compare.go` 输出首个不一致镜头序号、字段名、左右值。
+- **依赖与失效**：`internal/dependency/graph.go` 显式建立因果边、汇聚边、互斥边、标志生产/消费边、时长到采样呈现边。编辑前置条件或后果时传播到因果/标志下游与互斥对端；编辑时长时标记该镜及受全局时间轴偏移影响的后续镜头。
+- **持久化缓存**：未失效且内容哈希一致的镜头从 SQLite `shot_cache` 复用；失效重演结果和会话摘要通过事务原子替换。
+- **检查点续演**：每个镜头边界在同一事务内写入进度、选择偏移、标志快照、节点终态摘要、镜头/工程哈希、结构版本和算法版本。SQLite 连接池限制为 1，另有互斥锁保证写串行。
+- **快照作废**：重启加载时工程哈希、结构版本或算法版本不匹配，会删除该会话全部检查点/会话快照；工作台随后自动从起点全量重演，不混用旧镜头。
+- **三路径一致**：连续推进、中断存档续演、编辑后增量重演由 `internal/workbench/verify.go` 逐项比较镜头顺序、采样点、终态标志、角色状态和事件到达顺序。
+- **版本互操作**：`internal/interop/interop.go` 支持 `storyboard/1.0`、`storyboard/2.0`、`storyboard/3.0`。三版分别使用 decisecond、millisecond、microsecond 时长单位，以及相对路径、URN、canonical URI 画幅表达；低版本升级补默认值并写转换痕迹，导出低版本无法表达的字段时返回 `E_LOSSY` 清单。
+- **并发边界**：`internal/pool/pool.go` 限制最大并行 worker；每个 worker 的状态缓冲有容量上限，满时 `Push` 阻塞等待串行 writer 排空，不丢弃状态。多样本并行核验入口为 `workbench.VerifyProjectsParallel`。
+- **工作台界面**：`web/` 是无需 Node 构建步骤的原生 JS 界面，展示因果图、节点镜头、选择时间轴、分镜预览、存档列表和失效高亮；支持编辑前置条件/时长、连续运行、中断、续演、逐节点导出和一键核验。
+
+## HTTP API
+
+启动 `make serve` 后：
+
+- `GET /api/projects`、`GET /api/projects/{id}`、`GET /api/projects/{id}/graph`
+- `POST /api/projects/{id}/run`
+- `POST /api/projects/{id}/checkpoint`
+- `POST /api/projects/{id}/resume`
+- `POST /api/projects/{id}/edit`
+- `POST /api/projects/{id}/verify`
+- `GET /api/projects/{id}/export?node_id=...&version=1.0|2.0|3.0`
+- `GET /api/sessions`、`GET /api/sessions/{id}/checkpoints`
+
+## Wails / Windows WebView2
+
+本机已确认 Wails CLI：
+
+```text
+Wails CLI v2.10.2
+```
+
+当前 WSL 环境缺少 `libwebkit2gtk-4.0-dev` 与可用的 `pkg-config/gcc` 包装链，因此没有把 Linux 桌面壳作为运行验证路径；纯 Go 核心、Web UI 和 Windows 目标不受影响。已通过 Windows 注册表确认 WebView2 Runtime：
+
+```text
+HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}
+pv = 158.0.4370.33
+```
+
+并已实际执行成功：
+
+```bash
+CGO_ENABLED=0 wails build \
+  -tags wails_desktop -s -skipbindings -nopackage \
+  -platform windows/amd64
+```
+
+在 Windows 上请确认 WebView2 Runtime 可用，然后运行：
+
+```powershell
+wails doctor
+wails build -tags wails_desktop -s -skipbindings
+```
+
+Wails 入口是 `main_wails.go`；默认 `go run .` / `go build .` 使用 `main_web.go` 启动浏览器工作台，不要求 Linux 安装 WebKit。
+
+## 目录说明
+
+- `internal/model`：工程、镜头、真值、错误码与结构校验。
+- `internal/sample`：固定种子确定性样本生成器。
+- `internal/engine`：拓扑推进、采样、真值/结果比对。
+- `internal/dependency`：节点依赖图与失效清单。
+- `internal/checkpoint`：SQLite 检查点、镜头缓存、事务与版本校验。
+- `internal/workbench`：编辑/缓存/续演/三路径核验编排。
+- `internal/interop`：v1/v2/v3 分镜描述转换。
+- `internal/pool`：有界 worker 与有界状态缓冲。
+- `internal/api`：工作台 JSON API 和静态资源服务。
+- `web`：原生 JavaScript 前端与嵌入资源。
+- `cmd/storyboard`：`generate`、`verify`、`run`、`export`、`serve`、`negative-checks` CLI。
+
+实际验证记录见 `docs/VERIFICATION.md`。

@@ -1,0 +1,467 @@
+{
+  "schema": "narrative-project/v1",
+  "id": "narrative-seed-252001",
+  "seed": 252001,
+  "sample_interval_ms": 250,
+  "tolerance_ms": 25,
+  "observable_flags": [
+    "world_established",
+    "office_entered",
+    "path_clue",
+    "path_leave",
+    "has_clue",
+    "clue_found",
+    "witness_met",
+    "left_office",
+    "branch_resolved",
+    "ending_arrest",
+    "ending_watch",
+    "case_closed"
+  ],
+  "nodes": [
+    {
+      "id": "n00_world",
+      "title": "城市开场",
+      "preconditions": {},
+      "on_arrive": {
+        "set_flags": [
+          "world_established"
+        ]
+      },
+      "shots": [
+        {
+          "id": "s252001-00-a",
+          "duration_ms": 1500,
+          "aspect_path": "aspect://21x9",
+          "camera": "slow aerial establish",
+          "motion": "drift",
+          "transition": "fade"
+        }
+      ],
+      "layout": {
+        "x": 40,
+        "y": 180
+      }
+    },
+    {
+      "id": "n01_office",
+      "title": "事务所选择",
+      "preconditions": {},
+      "on_arrive": {
+        "set_flags": [
+          "office_entered"
+        ]
+      },
+      "options": [
+        {
+          "id": "inspect_clue",
+          "label": "检查线索",
+          "effects": {
+            "set_flags": [
+              "path_clue"
+            ]
+          }
+        },
+        {
+          "id": "walk_away",
+          "label": "离开事务所",
+          "effects": {
+            "set_flags": [
+              "path_leave"
+            ]
+          }
+        }
+      ],
+      "shots": [
+        {
+          "id": "s252001-01-a",
+          "duration_ms": 1250,
+          "aspect_path": "aspect://21x9",
+          "camera": "medium desk",
+          "motion": "static",
+          "transition": "cut"
+        },
+        {
+          "id": "s252001-01-b",
+          "duration_ms": 1000,
+          "aspect_path": "aspect://16x9",
+          "camera": "close choice",
+          "motion": "push-in",
+          "transition": "cut"
+        }
+      ],
+      "layout": {
+        "x": 260,
+        "y": 180
+      }
+    },
+    {
+      "id": "n02_clue",
+      "title": "发现线索",
+      "parents": [
+        "n01_office"
+      ],
+      "preconditions": {
+        "all": [
+          "path_clue"
+        ],
+        "none": [
+          "path_leave"
+        ]
+      },
+      "mutex_with": [
+        "n03_leave"
+      ],
+      "on_arrive": {
+        "set_flags": [
+          "has_clue",
+          "clue_found"
+        ],
+        "characters": [
+          {
+            "character_id": "detective",
+            "key": "mood",
+            "value": "focused"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "id": "s252001-02-a",
+          "duration_ms": 500,
+          "aspect_path": "aspect://16x9",
+          "camera": "clue insert",
+          "motion": "macro-pan",
+          "transition": "match-cut"
+        }
+      ],
+      "layout": {
+        "x": 500,
+        "y": 70
+      }
+    },
+    {
+      "id": "n03_leave",
+      "title": "街头目击者",
+      "parents": [
+        "n01_office"
+      ],
+      "preconditions": {
+        "all": [
+          "path_leave"
+        ],
+        "none": [
+          "path_clue"
+        ]
+      },
+      "mutex_with": [
+        "n02_clue"
+      ],
+      "on_arrive": {
+        "set_flags": [
+          "witness_met",
+          "left_office"
+        ],
+        "characters": [
+          {
+            "character_id": "detective",
+            "key": "mood",
+            "value": "restless"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "id": "s252001-03-a",
+          "duration_ms": 1500,
+          "aspect_path": "aspect://21x9",
+          "camera": "street exit",
+          "motion": "tracking",
+          "transition": "wipe"
+        },
+        {
+          "id": "s252001-03-b",
+          "duration_ms": 750,
+          "aspect_path": "aspect://16x9",
+          "camera": "witness glance",
+          "motion": "handheld",
+          "transition": "cut"
+        }
+      ],
+      "layout": {
+        "x": 500,
+        "y": 290
+      }
+    },
+    {
+      "id": "n04_join",
+      "title": "因果汇聚",
+      "parents": [
+        "n02_clue",
+        "n03_leave"
+      ],
+      "preconditions": {},
+      "convergence": {
+        "id": "join_branch",
+        "policy": "any",
+        "predecessors": [
+          "n02_clue",
+          "n03_leave"
+        ]
+      },
+      "on_arrive": {
+        "set_flags": [
+          "branch_resolved"
+        ]
+      },
+      "shots": [
+        {
+          "id": "s252001-04-a",
+          "duration_ms": 1000,
+          "aspect_path": "aspect://16x9",
+          "camera": "converging reaction",
+          "motion": "static",
+          "transition": "cross-dissolve"
+        }
+      ],
+      "layout": {
+        "x": 740,
+        "y": 180
+      }
+    },
+    {
+      "id": "n05_final_choice",
+      "title": "最终行动",
+      "parents": [
+        "n04_join"
+      ],
+      "preconditions": {},
+      "on_arrive": {},
+      "options": [
+        {
+          "id": "arrest",
+          "label": "立即逮捕",
+          "effects": {
+            "set_flags": [
+              "ending_arrest"
+            ]
+          }
+        },
+        {
+          "id": "surveil",
+          "label": "继续监视",
+          "effects": {
+            "set_flags": [
+              "ending_watch"
+            ]
+          }
+        }
+      ],
+      "shots": [
+        {
+          "id": "s252001-05-a",
+          "duration_ms": 500,
+          "aspect_path": "aspect://16x9",
+          "camera": "decision close-up",
+          "motion": "push-in",
+          "transition": "cut"
+        }
+      ],
+      "layout": {
+        "x": 980,
+        "y": 180
+      }
+    },
+    {
+      "id": "n06_epilogue",
+      "title": "结案余韵",
+      "parents": [
+        "n05_final_choice"
+      ],
+      "preconditions": {},
+      "on_arrive": {
+        "set_flags": [
+          "case_closed"
+        ],
+        "clear_flags": [
+          "office_entered"
+        ],
+        "characters": [
+          {
+            "character_id": "detective",
+            "key": "case_status",
+            "value": "closed"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "id": "s252001-06-a",
+          "duration_ms": 1500,
+          "aspect_path": "aspect://21x9",
+          "camera": "epilogue skyline",
+          "motion": "pull-back",
+          "transition": "fade-out"
+        }
+      ],
+      "layout": {
+        "x": 1220,
+        "y": 180
+      }
+    }
+  ],
+  "choice_sequence": {
+    "id": "choices-252001",
+    "items": [
+      {
+        "index": 0,
+        "node_id": "n01_office",
+        "option_id": "walk_away"
+      },
+      {
+        "index": 1,
+        "node_id": "n05_final_choice",
+        "option_id": "arrest"
+      }
+    ]
+  },
+  "truth": {
+    "terminal_flags": {
+      "branch_resolved": true,
+      "case_closed": true,
+      "clue_found": false,
+      "ending_arrest": true,
+      "ending_watch": false,
+      "has_clue": false,
+      "left_office": true,
+      "office_entered": false,
+      "path_clue": false,
+      "path_leave": true,
+      "witness_met": true,
+      "world_established": true
+    },
+    "event_order": [
+      "n00_world",
+      "n01_office",
+      "n03_leave",
+      "n04_join",
+      "n05_final_choice",
+      "n06_epilogue"
+    ],
+    "reachable_nodes": [
+      "n00_world",
+      "n01_office",
+      "n03_leave",
+      "n04_join",
+      "n05_final_choice",
+      "n06_epilogue"
+    ],
+    "key_reachability": {
+      "n02_clue": false,
+      "n03_leave": true,
+      "n04_join": true
+    },
+    "shot_samples": [
+      {
+        "global_index": 0,
+        "node_id": "n00_world",
+        "shot_id": "s252001-00-a",
+        "samples_ms": [
+          0,
+          250,
+          500,
+          750,
+          1000,
+          1250,
+          1500
+        ]
+      },
+      {
+        "global_index": 1,
+        "node_id": "n01_office",
+        "shot_id": "s252001-01-a",
+        "samples_ms": [
+          0,
+          250,
+          500,
+          750,
+          1000,
+          1250
+        ]
+      },
+      {
+        "global_index": 2,
+        "node_id": "n01_office",
+        "shot_id": "s252001-01-b",
+        "samples_ms": [
+          0,
+          250,
+          500,
+          750,
+          1000
+        ]
+      },
+      {
+        "global_index": 3,
+        "node_id": "n03_leave",
+        "shot_id": "s252001-03-a",
+        "samples_ms": [
+          0,
+          250,
+          500,
+          750,
+          1000,
+          1250,
+          1500
+        ]
+      },
+      {
+        "global_index": 4,
+        "node_id": "n03_leave",
+        "shot_id": "s252001-03-b",
+        "samples_ms": [
+          0,
+          250,
+          500,
+          750
+        ]
+      },
+      {
+        "global_index": 5,
+        "node_id": "n04_join",
+        "shot_id": "s252001-04-a",
+        "samples_ms": [
+          0,
+          250,
+          500,
+          750,
+          1000
+        ]
+      },
+      {
+        "global_index": 6,
+        "node_id": "n05_final_choice",
+        "shot_id": "s252001-05-a",
+        "samples_ms": [
+          0,
+          250,
+          500
+        ]
+      },
+      {
+        "global_index": 7,
+        "node_id": "n06_epilogue",
+        "shot_id": "s252001-06-a",
+        "samples_ms": [
+          0,
+          250,
+          500,
+          750,
+          1000,
+          1250,
+          1500
+        ]
+      }
+    ]
+  }
+}
