@@ -1,3 +1,17 @@
+# editorpick：定点拾取与空间操作验证
+
+可集成的纯标准库 Go 领域组件、确定性样本生成器和三路径自动校验入口。
+
+```bash
+go run ./cmd/editorpick generate --dir samples/default --seed 241125
+go run ./cmd/editorpick verify --dir samples/default --report samples/default/verification-report.json
+go test ./... -count=1
+```
+
+Windows PowerShell 可运行 `.\scripts\verify.ps1`。架构、误差公式、异常码和实际验证结果见 `docs/VALIDATION.md`；最近一次机器可读结果在 `samples/default/verification-report.json`。
+
+---
+
 团队刚拿到一台干净的开发机，要在空工作区里为游戏编辑器的拾取与空间操作做一次独立产品验证，确认深层级场景下点击拾取、框选与枢轴操作在定点精度下的可靠性，并交付可集成的 Go 领域组件与完整可运行示例。本地确定性生成器按固定种子产出场景描述：带父子变换的节点树、多类几何体（轴对齐包围盒、球体、三角网格）以及一组拾取查询请求（屏幕坐标射线、框选矩形、围绕枢轴点的平移旋转缩放序列），同时记录解析真值，含每条射线与各几何体的首个交点坐标、框选命中的节点集合与操作后的世界变换矩阵，真值只在构造样本时写入、不从组件输出反推。核心难点是数值精度沿长父子链传播：世界变换、包围体与拾取判定必须统一使用声明精度的定点表示，并给出无法可靠区分命中与未命中的模糊判定，而不是把近似结果当成精确结论。
 
 任务环境与准备：

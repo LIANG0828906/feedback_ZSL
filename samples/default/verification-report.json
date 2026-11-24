@@ -1,0 +1,157 @@
+{
+  "ok": true,
+  "directory": "samples/default",
+  "seed": 241125,
+  "manifest_ok": true,
+  "deterministic_generate": true,
+  "file_hashes_equal": true,
+  "tolerances": {
+    "bounds": 0.0015,
+    "matrix": 0.0005,
+    "point": 0.0008
+  },
+  "truth": {
+    "ray_count": 9,
+    "box_count": 5,
+    "point_count": 4,
+    "operation_count": 5,
+    "max_point_diff": 3.333333339211597e-7,
+    "max_matrix_diff": 0.000003255095282983511,
+    "max_bounds_diff": 0.000003447221498031894
+  },
+  "paths": {
+    "resume_snapshot_path": "samples/default/resume-snapshot.json"
+  },
+  "error_codes": [
+    {
+      "code": "E_SCHEMA-missing-id",
+      "ok": true,
+      "detail": "E_SCHEMA[nodes[0]]: missing required field id"
+    },
+    {
+      "code": "E_CYCLE-parent-cycle",
+      "ok": true,
+      "detail": "E_CYCLE[a]: parent reference contains a cycle"
+    },
+    {
+      "code": "E_REF-missing-parent",
+      "ok": true,
+      "detail": "E_REF[c]: parent_id \"missing\" does not exist"
+    },
+    {
+      "code": "E_REF-geometry-index",
+      "ok": true,
+      "detail": "E_REF[d]: geometry_index 9 is outside 0..-1"
+    },
+    {
+      "code": "E_TXN-empty-batch",
+      "ok": true,
+      "detail": "E_TXN: pivot batch selection must not be empty"
+    }
+  ],
+  "concurrency": {
+    "ray_queries": 9,
+    "box_queries": 5,
+    "serial_same": true,
+    "derived_same": true
+  },
+  "invalidation": {
+    "cache_reuse_observed": true,
+    "unaffected_derived_reused": true,
+    "expected_objects": [
+      "world:chain-00",
+      "world:chain-23",
+      "entry:chain-23",
+      "entry:root"
+    ],
+    "found_objects": [
+      "entry:chain-00",
+      "entry:chain-00",
+      "entry:chain-01",
+      "entry:chain-01",
+      "entry:chain-02",
+      "entry:chain-02",
+      "entry:chain-03",
+      "entry:chain-03",
+      "entry:chain-04",
+      "entry:chain-04",
+      "entry:chain-05",
+      "entry:chain-05",
+      "entry:chain-06",
+      "entry:chain-06",
+      "entry:chain-07",
+      "entry:chain-07",
+      "entry:chain-08",
+      "entry:chain-08",
+      "entry:chain-09",
+      "entry:chain-09",
+      "entry:chain-10",
+      "entry:chain-10",
+      "entry:chain-11",
+      "entry:chain-11",
+      "entry:chain-12",
+      "entry:chain-12",
+      "entry:chain-13",
+      "entry:chain-13",
+      "entry:chain-14",
+      "entry:chain-14",
+      "entry:chain-15",
+      "entry:chain-15",
+      "entry:chain-16",
+      "entry:chain-16",
+      "entry:chain-17",
+      "entry:chain-17",
+      "entry:chain-18",
+      "entry:chain-18",
+      "entry:chain-19",
+      "entry:chain-19",
+      "entry:chain-20",
+      "entry:chain-20",
+      "entry:chain-21",
+      "entry:chain-21",
+      "entry:chain-22",
+      "entry:chain-22",
+      "entry:chain-23",
+      "entry:root",
+      "local:chain-00",
+      "query:ray:b245a38c505e0100",
+      "world:chain-00",
+      "world:chain-01",
+      "world:chain-02",
+      "world:chain-03",
+      "world:chain-04",
+      "world:chain-05",
+      "world:chain-06",
+      "world:chain-07",
+      "world:chain-08",
+      "world:chain-09",
+      "world:chain-10",
+      "world:chain-11",
+      "world:chain-12",
+      "world:chain-13",
+      "world:chain-14",
+      "world:chain-15",
+      "world:chain-16",
+      "world:chain-17",
+      "world:chain-18",
+      "world:chain-19",
+      "world:chain-20",
+      "world:chain-21",
+      "world:chain-22",
+      "world:chain-23"
+    ],
+    "ok": true
+  },
+  "snapshot_tamper": [
+    {
+      "code": "E_HASH-content-tamper",
+      "ok": true,
+      "detail": "E_HASH[content_hash]: snapshot content hash mismatch"
+    },
+    {
+      "code": "E_VERSION-mismatch",
+      "ok": true,
+      "detail": "E_VERSION[structure_version]: snapshot structure version mismatch"
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "schema": "editorpick.queries/v1",
+  "structure_version": "struct-2026-11-25-v1",
+  "precision": {
+    "kind": "decimal",
+    "fractional_digits": 6,
+    "scale": 1000000,
+    "step": 0.000001
+  },
+  "seed": 241125,
+  "camera": {
+    "width": 800,
+    "height": 600,
+    "view_height": 16.000000,
+    "center": {
+      "x": 0.000000,
+      "y": 0.000000,
+      "z": 0.000000
+    },
+    "eye_z": -10.000000
+  },
+  "rays": [
+    {
+      "id": "ray-aabb-center",
+      "screen": [
+        250,
+        300
+      ],
+      "origin": {
+        "x": -4.000000,
+        "y": 0.000000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-sphere-center",
+      "screen": [
+        400,
+        300
+      ],
+      "origin": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-mesh-center",
+      "screen": [
+        550,
+        300
+      ],
+      "origin": {
+        "x": 4.000000,
+        "y": 0.000000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-chain-center",
+      "screen": [
+        460.375,
+        66.75
+      ],
+      "origin": {
+        "x": 1.610000,
+        "y": 6.220000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-empty",
+      "screen": [
+        -50,
+        750
+      ],
+      "origin": {
+        "x": -12.000000,
+        "y": -12.000000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-aabb-edge-ambig",
+      "screen": [
+        287.5,
+        300
+      ],
+      "origin": {
+        "x": -2.999999,
+        "y": 0.000000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-sphere-edge-ambig",
+      "screen": [
+        445,
+        300
+      ],
+      "origin": {
+        "x": 1.200001,
+        "y": 0.000000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-mesh-edge-ambig",
+      "screen": [
+        550,
+        337.5
+      ],
+      "origin": {
+        "x": 4.000000,
+        "y": -1.000001,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    },
+    {
+      "id": "ray-chain-edge-ambig",
+      "screen": [
+        477.25,
+        66.75
+      ],
+      "origin": {
+        "x": 2.060001,
+        "y": 6.220000,
+        "z": -10.000000
+      },
+      "direction": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 1.000000
+      }
+    }
+  ],
+  "boxes": [
+    {
+      "id": "box-principals",
+      "rect": {
+        "min_x": -5.500000,
+        "min_y": -1.600000,
+        "max_x": 5.500000,
+        "max_y": 1.900000
+      }
+    },
+    {
+      "id": "box-aabb-only",
+      "rect": {
+        "min_x": -5.300000,
+        "min_y": -1.300000,
+        "max_x": -2.700000,
+        "max_y": 1.300000
+      }
+    },
+    {
+      "id": "box-sphere-only",
+      "rect": {
+        "min_x": -1.600000,
+        "min_y": -1.600000,
+        "max_x": 1.600000,
+        "max_y": 1.600000
+      }
+    },
+    {
+      "id": "box-chain",
+      "rect": {
+        "min_x": 0.810000,
+        "min_y": 5.420000,
+        "max_x": 2.410000,
+        "max_y": 7.020000
+      }
+    },
+    {
+      "id": "box-empty",
+      "rect": {
+        "min_x": 20.000000,
+        "min_y": 20.000000,
+        "max_x": 22.000000,
+        "max_y": 22.000000
+      }
+    }
+  ],
+  "points": [
+    {
+      "id": "point-aabb-inside",
+      "point": {
+        "x": -4.000000,
+        "y": 0.000000,
+        "z": 0.000000
+      }
+    },
+    {
+      "id": "point-sphere-inside",
+      "point": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 0.000000
+      }
+    },
+    {
+      "id": "point-aabb-edge-ambig",
+      "point": {
+        "x": -2.999999,
+        "y": 0.000000,
+        "z": 0.000000
+      }
+    },
+    {
+      "id": "point-empty",
+      "point": {
+        "x": -12.000000,
+        "y": -12.000000,
+        "z": 0.000000
+      }
+    }
+  ],
+  "edit_sequence": [
+    {
+      "id": "step-translate-aabb",
+      "description": "translate AABB node in a batch",
+      "selection": [
+        "aabb-node"
+      ],
+      "pivot": {
+        "x": -4.000000,
+        "y": 0.000000,
+        "z": 0.000000
+      },
+      "ops": [
+        {
+          "type": "translate",
+          "vector": {
+            "x": 0.600000,
+            "y": 0.000000,
+            "z": 0.000000
+          }
+        }
+      ]
+    },
+    {
+      "id": "step-rotate-principals",
+      "description": "rotate sphere and mesh around shared pivot",
+      "selection": [
+        "sphere-node",
+        "mesh-node"
+      ],
+      "pivot": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 0.000000
+      },
+      "ops": [
+        {
+          "type": "rotate",
+          "vector": {
+            "x": 0.000000,
+            "y": 0.000000,
+            "z": 0.000000
+          },
+          "axis": "z",
+          "angle": 0.4363323129985824
+        }
+      ],
+      "checkpoint": true
+    },
+    {
+      "id": "step-scale-aabb-pivot",
+      "description": "scale around translated AABB center",
+      "selection": [
+        "aabb-node"
+      ],
+      "pivot": {
+        "x": -3.400000,
+        "y": 0.000000,
+        "z": 0.000000
+      },
+      "ops": [
+        {
+          "type": "scale",
+          "vector": {
+            "x": 1.300000,
+            "y": 1.300000,
+            "z": 1.000000
+          }
+        }
+      ]
+    },
+    {
+      "id": "step-invalid-zero-scale",
+      "description": "zero scale must abort with E_TXN",
+      "selection": [
+        "sphere-node"
+      ],
+      "pivot": {
+        "x": 0.000000,
+        "y": 0.000000,
+        "z": 0.000000
+      },
+      "ops": [
+        {
+          "type": "scale",
+          "vector": {
+            "x": 0.000000,
+            "y": 1.000000,
+            "z": 1.000000
+          }
+        }
+      ],
+      "expect_code": "E_TXN"
+    },
+    {
+      "id": "step-rotate-deep-branch",
+      "description": "rotate chain root and propagate 24 levels",
+      "selection": [
+        "chain-00"
+      ],
+      "pivot": {
+        "x": 0.000000,
+        "y": 3.000000,
+        "z": 0.000000
+      },
+      "ops": [
+        {
+          "type": "rotate",
+          "vector": {
+            "x": 0.000000,
+            "y": 0.000000,
+            "z": 0.000000
+          },
+          "axis": "z",
+          "angle": 0.2617993877991494
+        }
+      ]
+    }
+  ]
+}
