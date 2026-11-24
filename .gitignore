@@ -11,3 +11,17 @@ node_modules/
 .venv/
 venv/
 __pycache__/
+
+# Generated deterministic datasets and checkpoint work directories.
+data/
+artifacts/work/
+artifacts/demo-work/
+artifacts/tiny*.json
+artifacts/small*.json
+
+# Local binaries and test outputs.
+/verifytool
+/verifytool.exe
+*.test
+coverage.out
+coverage.html
