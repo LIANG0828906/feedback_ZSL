@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MorphEdge Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">ME</div>
+        <div>
+          <h1>MorphEdge Studio</h1>
+          <p>分块形态学 · 边缘一致性工作台</p>
+        </div>
+      </div>
+      <div class="top-status">
+        <span id="stateBadge" class="badge idle">IDLE</span>
+        <span class="mono" id="algoVersion">algorithm --</span>
+        <button id="exportBtn" class="ghost" disabled>导出诊断</button>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="section-title">本地确定性样本</div>
+      <div id="sampleList" class="sample-list"></div>
+      <div class="checkpoint-card">
+        <div class="eyebrow">SQLite 检查点</div>
+        <div id="checkpointPath" class="path mono">--</div>
+        <div class="tiny">提交串行 · 哈希/参数/算法版本全量校验</div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <section class="control-deck">
+        <div class="control-head">
+          <div>
+            <div class="eyebrow">参数版本</div>
+            <div id="paramVersion" class="version mono">--</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="autoExact" checked> 停止拖动后自动精确</label>
+          <div class="action-row">
+            <select id="runMode">
+              <option value="realtime">实时处理</option>
+              <option value="resume">断点恢复</option>
+              <option value="full">全量重算</option>
+            </select>
+            <button id="runBtn" class="primary">运行三路径</button>
+            <button id="exactBtn" class="primary">精确重算</button>
+            <button id="pauseBtn" class="ghost">暂停</button>
+            <button id="cancelBtn" class="danger">取消</button>
+          </div>
+        </div>
+        <div class="parameter-grid">
+          <label>梯度算子
+            <select id="operator">
+              <option value="sobel">Sobel</option>
+              <option value="prewitt">Prewitt</option>
+              <option value="central">Central</option>
+            </select>
+          </label>
+          <label>低阈值 <output id="lowOut">10</output>
+            <input type="range" id="lowThreshold" min="0" max="255" value="10">
+          </label>
+          <label>高阈值 <output id="highOut">22</output>
+            <input type="range" id="highThreshold" min="0" max="255" value="22">
+          </label>
+          <label>开运算半径 <output id="openOut">0</output>
+            <input type="range" id="openRadius" min="0" max="8" value="0">
+          </label>
+          <label>闭运算半径 <output id="closeOut">0</output>
+            <input type="range" id="closeRadius" min="0" max="8" value="0">
+          </label>
+          <label>细化迭代 <output id="thinOut">2</output>
+            <input type="range" id="thinIterations" min="0" max="12" value="2">
+          </label>
+          <label>剪枝长度 <output id="pruneOut">8</output>
+            <input type="range" id="pruneLength" min="0" max="64" value="8">
+          </label>
+        </div>
+      </section>
+
+      <section class="metrics" id="metrics">
+        <article><span>预览延迟</span><strong id="mLatency">--</strong><small id="mPolicy">factor --</small></article>
+        <article><span>帧状态</span><strong id="mFrame">--</strong><small id="mVersion">version --</small></article>
+        <article><span>边缘覆盖率</span><strong id="mCoverage">--</strong><small>预览/精确</small></article>
+        <article><span>真值几何偏差</span><strong id="mTruth">--</strong><small>端点/圆心/直径</small></article>
+        <article><span>逐像素差异</span><strong id="mPixels">--</strong><small id="mPool">pool --</small></article>
+      </section>
+
+      <section class="viewer-grid">
+        <article class="viewer-card">
+          <header><span>原图</span><span id="sampleMeta" class="tiny">--</span></header>
+          <img id="sourceImage" alt="source image">
+        </article>
+        <article class="viewer-card">
+          <header><span>预览掩膜</span><span id="previewMeta" class="tiny">--</span></header>
+          <img id="previewImage" alt="preview mask">
+        </article>
+        <article class="viewer-card">
+          <header><span id="stageTitle">精确阶段掩膜</span><span id="stageMeta" class="tiny">--</span></header>
+          <img id="stageImage" alt="stage mask">
+        </article>
+        <article class="viewer-card">
+          <header><span>差异热力图</span><span class="tiny">红=像素不一致</span></header>
+          <img id="heatmapImage" alt="difference heatmap">
+        </article>
+      </section>
+
+      <section class="stage-strip" id="stageStrip"></section>
+
+      <section class="diagnostic-grid">
+        <article class="panel">
+          <header><span>几何真值比对</span><button class="ghost small" id="refreshStats">刷新</button></header>
+          <div id="geometryTable" class="table-wrap"><div class="empty">运行精确重算后显示</div></div>
+        </article>
+        <article class="panel">
+          <header><span>分块阶段状态矩阵</span><span id="blockHint" class="tiny">点击块查看</span></header>
+          <div id="blockMatrix" class="block-matrix"><div class="empty">等待运行</div></div>
+          <div id="blockDetail" class="block-detail"></div>
+          <button id="retryBtn" class="ghost small" disabled>重试所选失败块</button>
+        </article>
+        <article class="panel">
+          <header><span>运行与一致性</span><span id="runStatus" class="tiny">--</span></header>
+          <div id="runSummary" class="summary-list"><div class="empty">等待运行</div></div>
+        </article>
+        <article class="panel">
+          <header><span>错误 / 事件</span><button class="ghost small" id="clearLog">清空</button></header>
+          <pre id="logPane" class="log-pane"></pre>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
