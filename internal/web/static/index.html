@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>多通道采集联调诊断</title>
+<style>
+  :root { --bg:#0f1420; --panel:#171e2e; --line:#2a3550; --fg:#dbe4f3; --muted:#8aa0c0;
+          --accent:#5db1ff; --warn:#ffb454; --bad:#ff6b6b; --ok:#46d17d; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:13px/1.5 -apple-system,Segoe UI,Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+         background:var(--bg); color:var(--fg); }
+  header { padding:14px 20px; border-bottom:1px solid var(--line); display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  h1 { font-size:16px; margin:0; }
+  main { padding:16px 20px; display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px; }
+  .panel h2 { font-size:13px; margin:0 0 10px; color:var(--accent); }
+  .full { grid-column:1 / span 2; }
+  label { color:var(--muted); margin-right:8px; }
+  input,select,button { background:#0d1322; color:var(--fg); border:1px solid var(--line);
+        border-radius:6px; padding:5px 8px; font-size:12px; }
+  button { cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+  canvas { width:100%; height:220px; display:block; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  td,th { border-bottom:1px solid var(--line); padding:4px 6px; text-align:left; }
+  .pill { padding:1px 8px; border-radius:999px; font-size:11px; }
+  .committed { background:rgba(70,209,125,.18); color:var(--ok); }
+  .aligned { background:rgba(93,177,255,.18); color:var(--accent); }
+  .pending { background:rgba(138,160,192,.18); color:var(--muted); }
+  .failed { background:rgba(255,107,107,.18); color:var(--bad); }
+  #log { max-height:180px; overflow:auto; font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); }
+  #err { color:var(--bad); white-space:pre-wrap; }
+  .ok { color:var(--ok); }
+</style>
+</head>
+<body>
+<header>
+  <h1>多通道采集联调诊断</h1>
+  <div class="row" style="margin:0">
+    <label>模式
+      <select id="mode"><option value="full">全量重算</option>
+      <option value="realtime">实时采集</option><option value="resume">断点恢复</option></select></label>
+    <label>线程 <input id="workers" type="number" value="3" min="1" style="width:64px"/></label>
+    <label>分段长度 <input id="seg" type="number" value="0" min="0" style="width:90px"/></label>
+    <label>插值阶数 <input id="order" type="number" value="1.0" step="0.05" style="width:70px"/></label>
+    <label>窗长 <input id="halfwin" type="number" value="16" min="4" max="64" style="width:64px"/></label>
+    <label>容差 <input id="tol" type="number" value="0.25" step="0.01" style="width:70px"/></label>
+  </div>
+  <div class="row" style="margin:0">
+    <button onclick="run()">运行</button>
+    <button onclick="exp()">导出多声道</button>
+    <button onclick="loadState()">刷新</button>
+  </div>
+  <div class="row" style="margin:0">
+    <label>注入
+      <select id="fault"><option value="chan">通道缺失 E_CHAN</option>
+      <option value="mark">标记缺失 E_MARK</option><option value="clip">增益溢出 E_CLIP</option></select></label>
+    <label>标记 <input id="fmarker" type="number" value="3" style="width:60px"/></label>
+    <label>增益 <input id="fgain" type="number" value="4" step="0.5" style="width:60px"/></label>
+    <button onclick="inject()">生成并验证异常链路</button>
+  </div>
+</header>
+<main>
+  <div class="panel"><h2>漂移曲线（累计漂移，采样点）</h2><canvas id="drift"></canvas></div>
+  <div class="panel"><h2>标记到达位置（参考 vs 各通道）</h2><canvas id="markers"></canvas></div>
+  <div class="panel full"><h2>对齐前 / 对齐后波形对比</h2><canvas id="wave"></canvas></div>
+  <div class="panel"><h2>残余偏移热力图</h2><canvas id="heat"></canvas></div>
+  <div class="panel"><h2>分段状态机与提交序列</h2>
+    <div id="progress" class="row"></div>
+    <table><thead><tr><th>通道</th><th>段</th><th>区间</th><th>状态</th><th>内容哈希</th></tr></thead>
+    <tbody id="segs"></tbody></table>
+  </div>
+  <div class="panel full"><h2>调度事件与错误链路</h2><div id="err"></div><div id="log"></div></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let STATE = null;
+async function api(path, body){
+  const opt = body ? {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)} : {};
+  const r = await fetch(path,opt); const j = await r.json();
+  if(!r.ok) { $('err').textContent = (j.code||'ERROR')+': '+j.error; throw j; }
+  $('err').textContent = ''; return j;
+}
+async function run(){
+  const body = {mode:$('mode').value, workers:+$('workers').value, seg:+$('seg').value,
+    halfwin:+$('halfwin').value, order:+$('order').value, tol:+$('tol').value};
+  await api('/api/run', body); await loadState();
+}
+async function exp(){ const j = await api('/api/export',{}); log('export -> '+j.out); }
+async function inject(){
+  const body = {fault:$('fault').value, marker:+$('fmarker').value, gain:+$('fgain').value};
+  const j = await api('/api/inject', body);
+  log('注入故障: '+JSON.stringify(j.faults));
+  if(j.detected){ $('err').textContent = j.detected.code+': '+j.detected.message; }
+}
+async function loadState(){
+  const r = await fetch('/api/state'); STATE = await r.json(); render();
+}
+function log(s){ $('log').innerHTML = '['+new Date().toLocaleTimeString()+'] '+s+'<br/>'+$('log').innerHTML; }
+function setup(cv){ const dpr=window.devicePixelRatio||1; const w=cv.clientWidth,h=cv.clientHeight;
+  cv.width=w*dpr; cv.height=h*dpr; const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h); return {ctx,w,h}; }
+const COLORS=['#5db1ff','#46d17d','#ffb454','#ff6b6b','#b58cff','#5ce1e6'];
+function render(){
+  if(!STATE) return;
+  $('progress').textContent = STATE.progress ? ('已提交 '+STATE.progress[0]+' / 总段数 '+STATE.progress[1]) : '';
+  drawDrift(); drawMarkers(); drawWave(); drawHeat(); drawSegs(); drawLog();
+}
+function drawDrift(){
+  const {ctx,w,h}=setup($('drift')); if(!STATE.drift) return;
+  const ids=Object.keys(STATE.drift); let all=[];
+  ids.forEach(id=>{ const p=STATE.drift[id];
+    const pts=[]; let phi=p.phi0; const knots=p.knots;
+    // 用节点近似绘制
+    knots.forEach((k,i)=>{ if(i>0){ const a=knots[i-1];
+      const span=k.at-a.at; for(let n=a.at;n<k.at && n< (STATE.session.core_points||1);n+=Math.max(1,span/40)){
+        const t=(n-a.at)/span; phi+=(a.rate+(k.rate-a.rate)*t); pts.push([n,phi]); } } });
+    all=all.concat(pts.map(p=>p[1])); line(ctx,pts,w,h,COLORS[ids.indexOf(id)%COLORS.length]);
+    legend(ctx,id,COLORS[ids.indexOf(id)%COLORS.length],ids.indexOf(id));
+  });
+  axis(ctx,w,h,Math.min(...all),Math.max(...all));
+}
+function line(ctx,pts,w,h,color){
+  if(pts.length<2) return;
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+  ctx.strokeStyle=color; ctx.beginPath();
+  pts.forEach((p,i)=>{const x=40+(p[0]-xmin)/(xmax-xmin||1)*(w-50);
+    const y=h-24-(p[1]-ymin)/(ymax-ymin||1)*(h-44);
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);}); ctx.stroke();
+}
+function axis(ctx,w,h,min,max){ ctx.fillStyle='#8aa0c0'; ctx.font='10px monospace';
+  ctx.fillText(max.toFixed(2),2,12); ctx.fillText(min.toFixed(2),2,h-26); }
+function legend(ctx,t,c,i){ ctx.fillStyle=c; ctx.fillText(t,60+i*70,12); }
+function drawMarkers(){
+  const {ctx,w,h}=setup($('markers')); if(!STATE.session) return;
+  STATE.session.channel_specs.forEach((ch,ci)=>{
+    ctx.fillStyle=COLORS[ci%COLORS.length];
+    (ch.markers||[]).forEach((m,i)=>{ const x=40+(m.core_ref_sample/STATE.session.core_points)*(w-50);
+      ctx.fillRect(x,30+ci*36,4,18); });
+    ctx.fillStyle=COLORS[ci%COLORS.length]; ctx.fillText(ch.id,4,h=40+ci*36);
+  });
+}
+function drawWave(){
+  const {ctx,w,h}=setup($('wave')); if(!STATE.waveforms) return;
+  STATE.waveforms.forEach((wv,ci)=>{
+    const color=COLORS[ci%COLORS.length];
+    plotSeries(ctx,wv.before,w,h,color,0.4,ci,STATE.waveforms.length);
+    plotSeries(ctx,wv.after,w,h,color,1.0,ci,STATE.waveforms.length);
+  });
+}
+function plotSeries(ctx,a,w,h,color,alpha,ci,total){
+  const band=(h-20)/total; const y0=10+ci*band;
+  ctx.strokeStyle=color; ctx.globalAlpha=alpha; ctx.beginPath();
+  let mn=Math.min(...a),mx=Math.max(...a);
+  a.forEach((v,i)=>{const x=(i/(a.length-1))*w; const y=y0+band*0.85*(1-(v-mn)/((mx-mn)||1));
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);}); ctx.stroke(); ctx.globalAlpha=1;
+}
+function drawHeat(){
+  const {ctx,w,h}=setup($('heat')); if(!STATE.residuals) return;
+  const ids=Object.keys(STATE.residuals); const cellW=(w-60)/Math.max(1,...ids.map(id=>STATE.residuals[id].length));
+  ids.forEach((id,row)=>{ STATE.residuals[id].forEach((r,col)=>{
+    const mag=Math.min(1,Math.abs(r.residual)/(r.bound||0.05));
+    ctx.fillStyle=`rgba(255,${Math.round(180-120*mag)},${Math.round(84-60*mag)},${0.25+0.75*mag})`;
+    ctx.fillRect(50+col*cellW,20+row*28,Math.max(2,cellW-1),22);
+  }); ctx.fillStyle='#dbe4f3'; ctx.fillText(id,4,36+row*28); });
+}
+function drawSegs(){
+  const tb=$('segs'); tb.innerHTML=''; if(!STATE.segments) return;
+  STATE.segments.forEach(s=>{ const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.channel}</td><td>${s.segment}</td><td>${s.start}..${s.end}</td>
+      <td><span class="pill ${s.state}">${s.state}</span></td>
+      <td style="font-family:monospace">${(s.hash||'').slice(0,16)}</td>`;
+    tb.appendChild(tr); });
+}
+function drawLog(){ if(!STATE.events) return;
+  $('log').innerHTML=STATE.events.slice().reverse().map(e=>
+    `[${e.kind}] ${e.channel||''} #${e.segment} ${e.detail||''}`).join('<br/>'); }
+loadState();
+</script>
+</body>
+</html>
