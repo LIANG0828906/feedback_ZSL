@@ -20,3 +20,25 @@
 
 验收：
 用本地样本核验水印与噪声两类证据的判决、替换区间定位及三路径一致性，并检查参数调整后的失效传播与异常码。
+
+---
+
+## 实现入口
+
+本仓库已交付上述核验内核与可复现实验环境：
+
+- 技术设计与需求映射：`docs/SOLUTION.md`
+- 实际验证记录：`docs/VALIDATION.md`
+- 一键复现（Linux/macOS）：`bash scripts/reproduce.sh`
+- Windows PowerShell：`powershell -ExecutionPolicy Bypass -File scripts/reproduce.ps1`
+
+常用入口：
+
+```bash
+go run ./cmd/gensample -out data/sample
+go run ./cmd/verify experiment -data data/sample -out artifacts/experiment-report.json
+go run ./cmd/verify run -sample data/sample/noise -db artifacts/noise.db -parallelism 4 -buffer-pixels-per-thread 24576 -block-size 16 -threshold 0.55
+go run ./cmd/review -db artifacts/noise.db -truth data/sample/noise/truth.json
+```
+
+实现使用 Go 1.22 和纯 Go SQLite 驱动 `modernc.org/sqlite`；验证命令使用 `CGO_ENABLED=0 GOPROXY=off`，不需要 Docker、gcc 或联网下载依赖。
