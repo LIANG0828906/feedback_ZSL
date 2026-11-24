@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terrain Occlusion Diagnostic</title>
+  <style>
+    :root {
+      --bg: #0b1020; --panel: #121a2e; --panel2: #18233d; --line: #2a395f;
+      --text: #e8eefc; --muted: #93a4c7; --visible: #35d07f; --occluded: #ef5b6b;
+      --uncertain: #f4bd4f; --accent: #6aa6ff; --queued: #b58cff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: linear-gradient(180deg,#0d1428,#090e1d); color: var(--text);
+      font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    header { padding: 18px 24px; border-bottom: 1px solid var(--line); display: flex;
+      gap: 16px; align-items: center; flex-wrap: wrap; background: rgba(18,26,46,.9); position: sticky; top: 0; z-index: 2; }
+    h1 { font-size: 18px; margin: 0; letter-spacing: .2px; }
+    main { padding: 20px 24px 40px; max-width: 1500px; margin: 0 auto; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .card { background: linear-gradient(180deg,var(--panel),#10182b); border: 1px solid var(--line);
+      border-radius: 14px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.18); }
+    .card h2 { font-size: 14px; margin: 0 0 12px; color: #dbe7ff; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .span-4 { grid-column: span 4; } .span-12 { grid-column: span 12; }
+    @media (max-width: 1100px) { .span-8,.span-6,.span-4 { grid-column: span 12; } }
+    .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+    .stat { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; min-width: 110px; }
+    .stat b { display: block; font-size: 18px; }
+    .stat span { color: var(--muted); font-size: 12px; }
+    .ok { color: var(--visible); } .bad { color: var(--occluded); } .warn { color: var(--uncertain); }
+    label { color: var(--muted); margin-right: 12px; white-space: nowrap; }
+    input[type=range] { width: 220px; vertical-align: middle; }
+    .canvas-wrap { width: 100%; overflow: auto; border-radius: 10px; background: #0a1122; border:1px solid var(--line); }
+    canvas { display: block; max-width: 100%; }
+    .legend { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; color:var(--muted); font-size:12px; }
+    .dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th,td { padding: 7px 8px; border-bottom: 1px solid rgba(42,57,95,.65); text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; position: sticky; top: 0; background: #15203a; }
+    code { color: #b9d2ff; }
+    .pill { display:inline-block; border-radius: 999px; padding: 2px 8px; font-size:12px; border:1px solid currentColor; }
+    .visible { color: var(--visible); } .occluded { color: var(--occluded); } .uncertain { color: var(--uncertain); }
+    .muted { color: var(--muted); }
+    .slot { width: 42px; height: 34px; border-radius: 8px; border:1px solid var(--line); display:flex; align-items:center;
+      justify-content:center; background:#0d1629; font-weight:700; }
+    .slot.used { background: rgba(106,166,255,.22); border-color: var(--accent); }
+    .slot-row { display:flex; gap:8px; flex-wrap:wrap; margin: 10px 0; }
+    .bar { height: 14px; background:#0d1629; border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+    .bar > i { display:block; height:100%; background: linear-gradient(90deg,#4d8dff,#68e0cf); }
+    .two-col { columns: 2; column-gap: 18px; }
+    .kv { display:grid; grid-template-columns: 150px 1fr; gap:4px 10px; font-size:12px; }
+    .kv div:nth-child(odd) { color: var(--muted); }
+    svg { width:100%; height:240px; }
+    .error-list { max-height: 220px; overflow:auto; }
+    .hash { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; overflow-wrap:anywhere; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>地形高度场遮挡剔除 / 流式加载诊断台</h1>
+  <div class="stats" id="topStats"></div>
+</header>
+<main class="grid">
+  <section class="card span-12">
+    <h2>采样时刻与分层开关
+      <span>
+        <label>时刻 <input id="sampleSlider" type="range" min="0" max="0" value="0" /><b id="sampleLabel"></b></label>
+        <label><input id="layerVisible" type="checkbox" checked />可见</label>
+        <label><input id="layerOccluded" type="checkbox" checked />遮挡</label>
+        <label><input id="layerUncertain" type="checkbox" checked />不确定</label>
+      </span>
+    </h2>
+    <div class="kv" id="sampleMeta"></div>
+  </section>
+
+  <section class="card span-8">
+    <h2>分块着色预览（XZ 俯视；三角为相机）<span class="muted" id="previewHint"></span></h2>
+    <div class="canvas-wrap"><canvas id="terrainCanvas" width="760" height="570"></canvas></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--visible)"></i>visible</span>
+      <span><i class="dot" style="background:var(--occluded)"></i>occluded</span>
+      <span><i class="dot" style="background:var(--uncertain)"></i>uncertain</span>
+      <span><i class="dot" style="background:#6aa6ff"></i>camera / target</span>
+      <span class="muted">底色为确定性高度场灰度</span>
+    </div>
+  </section>
+
+  <section class="card span-4">
+    <h2>光源阴影图</h2>
+    <div class="canvas-wrap"><canvas id="shadowCanvas" width="360" height="360"></canvas></div>
+    <div class="legend"><span id="shadowInfo" class="muted"></span></div>
+  </section>
+
+  <section class="card span-6">
+    <h2>误差界与累积上界曲线</h2>
+    <svg id="errorChart" viewBox="0 0 600 240" preserveAspectRatio="none"></svg>
+    <div class="legend">
+      <span><i class="dot" style="background:#6aa6ff"></i>累积误差界</span>
+      <span><i class="dot" style="background:#f4bd4f"></i>不确定分块数</span>
+      <span><i class="dot" style="background:#ef5b6b"></i>估计集合差异上界</span>
+    </div>
+  </section>
+
+  <section class="card span-6">
+    <h2>加载槽位 / 内存预算</h2>
+    <div id="slots"></div>
+    <div id="memory"></div>
+    <h2 style="margin-top:16px">当前时刻装卸与排队</h2>
+    <div id="streamEvents" class="error-list"></div>
+  </section>
+
+  <section class="card span-4">
+    <h2>分块判定明细</h2>
+    <div style="max-height:420px;overflow:auto">
+      <table id="verdictTable"><thead><tr><th>ID</th><th>结论</th><th>margin / [L,U]</th><th>ref</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <section class="card span-8">
+    <h2>三路径一致性自动比对</h2>
+    <div id="comparison"></div>
+  </section>
+
+  <section class="card span-12">
+    <h2>资源等待、延迟与错误信息</h2>
+    <div id="resources" class="two-col"></div>
+  </section>
+</main>
+
+<script>
+let report = null;
+let currentSample = 0;
+
+const $ = (id) => document.getElementById(id);
+const clamp = (v,a,b) => Math.max(a, Math.min(b,v));
+const stateZh = {pending:'待剔除', culling:'剔除中', loaded:'已加载', committed:'已提交', failed:'失败'};
+
+async function boot() {
+  const res = await fetch('/api/diagnostic');
+  report = await res.json();
+  $('sampleSlider').max = report.realtime.results.length - 1;
+  renderAll();
+  ['sampleSlider','layerVisible','layerOccluded','layerUncertain'].forEach(id => $(id).addEventListener('input', () => {
+    currentSample = Number($('sampleSlider').value); renderSample();
+  }));
+}
+
+function result(i) { return report.realtime.results[i]; }
+
+function renderAll() {
+  const r = result(0);
+  const totals = report.realtime.results.reduce((acc,s) => {
+    s.verdicts.forEach(v => acc[v.final] = (acc[v.final]||0)+1);
+    acc.revisit += s.revisit_hit ? 1 : 0;
+    return acc;
+  }, {visible:0, occluded:0, uncertain:0, revisit:0});
+  $('topStats').innerHTML = [
+    stat(report.ok ? 'PASS' : 'FAIL', report.ok ? 'ok' : 'bad', '总体验收'),
+    stat(report.comparison.identical ? 'IDENTICAL' : 'DIVERGE', report.comparison.identical ? 'ok' : 'bad', '三路径'),
+    stat(report.project.chunks.length, '', '分块数'),
+    stat(`${report.committed_samples}/${report.total_samples}`, '', '已提交/总时刻'),
+    stat(totals.visible, 'visible', '可见判定'),
+    stat(totals.occluded, 'occluded', '遮挡判定'),
+    stat(totals.uncertain, 'uncertain', '不确定判定'),
+    stat(totals.revisit, 'warn', '回退缓存命中')
+  ].join('');
+  renderComparison();
+  renderErrorChart();
+  renderResources();
+  renderSample();
+}
+
+function stat(value, cls, label) {
+  return `<div class="stat"><b class="${cls||''}">${value}</b><span>${label}</span></div>`;
+}
+
+function renderSample() {
+  const s = result(currentSample);
+  $('sampleLabel').textContent = `#${s.sample_index} / t=${s.logical_time_ms}ms`;
+  $('sampleMeta').innerHTML = `
+    <div>姿态键 / 偏移</div><div><code>${s.pose_key}</code> · camera_offset=${s.camera_offset} · state=${stateZh[s.state]||s.state}</div>
+    <div>阴影参数版本</div><div><code>${s.shadow_version}</code> · resolution=${s.shadow_resolution}</div>
+    <div>误差报告</div><div>εshadow=${s.error_report.shadow_quantization.toFixed(6)}, εdepth=${s.error_report.depth_truncation.toFixed(6)},
+      εproj=${s.error_report.projection_quantization.toFixed(6)}, εsample=${s.error_report.sampling_propagation.toFixed(6)},
+      累积上界=${s.error_report.cumulative_upper_bound.toFixed(6)}, 集合差异上界=${s.error_report.estimated_set_difference_upper_bound}</div>`;
+  drawTerrain(s);
+  drawShadow(s);
+  renderVerdictTable(s);
+  renderStreaming(s);
+}
+
+function worldToCanvas(x,z,cw,ch,pad) {
+  const W = report.project.terrain.width_cells * report.project.terrain.cell_size;
+  const D = report.project.terrain.depth_cells * report.project.terrain.cell_size;
+  const scale = Math.min((cw-pad*2)/W, (ch-pad*2)/D);
+  const ox = (cw - W*scale)/2, oz = (ch - D*scale)/2;
+  return [ox + x*scale, oz + z*scale, scale];
+}
+
+function drawTerrain(s) {
+  const canvas = $('terrainCanvas'), ctx = canvas.getContext('2d');
+  const cw = canvas.width, ch = canvas.height, pad = 18;
+  ctx.clearRect(0,0,cw,ch); ctx.fillStyle = '#0a1122'; ctx.fillRect(0,0,cw,ch);
+  const t = report.project.terrain;
+  const W = t.width_cells*t.cell_size, D = t.depth_cells*t.cell_size;
+  for (let iz=0; iz<t.depth_cells; iz++) for (let ix=0; ix<t.width_cells; ix++) {
+    const h = averageCellHeight(t,ix,iz);
+    const g = clamp(35 + h*22, 25, 210);
+    const [x,z,sc] = worldToCanvas(ix*t.cell_size, iz*t.cell_size,cw,ch,pad);
+    ctx.fillStyle = `rgb(${g*.75|0},${g*.85|0},${g|0})`;
+    ctx.fillRect(x,z,t.cell_size*sc+1,t.cell_size*sc+1);
+  }
+  const verdictByID = Object.fromEntries(s.verdicts.map(v=>[v.chunk_id,v]));
+  for (const c of report.project.chunks) {
+    const v = verdictByID[c.id];
+    const show = $(`layer${cap(v.final)}`).checked;
+    const [x,z,sc] = worldToCanvas(c.coverage.min_x,c.coverage.min_z,cw,ch,pad);
+    const w=(c.coverage.max_x-c.coverage.min_x)*sc, h=(c.coverage.max_z-c.coverage.min_z)*sc;
+    if (show) {
+      ctx.fillStyle = colorFor(v.final, .30); ctx.fillRect(x,z,w,h);
+      ctx.strokeStyle = colorFor(v.final, .95); ctx.lineWidth = 2; ctx.strokeRect(x,z,w,h);
+      ctx.fillStyle='#eaf1ff'; ctx.font='bold 13px ui-monospace, monospace';
+      ctx.fillText(String(c.id), x+7, z+17);
+    } else {
+      ctx.strokeStyle='rgba(180,195,230,.25)'; ctx.strokeRect(x,z,w,h);
+    }
+  }
+  const cam = report.project.camera_track[s.sample_index];
+  const [cx,cz] = worldToCanvas(cam.position.x,cam.position.z,cw,ch,pad);
+  const [tx,tz] = worldToCanvas(cam.target.x,cam.target.z,cw,ch,pad);
+  ctx.strokeStyle='#6aa6ff'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx,cz); ctx.lineTo(tx,tz); ctx.stroke();
+  ctx.fillStyle='#6aa6ff'; ctx.beginPath(); ctx.arc(cx,cz,7,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#b9d2ff'; ctx.font='12px sans-serif'; ctx.fillText('CAM '+s.sample_index,cx+9,cz-8);
+  ctx.fillStyle='rgba(106,166,255,.5)'; ctx.fillRect(tx-3,tz-3,6,6);
+  $('previewHint').textContent = `${W}×${D} world units · ${report.project.chunks.length} chunks`;
+}
+
+function averageCellHeight(t,ix,iz) {
+  const idx=(x,z)=>t.heights[z*(t.width_cells+1)+x]||0;
+  return (idx(ix,iz)+idx(ix+1,iz)+idx(ix,iz+1)+idx(ix+1,iz+1))/4;
+}
+function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+function colorFor(v,a=1) {
+  const c = v==='visible' ? '53,208,127' : v==='occluded' ? '239,91,107' : '244,189,79';
+  return `rgba(${c},${a})`;
+}
+
+function drawShadow(s) {
+  const frame = (report.shadow_frames||[]).find(f=>f.sample_index===s.sample_index) || report.shadow_frames?.[0];
+  const canvas=$('shadowCanvas'), ctx=canvas.getContext('2d'), N=canvas.width;
+  if (!frame) { $('shadowInfo').textContent='revisit uses cached verdict; no new shadow map'; return; }
+  const R=frame.resolution, cell=N/R;
+  for (let y=0;y<R;y++) for (let x=0;x<R;x++) {
+    const d=clamp(frame.depth[y*R+x] ?? 1,0,1);
+    const g=Math.floor((1-d)*255);
+    ctx.fillStyle=`rgb(${g*.7|0},${g*.85|0},255)`;
+    ctx.fillRect(x*cell,y*cell,Math.ceil(cell),Math.ceil(cell));
+  }
+  $('shadowInfo').textContent=`${R}×${R} light depth · ${s.shadow_version}`;
+}
+
+function renderVerdictTable(s) {
+  const tb=document.querySelector('#verdictTable tbody');
+  tb.innerHTML = s.verdicts.map(v => `<tr>
+    <td><b>${v.chunk_id}</b></td>
+    <td><span class="pill ${v.final}">${v.final}</span><div class="muted">${v.coarse}${v.revisit_hit?' · cache':''}</div></td>
+    <td class="hash">${v.decision_margin.toFixed(5)}<br/>[${v.lower_bound.toFixed(5)}, ${v.upper_bound.toFixed(5)}]</td>
+    <td>${v.reference_occluder_id || '—'}</td></tr>`).join('');
+}
+
+function renderStreaming(s) {
+  const b=report.project.budgets;
+  const used=s.resident_ids.length, slots=[];
+  for (let i=0;i<b.load_slots;i++) slots.push(`<div class="slot ${s.load_events.length>i?'used':''}">${(s.load_events[i]?.chunk_id)??''}</div>`);
+  const memUsed=s.resident_ids.reduce((sum,id)=>sum+report.project.chunks.find(c=>c.id===id).memory_bytes,0);
+  const pct=Math.min(100,memUsed/b.memory_bytes*100);
+  $('slots').innerHTML=`<div class="muted">本刻加载槽位（最多 ${b.load_slots} 个完成加载）</div><div class="slot-row">${slots.join('')}</div>
+    <div class="muted">驻留：${s.resident_ids.join(', ')||'—'}；排队：<span class="warn">${s.queued_ids.join(', ')||'—'}</span>；取消排队：${s.cancelled_ids?.join(', ')||'—'}</div>`;
+  $('memory').innerHTML=`<div class="muted">内存 ${(memUsed/1048576).toFixed(1)} / ${(b.memory_bytes/1048576).toFixed(0)} MiB</div>
+    <div class="bar"><i style="width:${pct}%"></i></div>`;
+  const events = [
+    ...s.load_events.map(e=>`<tr><td class="visible">LOAD</td><td>chunk ${e.chunk_id}</td><td>${e.reason}</td></tr>`),
+    ...s.unload_events.map(e=>`<tr><td class="occluded">UNLOAD</td><td>chunk ${e.chunk_id}</td><td>${e.reason}</td></tr>`),
+    ...(s.resource_waits||[]).map(w=>`<tr><td class="uncertain">WAIT</td><td>chunk ${w.chunk_id}</td><td>${w.reason}</td></tr>`)
+  ];
+  $('streamEvents').innerHTML = events.length ? `<table><tbody>${events.join('')}</tbody></table>` : '<p class="muted">本时刻无装卸或资源等待。</p>';
+}
+
+function renderErrorChart() {
+  const W=600,H=240,pad=34, rs=report.realtime.results;
+  const maxE=Math.max(...rs.map(s=>s.error_report.cumulative_upper_bound), .02);
+  const maxN=Math.max(12,...rs.map(s=>s.error_report.estimated_set_difference_upper_bound));
+  const x=i=>pad+i*(W-pad*2)/Math.max(1,rs.length-1);
+  const yE=v=>H-pad-v/maxE*(H-pad*2);
+  const yN=v=>H-pad-v/maxN*(H-pad*2);
+  const path=(fn,y)=>rs.map((s,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(fn(s)).toFixed(1)}`).join(' ');
+  const uncertainPath=path(s=>s.uncertain_ids.length,yN);
+  const estPath=path(s=>s.error_report.estimated_set_difference_upper_bound,yN);
+  $('errorChart').innerHTML=`
+    <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#2a395f"/>
+    <line x1="${pad}" y1="${pad/2}" x2="${pad}" y2="${H-pad}" stroke="#2a395f"/>
+    <path d="${path(s=>s.error_report.cumulative_upper_bound,yE)}" fill="none" stroke="#6aa6ff" stroke-width="3"/>
+    <path d="${uncertainPath}" fill="none" stroke="#f4bd4f" stroke-width="2" stroke-dasharray="5 4"/>
+    <path d="${estPath}" fill="none" stroke="#ef5b6b" stroke-width="2"/>
+    ${rs.map((s,i)=>`<circle cx="${x(i)}" cy="${yE(s.error_report.cumulative_upper_bound)}" r="3" fill="#6aa6ff"><title>t${i}: bound ${s.error_report.cumulative_upper_bound.toFixed(4)}</title></circle>`).join('')}
+    <text x="${pad}" y="${H-10}" fill="#93a4c7" font-size="11">sample 0 → ${rs.length-1}</text>
+    <text x="8" y="20" fill="#93a4c7" font-size="11">bound</text>`;
+}
+
+function renderComparison() {
+  const c=report.comparison;
+  const rows=[['realtime',report.realtime],['resume / restart',report.resume],['one-shot replay',report.replay]];
+  $('comparison').innerHTML=`
+    <p><span class="pill ${c.identical?'visible':'occluded'}">${c.identical?'IDENTICAL':'MISMATCH'}</span>
+      ${c.identical ? '三条路径的可见集合、不确定集合、驻留集合与装卸序列完全一致。' :
+      `首个不一致：sample=${c.first_sample}, chunk=${c.first_chunk_id||'—'}, field=<code>${c.field}</code>；${c.detail}`}</p>
+    <table><thead><tr><th>路径</th><th>采样数</th><th>SQLite / 结果哈希</th></tr></thead><tbody>
+    ${rows.map(([name,p])=>`<tr><td>${name}</td><td>${p.results?.length||0}</td>
+      <td class="hash">${p.checkpoint_path||'—'}<br/>${p.results?.at(-1)?.content_hash||''}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+function renderResources() {
+  const waits=report.realtime.results.flatMap(s=>s.resource_waits||[]);
+  const delayed=report.realtime.results.flatMap(s=>s.delayed_chunks||[]);
+  const errs=report.verification_errors||[];
+  $('resources').innerHTML=`
+    <div><h3 class="warn">资源等待 (${waits.length})</h3>
+      <table><tbody>${waits.slice(0,30).map(w=>`<tr><td>t${w.sample_index}</td><td>chunk ${w.chunk_id}</td><td>${w.reason}</td></tr>`).join('')||'<tr><td class="muted">无</td></tr>'}</tbody></table>
+    </div>
+    <div><h3 class="warn">延迟记录 (${delayed.length})</h3>
+      <table><tbody>${delayed.slice(0,30).map(d=>`<tr><td>chunk ${d.chunk_id}</td><td>request t${d.requested_sample} → complete t${d.completed_sample??'…'}</td><td>delay ${d.delay_samples}</td><td>${d.reason||''}</td></tr>`).join('')||'<tr><td class="muted">无</td></tr>'}</tbody></table>
+      <h3 class="${errs.length?'bad':'ok'}">校验错误</h3><pre class="hash">${errs.join('\n')||'none'}</pre>
+    </div>`;
+}
+
+boot().catch(e => { document.body.insertAdjacentHTML('beforeend', `<pre style="color:#ff8090">${e.stack||e}</pre>`); });
+</script>
+</body>
+</html>
