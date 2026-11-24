@@ -1,22 +1,201 @@
-内部工具立项完成后，当前工作区仍为空目录，需从零实现一套面向虚拟制片实时合成场景的桌面层栈合成与验证工具。本地确定性样本生成器按固定种子产出背景板、前景道具与角色三层的前景合成描述，同一内容以三个版本格式给出，版本差异覆盖字段命名、层可见性与层级关系表达、alpha 预乘约定以及时间基准单位；另产出逐帧合成指令与解析真值，真值给出每帧若干采样像素的期望合成结果、各层可见性终点与逐帧时间戳。管线须把多版本描述统一映射为内部有序层栈，逐帧执行 alpha 合成与色彩线性化，输出合成帧、逐帧统计与差异热力图，并支持层参数编辑后的增量重算与断点恢复。
+# vcomp
 
-任务环境与准备：
-安装 Go 1.22 或更高版本，确认 go version 可用。
-准备本地确定性样本生成器与三个版本的层描述、逐帧合成指令及真值清单，全部由固定种子在本地生成，不依赖网络与外部素材。
-SQLite 使用纯 Go 驱动，通过 go get 安装并在模块中固定版本；无需容器或外部数据库服务。
-在 Windows 上执行 go build 与 go test，运行工作台示例并保留本地持久化目录用于断点恢复验证。
+`vcomp` 是一套面向虚拟制片实时合成的桌面层栈合成与验证工具。它从固定种子生成本地三层样本，把三种前景描述版本统一成内部有序层栈，执行确定性 alpha 合成与 sRGB 线性化，并通过 SQLite 检查点支持实时增量重算、取消恢复和一次性全量重算。
 
-业务要求：
-1. 实现多版本前景合成格式的统一加载器：读取至少三个版本的层描述，各版本在字段命名、层可见性与层级关系表达、alpha 预乘约定与时间基准单位上互不相同；映射为内部有序层栈并保留源版本标识，未知版本号或必填字段缺失返回 E_VER 并指出字段路径，层引用成环返回 E_CYCLE 并指出环上首个层标识。
-2. 实现逐帧合成核心：按内部层栈有序执行 alpha 合成与色彩线性化，支持预乘与非预乘输入的确定性换算，输出帧尺寸、通道数与帧时间基准严格由内部模型推导；要求同一帧在相同层栈与参数下重复合成逐像素一致，不随线程标识或帧完成顺序变化，合成参数越界返回 E_PARA 并指出字段名。
-3. 实现帧窗口状态机与提交边界：合成按固定帧窗口推进，每窗口经历待合成、合成中、已提交、失败四类状态且只能沿合法迁移推进，进度以已提交窗口数与总窗口数表示；已提交窗口冻结其层参数快照与源版本快照，合法迁移之外的指令返回 E_STATE 并保持原状态。
-4. 实现层参数或可见性编辑后的精确失效传播与增量重算：显式记录层栈节点、帧窗口与导出阶段之间的依赖关系，编辑某层参数、可见性或时间基准时仅将实际受影响帧窗口及其下游导出阶段标记失效并输出含窗口编号与失效层标识的清单；未失效窗口必须复用持久化缓存，增量路径与从空缓存全量重算的合成帧、逐帧统计与窗口提交序列须逐项相等，并提供自动比对定位首个不一致窗口与像素坐标。
-5. 实现实时处理、断点恢复处理与一次性全量重算三条路径的逐像素一致：三者对同一工程、同一层编辑序列与同一参数须产出相同的合成帧、相同的逐帧采样点统计与相同的窗口提交序列；同时支持用户取消，取消后已完成窗口须已持久化，重启只能依据已持久化且版本匹配的窗口恢复，恢复后的合成结果须与未中断路径逐像素一致。
-6. 实现跨版本导出与降级报告：把内部层栈与合成帧导出为任一受支持目标版本，低版本无法表达的层属性（如预乘约定或层级表达）须生成 E_LOSSY 警告清单并记录字段路径、原值与降级处置方式；导出产物须能被对应版本加载器读回并恢复相同的层栈结构与合成参数，同一内部模型重复导出须逐字节一致。
-7. 实现基于 SQLite 的持久化检查点与整体版本识别：每提交一个帧窗口把该窗口合成帧摘要、层参数快照、内容哈希、源格式版本、参数版本与算法版本原子且串行写入数据库，写入不得交错且窗口顺序稳定；重启加载时任一内容哈希或版本不匹配须整体作废快照并全量重算，禁止部分混用旧窗口结果。
-8. 实现并发调度、资源边界与异常隔离并交付可交互诊断应用：窗口合成可在工作线程池并行推进，须限制最大并行度与每线程像素缓冲上限，缓冲耗尽时阻塞排队并记录原因而非静默丢弃；样本损坏返回 E_DECODE，单窗口内部异常须置该窗口失败并允许重试且不污染其他窗口；应用展示层栈与源版本标识、帧窗口状态矩阵、合成结果与差异热力图，允许调整层参数与目标导出格式并触发增量重算。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+要求 Go 1.22+。SQLite 使用纯 Go 驱动 `modernc.org/sqlite v1.34.5`，不需要 CGO、容器或外部数据库。
 
-验收：
-用本地样本验证多版本层栈合成、增量重算与三路径逐像素一致，并核对降级报告与异常链路。
+```bash
+# Linux / WSL
+CGO_ENABLED=0 go test ./...
+CGO_ENABLED=0 go build -trimpath -o artifacts/vcomp ./cmd/vcomp
+
+./artifacts/vcomp gen --out samples --seed 42
+./artifacts/vcomp verify --data samples --work artifacts/verify
+./artifacts/vcomp workbench --data samples --version v3 \
+  --db artifacts/workbench.db --project workbench --demo --out artifacts/workbench
+```
+
+Windows PowerShell：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\windows-build-test.ps1
+```
+
+脚本执行 `go test ./...`、`go build`、样本生成、完整验收、工作台演示，并保留 `artifacts/windows/workbench.db` 供断点恢复。
+
+## 关键能力
+
+- **三版本统一加载**：V1 使用 z-index、布尔可见性、8 位 straight、微秒；V2 使用显式有序栈、字符串可见性、8 位 straight、毫秒；V3 使用 `above` 引用链、整数可见性、16 位 premultiplied、tick 时间。V3 也兼容 8 位文档。
+- **确定性合成**：内部固定自底向上的层顺序、8 位 straight sRGB RGBA 和纳秒帧时间基准。逐层在 linear sRGB 中执行 source-over，最后回到 sRGB 输出。
+- **状态机与提交边界**：窗口只有 pending/compositing/committed/failed；合法迁移之外返回 `E_STATE`。提交时冻结源版本、层参数、时间基准和参数版本。
+- **精确增量**：依赖图显式记录层 → 帧窗口 → 导出阶段。隐藏层或未出现层的变化不会使无关窗口失效；未失效窗口复用 SQLite 缓存。
+- **三条一致路径**：实时缓存、取消后重启恢复、空缓存全量重算使用同一合成核心，输出帧、采样统计和窗口提交序列逐项相等。
+- **跨版本导出**：确定性 JSON 与 PNG 产物；V3→V1/V2 的预乘层和层级引用会生成带字段路径、原值与处置方式的 `E_LOSSY` 报告。
+- **SQLite 整体快照**：单连接串行事务写入；每个窗口保存内容哈希、帧摘要、参数版本、源版本、算法版本和冻结快照。任一哈希或版本不一致会删除整个工程快照并从空缓存重算。
+- **资源与异常隔离**：窗口工作线程池、每线程像素缓冲上限、可选总缓冲预算；排队原因写入运行结果。窗口 panic、注入错误或样本损坏只会使该窗口失败，重跑可恢复。
+- **交互诊断**：工作台展示源版本、层栈、窗口状态矩阵、ASCII 合成预览、采样点、差异热力图 PNG，并支持编辑参数、切换目标格式、增量重算和导出。
+
+## 目录
+
+```text
+cmd/vcomp/          CLI 与交互工作台
+model/              内部模型、错误码、快照、内容哈希、自动对比
+compose/            alpha 归一、sRGB 线性化、合成、统计、PNG、热力图
+formats/            V1/V2/V3 加载器、指令加载、跨版本导出
+sample/             固定种子样本、指令与真值生成
+engine/             窗口状态机、依赖图、资源限流、并发调度、工作区
+store/              modernc SQLite 检查点与整体版本校验
+docs/               格式/持久化契约、实际验证记录
+scripts/            Windows PowerShell 构建与演示
+samples/            已生成的确定性样本
+artifacts/          本地验证数据库、工作台输出与 Windows 构建产物
+```
+
+## CLI
+
+### 生成样本
+
+```bash
+go run ./cmd/vcomp gen --out samples --seed 42
+```
+
+固定种子生成：
+
+- `samples/v1/scene.json`
+- `samples/v2/scene.json`
+- `samples/v3/scene.json`
+- `samples/commands.json`
+- `samples/truth.json`
+- `samples/manifest.json`
+
+真值包含 6 个采样像素/帧、24 帧时间戳、每层首个/最后可见帧和帧内容哈希。
+
+### 加载检查
+
+```bash
+go run ./cmd/vcomp load --scene samples/v3/scene.json --commands samples/commands.json
+```
+
+输出统一后的源版本、尺寸、通道数、帧时间基准、顺序表达和层参数。
+
+### 运行合成
+
+```bash
+# 全量路径
+go run ./cmd/vcomp run --data samples --version v1 --db artifacts/demo.db \
+  --project demo --mode full --workers 3 --frames-out artifacts/frames
+
+# 复用已提交窗口
+go run ./cmd/vcomp run --data samples --version v1 --db artifacts/demo.db \
+  --project demo --mode realtime
+
+# 提交 2 个窗口后取消；重启时恢复
+go run ./cmd/vcomp run --data samples --version v1 --db artifacts/resume.db \
+  --project resume --cancel-after 2
+go run ./cmd/vcomp run --data samples --version v1 --db artifacts/resume.db \
+  --project resume --mode resume
+```
+
+`run` 输出窗口状态矩阵（`P` pending、`C` compositing、`K` committed、`F` failed）、已提交/总窗口数、提交序列、复用窗口、重算窗口和缓冲排队事件。
+
+### 导出
+
+```bash
+go run ./cmd/vcomp export --data samples --version v3 --target v1 \
+  --out artifacts/export-v3-to-v1
+```
+
+目录包含目标版本描述、逐帧 PNG 和无时间戳的确定性 `manifest.json`。降级警告直接列在命令输出中。
+
+### 验收
+
+```bash
+go run ./cmd/vcomp verify --data samples --work artifacts/verify
+```
+
+验收覆盖三版本真值、规范层栈一致性、重复合成、错误码、状态机、全量/实时/恢复、取消持久化、增量失效与缓存复用、资源排队、窗口故障隔离、跨版本往返与缓存毒化。
+
+## 工作台
+
+```bash
+go run ./cmd/vcomp workbench --data samples --version v3 \
+  --db artifacts/workbench.db --project workbench --out artifacts/workbench
+```
+
+命令：
+
+```text
+stack                       层栈与源版本
+matrix                      窗口状态矩阵
+frame <n>                   合成预览和采样统计
+diff                        与上一次运行比较，写差异热力图 PNG
+opacity <layer> <0..1>      编辑透明度并增量重算
+visible <layer> <0|1>       编辑可见性并增量重算
+timebase <ns>               编辑帧时间基准
+target <v1|v2|v3>           切换目标导出格式
+recompute                   复用缓存重算
+full                        丢弃缓存全量重算
+export <v1|v2|v3>           导出描述、帧和 E_LOSSY 报告
+compare                     对比上次/当前帧、统计与提交序列
+quit
+```
+
+`--demo` 自动展示编辑 `prop` 不透明度、隐藏 `character`、差异热力图和导出结果。
+
+## 设计说明
+
+### Alpha 与颜色
+
+输入 straight 样本在渲染时先解码 sRGB，再乘 alpha 得到线性预乘贡献。V3 的 16 位预乘值按同一 encoded-domain 约定编码；加载到内部模型时转回 8 位 straight。16 位中间表示保证任意 8 位 straight 值经 V1→V3 往返后逐字节恢复，同时内部缓存和输出通道保持统一。
+
+合成使用标准 source-over：
+
+```text
+out.rgb = src.linear * src.a + dst.rgb * (1 - src.a)
+out.a   = src.a + dst.a * (1 - src.a)
+```
+
+全部计算使用 `float64`，最终按固定规则量化到 8 位，不依赖线程、GOMAXPROCS 或完成顺序。
+
+### 增量与缓存
+
+每个窗口的内容哈希只覆盖实际渲染贡献：可见层、正不透明度、像素哈希、帧时间。隐藏层的参数变化不会扩大窗口失效范围，但会使描述导出阶段失效。编辑后，失效窗口在一个 SQLite 事务中删除；未失效窗口仍满足当前解析快照的内容哈希/参数版本，从而复用。
+
+重启时，每个已存窗口都会重新验证自身版本、快照哈希、参数版本、内容哈希、帧摘要和帧哈希。任何一项不一致都会清除整个工程快照，禁止新旧窗口混合使用。取消或异常发生在批处理边界时，已提交窗口已原子持久化，下一次运行只补算缺失窗口。
+
+### 资源与异常
+
+- `--workers` 限制窗口并行度。
+- `--buffer` 是每工作线程像素缓冲上限。
+- `RunOptions.PixelBufferTotalBytes` 可设置共享总预算；不足时排队并产生 `Queued` 事件，不静默丢帧。
+- worker panic 被恢复为该窗口 `E_DECODE` 失败。
+- 失败窗口不写入检查点；同批后续窗口回到 pending，下一次运行可重试。
+
+详细契约见 `docs/format-contract.md`。
+
+## 验证状态
+
+本机实际结果记录在 `docs/verification-linux.md`：
+
+- `CGO_ENABLED=0 go test ./...` 全部通过。
+- `go vet ./...` 无报告。
+- `vcomp verify` 的 19 项检查全部通过。
+- 工作台增量演示只重算窗口 `[1,2,3,4]`，复用 `[0,5]`，差异热力图非零。
+- Windows `.exe` 与 6 个测试二进制已交叉构建成功；当前 WSL 宿主机没有可调用的 Windows Go/PowerShell/Wine，因此 Windows 运行时测试需在 Windows 主机执行 `scripts/windows-build-test.ps1`。
+
+## 测试
+
+```bash
+CGO_ENABLED=0 go test ./...
+```
+
+覆盖包：
+
+- `compose`：sRGB 往返、16 位预乘无损、确定性、E_PARA、热力图定位。
+- `formats`：三版本归一、错误契约、导出确定性、E_LOSSY、往返。
+- `sample`：固定种子文件确定性、三版本真值、可见性终点。
+- `engine`：全量/实时/恢复、并发一致、取消、增量、缓存复用、故障隔离、缓冲排队、缓存毒化、状态机。
+- `store`：检查点往返、整体哈希校验、错误版本拒绝。
+- `model`：首个不一致窗口/像素定位、隐藏层哈希语义。
