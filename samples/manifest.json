@@ -1,0 +1,213 @@
+{
+  "format": "volumelab.manifest/v1",
+  "seed": 42,
+  "precisionToleranceMM": 2.5,
+  "volumes": [
+    {
+      "id": "vol_a",
+      "file": "vol_a.vlm",
+      "axisOrder": "XYZ",
+      "dimensions": [
+        64,
+        56,
+        40
+      ],
+      "spacing": [
+        1,
+        1.2,
+        1.5
+      ],
+      "slope": 1,
+      "intercept": -1000,
+      "layerCount": 40,
+      "sha256": "ca34e2576411b8896935f1df2b9f60da4ce6a39aedfe702938728cfbea2e5e4b",
+      "grayRange": [
+        -1000,
+        1600
+      ],
+      "structures": [
+        {
+          "id": "sphere_a",
+          "type": "sphere",
+          "center": [
+            22,
+            24,
+            24
+          ],
+          "radius": 8,
+          "boundingBox": [
+            [
+              14,
+              16,
+              16
+            ],
+            [
+              30,
+              32,
+              32
+            ]
+          ],
+          "label": "球体 A"
+        },
+        {
+          "id": "tube_a",
+          "type": "tube",
+          "radius": 4,
+          "start": [
+            10,
+            44,
+            8
+          ],
+          "end": [
+            54,
+            44,
+            44
+          ],
+          "boundingBox": [
+            [
+              6,
+              40,
+              4
+            ],
+            [
+              58,
+              48,
+              48
+            ]
+          ],
+          "label": "管状结构 A"
+        },
+        {
+          "id": "box_a",
+          "type": "box",
+          "min": [
+            40,
+            8,
+            10
+          ],
+          "max": [
+            58,
+            24,
+            36
+          ],
+          "boundingBox": [
+            [
+              40,
+              8,
+              10
+            ],
+            [
+              58,
+              24,
+              36
+            ]
+          ],
+          "label": "矩形块 A"
+        }
+      ]
+    },
+    {
+      "id": "vol_b",
+      "file": "vol_b.vlm",
+      "axisOrder": "ZYX",
+      "dimensions": [
+        48,
+        52,
+        36
+      ],
+      "spacing": [
+        1.25,
+        1.25,
+        2
+      ],
+      "slope": 0.5,
+      "intercept": -500,
+      "layerCount": 36,
+      "sha256": "4060d60f9dc17886fad1b28f749d9680c0c75e44d335f9db8c0eafa1f7a86c7a",
+      "grayRange": [
+        -500,
+        900
+      ],
+      "structures": [
+        {
+          "id": "sphere_b",
+          "type": "sphere",
+          "center": [
+            22,
+            20,
+            22
+          ],
+          "radius": 7.5,
+          "boundingBox": [
+            [
+              14.5,
+              12.5,
+              14.5
+            ],
+            [
+              29.5,
+              27.5,
+              29.5
+            ]
+          ],
+          "label": "球体 B"
+        },
+        {
+          "id": "tube_b",
+          "type": "tube",
+          "radius": 3.75,
+          "start": [
+            8,
+            42,
+            12
+          ],
+          "end": [
+            48,
+            42,
+            56
+          ],
+          "boundingBox": [
+            [
+              4.25,
+              38.25,
+              8.25
+            ],
+            [
+              51.75,
+              45.75,
+              59.75
+            ]
+          ],
+          "label": "管状结构 B"
+        },
+        {
+          "id": "box_b",
+          "type": "box",
+          "min": [
+            30,
+            6,
+            8
+          ],
+          "max": [
+            52,
+            20,
+            30
+          ],
+          "boundingBox": [
+            [
+              30,
+              6,
+              8
+            ],
+            [
+              52,
+              20,
+              30
+            ]
+          ],
+          "label": "矩形块 B"
+        }
+      ]
+    }
+  ]
+}

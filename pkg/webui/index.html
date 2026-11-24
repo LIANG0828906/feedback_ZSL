@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VolumeLab · 确定性医学影像工作站</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">VL</span>
+        <div>
+          <h1>VolumeLab</h1>
+          <p>确定性容积影像 · 三平面重采样与解析几何验收</p>
+        </div>
+      </div>
+      <div class="topbar-status">
+        <span id="connectionChip" class="chip chip-muted">未连接</span>
+        <span id="volumeChip" class="chip chip-muted">未加载体数据</span>
+        <span id="snapshotChip" class="chip chip-muted">无快照</span>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="panel controls-panel">
+        <section class="control-section">
+          <div class="section-title">
+            <span>数据源</span>
+            <button id="generateBtn" class="button button-quiet" type="button">生成样本</button>
+          </div>
+          <label class="field">
+            <span>清单路径</span>
+            <input id="manifestPath" type="text" value="samples/manifest.json" spellcheck="false">
+          </label>
+          <label class="field">
+            <span>体数据</span>
+            <select id="volumeSelect"></select>
+          </label>
+          <label class="field">
+            <span>会话目录（可选）</span>
+            <input id="sessionDir" type="text" placeholder="默认：清单目录/sessions" spellcheck="false">
+          </label>
+          <div class="button-row">
+            <button id="openBtn" class="button button-primary" type="button">打开 / 恢复</button>
+            <button id="reopenBtn" class="button" type="button">重开会话</button>
+          </div>
+          <div class="seed-row">
+            <label class="field compact">
+              <span>样本目录</span>
+              <input id="sampleDir" type="text" value="samples" spellcheck="false">
+            </label>
+            <label class="field compact seed">
+              <span>种子</span>
+              <input id="sampleSeed" type="number" value="42" step="1">
+            </label>
+          </div>
+          <label class="field compact">
+            <span>清单文件名</span>
+            <input id="sampleManifestName" type="text" value="manifest.json" spellcheck="false">
+          </label>
+        </section>
+
+        <section class="control-section">
+          <div class="section-title"><span>显示映射</span><em id="grayRangeLabel">--</em></div>
+          <label class="field">
+            <span>窗宽 WW</span>
+            <div class="input-with-unit">
+              <input id="windowWidth" type="number" step="1" min="0.000001">
+              <span>灰阶</span>
+            </div>
+          </label>
+          <label class="field">
+            <span>窗位 WL</span>
+            <div class="input-with-unit">
+              <input id="windowLevel" type="number" step="1">
+              <span>灰阶</span>
+            </div>
+          </label>
+          <label class="field">
+            <span>插值阶数</span>
+            <select id="interpolationOrder">
+              <option value="0">0 · 最近邻</option>
+              <option value="1" selected>1 · 三线性</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="control-section">
+          <div class="section-title"><span>层厚等效</span><em>重叠权重归一</em></div>
+          <div id="thicknessControls" class="thickness-grid"></div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-title"><span>共享定位点</span><em>世界坐标 mm</em></div>
+          <div class="triple-input">
+            <label><span>X</span><input id="crosshairX" type="number" step="0.1"></label>
+            <label><span>Y</span><input id="crosshairY" type="number" step="0.1"></label>
+            <label><span>Z</span><input id="crosshairZ" type="number" step="0.1"></label>
+          </div>
+        </section>
+
+        <section class="control-section session-section">
+          <div class="section-title"><span>会话快照</span><span class="title-actions"><button id="pauseBtn" class="button button-quiet" type="button">暂停</button><button id="cancelBtn" class="button button-danger button-quiet" type="button">取消</button></span></div>
+          <dl class="session-meta">
+            <dt>序号</dt><dd id="snapshotSequence">--</dd>
+            <dt>版本</dt><dd id="snapshotVersion">--</dd>
+            <dt>校验</dt><dd id="snapshotChecksum" class="mono truncate">--</dd>
+            <dt>限制</dt><dd id="parallelLimits">--</dd>
+          </dl>
+          <p class="hint">每次操作完成渲染后原子提交；强制终止仅能恢复最后一次已提交快照。</p>
+        </section>
+      </aside>
+
+      <main class="main-area">
+        <div class="toolbar">
+          <div class="tool-group" role="group" aria-label="交互模式">
+            <button id="locateModeBtn" class="tool-button active" type="button">定位</button>
+            <button id="measureModeBtn" class="tool-button" type="button">测距</button>
+          </div>
+          <div class="toolbar-note" id="modeHint">单击任一平面更新共享世界坐标定位点。</div>
+          <div class="toolbar-actions">
+            <button id="stateBtn" class="button button-quiet" type="button">刷新状态</button>
+          </div>
+        </div>
+
+        <div id="viewports" class="viewports">
+          <article class="viewport" data-plane="axial">
+            <header><div><strong>AXIAL</strong><span>轴位</span></div><span class="plane-position" data-position="axial">--</span></header>
+            <div class="canvas-wrap"><canvas data-canvas="axial"></canvas><div class="canvas-empty">未加载</div></div>
+            <footer><span data-layers="axial">--</span><span data-window="axial">--</span></footer>
+          </article>
+          <article class="viewport" data-plane="coronal">
+            <header><div><strong>CORONAL</strong><span>冠状位</span></div><span class="plane-position" data-position="coronal">--</span></header>
+            <div class="canvas-wrap"><canvas data-canvas="coronal"></canvas><div class="canvas-empty">未加载</div></div>
+            <footer><span data-layers="coronal">--</span><span data-window="coronal">--</span></footer>
+          </article>
+          <article class="viewport" data-plane="sagittal">
+            <header><div><strong>SAGITTAL</strong><span>矢状位</span></div><span class="plane-position" data-position="sagittal">--</span></header>
+            <div class="canvas-wrap"><canvas data-canvas="sagittal"></canvas><div class="canvas-empty">未加载</div></div>
+            <footer><span data-layers="sagittal">--</span><span data-window="sagittal">--</span></footer>
+          </article>
+        </div>
+
+        <section class="analysis-grid">
+          <article class="panel annotations-panel">
+            <div class="section-title">
+              <span>测距标注 · 双坐标读数</span>
+              <button id="deleteLastBtn" class="button button-quiet" type="button">删除末尾</button>
+            </div>
+            <div id="pendingMeasure" class="pending-measure hidden"></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID / 平面</th>
+                    <th>世界长度</th>
+                    <th>体素长度</th>
+                    <th>端点 A 世界 / 体素</th>
+                    <th>端点 B 世界 / 体素</th>
+                  </tr>
+                </thead>
+                <tbody id="annotationRows"><tr><td colspan="5" class="empty-row">尚无标注</td></tr></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel truth-panel">
+            <div class="section-title"><span>解析真值验收</span><em>真值不参与偏差上界</em></div>
+            <div class="truth-controls">
+              <label class="field compact">
+                <span>结构</span>
+                <select id="structureSelect"></select>
+              </label>
+              <label class="field compact">
+                <span>标注</span>
+                <select id="annotationSelect"></select>
+              </label>
+              <label class="field compact">
+                <span>容差 mm</span>
+                <input id="toleranceInput" type="number" step="0.1" value="2.5">
+              </label>
+            </div>
+            <div class="button-row">
+              <button id="autoBoundaryBtn" class="button" type="button">载入边界标注</button>
+              <button id="precisionBtn" class="button button-primary" type="button">执行精度校验</button>
+            </div>
+            <div id="precisionReport" class="precision-report empty">等待精度校验</div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="busy" class="busy hidden"><span></span><em>正在计算并提交确定性快照…</em></div>
+  <script src="/app.js"></script>
+</body>
+</html>
