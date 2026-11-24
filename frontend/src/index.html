@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Screen-Space Volumetric Light Diagnostics</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">V</span>
+        <div>
+          <h1>Volumetric Light Diagnostics</h1>
+          <p>deterministic blocks · analytic truth · dependency-aware cache</p>
+        </div>
+      </div>
+      <div class="pathbar">
+        <label>Scene <input id="scenePath" placeholder="auto-detect" /></label>
+        <label>SQLite <input id="dbPath" placeholder="auto-detect" /></label>
+        <button id="bootBtn" class="primary">Load / Generate</button>
+      </div>
+    </header>
+
+    <section class="toolrow">
+      <button id="fullBtn">Full rebuild</button>
+      <button id="previewBtn">Preview</button>
+      <button id="resumeBtn">Resume checkpoint</button>
+      <button id="compareBtn">Compare vs full</button>
+      <button id="truthBtn">Verify truth</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="retryBtn">Retry failed</button>
+      <div class="spacer"></div>
+      <span id="busy" class="busy hidden">working…</span>
+      <span id="message" class="message">starting</span>
+    </section>
+
+    <section class="metrics">
+      <article><span>source hash</span><b id="sourceHash">—</b></article>
+      <article><span>scene hash</span><b id="sceneHash">—</b></article>
+      <article><span>cache</span><b id="cacheStat">0 / 0</b></article>
+      <article><span>pending</span><b id="pendingStat">0</b></article>
+      <article><span>checkpoint</span><b id="ckptStat">—</b></article>
+      <article><span>quality bound / px</span><b id="boundStat">—</b></article>
+      <article><span>last edit</span><b id="editStat">—</b></article>
+    </section>
+
+    <main class="workspace">
+      <section class="left-stack">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Scene &amp; light positions</h2>
+            <span class="hint">top-down X / Z · light support circles</span>
+          </div>
+          <canvas id="sceneCanvas" class="scene-canvas"></canvas>
+        </article>
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Depth meshes</h2>
+            <span class="hint">cell depth offset along normal</span>
+          </div>
+          <canvas id="depthCanvas" class="depth-canvas"></canvas>
+        </article>
+        <article class="panel heat-panel">
+          <div class="panel-head">
+            <h2>Volume light color buffer</h2>
+            <span class="hint">click a block · amber = invalidated · green = reused cache</span>
+          </div>
+          <canvas id="volumeCanvas" class="heat-canvas"></canvas>
+          <div id="statusLegend" class="legend"></div>
+        </article>
+        <article class="panel heat-panel">
+          <div class="panel-head">
+            <h2>Truth difference heatmap</h2>
+            <span class="hint">abs(rendered volume − generator truth)</span>
+          </div>
+          <canvas id="diffCanvas" class="heat-canvas"></canvas>
+        </article>
+        <article class="panel heat-panel">
+          <div class="panel-head">
+            <h2>Additive composite</h2>
+            <span class="hint">geometry pass + volume light buffer</span>
+          </div>
+          <canvas id="compositeCanvas" class="heat-canvas"></canvas>
+        </article>
+      </section>
+
+      <aside class="right-stack">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Light editor</h2>
+            <span id="lightCoverageHint" class="hint">influence overlay</span>
+          </div>
+          <label class="wide">Light
+            <select id="lightSelect"></select>
+          </label>
+          <div class="triple">
+            <label>Intensity R<input id="intR" type="number" step="0.01" /></label>
+            <label>G<input id="intG" type="number" step="0.01" /></label>
+            <label>B<input id="intB" type="number" step="0.01" /></label>
+          </div>
+          <div class="triple">
+            <label>Dir X<input id="dirX" type="number" step="0.01" /></label>
+            <label>Y<input id="dirY" type="number" step="0.01" /></label>
+            <label>Z<input id="dirZ" type="number" step="0.01" /></label>
+          </div>
+          <label class="wide">Anisotropy g<input id="anisotropy" type="number" step="0.01" min="-0.95" max="0.95" /></label>
+          <div class="button-row">
+            <button id="applyLightBtn" class="primary">Apply light edit</button>
+            <button id="clearCoverageBtn">Clear overlay</button>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>Medium editor</h2><span class="hint">invalidation is global</span></div>
+          <div class="triple">
+            <label>Ext R<input id="extR" type="number" step="0.001" min="0" /></label>
+            <label>G<input id="extG" type="number" step="0.001" min="0" /></label>
+            <label>B<input id="extB" type="number" step="0.001" min="0" /></label>
+          </div>
+          <div class="triple">
+            <label>Sct R<input id="sctR" type="number" step="0.001" min="0" /></label>
+            <label>G<input id="sctG" type="number" step="0.001" min="0" /></label>
+            <label>B<input id="sctB" type="number" step="0.001" min="0" /></label>
+          </div>
+          <label class="wide">Phase g<input id="mediumG" type="number" step="0.01" min="-0.95" max="0.95" /></label>
+          <button id="applyMediumBtn" class="primary">Apply medium edit</button>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>Quality &amp; resources</h2><span class="hint">records actual step / samples</span></div>
+          <div class="triple">
+            <label>Step<input id="cfgStep" type="number" step="0.01" min="0.01" max="2" /></label>
+            <label>Jitter samples<input id="cfgJitterSamples" type="number" min="1" max="16" /></label>
+            <label>Workers<input id="cfgWorkers" type="number" min="1" max="64" /></label>
+          </div>
+          <div class="triple">
+            <label>Buffer slots<input id="cfgSlots" type="number" min="1" max="64" /></label>
+            <label>Batch size<input id="cfgBatch" type="number" min="1" max="512" /></label>
+            <label>Jitter<select id="cfgJitter"><option>none</option><option>halton</option><option>hash</option></select></label>
+          </div>
+          <label class="wide">Per-thread sample cap<input id="cfgSampleCap" type="number" min="64" max="4000000" /></label>
+          <button id="applyConfigBtn">Apply config</button>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>Invalidation propagation</h2><span id="propagationSummary" class="hint">—</span></div>
+          <div id="invalidations" class="invalidation-list empty">No edit yet.</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>Diagnostics</h2><span class="hint">E_DIFF includes block / pixel / item / values</span></div>
+          <pre id="diagnostics" class="diagnostics">ready</pre>
+        </article>
+      </aside>
+    </main>
+
+    <section class="bottom">
+      <article class="panel">
+        <div class="panel-head"><h2>Per-block cache map</h2><span class="hint">click any cell to inspect</span></div>
+        <div id="blockChips" class="block-chips"></div>
+      </article>
+      <article class="panel block-detail">
+        <div class="panel-head"><h2>Selected block</h2><span id="blockTitle" class="hint">none</span></div>
+        <div class="detail-grid">
+          <div>
+            <pre id="blockInfo" class="diagnostics">click a block</pre>
+          </div>
+          <canvas id="blockCanvas" class="block-canvas"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <span>truth is generated from the scene model, never back-derived from renderer output.</span>
+      <span id="restoreSummary">—</span>
+    </footer>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
