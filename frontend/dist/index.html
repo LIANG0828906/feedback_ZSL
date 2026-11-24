@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VectorLab Diagnostics</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">DETERMINISTIC PATH LAB</p>
+      <h1>VectorLab 诊断台</h1>
+      <p class="sub">多版本场景 / 整型时间换算 / 曲率自适应扁平化 / 三路径逐像素核验</p>
+    </div>
+    <div id="runBadge" class="badge idle">未运行</div>
+  </header>
+
+  <main>
+    <section class="viewport panel">
+      <div class="panel-title">
+        <h2>当帧预览</h2>
+        <div class="frame-controls">
+          <button id="prevBtn" class="ghost">上一帧</button>
+          <input id="frameSlider" type="range" min="0" max="0" value="0">
+          <button id="nextBtn" class="ghost">下一帧</button>
+          <span id="frameLabel">frame -</span>
+        </div>
+      </div>
+      <div class="canvas-stack">
+        <canvas id="bitmapCanvas" width="640" height="480"></canvas>
+        <canvas id="overlayCanvas" width="640" height="480"></canvas>
+      </div>
+      <div id="frameMeta" class="meta-line"></div>
+    </section>
+
+    <aside class="side panel">
+      <h2>运行与资源</h2>
+      <div class="button-row">
+        <button id="runBtn" class="primary">运行三路径</button>
+        <button id="pauseBtn">暂停</button>
+        <button id="resumeBtn">继续</button>
+        <button id="cancelBtn" class="danger">取消</button>
+      </div>
+      <dl id="statusList" class="kv"></dl>
+      <h3>质量参数</h3>
+      <div class="field-row">
+        <label>容差 Q10<input id="toleranceInput" type="number" min="1" max="16384" value="64"></label>
+        <label>插值精度<input id="precisionInput" type="number" min="4" max="24" value="12"></label>
+      </div>
+      <div class="button-row">
+        <button id="applyQualityBtn" class="primary">增量重绘</button>
+        <button id="retryBtn">逐时刻重试</button>
+      </div>
+      <h3>取舍依据</h3>
+      <ul id="qualityReasons" class="reason-list"></ul>
+      <p id="errorBox" class="error hidden"></p>
+    </aside>
+
+    <section class="diff panel">
+      <div class="panel-title">
+        <h2>差异热力图</h2>
+        <span id="diffLabel" class="muted">相对精细基线</span>
+      </div>
+      <canvas id="heatCanvas" width="640" height="360"></canvas>
+    </section>
+
+    <section class="matrix panel">
+      <div class="panel-title">
+        <h2>状态矩阵</h2>
+        <span id="matrixLabel" class="muted">扁平化 / 覆盖 / 合成</span>
+      </div>
+      <div id="stateMatrix" class="matrix-grid"></div>
+    </section>
+
+    <section class="meta panel">
+      <h2>数据集</h2>
+      <div id="datasetInfo" class="dataset"></div>
+      <h3>逐路径覆盖</h3>
+      <div id="pathCoverage" class="coverage-list"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
