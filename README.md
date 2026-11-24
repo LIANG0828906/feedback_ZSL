@@ -1,3 +1,26 @@
+# 交付实现：截图与互动媒体内容完整性核验内核
+
+快速验收：
+
+```bash
+go run ./cmd/diagnose gen -sample samples/default
+CGO_ENABLED=0 go test -count=1 ./...
+go run ./cmd/diagnose crosscheck -sample samples/default -artifacts artifacts
+go run ./cmd/diagnose serve -sample samples/default -artifacts artifacts -addr 127.0.0.1:8088
+```
+
+Windows PowerShell：
+
+```powershell
+$env:CGO_ENABLED="0"
+go build -o integrity-diagnose.exe .\cmd\diagnose
+.\integrity-diagnose.exe crosscheck -sample .\samples\default -artifacts .\artifacts
+```
+
+已验证：24 帧样本的替换区间 `13..16` 被准确定位；增量、断点恢复、全量三路逐帧/逐块/提交序列一致；注入的第 2 批事务中断返回 `E_TXN`；独立复核通过。详见 `docs/IMPLEMENTATION.md` 与 `docs/VALIDATION.md`。
+
+---
+
 在一个空工作区里，团队要为游戏截图与互动媒体素材搭建一套内容完整性核验内核，用来判断一组截图帧在导出与传输过程中是否被局部替换或拼接。本地确定性生成器按固定种子产出多段截图帧序列：每帧由渐变背景、若干几何图元、逐帧变化的帧号水印与轻微亮度扰动合成，并附带解析真值，包括水印区域坐标、图元外接框、原始基准像素与一段被替换的帧区间掩码，真值只来自生成器构造。核验链为逐帧水印解码与连续性校验、帧间残差能量与块级噪声方差比对、替换区间定位与报告输出。业务方关注的是水印断裂与噪声异常两类证据如何互相印证，以及当用户调整分块尺寸或判决阈值时，已算出的帧级证据必须按依赖关系精确失效重算，其余帧的证据复用，增量结论与全量重算逐帧一致。
 
 任务环境与准备：

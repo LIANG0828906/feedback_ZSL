@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>内容完整性核验内核</title>
+  <style>
+    :root {
+      --bg: #0b1220; --panel: #121c2e; --panel2: #18243a; --line: #2a3a58;
+      --text: #e7eefc; --muted: #91a4c3; --ok: #2fbf71; --bad: #ef476f;
+      --warn: #ffd166; --info: #4cc9f0; --accent: #7c5cff;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:linear-gradient(180deg,#0a1020,#0d1526 240px); color:var(--text); font:14px/1.45 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif; }
+    header { padding:20px 28px 12px; border-bottom:1px solid var(--line); display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    h1 { font-size:20px; margin:0; }
+    .sub { color:var(--muted); }
+    main { padding:18px 28px 40px; display:grid; grid-template-columns: 380px 1fr; gap:16px; }
+    .panel { background:rgba(18,28,46,.92); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+    .panel h2 { font-size:15px; margin:0 0 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .wide { grid-column:1 / -1; }
+    button,input { font:inherit; }
+    button { border:1px solid #3b517a; background:#203150; color:var(--text); border-radius:9px; padding:7px 11px; cursor:pointer; }
+    button:hover { border-color:#6d8cc5; background:#283d63; }
+    button.primary { background:linear-gradient(135deg,#6d5dfc,#4cc9f0); border:0; color:white; font-weight:650; }
+    button.danger { border-color:#7d2940; background:#3a1725; }
+    input { width:86px; background:#0c1424; border:1px solid var(--line); color:var(--text); border-radius:8px; padding:6px 8px; }
+    label { color:var(--muted); display:inline-flex; gap:6px; align-items:center; margin-right:10px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+    .cards { display:grid; grid-template-columns:repeat(4,minmax(150px,1fr)); gap:10px; }
+    .card { background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:12px; }
+    .card .k { color:var(--muted); font-size:12px; }
+    .card .v { font-size:22px; font-weight:750; margin-top:3px; }
+    .ok { color:var(--ok); } .bad { color:var(--bad); } .warn { color:var(--warn); } .info { color:var(--info); }
+    .matrix-wrap { overflow:auto; padding-bottom:6px; }
+    .matrix { display:grid; gap:2px; min-width:max-content; }
+    .mcell { width:20px; height:24px; border-radius:5px; border:1px solid rgba(255,255,255,.12); cursor:pointer; padding:0; }
+    .mhead { width:20px; text-align:center; color:var(--muted); font-size:10px; }
+    .rlabel { color:var(--muted); font-size:12px; display:flex; align-items:center; padding-right:6px; }
+    .legend { display:flex; gap:12px; color:var(--muted); font-size:12px; flex-wrap:wrap; }
+    .swatch { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:4px; vertical-align:-1px; }
+    canvas,svg { max-width:100%; background:#0a1222; border:1px solid var(--line); border-radius:10px; }
+    .frame-layout { display:grid; grid-template-columns: 320px 1fr; gap:14px; }
+    .frame-img { width:100%; image-rendering:pixelated; border-radius:10px; border:1px solid var(--line); background:#000; }
+    pre { background:#080f1d; border:1px solid var(--line); border-radius:10px; padding:10px; overflow:auto; max-height:300px; font-size:12px; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid var(--line); padding:6px 7px; text-align:left; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; }
+    .pill { display:inline-block; border-radius:999px; padding:2px 8px; font-size:12px; border:1px solid var(--line); }
+    .pill.ok { background:rgba(47,191,113,.12); } .pill.bad { background:rgba(239,71,111,.14); } .pill.warn { background:rgba(255,209,102,.13); }
+    .timeline { position:relative; height:46px; background:#0a1222; border:1px solid var(--line); border-radius:10px; margin:8px 0 4px; overflow:hidden; }
+    .truth-band { position:absolute; top:0; bottom:0; background:rgba(239,71,111,.22); border-left:1px dashed var(--bad); border-right:1px dashed var(--bad); }
+    .pred-band { position:absolute; top:7px; height:12px; background:rgba(255,209,102,.55); border-radius:4px; }
+    .tick { position:absolute; top:24px; bottom:0; width:1px; background:rgba(145,164,195,.25); }
+    .small { font-size:12px; color:var(--muted); }
+    .heat-wrap { overflow:auto; }
+    #heatDetail { min-height:42px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>游戏截图内容完整性核验内核</h1>
+  <span class="sub">确定性样本 · 水印/残差/噪声互证 · 依赖失效 · SQLite 检查点 · 三路一致</span>
+  <span style="flex:1"></span>
+  <button class="primary" id="crossBtn">运行三路比对</button>
+  <button id="reviewBtn">独立复核</button>
+  <button id="refreshBtn">刷新状态</button>
+</header>
+<main>
+  <section class="panel wide">
+    <h2>运行概览 <span class="small" id="metaLine"></span></h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section class="panel wide">
+    <h2>参数调整与精确失效</h2>
+    <div class="row">
+      <label>分块尺寸 <input id="blockSize" type="number" min="4" step="1"></label>
+      <label>判决阈值 <input id="threshold" type="number" min="0.01" max="0.99" step="0.01"></label>
+      <label>噪声 Z <input id="noiseZ" type="number" min="0.1" max="20" step="0.1"></label>
+      <button class="primary" id="applyParams">应用并重算</button>
+      <span class="small">仅依赖变更参数的证据及下游 verdict 失效；其余帧缓存复用。</span>
+    </div>
+    <div class="row">
+      <label>水印区 X <input id="regionX" type="number"></label>
+      <label>Y <input id="regionY" type="number"></label>
+      <button id="applyRegion">修正水印区域</button>
+      <span id="invalidSummary" class="pill"></span>
+    </div>
+    <div id="invalidList" class="small"></div>
+  </section>
+
+  <section class="panel wide">
+    <h2>帧时间轴与证据状态矩阵 <span class="legend">
+      <span><i class="swatch" style="background:#2fbf71"></i>正常/复用</span>
+      <span><i class="swatch" style="background:#ef476f"></i>异常/失效</span>
+      <span><i class="swatch" style="background:#ffd166"></i>关注</span>
+      <span><i class="swatch" style="background:#33415f"></i>缺失</span>
+    </span></h2>
+    <div class="timeline" id="timeline"></div>
+    <div class="matrix-wrap"><div class="matrix" id="matrix"></div></div>
+  </section>
+
+  <section class="panel">
+    <h2>选中帧</h2>
+    <div class="frame-layout" style="grid-template-columns:1fr;">
+      <div>
+        <img id="frameImage" class="frame-img" alt="selected frame" />
+        <div class="row" style="margin-top:8px;">
+          <label><input type="checkbox" id="baselineToggle"> 查看原始基准像素</label>
+          <span id="frameTitle" class="small"></span>
+        </div>
+      </div>
+      <div id="frameDetail"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>水印解码曲线</h2>
+    <div id="watermarkChart"></div>
+    <p class="small">亮线为逐帧解码帧号，淡线为期望帧号；红色区间为真值替换段，跳变/平台表示水印断裂。</p>
+  </section>
+
+  <section class="panel wide">
+    <h2>噪声方差热力图 <span class="small" id="heatTitle"></span></h2>
+    <div class="heat-wrap"><canvas id="heatmap" width="760" height="420"></canvas></div>
+    <div id="heatDetail" class="small">点击块查看坐标与统计。</div>
+  </section>
+
+  <section class="panel wide">
+    <h2>替换区间标注与三路径比对</h2>
+    <div id="intervalSummary"></div>
+    <pre id="crossResult">尚未运行三路比对。</pre>
+  </section>
+</main>
+
+<script>
+let state = null;
+let selectedFrame = 13;
+let heatBlock = null;
+
+const $ = (id) => document.getElementById(id);
+const pct = (v) => (v == null ? '-' : (v * 100).toFixed(1) + '%');
+
+async function fetchJSON(url, options) {
+  const res = await fetch(url, options);
+  const data = await res.json();
+  if (!res.ok) throw data;
+  return data;
+}
+
+async function loadState() {
+  state = await fetchJSON('/api/state');
+  $('blockSize').value = state.params.block_size;
+  $('threshold').value = state.params.verdict_threshold;
+  $('noiseZ').value = state.params.noise_z_threshold;
+  $('regionX').value = state.region.x;
+  $('regionY').value = state.region.y;
+  selectedFrame = Math.min(selectedFrame, state.report.frames.length - 1);
+  render();
+}
+
+function scoreColor(score, bad) {
+  if (bad) return '#ef476f';
+  if (score == null) return '#33415f';
+  const r = Math.round(47 + score * 192);
+  const g = Math.round(191 - score * 110);
+  const b = Math.round(113 - score * 40);
+  return `rgb(${r},${g},${b})`;
+}
+
+function evidenceCell(frame, type) {
+  const f = state.report.frames[frame];
+  if (!f || !f[type]) return { color:'#33415f', title:`${frame} ${type} missing` };
+  const e = f[type];
+  if (type === 'watermark') {
+    const bad = !e.matches_expected || e.missing || e.misaligned;
+    return { color: bad ? '#ef476f' : '#2fbf71', title:`帧${frame} 水印解码=${e.decoded_frame} 置信度=${e.overall_confidence.toFixed(3)}` };
+  }
+  if (type === 'verdict') return { color: e.tampered ? '#ef476f' : '#2fbf71', title:`帧${frame} verdict score=${e.score.toFixed(3)} tampered=${e.tampered}` };
+  if (type === 'noise') return { color:scoreColor(e.anomaly_score), title:`帧${frame} noise score=${e.anomaly_score.toFixed(3)} blocks=${e.anomalous_blocks}` };
+  return { color:scoreColor(e.anomaly_score), title:`帧${frame} residual score=${e.anomaly_score.toFixed(3)} peak=${e.peak_block_energy.toExponential(2)}` };
+}
+
+function renderCards() {
+  const r = state.report;
+  const truth = state.manifest.replacement;
+  const tampered = r.frames.filter(f => f.verdict && f.verdict.tampered).length;
+  const breaks = r.timeline.breaks ? r.timeline.breaks.length : 0;
+  const invalid = (r.invalidations || []).length;
+  const failed = (r.failures || []).length;
+  $('metaLine').textContent = `root=${r.root_hash.slice(0,12)} params=${r.param_version} algo=${r.algorithm_version}`;
+  $('cards').innerHTML = [
+    ['帧数', state.manifest.frame_count, 'info'],
+    ['篡改判决帧', tampered, tampered ? 'bad' : 'ok'],
+    ['水印断裂', breaks, breaks ? 'warn' : 'ok'],
+    ['当前失效项', invalid, invalid ? 'warn' : 'ok'],
+    ['失败证据', failed, failed ? 'bad' : 'ok'],
+    ['真值区间', `${truth.start_frame}-${truth.end_frame}`, 'bad'],
+    ['定位区间', (r.intervals||[]).map(x=>`${x.start_frame}-${x.end_frame}`).join(', ') || '-', 'warn'],
+    ['队列事件', (r.queue_events||[]).length, 'muted'],
+  ].map(([k,v,c]) => `<div class="card"><div class="k">${k}</div><div class="v ${c}">${v}</div></div>`).join('');
+}
+
+function renderMatrix() {
+  const n = state.report.frames.length;
+  const types = ['watermark','residual','noise','verdict'];
+  const labels = {watermark:'水印', residual:'残差', noise:'噪声', verdict:'判决'};
+  const matrix = $('matrix');
+  matrix.style.gridTemplateColumns = `64px repeat(${n}, 20px)`;
+  let html = '<div></div>';
+  for (let i=0;i<n;i++) html += `<div class="mhead">${i%2===0?i:''}</div>`;
+  for (const type of types) {
+    html += `<div class="rlabel">${labels[type]}</div>`;
+    for (let i=0;i<n;i++) {
+      const c = evidenceCell(i,type);
+      const border = i === selectedFrame ? '2px solid white' : '1px solid rgba(255,255,255,.12)';
+      html += `<button class="mcell" data-frame="${i}" style="background:${c.color};border:${border}" title="${c.title.replaceAll('"','&quot;')}"></button>`;
+    }
+  }
+  matrix.innerHTML = html;
+  matrix.querySelectorAll('.mcell').forEach(btn => btn.onclick = () => { selectedFrame = +btn.dataset.frame; heatBlock=null; render(); });
+}
+
+function renderTimeline() {
+  const n = state.report.frames.length;
+  const pctX = i => (i / (n-1)) * 100;
+  const truth = state.manifest.replacement;
+  let html = `<div class="truth-band" style="left:${pctX(truth.start_frame)}%;width:${(truth.end_frame-truth.start_frame+1)/(n-1)*100}%"></div>`;
+  for (const interval of state.report.intervals || []) {
+    html += `<div class="pred-band" style="left:${pctX(interval.start_frame)}%;width:${(interval.end_frame-interval.start_frame+1)/(n-1)*100}%" title="${interval.start_frame}-${interval.end_frame}"></div>`;
+  }
+  for (let i=0;i<n;i+=2) html += `<div class="tick" style="left:${pctX(i)}%"></div>`;
+  $('timeline').innerHTML = html;
+}
+
+function renderFrame() {
+  const f = state.report.frames[selectedFrame];
+  const meta = state.manifest.frames[selectedFrame];
+  const baseline = $('baselineToggle').checked;
+  const file = baseline ? meta.baseline_file : meta.file;
+  $('frameImage').src = `/samples/${file}`;
+  $('frameTitle').textContent = `帧 ${selectedFrame} · ${file} · ${f.content_hash.slice(0,16)}`;
+  const w = f.watermark, v = f.verdict, n = f.noise, r = f.residual;
+  $('frameDetail').innerHTML = `
+    <table>
+      <tr><th>水印</th><td>解码 ${w.decoded_frame} / 期望 ${w.expected_frame}，置信度 ${w.overall_confidence.toFixed(3)}，missing=${w.missing}，misaligned=${w.misaligned}，offset=(${w.offset_x},${w.offset_y})</td></tr>
+      <tr><th>残差</th><td>score=${r.anomaly_score.toFixed(3)}，median=${r.median_energy.toExponential(3)}，peakBlock=${r.peak_block_energy.toExponential(3)}</td></tr>
+      <tr><th>噪声</th><td>score=${n.anomaly_score.toFixed(3)}，异常块 ${n.anomalous_blocks}/${n.blocks.length}，块比例 ${pct(n.anomaly_fraction)}，edgeAnomaly=${n.edge_anomaly.toFixed(3)}</td></tr>
+      <tr><th>判决</th><td><span class="pill ${v.tampered?'bad':'ok'}">${v.tampered?'篡改':'正常'}</span> score=${v.score.toFixed(3)} confidence=${v.confidence.toFixed(3)}<br>${(v.reasons||[]).join('；')}</td></tr>
+    </table>`;
+}
+
+function renderWatermarkChart() {
+  const n = state.report.frames.length;
+  const W=720,H=230,L=34,R=10,T=14,B=28;
+  const x = i => L + i*(W-L-R)/(n-1);
+  const maxV = Math.max(n-1, ...state.report.timeline.decoded_values);
+  const y = v => H-B - v*(H-T-B)/maxV;
+  const expected = state.report.frames.map((f,i)=>`${i===0?'M':'L'}${x(i)},${y(i)}`).join(' ');
+  const decoded = state.report.timeline.decoded_values.map((v,i)=>`${i===0?'M':'L'}${x(i)},${y(v)}`).join(' ');
+  const truth = state.manifest.replacement;
+  let circles = state.report.timeline.decoded_values.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.2" fill="#4cc9f0"><title>帧${i}: ${v}</title></circle>`).join('');
+  let breaks = (state.report.timeline.breaks||[]).map(b=>`<text x="${x(b.after_frame+1)}" y="${T+8}" fill="#ef476f" font-size="11">${b.reason}</text>`).join('');
+  $('watermarkChart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="230">
+    <rect x="${x(truth.start_frame)}" y="${T}" width="${x(truth.end_frame)-x(truth.start_frame)}" height="${H-T-B}" fill="rgba(239,71,111,.16)"/>
+    <line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#2a3a58"/>
+    <polyline points="${expected}" fill="none" stroke="#91a4c3" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <polyline points="${decoded}" fill="none" stroke="#4cc9f0" stroke-width="2.4"/>
+    ${circles}${breaks}
+  </svg>`;
+}
+
+function renderHeatmap() {
+  const noise = state.report.frames[selectedFrame].noise;
+  $('heatTitle').textContent = `帧 ${selectedFrame} · block=${noise.block_size} · grid=${noise.grid_cols}×${noise.grid_rows}`;
+  const canvas = $('heatmap');
+  const ctx = canvas.getContext('2d');
+  const cellW = Math.max(28, Math.floor((canvas.width-40)/noise.grid_cols));
+  const cellH = Math.max(24, Math.floor((canvas.height-30)/noise.grid_rows));
+  canvas.width = noise.grid_cols*cellW + 20;
+  canvas.height = noise.grid_rows*cellH + 30;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const logs = noise.blocks.map(b=>Math.log(b.noise_variance+1e-8));
+  const min = Math.min(...logs), max = Math.max(...logs);
+  for (const b of noise.blocks) {
+    const t = (Math.log(b.noise_variance+1e-8)-min)/Math.max(1e-9,max-min);
+    const hue = 210 - t*210;
+    ctx.fillStyle = `hsl(${hue},78%,${34+t*18}%)`;
+    ctx.fillRect(10+b.block_x*cellW, 10+b.block_y*cellH, cellW-2, cellH-2);
+    if (b.anomalous) { ctx.strokeStyle='#ffd166'; ctx.lineWidth=2; ctx.strokeRect(11+b.block_x*cellW,11+b.block_y*cellH,cellW-4,cellH-4); }
+    ctx.fillStyle='rgba(255,255,255,.72)'; ctx.font='10px monospace';
+    ctx.fillText(b.temporal_z.toFixed(1), 14+b.block_x*cellW, 25+b.block_y*cellH);
+  }
+  canvas.onclick = (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const px = (ev.clientX-rect.left) * canvas.width/rect.width;
+    const py = (ev.clientY-rect.top) * canvas.height/rect.height;
+    const bx = Math.floor((px-10)/cellW), by = Math.floor((py-10)/cellH);
+    const b = noise.blocks.find(x=>x.block_x===bx && x.block_y===by);
+    heatBlock = b;
+    if (b) $('heatDetail').innerHTML = `块坐标 block=(${b.block_x},${b.block_y}) 像素=(${b.pixel_x},${b.pixel_y}) · variance=${b.noise_variance.toExponential(5)} · spatialZ=${b.spatial_z.toFixed(3)} · temporalZ=${b.temporal_z.toFixed(3)} · edgeConsistency=${b.edge_consistency.toFixed(3)} · anomalous=${b.anomalous}`;
+  };
+}
+
+function renderInvalidations() {
+  const list = state.report.invalidations || [];
+  $('invalidSummary').textContent = list.length ? `${list.length} 项精确失效` : '当前无新增失效';
+  const counts = {};
+  for (const x of list) counts[`${x.type}:${x.reason}`] = (counts[`${x.type}:${x.reason}`]||0)+1;
+  const summary = Object.entries(counts).map(([k,v])=>`${k} × ${v}`).join('；');
+  $('invalidList').innerHTML = summary ? `失效原因分组：${summary}` : '调整参数后这里会列出帧号、证据类型与原因。';
+}
+
+function renderIntervals() {
+  const r = state.report;
+  $('intervalSummary').innerHTML = `<table><tr><th>来源</th><th>区间</th><th>置信度</th></tr>
+    <tr><td>真值掩码</td><td>${state.manifest.replacement.start_frame}-${state.manifest.replacement.end_frame}</td><td>生成器构造</td></tr>
+    ${(r.intervals||[]).map(i=>`<tr><td>增量/全量/恢复一致结论</td><td>${i.start_frame}-${i.end_frame}</td><td>${i.confidence.toFixed(3)}</td></tr>`).join('')}
+  </table>`;
+}
+
+function render() {
+  if (!state) return;
+  renderCards(); renderMatrix(); renderTimeline(); renderFrame(); renderWatermarkChart(); renderHeatmap(); renderInvalidations(); renderIntervals();
+}
+
+$('refreshBtn').onclick = loadState;
+$('baselineToggle').onchange = renderFrame;
+$('applyParams').onclick = async () => {
+  try {
+    const q = new URLSearchParams({block_size:$('blockSize').value, verdict_threshold:$('threshold').value, noise_z_threshold:$('noiseZ').value});
+    const res = await fetchJSON('/api/adjust?'+q.toString());
+    state.report = res.report; state.params = res.params;
+    render();
+  } catch (e) { alert(`${e.code||'ERROR'} ${e.message||JSON.stringify(e)} ${e.field||''}`); }
+};
+$('applyRegion').onclick = async () => {
+  try {
+    const q = new URLSearchParams({x:$('regionX').value,y:$('regionY').value});
+    const res = await fetchJSON('/api/region?'+q.toString());
+    state.report = res.report; state.region = res.region;
+    render();
+  } catch (e) { alert(`${e.code||'ERROR'} ${e.message||JSON.stringify(e)} ${e.field||''}`); }
+};
+$('crossBtn').onclick = async () => {
+  $('crossBtn').disabled = true; $('crossResult').textContent = '运行中：生成样本、注入批次中断、重启恢复、三路重算与独立复核...';
+  try {
+    const r = await fetchJSON('/api/crosscheck');
+    const summary = {
+      ok:r.ok, first_mismatch:r.first_mismatch, truth_check:r.truth_check,
+      transaction_check_ok:r.transaction_check_ok,
+      injected_batch_error:r.injected_batch_error,
+      restart_transaction:r.restart_transaction,
+      initial_recovery_log_count:(r.initial_recovery_log||[]).length,
+      review:r.review,
+      states:r.states.map(s=>({name:s.name, invalidations:(s.invalidations||[]).length, inc_error:s.incremental_vs_full_error, recovery_error:s.recovery_vs_full_error}))
+    };
+    $('crossResult').textContent = JSON.stringify(summary,null,2);
+    await loadState();
+  } catch(e) { $('crossResult').textContent = JSON.stringify(e,null,2); }
+  finally { $('crossBtn').disabled=false; }
+};
+$('reviewBtn').onclick = async () => {
+  try { const r = await fetchJSON('/api/review'); $('crossResult').textContent = JSON.stringify(r,null,2); }
+  catch(e) { $('crossResult').textContent = JSON.stringify(e,null,2); }
+};
+loadState().catch(e => { document.body.insertAdjacentHTML('beforeend', `<pre>${JSON.stringify(e,null,2)}</pre>`); });
+</script>
+</body>
+</html>
