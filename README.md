@@ -1,22 +1,195 @@
-项目初始状态是空目录，需要从零构建一套面向游戏与互动媒体音频素材的空间声学与声场重建桌面工作台，交付领域可视化与诊断应用。本地确定性样本生成器（无需外部音频文件）按固定种子产出多组多通道脉冲响应描述：每个样本声明采样率、声道布局、逐通道解析真值（直接路径到达采样点、早期反射到达采样点与能量、直达/混响能量比、通道间传播时差），样本由合成的直达脉冲、若干离散反射脉冲与指数衰减尾音叠加构造，真值只来源于生成器的解析构造，不从分析输出反推。工作台需完成多通道加载、分帧声学分析、声场参数重建、按重建参数把干声卷积渲染为多声道输出，并在用户逐帧推进过程中维护帧级状态演进；每提交一帧须持久化检查点，可暂停、退出并在重启后从已提交帧继续，且实时处理、断点恢复与一次性全量重算三条路径结果必须逐样本一致。核心矛盾在于状态演进的长链路与恢复一致性：分帧估计、参数重建与卷积渲染跨帧耦合，已提交帧冻结其参数与能量统计，后续参数调整只能作用于未提交帧，而检查点必须能识别内容或版本变化并整体作废。
+# Spatial Acoustic Reconstruction Workbench
 
-任务环境与准备：
-在 Windows 上安装 Go 1.22 或更高版本，并确认 go env 输出正常；安装包含 CGO 支持的 gcc（如 MinGW-w64），因为 Fyne 桌面应用需要 CGO。
-设置 GOPATH 与 GOCACHE 为可写本地目录，执行 go mod init 初始化模块；从模块代理拉取 Fyne 与 SQLite 驱动依赖，预先下载后离线可重复构建。
-无需外部音频文件或网络服务：样本由题目内置的确定性生成器按固定种子在本地生成，干声片段与多通道脉冲响应均由生成器描述构造。
-可使用 go test 运行本地单元测试验证分帧估计、卷积渲染与检查点恢复；桌面界面通过 go run 启动，使用本地窗口查看诊断面板。
+面向游戏与互动媒体音频素材的本地桌面工作台，实现多通道脉冲响应样本生成、分帧声学分析、声场参数重建、干声卷积渲染、逐帧提交/冻结、SQLite 断点恢复，以及实时、恢复、持久化参数全量复算三条路径的逐样本一致性比对。
 
-业务要求：
-1. 实现多通道脉冲响应样本加载与结构校验：读取本地确定性生成器产出的样本清单，含采样率、声道布局、逐通道解析真值与干声片段描述；校验各通道采样点数与清单一致、声道标识唯一、真值中到达点单调、采样率在支持范围内，字段缺失或点数不符返回 E_DECODE，采样率不支持返回 E_RATE 并指出实际值与支持区间。
-2. 实现分帧声学分析核心：对每个通道按可配置帧长、帧移与估计窗长分帧，估计每帧的直接路径到达采样点与早期反射能量；要求直达检峰只允许在声明量化步长的整数倍上取值，能量积分窗不跨越帧边界补零，帧长、帧移或窗长越界返回 E_PARA 并指出字段名；同一输入与同一参数下逐帧估计结果只依赖内容与参数，不受线程标识与完成顺序影响。
-3. 实现声场参数重建与干声卷积渲染：由逐通道直达延迟与早期反射能量导出通道间时差与直达/混响能量比，按帧把干声卷积渲染为多声道输出；渲染输出采样点数须与干声时长严格一致且起止边界不补零越界，声道布局映射可配置且越界返回 E_LAYOUT 并指出声道标识；同一帧在相同参数下重复渲染须逐样本一致。
-4. 建立并输出分帧数值误差传播报告：逐帧记录直达检峰量化误差、早期反射能量积分截断误差、时差估计误差与卷积插值误差，并给出四项随帧序累积的误差上界估计；上界只能由已观测的帧长、帧移、窗长、插值阶数与采样率量化步长推导，不得从真值清单或渲染输出反推；误差超容差返回 E_ERR 并指出帧号与误差项名称。
-5. 实现逐帧状态机与提交边界：每帧经历待估计、已估计、已提交、失败四类状态且只能沿合法迁移推进，非法迁移返回 E_STATE 并保持原状态；进度以已提交帧数与总帧数表示；已提交帧的重建参数、时差与能量统计被冻结，后续重新估计若改变参数只能作用于未提交帧，已提交帧被改写时返回 E_FROZEN 并指出帧号。
-6. 实现可暂停可退出可重启续跑的 SQLite 检查点机制：每提交一帧把该帧重建参数、直达延迟、早期反射能量、时差、误差上界、输入内容哈希、参数版本与算法版本原子且串行写入本地数据库，写入不得交错且帧序稳定；重启加载时若输入内容哈希、参数版本或算法版本任一不匹配则整体作废并全量重算，禁止部分混用旧帧结果。
-7. 保证实时逐帧处理、断点恢复处理与基于已持久化参数的全量复算三条路径输出逐样本一致：对同一输入与参数须产出相同渲染采样、相同延迟与能量统计、相同误差上界与相同帧提交序列；提供自动比对功能定位首个不一致采样位置、帧号与字段名，不一致时返回 E_DIFF 并列出两侧取值。
-8. 实现异常注入链路、可视化诊断面板与并发资源边界：通过输入或参数注入通道缺失、到达点倒置、增益溢出与坏帧四类异常，分别走 E_CHAN、E_ORDER、E_CLIP、E_FRAME 链路并给出帧号与通道标识；单帧处理内部异常须置该帧为失败并允许重试且不污染其他帧与已提交结果；面板展示逐帧重建参数、通道延迟与能量曲线、声场方向示意、波形对比及三路径比对结果，支持试听、暂停与逐帧重试；帧估计与渲染可在工作线程池并行推进，但须限制最大并行度与每线程采样缓冲上限，缓冲耗尽时阻塞排队并记录原因。
+项目不依赖外部音频文件或网络服务。样本由固定种子的确定性生成器在本地构造，真值直接来自生成器解析描述，不从分析结果反推。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## Quick Start
 
-验收：
-使用本地确定性样本验证分帧分析、声场重建与三条路径逐样本一致，并覆盖异常注入与断点恢复。
+### Windows
+
+1. 安装 Go 1.22+，并确认 `go version`、`go env` 正常。
+2. 安装含 CGO 的 MinGW-w64 gcc，并确认 `gcc --version` 可用。
+3. 设置可写目录并启用 CGO：
+
+```powershell
+go env -w CGO_ENABLED=1
+go env -w GOPATH=D:\work\gopath
+go env -w GOCACHE=D:\work\gocache
+go mod download
+```
+
+4. 运行测试与命令行诊断：
+
+```powershell
+go test ./...
+go run ./cmd/workbench generate -out samples/workbench_samples.json -seed 20261124
+go run ./cmd/workbench verify -sample samples/workbench_samples.json -index 0 -resume-at 7
+```
+
+5. 启动 Fyne 桌面面板（Windows 默认构建包含 Fyne）：
+
+```powershell
+go run ./cmd/spatialworkbench
+```
+
+Windows 构建标签会自动启用桌面入口；Linux/CI 无图形环境下核心测试不需要 Fyne 的 C 依赖。Fyne v2.4.4 与纯 Go SQLite 驱动 `modernc.org/sqlite` 已锁定在 `go.mod`/`go.sum`。
+
+### Linux
+
+需要 X11/OpenGL 开发包（Ubuntu 示例）：
+
+```bash
+sudo apt install build-essential pkg-config libgl1-mesa-dev xorg-dev
+go test ./...
+go test -tags fyne ./...
+go run -tags fyne ./cmd/spatialworkbench
+```
+
+## Source Map
+
+| 路径 | 职责 |
+|---|---|
+| `internal/generator` | 固定种子生成多通道 IR、干声、解析真值 |
+| `internal/loader` | 清单 JSON 解析、字段/点数/单调性/采样率校验 |
+| `internal/acoustics` | 分帧估计、参数重建、误差上界、截断卷积渲染 |
+| `internal/session` | 帧状态机、冻结边界、工作线程池与缓冲预算 |
+| `internal/checkpoint` | SQLite 原子逐帧检查点、版本识别、整体作废 |
+| `internal/verify` | 三路径运行、首个差异定位、逐样本比对 |
+| `internal/audio` | 32-bit float 多声道 WAV 导出 |
+| `internal/desktop` | Fyne 诊断面板与平台的试听/暂停控制 |
+| `cmd/workbench` | 无显示环境的诊断、验证、渲染 CLI |
+| `cmd/spatialworkbench` | Fyne 桌面入口 |
+
+详细设计见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)，实际验证记录见 [docs/VALIDATION.md](docs/VALIDATION.md)。
+
+## Core Semantics
+
+### Sample and truth
+
+生成器按 `seed` 构造 5.1、quad、stereo 等布局。每通道由以下部分叠加：
+
+- 解析直达脉冲；
+- 若干离散反射脉冲；
+- 指数衰减尾音与确定性 LCG 噪声。
+
+真值字段包括 `directArrival`、`directEnergy`、`reflections[]`、`drrDb`、`itdSamples`、`tailEnergy`，全部在构造阶段写入。
+
+### Estimation and reconstruction
+
+- 直达检峰只在全局采样点中按 `quantStep` 的整数倍网格搜索。
+- 早期反射能量窗口从直达点之后开始，严格裁剪在分析帧 `[start,end)` 内，不跨帧补零。
+- 通道间时差以布局首通道为参考；DRR 由直达能量与早期能量导出。
+- 早期能量重建对已提交前缀使用固定平滑权重，形成跨帧状态演进。
+- 渲染时按重建参数合成每帧 IR，与对应干声段卷积，只输出 `[0,len(dryChunk))`，输出总长度严格等于干声长度。
+
+### Frame states
+
+```text
+pending -> estimated -> committed
+   |           |  ^
+   v           v  |
+ failed <------+  |
+   |              |
+   +--> pending --+
+```
+
+合法迁移之外的操作返回 `E_STATE` 且保持原状态。已提交帧结果通过快照冻结；重新估计或提交已提交帧返回 `E_FROZEN`。
+
+### Error bounds
+
+每帧记录四项当前值与累计上界：
+
+- `direct_peak_quantization`: `quantStep/2`；
+- `early_energy_integration_truncation`: 被帧边界裁掉的窗口比例；
+- `inter_channel_time_difference`: `quantStep`；
+- `convolution_interpolation`: `2^-(interpOrder+1)`。
+
+累计值只由前一帧状态与当前参数推导。当前值或累计值超出 `errorTolerance` 返回 `E_ERR`，并携带帧号与误差项名称。上界计算不读取真值或渲染结果。
+
+### Checkpoints
+
+SQLite 每提交一帧执行一次事务写入：
+
+- 重建参数快照；
+- 直达延迟、早期能量、ITD、DRR；
+- 当前/累计误差上界；
+- 内容哈希、参数哈希、算法版本、布局哈希；
+- 渲染采样 BLOB。
+
+数据库使用单连接、互斥锁与严格 `frame_index/seq` 连续检查，写入不会交错。加载时若内容哈希、参数版本、算法版本或布局哈希任一不一致，在同一事务内删除所有帧和元数据，再从第 0 帧全量重算。
+
+### Three-path equality
+
+`internal/verify` 实现：
+
+1. **realtime**：逐帧估计、渲染、提交；
+2. **resume**：提交前 N 帧，关闭数据库，重启后从 N 继续；
+3. **persisted-recompute**：读取已持久化参数，在并行估计批次中重算，再按帧序重建/渲染/提交。
+
+三路输出比较提交序列、逐通道延迟/能量/ITD/DRR、四项误差上界和全部渲染采样。首个差异返回 `E_DIFF`，包含帧号、通道、字段名及左右值。
+
+## CLI
+
+```bash
+# 生成固定种子清单
+go run ./cmd/workbench generate -out samples/workbench_samples.json -seed 20261124 -samples 3
+
+# 查看样本解析真值
+go run ./cmd/workbench inspect -sample samples/workbench_samples.json -index 0
+
+# 逐帧推进并写入检查点
+go run ./cmd/workbench diagnostics -sample samples/workbench_samples.json -index 0 \
+  -db .workbench/state.sqlite -frames 4
+
+# 同一数据库重启续跑
+go run ./cmd/workbench diagnostics -sample samples/workbench_samples.json -index 0 \
+  -db .workbench/state.sqlite -frames 8
+
+# 三路径比对
+go run ./cmd/workbench verify -sample samples/workbench_samples.json -index 0 -resume-at 7
+
+# 并行估计批次 + 缓冲预算
+go run ./cmd/workbench diagnostics -sample samples/workbench_samples.json -index 0 \
+  -db .workbench/batch.sqlite -batch -workers 2 -buffer 4096
+
+# 导出多声道 32-bit float WAV
+go run ./cmd/workbench render -sample samples/workbench_samples.json -index 0 \
+  -out artifacts/render.wav
+```
+
+异常注入：
+
+```bash
+go run ./cmd/workbench diagnostics ... -inject-order FL
+go run ./cmd/workbench diagnostics ... -inject-clip FL
+go run ./cmd/workbench diagnostics ... -inject-bad-frame 1
+go run ./cmd/workbench diagnostics ... -inject-missing FL
+```
+
+## Error Codes
+
+| 代码 | 场景 |
+|---|---|
+| `E_DECODE` | JSON 字段缺失、IO/解析失败、通道点数与 `irSamples` 不符 |
+| `E_RATE` | 采样率超出 `[8000,192000]`，携带实际值、最小/最大值 |
+| `E_PARA` | 帧长、帧移、窗长、量化步长、插值阶数等参数越界 |
+| `E_LAYOUT` | 路由缺失、目标索引越界、输出声道冲突 |
+| `E_ERR` | 数值误差上界超容差，携带帧号与误差项 |
+| `E_STATE` | 非法状态迁移、乱序提交、失败帧未重试 |
+| `E_FROZEN` | 改写已提交帧或其持久化代际 |
+| `E_DIFF` | 三路径输出不一致，携带首个差异上下文 |
+| `E_CHAN` | 通道缺失、重复、布局不一致 |
+| `E_ORDER` | 直达/反射到达点不单调 |
+| `E_CLIP` | 增益溢出 |
+| `E_FRAME` | 坏帧、帧内处理异常或缓冲上限错误 |
+
+## Verification
+
+```bash
+go test ./...
+go test -race ./...
+go test -tags fyne ./...
+```
+
+当前仓库保存了固定种子样本 `samples/workbench_samples.json` 与验证导出 `artifacts/render.wav`。实际命令输出见 [docs/VALIDATION.md](docs/VALIDATION.md)。
