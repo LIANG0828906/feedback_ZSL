@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OcclusionLab · 遮挡剔除与流式加载诊断</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">OC</div>
+        <div>
+          <h1>OcclusionLab</h1>
+          <p>遮挡剔除 · 流式窗口 · 定点误差传播</p>
+        </div>
+      </div>
+      <div class="topbar-status">
+        <span class="pill" id="runtimeBadge">LOCAL</span>
+        <span class="pill" id="projectBadge">PROJECT —</span>
+        <span class="pill accent" id="progressBadge">0 / 0</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn" id="btnStep">单步窗口</button>
+        <button class="btn primary" id="btnRun">自动推进</button>
+        <button class="btn" id="btnPause">暂停</button>
+        <button class="btn ghost" id="btnValidate">三路径验收</button>
+        <button class="btn danger-ghost" id="btnQuit">退出</button>
+      </div>
+    </header>
+
+    <div class="banner hidden" id="globalBanner"></div>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="panel compact">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">GENERATOR</span>
+              <h2>场景工程</h2>
+            </div>
+            <span class="chip" id="seedChip">seed</span>
+          </div>
+          <div class="form-grid">
+            <label>随机种子<input id="seed" type="number" value="1042" step="1" /></label>
+            <label>世界定点位<input id="worldBits" type="number" value="8" min="4" max="20" /></label>
+            <label>屏幕定点位<input id="screenBits" type="number" value="8" min="4" max="16" /></label>
+            <label>栅格分辨率<input id="genRaster" type="number" value="128" min="8" max="256" /></label>
+            <label>投影容差 px<input id="tolerance" type="number" value="2" min="0.125" step="0.125" /></label>
+          </div>
+          <button class="btn full" id="btnGenerate">按种子重新生成</button>
+        </section>
+
+        <section class="panel compact">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">RUNTIME</span>
+              <h2>精度与预算</h2>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>栅格分辨率<input id="raster" type="number" value="128" min="8" max="256" /></label>
+            <label>最大工作线程<input id="workers" type="number" value="2" min="1" max="16" /></label>
+            <label>驻留槽位<input id="resident" type="number" value="15" min="1" max="64" /></label>
+            <label>容差 px<input id="runtimeTolerance" type="number" value="2" min="0.125" step="0.125" /></label>
+          </div>
+          <button class="btn full" id="btnApply">应用到未提交窗口</button>
+          <p class="hint">已提交窗口的结果、驻留集合与误差界永久冻结。</p>
+        </section>
+
+        <section class="panel compact">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">CHECKPOINT</span>
+              <h2>恢复点</h2>
+            </div>
+          </div>
+          <dl class="meta-list">
+            <div><dt>快照窗口</dt><dd id="snapshotCount">0</dd></div>
+            <div><dt>最近窗口</dt><dd id="snapshotLast">—</dd></div>
+            <div><dt>数据库</dt><dd class="mono ellipsis" id="snapshotPath">—</dd></div>
+          </dl>
+          <div class="button-row">
+            <button class="btn small" id="btnReset">清空并重放</button>
+            <button class="btn small" id="btnExport">导出工程</button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <div class="kpi-row">
+          <article class="kpi">
+            <span>提交进度</span>
+            <strong id="kpiCommitted">—</strong>
+            <small id="kpiProgressText">等待场景</small>
+          </article>
+          <article class="kpi good">
+            <span>可见分块</span>
+            <strong id="kpiVisible">—</strong>
+            <small>当前选中窗口</small>
+          </article>
+          <article class="kpi warn">
+            <span>不确定分块</span>
+            <strong id="kpiUncertain">—</strong>
+            <small>误差带内保守标注</small>
+          </article>
+          <article class="kpi bad">
+            <span>累计上界</span>
+            <strong id="kpiBound">—</strong>
+            <small>投影 + 栅格 + 深度</small>
+          </article>
+          <article class="kpi">
+            <span>三路径</span>
+            <strong id="kpiPaths">未验收</strong>
+            <small id="kpiPathsDetail">运行后比较实时/恢复/重放</small>
+          </article>
+        </div>
+
+        <div class="grid-2">
+          <section class="panel canvas-panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">WORLD TOP-DOWN</span>
+                <h2>场景分块与视锥</h2>
+              </div>
+              <div class="legend">
+                <span><i class="dot visible"></i>可见</span>
+                <span><i class="dot uncertain"></i>不确定</span>
+                <span><i class="dot occluded"></i>遮挡</span>
+                <span><i class="dot resident"></i>驻留</span>
+              </div>
+            </div>
+            <canvas id="sceneCanvas" height="370"></canvas>
+          </section>
+
+          <section class="panel canvas-panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">SCREEN PROJECTION</span>
+                <h2>屏幕空间覆盖</h2>
+              </div>
+              <span class="chip" id="renderChip">1280 × 720</span>
+            </div>
+            <canvas id="screenCanvas" height="370"></canvas>
+          </section>
+        </div>
+
+        <div class="grid-2">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">ERROR PROPAGATION</span>
+                <h2>逐窗口误差上界</h2>
+              </div>
+              <div class="legend">
+                <span><i class="line projection"></i>投影</span>
+                <span><i class="line coverage"></i>栅格覆盖</span>
+                <span><i class="line cumulative"></i>累计上界</span>
+              </div>
+            </div>
+            <canvas id="errorCanvas" height="245"></canvas>
+          </section>
+
+          <section class="panel explainer">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">WHY UNCERTAIN</span>
+                <h2>投影误差如何影响判定</h2>
+              </div>
+            </div>
+            <div id="explainBody" class="explain-body">
+              <p class="muted">选择窗口后显示因误差带而无法二值化判定的分块。</p>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">STREAMING WINDOWS</span>
+              <h2>窗口状态矩阵</h2>
+            </div>
+            <span class="hint">点击窗口逐项检查；失败窗口可重试</span>
+          </div>
+          <div id="windowMatrix" class="window-matrix"></div>
+        </section>
+
+        <div class="grid-2 lower-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">CHUNK EVIDENCE</span>
+                <h2>分块判定证据</h2>
+              </div>
+              <span class="chip" id="selectedChip">W0</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>分块</th>
+                    <th>状态</th>
+                    <th>锚点 px</th>
+                    <th>参考遮挡体</th>
+                    <th>投影误差</th>
+                    <th>累计上界</th>
+                  </tr>
+                </thead>
+                <tbody id="chunkRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">RESIDENCY</span>
+                <h2>加载槽位与流转</h2>
+              </div>
+              <span class="chip" id="slotChip">0 / 15</span>
+            </div>
+            <div id="slotGrid" class="slot-grid"></div>
+            <div class="flow-row">
+              <div><span class="eyebrow">LOADED</span><p id="loadedText" class="mono">—</p></div>
+              <div><span class="eyebrow">UNLOADED</span><p id="unloadedText" class="mono">—</p></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">PATH EQUIVALENCE</span>
+              <h2>实时 / 断点恢复 / 全量重放</h2>
+            </div>
+            <button class="btn small" id="btnValidateInline">重新验收</button>
+          </div>
+          <div id="pathCards" class="path-cards">
+            <div class="empty-state">尚未运行三路径验收。</div>
+          </div>
+          <div id="checkList" class="check-list"></div>
+        </section>
+      </section>
+
+      <aside class="inspector">
+        <section class="panel compact">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">SELECTED</span>
+              <h2 id="selectedTitle">窗口 —</h2>
+            </div>
+            <span class="state-chip" id="selectedState">pending</span>
+          </div>
+          <dl class="meta-list">
+            <div><dt>逻辑时刻</dt><dd id="selectedTime">—</dd></div>
+            <div><dt>轨迹偏移</dt><dd id="selectedOffset">—</dd></div>
+            <div><dt>参数版本</dt><dd id="selectedParams">—</dd></div>
+            <div><dt>冻结</dt><dd id="selectedFrozen">—</dd></div>
+          </dl>
+          <div class="button-row hidden" id="cameraMoveRow">
+            <button class="btn small" data-camera-dx="-48">相机左移</button>
+            <button class="btn small" data-camera-dx="48">相机右移</button>
+          </div>
+          <button class="btn small full hidden" id="btnRetry">重试该窗口</button>
+        </section>
+
+        <section class="panel compact">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">INVALID WINDOWS</span>
+              <h2>失效与原因</h2>
+            </div>
+            <span class="chip" id="invalidCount">0</span>
+          </div>
+          <div id="invalidList" class="invalid-list"><p class="muted">无失效窗口。</p></div>
+        </section>
+
+        <section class="panel compact">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">BUDGET</span>
+              <h2>资源排队记录</h2>
+            </div>
+            <span class="chip" id="budgetCount">0</span>
+          </div>
+          <div id="budgetList" class="event-list"><p class="muted">无阻塞或预算事件。</p></div>
+        </section>
+
+        <section class="panel compact log-panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">TRACE</span>
+              <h2>运行日志</h2>
+            </div>
+          </div>
+          <div id="logList" class="log-list"></div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
