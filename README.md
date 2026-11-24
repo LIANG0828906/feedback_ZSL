@@ -20,3 +20,23 @@
 
 验收：
 使用本地样本验证分块网格、边界归因与增量及断点三路径一致性。
+
+## 交付实现
+
+上面是原始任务说明；本仓库已实现可运行的 Go 1.22+ 服务端原型。快速运行：
+
+```bash
+./scripts/acceptance.sh
+./scripts/run-server.sh
+```
+
+Windows PowerShell：
+
+```powershell
+.\scripts\Invoke-Acceptance.ps1
+.\scripts\Start-Diagnostics.ps1
+```
+
+实现说明见 `docs/ARCHITECTURE.md`，实测结果见 `docs/VERIFICATION.md`，
+脚本说明见 `scripts/README.md`。SQLite 驱动 `modernc.org/sqlite` 已 vendored，
+推荐始终设置 `CGO_ENABLED=0`，因此不需要本机 gcc 或 mingw-w64。
