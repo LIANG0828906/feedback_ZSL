@@ -8,6 +8,15 @@ credentials.json
 secrets.json
 .npmrc
 node_modules/
+.DS_Store
+
+# Local CAD pipeline build and checkpoint artifacts
+/artifacts/cadpipe
+/artifacts/*.sqlite
+/artifacts/*.sqlite-shm
+/artifacts/*.sqlite-wal
+/artifacts/crash-sig*.sqlite*
+/artifacts/acceptance-crash-*.sqlite*
 .venv/
 venv/
 __pycache__/
