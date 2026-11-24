@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SyncForge · 实时状态同步验证台</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a31;--panel2:#17213d;--line:#273459;--text:#e9eefc;--muted:#8fa0c8;--ok:#42d392;--warn:#f5b84b;--bad:#ff6b7a;--accent:#6ea8ff;--authority:#42d392;--predicted:#f5b84b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 700px at 10% -10%,#1c2b55 0,var(--bg) 55%);color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:24px 28px 14px;border-bottom:1px solid var(--line);display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap}
+h1{margin:0;font-size:24px;letter-spacing:.4px}h2{font-size:15px;margin:0 0 12px;color:#cad7f7}
+.sub{color:var(--muted);font-size:12px}.grow{flex:1}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);background:#0d1428;border-radius:999px;padding:4px 10px;color:var(--muted);font-size:12px}
+main{padding:18px 28px 48px;max-width:1540px;margin:0 auto}
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:16px}
+select,input[type=range],button{font:inherit}select{background:#0c1428;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+button{background:#1b2a4e;color:var(--text);border:1px solid #345080;border-radius:9px;padding:8px 14px;cursor:pointer}button:hover{background:#243961}button.primary{background:linear-gradient(180deg,#316ddc,#2555b4);border-color:#4b83ee}button:disabled{opacity:.45;cursor:not-allowed}
+label{color:var(--muted);font-size:12px;display:flex;gap:8px;align-items:center}
+.grid{display:grid;gap:14px}.grid.two{grid-template-columns:1.05fr .95fr}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.panel{background:linear-gradient(180deg,var(--panel),#0e1630);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.statline{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}.stat b{display:block;font-size:18px}.stat span{color:var(--muted);font-size:11px}
+.unit{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:12px;position:relative}.unit.dead{opacity:.55;border-color:#5a2c39}.unit .name{font-weight:700}.unit .id{color:var(--muted);font-size:11px}
+.bars{margin-top:10px;display:grid;gap:6px}.bar{height:8px;background:#091021;border-radius:99px;overflow:hidden}.bar > i{display:block;height:100%;background:linear-gradient(90deg,#3b7cf0,#65d6ff)}.bar.hp > i{background:linear-gradient(90deg,#e05a70,#ff9a76)}.bar.res > i{background:linear-gradient(90deg,#20b98c,#7ce6b4)}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px;font-size:11px;color:var(--muted)}.kv b{color:var(--text);font-size:12px}
+.mode{font-size:11px;border-radius:999px;padding:3px 8px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}.mode.authority{background:#163d31;color:var(--authority);border:1px solid #246a52}.mode.predicted{background:#44351a;color:var(--predicted);border:1px solid #806331}
+.client{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel2)}.client-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.basis{color:var(--muted);font-size:11px;margin-top:6px;min-height:30px}
+.timeline{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin:10px 0 16px}
+canvas{width:100%;height:180px;display:block;background:#091021;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;border-bottom:1px solid #202b4c;padding:8px 6px;vertical-align:top}th{color:var(--muted);font-weight:600}
+.status-committed{color:var(--ok)}.status-failed{color:var(--bad)}.status-retrying{color:var(--warn)}
+.notice{border:1px solid #354a78;background:#101c37;border-radius:10px;padding:10px 12px;color:#b9c8ea;font-size:12px}
+.error{border-color:#7a2e3d;background:#2a121a;color:#ffb4bd}.ok{border-color:#225f46;background:#0e2b20;color:#9ceac5}
+.log{max-height:160px;overflow:auto;white-space:pre-wrap;color:var(--muted);font-size:11px}
+.footer-note{color:var(--muted);font-size:11px;margin-top:10px}
+@media(max-width:1000px){.grid.two,.grid.three{grid-template-columns:1fr}main{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>SyncForge <span class="sub">实时同步 / 预测回滚 / 结算一致性</span></h1>
+    <div class="sub mono" id="identity">加载样本中…</div>
+  </div>
+  <div class="grow"></div>
+  <span class="pill">仅监听回环地址</span>
+  <span class="pill">算法 <b class="mono" id="algo">-</b></span>
+</header>
+<main>
+  <div class="toolbar">
+    <label>观测时延档位 <select id="tier"></select></label>
+    <label>推进速度 <input id="speed" type="range" min="1" max="30" value="8"><span class="mono" id="speedText">8 t/s</span></label>
+    <button class="primary" id="loadBtn">加载实时轨迹</button>
+    <button id="replayBtn">全量重演</button>
+    <button id="verifyBtn">三路径自动比对</button>
+    <div class="grow"></div>
+    <span class="pill" id="runMode">未加载</span>
+  </div>
+
+  <div class="statline" id="stats"></div>
+  <div class="notice" id="notice">正在读取本地样本与权威状态…</div>
+
+  <div class="timeline panel">
+    <button id="playBtn">▶ 播放</button>
+    <input id="tick" type="range" min="0" max="0" value="0">
+    <div class="mono" id="tickText">tick 0</div>
+  </div>
+
+  <div class="grid two" style="margin-bottom:14px">
+    <section class="panel">
+      <h2>权威单位状态 <span class="sub mono" id="authTick"></span></h2>
+      <div class="grid three" id="units"></div>
+    </section>
+    <section class="panel">
+      <h2>各客户端可见状态 <span class="sub">模式与依据逐帧记录</span></h2>
+      <div class="grid two" id="clients"></div>
+    </section>
+  </div>
+
+  <div class="grid two" style="margin-bottom:14px">
+    <section class="panel">
+      <h2>回滚修正量曲线 <select id="curveClient" style="float:right;padding:4px 8px"></select></h2>
+      <canvas id="curve" width="820" height="180"></canvas>
+      <div class="footer-note" id="rollbackStats">尚未加载</div>
+    </section>
+    <section class="panel">
+      <h2>已提交窗口</h2>
+      <div class="notice" style="margin-bottom:10px">已提交窗口为不可变快照；同窗口重写会返回 E_CONFLICT。失败窗口可单独重试。</div>
+      <div style="overflow:auto"><table id="windows"><thead><tr><th>窗口</th><th>Tick</th><th>状态</th><th>尝试</th><th>哈希</th><th>操作</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>验证输出</h2>
+    <div class="notice log" id="log">等待操作。</div>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const state={sample:null,run:null,tier:"low",tick:0,timer:null,playing:false};
+const fmt=n=>new Intl.NumberFormat("zh-CN").format(n);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+async function api(path,opts){
+  const r=await fetch(path,opts); const text=await r.text();
+  let data; try{data=text?JSON.parse(text):null}catch{data={raw:text}}
+  if(!r.ok) throw new Error(JSON.stringify(data?.error||data));
+  return data;
+}
+function log(msg,kind=""){ $("notice").className="notice "+kind; $("notice").textContent=msg; $("log").textContent=typeof msg==="string"?msg:JSON.stringify(msg,null,2); }
+function activeFrame(client){
+  if(!client?.frames?.length) return null;
+  let pick=client.frames[0];
+  for(const f of client.frames){ if(f.state.tick<=state.tick) pick=f; else break; }
+  return pick;
+}
+function findAuthtick(){
+  const s=state.run?.authority?.states||[]; return s[Math.min(state.tick,s.length-1)]||null;
+}
+function unitCard(u){
+  const hpPct=u.max_health?Math.max(0,Math.min(100,u.health/u.max_health*100)):0;
+  const resPct=Math.max(0,Math.min(100,u.resource/120*100));
+  const cd=Object.entries(u.skill_cooldown||{}).map(([k,v])=>`${esc(k)}:${v}`).join(" · ")||"-";
+  return `<div class="unit ${u.alive?"":"dead"}"><div class="name">${esc(u.player_id)}</div><div class="id">${u.alive?"存活":"等待复活"}${u.respawn_at?` · @${u.respawn_at}`:""}</div>
+  <div class="bars"><div class="bar hp"><i style="width:${hpPct}%"></i></div><div class="bar res"><i style="width:${resPct}%"></i></div></div>
+  <div class="kv"><span>坐标<b>${u.x},${u.y}</b></span><span>朝向<b>${u.direction}°</b></span><span>生命<b>${u.health}/${u.max_health}</b></span><span>资源<b>${u.resource}</b></span><span>击杀<b>${u.kills}</b></span><span>冷却<b>${cd}</b></span></div></div>`;
+}
+function render(){
+  if(!state.run){return}
+  const auth=findAuthtick();
+  if(auth){$("authTick").textContent=`tick ${auth.tick}${auth.finished?` · 已锁定 winner=${auth.winner}`:""}`;
+    $("units").innerHTML=auth.units.map(unitCard).join("");}
+  $("clients").innerHTML=state.run.clients.map(c=>{
+    const f=activeFrame(c); if(!f) return "";
+    const own=f.state.units.find(u=>u.player_id===c.player_id);
+    return `<div class="client"><div class="client-head"><b>${esc(c.client_id)} · ${esc(c.player_id)}</b><span class="mode ${f.mode}">${f.mode==="authority"?"权威":"预测"}</span></div>
+    <div class="basis">tick ${f.state.tick} · frame ${f.frame} · auth ${f.authority_tick}<br>${esc(f.basis)}</div>
+    <div class="kv"><span>己方位置<b>${own?own.x+","+own.y:"-"}</b></span><span>生命<b>${own?own.health:"-"}</b></span><span>资源<b>${own?own.resource:"-"}</b></span><span>修正量<b>${f.correction}</b></span><span>回滚<b>${f.rollback?"是":"否"}</b></span><span>时延档<b>${esc(c.tier_id)}</b></span></div></div>`;
+  }).join("");
+  $("tickText").textContent=`tick ${state.tick} · frame ${Math.round(state.tick*state.sample.render_fps/state.sample.tick_rate)}`;
+  renderCurve(); renderWindows();
+}
+function renderCurve(){
+  const canvas=$("curve"),dpr=window.devicePixelRatio||1; const w=canvas.clientWidth||820,h=180;
+  canvas.width=w*dpr; canvas.height=h*dpr; const ctx=canvas.getContext("2d"); ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
+  const id=$("curveClient").value; const c=state.run?.clients?.find(x=>x.client_id===id); const pts=c?.correction_curve||[];
+  const max=Math.max(1,...pts.map(p=>p.correction)); const pad=18;
+  ctx.strokeStyle="#1e2b4b"; ctx.lineWidth=1; for(let i=0;i<=4;i++){const y=pad+(h-2*pad)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();}
+  if(pts.length){
+    ctx.strokeStyle="#6ea8ff";ctx.lineWidth=2;ctx.beginPath();
+    pts.forEach((p,i)=>{const x=pad+(w-2*pad)*i/Math.max(1,pts.length-1);const y=h-pad-(h-2*pad)*p.correction/max;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();
+    pts.filter(p=>p.rollback).forEach((p,i)=>{const x=pad+(w-2*pad)*pts.indexOf(p)/Math.max(1,pts.length-1);ctx.fillStyle="#42d392";ctx.beginPath();ctx.arc(x,h-pad-(h-2*pad)*p.correction/max,3,0,Math.PI*2);ctx.fill();});
+  }
+  ctx.fillStyle="#8fa0c8";ctx.font="11px ui-monospace,monospace";ctx.fillText("max "+max,pad,12);ctx.fillText("frame "+pts.length,w-pad-70,12);
+  $("rollbackStats").textContent=c?`${c.client_id}: 回滚 ${c.rollback_count} 次 · 最大深度 ${c.max_rollback_depth} · 最大连续 ${c.max_consecutive_rollbacks} · 最慢输入响应 ${Math.max(0,...c.input_latency.map(x=>x.delay_frames))} 帧`:"";
+}
+function renderWindows(){
+  const tbody=$("windows").querySelector("tbody"); const ws=state.run?.windows||[];
+  tbody.innerHTML=ws.map(w=>`<tr><td>${w.window_index}</td><td>${w.start_tick}–${w.end_tick}</td><td class="status-${w.status}">${w.status}</td><td>${w.attempt}</td><td class="mono">${esc((w.snapshot_hash||"").slice(0,14))}</td><td>${w.status==="failed"?`<button style="padding:3px 8px" onclick="retryWindow(${w.window_index})">重试</button>`:"<span class=\"sub\">不可改写</span>"}</td></tr>`).join("")||`<tr><td colspan="6" class="sub">暂无已加载窗口</td></tr>`;
+}
+async function retryWindow(index){
+  try{
+    const run=await api(`/api/windows/${index}/retry?tier=${encodeURIComponent($("tier").value)}`,{method:"POST"});
+    setRun(run); log(`窗口 ${index} 重试完成；其余已提交窗口未被改写。`,"ok");
+  }catch(e){log(String(e.message||e),"error")}
+}
+window.retryWindow=retryWindow;
+function setRun(run){
+  state.run=run; state.tick=Math.min(state.tick, (run.authority?.states?.length||1)-1);
+  const max=(run.authority?.states?.length||1)-1; $("tick").max=max; $("tick").value=state.tick;
+  $("runMode").textContent=`mode: ${run.mode}`;
+  const last=run.authority.states[run.authority.states.length-1];
+  const totalRollbacks=run.clients.reduce((a,c)=>a+c.rollback_count,0);
+  $("stats").innerHTML=[
+    ["Ticks",last.tick],["Winner",last.winner||"-"],["Locked",last.locked_tick||"-"],
+    ["Rollbacks",totalRollbacks],["Clients",run.clients.length],["Persisted",run.persisted_tick]
+  ].map(([k,v])=>`<div class="stat"><b class="mono">${esc(v)}</b><span>${k}</span></div>`).join("");
+  $("curveClient").innerHTML=run.clients.map(c=>`<option value="${esc(c.client_id)}">${esc(c.client_id)} / ${esc(c.tier_id)}</option>`).join("");
+  log(`轨迹已加载：mode=${run.mode}, ticks=${last.tick}, windows=${(run.windows||[]).length}, rollbacks=${totalRollbacks}`);
+  render();
+}
+async function loadSample(){
+  state.sample=await api("/api/sample");
+  $("identity").textContent=`seed=${state.sample.seed} · truth=${state.sample.truth_hash.slice(0,16)} · stream=${state.sample.stream_fingerprint.slice(0,16)}`;
+  $("algo").textContent=state.sample.algorithm_version;
+  $("tier").innerHTML=state.sample.latency_tiers.map(t=>`<option value="${t.id}">${t.id} · 延迟 ${t.observation_delay_frames} 帧 · 输入上限 ${t.max_input_latency_frames}</option>`).join("");
+  state.tier=state.sample.latency_tiers[0]?.id||"low"; $("tier").value=state.tier;
+}
+async function loadDemo(){
+  try{
+    $("loadBtn").disabled=true; log("正在推进权威状态并模拟客户端…");
+    await loadSample(); state.tier=$("tier").value;
+    const run=await api(`/api/demo?tier=${encodeURIComponent(state.tier)}`); setRun(run);
+  }catch(e){log(String(e.message||e),"error")}finally{$("loadBtn").disabled=false}
+}
+async function replay(){
+  try{
+    $("replayBtn").disabled=true; log("全量重演中…");
+    const run=await api("/api/replay",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tier:$("tier").value})});
+    setRun(run);
+  }catch(e){log(String(e.message||e),"error")}finally{$("replayBtn").disabled=false}
+}
+async function verify(){
+  try{
+    $("verifyBtn").disabled=true; log("运行实时 / 断点恢复 / 全量重演三路径比对…");
+    const result=await api("/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tier:$("tier").value})});
+    const r=result.report;
+    if(result.passed){log(`三路径逐 tick 一致：实时 vs 重放、实时 vs 恢复均通过；中断 tick=${r.interrupted_tick}，恢复自 tick=${r.recovered_from_tick}`,"ok")}
+    else{log(`比对失败：${JSON.stringify(result.error||r,null,2)}`,"error")}
+  }catch(e){log(String(e.message||e),"error")}finally{$("verifyBtn").disabled=false}
+}
+function togglePlay(){
+  state.playing=!state.playing; $("playBtn").textContent=state.playing?"⏸ 暂停":"▶ 播放";
+  if(state.playing) tickLoop(); else clearTimeout(state.timer);
+}
+function tickLoop(){
+  clearTimeout(state.timer); if(!state.playing||!state.run)return;
+  const max=Number($("tick").max); state.tick=state.tick>=max?0:state.tick+1; $("tick").value=state.tick; render();
+  state.timer=setTimeout(tickLoop,Math.max(30,1000/Number($("speed").value)));
+}
+$("loadBtn").onclick=loadDemo; $("replayBtn").onclick=replay; $("verifyBtn").onclick=verify; $("playBtn").onclick=togglePlay;
+$("tier").onchange=()=>{state.tier=$("tier").value};
+$("speed").oninput=()=>{$("speedText").textContent=$("speed").value+" t/s"};
+$("tick").oninput=()=>{state.tick=Number($("tick").value);render()};
+$("curveClient").onchange=renderCurve; window.addEventListener("resize",()=>{if(state.run)renderCurve()});
+loadDemo();
+</script>
+</body>
+</html>
