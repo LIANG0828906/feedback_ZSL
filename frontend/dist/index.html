@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TexLab · Bit Depth & Channel Workbench</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div>
+          <div class="brand-name">TexLab</div>
+          <div class="brand-sub">BIT DEPTH &amp; CHANNEL WORKBENCH</div>
+        </div>
+      </div>
+      <div class="topbar-center">
+        <label class="field inline">
+          <span>Local sample</span>
+          <select id="sampleSelect"></select>
+        </label>
+        <div class="pill" id="algoPill">core --</div>
+        <div class="pill" id="truthPill">truth --</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn ghost" id="compareBtn">Compare paths</button>
+        <button class="btn" id="exportBtn">Export bundle</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel pipeline-panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">Conversion plan</div>
+            <h2>Pipeline</h2>
+          </div>
+          <span class="badge" id="revisionBadge">rev 1</span>
+        </div>
+        <div class="pipeline" id="pipeline"></div>
+        <div class="pipeline-foot">
+          <div class="meta-line"><span>Committed</span><strong id="progressText">0 / 0</strong></div>
+          <div class="progress"><i id="progressBar"></i></div>
+          <div class="legend-row">
+            <span><i class="dot committed"></i>committed</span>
+            <span><i class="dot processing"></i>working</span>
+            <span><i class="dot failed"></i>failed</span>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel viewer-panel">
+        <div class="viewer-head">
+          <div>
+            <div class="eyebrow">Texture inspector</div>
+            <h2 id="viewerTitle">Converted result</h2>
+          </div>
+          <div class="tabs" id="imageTabs">
+            <button data-view="source">Source</button>
+            <button data-view="final" class="active">Result</button>
+            <button data-view="diff">Diff heatmap</button>
+            <button data-view="entry" id="entryTab" hidden>Entry</button>
+          </div>
+        </div>
+        <div class="viewer-stage">
+          <div class="image-wrap">
+            <div class="checker"></div>
+            <img id="mainImage" alt="Texture preview" />
+            <div class="image-hud">
+              <span id="imageMeta">--</span>
+              <span id="zoomLabel">fit</span>
+            </div>
+          </div>
+          <div class="viewer-side">
+            <div class="metric-grid">
+              <div class="metric"><label>Resolution</label><strong id="mResolution">--</strong></div>
+              <div class="metric"><label>Source format</label><strong id="mFormat">--</strong></div>
+              <div class="metric"><label>Alpha convention</label><strong id="mAlpha">--</strong></div>
+              <div class="metric"><label>Changed pixels</label><strong id="mChanged">--</strong></div>
+            </div>
+            <div class="diff-card">
+              <div class="diff-head"><span>Edit delta</span><b id="diffMax">0</b></div>
+              <p id="diffCopy">No comparison has run yet.</p>
+              <div class="diff-scale"><i></i><span>unchanged</span><span>max</span></div>
+            </div>
+            <div class="verification-card" id="verificationCard">
+              <div class="status-row"><span class="status-dot"></span><strong id="verifyStatus">--</strong></div>
+              <p id="verifyMessage">Verification report pending.</p>
+              <button class="text-btn" id="refreshVerifyBtn">Compare &amp; verify</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel inspector-panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">Entry parameters</div>
+            <h2 id="inspectorTitle">Select an entry</h2>
+          </div>
+        </div>
+        <div id="inspector" class="inspector-empty">Choose a pipeline entry to edit its deterministic parameters.</div>
+      </aside>
+
+      <section class="panel bottom-panel">
+        <div class="panel-head bottom-head">
+          <div class="tabs solid" id="bottomTabs">
+            <button data-tab="matrix" class="active">Segment matrix</button>
+            <button data-tab="audit">Cache audit</button>
+            <button data-tab="logs">Resource log</button>
+            <button data-tab="verification">Verification</button>
+          </div>
+          <div class="bottom-actions">
+            <label class="field inline compact">
+              <span>Retry segment</span>
+              <input id="retrySegment" type="number" min="0" value="0" />
+            </label>
+            <button class="btn small" id="retryBtn">Retry</button>
+          </div>
+        </div>
+        <div class="tab-pane active" id="pane-matrix">
+          <div class="matrix-scroll"><div class="matrix" id="matrix"></div></div>
+        </div>
+        <div class="tab-pane" id="pane-audit">
+          <div class="table-scroll">
+            <table class="audit-table">
+              <thead><tr><th>Entry</th><th>Segment</th><th>Regions</th><th>State</th><th>Result</th><th>Reason</th><th>Cache key</th><th>Snapshot</th></tr></thead>
+              <tbody id="auditBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tab-pane" id="pane-logs">
+          <div class="table-scroll">
+            <table class="audit-table">
+              <thead><tr><th>Segment</th><th>Worker</th><th>Reason</th><th>Detail</th></tr></thead>
+              <tbody id="logBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tab-pane" id="pane-verification">
+          <div class="verification-detail" id="verificationDetail"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <h3 id="loadingTitle">Preparing deterministic sample…</h3>
+      <p id="loadingCopy">Generating fixed-seed textures and truth manifests.</p>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
