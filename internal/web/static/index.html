@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>采集点分布重建诊断面板</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+  <h1>采集点分布重建诊断面板</h1>
+  <div id="meta" class="meta">加载中…</div>
+</header>
+<nav class="tabs">
+  <button data-view="overview" class="active">区域俯视</button>
+  <button data-view="samples">采样与禁采区</button>
+  <button data-view="points">重建采集点</button>
+  <button data-view="heat">密度热力面</button>
+  <button data-view="bounds">偏差上界曲线</button>
+  <button data-view="invalidation">失效传播示意</button>
+</nav>
+<main>
+  <canvas id="canvas" width="900" height="720"></canvas>
+  <section id="side">
+    <h2 id="side-title">区域信息</h2>
+    <div id="side-body"></div>
+  </section>
+</main>
+<footer>仅本地静态资源 · 标准库 net/http · 无外部网络请求</footer>
+<script src="/app.js"></script>
+</body>
+</html>
