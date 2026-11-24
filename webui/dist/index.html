@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Virtual Stage Composite</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <div>
+          <h1>Virtual Stage</h1>
+          <p>REAL-TIME COMPOSITE PIPELINE</p>
+        </div>
+      </div>
+      <div id="sceneMeta" class="scene-meta"></div>
+      <div class="top-actions">
+        <button id="validateBtn" class="ghost">Validate truth</button>
+        <button id="fullBtn" class="primary">Full rebuild</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel layers-panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow">Scene graph</span>
+            <h2>Layer stack</h2>
+          </div>
+          <span id="layerCount" class="count-badge">0</span>
+        </div>
+        <div id="layerStack" class="layer-stack"></div>
+        <div class="panel-foot">
+          <span>Order is bottom → top</span>
+          <span id="sourceBadges"></span>
+        </div>
+      </aside>
+
+      <section class="center-column">
+        <div class="panel viewer-panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">Composited result</span>
+              <h2 id="viewerTitle">Frame preview</h2>
+            </div>
+            <div class="viewer-controls">
+              <button id="prevFrame" class="icon-btn" title="Previous frame">←</button>
+              <span id="frameLabel" class="mono">—</span>
+              <button id="nextFrame" class="icon-btn" title="Next frame">→</button>
+            </div>
+          </div>
+          <div class="viewer-stage">
+            <img id="frameImage" alt="Composited frame">
+            <div id="viewerEmpty" class="empty-state">
+              <span class="empty-icon"></span>
+              <h3>No committed frame</h3>
+              <p>Run a full rebuild or select a committed window.</p>
+            </div>
+            <div id="busy" class="busy-overlay hidden"><span></span><b>Processing windows…</b></div>
+          </div>
+          <div class="scrubber-row">
+            <input id="frameScrubber" type="range" min="0" max="23" value="0">
+            <span id="scrubberTimestamp" class="mono"></span>
+          </div>
+        </div>
+
+        <div class="lower-grid">
+          <div class="panel stats-panel">
+            <div class="panel-head compact">
+              <div><span class="eyebrow">Signals</span><h2>Frame statistics</h2></div>
+            </div>
+            <div id="frameStats" class="stats-grid"></div>
+          </div>
+          <div class="panel heatmap-panel">
+            <div class="panel-head compact">
+              <div><span class="eyebrow">Incremental audit</span><h2>Difference heatmap</h2></div>
+              <span id="heatmapDelta" class="delta-badge">0.000</span>
+            </div>
+            <canvas id="heatmap" width="384" height="216"></canvas>
+            <div id="heatmapLabel" class="heatmap-label">Select a recomputed window</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right-column">
+        <div class="panel progress-panel">
+          <div class="panel-head compact">
+            <div><span class="eyebrow">Checkpoint progress</span><h2>Window matrix</h2></div>
+            <span id="progressText" class="mono">0 / 0</span>
+          </div>
+          <div class="progress-track"><div id="progressBar"></div></div>
+          <div id="windowMatrix" class="window-matrix"></div>
+          <div class="matrix-legend">
+            <span><i class="dot committed"></i>committed</span>
+            <span><i class="dot pending"></i>pending</span>
+            <span><i class="dot failed"></i>failed</span>
+            <span><i class="dot reused"></i>reused</span>
+          </div>
+        </div>
+
+        <div class="panel invalidation-panel">
+          <div class="panel-head compact">
+            <div><span class="eyebrow">Dependency invalidation</span><h2>Last operation</h2></div>
+          </div>
+          <div id="invalidationList" class="invalidation-list muted">No edits yet.</div>
+        </div>
+
+        <div class="panel export-panel">
+          <div class="panel-head compact">
+            <div><span class="eyebrow">Deliverable</span><h2>Cross-version export</h2></div>
+          </div>
+          <label class="field-label" for="exportVersion">Target format</label>
+          <select id="exportVersion">
+            <option value="1">v1 · flat / global alpha</option>
+            <option value="2">v2 · hierarchy / global alpha</option>
+            <option value="3">v3 · hierarchy / per-layer alpha</option>
+          </select>
+          <button id="exportBtn" class="primary wide">Export committed frames</button>
+          <div id="exportResult" class="export-result"></div>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <span id="statusMessage" class="status-message">Ready</span>
+      <span id="algorithm" class="mono"></span>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

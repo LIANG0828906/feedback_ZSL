@@ -1,0 +1,1988 @@
+{
+  "elapsed_ms": 105,
+  "invalidation": {
+    "operation": "layer_parameter",
+    "affected": [
+      {
+        "window": 0,
+        "layer_ids": [
+          "prop"
+        ],
+        "reason": "layer parameter changed",
+        "stage": "composite+export"
+      },
+      {
+        "window": 1,
+        "layer_ids": [
+          "prop"
+        ],
+        "reason": "layer parameter changed",
+        "stage": "composite+export"
+      },
+      {
+        "window": 2,
+        "layer_ids": [
+          "prop"
+        ],
+        "reason": "layer parameter changed",
+        "stage": "composite+export"
+      }
+    ],
+    "reused": [
+      3
+    ],
+    "total_windows": 4,
+    "total_frames": 24
+  },
+  "ok": true,
+  "snapshot": {
+    "model": {
+      "name": "Virtual Stage 42",
+      "source_version": 3,
+      "source_versions": [
+        1,
+        2,
+        3
+      ],
+      "sources": [
+        {
+          "path": "work/layers/layers-v1.json",
+          "version": 1,
+          "format": "foreground-composite/v1"
+        },
+        {
+          "path": "work/layers/layers-v2.json",
+          "version": 2,
+          "format": "foreground-composite/v2"
+        },
+        {
+          "path": "work/layers/layers-v3.json",
+          "version": 3,
+          "format": "foreground-composite/v3"
+        }
+      ],
+      "canvas": {
+        "width": 320,
+        "height": 180,
+        "channels": 4,
+        "color_space": "linear-srgb"
+      },
+      "time_base": {
+        "unit": "second",
+        "frame_period": {
+          "num": 1,
+          "den": 24
+        }
+      },
+      "source_time_bases": [
+        {
+          "unit": "second",
+          "frame_period": {
+            "num": 1,
+            "den": 24
+          }
+        },
+        {
+          "unit": "second",
+          "frame_period": {
+            "num": 1,
+            "den": 24
+          }
+        },
+        {
+          "unit": "tick",
+          "frame_period": {
+            "num": 1,
+            "den": 24
+          },
+          "ticks_per_frame": 1000,
+          "tick_rate": 24000
+        }
+      ],
+      "layers": [
+        {
+          "id": "background",
+          "name": "Background Plate",
+          "kind": "background",
+          "visible": true,
+          "in_frame": 0,
+          "out_frame": 24,
+          "visible_until_frame": 24,
+          "opacity": 1,
+          "alpha": 1,
+          "color": [
+            0.093,
+            0.185,
+            0.328
+          ],
+          "color_encoding": "srgb",
+          "alpha_mode": "premultiplied",
+          "shape": {
+            "type": "full",
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "source_version": 1
+        },
+        {
+          "id": "character",
+          "name": "Character Layer",
+          "kind": "character",
+          "visible": true,
+          "in_frame": 4,
+          "out_frame": 24,
+          "visible_until_frame": 24,
+          "opacity": 0.9,
+          "alpha": 0.93,
+          "color": [
+            0.848,
+            0.674,
+            0.567
+          ],
+          "color_encoding": "srgb",
+          "alpha_mode": "straight",
+          "shape": {
+            "type": "ellipse",
+            "rect": [
+              136,
+              45,
+              100,
+              108
+            ]
+          },
+          "source_version": 3
+        },
+        {
+          "id": "prop",
+          "name": "Foreground Prop",
+          "kind": "prop",
+          "visible": true,
+          "in_frame": 0,
+          "out_frame": 18,
+          "visible_until_frame": 18,
+          "opacity": 0.61,
+          "alpha": 0.84,
+          "color": [
+            0.5754,
+            0.29063999999999995,
+            0.08148
+          ],
+          "color_encoding": "srgb",
+          "alpha_mode": "premultiplied",
+          "shape": {
+            "type": "ellipse",
+            "rect": [
+              55,
+              54,
+              132,
+              104
+            ]
+          },
+          "source_version": 2
+        }
+      ],
+      "stack": [
+        "background",
+        "prop",
+        "character"
+      ],
+      "frame_count": 24,
+      "instructions": [
+        {
+          "frame": 2,
+          "layers": {
+            "prop": {
+              "opacity": 0.65
+            }
+          }
+        },
+        {
+          "frame": 9,
+          "layers": {
+            "character": {
+              "opacity": 0.7
+            }
+          }
+        },
+        {
+          "frame": 14,
+          "layers": {
+            "prop": {
+              "visible": false
+            }
+          }
+        }
+      ]
+    },
+    "windows": [
+      {
+        "index": 0,
+        "start_frame": 0,
+        "end_frame": 6,
+        "state": "committed",
+        "snapshot": {
+          "window_index": 0,
+          "start_frame": 0,
+          "end_frame": 6,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.61,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "36e9878eb018a0acff156502ebc85475bff97781bfa66a079599c060cbbdc2bf",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "79fb00f1e42b7b57ca878f09a946c19df364575a5c1e03bf8492377b66b55a47",
+          "frame_path": "window-00000.vspw",
+          "summary": {
+            "frame": 15,
+            "timestamp": {
+              "num": 0,
+              "den": 1
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.05838370712542637,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.4018287077903748,
+            "mean_alpha": 1,
+            "content_hash": "519eb86d9e68c46c0ba31c6d3b1dfde07f71a042998bc19403ccae6d34351547"
+          },
+          "frame_summaries": [
+            {
+              "frame": 0,
+              "timestamp": {
+                "num": 0,
+                "den": 1
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.041476962441326044,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.09682275223955512,
+              "mean_alpha": 1,
+              "content_hash": "bff0124d2eab781561a2195af508e937eb40d34e2e33cce8b5dfab4b7fc09380"
+            },
+            {
+              "frame": 1,
+              "timestamp": {
+                "num": 1,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.041476962441326044,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.09682275223955512,
+              "mean_alpha": 1,
+              "content_hash": "ea76beda919d12a76de2e8be629689fffe073a6a85488b1615241106d94df4b2"
+            },
+            {
+              "frame": 2,
+              "timestamp": {
+                "num": 1,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.042313333620971935,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.10128836031779646,
+              "mean_alpha": 1,
+              "content_hash": "e26be76e1f2e4877c2bbf34d8d4235806eb3f4e987b0f0f7ba8aa59cf49db81d"
+            },
+            {
+              "frame": 3,
+              "timestamp": {
+                "num": 1,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.041476962441326044,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.09682275223955512,
+              "mean_alpha": 1,
+              "content_hash": "c1c3245cd64758691d10846fae37fbbaa407619871ad45937dc3a0eb569fc962"
+            },
+            {
+              "frame": 4,
+              "timestamp": {
+                "num": 1,
+                "den": 6
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "d96ceca85d1c17c34a3bfc1971f6e7b399c20b556f22190464f88a2656b08f9f"
+            },
+            {
+              "frame": 5,
+              "timestamp": {
+                "num": 5,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "9afdf5b363914760d17663f539b745a94654512d4a2ac2b23291554bf17b0456"
+            }
+          ],
+          "committed_sequence": 1,
+          "committed_at": "2026-11-24T06:07:50.249094641Z"
+        },
+        "invalidated": false,
+        "reused": false
+      },
+      {
+        "index": 1,
+        "start_frame": 6,
+        "end_frame": 12,
+        "state": "committed",
+        "snapshot": {
+          "window_index": 1,
+          "start_frame": 6,
+          "end_frame": 12,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.61,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "36e9878eb018a0acff156502ebc85475bff97781bfa66a079599c060cbbdc2bf",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "c11f7888a78f9e3d76302a2f077d7fc92e2619e6a6601f6d59eecbd51c05bfca",
+          "frame_path": "window-00001.vspw",
+          "summary": {
+            "frame": 51,
+            "timestamp": {
+              "num": 1,
+              "den": 4
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.08991597256661583,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.4018287077903748,
+            "mean_alpha": 1,
+            "content_hash": "c57d9eb27019e205e5cc4983ea62bb42d4e623e100362c2650758935bc0d64b7"
+          },
+          "frame_summaries": [
+            {
+              "frame": 6,
+              "timestamp": {
+                "num": 1,
+                "den": 4
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "9ae307e88cd1299bd92b1268c9dfe066b482d2fa1eeec7734bfa04809b505c8e"
+            },
+            {
+              "frame": 7,
+              "timestamp": {
+                "num": 7,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "b3d0af99648b25a56913326c035052e8e675226e24b19310d7aa2058a8eaeeca"
+            },
+            {
+              "frame": 8,
+              "timestamp": {
+                "num": 1,
+                "den": 3
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "36f9bc9eba5c8b236bdd3f580070ae9a402af8c4595616c3a831a838928eefd2"
+            },
+            {
+              "frame": 9,
+              "timestamp": {
+                "num": 3,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.08060078088067475,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.33404963198602194,
+              "mean_alpha": 1,
+              "content_hash": "011eb67923d41dbdd147f0548c707a0df7055b3f79c4d5626aa1e18103f67682"
+            },
+            {
+              "frame": 10,
+              "timestamp": {
+                "num": 5,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "bd713a65809c07b996114d2ab351d270263efe764cdf67b1b242489db84b0fde"
+            },
+            {
+              "frame": 11,
+              "timestamp": {
+                "num": 11,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "f0c6a575f50667230f6aca2f3b6c3cc1bc3645913b79f8ba34c24f5c13e4fcae"
+            }
+          ],
+          "committed_sequence": 2,
+          "committed_at": "2026-11-24T06:07:50.267686665Z"
+        },
+        "invalidated": false,
+        "reused": false
+      },
+      {
+        "index": 2,
+        "start_frame": 12,
+        "end_frame": 18,
+        "state": "committed",
+        "snapshot": {
+          "window_index": 2,
+          "start_frame": 12,
+          "end_frame": 18,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.61,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "36e9878eb018a0acff156502ebc85475bff97781bfa66a079599c060cbbdc2bf",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "014f5c7b45d3869be63a5b0cc7b37efeabaeddc1771349d07403934e42ab497c",
+          "frame_path": "window-00002.vspw",
+          "summary": {
+            "frame": 87,
+            "timestamp": {
+              "num": 1,
+              "den": 2
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.09016468730241321,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.4018287077903748,
+            "mean_alpha": 1,
+            "content_hash": "7c7e24371a52d2275b137c560c7bf71ee106f66dd769222da50f5236e5bccd01"
+          },
+          "frame_summaries": [
+            {
+              "frame": 12,
+              "timestamp": {
+                "num": 1,
+                "den": 2
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "a9dcbf881ee789a429a0918d9e7e51502c053bd755270afe938473304684b90f"
+            },
+            {
+              "frame": 13,
+              "timestamp": {
+                "num": 13,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "6a4598eb5cc108e5f6e18a713c9a74f0bec6762898941f2e051a4d4988503e32"
+            },
+            {
+              "frame": 14,
+              "timestamp": {
+                "num": 7,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "ce57871a6de44bc3631024f902238d7753e1d02c5b16fa4c31b5aeb91a0a3244"
+            },
+            {
+              "frame": 15,
+              "timestamp": {
+                "num": 5,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "61420dbd4ca2042711bb61af6454902331fdcd60e47d712f7bb83dc37378a095"
+            },
+            {
+              "frame": 16,
+              "timestamp": {
+                "num": 2,
+                "den": 3
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "cb436cb6c3efa1ca7dfbe6e6911ee63d7b6b23931f20c6de16ebc1d9d1893eca"
+            },
+            {
+              "frame": 17,
+              "timestamp": {
+                "num": 17,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09177901090380407,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4018287077903748,
+              "mean_alpha": 1,
+              "content_hash": "ae9a624cdf0ecc7196a7bf9e96a6342e612ca334285a707165b50eede3fadc3d"
+            }
+          ],
+          "committed_sequence": 3,
+          "committed_at": "2026-11-24T06:07:50.290316385Z"
+        },
+        "invalidated": false,
+        "reused": false
+      },
+      {
+        "index": 3,
+        "start_frame": 18,
+        "end_frame": 24,
+        "state": "committed",
+        "snapshot": {
+          "window_index": 3,
+          "start_frame": 18,
+          "end_frame": 24,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.78,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "497e47e315c538f890e0a66e36f4d32b98d7a0e383a1d8b616efa83427b81999",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "bb6546f0a88055315b880dd5c32def8cc1c449725bfc836c04607d47777d689f",
+          "frame_path": "window-00003.vspw",
+          "summary": {
+            "frame": 123,
+            "timestamp": {
+              "num": 3,
+              "den": 4
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.0820930692954589,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.390728351637721,
+            "mean_alpha": 1,
+            "content_hash": "251f5fd9c7714d7f24bf71428f5139c66079de2097536f3c756143078ba67746"
+          },
+          "frame_summaries": [
+            {
+              "frame": 18,
+              "timestamp": {
+                "num": 3,
+                "den": 4
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "b7d67e217cfb13dfced912c6d323a74f6027242c2070b40cef1f894d1ded6ca9"
+            },
+            {
+              "frame": 19,
+              "timestamp": {
+                "num": 19,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "d1c29d4c676bb20b8ef5daa77c42ed98110439ca1c3f19522692f9dcf1a3e434"
+            },
+            {
+              "frame": 20,
+              "timestamp": {
+                "num": 5,
+                "den": 6
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "6654337db525c5c40353304372d0c9eae22c07088bfcbc5680124050a2c92bf7"
+            },
+            {
+              "frame": 21,
+              "timestamp": {
+                "num": 7,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "59a424a8595a3ec05779685e69cdbf458754db790e4522492fb50b51493d27d9"
+            },
+            {
+              "frame": 22,
+              "timestamp": {
+                "num": 11,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "c6445b868272ad800ceea1bd28d114981313b32800a3e7609ea56da8643ba431"
+            },
+            {
+              "frame": 23,
+              "timestamp": {
+                "num": 23,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "530ccdbf2ef1c73cbcfbb2ba55cc36b6014bd35dae1df59eff2875c6c6f86d5c"
+            }
+          ],
+          "committed_sequence": 4,
+          "committed_at": "2026-11-24T06:07:49.777625589Z"
+        },
+        "invalidated": false,
+        "reused": true
+      }
+    ],
+    "committed_windows": 4,
+    "total_windows": 4,
+    "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+    "model_hash": "36e9878eb018a0acff156502ebc85475bff97781bfa66a079599c060cbbdc2bf",
+    "recovery": {
+      "restored": [
+        {
+          "window_index": 0,
+          "start_frame": 0,
+          "end_frame": 6,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.78,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "497e47e315c538f890e0a66e36f4d32b98d7a0e383a1d8b616efa83427b81999",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "5805287e3e78617fed4e6f7cb99e257c1a8f990a6b2a7f306501a6c90b5eda14",
+          "frame_path": "window-00000.vspw",
+          "summary": {
+            "frame": 15,
+            "timestamp": {
+              "num": 0,
+              "den": 1
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.061060780862987295,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.4049222567051649,
+            "mean_alpha": 1,
+            "content_hash": "0f98c5e1be962d7bed3da03b589f2701c0816cdc74a23ac0b3106a315de14d52"
+          },
+          "frame_summaries": [
+            {
+              "frame": 0,
+              "timestamp": {
+                "num": 0,
+                "den": 1
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.045031535639061315,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.11580156352892518,
+              "mean_alpha": 1,
+              "content_hash": "008066f5e139f0f9816f23bea5037472d5ec1bba766aa94d8206d7343a9f0074"
+            },
+            {
+              "frame": 1,
+              "timestamp": {
+                "num": 1,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.045031535639061315,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.11580156352892518,
+              "mean_alpha": 1,
+              "content_hash": "263be9b398c80242e3a7d2f0f30fd793df33af4ed7db294b79c2a592f9d0ad0f"
+            },
+            {
+              "frame": 2,
+              "timestamp": {
+                "num": 1,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.042313333620971935,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.10128836031779646,
+              "mean_alpha": 1,
+              "content_hash": "e26be76e1f2e4877c2bbf34d8d4235806eb3f4e987b0f0f7ba8aa59cf49db81d"
+            },
+            {
+              "frame": 3,
+              "timestamp": {
+                "num": 1,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.045031535639061315,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.11580156352892518,
+              "mean_alpha": 1,
+              "content_hash": "3b57e03f56139a45b8c44677160e99abf93d0078e1ad373fc8e94f618cc489ae"
+            },
+            {
+              "frame": 4,
+              "timestamp": {
+                "num": 1,
+                "den": 6
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "5310c2d2d34671f270d3962e8f0eb2c654e775e725f3c74036d997bc03941caa"
+            },
+            {
+              "frame": 5,
+              "timestamp": {
+                "num": 5,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "ae35162d82250d9794f190a8cbc23685c1ae44119927e0a9cba2a10e55682cd0"
+            }
+          ],
+          "committed_sequence": 1,
+          "committed_at": "2026-11-24T06:07:49.705717906Z"
+        },
+        {
+          "window_index": 1,
+          "start_frame": 6,
+          "end_frame": 12,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.78,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "497e47e315c538f890e0a66e36f4d32b98d7a0e383a1d8b616efa83427b81999",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "3ad41d10b92ae51c5315f8a8f6c07fd98fc0a6d97115be89adda93f8dbfb21a3",
+          "frame_path": "window-00001.vspw",
+          "summary": {
+            "frame": 51,
+            "timestamp": {
+              "num": 1,
+              "den": 4
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.09264700834522999,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.4049222567051649,
+            "mean_alpha": 1,
+            "content_hash": "2a558d81b9e04a7d2b0fdf4daadb167156cbc3c48a828a93fd27b43b14200129"
+          },
+          "frame_summaries": [
+            {
+              "frame": 6,
+              "timestamp": {
+                "num": 1,
+                "den": 4
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "4380fe76bfcaa4e8c971f4030480bc7a9b996215b9c35fb825c66af6d5a8dc29"
+            },
+            {
+              "frame": 7,
+              "timestamp": {
+                "num": 7,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "c6e24b25eff02cca34512db83e977311a6a399c5447dc7fd2c2f018eb85017a7"
+            },
+            {
+              "frame": 8,
+              "timestamp": {
+                "num": 1,
+                "den": 3
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "5a6cf90a2de1b948b64992e76d714cd5e408e1cff8037d201fe14a5cefea9203"
+            },
+            {
+              "frame": 9,
+              "timestamp": {
+                "num": 3,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.08349018847196016,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.3406732227236033,
+              "mean_alpha": 1,
+              "content_hash": "b9f970ef390d9821e2c4d75d3ec34e72182ef274173dd267123d13a9ffe9c40d"
+            },
+            {
+              "frame": 10,
+              "timestamp": {
+                "num": 5,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "eb2f99480b22b9bfb080f2ce1c679d8aad4c5bfa3662291d471aaa50be175262"
+            },
+            {
+              "frame": 11,
+              "timestamp": {
+                "num": 11,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "d5953641f6eb26b07e4c9b1f6557590fa1c359eb12a479b4c6174365d01f2959"
+            }
+          ],
+          "committed_sequence": 2,
+          "committed_at": "2026-11-24T06:07:49.731675987Z"
+        },
+        {
+          "window_index": 2,
+          "start_frame": 12,
+          "end_frame": 18,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.78,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "497e47e315c538f890e0a66e36f4d32b98d7a0e383a1d8b616efa83427b81999",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "a41d4a83cfe0f2e202ed1a57990c432d54dfdfc1bdb139b7131240bf8a3a2bb7",
+          "frame_path": "window-00002.vspw",
+          "summary": {
+            "frame": 87,
+            "timestamp": {
+              "num": 1,
+              "den": 2
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.09241415514914643,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.4049222567051649,
+            "mean_alpha": 1,
+            "content_hash": "211844868a627dc46ce8586a0f232d2c4e3f7801c203245cc619bddd42aba370"
+          },
+          "frame_summaries": [
+            {
+              "frame": 12,
+              "timestamp": {
+                "num": 1,
+                "den": 2
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "8e4ee57965be4c65e58625b184b50f8eba5ca520e9c39c3eae3f1c9bdb8b75dc"
+            },
+            {
+              "frame": 13,
+              "timestamp": {
+                "num": 13,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "b4e76f6aaee895dd3679af30662744d6bc3da38c6700816bc536e0ddaa599d72"
+            },
+            {
+              "frame": 14,
+              "timestamp": {
+                "num": 7,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "ce57871a6de44bc3631024f902238d7753e1d02c5b16fa4c31b5aeb91a0a3244"
+            },
+            {
+              "frame": 15,
+              "timestamp": {
+                "num": 5,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "c61cecadf408c6037fb9130076fa5ccfb0bf5d1ad25ac6e717ba63dd31214607"
+            },
+            {
+              "frame": 16,
+              "timestamp": {
+                "num": 2,
+                "den": 3
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "a3b3c005727297efa1983fc7fef8dac772e46309e7b1cb491a93582ca5722c10"
+            },
+            {
+              "frame": 17,
+              "timestamp": {
+                "num": 17,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.09447837231988394,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.4049222567051649,
+              "mean_alpha": 1,
+              "content_hash": "46cbf0ce9917f708257971d9536e317ff0a8de3ed3e94621b97951d0a8185b33"
+            }
+          ],
+          "committed_sequence": 3,
+          "committed_at": "2026-11-24T06:07:49.758110681Z"
+        },
+        {
+          "window_index": 3,
+          "start_frame": 18,
+          "end_frame": 24,
+          "layers": [
+            {
+              "id": "background",
+              "name": "Background Plate",
+              "kind": "background",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 1,
+              "alpha": 1,
+              "color": [
+                0.093,
+                0.185,
+                0.328
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "full",
+                "rect": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "source_version": 1
+            },
+            {
+              "id": "character",
+              "name": "Character Layer",
+              "kind": "character",
+              "visible": true,
+              "in_frame": 4,
+              "out_frame": 24,
+              "visible_until_frame": 24,
+              "opacity": 0.9,
+              "alpha": 0.93,
+              "color": [
+                0.848,
+                0.674,
+                0.567
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "straight",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  136,
+                  45,
+                  100,
+                  108
+                ]
+              },
+              "source_version": 3
+            },
+            {
+              "id": "prop",
+              "name": "Foreground Prop",
+              "kind": "prop",
+              "visible": true,
+              "in_frame": 0,
+              "out_frame": 18,
+              "visible_until_frame": 18,
+              "opacity": 0.78,
+              "alpha": 0.84,
+              "color": [
+                0.5754,
+                0.29063999999999995,
+                0.08148
+              ],
+              "color_encoding": "srgb",
+              "alpha_mode": "premultiplied",
+              "shape": {
+                "type": "ellipse",
+                "rect": [
+                  55,
+                  54,
+                  132,
+                  104
+                ]
+              },
+              "source_version": 2
+            }
+          ],
+          "source": {
+            "versions": [
+              1,
+              2,
+              3
+            ],
+            "time_base": {
+              "unit": "second",
+              "frame_period": {
+                "num": 1,
+                "den": 24
+              }
+            },
+            "canvas": {
+              "width": 320,
+              "height": 180,
+              "channels": 4,
+              "color_space": "linear-srgb"
+            }
+          },
+          "model_hash": "497e47e315c538f890e0a66e36f4d32b98d7a0e383a1d8b616efa83427b81999",
+          "source_hash": "945c6b12a2322963c5b06d02029a8f741a566d8362c5cee2d42e5a5f47f151c2",
+          "algorithm_version": "vsp-composite/1",
+          "frame_hash": "bb6546f0a88055315b880dd5c32def8cc1c449725bfc836c04607d47777d689f",
+          "frame_path": "window-00003.vspw",
+          "summary": {
+            "frame": 123,
+            "timestamp": {
+              "num": 3,
+              "den": 4
+            },
+            "pixel_count": 345600,
+            "mean_luma": 0.0820930692954589,
+            "min_luma": 0.02872231875285506,
+            "max_luma": 0.390728351637721,
+            "mean_alpha": 1,
+            "content_hash": "251f5fd9c7714d7f24bf71428f5139c66079de2097536f3c756143078ba67746"
+          },
+          "frame_summaries": [
+            {
+              "frame": 18,
+              "timestamp": {
+                "num": 3,
+                "den": 4
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "b7d67e217cfb13dfced912c6d323a74f6027242c2070b40cef1f894d1ded6ca9"
+            },
+            {
+              "frame": 19,
+              "timestamp": {
+                "num": 19,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "d1c29d4c676bb20b8ef5daa77c42ed98110439ca1c3f19522692f9dcf1a3e434"
+            },
+            {
+              "frame": 20,
+              "timestamp": {
+                "num": 5,
+                "den": 6
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "6654337db525c5c40353304372d0c9eae22c07088bfcbc5680124050a2c92bf7"
+            },
+            {
+              "frame": 21,
+              "timestamp": {
+                "num": 7,
+                "den": 8
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "59a424a8595a3ec05779685e69cdbf458754db790e4522492fb50b51493d27d9"
+            },
+            {
+              "frame": 22,
+              "timestamp": {
+                "num": 11,
+                "den": 12
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "c6445b868272ad800ceea1bd28d114981313b32800a3e7609ea56da8643ba431"
+            },
+            {
+              "frame": 23,
+              "timestamp": {
+                "num": 23,
+                "den": 24
+              },
+              "pixel_count": 57600,
+              "mean_luma": 0.0820930692954589,
+              "min_luma": 0.02872231875285506,
+              "max_luma": 0.390728351637721,
+              "mean_alpha": 1,
+              "content_hash": "530ccdbf2ef1c73cbcfbb2ba55cc36b6014bd35dae1df59eff2875c6c6f86d5c"
+            }
+          ],
+          "committed_sequence": 4,
+          "committed_at": "2026-11-24T06:07:49.777625589Z"
+        }
+      ],
+      "purged": false,
+      "checked": 4
+    },
+    "last_invalidation": {
+      "operation": "layer_parameter",
+      "affected": [
+        {
+          "window": 0,
+          "layer_ids": [
+            "prop"
+          ],
+          "reason": "layer parameter changed",
+          "stage": "composite+export"
+        },
+        {
+          "window": 1,
+          "layer_ids": [
+            "prop"
+          ],
+          "reason": "layer parameter changed",
+          "stage": "composite+export"
+        },
+        {
+          "window": 2,
+          "layer_ids": [
+            "prop"
+          ],
+          "reason": "layer parameter changed",
+          "stage": "composite+export"
+        }
+      ],
+      "reused": [
+        3
+      ],
+      "total_windows": 4,
+      "total_frames": 24
+    }
+  }
+}

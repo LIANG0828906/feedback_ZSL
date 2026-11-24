@@ -1,0 +1,30 @@
+{
+  "target_version": 2,
+  "format": "foreground-composite/v2",
+  "layer_file": "layers-v2.json",
+  "content_hash": "8b127717ed09ef01f2c3facfc5670281eb4b0244ede56a9dc299590c594c6c42",
+  "warnings": [
+    {
+      "code": "E_LOSSY",
+      "layer_id": "character",
+      "property": "alpha_mode",
+      "from": "straight",
+      "to": "premultiplied",
+      "message": "v2 has one global alpha convention; source color was normalized",
+      "trace_path": "layers[character].pixel.color"
+    }
+  ],
+  "traces": [
+    {
+      "layer_id": "character",
+      "from": "straight",
+      "to": "premultiplied",
+      "path": "layers[character].pixel.color"
+    }
+  ],
+  "layer_order": [
+    "background",
+    "prop",
+    "character"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "verification": {
+    "report": {
+      "target_version": 1,
+      "format": "foreground-composite/v1",
+      "layer_file": "layers-v1.json",
+      "content_hash": "0873753d56430c908d651842263d48b431d7fc9b474799f4dc9729acee9462bc",
+      "warnings": [
+        {
+          "code": "E_LOSSY",
+          "layer_id": "character",
+          "property": "alpha_mode",
+          "from": "straight",
+          "to": "premultiplied",
+          "message": "v1 has one global premultiplication convention; source color was converted to premultiplied alpha",
+          "trace_path": "layers[character].color"
+        }
+      ],
+      "traces": [
+        {
+          "layer_id": "character",
+          "from": "straight",
+          "to": "premultiplied",
+          "path": "layers[character].color"
+        }
+      ],
+      "layer_order": [
+        "background",
+        "prop",
+        "character"
+      ]
+    },
+    "round_trip_ok": true,
+    "stack_equal": true,
+    "visibility_equal": true,
+    "deterministic": true,
+    "warnings": [
+      {
+        "code": "E_LOSSY",
+        "layer_id": "character",
+        "property": "alpha_mode",
+        "from": "straight",
+        "to": "premultiplied",
+        "message": "v1 has one global premultiplication convention; source color was converted to premultiplied alpha",
+        "trace_path": "layers[character].color"
+      }
+    ],
+    "reloaded_source_version": 1
+  }
+}

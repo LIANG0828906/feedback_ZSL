@@ -1,0 +1,99 @@
+{
+  "format": "foreground-composite/v1",
+  "frame_count": 24,
+  "scene": {
+    "name": "Virtual Stage 42",
+    "width": 320,
+    "height": 180,
+    "channels": 4,
+    "color_space": "linear-srgb",
+    "frame_rate_num": 24,
+    "frame_rate_den": 1,
+    "premultiplied": true
+  },
+  "layers": [
+    {
+      "id": "background",
+      "name": "Background Plate",
+      "kind": "background",
+      "z_index": 0,
+      "enabled": true,
+      "opacity": 1,
+      "color": [
+        0.093,
+        0.185,
+        0.328
+      ],
+      "color_encoding": "srgb",
+      "alpha": 1,
+      "in_frame": 0,
+      "out_frame": 24,
+      "shape": {
+        "type": "full",
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "character",
+      "name": "Character Layer",
+      "kind": "character",
+      "z_index": 2,
+      "enabled": true,
+      "opacity": 0.9,
+      "color": [
+        0.78864,
+        0.62682,
+        0.52731
+      ],
+      "color_encoding": "srgb",
+      "alpha": 0.93,
+      "in_frame": 4,
+      "out_frame": 24,
+      "shape": {
+        "type": "ellipse",
+        "rect": [
+          136,
+          45,
+          100,
+          108
+        ]
+      }
+    },
+    {
+      "id": "prop",
+      "name": "Foreground Prop",
+      "kind": "prop",
+      "z_index": 1,
+      "enabled": true,
+      "opacity": 0.61,
+      "color": [
+        0.5754,
+        0.29063999999999995,
+        0.08148
+      ],
+      "color_encoding": "srgb",
+      "alpha": 0.84,
+      "in_frame": 0,
+      "out_frame": 18,
+      "shape": {
+        "type": "ellipse",
+        "rect": [
+          55,
+          54,
+          132,
+          104
+        ]
+      }
+    }
+  ],
+  "layer_order": [
+    "background",
+    "prop",
+    "character"
+  ]
+}

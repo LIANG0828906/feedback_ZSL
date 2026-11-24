@@ -1,0 +1,129 @@
+{
+  "format": "foreground-composite/v3",
+  "schema_version": 3,
+  "frame_count": 24,
+  "name": "Virtual Stage 42",
+  "canvas": {
+    "w": 320,
+    "h": 180,
+    "channels": 4
+  },
+  "color": {
+    "space": "linear-srgb",
+    "alpha_mode": "straight",
+    "per_layer_alpha": true
+  },
+  "timing": {
+    "tick_rate": 24000,
+    "ticks_per_frame": 1000,
+    "unit": "ticks"
+  },
+  "layers": [
+    {
+      "layer_key": "background",
+      "title": "Background Plate",
+      "role": "background",
+      "visible": true,
+      "lifecycle": {
+        "start": 0,
+        "end": 24
+      },
+      "parent": null,
+      "source": {
+        "color": [
+          0.093,
+          0.185,
+          0.328
+        ],
+        "encoding": "srgb",
+        "alpha": 1,
+        "premultiplied": "premultiplied"
+      },
+      "blend": {
+        "opacity": 1
+      },
+      "mask": {
+        "type": "full"
+      }
+    },
+    {
+      "layer_key": "character",
+      "title": "Character Layer",
+      "role": "character",
+      "visible": true,
+      "lifecycle": {
+        "start": 4,
+        "end": 24
+      },
+      "parent": null,
+      "source": {
+        "color": [
+          0.848,
+          0.674,
+          0.567
+        ],
+        "encoding": "srgb",
+        "alpha": 0.93,
+        "premultiplied": "straight"
+      },
+      "blend": {
+        "opacity": 0.9
+      },
+      "mask": {
+        "type": "ellipse",
+        "rect": [
+          136,
+          45,
+          100,
+          108
+        ]
+      }
+    },
+    {
+      "layer_key": "prop",
+      "title": "Foreground Prop",
+      "role": "prop",
+      "visible": true,
+      "lifecycle": {
+        "start": 0,
+        "end": 18
+      },
+      "parent": null,
+      "source": {
+        "color": [
+          0.5754,
+          0.29063999999999995,
+          0.08148
+        ],
+        "encoding": "srgb",
+        "alpha": 0.84,
+        "premultiplied": "premultiplied"
+      },
+      "blend": {
+        "opacity": 0.61
+      },
+      "mask": {
+        "type": "ellipse",
+        "rect": [
+          55,
+          54,
+          132,
+          104
+        ]
+      }
+    }
+  ],
+  "hierarchy": {
+    "roots": [
+      "background",
+      "character",
+      "prop"
+    ],
+    "children": {},
+    "render_order": [
+      "background",
+      "prop",
+      "character"
+    ]
+  }
+}
