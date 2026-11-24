@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>SIR Desktop</title></head>
+<body>
+<h1>SIR 空间声学脉冲响应工作台（Wails 壳）</h1>
+<p>完整可视化面板见内置 HTTP 面板 <code>sir serve</code>；本壳通过 Wails 绑定暴露同一套 Go API。</p>
+<button onclick="window.go['main']['App'].GenerateSamples().then(r => document.body.append(r.join(',')))">
+  生成确定性样本
+</button>
+</body>
+</html>

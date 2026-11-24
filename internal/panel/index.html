@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>SIR 空间声学脉冲响应工作台</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 16px; background: #0f1420; color: #d7e0f0; }
+  h1 { font-size: 18px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  select, input, button { background: #1b2334; color: #d7e0f0; border: 1px solid #2d3a55;
+    border-radius: 6px; padding: 6px 10px; }
+  button { cursor: pointer; }
+  button:hover { border-color: #5b8cff; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { background: #161d2e; border: 1px solid #24304a; border-radius: 8px; padding: 10px; }
+  canvas { width: 100%; height: 220px; background: #0c1120; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th, td { border: 1px solid #24304a; padding: 3px 6px; text-align: right; }
+  pre { background: #0c1120; padding: 8px; border-radius: 6px; max-height: 160px; overflow: auto; }
+</style>
+</head>
+<body>
+<h1>SIR 空间声学脉冲响应分析工作台</h1>
+<div class="row">
+  <label>样本 <select id="sample"></select></label>
+  <label>模式
+    <select id="mode">
+      <option value="realtime">实时逐帧</option>
+      <option value="resume">断点恢复</option>
+      <option value="replay">持久化复算</option>
+    </select>
+  </label>
+  <label>暂停于帧 <input id="pause" type="number" value="0" style="width:80px"></label>
+  <button onclick="run()">运行 / 续跑</button>
+  <button onclick="retry()">重试失败帧</button>
+  <button onclick="exp()">导出报告</button>
+</div>
+<div class="row">
+  <label>帧长 <input id="frame_length" type="number" value="1024" style="width:90px"></label>
+  <label>帧移 <input id="frame_hop" type="number" value="512" style="width:90px"></label>
+  <label>窗长 <input id="window_len" type="number" value="768" style="width:90px"></label>
+  <label>并行度 <input id="max_workers" type="number" value="4" style="width:70px"></label>
+  <label>缓冲上限 <input id="buffer_cap" type="number" value="4096" style="width:90px"></label>
+  <label>上界系数 <input id="bound_scale" type="number" step="0.01" value="1" style="width:80px"></label>
+</div>
+<pre id="status">就绪</pre>
+<div class="grid">
+  <div class="card"><h3>通道直达延迟（样本）</h3><canvas id="delayChart"></canvas></div>
+  <div class="card"><h3>逐帧能量（原始 vs 渲染）</h3><canvas id="energyChart"></canvas></div>
+  <div class="card"><h3>误差上界（累积）</h3><canvas id="boundChart"></canvas></div>
+  <div class="card"><h3>原始 vs 重建波形（首声道）</h3><canvas id="waveChart"></canvas></div>
+</div>
+<div class="card"><h3>逐帧重建参数</h3>
+  <table id="frameTable"><thead><tr>
+    <th>帧</th><th>状态</th><th>直达</th><th>早期能量</th><th>DR</th><th>ITD</th>
+    <th>峰值误差</th><th>截断误差</th><th>插值误差</th>
+  </tr></thead><tbody></tbody></table>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+async function loadSamples() {
+  const list = await (await fetch('/api/samples')).json();
+  $('sample').innerHTML = list.map(s => `<option>${s}</option>`).join('');
+}
+function params() {
+  return {
+    frame_length: +$('frame_length').value, frame_hop: +$('frame_hop').value,
+    window_len: +$('window_len').value, conv_window: 64, render_block: 512,
+    interp_order: 1, bound_scale: +$('bound_scale').value,
+    max_workers: +$('max_workers').value, buffer_cap: +$('buffer_cap').value
+  };
+}
+async function run() {
+  $('status').textContent = '运行中...';
+  const resp = await fetch('/api/run', {method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({sample: $('sample').value, mode: $('mode').value,
+      pause: +$('pause').value, params: params()})});
+  const data = await resp.json();
+  if (!resp.ok) { $('status').textContent = JSON.stringify(data, null, 2); return; }
+  $('status').textContent = `committed=${data.report.committed}/${data.report.frames} ` +
+    `pool_events=${(data.pool_events||[]).length}`;
+  render(data.report);
+}
+async function retry() {
+  await fetch('/api/retry', {method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({sample: $('sample').value, frames: []})});
+}
+async function exp() {
+  window.location = '/api/export?sample=' + encodeURIComponent($('sample').value);
+}
+function line(canvas, series, labels) {
+  const c = canvas.getContext('2d'), W = canvas.width = canvas.clientWidth, H = canvas.height = 220;
+  c.clearRect(0, 0, W, H);
+  const colors = ['#5b8cff', '#ff8c5b', '#5bff9d', '#ffd25b'];
+  const all = series.flat();
+  const max = Math.max(...all, 1e-9), min = Math.min(...all, 0);
+  series.forEach((s, k) => {
+    c.strokeStyle = colors[k % colors.length]; c.beginPath();
+    s.forEach((v, i) => {
+      const x = i / Math.max(s.length - 1, 1) * W;
+      const y = H - (v - min) / (max - min || 1) * (H - 10) - 5;
+      i ? c.lineTo(x, y) : c.moveTo(x, y);
+    });
+    c.stroke();
+  });
+  c.fillStyle = '#8fa3c8'; c.font = '11px sans-serif';
+  labels.forEach((l, i) => c.fillText(l, 8, 14 + i * 14));
+}
+function render(rep) {
+  const fs = rep.frame_reports;
+  const ch = rep.layout.names[0];
+  line($('delayChart'), [fs.map(f => (f.estimates?.[0]?.direct_sample) || 0)], ['直达样本点']);
+  line($('energyChart'),
+    [fs.map(f => f.energy.original_energy), fs.map(f => f.energy.render_energy)],
+    ['原始能量', '渲染能量']);
+  line($('boundChart'),
+    [fs.map(f => f.bound.cumulative.peak_quantization),
+     fs.map(f => f.bound.cumulative.energy_truncation),
+     fs.map(f => f.bound.cumulative.itd_estimation),
+     fs.map(f => f.bound.cumulative.render_interpolation)],
+    ['峰值', '截断', 'ITD', '插值']);
+  const n = rep.original[0].length;
+  const step = Math.max(1, Math.floor(n / 800));
+  const dec = a => a.filter((_, i) => i % step === 0);
+  line($('waveChart'), [dec(rep.original[0]), dec(rep.rendered[0])], ['原始 ' + ch, '重建 ' + ch]);
+  $('frameTable').querySelector('tbody').innerHTML = fs.map(f => {
+    const e = f.estimates?.[0] || {};
+    const itd = Object.values(f.itd || {})[0] ?? '';
+    return `<tr><td>${f.index}</td><td>${f.status}</td><td>${e.direct_sample ?? ''}</td>
+      <td>${(e.early_energy ?? 0).toExponential(2)}</td>
+      <td>${(e.dry_reverb_ratio ?? 0).toExponential(2)}</td><td>${itd}</td>
+      <td>${f.measured.peak_quantization}</td>
+      <td>${f.measured.energy_truncation.toExponential(2)}</td>
+      <td>${f.measured.render_interpolation.toExponential(2)}</td></tr>`;
+  }).join('');
+}
+loadSamples();
+</script>
+</body>
+</html>
