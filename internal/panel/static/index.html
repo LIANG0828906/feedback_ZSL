@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RetargetLab · 骨骼动作重定向诊断台</title>
+  <style>
+    :root{
+      --bg:#081018;--panel:#0e1a24;--panel2:#122330;--line:#203644;--line2:#2a4a5d;
+      --text:#d9e8ee;--muted:#7892a1;--cyan:#42d6d0;--blue:#62a8ff;--amber:#f0b45a;
+      --red:#ff6b78;--green:#68df9a;--violet:#b490ff;
+      --pending:#536b78;--solving:#f0b45a;--committed:#42d6d0;--failed:#ff6b78;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at 12% -10%,#133547 0,transparent 34%),var(--bg);
+      color:var(--text);font:13px/1.5 "Segoe UI","Microsoft YaHei",system-ui,sans-serif;min-height:100vh}
+    button,input,select{font:inherit}
+    button{cursor:pointer;border:1px solid var(--line2);background:#132a38;color:var(--text);
+      border-radius:7px;padding:7px 11px;transition:.16s}
+    button:hover{border-color:var(--cyan);color:#fff;background:#173849}
+    button.primary{background:linear-gradient(135deg,#1a6b78,#205d9b);border-color:#2a91a0}
+    button.danger{border-color:#6b3540;background:#2a1720;color:#ff9ba4}
+    input{background:#0a1620;border:1px solid var(--line);color:var(--text);border-radius:6px;padding:7px 9px;width:100%}
+    header{position:sticky;top:0;z-index:5;background:rgba(8,16,24,.92);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);padding:13px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+    .brand{font-weight:700;font-size:17px;letter-spacing:.5px;white-space:nowrap}
+    .brand span{color:var(--cyan)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+    .chip{border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:4px 10px;color:var(--muted)}
+    .chip b{color:var(--text);font-weight:600}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    main{padding:16px 20px 38px;max-width:1680px;margin:auto}
+    .grid{display:grid;grid-template-columns:minmax(410px,1fr) minmax(520px,1.35fr);gap:14px}
+    .col{display:flex;flex-direction:column;gap:14px;min-width:0}
+    .card{background:linear-gradient(180deg,rgba(18,36,48,.93),rgba(12,24,33,.95));
+      border:1px solid var(--line);border-radius:11px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.18)}
+    .card h2{margin:0;padding:10px 13px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;
+      color:#9bb8c5;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .card h2 small{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)}
+    .body{padding:12px 13px}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .tree{font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:nowrap}
+    .tree ul{list-style:none;margin:0;padding-left:14px;border-left:1px solid #28414d}
+    .tree>ul{padding-left:0;border-left:0}
+    .tree li{margin:3px 0}
+    .node{padding:1px 5px;border-radius:4px;color:#bcd2dc}
+    .node.root{color:var(--cyan);font-weight:600}
+    .node.mapped{background:#102f3b;color:#dffafa}
+    .node.fallback{color:var(--amber)}
+    .frame-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:5px}
+    .cell{position:relative;height:31px;border-radius:5px;border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;font:11px ui-monospace,monospace;color:#0b1820;
+      background:var(--pending);cursor:pointer;transition:.15s;user-select:none}
+    .cell:hover{transform:translateY(-1px);filter:brightness(1.15)}
+    .cell.selected{outline:2px solid #fff;outline-offset:1px}
+    .cell.solving{background:var(--solving)}
+    .cell.committed{background:var(--committed)}
+    .cell.failed{background:var(--failed);color:#fff}
+    .cell.invalid:after{content:"";position:absolute;inset:0;border-radius:4px;
+      background:repeating-linear-gradient(135deg,transparent 0 4px,rgba(255,255,255,.2) 4px 6px)}
+    .cell .hit{position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:#fff}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);margin-top:10px;font-size:11px}
+    .dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:6px 5px;border-bottom:1px solid #1b303c;text-align:left;vertical-align:top}
+    th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.7px}
+    td.mono,.mono{font-family:ui-monospace,Consolas,monospace;font-size:11px}
+    .rule{cursor:pointer}.rule:hover td{background:#12303d}
+    .rule.active td{background:#153947}
+    .tag{display:inline-block;border:1px solid var(--line2);border-radius:4px;padding:1px 5px;margin:1px;color:#9fd7e4;font-size:10px}
+    .tag.amber{color:var(--amber);border-color:#5d4826}
+    .tag.violet{color:var(--violet);border-color:#4b3b6b}
+    .mut{color:var(--muted)} .cyan{color:var(--cyan)} .amber{color:var(--amber)} .red{color:var(--red)}
+    .editor{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding:10px;border:1px solid var(--line);
+      border-radius:8px;background:#0a1720}
+    .editor .wide{grid-column:1/-1}
+    .editor label{display:block;color:var(--muted);font-size:10px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.6px}
+    canvas{width:100%;height:150px;display:block;background:#08131b;border:1px solid #172c38;border-radius:7px}
+    .chart-wrap{padding:8px 0 0}
+    .chart-title{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:5px}
+    .detail-head{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+    .state-pill{padding:3px 8px;border-radius:20px;color:#081018;font-size:11px;font-weight:700;background:var(--pending)}
+    .state-pill.committed{background:var(--committed)}.state-pill.failed{background:var(--failed);color:#fff}
+    .state-pill.solving{background:var(--solving)}
+    .scroll{max-height:285px;overflow:auto;scrollbar-color:#315364 transparent;scrollbar-width:thin}
+    .kv{display:grid;grid-template-columns:125px 1fr;gap:4px 10px;font-size:12px}
+    .kv .k{color:var(--muted)}
+    .empty{color:var(--muted);padding:17px;text-align:center}
+    .flash{white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:11px;padding:9px;border-radius:7px;
+      border:1px solid var(--line);background:#08131b;color:#a9c6d2;max-height:170px;overflow:auto}
+    .flash.ok{border-color:#285b43;color:var(--green)}
+    .flash.bad{border-color:#69323a;color:#ff9ba4}
+    .window-row{display:grid;grid-template-columns:80px 1fr auto;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid #182d38;font-size:11px}
+    .bar{height:4px;background:#1c3140;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--cyan)}
+    .mini{font-size:10px;color:var(--muted)}
+    @media(max-width:1100px){.grid{grid-template-columns:1fr}main{padding:12px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">Retarget<span>Lab</span> 动作重定向诊断台</div>
+  <div class="chips" id="chips"></div>
+  <div class="actions">
+    <button class="primary" onclick="act('/api/solve',{})">求解待处理帧</button>
+    <button onclick="act('/api/retry',{})">重试失败帧</button>
+    <button onclick="validateFull()">增量 / 全量比对</button>
+    <button onclick="checkTruth()">真值核验</button>
+  </div>
+</header>
+<main>
+  <div class="grid">
+    <div class="col">
+      <section class="card">
+        <h2>帧窗口状态矩阵 <small id="matrix-sub"></small></h2>
+        <div class="body">
+          <div class="frame-grid" id="frames"></div>
+          <div class="legend">
+            <span><i class="dot" style="background:var(--pending)"></i>待求解</span>
+            <span><i class="dot" style="background:var(--solving)"></i>求解中</span>
+            <span><i class="dot" style="background:var(--committed)"></i>已提交</span>
+            <span><i class="dot" style="background:var(--failed)"></i>失败</span>
+            <span>斜纹 = 已失效</span><span>白点 = 缓存命中</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>骨架层级 <small>源 / 目标</small></h2>
+        <div class="body split">
+          <div id="source-tree"></div>
+          <div id="target-tree"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>关节映射关系 <small>点击规则编辑，仅影响未提交帧</small></h2>
+        <div class="body">
+          <div class="scroll"><table id="mapping-table"></table></div>
+          <div class="editor" id="mapping-editor">
+            <div class="wide mut">选择一条映射规则以编辑。</div>
+          </div>
+          <div style="height:10px"></div>
+          <div id="scale-editor" class="editor"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>依赖失效传播 <small id="inv-sub"></small></h2>
+        <div class="body">
+          <div id="invalidations" class="scroll"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card">
+        <h2>约束违背曲线 <small>角度 ° / 末端距离</small></h2>
+        <div class="body chart-wrap">
+          <div class="chart-title"><span>逐帧约束违背</span><span class="mono" id="violation-axis"></span></div>
+          <canvas id="violation-chart" width="900" height="170"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>足部接触与根轨迹 <small>接触区间 / 校正后根节点</small></h2>
+        <div class="body chart-wrap">
+          <div class="chart-title"><span>根轨迹 XZ 投影</span><span class="mono" id="root-axis"></span></div>
+          <canvas id="root-chart" width="900" height="170"></canvas>
+          <div class="chart-title" style="margin-top:9px"><span>足部接触</span><span class="mono">左 / 右</span></div>
+          <canvas id="contact-chart" width="900" height="95"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>逐帧诊断 <small id="detail-sub"></small></h2>
+        <div class="body" id="detail"></div>
+      </section>
+
+      <section class="card">
+        <h2>骨骼姿态预览 <small id="pose-sub"></small></h2>
+        <div class="body">
+          <canvas id="pose-canvas" width="900" height="300"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>提交窗口 / 资源边界 <small id="window-sub"></small></h2>
+        <div class="body">
+          <div id="windows" class="scroll"></div>
+          <div id="pool-info" class="mini" style="margin-top:9px"></div>
+          <div id="flash" class="flash" style="margin-top:9px">就绪。</div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<script>
+let S = null, selected = 0, detail = null, selectedRule = -1;
+
+async function api(path, options={}) {
+  const res = await fetch(path, {headers:{'Content-Type':'application/json'}, ...options});
+  const text = await res.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch(e) { data = {message:text}; }
+  if (!res.ok) throw data || {code:'HTTP_'+res.status,message:text};
+  return data;
+}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmt(v,n=4){return Number.isFinite(v)?Number(v).toFixed(n):'—';}
+function flash(msg,bad=false){const el=document.getElementById('flash');el.className='flash '+(bad?'bad':'ok');el.textContent=msg;}
+
+async function refresh(keepDetail=true){
+  S = await api('/api/state');
+  if (selected >= S.totalFrames) selected = 0;
+  render();
+  if (keepDetail) await loadDetail(selected);
+}
+
+async function loadDetail(frame){
+  selected = frame;
+  try { detail = await api('/api/frame?frame='+frame); } catch(e) { detail=null; }
+  renderFrames(); renderDetail(); renderPose();
+}
+
+function render(){
+  const c = document.getElementById('chips');
+  c.innerHTML = [
+    `<span class="chip">目标 <b>${esc(S.targetName)}</b></span>`,
+    `<span class="chip">进度 <b>${S.committedFrames}/${S.totalFrames}</b></span>`,
+    `<span class="chip">缓存 <b>${S.cacheHits}</b> 命中 / <b>${S.cacheMisses}</b> 未命中</span>`,
+    `<span class="chip">失效 <b>${S.invalidations.length}</b> 帧</span>`,
+    `<span class="chip">参数版本 <b>v${S.paramVersion}</b></span>`,
+    `<span class="chip">算法 <b>${esc(S.algorithmVersion)}</b></span>`
+  ].join('');
+  document.getElementById('matrix-sub').textContent = `${Math.round(S.progress*100)}% committed`;
+  renderFrames(); renderTrees(); renderMapping(); renderScales();
+  renderInvalidations(); drawViolations(); drawRoots(); drawContacts();
+  renderWindows(); renderDetail(); renderPose();
+}
+
+function renderFrames(){
+  const host = document.getElementById('frames');
+  host.innerHTML = '';
+  for (const f of S.frames){
+    const el = document.createElement('div');
+    el.className = 'cell '+f.state+(f.invalidated?' invalid':'')+(f.frame===selected?' selected':'');
+    el.title = `帧 ${f.frame} · ${f.state}${f.invalidated?' · 失效: '+f.invalidJoints.join(', '):''}${f.error?' · '+f.error:''}`;
+    el.innerHTML = `${f.frame}${f.cacheHit?'<i class="hit"></i>':''}`;
+    el.onclick = () => loadDetail(f.frame);
+    host.appendChild(el);
+  }
+}
+
+function renderTrees(){
+  const mapped = new Set();
+  for (const r of S.mapping.rules) for (const t of r.targets) mapped.add(t);
+  const fallback = new Set((S.mapping.missing||[]).map(m=>m.joint));
+  document.getElementById('source-tree').innerHTML = '<div class="mut" style="margin-bottom:6px">SOURCE · '+esc(S.source.name)+'</div>'+treeHTML(S.source,mapped,fallback);
+  document.getElementById('target-tree').innerHTML = '<div class="mut" style="margin-bottom:6px">TARGET · '+esc(S.target.name)+'</div>'+treeHTML(S.target,mapped,fallback);
+}
+function treeHTML(skel,mapped,fallback){
+  const kids = new Map();
+  let root = -1;
+  skel.joints.forEach((j,i)=>{if(!kids.has(j.parent))kids.set(j.parent,[]);kids.get(j.parent).push(i);if(j.parent<0)root=i;});
+  function walk(i){
+    const j=skel.joints[i];
+    const cls = j.parent<0?'root':(mapped.has(j.name)?'mapped':(fallback.has(j.name)?'fallback':''));
+    let out = `<li><span class="node ${cls}">${esc(j.name)}${j.rotationLimitDeg?` <span class="mut">±${j.rotationLimitDeg}°</span>`:''}</span>`;
+    const cs=kids.get(i)||[];
+    if(cs.length) out += '<ul>'+cs.map(walk).join('')+'</ul>';
+    return out+'</li>';
+  }
+  return root<0?'<div class="empty">无根关节</div>':'<div class="tree"><ul>'+walk(root)+'</ul></div>';
+}
+
+function renderMapping(){
+  const host = document.getElementById('mapping-table');
+  host.innerHTML = `<tr><th>#</th><th>源关节</th><th>目标关节</th><th>阶段</th></tr>` + S.mapping.rules.map((r,i)=>{
+    const targets=r.targets.map(t=>`<span class="tag">${esc(t)}</span>`).join('');
+    const phases=r.phases?.length?r.phases.map(p=>`<span class="tag violet">P${p}</span>`).join(''):'<span class="tag">全部</span>';
+    return `<tr class="rule ${i===selectedRule?'active':''}" onclick="selectRule(${i})"><td class="mono">${i}</td><td class="mono">${esc(r.source)}</td><td>${targets}</td><td>${phases}</td></tr>`;
+  }).join('');
+}
+function selectRule(i){
+  selectedRule=i;
+  const r=S.mapping.rules[i];
+  const host=document.getElementById('mapping-editor');
+  host.innerHTML = `
+    <div><label>源关节</label><input id="edit-source" value="${esc(r.source)}"></div>
+    <div><label>权重</label><input id="edit-weight" type="number" step="0.01" value="${r.weight||1}"></div>
+    <div class="wide"><label>目标关节（逗号分隔）</label><input id="edit-targets" value="${esc(r.targets.join(','))}"></div>
+    <div class="wide"><label>动作阶段（逗号分隔，留空=全部）</label><input id="edit-phases" value="${esc((r.phases||[]).join(','))}"></div>
+    <div class="wide" style="display:flex;gap:8px"><button class="primary" onclick="saveRule(${i})">应用映射编辑</button><span class="mini">已提交帧保持冻结。</span></div>`;
+  renderMapping();
+}
+async function saveRule(i){
+  const old=S.mapping.rules[i];
+  const phases=document.getElementById('edit-phases').value.split(',').map(x=>x.trim()).filter(Boolean).map(Number);
+  const rule={
+    source:document.getElementById('edit-source').value.trim(),
+    targets:document.getElementById('edit-targets').value.split(',').map(x=>x.trim()).filter(Boolean),
+    weight:Number(document.getElementById('edit-weight').value)||1,
+    phases
+  };
+  try{
+    const report=await api('/api/mapping',{method:'POST',body:JSON.stringify({index:i,rule})});
+    flash(`映射已更新；失效 ${report.frames} 帧，${report.cacheHits} 帧缓存复用。`);
+    await refresh();
+  }catch(e){flash(errorText(e),true);}
+}
+
+function renderScales(){
+  const host=document.getElementById('scale-editor');
+  host.innerHTML = `<div class="wide mut" style="font-size:10px;text-transform:uppercase;letter-spacing:.6px">比例系数</div>` + (S.mapping.scaleDefaults||[]).map(s=>{
+    const phases=s.phases?.length?`P${s.phases.join(',')}`:'全部';
+    return `<div><label>${esc(s.key)} · ${phases}</label><div style="display:flex;gap:5px"><input id="scale-${esc(s.key)}" type="number" step="0.01" value="${S.scaleValues[s.key]??s.value}"><button onclick="saveScale('${esc(s.key)}')">应用</button></div></div>`;
+  }).join('');
+}
+async function saveScale(key){
+  try{
+    const value=Number(document.getElementById('scale-'+key).value);
+    const report=await api('/api/scale',{method:'POST',body:JSON.stringify({key,value})});
+    flash(`比例 ${key}=${value} 已应用；失效 ${report.frames} 帧，${report.cacheHits} 帧缓存复用。`);
+    await refresh();
+  }catch(e){flash(errorText(e),true);}
+}
+
+function renderInvalidations(){
+  const host=document.getElementById('invalidations');
+  document.getElementById('inv-sub').textContent=`${S.invalidations.length} 帧 / ${(S.dependencies.rules||[]).length} 映射依赖 / ${(S.dependencies.fallbacks||[]).length} 降级依赖 / ${(S.dependencies.scales||[]).length} 比例依赖`;
+  if(!S.invalidations.length){host.innerHTML='<div class="empty">当前没有失效帧。已提交帧不会因后续编辑失效。</div>';return;}
+  host.innerHTML=S.invalidations.map(inv=>`<div style="padding:6px 0;border-bottom:1px solid #192f3b">
+    <div><b class="amber">帧 ${inv.frame}</b> <span class="tag violet">P${inv.phase}</span> ${inv.joints.map(j=>`<span class="tag">${esc(j)}</span>`).join('')}</div>
+    <div class="mini">${inv.reasons.map(esc).join(' · ')}</div></div>`).join('');
+}
+
+function canvasCtx(id){
+  const cv=document.getElementById(id), dpr=window.devicePixelRatio||1;
+  const rect=cv.getBoundingClientRect();
+  const w=Math.max(300,Math.floor(rect.width*dpr)), h=Math.floor(cv.height/ (cv.width/w));
+  cv.width=w; cv.height=Math.max(1,h);
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w:w/dpr,h:h/dpr,cv};
+}
+function chartFrame(x0,y0,w,h){
+  const ctx=arguments[0]; return {x0,y0,w,h};
+}
+function drawAxes(ctx,x0,y0,w,h){
+  ctx.clearRect(0,0,x0+w+20,y0+h+20);
+  ctx.strokeStyle='#1b3442';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=y0+h*i/4;ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x0+w,y);ctx.stroke();}
+  for(let i=0;i<=8;i++){const x=x0+w*i/8;ctx.beginPath();ctx.moveTo(x,y0);ctx.lineTo(x,y0+h);ctx.stroke();}
+}
+function drawViolations(){
+  const {ctx,w,h}=canvasCtx('violation-chart');
+  const x0=38,y0=12,w0=w-50,h0=h-28;
+  drawAxes(ctx,x0,y0,w0,h0);
+  const fs=S.frames.filter(f=>f.constraint);
+  if(!fs.length){ctx.fillStyle='#7892a1';ctx.fillText('尚无已提交帧',x0+10,y0+25);return;}
+  const maxA=Math.max(0.0001,...fs.map(f=>f.constraint.angleViolationDeg));
+  const maxE=Math.max(0.0001,...fs.map(f=>f.constraint.effectorViolation));
+  const normA=maxA>0?maxA:1, normE=maxE>0?maxE:1;
+  const px=f=>x0+w0*(S.totalFrames>1?f.frame/(S.totalFrames-1):0);
+  const py=(v,m)=>y0+h0*(1-Math.min(1,v/m));
+  function line(key,norm,color){
+    ctx.strokeStyle=color;ctx.lineWidth=1.7;ctx.beginPath();
+    fs.forEach((f,i)=>{const x=px(f),y=py(f.constraint[key],norm);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.stroke();
+  }
+  line('angleViolationDeg',normA,'#f0b45a');
+  line('effectorViolation',normE,'#42d6d0');
+  ctx.fillStyle='#7892a1';ctx.font='10px ui-monospace';
+  ctx.fillText('0',x0-24,y0+h0+4);ctx.fillText(maxA.toFixed(3)+'°',x0-30,y0+8);
+  ctx.fillText('帧',x0+w0-10,y0+h0+18);
+  document.getElementById('violation-axis').textContent=`角度 max ${maxA.toFixed(5)}° · 末端 max ${maxE.toFixed(5)}`;
+}
+
+function drawRoots(){
+  const {ctx,w,h}=canvasCtx('root-chart');
+  const x0=34,y0=12,w0=w-46,h0=h-26;
+  drawAxes(ctx,x0,y0,w0,h0);
+  const fs=S.frames.filter(f=>f.root);
+  if(!fs.length){ctx.fillStyle='#7892a1';ctx.fillText('根轨迹等待已提交帧',x0+10,y0+24);return;}
+  const xs=fs.map(f=>f.root.x),zs=fs.map(f=>f.root.z),ys=fs.map(f=>f.root.y);
+  const minX=Math.min(...xs),maxX=Math.max(...xs),minZ=Math.min(...zs),maxZ=Math.max(...zs);
+  const minY=Math.min(...ys),maxY=Math.max(...ys);
+  const sx=x=>x0+w0*((x-minX)/(maxX-minX||1));
+  const sz=z=>y0+h0*(1-((z-minZ)/(maxZ-minZ||1)));
+  ctx.strokeStyle='#42d6d0';ctx.lineWidth=1.7;ctx.beginPath();
+  fs.forEach((f,i)=>{const x=sx(f.root.x),y=sz(f.root.z);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+  ctx.fillStyle='#62a8ff';
+  fs.forEach(f=>{const x=sx(f.root.x),y=sz(f.root.z);ctx.beginPath();ctx.arc(x,y,2.2,0,Math.PI*2);ctx.fill();});
+  ctx.fillStyle='#7892a1';ctx.font='10px ui-monospace';
+  ctx.fillText('X',x0+w0-10,y0+h0+18);ctx.fillText('Z',x0-24,y0+8);
+  document.getElementById('root-axis').textContent=`Y ${minY.toFixed(3)} .. ${maxY.toFixed(3)}`;
+}
+
+function drawContacts(){
+  const {ctx,w,h}=canvasCtx('contact-chart');
+  ctx.clearRect(0,0,w,h);
+  const x0=34,w0=w-46,lane=h/2;
+  const feet=['foot_l','foot_r'];
+  const colors={foot_l:'#42d6d0',foot_r:'#62a8ff'};
+  feet.forEach((foot,i)=>{
+    const y=i*lane+12;
+    ctx.fillStyle='#7892a1';ctx.font='10px ui-monospace';ctx.fillText(foot,x0-2,y+10);
+    ctx.fillStyle='#132633';ctx.fillRect(x0,y,w0,12);
+    for(const c of (S.clip.contacts||[]).filter(c=>c.foot===foot)){
+      const a=x0+w0*(c.start/Math.max(1,S.totalFrames-1));
+      const b=x0+w0*(c.end/Math.max(1,S.totalFrames-1));
+      ctx.fillStyle=colors[foot];ctx.globalAlpha=.8;ctx.fillRect(a,y,Math.max(2,b-a),12);ctx.globalAlpha=1;
+    }
+  });
+  ctx.strokeStyle='#315364';ctx.strokeRect(x0,0,w0,h);
+}
+
+function renderDetail(){
+  const host=document.getElementById('detail');
+  if(!detail){host.innerHTML='<div class="empty">选择帧以查看诊断。</div>';return;}
+  const f=detail.frame, r=detail.result;
+  document.getElementById('detail-sub').textContent='frame '+f.frame;
+  let html=`<div class="detail-head"><span class="state-pill ${f.state}">${f.state}</span>
+    <b>帧 ${f.frame}</b>${f.invalidated?'<span class="tag amber">失效</span>':''}
+    ${f.state==='failed'?`<button class="danger" onclick="retryFrame(${f.frame})">重试该帧</button>`:''}</div>`;
+  if(f.error) html+=`<div class="flash bad">${esc(f.error)}</div>`;
+  if(f.invalidated) html+=`<div class="mini amber">失效关节：${f.invalidJoints.map(esc).join(', ')}<br>${f.invalidReasons.map(esc).join(' · ')}</div>`;
+  if(r){
+    html+=`<div class="kv" style="margin-top:9px">
+      <span class="k">根轨迹校正后</span><span class="mono">${fmt(r.rootTrajectory.x)} / ${fmt(r.rootTrajectory.y)} / ${fmt(r.rootTrajectory.z)}</span>
+      <span class="k">根校正量</span><span class="mono">${fmt(r.rootShift.x)} / ${fmt(r.rootShift.y)} / ${fmt(r.rootShift.z)}</span>
+      <span class="k">接触足</span><span>${r.contacts.map(x=>`<span class="tag">${esc(x)}</span>`).join('')||'—'}</span>
+      <span class="k">角度违背</span><span class="mono amber">${fmt(r.constraint.angleViolationDeg,5)}° / ${r.constraint.angleViolations} 次</span>
+      <span class="k">末端违背</span><span class="mono cyan">${fmt(r.constraint.effectorViolation,7)} / ${r.constraint.effectorConstraints} 约束</span>
+      <span class="k">迭代投影</span><span class="mono">${r.constraint.iterations}</span>
+      <span class="k">映射快照</span><span class="mono">${esc(r.snapshot.mappingHash).slice(0,18)}…</span>
+      </div>`;
+    html+=`<div class="mini" style="margin-top:9px">局部旋转（前 12 关节）</div>
+      <div class="scroll"><table><tr><th>关节</th><th>w</th><th>x</th><th>y</th><th>z</th></tr>`+
+      r.targetRotations.slice(0,12).map((q,i)=>`<tr><td class="mono">${esc(r.world[i]?.joint||i)}</td><td class="mono">${fmt(q.w,4)}</td><td class="mono">${fmt(q.x,4)}</td><td class="mono">${fmt(q.y,4)}</td><td class="mono">${fmt(q.z,4)}</td></tr>`).join('')+
+      `</table></div>`;
+  } else {
+    html+=`<div class="empty">该帧尚未提交。${f.state==='pending'?'点击顶部“求解待处理帧”。':''}</div>`;
+  }
+  host.innerHTML=html;
+}
+
+function renderPose(){
+  const {ctx,w,h}=canvasCtx('pose-canvas');
+  ctx.clearRect(0,0,w,h);
+  document.getElementById('pose-sub').textContent = detail&&detail.result?'frame '+detail.frame.frame:'等待姿态';
+  if(!detail||!detail.result){ctx.fillStyle='#7892a1';ctx.fillText('提交后显示世界坐标骨骼姿态',16,28);return;}
+  const world=detail.result.world, target=S.target;
+  if(!world.length) return;
+  const xs=world.map(j=>j.position.x),ys=world.map(j=>j.position.y);
+  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+  const pad=28,sx=x=>pad+(w-2*pad)*((x-minX)/(maxX-minX||1)),sy=y=>h-pad-(h-2*pad)*((y-minY)/(maxY-minY||1));
+  ctx.strokeStyle='#315364';ctx.lineWidth=2;
+  target.joints.forEach((j,i)=>{
+    if(j.parent<0)return;
+    const a=world[j.parent],b=world[i];
+    ctx.beginPath();ctx.moveTo(sx(a.position.x),sy(a.position.y));ctx.lineTo(sx(b.position.x),sy(b.position.y));ctx.stroke();
+  });
+  world.forEach((j,i)=>{
+    const x=sx(j.position.x),y=sy(j.position.y);
+    const isContact=(detail.result.contacts||[]).includes(j.joint);
+    ctx.fillStyle=isContact?'#f0b45a':'#42d6d0';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#9bb8c5';ctx.font='9px ui-monospace';ctx.fillText(j.joint,x+4,y-4);
+  });
+}
+
+function renderWindows(){
+  const host=document.getElementById('windows');
+  document.getElementById('window-sub').textContent=`${S.windows.length} windows`;
+  if(!S.windows.length){host.innerHTML='<div class="empty">尚未提交检查点窗口。</div>';}
+  else host.innerHTML=S.windows.map(w=>`<div class="window-row"><span class="mono">#${w.commitSeq}</span><span>帧 ${w.startFrame}–${w.endFrame} <span class="mini">${esc(w.mappingHash).slice(0,12)}…</span></span><span class="mono">${esc(w.contentHash).slice(0,10)}…</span></div>`).join('');
+  const p=S.pool||{};
+  document.getElementById('pool-info').textContent=`worker=${p.workers||'—'} · queue cap=${p.queueCapacity||'—'} · buffer cap=${p.bufferLimit||'—'} · peak queue=${p.peakQueue||0} · peak in-flight=${p.peakInFlight||0} · blocked dispatches=${p.blockedDispatches||0}`;
+}
+
+async function act(path,body){
+  try{
+    const run=await api(path,{method:'POST',body:JSON.stringify(body||{})});
+    flash(`${path} 完成：求解 ${run.framesSolved||0} 帧，缓存命中 ${run.cacheHits||0}，失败 ${run.failedFrames?.length||0}。`);
+    await refresh();
+  }catch(e){flash(errorText(e),true); await refresh(false);}
+}
+async function retryFrame(frame){
+  try{
+    const run=await api('/api/retry',{method:'POST',body:JSON.stringify({frame})});
+    flash(`帧 ${frame} 重试完成：成功 ${run.framesSolved||0}。`);
+    await refresh();
+  }catch(e){flash(errorText(e),true); await refresh(false);}
+}
+async function validateFull(){
+  try{
+    const r=await api('/api/validate',{method:'POST',body:'{}'});
+    flash(`增量/全量一致：比较 ${r.framesCompared} 个当前配置帧，跳过 ${r.frozenSkipped?.length||0} 个冻结帧，firstFrame=${r.firstFrame}。`);
+  }catch(e){
+    const rep=e.report?`\nfirstFrame=${e.report.firstFrame} joint=${e.report.joint||'—'} ${e.report.message||''}`:'';
+    flash(errorText(e)+rep,true);
+    if(e.report) await refresh(false);
+  }
+}
+async function checkTruth(){
+  try{
+    const r=await api('/api/truth');
+    flash(`解析真值核验通过，容差 ${r.tolerance}。`);
+  }catch(e){flash(errorText(e),true);}
+}
+function errorText(e){
+  if(!e) return '未知错误';
+  return [e.code,e.message,e.joint?('joint='+e.joint):'',e.frame!==undefined?('frame='+e.frame):''].filter(Boolean).join(' · ');
+}
+window.addEventListener('resize',()=>{if(S){drawViolations();drawRoots();drawContacts();renderPose();}});
+refresh().catch(e=>flash(errorText(e),true));
+setInterval(()=>{if(S) refresh(false).catch(()=>{});},3500);
+</script>
+</body>
+</html>
