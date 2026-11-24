@@ -20,3 +20,29 @@ Windows 本机安装 Go 1.22 或以上并确认 go version 可用，无需网络
 
 验收：
 用本地样本验证分块评估指标、误差上界与三路径一致，并检查异常链路与断点恢复。
+
+---
+
+## 交付入口
+
+实现说明见 `docs/DELIVERY.md`，实际验证记录见 `docs/VALIDATION.md`，完整日志见
+`artifacts/acceptance-20261125.log`。
+
+快速验收：
+
+```bash
+go test ./...
+bash scripts/acceptance.sh
+```
+
+常用命令：
+
+```bash
+go run ./cmd/audiocheck gen --dir artifacts/demo
+go run ./cmd/audiocheck run --dir artifacts/demo --mode full
+go run ./cmd/audio-verify --db artifacts/demo/checkpoint.db --truth artifacts/demo/truth.json
+go run ./cmd/audiocheck serve --report artifacts/demo/report-full.json
+```
+
+Windows PowerShell 建议先执行 `$env:CGO_ENABLED = "0"`，并用
+`winget install SQLite.SQLite` 安装 `sqlite3.exe`。
