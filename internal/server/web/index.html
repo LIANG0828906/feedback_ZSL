@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>游戏语音事件指纹标注工作台</title>
+<style>
+  :root { --bg:#0f1420; --panel:#171e2e; --line:#26314a; --txt:#dbe4f3;
+          --muted:#8aa0c0; --accent:#4f9cff; --ok:#37c97e; --warn:#f0b429; --err:#ff6b6b; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--txt); font-size:13px; }
+  header { padding:10px 16px; background:var(--panel); border-bottom:1px solid var(--line); display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  header h1 { font-size:15px; margin:0; }
+  .grid { display:grid; grid-template-columns:340px 1fr 360px; gap:10px; padding:10px; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px; }
+  .panel h2 { font-size:13px; margin:0 0 8px; color:var(--accent); }
+  label { display:block; color:var(--muted); margin:6px 0 2px; }
+  input,select,button { font:inherit; }
+  input[type=number],select { width:100%; padding:5px; background:#0d1322; color:var(--txt); border:1px solid var(--line); border-radius:5px; }
+  button { padding:6px 10px; border-radius:5px; border:1px solid var(--line); background:#1d2942; color:var(--txt); cursor:pointer; margin:4px 4px 0 0; }
+  button:hover { border-color:var(--accent); }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#06101f; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th,td { border-bottom:1px solid var(--line); padding:4px 6px; text-align:left; }
+  th { color:var(--muted); }
+  .pill { display:inline-block; padding:1px 7px; border-radius:10px; font-size:11px; }
+  .pending{background:#33415c;} .extracting{background:#7a5c00;color:#ffe9b0;}
+  .committed{background:#0f5132;color:#b6f0d0;} .failed{background:#5c1f24;color:#ffc9c9;}
+  #waveCanvas,#matrixCanvas { width:100%; background:#0d1322; border:1px solid var(--line); border-radius:6px; }
+  .stat { display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed var(--line); }
+  .muted { color:var(--muted); }
+  .ok{color:var(--ok);} .warn{color:var(--warn);} .errc{color:var(--err);}
+  pre { background:#0d1322; border:1px solid var(--line); border-radius:6px; padding:8px; max-height:240px; overflow:auto; font-size:11px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; }
+  .grow { flex:1; }
+</style>
+</head>
+<body>
+<header>
+  <h1>语音事件指纹标注工作台</h1>
+  <select id="materialSelect" class="grow"></select>
+  <button class="primary" id="openBtn">打开素材</button>
+  <span id="health" class="muted"></span>
+</header>
+
+<div class="grid">
+  <div>
+    <div class="panel">
+      <h2>算法参数（提交后冻结）</h2>
+      <div class="row">
+        <div class="grow"><label>帧长 frame_length</label><input type="number" id="frameLength"></div>
+        <div class="grow"><label>帧移 frame_shift</label><input type="number" id="frameShift"></div>
+      </div>
+      <div class="row">
+        <div class="grow"><label>频带数 bands</label><input type="number" id="bands"></div>
+        <div class="grow"><label>间隙容忍(帧)</label><input type="number" id="gapTol"></div>
+      </div>
+      <div class="row">
+        <div class="grow"><label>最小命中帧</label><input type="number" id="minHit"></div>
+        <div class="grow"><label>匹配阈值</label><input type="number" step="0.01" id="threshold"></div>
+      </div>
+      <label>静音阈值 quiet_ratio</label><input type="number" step="0.01" id="quietRatio">
+      <button id="applyParams">应用参数（未提交窗口）</button>
+      <hr style="border-color:var(--line)">
+      <button class="primary" id="runBtn">实时增量标注</button>
+      <button id="resumeBtn">断点恢复</button>
+      <button id="fullBtn">全量重算</button><br>
+      <button id="pauseBtn">暂停</button>
+      <button id="cancelBtn">取消</button>
+      <button id="compareBtn">三路径比对</button>
+      <button id="exportBtn">导出</button>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>质量统计</h2>
+      <div id="quality"><span class="muted">暂无</span></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <h2>波形与事件区间叠加</h2>
+      <canvas id="waveCanvas" height="180"></canvas>
+      <div id="legend" class="muted" style="margin-top:6px"></div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>逐窗帧指纹与状态矩阵</h2>
+      <div id="progress" class="muted"></div>
+      <canvas id="matrixCanvas" height="120" style="margin-top:6px"></canvas>
+      <div id="windowTable"></div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>帧指纹（前 64 帧量化码本）</h2>
+      <pre id="fpView" class="muted">运行标注后展示</pre>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <h2>事件清单 vs 标注结果</h2>
+      <div style="max-height:300px;overflow:auto">
+        <table id="eventTable"><thead><tr>
+          <th>#</th><th>声明类别</th><th>声明区间</th><th>实测类别</th><th>实测区间</th><th>置信度</th>
+        </tr></thead><tbody></tbody></table>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>三路径比对结果</h2>
+      <div id="compareView" class="muted">尚未执行</div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>消息 / 异常码</h2>
+      <pre id="logView">就绪</pre>
+    </div>
+  </div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

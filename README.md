@@ -1,5 +1,34 @@
 当前只有一台干净的开发机，需要从零构建一套面向游戏音效资产管理的语音事件指纹标注桌面工作台，交付可交互的专业应用与可重复演示。本地确定性样本生成器按固定种子产出多组游戏语音事件素材：每一组由若干事件片段拼接而成，每段事件在清单中声明类别标签、起止采样点与嵌入的类别特征音调，素材以单声道 PCM 描述文件给出。工作台的核心不是跨格式索引检索，而是逐帧事件标注：把素材分帧提取频谱特征并量化为帧指纹，再按帧指纹与类别特征音的匹配把连续帧聚合为事件区间，逐事件区间给出类别、起止采样点与置信度，供音效师核对与修正。业务方要求长素材的标注过程可暂停、退出或崩溃后从已提交帧窗口继续，逐窗查看帧指纹与事件区间，且实时标注、断点恢复标注与全量重算三条路径产出逐帧一致的指纹与逐事件一致的区间结果；已提交帧窗口在参数调整后不得被静默改写，版本不匹配的持久化快照必须整体作废。
 
+---
+
+## 实现交付（audiobench）
+
+纯 Go（Go 1.22，无 cgo、无外部网络依赖）实现，SQLite 采用纯 Go 驱动
+`modernc.org/sqlite`。设计与验证细节见 `docs/DESIGN.md`、`docs/VERIFICATION.md`。
+
+### 快速开始
+
+```bash
+make generate   # 固定种子 42 生成 data/ 下三类素材与类别参数
+make test       # 全部单元/集成测试
+make race       # go test -race 竞争检测
+make demo       # 三路径端到端演示，报告写入 var/demo_report.json
+make serve      # 浏览器打开 http://127.0.0.1:8080/
+```
+
+### 目录
+
+- `cmd/audiobench`：`generate` / `demo` / `serve` 命令入口
+- `internal/`：`sample` `ingest` `dsp` `match` `window` `checkpoint` `pipeline` `compare` `server`
+- `docs/`：技术设计与验证记录
+- `data/`、`var/`：本地样本与 SQLite/报告持久化目录（已 gitignore）
+
+### 异常码
+
+`E_SCHEMA` `E_RANGE` `E_PARA` `E_QUIET` `E_QUAL` `E_STATE` `E_DIV` `E_IO`，
+触发条件与携带字段见 `docs/DESIGN.md` 第 4 节。
+
 任务环境与准备：
 安装 Go 1.22 或以上版本，确认 go version 可执行。
 使用纯 Go 的 SQLite 驱动（如 modernc.org/sqlite）并在 go.mod 中锁定版本，确认可创建本地数据库文件。
