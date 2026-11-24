@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Resource Economy Workbench</title>
+  <style>
+    :root {
+      --bg: #0b1016;
+      --panel: #121a23;
+      --panel-2: #17222e;
+      --line: #263445;
+      --text: #d9e4ef;
+      --muted: #7f93a8;
+      --accent: #52d3a2;
+      --accent-2: #70a7ff;
+      --warn: #f2b65b;
+      --bad: #ff6b78;
+      --grid: rgba(112, 167, 255, .08);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% -5%, rgba(82,211,162,.12), transparent 28rem),
+        radial-gradient(circle at 95% 0%, rgba(112,167,255,.12), transparent 30rem),
+        var(--bg);
+      font: 13px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    button, input, select, textarea { font: inherit; }
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 7px;
+      padding: 7px 11px;
+      cursor: pointer;
+    }
+    button:hover { border-color: #3b5269; background: #1b2a39; }
+    button.primary { background: var(--accent); color: #05130e; border-color: var(--accent); font-weight: 700; }
+    button.primary:hover { background: #6ae2b4; }
+    button.ghost { background: transparent; }
+    input, select, textarea {
+      background: #0d151e;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 6px 8px;
+      min-width: 0;
+    }
+    textarea { width: 100%; min-height: 72px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    header {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(11,16,22,.78);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 240px; }
+    .brand-mark {
+      width: 31px; height: 31px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid; place-items: center; color: #06110d; font-weight: 900;
+    }
+    .brand strong { display: block; letter-spacing: .02em; }
+    .brand small { color: var(--muted); }
+    .toolbar { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px;
+      color: var(--muted); background: rgba(18,26,35,.7); white-space: nowrap;
+    }
+    .chip b { color: var(--text); font-weight: 600; }
+    .chip.ok { color: var(--accent); border-color: rgba(82,211,162,.35); }
+    .chip.warn { color: var(--warn); border-color: rgba(242,182,91,.4); }
+    main {
+      display: grid;
+      grid-template-columns: 260px minmax(520px, 1fr) 310px;
+      gap: 12px;
+      padding: 12px;
+      height: calc(100vh - 58px);
+      min-height: 620px;
+    }
+    .panel {
+      background: linear-gradient(180deg, rgba(23,34,46,.82), rgba(18,26,35,.88));
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .panel-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line);
+    }
+    .panel-head h2 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+    aside.panel { overflow: auto; }
+    .tree { padding: 7px; }
+    .node-row {
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 8px 8px calc(8px + var(--depth) * 13px);
+      border-radius: 7px; cursor: pointer; border: 1px solid transparent;
+    }
+    .node-row:hover { background: rgba(112,167,255,.07); }
+    .node-row.selected { background: rgba(82,211,162,.1); border-color: rgba(82,211,162,.35); }
+    .node-icon {
+      width: 20px; height: 20px; border-radius: 5px; display: grid; place-items: center;
+      background: #203042; color: var(--accent-2); font-size: 10px; font-weight: 800;
+    }
+    .node-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .node-meta { color: var(--muted); font-size: 11px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+    .dot.on { background: var(--accent); box-shadow: 0 0 0 3px rgba(82,211,162,.1); }
+    .dot.stall { background: var(--warn); box-shadow: 0 0 0 3px rgba(242,182,91,.12); }
+    .workspace {
+      display: grid;
+      grid-template-rows: auto minmax(230px, 1fr) minmax(180px, .78fr) minmax(200px, .72fr);
+      gap: 12px;
+      min-height: 0;
+    }
+    .metrics {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    }
+    .metric {
+      background: rgba(18,26,35,.8); border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px;
+    }
+    .metric span { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+    .metric strong { font-size: 18px; font-weight: 650; }
+    .chart-wrap { position: relative; height: 100%; padding: 8px 10px 5px; }
+    canvas { display: block; width: 100%; height: 100%; }
+    .legend { display: flex; gap: 12px; align-items: center; color: var(--muted); font-size: 11px; }
+    .legend i { display: inline-block; width: 18px; height: 2px; vertical-align: middle; margin-right: 5px; }
+    .legend .exact { background: var(--accent); }
+    .legend .preview { background: var(--accent-2); }
+    .heat-wrap { padding: 8px; height: calc(100% - 41px); overflow: auto; }
+    .timeline-wrap { padding: 4px 8px 8px; height: calc(100% - 41px); }
+    .timeline-tools { display: flex; gap: 7px; align-items: center; }
+    .timeline-tools select { max-width: 150px; }
+    .inspector { padding: 10px; overflow: auto; }
+    .field-group { border-bottom: 1px solid var(--line); padding: 0 0 12px; margin: 0 0 12px; }
+    .field-group:last-child { border: 0; }
+    .field-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+    .field-title h3 { margin: 0; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 8px; }
+    .field { display: grid; gap: 3px; }
+    .field label { color: var(--muted); font-size: 11px; }
+    .field input { width: 100%; }
+    .map-table { width: 100%; border-collapse: collapse; }
+    .map-table td { padding: 3px 0; }
+    .map-table td:first-child { color: var(--muted); padding-right: 7px; }
+    .map-table input { width: 100%; text-align: right; }
+    .stack { display: grid; gap: 7px; }
+    .btn-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; }
+    .muted { color: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .tiny { font-size: 11px; }
+    .error-box {
+      display: none; border: 1px solid rgba(255,107,120,.45); background: rgba(255,107,120,.08);
+      border-radius: 8px; padding: 8px; margin-bottom: 9px; color: #ffd7db; white-space: pre-wrap;
+    }
+    .error-box.show { display: block; }
+    .pending {
+      border: 1px solid rgba(242,182,91,.3); background: rgba(242,182,91,.07);
+      border-radius: 7px; padding: 6px 8px; margin-bottom: 8px; color: var(--warn);
+    }
+    .toast {
+      position: fixed; right: 18px; bottom: 18px; max-width: 440px;
+      padding: 10px 13px; background: #17222e; border: 1px solid var(--line);
+      border-radius: 9px; box-shadow: 0 16px 50px rgba(0,0,0,.45);
+      transform: translateY(20px); opacity: 0; pointer-events: none; transition: .18s ease;
+      z-index: 20;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.bad { border-color: rgba(255,107,120,.5); }
+    .empty { padding: 24px 14px; color: var(--muted); text-align: center; }
+    @media (max-width: 1180px) {
+      main { grid-template-columns: 220px 1fr; }
+      aside.inspector { display: none; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-mark">RE</div>
+    <div><strong>Resource Economy</strong><small>deterministic production workbench</small></div>
+  </div>
+  <div class="toolbar">
+    <select id="sampleSelect" aria-label="sample"></select>
+    <button id="openBtn">Open sample</button>
+    <div class="chips">
+      <span class="chip" id="statusChip">loading</span>
+      <span class="chip" id="hashChip">hash —</span>
+      <span class="chip" id="pendingChip">0 staged edits</span>
+    </div>
+  </div>
+  <button class="ghost" id="discardBtn">Discard</button>
+  <button class="primary" id="commitBtn">Commit batch</button>
+</header>
+
+<main>
+  <aside class="panel">
+    <div class="panel-head"><h2>Production graph</h2><span class="tiny muted" id="nodeCount">—</span></div>
+    <div class="tree" id="nodeTree"></div>
+  </aside>
+
+  <section class="workspace">
+    <div class="metrics">
+      <div class="metric"><span>Nodes</span><strong id="mNodes">—</strong></div>
+      <div class="metric"><span>Intents</span><strong id="mIntents">—</strong></div>
+      <div class="metric"><span>Committed windows</span><strong id="mWindows">—</strong></div>
+      <div class="metric"><span>Endpoint delta</span><strong id="mDelta">—</strong></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Preview / exact curves</h2>
+        <div class="legend">
+          <span><i class="exact"></i>exact</span>
+          <span><i class="preview"></i>preview (step <b id="previewStep">—</b>)</span>
+          <select id="metricSelect" aria-label="metric">
+            <option value="stock">global stock</option>
+            <option value="net">global net rate</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="curveCanvas"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Divergence heatmap</h2>
+        <span class="chip ok" id="heatStatus">0 divergence</span>
+      </div>
+      <div class="heat-wrap"><canvas id="heatCanvas"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Intent timeline · drag to retime</h2>
+        <div class="timeline-tools">
+          <select id="laneFilter"><option value="">all nodes</option></select>
+          <span class="tiny muted" id="selectedIntent">no intent selected</span>
+        </div>
+      </div>
+      <div class="timeline-wrap"><canvas id="timelineCanvas"></canvas></div>
+    </div>
+  </section>
+
+  <aside class="panel inspector" id="inspector">
+    <div class="panel-head"><h2>Inspector</h2><span class="tiny muted">working copy</span></div>
+    <div class="inspector" id="inspectorBody">
+      <div class="empty">Select a node or intent.</div>
+    </div>
+  </aside>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    manifest: null,
+    view: null,
+    selectedNode: null,
+    selectedIntent: -1,
+    pending: [],
+    livePreview: null,
+    previewTimer: null,
+    previewSeq: 0,
+    drag: null,
+    metric: "stock",
+    lane: "",
+    busy: false,
+    lastError: null,
+  };
+
+  const fmt = (n) => new Intl.NumberFormat("en-US").format(n);
+  const fixed = (n) => (Number(n || 0) / 1000).toFixed(3);
+  const typeLetter = { farm: "F", mine: "M", factory: "P", warehouse: "W" };
+  const intentColor = {
+    build: "#52d3a2", upgrade: "#70a7ff", demolish: "#ff6b78",
+    assign_workers: "#f2b65b", recipe: "#c18cff", consume: "#8ad5e6"
+  };
+
+  function toast(message, bad = false) {
+    const el = $("toast");
+    el.textContent = message;
+    el.classList.toggle("bad", bad);
+    el.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => el.classList.remove("show"), 4200);
+  }
+
+  async function api(path, opts = {}) {
+    const res = await fetch(path, {
+      ...opts,
+      headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
+    });
+    const text = await res.text();
+    let body = null;
+    try { body = text ? JSON.parse(text) : null; } catch (_) { body = { message: text }; }
+    if (!res.ok) {
+      const err = new Error(body?.message || `HTTP ${res.status}`);
+      err.body = body;
+      throw err;
+    }
+    return body;
+  }
+
+  function setBusy(flag, label = "") {
+    state.busy = flag;
+    $("commitBtn").disabled = flag;
+    $("openBtn").disabled = flag;
+    $("discardBtn").disabled = flag;
+    $("statusChip").textContent = label || (flag ? "working…" : "ready");
+  }
+
+  async function boot() {
+    try {
+      state.manifest = await api("/api/samples");
+      const select = $("sampleSelect");
+      select.innerHTML = "";
+      for (const sample of state.manifest.samples) {
+        const opt = document.createElement("option");
+        opt.value = sample.id;
+        opt.textContent = `${sample.id} · ${sample.intent_count} intents`;
+        select.appendChild(opt);
+      }
+      const preferred = state.manifest.samples.find(s => s.id === "frontier_small") || state.manifest.samples[0];
+      select.value = preferred.id;
+      await openSample(preferred.id);
+    } catch (e) {
+      showError(e);
+    }
+  }
+
+  async function openSample(id) {
+    setBusy(true, "opening sample…");
+    try {
+      const view = await api("/api/sessions", {
+        method: "POST",
+        body: JSON.stringify({ sample_id: id }),
+      });
+      state.view = view;
+      state.pending = [];
+      state.livePreview = null;
+      state.previewSeq++;
+      state.selectedNode = view.nodes[0]?.id || null;
+      state.selectedIntent = -1;
+      state.lastError = null;
+      await routeFromHash();
+      renderAll();
+      toast(`Loaded ${id}: ${view.nodes.length} nodes, ${view.intents.length} intents`);
+    } catch (e) {
+      showError(e);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function renderAll() {
+    if (!state.view) return;
+    renderHeader();
+    renderTree();
+    renderLaneFilter();
+    renderMetrics();
+    renderInspector();
+    drawCurves();
+    drawHeatmap();
+    drawTimeline();
+  }
+
+  function renderHeader() {
+    const v = state.view;
+    $("statusChip").textContent = v.dirty ? "dirty working copy" : "committed";
+    $("statusChip").className = "chip " + (v.dirty ? "warn" : "ok");
+    $("hashChip").textContent = `hash ${v.scene_hash.slice(0, 10)}…`;
+    $("pendingChip").textContent = `${state.pending.length} staged edit${state.pending.length === 1 ? "" : "s"}`;
+    $("pendingChip").className = "chip " + (state.pending.length ? "warn" : "");
+    $("nodeCount").textContent = v.nodes.length;
+  }
+
+  function renderTree() {
+    const v = state.view;
+    const byParent = new Map();
+    for (const n of v.nodes) {
+      const key = n.parent_id || "";
+      if (!byParent.has(key)) byParent.set(key, []);
+      byParent.get(key).push(n);
+    }
+    const root = document.createElement("div");
+    const visit = (parent) => {
+      for (const n of byParent.get(parent) || []) {
+        const row = document.createElement("div");
+        row.className = "node-row" + (n.id === state.selectedNode ? " selected" : "");
+        row.style.setProperty("--depth", n.depth || 0);
+        const latest = latestNode(n.id);
+        row.innerHTML = `
+          <span class="node-icon">${typeLetter[n.type] || "?"}</span>
+          <span class="node-name">${escapeHTML(n.name || n.id)}<br><span class="node-meta">${escapeHTML(n.type)} · L${n.level}</span></span>
+          <span class="dot ${latest?.stalled ? "stall" : (n.active ? "on" : "")}" title="${latest?.stalled ? "stalled" : (n.active ? "active" : "inactive")}"></span>`;
+        row.onclick = () => {
+          state.selectedNode = n.id;
+          state.selectedIntent = -1;
+          renderTree(); renderInspector();
+        };
+        root.appendChild(row);
+        visit(n.id);
+      }
+    };
+    visit("");
+    $("nodeTree").replaceChildren(root);
+  }
+
+  function latestNode(id) {
+    const snaps = state.view.exact?.snapshots || [];
+    if (!snaps.length) return null;
+    return snaps[snaps.length - 1].nodes.find(n => n.id === id);
+  }
+
+  function renderLaneFilter() {
+    const sel = $("laneFilter");
+    const current = state.lane;
+    sel.innerHTML = `<option value="">all nodes</option>`;
+    for (const n of state.view.nodes) {
+      const opt = document.createElement("option");
+      opt.value = n.id; opt.textContent = n.id;
+      sel.appendChild(opt);
+    }
+    sel.value = current;
+  }
+
+  function renderMetrics() {
+    const v = state.view;
+    $("mNodes").textContent = v.nodes.length;
+    $("mIntents").textContent = fmt(v.intents.length);
+    $("mWindows").textContent = v.exact?.windows?.length ?? 0;
+    $("previewStep").textContent = v.preview_step;
+    const exactFinal = v.exact?.final;
+    const previewFinal = (state.livePreview || v.preview)?.final;
+    $("mDelta").textContent = exactFinal && previewFinal ? mapDelta(exactFinal.global_stock, previewFinal.global_stock).toLocaleString() : "—";
+  }
+
+  function mapDelta(a = {}, b = {}) {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+    let total = 0;
+    for (const k of keys) total += Math.abs((a[k] || 0) - (b[k] || 0));
+    return total;
+  }
+
+  function nodeById(id) { return state.view?.nodes.find(n => n.id === id); }
+
+  function renderInspector() {
+    const body = $("inspectorBody");
+    if (state.selectedIntent >= 0 && state.view?.intents[state.selectedIntent]) {
+      body.innerHTML = intentInspector(state.selectedIntent);
+      wireIntentInspector();
+      return;
+    }
+    const n = nodeById(state.selectedNode);
+    if (!n) {
+      body.innerHTML = `<div class="empty">Select a node or intent.</div>`;
+      return;
+    }
+    const latest = latestNode(n.id);
+    body.innerHTML = `
+      <div class="field-group">
+        <div class="field-title"><h3>${escapeHTML(n.id)}</h3><span class="chip">${escapeHTML(n.type)}</span></div>
+        <div class="kv-grid">
+          <div class="field"><label>level</label><input id="nodeLevel" value="${n.level}" disabled></div>
+          <div class="field"><label>workers</label><input id="nodeWorkers" type="number" min="0" max="${n.max_workers}" value="${n.workers}"></div>
+          <div class="field"><label>required</label><input id="nodeReq" type="number" min="0" value="${n.workers_required}"></div>
+          <div class="field"><label>stalled</label><input value="${latest?.stalled ? "yes" : "no"}" disabled></div>
+        </div>
+        <div class="btn-row">
+          <button id="stageWorkers">Stage workers</button>
+          <button id="stageActive">${n.active ? "Stage demolish" : "Stage build"}</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-title"><h3>Outputs / tick</h3><span class="tiny muted">fixed ×1000</span></div>
+        ${mapEditor("out", n.outputs)}
+      </div>
+      <div class="field-group">
+        <div class="field-title"><h3>Inputs / tick</h3><span class="tiny muted">fixed ×1000</span></div>
+        ${mapEditor("in", n.inputs)}
+      </div>
+      <div class="field-group">
+        <div class="field-title"><h3>Capacity</h3><span class="tiny muted">fixed ×1000</span></div>
+        ${mapEditor("cap", n.capacity)}
+        <div class="btn-row"><button class="primary" id="stageParams">Stage parameter batch</button></div>
+      </div>`;
+    $("stageWorkers").onclick = () => stageEdit({
+      kind: "node_workers", node_id: n.id,
+      workers: Number($("nodeWorkers").value),
+    });
+    $("stageActive").onclick = () => stageEdit({
+      kind: "node_active", node_id: n.id, active: !n.active,
+    });
+    $("stageParams").onclick = () => stageEdit({
+      kind: "node_params", node_id: n.id,
+      workers_required: Number($("nodeReq").value),
+      outputs: readMap("out", n.outputs),
+      inputs: readMap("in", n.inputs),
+      capacity: readMap("cap", n.capacity),
+    });
+  }
+
+  function mapEditor(prefix, map = {}) {
+    const keys = Object.keys(map || {}).sort();
+    if (!keys.length) return `<div class="muted">No resources.</div>`;
+    return `<table class="map-table">${keys.map(k => `
+      <tr><td>${escapeHTML(k)}</td><td><input data-map="${prefix}" data-key="${escapeHTML(k)}" type="number" min="0" value="${map[k]}"></td></tr>
+    `).join("")}</table>`;
+  }
+
+  function readMap(prefix, fallback = {}) {
+    const out = {};
+    for (const key of Object.keys(fallback || {})) out[key] = 0;
+    for (const el of document.querySelectorAll(`[data-map="${prefix}"]`)) {
+      out[el.dataset.key] = Number(el.value);
+    }
+    return out;
+  }
+
+  function intentInspector(index) {
+    const inx = state.view.intents[index];
+    const time = intentTime(index);
+    const payload = [];
+    if (inx.type === "assign_workers") {
+      payload.push(`<div class="field"><label>workers</label><input id="intentWorkers" type="number" min="0" value="${inx.workers ?? 0}"></div>`);
+    }
+    if (inx.type === "upgrade") {
+      payload.push(`<div class="field"><label>level</label><input id="intentLevel" type="number" min="0" value="${inx.level ?? 0}"></div>`);
+    }
+    if (inx.type === "recipe") {
+      payload.push(`<div class="field"><label>recipe JSON</label><textarea id="intentRecipe">${escapeHTML(JSON.stringify(inx.recipe, null, 2))}</textarea></div>`);
+    }
+    return `
+      <div class="error-box ${state.lastError ? "show" : ""}" id="errorBox">${state.lastError ? errorText(state.lastError) : ""}</div>
+      <div class="field-group">
+        <div class="field-title"><h3>Intent #${index}</h3><span class="chip">${escapeHTML(inx.type)}</span></div>
+        <div class="kv-grid">
+          <div class="field"><label>seq</label><input value="${inx.seq}" disabled></div>
+          <div class="field"><label>node</label><input value="${escapeHTML(inx.node_id)}" disabled></div>
+          <div class="field"><label>timestamp</label><input id="intentTime" type="number" min="0" max="${state.view.final_tick}" value="${time}"></div>
+          <div class="field"><label>logical time</label><input value="${(time * 0.1).toFixed(1)}s" disabled></div>
+        </div>
+        <div class="btn-row"><button id="jumpNode">Inspect node</button></div>
+      </div>
+      ${payload.length ? `<div class="field-group"><div class="field-title"><h3>Payload</h3></div><div class="stack">${payload.join("")}</div>
+        <div class="btn-row"><button class="primary" id="stageIntentPayload">Stage payload edit</button></div></div>` : ""}
+      <div class="field-group">
+        <div class="field-title"><h3>Retime</h3><span class="tiny muted">drag the marker</span></div>
+        <div class="btn-row"><button id="stageIntentTime">Stage timestamp</button></div>
+      </div>`;
+  }
+
+  function wireIntentInspector() {
+    const idx = state.selectedIntent;
+    const inx = state.view.intents[idx];
+    $("jumpNode").onclick = () => {
+      state.selectedNode = inx.node_id;
+      state.selectedIntent = -1;
+      renderTree(); renderInspector();
+    };
+    $("stageIntentTime").onclick = () => stageEdit({
+      kind: "intent_time", intent_index: idx,
+      timestamp: Number($("intentTime").value),
+    });
+    if ($("stageIntentPayload")) {
+      $("stageIntentPayload").onclick = () => {
+        if (inx.type === "assign_workers") {
+          stageEdit({ kind: "intent_workers", intent_index: idx, workers: Number($("intentWorkers").value) });
+        } else if (inx.type === "upgrade") {
+          stageEdit({ kind: "intent_level", intent_index: idx, level: Number($("intentLevel").value) });
+        } else if (inx.type === "recipe") {
+          try {
+            const recipe = JSON.parse($("intentRecipe").value);
+            stageEdit({ kind: "intent_recipe", intent_index: idx, recipe });
+          } catch (e) {
+            toast("Recipe is not valid JSON", true);
+          }
+        }
+      };
+    }
+  }
+
+  function stageEdit(edit) {
+    const key = edit.kind.startsWith("intent_")
+      ? `${edit.kind}:${edit.intent_index}`
+      : `${edit.kind}:${edit.node_id}`;
+    state.pending = state.pending.filter(e => {
+      const k = e.kind.startsWith("intent_") ? `${e.kind}:${e.intent_index}` : `${e.kind}:${e.node_id}`;
+      return k !== key;
+    });
+    state.pending.push(edit);
+    scheduleLivePreview();
+    renderHeader();
+    renderInspector();
+    drawTimeline();
+    toast(`Staged ${edit.kind}; commit to settle atomically`);
+  }
+
+  async function commitBatch() {
+    if (!state.view || state.busy) return;
+    state.previewSeq++;
+    clearTimeout(state.previewTimer);
+    setBusy(true, "atomic settlement…");
+    const batchId = `batch-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    state.lastError = null;
+    try {
+      const response = await api(`/api/sessions/${state.view.session_id}/commit`, {
+        method: "POST",
+        body: JSON.stringify({ batch_id: batchId, edits: state.pending }),
+      });
+      state.view = response.session;
+      state.pending = [];
+      state.livePreview = null;
+      state.selectedIntent = -1;
+      renderAll();
+      toast(`Committed ${batchId} · ${state.view.exact?.windows?.length || 0} windows · revision ${state.view.revision}`);
+    } catch (e) {
+      state.lastError = e.body || { code: "E_STATE", message: e.message };
+      showError(e);
+      renderInspector();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function discardDraft() {
+    if (!state.view || state.busy) return;
+    state.previewSeq++;
+    clearTimeout(state.previewTimer);
+    state.pending = [];
+    state.livePreview = null;
+    state.lastError = null;
+    setBusy(true, "reloading committed copy…");
+    try {
+      state.view = await api(`/api/sessions/${state.view.session_id}/discard`, { method: "POST", body: "{}" });
+      renderAll();
+      toast("Working copy discarded");
+    } catch (e) { showError(e); }
+    finally { setBusy(false); }
+  }
+
+  function showError(e) {
+    const body = e.body || { code: "E_IO", message: e.message };
+    state.lastError = body;
+    toast(`${body.code || "ERROR"} ${body.path || ""} ${body.message || e.message}`, true);
+    renderInspector();
+  }
+
+  function scheduleLivePreview() {
+    clearTimeout(state.previewTimer);
+    const seq = ++state.previewSeq;
+    if (!state.pending.length) {
+      state.livePreview = null;
+      drawCurves();
+      drawHeatmap();
+      renderMetrics();
+      return;
+    }
+    state.previewTimer = setTimeout(async () => {
+      if (!state.view || state.busy) return;
+      try {
+        const preview = await api(`/api/sessions/${state.view.session_id}/preview`, {
+          method: "POST",
+          body: JSON.stringify({ batch_id: `preview-${Date.now()}`, edits: state.pending }),
+        });
+        if (seq !== state.previewSeq) return;
+        state.livePreview = preview;
+        state.lastError = null;
+        $("statusChip").textContent = "live coarse preview";
+        $("statusChip").className = "chip warn";
+        drawCurves();
+        drawHeatmap();
+        renderMetrics();
+      } catch (e) {
+        if (seq !== state.previewSeq) return;
+        state.livePreview = null;
+        showError(e);
+        drawCurves();
+        drawHeatmap();
+      }
+    }, 280);
+  }
+
+  function errorText(e) {
+    return `${e.code || "E_STATE"}${e.path ? " @ " + e.path : ""}${e.batch_id ? " · batch " + e.batch_id : ""}
+${e.message || ""}${e.cause ? "\n" + e.cause : ""}${e.field ? "\nfield: " + e.field : ""}${e.left !== undefined ? "\nleft: " + JSON.stringify(e.left) : ""}${e.right !== undefined ? "\nright: " + JSON.stringify(e.right) : ""}`;
+  }
+
+  function intentTime(index) {
+    const edit = state.pending.find(e => e.kind === "intent_time" && e.intent_index === index);
+    return edit ? edit.timestamp : state.view.intents[index].timestamp;
+  }
+
+  function curveValues() {
+    const exact = state.view.exact?.snapshots || [];
+    const preview = (state.livePreview || state.view.preview)?.points || [];
+    const pick = (snap) => state.metric === "stock" ? sumMap(snap.global_stock) : sumMap(snap.global_net_rate);
+    return {
+      exact: exact.map(s => ({ x: s.tick, y: pick(s) })),
+      preview: preview.map(p => ({ x: p.tick, y: pick(p.snapshot) })),
+      final: state.view.final_tick,
+    };
+  }
+
+  function sumMap(m = {}) { let n = 0; for (const v of Object.values(m)) n += v; return n; }
+
+  function canvasSetup(canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const width = Math.max(10, rect.width);
+    const height = Math.max(10, rect.height);
+    if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+    }
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+    return { ctx, width, height };
+  }
+
+  function drawCurves() {
+    const canvas = $("curveCanvas");
+    const { ctx, width, height } = canvasSetup(canvas);
+    const data = curveValues();
+    const pad = { l: 64, r: 18, t: 16, b: 28 };
+    const w = width - pad.l - pad.r, h = height - pad.t - pad.b;
+    const all = [...data.exact, ...data.preview];
+    if (!all.length) return;
+    let minY = Infinity, maxY = -Infinity;
+    for (const p of all) { minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y); }
+    if (minY === maxY) { minY -= 1; maxY += 1; }
+    const range = maxY - minY;
+    minY -= range * .08; maxY += range * .08;
+    const sx = x => pad.l + (x / Math.max(1, data.final)) * w;
+    const sy = y => pad.t + h - ((y - minY) / (maxY - minY)) * h;
+
+    ctx.strokeStyle = "rgba(112,167,255,.09)";
+    ctx.lineWidth = 1;
+    ctx.fillStyle = "#7f93a8";
+    ctx.font = "10px ui-monospace, monospace";
+    for (let i = 0; i <= 4; i++) {
+      const y = pad.t + h * i / 4;
+      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(width - pad.r, y); ctx.stroke();
+      const value = maxY - (maxY - minY) * i / 4;
+      ctx.fillText(fmt(Math.round(value)), 5, y + 3);
+    }
+    for (let i = 0; i <= 5; i++) {
+      const x = pad.l + w * i / 5;
+      ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + h); ctx.stroke();
+      ctx.fillText(fmt(Math.round(data.final * i / 5)), x - 10, height - 8);
+    }
+    const line = (points, color, dashed) => {
+      if (!points.length) return;
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = dashed ? 1.4 : 2;
+      ctx.setLineDash(dashed ? [5, 5] : []);
+      ctx.beginPath();
+      points.forEach((p, i) => i ? ctx.lineTo(sx(p.x), sy(p.y)) : ctx.moveTo(sx(p.x), sy(p.y)));
+      ctx.stroke();
+      ctx.restore();
+    };
+    line(data.preview, "#70a7ff", true);
+    line(data.exact, "#52d3a2", false);
+    const last = data.exact[data.exact.length - 1];
+    if (last) {
+      ctx.fillStyle = "#52d3a2";
+      ctx.beginPath(); ctx.arc(sx(last.x), sy(last.y), 3.2, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  function drawHeatmap() {
+    const canvas = $("heatCanvas");
+    const { ctx, width, height } = canvasSetup(canvas);
+    const hm = effectiveHeatmap();
+    const cell = 13, left = 108, top = 22;
+    const cols = hm.ticks.length, rows = hm.nodes.length;
+    const neededW = left + cols * (cell + 2) + 8;
+    const neededH = top + rows * (cell + 2) + 8;
+    canvas.parentElement.style.minHeight = `${Math.max(120, neededH)}px`;
+    const cw = Math.max(width, neededW);
+    if (cw > width) {
+      canvas.style.width = `${cw}px`;
+      canvas.width = Math.floor(cw * (window.devicePixelRatio || 1));
+      ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+      ctx.clearRect(0, 0, cw, height);
+    }
+    const max = Math.max(1, hm.max_abs || 0);
+    ctx.font = "10px ui-monospace, monospace";
+    ctx.fillStyle = "#7f93a8";
+    for (let c = 0; c < cols; c++) {
+      ctx.save();
+      ctx.translate(left + c * (cell + 2) + 4, 14);
+      ctx.rotate(-0.6);
+      ctx.fillText(String(hm.ticks[c]), 0, 0);
+      ctx.restore();
+    }
+    for (let r = 0; r < rows; r++) {
+      const y = top + r * (cell + 2);
+      ctx.fillStyle = "#9fb1c4";
+      ctx.fillText(hm.nodes[r].slice(0, 15), 5, y + 10);
+      for (let c = 0; c < cols; c++) {
+        const value = hm.cells?.[r]?.[c] || 0;
+        const intensity = value / max;
+        ctx.fillStyle = value === 0
+          ? "rgba(82,211,162,.18)"
+          : `rgba(255,107,120,${.25 + .7 * intensity})`;
+        ctx.fillRect(left + c * (cell + 2), y, cell, cell);
+        if (value !== 0) {
+          ctx.fillStyle = "#fff";
+          ctx.fillText(String(value), left + c * (cell + 2) + 1, y + 10);
+        }
+      }
+    }
+    $("heatStatus").textContent = hm.equal ? "0 divergence" : `max cell Δ ${fmt(hm.max_abs)}`;
+    $("heatStatus").className = "chip " + (hm.equal ? "ok" : "warn");
+  }
+
+  function effectiveHeatmap() {
+    if (!state.livePreview || !state.view.exact?.snapshots?.length) return state.view.heatmap;
+    const exact = state.view.exact.snapshots;
+    const preview = new Map((state.livePreview.points || []).map(p => [p.tick, p.snapshot]));
+    const ticks = exact.map(s => s.tick);
+    const nodeSet = new Set();
+    for (const s of exact) for (const n of s.nodes) nodeSet.add(n.id);
+    const nodes = [...nodeSet].sort();
+    const hm = { ticks, nodes, cells: [], max_abs: 0, equal: true };
+    const stocks = (snap, id) => snap?.nodes?.find(n => n.id === id)?.stock || {};
+    for (const id of nodes) {
+      const row = [];
+      for (const tick of ticks) {
+        const a = stocks(exact.find(s => s.tick === tick), id);
+        const b = stocks(preview.get(tick), id);
+        const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+        let diff = 0;
+        for (const k of keys) diff += Math.abs((a[k] || 0) - (b[k] || 0));
+        row.push(diff);
+        hm.max_abs = Math.max(hm.max_abs, diff);
+        if (diff) hm.equal = false;
+      }
+      hm.cells.push(row);
+    }
+    return hm;
+  }
+
+  function timelineRows() {
+    const ids = state.lane ? [state.lane] : state.view.nodes.map(n => n.id);
+    return new Map(ids.map((id, i) => [id, i]));
+  }
+
+  function drawTimeline() {
+    const canvas = $("timelineCanvas");
+    const { ctx, width, height } = canvasSetup(canvas);
+    const pad = { l: 92, r: 14, t: 10, b: 20 };
+    const rows = timelineRows();
+    const rowH = Math.max(17, Math.min(28, (height - pad.t - pad.b) / Math.max(1, rows.size)));
+    const w = width - pad.l - pad.r;
+    const finalTick = state.view.final_tick || 1;
+    const sx = tick => pad.l + (tick / finalTick) * w;
+    const sy = node => pad.t + (rows.get(node) ?? 0) * rowH + rowH * .62;
+    ctx.font = "10px ui-monospace, monospace";
+    ctx.fillStyle = "#7f93a8";
+    for (const [id, row] of rows) {
+      const y = pad.t + row * rowH;
+      ctx.strokeStyle = "rgba(112,167,255,.06)";
+      ctx.beginPath(); ctx.moveTo(pad.l, y + rowH); ctx.lineTo(width - pad.r, y + rowH); ctx.stroke();
+      ctx.fillStyle = "#8da0b4";
+      ctx.fillText(id.slice(0, 14), 4, y + rowH * .68);
+    }
+    const ticks = state.view.exact?.snapshots || [];
+    for (const s of ticks) {
+      const x = sx(s.tick);
+      ctx.strokeStyle = "rgba(82,211,162,.17)";
+      ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, height - pad.b); ctx.stroke();
+    }
+    state.view.intents.forEach((intent, i) => {
+      if (!rows.has(intent.node_id)) return;
+      if (i === state.selectedIntent) return;
+      const x = sx(intentTime(i)), y = sy(intent.node_id);
+      ctx.fillStyle = intentColor[intent.type] || "#9fb1c4";
+      ctx.globalAlpha = i === state.selectedIntent ? 1 : .72;
+      ctx.beginPath(); ctx.arc(x, y, 1.9, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    if (state.selectedIntent >= 0 && state.view.intents[state.selectedIntent]) {
+      const inx = state.view.intents[state.selectedIntent];
+      if (rows.has(inx.node_id)) {
+        const x = sx(intentTime(state.selectedIntent)), y = sy(inx.node_id);
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(x - .5, pad.t, 1, height - pad.t - pad.b);
+      }
+    }
+    const t = state.selectedIntent >= 0 ? intentTime(state.selectedIntent) : null;
+    $("selectedIntent").textContent = t !== null ? `#${state.selectedIntent} @ ${t}` : "no intent selected";
+  }
+
+  function timelinePick(evt) {
+    const canvas = $("timelineCanvas");
+    const rect = canvas.getBoundingClientRect();
+    const x = evt.clientX - rect.left, y = evt.clientY - rect.top;
+    const pad = { l: 92, r: 14, t: 10, b: 20 };
+    const rows = timelineRows();
+    const rowH = Math.max(17, Math.min(28, (rect.height - pad.t - pad.b) / Math.max(1, rows.size)));
+    const w = rect.width - pad.l - pad.r;
+    const finalTick = state.view.final_tick || 1;
+    let best = -1, bestD = 8 * 8;
+    state.view.intents.forEach((intent, i) => {
+      if (!rows.has(intent.node_id)) return;
+      const px = pad.l + (intentTime(i) / finalTick) * w;
+      const py = pad.t + rows.get(intent.node_id) * rowH + rowH * .62;
+      const d = (px - x) ** 2 + (py - y) ** 2;
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    return { index: best, x, y, w, pad, finalTick };
+  }
+
+  function bindTimeline() {
+    const canvas = $("timelineCanvas");
+    canvas.addEventListener("pointerdown", (e) => {
+      if (!state.view) return;
+      const hit = timelinePick(e);
+      if (hit.index < 0) return;
+      state.selectedIntent = hit.index;
+      state.selectedNode = state.view.intents[hit.index].node_id;
+      state.drag = { index: hit.index, move: false };
+      canvas.setPointerCapture(e.pointerId);
+      renderInspector(); renderTree(); drawTimeline();
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      if (!state.drag) return;
+      const hit = timelinePick(e);
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.max(92, Math.min(rect.width - 14, e.clientX - rect.left));
+      const tick = Math.round(((x - 92) / Math.max(1, rect.width - 92 - 14)) * state.view.final_tick);
+      const clamped = Math.max(0, Math.min(state.view.final_tick, tick));
+      replacePendingTime(state.drag.index, clamped);
+      state.drag.move = true;
+      drawTimeline();
+      if (state.selectedIntent >= 0) {
+        const el = $("intentTime");
+        if (el) el.value = clamped;
+      }
+    });
+    canvas.addEventListener("pointerup", (e) => {
+      if (!state.drag) return;
+      const moved = state.drag.move;
+      state.drag = null;
+      if (moved) {
+        const edit = state.pending.find(x => x.kind === "intent_time" && x.intent_index === state.selectedIntent);
+        scheduleLivePreview();
+        renderHeader(); renderInspector(); drawTimeline();
+        toast(`Staged retime of intent #${state.selectedIntent} to ${edit?.timestamp ?? intentTime(state.selectedIntent)}`);
+      }
+    });
+    canvas.addEventListener("pointercancel", () => { state.drag = null; drawTimeline(); });
+  }
+
+  function replacePendingTime(index, tick) {
+    state.pending = state.pending.filter(e => !(e.kind === "intent_time" && e.intent_index === index));
+    state.pending.push({ kind: "intent_time", intent_index: index, timestamp: tick });
+    renderHeader();
+  }
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function routeFromHash() {}
+
+  $("openBtn").onclick = () => openSample($("sampleSelect").value);
+  $("sampleSelect").onchange = () => openSample($("sampleSelect").value);
+  $("commitBtn").onclick = commitBatch;
+  $("discardBtn").onclick = discardDraft;
+  $("metricSelect").onchange = () => { state.metric = $("metricSelect").value; drawCurves(); };
+  $("laneFilter").onchange = () => { state.lane = $("laneFilter").value; drawTimeline(); };
+  window.addEventListener("resize", () => {
+    drawCurves(); drawHeatmap(); drawTimeline();
+  });
+  bindTimeline();
+  boot();
+})();
+</script>
+</body>
+</html>

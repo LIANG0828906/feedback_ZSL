@@ -1,0 +1,6234 @@
+{
+  "schema_version": 1,
+  "id": "frontier_small",
+  "seed": 757124958959498700,
+  "tick_unit_ms": 100,
+  "params_version": "params/frontier_small/v1",
+  "final_tick": 720,
+  "nodes": [
+    {
+      "id": "depot_root",
+      "type": "warehouse",
+      "name": "depot_root",
+      "active": true,
+      "level": 0,
+      "workers": 1,
+      "max_workers": 4,
+      "outputs": {},
+      "inputs": {
+        "food": 0,
+        "grain": 0,
+        "metal": 0,
+        "ore": 0,
+        "tools": 0
+      },
+      "capacity": {
+        "food": 888526,
+        "grain": 926614,
+        "metal": 903885,
+        "ore": 892427,
+        "tools": 879857
+      },
+      "workers_required": 0,
+      "initial_stock": {
+        "food": 12000,
+        "grain": 26000,
+        "metal": 9000,
+        "ore": 22000,
+        "tools": 5000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {},
+          "inputs": {
+            "food": 0,
+            "grain": 0,
+            "metal": 0,
+            "ore": 0,
+            "tools": 0
+          },
+          "capacity": {
+            "food": 1066231,
+            "grain": 1111936,
+            "metal": 1084662,
+            "ore": 1070912,
+            "tools": 1055828
+          },
+          "workers_required": 1
+        }
+      ]
+    },
+    {
+      "id": "farm_west",
+      "type": "farm",
+      "name": "farm_west",
+      "parent_id": "depot_root",
+      "active": true,
+      "level": 0,
+      "workers": 2,
+      "max_workers": 6,
+      "outputs": {
+        "grain": 2257
+      },
+      "inputs": {},
+      "capacity": {
+        "grain": 116863
+      },
+      "workers_required": 2,
+      "initial_stock": {
+        "grain": 8000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "grain": 2595
+          },
+          "inputs": {},
+          "capacity": {
+            "grain": 140235
+          },
+          "workers_required": 3
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "grain": 2934
+          },
+          "inputs": {},
+          "capacity": {
+            "grain": 163608
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "grain": 3272
+          },
+          "inputs": {},
+          "capacity": {
+            "grain": 186980
+          },
+          "workers_required": 5
+        }
+      ]
+    },
+    {
+      "id": "farm_east",
+      "type": "farm",
+      "name": "farm_east",
+      "parent_id": "depot_root",
+      "active": true,
+      "level": 0,
+      "workers": 2,
+      "max_workers": 6,
+      "outputs": {
+        "grain": 1923
+      },
+      "inputs": {},
+      "capacity": {
+        "grain": 114769
+      },
+      "workers_required": 2,
+      "initial_stock": {
+        "grain": 7000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "grain": 2211
+          },
+          "inputs": {},
+          "capacity": {
+            "grain": 137722
+          },
+          "workers_required": 3
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "grain": 2499
+          },
+          "inputs": {},
+          "capacity": {
+            "grain": 160676
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "grain": 2788
+          },
+          "inputs": {},
+          "capacity": {
+            "grain": 183630
+          },
+          "workers_required": 5
+        }
+      ]
+    },
+    {
+      "id": "mine_north",
+      "type": "mine",
+      "name": "mine_north",
+      "parent_id": "depot_root",
+      "active": true,
+      "level": 0,
+      "workers": 3,
+      "max_workers": 7,
+      "outputs": {
+        "ore": 1632
+      },
+      "inputs": {},
+      "capacity": {
+        "ore": 97541
+      },
+      "workers_required": 3,
+      "initial_stock": {
+        "ore": 6500
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "ore": 1876
+          },
+          "inputs": {},
+          "capacity": {
+            "ore": 117049
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "ore": 2121
+          },
+          "inputs": {},
+          "capacity": {
+            "ore": 136557
+          },
+          "workers_required": 5
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "ore": 2366
+          },
+          "inputs": {},
+          "capacity": {
+            "ore": 156065
+          },
+          "workers_required": 6
+        }
+      ]
+    },
+    {
+      "id": "mine_south",
+      "type": "mine",
+      "name": "mine_south",
+      "parent_id": "depot_root",
+      "active": false,
+      "level": 0,
+      "workers": 3,
+      "max_workers": 7,
+      "outputs": {
+        "ore": 1337
+      },
+      "inputs": {},
+      "capacity": {
+        "ore": 96208
+      },
+      "workers_required": 3,
+      "initial_stock": {
+        "ore": 5000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "ore": 1537
+          },
+          "inputs": {},
+          "capacity": {
+            "ore": 115449
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "ore": 1738
+          },
+          "inputs": {},
+          "capacity": {
+            "ore": 134691
+          },
+          "workers_required": 5
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "ore": 1938
+          },
+          "inputs": {},
+          "capacity": {
+            "ore": 153932
+          },
+          "workers_required": 6
+        }
+      ]
+    },
+    {
+      "id": "mill_west",
+      "type": "factory",
+      "name": "mill_west",
+      "parent_id": "farm_west",
+      "active": true,
+      "level": 0,
+      "workers": 3,
+      "max_workers": 6,
+      "outputs": {
+        "food": 909
+      },
+      "inputs": {
+        "grain": 1050
+      },
+      "capacity": {
+        "food": 81090,
+        "grain": 38252
+      },
+      "workers_required": 2,
+      "initial_stock": {
+        "grain": 12000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "food": 1045
+          },
+          "inputs": {
+            "grain": 1102
+          },
+          "capacity": {
+            "food": 97308,
+            "grain": 45902
+          },
+          "workers_required": 3
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "food": 1181
+          },
+          "inputs": {
+            "grain": 1155
+          },
+          "capacity": {
+            "food": 113526,
+            "grain": 53552
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "food": 1318
+          },
+          "inputs": {
+            "grain": 1207
+          },
+          "capacity": {
+            "food": 129744,
+            "grain": 61203
+          },
+          "workers_required": 5
+        }
+      ]
+    },
+    {
+      "id": "mill_east",
+      "type": "factory",
+      "name": "mill_east",
+      "parent_id": "farm_east",
+      "active": true,
+      "level": 0,
+      "workers": 3,
+      "max_workers": 6,
+      "outputs": {
+        "food": 689
+      },
+      "inputs": {
+        "grain": 900
+      },
+      "capacity": {
+        "food": 70414,
+        "grain": 34532
+      },
+      "workers_required": 2,
+      "initial_stock": {
+        "grain": 9000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "food": 792
+          },
+          "inputs": {
+            "grain": 945
+          },
+          "capacity": {
+            "food": 84496,
+            "grain": 41438
+          },
+          "workers_required": 3
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "food": 895
+          },
+          "inputs": {
+            "grain": 990
+          },
+          "capacity": {
+            "food": 98579,
+            "grain": 48344
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "food": 999
+          },
+          "inputs": {
+            "grain": 1035
+          },
+          "capacity": {
+            "food": 112662,
+            "grain": 55251
+          },
+          "workers_required": 5
+        }
+      ]
+    },
+    {
+      "id": "smelter_alpha",
+      "type": "factory",
+      "name": "smelter_alpha",
+      "parent_id": "mine_north",
+      "active": true,
+      "level": 0,
+      "workers": 3,
+      "max_workers": 6,
+      "outputs": {
+        "metal": 678
+      },
+      "inputs": {
+        "ore": 1100
+      },
+      "capacity": {
+        "metal": 67168,
+        "ore": 29157
+      },
+      "workers_required": 2,
+      "initial_stock": {
+        "ore": 10000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "metal": 779
+          },
+          "inputs": {
+            "ore": 1155
+          },
+          "capacity": {
+            "metal": 80601,
+            "ore": 34988
+          },
+          "workers_required": 3
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "metal": 881
+          },
+          "inputs": {
+            "ore": 1210
+          },
+          "capacity": {
+            "metal": 94035,
+            "ore": 40819
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "metal": 983
+          },
+          "inputs": {
+            "ore": 1265
+          },
+          "capacity": {
+            "metal": 107468,
+            "ore": 46651
+          },
+          "workers_required": 5
+        }
+      ]
+    },
+    {
+      "id": "tools_factory",
+      "type": "factory",
+      "name": "tools_factory",
+      "parent_id": "smelter_alpha",
+      "active": false,
+      "level": 0,
+      "workers": 4,
+      "max_workers": 7,
+      "outputs": {
+        "tools": 421
+      },
+      "inputs": {
+        "metal": 650
+      },
+      "capacity": {
+        "metal": 25317,
+        "tools": 60681
+      },
+      "workers_required": 3,
+      "initial_stock": {
+        "metal": 7000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "tools": 484
+          },
+          "inputs": {
+            "metal": 682
+          },
+          "capacity": {
+            "metal": 30380,
+            "tools": 72817
+          },
+          "workers_required": 4
+        },
+        {
+          "level": 2,
+          "outputs": {
+            "tools": 547
+          },
+          "inputs": {
+            "metal": 715
+          },
+          "capacity": {
+            "metal": 35443,
+            "tools": 84953
+          },
+          "workers_required": 5
+        },
+        {
+          "level": 3,
+          "outputs": {
+            "tools": 610
+          },
+          "inputs": {
+            "metal": 747
+          },
+          "capacity": {
+            "metal": 40507,
+            "tools": 97089
+          },
+          "workers_required": 6
+        }
+      ]
+    },
+    {
+      "id": "warehouse_east",
+      "type": "warehouse",
+      "name": "warehouse_east",
+      "parent_id": "tools_factory",
+      "active": true,
+      "level": 0,
+      "workers": 1,
+      "max_workers": 4,
+      "outputs": {
+        "food": 0,
+        "tools": 0
+      },
+      "inputs": {},
+      "capacity": {
+        "food": 312035,
+        "tools": 258831
+      },
+      "workers_required": 0,
+      "initial_stock": {
+        "food": 2000,
+        "tools": 1000
+      },
+      "upgrades": [
+        {
+          "level": 1,
+          "outputs": {
+            "food": 0,
+            "tools": 0
+          },
+          "inputs": {},
+          "capacity": {
+            "food": 374442,
+            "tools": 310597
+          },
+          "workers_required": 1
+        }
+      ]
+    }
+  ],
+  "intents": [
+    {
+      "seq": 0,
+      "timestamp": 0,
+      "type": "upgrade",
+      "node_id": "mill_east",
+      "level": 1
+    },
+    {
+      "seq": 1,
+      "timestamp": 3,
+      "type": "recipe",
+      "node_id": "mine_north",
+      "recipe": {
+        "outputs": {
+          "ore": 1723
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 102540
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 2,
+      "timestamp": 6,
+      "type": "upgrade",
+      "node_id": "depot_root",
+      "level": 1
+    },
+    {
+      "seq": 3,
+      "timestamp": 9,
+      "type": "assign_workers",
+      "node_id": "mine_north",
+      "workers": 7
+    },
+    {
+      "seq": 4,
+      "timestamp": 12,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 2
+    },
+    {
+      "seq": 5,
+      "timestamp": 12,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 6,
+      "timestamp": 18,
+      "type": "demolish",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 7,
+      "timestamp": 21,
+      "type": "build",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 8,
+      "timestamp": 24,
+      "type": "recipe",
+      "node_id": "depot_root",
+      "recipe": {
+        "outputs": {},
+        "inputs": {
+          "food": 0,
+          "grain": 0,
+          "metal": 0,
+          "ore": 0,
+          "tools": 0
+        },
+        "capacity": {
+          "food": 1107678,
+          "grain": 1132052,
+          "metal": 1134342,
+          "ore": 1081941,
+          "tools": 1022273
+        },
+        "workers_required": 1
+      }
+    },
+    {
+      "seq": 9,
+      "timestamp": 27,
+      "type": "recipe",
+      "node_id": "smelter_alpha",
+      "recipe": {
+        "outputs": {
+          "metal": 680
+        },
+        "inputs": {
+          "ore": 1185
+        },
+        "capacity": {
+          "metal": 65064,
+          "ore": 29341
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 10,
+      "timestamp": 30,
+      "type": "assign_workers",
+      "node_id": "mill_east",
+      "workers": 3
+    },
+    {
+      "seq": 11,
+      "timestamp": 33,
+      "type": "demolish",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 12,
+      "timestamp": 36,
+      "type": "assign_workers",
+      "node_id": "farm_west",
+      "workers": 2
+    },
+    {
+      "seq": 13,
+      "timestamp": 39,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1407
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 91592
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 14,
+      "timestamp": 42,
+      "type": "build",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 15,
+      "timestamp": 45,
+      "type": "upgrade",
+      "node_id": "mill_east",
+      "level": 2
+    },
+    {
+      "seq": 16,
+      "timestamp": 45,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 979
+        },
+        "inputs": {
+          "grain": 1045
+        },
+        "capacity": {
+          "food": 101083,
+          "grain": 48862
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 17,
+      "timestamp": 51,
+      "type": "recipe",
+      "node_id": "warehouse_east",
+      "recipe": {
+        "outputs": {
+          "food": 0,
+          "tools": 0
+        },
+        "inputs": {},
+        "capacity": {
+          "food": 309488,
+          "tools": 256889
+        },
+        "workers_required": 0
+      }
+    },
+    {
+      "seq": 18,
+      "timestamp": 54,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 841
+        },
+        "inputs": {
+          "grain": 950
+        },
+        "capacity": {
+          "food": 97650,
+          "grain": 50803
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 19,
+      "timestamp": 57,
+      "type": "recipe",
+      "node_id": "tools_factory",
+      "recipe": {
+        "outputs": {
+          "tools": 396
+        },
+        "inputs": {
+          "metal": 650
+        },
+        "capacity": {
+          "metal": 23859,
+          "tools": 62655
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 20,
+      "timestamp": 60,
+      "type": "assign_workers",
+      "node_id": "tools_factory",
+      "workers": 3
+    },
+    {
+      "seq": 21,
+      "timestamp": 63,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 22,
+      "timestamp": 66,
+      "type": "build",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 23,
+      "timestamp": 69,
+      "type": "assign_workers",
+      "node_id": "mine_south",
+      "workers": 2
+    },
+    {
+      "seq": 24,
+      "timestamp": 72,
+      "type": "recipe",
+      "node_id": "depot_root",
+      "recipe": {
+        "outputs": {},
+        "inputs": {
+          "food": 0,
+          "grain": 0,
+          "metal": 0,
+          "ore": 0,
+          "tools": 0
+        },
+        "capacity": {
+          "food": 1117586,
+          "grain": 1160657,
+          "metal": 1142481,
+          "ore": 1101118,
+          "tools": 1048976
+        },
+        "workers_required": 1
+      }
+    },
+    {
+      "seq": 25,
+      "timestamp": 75,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 26,
+      "timestamp": 78,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 27,
+      "timestamp": 78,
+      "type": "upgrade",
+      "node_id": "farm_west",
+      "level": 1
+    },
+    {
+      "seq": 28,
+      "timestamp": 84,
+      "type": "upgrade",
+      "node_id": "farm_west",
+      "level": 2
+    },
+    {
+      "seq": 29,
+      "timestamp": 87,
+      "type": "assign_workers",
+      "node_id": "mine_north",
+      "workers": 4
+    },
+    {
+      "seq": 30,
+      "timestamp": 90,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 4
+    },
+    {
+      "seq": 31,
+      "timestamp": 93,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 3184
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 167128
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 32,
+      "timestamp": 96,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 949
+        },
+        "inputs": {
+          "grain": 1067
+        },
+        "capacity": {
+          "food": 92737,
+          "grain": 47490
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 33,
+      "timestamp": 99,
+      "type": "upgrade",
+      "node_id": "smelter_alpha",
+      "level": 1
+    },
+    {
+      "seq": 34,
+      "timestamp": 102,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 0
+    },
+    {
+      "seq": 35,
+      "timestamp": 105,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 36,
+      "timestamp": 108,
+      "type": "upgrade",
+      "node_id": "tools_factory",
+      "level": 1
+    },
+    {
+      "seq": 37,
+      "timestamp": 111,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 5
+    },
+    {
+      "seq": 38,
+      "timestamp": 111,
+      "type": "recipe",
+      "node_id": "tools_factory",
+      "recipe": {
+        "outputs": {
+          "tools": 506
+        },
+        "inputs": {
+          "metal": 693
+        },
+        "capacity": {
+          "metal": 31853,
+          "tools": 75858
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 39,
+      "timestamp": 117,
+      "type": "demolish",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 40,
+      "timestamp": 120,
+      "type": "recipe",
+      "node_id": "mill_west",
+      "recipe": {
+        "outputs": {
+          "food": 854
+        },
+        "inputs": {
+          "grain": 1067
+        },
+        "capacity": {
+          "food": 82399,
+          "grain": 36210
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 41,
+      "timestamp": 123,
+      "type": "upgrade",
+      "node_id": "tools_factory",
+      "level": 2
+    },
+    {
+      "seq": 42,
+      "timestamp": 126,
+      "type": "upgrade",
+      "node_id": "tools_factory",
+      "level": 3
+    },
+    {
+      "seq": 43,
+      "timestamp": 129,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 825
+        },
+        "inputs": {
+          "grain": 933
+        },
+        "capacity": {
+          "food": 98988,
+          "grain": 47880
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 44,
+      "timestamp": 132,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 45,
+      "timestamp": 135,
+      "type": "demolish",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 46,
+      "timestamp": 138,
+      "type": "recipe",
+      "node_id": "warehouse_east",
+      "recipe": {
+        "outputs": {
+          "food": 0,
+          "tools": 0
+        },
+        "inputs": {},
+        "capacity": {
+          "food": 327520,
+          "tools": 268224
+        },
+        "workers_required": 0
+      }
+    },
+    {
+      "seq": 47,
+      "timestamp": 141,
+      "type": "assign_workers",
+      "node_id": "mine_south",
+      "workers": 5
+    },
+    {
+      "seq": 48,
+      "timestamp": 144,
+      "type": "assign_workers",
+      "node_id": "mine_north",
+      "workers": 5
+    },
+    {
+      "seq": 49,
+      "timestamp": 144,
+      "type": "upgrade",
+      "node_id": "farm_west",
+      "level": 3
+    },
+    {
+      "seq": 50,
+      "timestamp": 150,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 927
+        },
+        "inputs": {
+          "grain": 941
+        },
+        "capacity": {
+          "food": 100327,
+          "grain": 48574
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 51,
+      "timestamp": 153,
+      "type": "build",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 52,
+      "timestamp": 156,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 53,
+      "timestamp": 159,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 0
+    },
+    {
+      "seq": 54,
+      "timestamp": 162,
+      "type": "recipe",
+      "node_id": "depot_root",
+      "recipe": {
+        "outputs": {},
+        "inputs": {
+          "food": 0,
+          "grain": 0,
+          "metal": 0,
+          "ore": 0,
+          "tools": 0
+        },
+        "capacity": {
+          "food": 1053607,
+          "grain": 1085776,
+          "metal": 1146640,
+          "ore": 1121849,
+          "tools": 1025231
+        },
+        "workers_required": 1
+      }
+    },
+    {
+      "seq": 55,
+      "timestamp": 165,
+      "type": "demolish",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 56,
+      "timestamp": 168,
+      "type": "build",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 57,
+      "timestamp": 171,
+      "type": "assign_workers",
+      "node_id": "depot_root",
+      "workers": 0
+    },
+    {
+      "seq": 58,
+      "timestamp": 174,
+      "type": "upgrade",
+      "node_id": "mill_east",
+      "level": 3
+    },
+    {
+      "seq": 59,
+      "timestamp": 177,
+      "type": "build",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 60,
+      "timestamp": 177,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 1951
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 109770
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 61,
+      "timestamp": 183,
+      "type": "demolish",
+      "node_id": "warehouse_east"
+    },
+    {
+      "seq": 62,
+      "timestamp": 186,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 2
+    },
+    {
+      "seq": 63,
+      "timestamp": 189,
+      "type": "recipe",
+      "node_id": "smelter_alpha",
+      "recipe": {
+        "outputs": {
+          "metal": 839
+        },
+        "inputs": {
+          "ore": 1192
+        },
+        "capacity": {
+          "metal": 80384,
+          "ore": 34654
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 64,
+      "timestamp": 192,
+      "type": "demolish",
+      "node_id": "farm_west"
+    },
+    {
+      "seq": 65,
+      "timestamp": 195,
+      "type": "build",
+      "node_id": "farm_west"
+    },
+    {
+      "seq": 66,
+      "timestamp": 198,
+      "type": "build",
+      "node_id": "warehouse_east"
+    },
+    {
+      "seq": 67,
+      "timestamp": 201,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 5
+    },
+    {
+      "seq": 68,
+      "timestamp": 204,
+      "type": "upgrade",
+      "node_id": "smelter_alpha",
+      "level": 2
+    },
+    {
+      "seq": 69,
+      "timestamp": 207,
+      "type": "upgrade",
+      "node_id": "smelter_alpha",
+      "level": 3
+    },
+    {
+      "seq": 70,
+      "timestamp": 210,
+      "type": "recipe",
+      "node_id": "mine_north",
+      "recipe": {
+        "outputs": {
+          "ore": 1664
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 92686
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 71,
+      "timestamp": 210,
+      "type": "assign_workers",
+      "node_id": "farm_west",
+      "workers": 0
+    },
+    {
+      "seq": 72,
+      "timestamp": 216,
+      "type": "upgrade",
+      "node_id": "warehouse_east",
+      "level": 1
+    },
+    {
+      "seq": 73,
+      "timestamp": 219,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 2
+    },
+    {
+      "seq": 74,
+      "timestamp": 222,
+      "type": "recipe",
+      "node_id": "warehouse_east",
+      "recipe": {
+        "outputs": {
+          "food": 0,
+          "tools": 0
+        },
+        "inputs": {},
+        "capacity": {
+          "food": 390675,
+          "tools": 293186
+        },
+        "workers_required": 1
+      }
+    },
+    {
+      "seq": 75,
+      "timestamp": 225,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 1846
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 121524
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 76,
+      "timestamp": 228,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 1832
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 115297
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 77,
+      "timestamp": 231,
+      "type": "upgrade",
+      "node_id": "mine_south",
+      "level": 1
+    },
+    {
+      "seq": 78,
+      "timestamp": 234,
+      "type": "assign_workers",
+      "node_id": "mill_east",
+      "workers": 3
+    },
+    {
+      "seq": 79,
+      "timestamp": 237,
+      "type": "demolish",
+      "node_id": "mine_north"
+    },
+    {
+      "seq": 80,
+      "timestamp": 240,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1629
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 120387
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 81,
+      "timestamp": 243,
+      "type": "build",
+      "node_id": "mine_north"
+    },
+    {
+      "seq": 82,
+      "timestamp": 243,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 3214
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 187975
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 83,
+      "timestamp": 249,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 84,
+      "timestamp": 252,
+      "type": "demolish",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 85,
+      "timestamp": 255,
+      "type": "demolish",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 86,
+      "timestamp": 258,
+      "type": "demolish",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 87,
+      "timestamp": 261,
+      "type": "build",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 88,
+      "timestamp": 264,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 2984
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 188489
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 89,
+      "timestamp": 267,
+      "type": "build",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 90,
+      "timestamp": 270,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 1082
+        },
+        "inputs": {
+          "grain": 992
+        },
+        "capacity": {
+          "food": 115187,
+          "grain": 56612
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 91,
+      "timestamp": 273,
+      "type": "assign_workers",
+      "node_id": "smelter_alpha",
+      "workers": 3
+    },
+    {
+      "seq": 92,
+      "timestamp": 276,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1581
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 119155
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 93,
+      "timestamp": 276,
+      "type": "demolish",
+      "node_id": "mine_north"
+    },
+    {
+      "seq": 94,
+      "timestamp": 282,
+      "type": "demolish",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 95,
+      "timestamp": 285,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 96,
+      "timestamp": 288,
+      "type": "assign_workers",
+      "node_id": "mill_east",
+      "workers": 3
+    },
+    {
+      "seq": 97,
+      "timestamp": 291,
+      "type": "demolish",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 98,
+      "timestamp": 294,
+      "type": "build",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 99,
+      "timestamp": 297,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1569
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 109999
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 100,
+      "timestamp": 300,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 905
+        },
+        "inputs": {
+          "grain": 958
+        },
+        "capacity": {
+          "food": 112614,
+          "grain": 55688
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 101,
+      "timestamp": 303,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 3595
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 196672
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 102,
+      "timestamp": 306,
+      "type": "build",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 103,
+      "timestamp": 309,
+      "type": "build",
+      "node_id": "mine_north"
+    },
+    {
+      "seq": 104,
+      "timestamp": 309,
+      "type": "assign_workers",
+      "node_id": "farm_west",
+      "workers": 6
+    },
+    {
+      "seq": 105,
+      "timestamp": 315,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 3
+    },
+    {
+      "seq": 106,
+      "timestamp": 318,
+      "type": "recipe",
+      "node_id": "tools_factory",
+      "recipe": {
+        "outputs": {
+          "tools": 573
+        },
+        "inputs": {
+          "metal": 696
+        },
+        "capacity": {
+          "metal": 38316,
+          "tools": 100362
+        },
+        "workers_required": 6
+      }
+    },
+    {
+      "seq": 107,
+      "timestamp": 321,
+      "type": "demolish",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 108,
+      "timestamp": 324,
+      "type": "assign_workers",
+      "node_id": "tools_factory",
+      "workers": 7
+    },
+    {
+      "seq": 109,
+      "timestamp": 327,
+      "type": "build",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 110,
+      "timestamp": 330,
+      "type": "assign_workers",
+      "node_id": "tools_factory",
+      "workers": 3
+    },
+    {
+      "seq": 111,
+      "timestamp": 333,
+      "type": "assign_workers",
+      "node_id": "mill_east",
+      "workers": 0
+    },
+    {
+      "seq": 112,
+      "timestamp": 336,
+      "type": "recipe",
+      "node_id": "mine_north",
+      "recipe": {
+        "outputs": {
+          "ore": 1770
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 100037
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 113,
+      "timestamp": 339,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 114,
+      "timestamp": 342,
+      "type": "assign_workers",
+      "node_id": "mine_north",
+      "workers": 3
+    },
+    {
+      "seq": 115,
+      "timestamp": 342,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 3389
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 184669
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 116,
+      "timestamp": 348,
+      "type": "demolish",
+      "node_id": "farm_west"
+    },
+    {
+      "seq": 117,
+      "timestamp": 351,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 949
+        },
+        "inputs": {
+          "grain": 978
+        },
+        "capacity": {
+          "food": 109822,
+          "grain": 52114
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 118,
+      "timestamp": 354,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 119,
+      "timestamp": 357,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 3
+    },
+    {
+      "seq": 120,
+      "timestamp": 360,
+      "type": "upgrade",
+      "node_id": "mine_north",
+      "level": 1
+    },
+    {
+      "seq": 121,
+      "timestamp": 363,
+      "type": "upgrade",
+      "node_id": "farm_east",
+      "level": 1
+    },
+    {
+      "seq": 122,
+      "timestamp": 366,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1655
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 116802
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 123,
+      "timestamp": 369,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 1
+    },
+    {
+      "seq": 124,
+      "timestamp": 372,
+      "type": "build",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 125,
+      "timestamp": 375,
+      "type": "recipe",
+      "node_id": "smelter_alpha",
+      "recipe": {
+        "outputs": {
+          "metal": 992
+        },
+        "inputs": {
+          "ore": 1268
+        },
+        "capacity": {
+          "metal": 109564,
+          "ore": 44266
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 126,
+      "timestamp": 375,
+      "type": "build",
+      "node_id": "farm_west"
+    },
+    {
+      "seq": 127,
+      "timestamp": 381,
+      "type": "demolish",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 128,
+      "timestamp": 384,
+      "type": "demolish",
+      "node_id": "mine_north"
+    },
+    {
+      "seq": 129,
+      "timestamp": 387,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 3067
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 177708
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 130,
+      "timestamp": 390,
+      "type": "assign_workers",
+      "node_id": "smelter_alpha",
+      "workers": 2
+    },
+    {
+      "seq": 131,
+      "timestamp": 393,
+      "type": "build",
+      "node_id": "mine_north"
+    },
+    {
+      "seq": 132,
+      "timestamp": 396,
+      "type": "build",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 133,
+      "timestamp": 399,
+      "type": "assign_workers",
+      "node_id": "depot_root",
+      "workers": 2
+    },
+    {
+      "seq": 134,
+      "timestamp": 402,
+      "type": "assign_workers",
+      "node_id": "mine_north",
+      "workers": 6
+    },
+    {
+      "seq": 135,
+      "timestamp": 405,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 136,
+      "timestamp": 408,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 1
+    },
+    {
+      "seq": 137,
+      "timestamp": 408,
+      "type": "assign_workers",
+      "node_id": "mill_east",
+      "workers": 2
+    },
+    {
+      "seq": 138,
+      "timestamp": 414,
+      "type": "demolish",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 139,
+      "timestamp": 417,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 1992
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 135889
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 140,
+      "timestamp": 420,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 2
+    },
+    {
+      "seq": 141,
+      "timestamp": 423,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 2152
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 134572
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 142,
+      "timestamp": 426,
+      "type": "recipe",
+      "node_id": "mine_north",
+      "recipe": {
+        "outputs": {
+          "ore": 1818
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 118162
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 143,
+      "timestamp": 429,
+      "type": "recipe",
+      "node_id": "mill_west",
+      "recipe": {
+        "outputs": {
+          "food": 938
+        },
+        "inputs": {
+          "grain": 993
+        },
+        "capacity": {
+          "food": 81669,
+          "grain": 37548
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 144,
+      "timestamp": 432,
+      "type": "assign_workers",
+      "node_id": "depot_root",
+      "workers": 0
+    },
+    {
+      "seq": 145,
+      "timestamp": 435,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 146,
+      "timestamp": 438,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 147,
+      "timestamp": 441,
+      "type": "assign_workers",
+      "node_id": "mine_north",
+      "workers": 3
+    },
+    {
+      "seq": 148,
+      "timestamp": 441,
+      "type": "recipe",
+      "node_id": "mill_west",
+      "recipe": {
+        "outputs": {
+          "food": 983
+        },
+        "inputs": {
+          "grain": 1090
+        },
+        "capacity": {
+          "food": 79870,
+          "grain": 40021
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 149,
+      "timestamp": 447,
+      "type": "demolish",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 150,
+      "timestamp": 450,
+      "type": "upgrade",
+      "node_id": "mine_north",
+      "level": 2
+    },
+    {
+      "seq": 151,
+      "timestamp": 453,
+      "type": "assign_workers",
+      "node_id": "depot_root",
+      "workers": 2
+    },
+    {
+      "seq": 152,
+      "timestamp": 456,
+      "type": "demolish",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 153,
+      "timestamp": 459,
+      "type": "build",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 154,
+      "timestamp": 462,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1605
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 111428
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 155,
+      "timestamp": 465,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 1075
+        },
+        "inputs": {
+          "grain": 1113
+        },
+        "capacity": {
+          "food": 110044,
+          "grain": 52428
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 156,
+      "timestamp": 468,
+      "type": "build",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 157,
+      "timestamp": 471,
+      "type": "build",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 158,
+      "timestamp": 474,
+      "type": "recipe",
+      "node_id": "mine_north",
+      "recipe": {
+        "outputs": {
+          "ore": 2171
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 136489
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 159,
+      "timestamp": 474,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 1071
+        },
+        "inputs": {
+          "grain": 1107
+        },
+        "capacity": {
+          "food": 108658,
+          "grain": 57064
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 160,
+      "timestamp": 480,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 2
+    },
+    {
+      "seq": 161,
+      "timestamp": 483,
+      "type": "demolish",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 162,
+      "timestamp": 486,
+      "type": "demolish",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 163,
+      "timestamp": 489,
+      "type": "demolish",
+      "node_id": "warehouse_east"
+    },
+    {
+      "seq": 164,
+      "timestamp": 492,
+      "type": "upgrade",
+      "node_id": "mine_north",
+      "level": 3
+    },
+    {
+      "seq": 165,
+      "timestamp": 495,
+      "type": "build",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 166,
+      "timestamp": 498,
+      "type": "build",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 167,
+      "timestamp": 501,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1637
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 115823
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 168,
+      "timestamp": 504,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 5
+    },
+    {
+      "seq": 169,
+      "timestamp": 507,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 2135
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 141222
+        },
+        "workers_required": 3
+      }
+    },
+    {
+      "seq": 170,
+      "timestamp": 507,
+      "type": "recipe",
+      "node_id": "depot_root",
+      "recipe": {
+        "outputs": {},
+        "inputs": {
+          "food": 0,
+          "grain": 0,
+          "metal": 0,
+          "ore": 0,
+          "tools": 0
+        },
+        "capacity": {
+          "food": 1123762,
+          "grain": 1078335,
+          "metal": 1115941,
+          "ore": 1024711,
+          "tools": 1047076
+        },
+        "workers_required": 1
+      }
+    },
+    {
+      "seq": 171,
+      "timestamp": 513,
+      "type": "assign_workers",
+      "node_id": "mill_east",
+      "workers": 1
+    },
+    {
+      "seq": 172,
+      "timestamp": 516,
+      "type": "assign_workers",
+      "node_id": "depot_root",
+      "workers": 3
+    },
+    {
+      "seq": 173,
+      "timestamp": 519,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 3079
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 184469
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 174,
+      "timestamp": 522,
+      "type": "build",
+      "node_id": "warehouse_east"
+    },
+    {
+      "seq": 175,
+      "timestamp": 525,
+      "type": "demolish",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 176,
+      "timestamp": 528,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 5
+    },
+    {
+      "seq": 177,
+      "timestamp": 531,
+      "type": "assign_workers",
+      "node_id": "mine_south",
+      "workers": 4
+    },
+    {
+      "seq": 178,
+      "timestamp": 534,
+      "type": "assign_workers",
+      "node_id": "farm_west",
+      "workers": 2
+    },
+    {
+      "seq": 179,
+      "timestamp": 537,
+      "type": "upgrade",
+      "node_id": "farm_east",
+      "level": 2
+    },
+    {
+      "seq": 180,
+      "timestamp": 540,
+      "type": "recipe",
+      "node_id": "mill_east",
+      "recipe": {
+        "outputs": {
+          "food": 993
+        },
+        "inputs": {
+          "grain": 1095
+        },
+        "capacity": {
+          "food": 109733,
+          "grain": 57387
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 181,
+      "timestamp": 540,
+      "type": "build",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 182,
+      "timestamp": 546,
+      "type": "assign_workers",
+      "node_id": "smelter_alpha",
+      "workers": 3
+    },
+    {
+      "seq": 183,
+      "timestamp": 549,
+      "type": "recipe",
+      "node_id": "mill_west",
+      "recipe": {
+        "outputs": {
+          "food": 951
+        },
+        "inputs": {
+          "grain": 1025
+        },
+        "capacity": {
+          "food": 78683,
+          "grain": 40254
+        },
+        "workers_required": 2
+      }
+    },
+    {
+      "seq": 184,
+      "timestamp": 552,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 1
+    },
+    {
+      "seq": 185,
+      "timestamp": 555,
+      "type": "assign_workers",
+      "node_id": "farm_west",
+      "workers": 5
+    },
+    {
+      "seq": 186,
+      "timestamp": 558,
+      "type": "upgrade",
+      "node_id": "farm_east",
+      "level": 3
+    },
+    {
+      "seq": 187,
+      "timestamp": 561,
+      "type": "demolish",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 188,
+      "timestamp": 564,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 2
+    },
+    {
+      "seq": 189,
+      "timestamp": 567,
+      "type": "recipe",
+      "node_id": "smelter_alpha",
+      "recipe": {
+        "outputs": {
+          "metal": 1002
+        },
+        "inputs": {
+          "ore": 1229
+        },
+        "capacity": {
+          "metal": 101172,
+          "ore": 46594
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 190,
+      "timestamp": 570,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 3
+    },
+    {
+      "seq": 191,
+      "timestamp": 573,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 4
+    },
+    {
+      "seq": 192,
+      "timestamp": 573,
+      "type": "recipe",
+      "node_id": "mine_north",
+      "recipe": {
+        "outputs": {
+          "ore": 2558
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 148407
+        },
+        "workers_required": 6
+      }
+    },
+    {
+      "seq": 193,
+      "timestamp": 579,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1463
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 114468
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 194,
+      "timestamp": 582,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 4
+    },
+    {
+      "seq": 195,
+      "timestamp": 585,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1481
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 114117
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 196,
+      "timestamp": 588,
+      "type": "demolish",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 197,
+      "timestamp": 591,
+      "type": "assign_workers",
+      "node_id": "depot_root",
+      "workers": 3
+    },
+    {
+      "seq": 198,
+      "timestamp": 594,
+      "type": "demolish",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 199,
+      "timestamp": 597,
+      "type": "build",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 200,
+      "timestamp": 600,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 6
+    },
+    {
+      "seq": 201,
+      "timestamp": 603,
+      "type": "recipe",
+      "node_id": "warehouse_east",
+      "recipe": {
+        "outputs": {
+          "food": 0,
+          "tools": 0
+        },
+        "inputs": {},
+        "capacity": {
+          "food": 391749,
+          "tools": 328803
+        },
+        "workers_required": 1
+      }
+    },
+    {
+      "seq": 202,
+      "timestamp": 606,
+      "type": "demolish",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 203,
+      "timestamp": 606,
+      "type": "recipe",
+      "node_id": "farm_west",
+      "recipe": {
+        "outputs": {
+          "grain": 3233
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 181539
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 204,
+      "timestamp": 612,
+      "type": "build",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 205,
+      "timestamp": 615,
+      "type": "demolish",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 206,
+      "timestamp": 618,
+      "type": "build",
+      "node_id": "mine_south"
+    },
+    {
+      "seq": 207,
+      "timestamp": 621,
+      "type": "build",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 208,
+      "timestamp": 624,
+      "type": "build",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 209,
+      "timestamp": 627,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 3
+    },
+    {
+      "seq": 210,
+      "timestamp": 630,
+      "type": "demolish",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 211,
+      "timestamp": 633,
+      "type": "build",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 212,
+      "timestamp": 636,
+      "type": "demolish",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 213,
+      "timestamp": 639,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 2685
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 192578
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 214,
+      "timestamp": 639,
+      "type": "build",
+      "node_id": "mill_east"
+    },
+    {
+      "seq": 215,
+      "timestamp": 645,
+      "type": "recipe",
+      "node_id": "depot_root",
+      "recipe": {
+        "outputs": {},
+        "inputs": {
+          "food": 0,
+          "grain": 0,
+          "metal": 0,
+          "ore": 0,
+          "tools": 0
+        },
+        "capacity": {
+          "food": 1101622,
+          "grain": 1109786,
+          "metal": 1055766,
+          "ore": 1071881,
+          "tools": 1044348
+        },
+        "workers_required": 1
+      }
+    },
+    {
+      "seq": 216,
+      "timestamp": 648,
+      "type": "demolish",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 217,
+      "timestamp": 651,
+      "type": "build",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 218,
+      "timestamp": 654,
+      "type": "demolish",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 219,
+      "timestamp": 657,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1559
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 116413
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 220,
+      "timestamp": 660,
+      "type": "build",
+      "node_id": "smelter_alpha"
+    },
+    {
+      "seq": 221,
+      "timestamp": 663,
+      "type": "assign_workers",
+      "node_id": "smelter_alpha",
+      "workers": 2
+    },
+    {
+      "seq": 222,
+      "timestamp": 666,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 2
+    },
+    {
+      "seq": 223,
+      "timestamp": 669,
+      "type": "build",
+      "node_id": "depot_root"
+    },
+    {
+      "seq": 224,
+      "timestamp": 672,
+      "type": "demolish",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 225,
+      "timestamp": 672,
+      "type": "assign_workers",
+      "node_id": "farm_east",
+      "workers": 3
+    },
+    {
+      "seq": 226,
+      "timestamp": 678,
+      "type": "assign_workers",
+      "node_id": "warehouse_east",
+      "workers": 4
+    },
+    {
+      "seq": 227,
+      "timestamp": 681,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1562
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 115697
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 228,
+      "timestamp": 684,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 2550
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 192090
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 229,
+      "timestamp": 687,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 2746
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 188223
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 230,
+      "timestamp": 690,
+      "type": "build",
+      "node_id": "mill_west"
+    },
+    {
+      "seq": 231,
+      "timestamp": 693,
+      "type": "recipe",
+      "node_id": "farm_east",
+      "recipe": {
+        "outputs": {
+          "grain": 3051
+        },
+        "inputs": {},
+        "capacity": {
+          "grain": 173253
+        },
+        "workers_required": 5
+      }
+    },
+    {
+      "seq": 232,
+      "timestamp": 696,
+      "type": "assign_workers",
+      "node_id": "smelter_alpha",
+      "workers": 0
+    },
+    {
+      "seq": 233,
+      "timestamp": 699,
+      "type": "assign_workers",
+      "node_id": "mill_west",
+      "workers": 2
+    },
+    {
+      "seq": 234,
+      "timestamp": 702,
+      "type": "demolish",
+      "node_id": "farm_east"
+    },
+    {
+      "seq": 235,
+      "timestamp": 705,
+      "type": "demolish",
+      "node_id": "tools_factory"
+    },
+    {
+      "seq": 236,
+      "timestamp": 705,
+      "type": "assign_workers",
+      "node_id": "mine_north",
+      "workers": 3
+    },
+    {
+      "seq": 237,
+      "timestamp": 711,
+      "type": "recipe",
+      "node_id": "mine_south",
+      "recipe": {
+        "outputs": {
+          "ore": 1603
+        },
+        "inputs": {},
+        "capacity": {
+          "ore": 115011
+        },
+        "workers_required": 4
+      }
+    },
+    {
+      "seq": 238,
+      "timestamp": 714,
+      "type": "assign_workers",
+      "node_id": "mill_east",
+      "workers": 5
+    },
+    {
+      "seq": 239,
+      "timestamp": 717,
+      "type": "demolish",
+      "node_id": "depot_root"
+    }
+  ],
+  "truth": {
+    "sample_ticks": [
+      0,
+      72,
+      144,
+      216,
+      288,
+      360,
+      432,
+      504,
+      576,
+      648,
+      720
+    ],
+    "snapshots": [
+      {
+        "tick": 0,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 0,
+            "workers": 1,
+            "workers_required": 0,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 26000,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 888526,
+              "grain": 926614,
+              "metal": 903885,
+              "ore": 892427,
+              "tools": 879857
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 7000
+            },
+            "capacity": {
+              "grain": 114769
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 8000
+            },
+            "capacity": {
+              "grain": 116863
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 9000
+            },
+            "capacity": {
+              "food": 70414,
+              "grain": 34532
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 12000
+            },
+            "capacity": {
+              "food": 81090,
+              "grain": 38252
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 6500
+            },
+            "capacity": {
+              "ore": 97541
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 3,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "ore": 5000
+            },
+            "capacity": {
+              "ore": 96208
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 10000
+            },
+            "capacity": {
+              "metal": 67168,
+              "ore": 29157
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 0,
+            "workers": 4,
+            "workers_required": 3,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 7000
+            },
+            "capacity": {
+              "metal": 25317,
+              "tools": 60681
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 0,
+            "workers": 1,
+            "workers_required": 0,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 312035,
+              "tools": 258831
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 14000,
+          "grain": 62000,
+          "metal": 16000,
+          "ore": 43500,
+          "tools": 6000
+        },
+        "global_net_rate": {},
+        "overflow": {},
+        "overflow_sources": null
+      },
+      {
+        "tick": 72,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 1,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 26000,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1107678,
+              "grain": 1132052,
+              "metal": 1134342,
+              "ore": 1081941,
+              "tools": 1022273
+            },
+            "net_rate": {
+              "food": 0,
+              "grain": 0,
+              "metal": 0,
+              "ore": 0,
+              "tools": 0
+            },
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 111931
+            },
+            "capacity": {
+              "grain": 114769
+            },
+            "net_rate": {
+              "grain": 1923
+            },
+            "total_output": {
+              "grain": 138456
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 115813
+            },
+            "capacity": {
+              "grain": 116863
+            },
+            "net_rate": {
+              "grain": 2257
+            },
+            "total_output": {
+              "grain": 162504
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 2,
+            "workers": 3,
+            "workers_required": 4,
+            "active": true,
+            "stalled": true,
+            "stall_since": 45,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 97650,
+              "grain": 50803
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 21816,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 81090,
+              "grain": 38252
+            },
+            "net_rate": {
+              "food": 909,
+              "grain": -1050
+            },
+            "total_output": {
+              "food": 21816
+            },
+            "total_input": {
+              "grain": 25200
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 7,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 67923
+            },
+            "capacity": {
+              "ore": 102540
+            },
+            "net_rate": {
+              "ore": 1723
+            },
+            "total_output": {
+              "ore": 123783
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 3,
+            "active": true,
+            "stalled": true,
+            "stall_since": 69,
+            "stock": {
+              "ore": 71276
+            },
+            "capacity": {
+              "ore": 91592
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 66276
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "metal": 16636,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 65064,
+              "ore": 29341
+            },
+            "net_rate": {
+              "metal": 680,
+              "ore": -1185
+            },
+            "total_output": {
+              "metal": 42786
+            },
+            "total_input": {
+              "ore": 72360
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 3,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 0,
+              "tools": 21321
+            },
+            "capacity": {
+              "metal": 23859,
+              "tools": 62655
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 21321
+            },
+            "total_input": {
+              "metal": 33150
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 0,
+            "workers": 1,
+            "workers_required": 0,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 309488,
+              "tools": 256889
+            },
+            "net_rate": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 71456,
+          "grain": 253744,
+          "metal": 25636,
+          "ore": 161199,
+          "tools": 27321
+        },
+        "global_net_rate": {
+          "food": 909,
+          "grain": 3130,
+          "metal": 680,
+          "ore": 538,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_west\u0000grain": 41491
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 41491,
+            "last_tick": 71
+          }
+        ]
+      },
+      {
+        "tick": 144,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 1,
+            "workers_required": 1,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 26000,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1117586,
+              "grain": 1160657,
+              "metal": 1142481,
+              "ore": 1101118,
+              "tools": 1048976
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 114769
+            },
+            "capacity": {
+              "grain": 114769
+            },
+            "net_rate": {
+              "grain": 1923
+            },
+            "total_output": {
+              "grain": 276912
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 2,
+            "workers": 2,
+            "workers_required": 4,
+            "active": true,
+            "stalled": true,
+            "stall_since": 78,
+            "stock": {
+              "grain": 55708
+            },
+            "capacity": {
+              "grain": 167128
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 176046
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 2,
+            "workers": 3,
+            "workers_required": 4,
+            "active": true,
+            "stalled": true,
+            "stall_since": 45,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 98988,
+              "grain": 47880
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 5,
+            "workers_required": 2,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "food": 78258,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 82399,
+              "grain": 36210
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 78258
+            },
+            "total_input": {
+              "grain": 91605
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 4,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 101385
+            },
+            "capacity": {
+              "ore": 102540
+            },
+            "net_rate": {
+              "ore": 1723
+            },
+            "total_output": {
+              "ore": 247839
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 5,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 75497
+            },
+            "capacity": {
+              "ore": 91592
+            },
+            "net_rate": {
+              "ore": 1407
+            },
+            "total_output": {
+              "ore": 70497
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 1,
+            "workers": 3,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "metal": 66151,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 80601,
+              "ore": 34988
+            },
+            "net_rate": {
+              "metal": 779,
+              "ore": -1155
+            },
+            "total_output": {
+              "metal": 96201
+            },
+            "total_input": {
+              "ore": 156330
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 0,
+              "tools": 23697
+            },
+            "capacity": {
+              "metal": 40507,
+              "tools": 97089
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 23697
+            },
+            "total_input": {
+              "metal": 37050
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 0,
+            "workers": 0,
+            "workers_required": 0,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 327520,
+              "tools": 268224
+            },
+            "net_rate": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 127898,
+          "grain": 196477,
+          "metal": 75151,
+          "ore": 198882,
+          "tools": 29697
+        },
+        "global_net_rate": {
+          "food": 0,
+          "grain": 1923,
+          "metal": 779,
+          "ore": 1975,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_east\u0000grain": 135618,
+          "farm_west\u0000grain": 48733,
+          "mine_north\u0000ore": 6624
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 135618,
+            "last_tick": 143
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 48733,
+            "last_tick": 77
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 6624,
+            "last_tick": 143
+          }
+        ]
+      },
+      {
+        "tick": 216,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 0,
+            "workers_required": 1,
+            "active": true,
+            "stalled": true,
+            "stall_since": 171,
+            "stock": {
+              "food": 12000,
+              "grain": 26000,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1053607,
+              "grain": 1085776,
+              "metal": 1146640,
+              "ore": 1121849,
+              "tools": 1025231
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 109770
+            },
+            "capacity": {
+              "grain": 109770
+            },
+            "net_rate": {
+              "grain": 1951
+            },
+            "total_output": {
+              "grain": 393384
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 0,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 195,
+            "stock": {
+              "grain": 4492
+            },
+            "capacity": {
+              "grain": 186980
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 176046
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 45,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 112662,
+              "grain": 55251
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 5,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 82399,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 82399,
+              "grain": 36210
+            },
+            "net_rate": {
+              "food": 854,
+              "grain": -1067
+            },
+            "total_output": {
+              "food": 119250
+            },
+            "total_input": {
+              "grain": 142821
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 5,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 92686
+            },
+            "capacity": {
+              "ore": 92686
+            },
+            "net_rate": {
+              "ore": 1664
+            },
+            "total_output": {
+              "ore": 371541
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 5,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 91592
+            },
+            "capacity": {
+              "ore": 91592
+            },
+            "net_rate": {
+              "ore": 1407
+            },
+            "total_output": {
+              "ore": 171801
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 204,
+            "stock": {
+              "metal": 80384,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 107468,
+              "ore": 46651
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 156,
+            "stock": {
+              "metal": 0,
+              "tools": 23697
+            },
+            "capacity": {
+              "metal": 40507,
+              "tools": 97089
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 23697
+            },
+            "total_input": {
+              "metal": 37050
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 0,
+            "workers": 0,
+            "workers_required": 0,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 327520,
+              "tools": 268224
+            },
+            "net_rate": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 132039,
+          "grain": 140262,
+          "metal": 89384,
+          "ore": 206278,
+          "tools": 29697
+        },
+        "global_net_rate": {
+          "food": 854,
+          "grain": 884,
+          "ore": 3071,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_east\u0000grain": 257089,
+          "farm_west\u0000grain": 48733,
+          "mill_west\u0000food": 36851,
+          "mine_north\u0000ore": 69170,
+          "mine_south\u0000ore": 85209,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 257089,
+            "last_tick": 215
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 48733,
+            "last_tick": 77
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 36851,
+            "last_tick": 215
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 69170,
+            "last_tick": 215
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 85209,
+            "last_tick": 215
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      },
+      {
+        "tick": 288,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 0,
+            "workers_required": 1,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 616,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1053607,
+              "grain": 1085776,
+              "metal": 1146640,
+              "ore": 1121849,
+              "tools": 1025231
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 115297
+            },
+            "capacity": {
+              "grain": 115297
+            },
+            "net_rate": {
+              "grain": 1832
+            },
+            "total_output": {
+              "grain": 526401
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 0,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 195,
+            "stock": {
+              "grain": 0
+            },
+            "capacity": {
+              "grain": 188489
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 176046
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 45,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 115187,
+              "grain": 56612
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 5,
+            "workers_required": 2,
+            "active": true,
+            "stalled": true,
+            "stall_since": 244,
+            "stock": {
+              "food": 82399,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 82399,
+              "grain": 36210
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 143162
+            },
+            "total_input": {
+              "grain": 172697
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 5,
+            "workers_required": 3,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "ore": 92686
+            },
+            "capacity": {
+              "ore": 92686
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 461397
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 5,
+            "workers_required": 4,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "ore": 119155
+            },
+            "capacity": {
+              "ore": 119155
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 260208
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 267,
+            "stock": {
+              "metal": 80384,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 107468,
+              "ore": 46651
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 285,
+            "stock": {
+              "metal": 0,
+              "tools": 23697
+            },
+            "capacity": {
+              "metal": 40507,
+              "tools": 97089
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 23697
+            },
+            "total_input": {
+              "metal": 37050
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 1,
+            "workers": 0,
+            "workers_required": 1,
+            "active": true,
+            "stalled": true,
+            "stall_since": 216,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 390675,
+              "tools": 293186
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 132039,
+          "grain": 115913,
+          "metal": 89384,
+          "ore": 233841,
+          "tools": 29697
+        },
+        "global_net_rate": {
+          "grain": 1832
+        },
+        "overflow": {
+          "farm_east\u0000grain": 384579,
+          "farm_west\u0000grain": 48733,
+          "mill_west\u0000food": 60763,
+          "mine_north\u0000ore": 159026,
+          "mine_south\u0000ore": 146053,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 384579,
+            "last_tick": 287
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 48733,
+            "last_tick": 77
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 60763,
+            "last_tick": 243
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 159026,
+            "last_tick": 275
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 146053,
+            "last_tick": 281
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      },
+      {
+        "tick": 360,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 0,
+            "workers_required": 1,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 616,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1053607,
+              "grain": 1085776,
+              "metal": 1146640,
+              "ore": 1121849,
+              "tools": 1025231
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 115297
+            },
+            "capacity": {
+              "grain": 115297
+            },
+            "net_rate": {
+              "grain": 1832
+            },
+            "total_output": {
+              "grain": 658305
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 6,
+            "workers_required": 5,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "grain": 84552
+            },
+            "capacity": {
+              "grain": 184669
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 315015
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 0,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 327,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 109822,
+              "grain": 52114
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 82399,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 82399,
+              "grain": 36210
+            },
+            "net_rate": {
+              "food": 854,
+              "grain": -1067
+            },
+            "total_output": {
+              "food": 186716
+            },
+            "total_input": {
+              "grain": 227114
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 3,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 100037
+            },
+            "capacity": {
+              "ore": 100037
+            },
+            "net_rate": {
+              "ore": 1770
+            },
+            "total_output": {
+              "ore": 548805
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 5,
+            "workers_required": 4,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 109999
+            },
+            "capacity": {
+              "ore": 109999
+            },
+            "net_rate": {
+              "ore": 1569
+            },
+            "total_output": {
+              "ore": 363798
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 267,
+            "stock": {
+              "metal": 76208,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 107468,
+              "ore": 46651
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 354,
+            "stock": {
+              "metal": 0,
+              "tools": 27135
+            },
+            "capacity": {
+              "metal": 38316,
+              "tools": 100362
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 27135
+            },
+            "total_input": {
+              "metal": 41226
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 1,
+            "workers": 0,
+            "workers_required": 1,
+            "active": true,
+            "stalled": true,
+            "stall_since": 216,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 390675,
+              "tools": 293186
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 132039,
+          "grain": 200465,
+          "metal": 85208,
+          "ore": 232036,
+          "tools": 33135
+        },
+        "global_net_rate": {
+          "food": 854,
+          "grain": 765,
+          "ore": 3339
+        },
+        "overflow": {
+          "farm_east\u0000grain": 516483,
+          "farm_west\u0000grain": 48733,
+          "mill_west\u0000food": 104317,
+          "mine_north\u0000ore": 239083,
+          "mine_south\u0000ore": 258799,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 516483,
+            "last_tick": 359
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 48733,
+            "last_tick": 77
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 104317,
+            "last_tick": 359
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 239083,
+            "last_tick": 359
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 258799,
+            "last_tick": 359
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      },
+      {
+        "tick": 432,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 2,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 616,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1053607,
+              "grain": 1085776,
+              "metal": 1146640,
+              "ore": 1121849,
+              "tools": 1025231
+            },
+            "net_rate": {
+              "food": 0,
+              "grain": 0,
+              "metal": 0,
+              "ore": 0,
+              "tools": 0
+            },
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 1,
+            "workers_required": 3,
+            "active": true,
+            "stalled": true,
+            "stall_since": 408,
+            "stock": {
+              "grain": 134572
+            },
+            "capacity": {
+              "grain": 134572
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 763296
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 6,
+            "workers_required": 5,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 176715
+            },
+            "capacity": {
+              "grain": 177708
+            },
+            "net_rate": {
+              "grain": 3067
+            },
+            "total_output": {
+              "grain": 493698
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 2,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 396,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 109822,
+              "grain": 52114
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 81669,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 81669,
+              "grain": 37548
+            },
+            "net_rate": {
+              "food": 938,
+              "grain": -993
+            },
+            "total_output": {
+              "food": 248456
+            },
+            "total_input": {
+              "grain": 303716
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 6,
+            "workers_required": 4,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 118162
+            },
+            "capacity": {
+              "ore": 118162
+            },
+            "net_rate": {
+              "ore": 1818
+            },
+            "total_output": {
+              "ore": 604737
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 5,
+            "workers_required": 4,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "ore": 116802
+            },
+            "capacity": {
+              "ore": 116802
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 452652
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 2,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 267,
+            "stock": {
+              "metal": 76208,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 109564,
+              "ore": 44266
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 0,
+              "tools": 27135
+            },
+            "capacity": {
+              "metal": 38316,
+              "tools": 100362
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 27135
+            },
+            "total_input": {
+              "metal": 41226
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 1,
+            "workers": 1,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 390675,
+              "tools": 293186
+            },
+            "net_rate": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 131309,
+          "grain": 311903,
+          "metal": 85208,
+          "ore": 256964,
+          "tools": 33135
+        },
+        "global_net_rate": {
+          "food": 938,
+          "grain": 2074,
+          "metal": 0,
+          "ore": 1818,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_east\u0000grain": 602199,
+          "farm_west\u0000grain": 58651,
+          "mill_west\u0000food": 166787,
+          "mine_north\u0000ore": 276890,
+          "mine_south\u0000ore": 340850,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 602199,
+            "last_tick": 423
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 58651,
+            "last_tick": 431
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 166787,
+            "last_tick": 431
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 276890,
+            "last_tick": 431
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 340850,
+            "last_tick": 413
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      },
+      {
+        "tick": 504,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 2,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 616,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1053607,
+              "grain": 1085776,
+              "metal": 1146640,
+              "ore": 1121849,
+              "tools": 1025231
+            },
+            "net_rate": {
+              "food": 0,
+              "grain": 0,
+              "metal": 0,
+              "ore": 0,
+              "tools": 0
+            },
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 2,
+            "workers_required": 3,
+            "active": true,
+            "stalled": true,
+            "stall_since": 468,
+            "stock": {
+              "grain": 134572
+            },
+            "capacity": {
+              "grain": 134572
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 763296
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 6,
+            "workers_required": 5,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 176618
+            },
+            "capacity": {
+              "grain": 177708
+            },
+            "net_rate": {
+              "grain": 3067
+            },
+            "total_output": {
+              "grain": 714522
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 2,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 498,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 108658,
+              "grain": 57064
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 79870,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 79870,
+              "grain": 40021
+            },
+            "net_rate": {
+              "food": 983,
+              "grain": -1090
+            },
+            "total_output": {
+              "food": 318827
+            },
+            "total_input": {
+              "grain": 381323
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 441,
+            "stock": {
+              "ore": 118162
+            },
+            "capacity": {
+              "ore": 156065
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 621099
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 5,
+            "workers_required": 4,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 115823
+            },
+            "capacity": {
+              "ore": 115823
+            },
+            "net_rate": {
+              "ore": 1637
+            },
+            "total_output": {
+              "ore": 525123
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 2,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 267,
+            "stock": {
+              "metal": 76208,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 109564,
+              "ore": 44266
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 0,
+              "tools": 27135
+            },
+            "capacity": {
+              "metal": 38316,
+              "tools": 100362
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 27135
+            },
+            "total_input": {
+              "metal": 41226
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 1,
+            "workers": 1,
+            "workers_required": 1,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 390675,
+              "tools": 293186
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 129510,
+          "grain": 311806,
+          "metal": 85208,
+          "ore": 255985,
+          "tools": 33135
+        },
+        "global_net_rate": {
+          "food": 983,
+          "grain": 1977,
+          "metal": 0,
+          "ore": 1637,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_east\u0000grain": 602199,
+          "farm_west\u0000grain": 201965,
+          "mill_west\u0000food": 238957,
+          "mine_north\u0000ore": 293252,
+          "mine_south\u0000ore": 414300,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 602199,
+            "last_tick": 423
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 201965,
+            "last_tick": 503
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 238957,
+            "last_tick": 503
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 293252,
+            "last_tick": 440
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 414300,
+            "last_tick": 503
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      },
+      {
+        "tick": 576,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 3,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 616,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1123762,
+              "grain": 1078335,
+              "metal": 1115941,
+              "ore": 1024711,
+              "tools": 1047076
+            },
+            "net_rate": {
+              "food": 0,
+              "grain": 0,
+              "metal": 0,
+              "ore": 0,
+              "tools": 0
+            },
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 570,
+            "stock": {
+              "grain": 183630
+            },
+            "capacity": {
+              "grain": 183630
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 919737
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 5,
+            "workers_required": 5,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 184469
+            },
+            "capacity": {
+              "grain": 184469
+            },
+            "net_rate": {
+              "grain": 3079
+            },
+            "total_output": {
+              "grain": 871371
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 1,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 498,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 109733,
+              "grain": 57387
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "food": 78683,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 78683,
+              "grain": 40254
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 374474
+            },
+            "total_input": {
+              "grain": 442673
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 441,
+            "stock": {
+              "ore": 118162
+            },
+            "capacity": {
+              "ore": 148407
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 621099
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 4,
+            "workers_required": 4,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 115823
+            },
+            "capacity": {
+              "ore": 115823
+            },
+            "net_rate": {
+              "ore": 1637
+            },
+            "total_output": {
+              "ore": 642987
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 267,
+            "stock": {
+              "metal": 76208,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 101172,
+              "ore": 46594
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 0,
+              "tools": 27135
+            },
+            "capacity": {
+              "metal": 38316,
+              "tools": 100362
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 27135
+            },
+            "total_input": {
+              "metal": 41226
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 1,
+            "workers": 4,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 390675,
+              "tools": 293186
+            },
+            "net_rate": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 128323,
+          "grain": 368715,
+          "metal": 85208,
+          "ore": 255985,
+          "tools": 33135
+        },
+        "global_net_rate": {
+          "food": 0,
+          "grain": 3079,
+          "metal": 0,
+          "ore": 1637,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_east\u0000grain": 709582,
+          "farm_west\u0000grain": 289613,
+          "mill_west\u0000food": 295791,
+          "mine_north\u0000ore": 293252,
+          "mine_south\u0000ore": 532164,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 709582,
+            "last_tick": 569
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 289613,
+            "last_tick": 575
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 295791,
+            "last_tick": 560
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 293252,
+            "last_tick": 440
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 532164,
+            "last_tick": 575
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      },
+      {
+        "tick": 648,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 3,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 616,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1101622,
+              "grain": 1109786,
+              "metal": 1055766,
+              "ore": 1071881,
+              "tools": 1044348
+            },
+            "net_rate": {
+              "food": 0,
+              "grain": 0,
+              "metal": 0,
+              "ore": 0,
+              "tools": 0
+            },
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 6,
+            "workers_required": 5,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 192578
+            },
+            "capacity": {
+              "grain": 192578
+            },
+            "net_rate": {
+              "grain": 2685
+            },
+            "total_output": {
+              "grain": 1002450
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 5,
+            "workers_required": 5,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 180514
+            },
+            "capacity": {
+              "grain": 181539
+            },
+            "net_rate": {
+              "grain": 3233
+            },
+            "total_output": {
+              "grain": 1099527
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 1,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 639,
+            "stock": {
+              "food": 35640,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 109733,
+              "grain": 57387
+            },
+            "net_rate": {},
+            "total_output": {
+              "food": 35640
+            },
+            "total_input": {
+              "grain": 42525
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 3,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 78683,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 78683,
+              "grain": 40254
+            },
+            "net_rate": {
+              "food": 951,
+              "grain": -1025
+            },
+            "total_output": {
+              "food": 422975
+            },
+            "total_input": {
+              "grain": 494948
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 441,
+            "stock": {
+              "ore": 118162
+            },
+            "capacity": {
+              "ore": 148407
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 621099
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 4,
+            "workers_required": 4,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 114117
+            },
+            "capacity": {
+              "ore": 114117
+            },
+            "net_rate": {
+              "ore": 1481
+            },
+            "total_output": {
+              "ore": 745536
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 76208,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 101172,
+              "ore": 46594
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 633,
+            "stock": {
+              "metal": 0,
+              "tools": 27135
+            },
+            "capacity": {
+              "metal": 38316,
+              "tools": 100362
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 27135
+            },
+            "total_input": {
+              "metal": 41226
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 1,
+            "workers": 4,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 391749,
+              "tools": 328803
+            },
+            "net_rate": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 128323,
+          "grain": 373708,
+          "metal": 85208,
+          "ore": 254279,
+          "tools": 33135
+        },
+        "global_net_rate": {
+          "food": 951,
+          "grain": 4893,
+          "metal": 0,
+          "ore": 1481,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_east\u0000grain": 783347,
+          "farm_west\u0000grain": 469449,
+          "mill_west\u0000food": 344292,
+          "mine_north\u0000ore": 293252,
+          "mine_south\u0000ore": 636419,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 783347,
+            "last_tick": 647
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 469449,
+            "last_tick": 647
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 344292,
+            "last_tick": 647
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 293252,
+            "last_tick": 440
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 636419,
+            "last_tick": 647
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      },
+      {
+        "tick": 720,
+        "nodes": [
+          {
+            "id": "depot_root",
+            "type": "warehouse",
+            "level": 1,
+            "workers": 3,
+            "workers_required": 1,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "food": 12000,
+              "grain": 616,
+              "metal": 9000,
+              "ore": 22000,
+              "tools": 5000
+            },
+            "capacity": {
+              "food": 1101622,
+              "grain": 1109786,
+              "metal": 1055766,
+              "ore": 1071881,
+              "tools": 1044348
+            },
+            "net_rate": {},
+            "total_output": {},
+            "total_input": {}
+          },
+          {
+            "id": "farm_east",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 5,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "grain": 166683
+            },
+            "capacity": {
+              "grain": 173253
+            },
+            "net_rate": {},
+            "total_output": {
+              "grain": 1058835
+            },
+            "total_input": {}
+          },
+          {
+            "id": "farm_west",
+            "type": "farm",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 5,
+            "workers_required": 5,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "grain": 180514
+            },
+            "capacity": {
+              "grain": 181539
+            },
+            "net_rate": {
+              "grain": 3233
+            },
+            "total_output": {
+              "grain": 1332303
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mill_east",
+            "type": "factory",
+            "parent_id": "farm_east",
+            "level": 3,
+            "workers": 5,
+            "workers_required": 5,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 41598,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 109733,
+              "grain": 57387
+            },
+            "net_rate": {
+              "food": 993,
+              "grain": -1095
+            },
+            "total_output": {
+              "food": 41598
+            },
+            "total_input": {
+              "grain": 49095
+            }
+          },
+          {
+            "id": "mill_west",
+            "type": "factory",
+            "parent_id": "farm_west",
+            "level": 0,
+            "workers": 2,
+            "workers_required": 2,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 78683,
+              "grain": 0
+            },
+            "capacity": {
+              "food": 78683,
+              "grain": 40254
+            },
+            "net_rate": {
+              "food": 951,
+              "grain": -1025
+            },
+            "total_output": {
+              "food": 474329
+            },
+            "total_input": {
+              "grain": 550298
+            }
+          },
+          {
+            "id": "mine_north",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": true,
+            "stalled": true,
+            "stall_since": 441,
+            "stock": {
+              "ore": 118162
+            },
+            "capacity": {
+              "ore": 148407
+            },
+            "net_rate": {},
+            "total_output": {
+              "ore": 621099
+            },
+            "total_input": {}
+          },
+          {
+            "id": "mine_south",
+            "type": "mine",
+            "parent_id": "depot_root",
+            "level": 1,
+            "workers": 4,
+            "workers_required": 4,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "ore": 115011
+            },
+            "capacity": {
+              "ore": 115011
+            },
+            "net_rate": {
+              "ore": 1603
+            },
+            "total_output": {
+              "ore": 857568
+            },
+            "total_input": {}
+          },
+          {
+            "id": "smelter_alpha",
+            "type": "factory",
+            "parent_id": "mine_north",
+            "level": 3,
+            "workers": 0,
+            "workers_required": 5,
+            "active": true,
+            "stalled": true,
+            "stall_since": 660,
+            "stock": {
+              "metal": 76208,
+              "ore": 0
+            },
+            "capacity": {
+              "metal": 101172,
+              "ore": 46594
+            },
+            "net_rate": {},
+            "total_output": {
+              "metal": 143841
+            },
+            "total_input": {
+              "ore": 226185
+            }
+          },
+          {
+            "id": "tools_factory",
+            "type": "factory",
+            "parent_id": "smelter_alpha",
+            "level": 3,
+            "workers": 3,
+            "workers_required": 6,
+            "active": false,
+            "stalled": false,
+            "stock": {
+              "metal": 0,
+              "tools": 27135
+            },
+            "capacity": {
+              "metal": 38316,
+              "tools": 100362
+            },
+            "net_rate": {},
+            "total_output": {
+              "tools": 27135
+            },
+            "total_input": {
+              "metal": 41226
+            }
+          },
+          {
+            "id": "warehouse_east",
+            "type": "warehouse",
+            "parent_id": "tools_factory",
+            "level": 1,
+            "workers": 4,
+            "workers_required": 1,
+            "active": true,
+            "stalled": false,
+            "stock": {
+              "food": 2000,
+              "tools": 1000
+            },
+            "capacity": {
+              "food": 391749,
+              "tools": 328803
+            },
+            "net_rate": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_output": {
+              "food": 0,
+              "tools": 0
+            },
+            "total_input": {}
+          }
+        ],
+        "global_stock": {
+          "food": 134281,
+          "grain": 347813,
+          "metal": 85208,
+          "ore": 255173,
+          "tools": 33135
+        },
+        "global_net_rate": {
+          "food": 1944,
+          "grain": 1113,
+          "ore": 1603,
+          "tools": 0
+        },
+        "overflow": {
+          "farm_east\u0000grain": 859057,
+          "farm_west\u0000grain": 646875,
+          "mill_west\u0000food": 395646,
+          "mine_north\u0000ore": 293252,
+          "mine_south\u0000ore": 747557,
+          "smelter_alpha\u0000metal": 33407
+        },
+        "overflow_sources": [
+          {
+            "node_id": "farm_east",
+            "resource": "grain",
+            "total": 859057,
+            "last_tick": 693
+          },
+          {
+            "node_id": "farm_west",
+            "resource": "grain",
+            "total": 646875,
+            "last_tick": 719
+          },
+          {
+            "node_id": "mill_west",
+            "resource": "food",
+            "total": 395646,
+            "last_tick": 719
+          },
+          {
+            "node_id": "mine_north",
+            "resource": "ore",
+            "total": 293252,
+            "last_tick": 440
+          },
+          {
+            "node_id": "mine_south",
+            "resource": "ore",
+            "total": 747557,
+            "last_tick": 719
+          },
+          {
+            "node_id": "smelter_alpha",
+            "resource": "metal",
+            "total": 33407,
+            "last_tick": 203
+          }
+        ]
+      }
+    ]
+  },
+  "scene_hash": "97aa939d734eb241293df6d278aac0cbf5db1274ae98cf4f3cf8f9700f9bf6d0"
+}
