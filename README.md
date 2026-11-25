@@ -1,3 +1,22 @@
+# OCRFlow：确定性 OCR 增量领域组件
+
+本目录已交付可编译、可测试、可本地演示的 Go 模块 `ocrflow`。快速验证：
+
+```bash
+go test ./... -count=1
+go run ./cmd/ocrflow generate --out artifacts/samples
+go run ./cmd/ocrflow verify --work artifacts/demo
+go run ./cmd/ocrflow serve --work artifacts/demo --addr 127.0.0.1:18080 --reset
+```
+
+- 实现说明与实测记录：`docs/IMPLEMENTATION.md`
+- 确定性样本：`artifacts/samples/`（`manifest.json`、`truth.json`、PNG、三版本配方）
+- 机器可读验收报告：`artifacts/demo/verification.json`
+
+异常码：`E_SCHEMA`、`E_OVF`、`E_PARA`、`E_DECODE`、`E_DIFF`；诊断页 `/` 与 `/healthz` 会列出。
+
+---
+
 长线运营的竞技游戏需要从玩家提交的截图中抽取战斗结算面板与排行榜文字，而原先的批量离线识别只要改动一次 OCR 配置就得整批重跑，运营活动根本等不起。首个可验收版本要在当前尚未初始化的空目录里独立成形，作为可集成的 Go 领域组件并附本地可重复演示。全部截图与解析真值由题内确定性生成器按固定种子产出：画面由渐变背景、几何图元与按固定字模渲染的文本行合成，文本行带倾斜、低对比度与多行排版，真值仅来自生成器的解析构造，含每个文本行的四点包围框、文本内容、字符数与平均笔画宽，是精度观测的唯一来源。识别配方以三个 schema 版本存在，版本差异体现在字段命名、检测阈值刻度、预处理阶数表达与可选二值化字段的有无上。
 
 任务环境与准备：
