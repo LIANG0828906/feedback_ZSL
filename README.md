@@ -1,21 +1,112 @@
-旧故障处理脚本即将退役，接替它的隔离与恢复编排能力目前只有一份评审纪要，代码目录里除空 Go 模块外别无他物，团队要先做出一版可独立核验的原型再谈替换。全部输入与解析真值由题内确定性生成器按固定种子产出：同一份集群工程以三个 schema 版本描述同一内容，差异体现在字段命名、拓扑归属表达（扁平节点表与按机架分组的拓扑树）、隔离域编号的绝对编号与相对本级偏移、时间与容量单位（tick 与毫秒、字节与 KiB）以及可选隔离超时字段的有无上。每份工程声明若干节点与它们承载的工作负载、节点间依赖边、按逻辑时刻排列的故障探测事件与恢复事件，并要求在隔离期间冻结受影响工作负载的资源预算，隔离未完成时不得宣称节点已恢复。
+# 隔离与恢复编排原型
 
-任务环境与准备：
-安装 Go 1.22 或以上版本，确认 go version 与 go env GOPATH 可用。
-创建并初始化空 Go 模块（go mod init），不预置任何源码、样本或第三方依赖；SQLite 使用纯 Go 驱动由实现自行引入并固定版本。
-在 Linux（WSL Ubuntu）下执行 go build ./... 与 go test ./...，全部样本由实现自带的确定性生成器按固定种子在本地产出。
+这是一个可从空 Go 模块独立构建、测试和人工核验的隔离编排原型。输入完全由仓库内的固定种子生成器产出，不依赖外部集群、容器或未授权目标；SQLite 使用纯 Go 驱动 `modernc.org/sqlite v1.34.5`。
 
-业务要求：
-1. 实现覆盖三个 schema 版本的集群工程装载器，把字段命名、扁平节点表与按机架分组拓扑树两种归属表达、隔离域编号的绝对编号与相对本级偏移、tick 与毫秒及字节与 KiB 单位、可选隔离超时字段统一映射为内部节点与依赖模型，保证同一工程经三个版本装载后的节点集合、依赖边集合与遍历次序完全一致，无法识别的版本组合须返回稳定业务码。
-2. 实现逐逻辑时刻的故障判定与隔离域求解：依据探测事件确定故障节点集合，并把故障节点的影响范围按拓扑归属聚成隔离域，域编号在绝对编号与相对偏移两种表达换算后须对应同一节点集合；逐时刻输出的故障节点集合、隔离域划分与域内节点顺序须与生成器真值逐项一致。
-3. 实现隔离期内的工作负载预算冻结：受影响工作负载在隔离提交前不得申请新资源，冻结期的到达请求须进入等待队列并记录冻结来源，解冻只发生在隔离完成提交之后；逐时刻输出的冻结集合、等待队列成员与解冻时刻须与真值一致，冻结期不得出现任何预算越界放行。
-4. 实现依赖传播与恢复门槛判定：隔离标记须沿依赖边按传播代数扩散到受影响工作负载，隔离未完成或依赖仍被隔离的节点不得宣称已恢复，须输出每个节点未恢复所依据的依赖链与传播代数；传播代数在三个版本下换算后须得到同一受影响集合，依赖成环时给出可定位报告。
-5. 实现隔离超时的定点判定：隔离超时按归一后的毫秒与 tick 换算使用声明位宽的定点整数计算，超时边界上的已超时与未超时按声明口径裁决且不可因版本不同而改变；超出超时的隔离须按声明规则升级为强制隔离并记录升级时刻与依据，超时换算误差不得累积到改变是否升级的结论。
-6. 实现隔离中断后的回退与续做：一次隔离在提交点前被打断时须回退到隔离前已提交状态，已分步完成的隔离须从最近提交点续做而非整体重来，恢复后同一节点不得同时出现在两个隔离域中；被可处理的退出信号打断时须落盘到最后一个完整提交点，强制终止后的恢复只能依赖已持久化状态且不得承诺一定生成退出报告。
-7. 实现故障事件、依赖边与恢复事件编辑后的增量失效：改动某节点的依赖边、某隔离域边界或追加恢复事件时，只重算依赖链经过被编辑对象的时刻区间与隔离判定，未受影响区间必须复用缓存结果，并输出每处结果所依据的失效来源，使增量结果与一次性全量重算逐时刻一致；整份工程快照被替换时须通过版本变化识别并丢弃失效缓存。
-8. 在声明的工作线程预算与每隔离域待判定节点上限下并行推进多时刻的隔离求解与传播，上限或线程预算耗尽时须产生确定的可观测背压结果而非越界分配或静默跳过节点，任何并发度、节点调度顺序与提交批次都不改变故障集合、隔离域划分、冻结集合与传播结果；同时把已提交的时刻序号、各节点隔离状态与冻结队列写入 SQLite 检查点，写入顺序须先落节点与域状态再更新全局时刻序号。
+## 快速验收
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+```bash
+go version
+go env GOPATH
+go build ./...
+go test ./...
+go test -race ./...
 
-验收：
-用本地多版本集群样本验证隔离域求解、冻结与恢复门槛的逐时刻结果，以及中断续算与异常注入路径。
+go run ./cmd/orchestrator gen -seed 424242 -out samples
+go run ./cmd/orchestrator verify -seed 424242 -out artifacts/verification.json
+go run ./cmd/orchestrator run -input samples/cluster-v2.json -out artifacts/run-v2.json
+go run ./cmd/orchestrator execute -input samples/cluster-v1.json -db /tmp/isolation.db
+go run ./cmd/orchestrator execute -input samples/cluster-v1.json -db /tmp/isolation.db -resume
+```
+
+本地实际环境为 `go1.22.12 linux/amd64`，`go env GOPATH` 可正常解析并用于模块缓存。`samples/` 下的三个 schema 文件、规范模型和真值均由生成器在本地写出；`artifacts/verification.json` 是最近一次验收结果。
+
+## 代码结构
+
+- `loader.go`、`model.go`、`units.go`：三版本线格式装载、单位换算、规范排序和稳定业务码。
+- `gen.go`：固定种子生成同一工程的 v1/v2/v3 表示及稀疏逐 tick 真值。
+- `engine.go`、`propagation.go`：逐 tick 故障域、冻结队列、恢复门槛、超时升级和多源传播。
+- `incremental.go`：依赖边、域边界和恢复事件的增量失效与缓存窗口复用。
+- `checkpoint.go`、`store.go`、`executor.go`：SQLite 提交点、事务回滚、优雅中断和从最后完整提交续做。
+- `cycles.go`：依赖强连通分量和可定位闭环报告。
+- `cmd/orchestrator/main.go`：生成、求解和完整验收命令。
+
+## 三版本映射
+
+生成器描述同一个 9 节点、6 条依赖、4 个隔离域、55 个逻辑 tick 的工程，但三份线格式刻意使用不同表达：
+
+| 维度 | v1 | v2 | v3 |
+|---|---|---|---|
+| 版本字段 | `cluster.v1` | `cluster/v2` | `cluster.v3` |
+| 节点表 | 扁平 `nodes` | `topology.racks[].nodes` | 扁平 `nodes` + 嵌套 `zone` |
+| 隔离域 | `zone_id_abs` 绝对编号 | `zone_base + zone_offset` | `zone.base + zone.offset` |
+| 事件时间 | `at_ms` | `at_tick` | `at_ms` |
+| 超时 | 可选 `isolation_timeout_ms` | 可选 `isolation_timeout_ticks` | 可选 `timeout_ms` |
+| 容量 | 字节 | KiB | KiB |
+| 事件/依赖字段 | `events`/`edges` | `timeline`/`dependencies` | `log`/`links` |
+
+装载后的节点、工作负载、依赖边、事件按稳定主键排序。显式超时和缺省超时都归一为精确 `ticks` 有理数，因此不同字段名、单位、绝对/相对编号和可选字段存在性不会改变内部模型。未知 schema 或版本组合返回稳定业务码 `E_UNSUPPORTED_SCHEMA`。
+
+## 逐 tick 语义
+
+- `probe` 事件把节点加入故障集，并按节点所属 zone 聚合隔离域；同一 zone 的多个根节点合并到一个域。
+- 依赖边表示为 `From depends on To`。隔离传播从 `To` 反向扩散到依赖它的 `From`，使用多源 BFS，域内节点为第 0 代。
+- 隔离域内节点以及传播影响节点上的工作负载进入冻结；新请求进入等待队列并记录 `domain:<id>`、`edge:<from>-><to>` 等冻结来源。
+- 冻结请求在 `commit` 提交前不放行。提交 tick 内先完成域状态更新，再解冻并按到达顺序重新检查预算；超出上限的释放请求标记为拒绝，不存在越界放行。
+- `recover` 是恢复意图。节点自身所属域仍活跃，或其依赖仍故障/隔离时不能恢复，并输出依赖链和传播代数；已阻塞的恢复意图在后续 tick 自动重试。
+- 超时使用归一化 tick 有理数做纯整数边界比较。边界包含等号：`elapsed >= timeout` 才升级；若同一 tick 已提交隔离，则提交优先。升级只记录一次，包含升级 tick 与精确依据。
+- 所有输出数组使用节点 ID、域 ID、事件 `(tick, seq)` 等确定性顺序。
+
+## 增量与并发
+
+增量引擎把缓存保存到每个 tick 的完整求解状态之后。编辑依赖边或域边界时，以新旧依赖图的弱连通分量为影响范围，从该范围最早探测 tick 开始，并按缓存中的静止 tick 切成窗口；只重算会经过被编辑对象的窗口，窗口间无故障、无冻结、无等待的基线区间直接复用。追加恢复事件只扩展事件 tick 之后的窗口。每个重算结果带 `invalidated_by`，报告同时列出 `recomputed_ticks` 与 `reused_ticks`。快照 ID/修订变化会清空整个缓存；同版本但内容变化返回 `E_SNAPSHOT_CHANGED`。
+
+传播按 BFS 层把 frontier 切成不超过 `per_domain_pending_limit` 的独立任务，并由 `worker_budget` 个 worker 并行展开。任务结果按父节点、子节点排序后合并，因此调度顺序不改变传播链。frontier 超过 `workers * per_domain_pending_limit` 时输出确定性的 `BackpressureSignal`，但仍分批处理全部节点，不跳过、不越界分配。
+
+## SQLite 提交与恢复
+
+一次 tick 的提交在单个事务中按以下顺序写盘：
+
+1. 节点隔离/故障/恢复状态；
+2. 活跃隔离域；
+3. 工作负载预算、冻结集合与等待队列；
+4. 提交历史；
+5. 最后更新全局 tick 的单行 `checkpoint_meta`。
+
+任意阶段注入错误都会回滚到上一完整 tick。恢复器只读取 `checkpoint_meta` 指向的已提交状态，重建故障集、活跃域、冻结队列、等待预算和待恢复意图，再从 `tick+1` 继续。`context` 取消表示可处理退出信号：只返回最后一个完整提交点并停止，不产生半 tick 报告；强制终止则没有退出报告承诺。
+
+## 已执行验证
+
+```text
+go build ./...                  PASS
+go test ./... -count=1          PASS
+go test -race ./... -count=1    PASS
+go test ./... -cover -count=1   PASS (主包 81.0%)
+go mod verify                   PASS
+```
+
+固定种子 `424242` 的验收报告：
+
+```json
+{
+  "seed": 424242,
+  "schemas_equivalent": true,
+  "truth_match": true,
+  "cross_schema_identical": true,
+  "concurrency_invariant": true,
+  "backpressure_observed": true,
+  "incremental_matches_full": true,
+  "snapshot_cache_dropped": true,
+  "crash_rollback_held": true,
+  "resume_matches_full": true,
+  "completed_ticks": 55,
+  "incremental_sources": ["edge:b:[]"],
+  "incremental_recomputed_ticks": 19,
+  "incremental_reused_ticks": 36,
+  "crash_last_committed_tick": 14,
+  "final_checkpoint_tick": 54
+}
+```
+
+测试还覆盖：三版本逐 tick 结果完全一致、8 tick 超时在 tick 20 精确升级、恢复依赖链阻塞、预算拒绝、依赖环报告、不同 worker 预算/域上限下语义一致、SQLite 提交前故障回滚、等待队列持久化、优雅取消与强制中断后续跑。
+
+这是可独立核验的原型，不包含旧脚本兼容层、真实集群适配器或生产级鉴权/网络控制。

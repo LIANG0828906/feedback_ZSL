@@ -1,0 +1,429 @@
+{
+  "schema": "cluster.v3",
+  "snapshot": {
+    "id": "snapshot-424242",
+    "row_version": "rev-1"
+  },
+  "clock": {
+    "milliseconds_per_tick": {
+      "num": 5,
+      "den": 2
+    }
+  },
+  "timeout": {
+    "bits": 32,
+    "default_ms": 50
+  },
+  "nodes": [
+    {
+      "id": "d",
+      "rack_id": "rack-b",
+      "zone": {
+        "base": 190,
+        "offset": 10
+      },
+      "timeout_ms": 20,
+      "workloads": [
+        {
+          "id": "wd",
+          "budget": 4,
+          "used": 0
+        }
+      ]
+    },
+    {
+      "id": "a",
+      "rack_id": "rack-a",
+      "zone": {
+        "base": 100,
+        "offset": 0
+      },
+      "timeout_ms": 30,
+      "workloads": [
+        {
+          "id": "wa",
+          "budget": 4,
+          "used": 1
+        }
+      ]
+    },
+    {
+      "id": "i",
+      "rack_id": "rack-d",
+      "zone": {
+        "base": 390,
+        "offset": 10
+      },
+      "workloads": [
+        {
+          "id": "wi",
+          "budget": 4,
+          "used": 0
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "rack_id": "rack-a",
+      "zone": {
+        "base": 100,
+        "offset": 0
+      },
+      "timeout_ms": 30,
+      "workloads": [
+        {
+          "id": "wb",
+          "budget": 4,
+          "used": 1
+        }
+      ]
+    },
+    {
+      "id": "f",
+      "rack_id": "rack-c",
+      "zone": {
+        "base": 290,
+        "offset": 10
+      },
+      "workloads": [
+        {
+          "id": "wf",
+          "budget": 4,
+          "used": 0
+        }
+      ]
+    },
+    {
+      "id": "g",
+      "rack_id": "rack-c",
+      "zone": {
+        "base": 290,
+        "offset": 10
+      },
+      "workloads": [
+        {
+          "id": "wg",
+          "budget": 4,
+          "used": 0
+        }
+      ]
+    },
+    {
+      "id": "h",
+      "rack_id": "rack-d",
+      "zone": {
+        "base": 390,
+        "offset": 10
+      },
+      "workloads": [
+        {
+          "id": "wh",
+          "budget": 4,
+          "used": 0
+        }
+      ]
+    },
+    {
+      "id": "e",
+      "rack_id": "rack-b",
+      "zone": {
+        "base": 190,
+        "offset": 10
+      },
+      "timeout_ms": 20,
+      "workloads": [
+        {
+          "id": "we",
+          "budget": 4,
+          "used": 1
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "rack_id": "rack-a",
+      "zone": {
+        "base": 100,
+        "offset": 0
+      },
+      "timeout_ms": 30,
+      "workloads": [
+        {
+          "id": "wc",
+          "budget": 4,
+          "used": 2
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "from": "i",
+      "to": "g"
+    },
+    {
+      "from": "d",
+      "to": "c"
+    },
+    {
+      "from": "g",
+      "to": "f"
+    },
+    {
+      "from": "c",
+      "to": "b"
+    },
+    {
+      "from": "e",
+      "to": "d"
+    },
+    {
+      "from": "b",
+      "to": "a"
+    }
+  ],
+  "log": [
+    {
+      "at_ms": 30,
+      "at_tick": null,
+      "sequence": 2,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "we",
+      "amount_bytes": 2048
+    },
+    {
+      "at_ms": 90,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 300,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 20,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "recovered",
+      "node": "b",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "fault_detected",
+      "node": "a",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 0,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wa",
+      "amount_bytes": 1024
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "sequence": 3,
+      "type": "fault_detected",
+      "node": "c",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "sequence": 4,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wb",
+      "amount_bytes": 2048
+    },
+    {
+      "at_ms": 130,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 400,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 10,
+      "at_tick": null,
+      "sequence": 2,
+      "type": "recovered",
+      "node": "c",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 10,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 100,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 85,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wg",
+      "amount_bytes": 1024
+    },
+    {
+      "at_ms": 90,
+      "at_tick": null,
+      "sequence": 2,
+      "type": "recovered",
+      "node": "f",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 20,
+      "at_tick": null,
+      "sequence": 2,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wb",
+      "amount_bytes": 4096
+    },
+    {
+      "at_ms": 135,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "recovered",
+      "node": "h",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 35,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wd",
+      "amount_bytes": 2048
+    },
+    {
+      "at_ms": 15,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "recovered",
+      "node": "a",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 30,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "fault_detected",
+      "node": "d",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 55,
+      "at_tick": null,
+      "sequence": 2,
+      "type": "recovered",
+      "node": "d",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 55,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 200,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 0,
+      "at_tick": null,
+      "sequence": 2,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wb",
+      "amount_bytes": 1024
+    },
+    {
+      "at_ms": 125,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "fault_detected",
+      "node": "h",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 65,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wd",
+      "amount_bytes": 3072
+    },
+    {
+      "at_ms": 80,
+      "at_tick": null,
+      "sequence": 1,
+      "type": "fault_detected",
+      "node": "f",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "sequence": 2,
+      "type": "fault_detected",
+      "node": "b",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    }
+  ],
+  "worker_budget": 4,
+  "per_domain_pending_limit": 3
+}

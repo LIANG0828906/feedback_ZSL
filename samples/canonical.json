@@ -1,0 +1,420 @@
+{
+  "schema_version": "v1",
+  "project_id": "snapshot-424242",
+  "snapshot_id": "snapshot-424242",
+  "revision": "rev-1",
+  "tick_millis": {
+    "num": 5,
+    "den": 2
+  },
+  "timeout_bits": 32,
+  "default_timeout": {
+    "set": true,
+    "ticks": {
+      "num": 0,
+      "den": 0
+    },
+    "wire": 50,
+    "unit": "ms",
+    "default": false
+  },
+  "nodes": [
+    {
+      "id": "a",
+      "rack": "rack-a",
+      "zone": 100,
+      "workloads": [
+        {
+          "id": "wa",
+          "node_id": "a",
+          "budget_bytes": 4096,
+          "used_bytes": 1024
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 12,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": false
+      }
+    },
+    {
+      "id": "b",
+      "rack": "rack-a",
+      "zone": 100,
+      "workloads": [
+        {
+          "id": "wb",
+          "node_id": "b",
+          "budget_bytes": 4096,
+          "used_bytes": 1024
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 12,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": false
+      }
+    },
+    {
+      "id": "c",
+      "rack": "rack-a",
+      "zone": 100,
+      "workloads": [
+        {
+          "id": "wc",
+          "node_id": "c",
+          "budget_bytes": 4096,
+          "used_bytes": 2048
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 12,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": false
+      }
+    },
+    {
+      "id": "d",
+      "rack": "rack-b",
+      "zone": 200,
+      "workloads": [
+        {
+          "id": "wd",
+          "node_id": "d",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 8,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": false
+      }
+    },
+    {
+      "id": "e",
+      "rack": "rack-b",
+      "zone": 200,
+      "workloads": [
+        {
+          "id": "we",
+          "node_id": "e",
+          "budget_bytes": 4096,
+          "used_bytes": 1024
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 8,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": false
+      }
+    },
+    {
+      "id": "f",
+      "rack": "rack-c",
+      "zone": 300,
+      "workloads": [
+        {
+          "id": "wf",
+          "node_id": "f",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 20,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": true
+      }
+    },
+    {
+      "id": "g",
+      "rack": "rack-c",
+      "zone": 300,
+      "workloads": [
+        {
+          "id": "wg",
+          "node_id": "g",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 20,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": true
+      }
+    },
+    {
+      "id": "h",
+      "rack": "rack-d",
+      "zone": 400,
+      "workloads": [
+        {
+          "id": "wh",
+          "node_id": "h",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 20,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": true
+      }
+    },
+    {
+      "id": "i",
+      "rack": "rack-d",
+      "zone": 400,
+      "workloads": [
+        {
+          "id": "wi",
+          "node_id": "i",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ],
+      "timeout": {
+        "set": true,
+        "ticks": {
+          "num": 20,
+          "den": 1
+        },
+        "wire": 0,
+        "unit": "",
+        "default": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "b",
+      "to": "a"
+    },
+    {
+      "from": "c",
+      "to": "b"
+    },
+    {
+      "from": "d",
+      "to": "c"
+    },
+    {
+      "from": "e",
+      "to": "d"
+    },
+    {
+      "from": "g",
+      "to": "f"
+    },
+    {
+      "from": "i",
+      "to": "g"
+    }
+  ],
+  "events": [
+    {
+      "tick": 0,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "a",
+      "workload_id": "wa",
+      "amount_bytes": 1024
+    },
+    {
+      "tick": 0,
+      "seq": 2,
+      "kind": "request",
+      "node_id": "b",
+      "workload_id": "wb",
+      "amount_bytes": 1024
+    },
+    {
+      "tick": 2,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "a"
+    },
+    {
+      "tick": 2,
+      "seq": 2,
+      "kind": "probe",
+      "node_id": "b"
+    },
+    {
+      "tick": 2,
+      "seq": 3,
+      "kind": "probe",
+      "node_id": "c"
+    },
+    {
+      "tick": 2,
+      "seq": 4,
+      "kind": "request",
+      "node_id": "b",
+      "workload_id": "wb",
+      "amount_bytes": 2048
+    },
+    {
+      "tick": 4,
+      "seq": 1,
+      "kind": "commit",
+      "domain_id": 100
+    },
+    {
+      "tick": 4,
+      "seq": 2,
+      "kind": "recover",
+      "node_id": "c"
+    },
+    {
+      "tick": 6,
+      "seq": 1,
+      "kind": "recover",
+      "node_id": "a"
+    },
+    {
+      "tick": 8,
+      "seq": 1,
+      "kind": "recover",
+      "node_id": "b"
+    },
+    {
+      "tick": 8,
+      "seq": 2,
+      "kind": "request",
+      "node_id": "b",
+      "workload_id": "wb",
+      "amount_bytes": 4096
+    },
+    {
+      "tick": 12,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "d"
+    },
+    {
+      "tick": 12,
+      "seq": 2,
+      "kind": "request",
+      "node_id": "e",
+      "workload_id": "we",
+      "amount_bytes": 2048
+    },
+    {
+      "tick": 14,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "d",
+      "workload_id": "wd",
+      "amount_bytes": 2048
+    },
+    {
+      "tick": 22,
+      "seq": 1,
+      "kind": "commit",
+      "domain_id": 200
+    },
+    {
+      "tick": 22,
+      "seq": 2,
+      "kind": "recover",
+      "node_id": "d"
+    },
+    {
+      "tick": 26,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "d",
+      "workload_id": "wd",
+      "amount_bytes": 3072
+    },
+    {
+      "tick": 32,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "f"
+    },
+    {
+      "tick": 34,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "g",
+      "workload_id": "wg",
+      "amount_bytes": 1024
+    },
+    {
+      "tick": 36,
+      "seq": 1,
+      "kind": "commit",
+      "domain_id": 300
+    },
+    {
+      "tick": 36,
+      "seq": 2,
+      "kind": "recover",
+      "node_id": "f"
+    },
+    {
+      "tick": 50,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "h"
+    },
+    {
+      "tick": 52,
+      "seq": 1,
+      "kind": "commit",
+      "domain_id": 400
+    },
+    {
+      "tick": 54,
+      "seq": 1,
+      "kind": "recover",
+      "node_id": "h"
+    }
+  ],
+  "worker_budget": 4,
+  "per_domain_pending_limit": 3
+}

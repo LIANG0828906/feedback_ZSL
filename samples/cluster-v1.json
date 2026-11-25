@@ -1,0 +1,415 @@
+{
+  "schema_version": "cluster.v1",
+  "project_id": "snapshot-424242",
+  "snapshot_id": "snapshot-424242",
+  "revision": "rev-1",
+  "clock": {
+    "tick_millis_num": 5,
+    "tick_millis_den": 2
+  },
+  "timeout_bits": 32,
+  "default_timeout_ms": 50,
+  "nodes": [
+    {
+      "id": "e",
+      "node_id": "",
+      "rack": "rack-b",
+      "zone_id_abs": 200,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "we",
+          "budget_bytes": 4096,
+          "used_bytes": 1024
+        }
+      ],
+      "isolation_timeout_ms": 20
+    },
+    {
+      "id": "g",
+      "node_id": "",
+      "rack": "rack-c",
+      "zone_id_abs": 300,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wg",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ]
+    },
+    {
+      "id": "f",
+      "node_id": "",
+      "rack": "rack-c",
+      "zone_id_abs": 300,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wf",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ]
+    },
+    {
+      "id": "i",
+      "node_id": "",
+      "rack": "rack-d",
+      "zone_id_abs": 400,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wi",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ]
+    },
+    {
+      "id": "h",
+      "node_id": "",
+      "rack": "rack-d",
+      "zone_id_abs": 400,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wh",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "node_id": "",
+      "rack": "rack-a",
+      "zone_id_abs": 100,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wc",
+          "budget_bytes": 4096,
+          "used_bytes": 2048
+        }
+      ],
+      "isolation_timeout_ms": 30
+    },
+    {
+      "id": "d",
+      "node_id": "",
+      "rack": "rack-b",
+      "zone_id_abs": 200,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wd",
+          "budget_bytes": 4096,
+          "used_bytes": 0
+        }
+      ],
+      "isolation_timeout_ms": 20
+    },
+    {
+      "id": "a",
+      "node_id": "",
+      "rack": "rack-a",
+      "zone_id_abs": 100,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wa",
+          "budget_bytes": 4096,
+          "used_bytes": 1024
+        }
+      ],
+      "isolation_timeout_ms": 30
+    },
+    {
+      "id": "b",
+      "node_id": "",
+      "rack": "rack-a",
+      "zone_id_abs": 100,
+      "zone_id": null,
+      "workloads": [
+        {
+          "id": "wb",
+          "budget_bytes": 4096,
+          "used_bytes": 1024
+        }
+      ],
+      "isolation_timeout_ms": 30
+    }
+  ],
+  "edges": [
+    {
+      "from_node": "g",
+      "to_node": "f"
+    },
+    {
+      "from_node": "e",
+      "to_node": "d"
+    },
+    {
+      "from_node": "b",
+      "to_node": "a"
+    },
+    {
+      "from_node": "i",
+      "to_node": "g"
+    },
+    {
+      "from_node": "d",
+      "to_node": "c"
+    },
+    {
+      "from_node": "c",
+      "to_node": "b"
+    }
+  ],
+  "events": [
+    {
+      "at_ms": 20,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "recover",
+      "node_id": "b",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "a",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 20,
+      "at_tick": null,
+      "seq": 2,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "wb",
+      "amount_bytes": 4096
+    },
+    {
+      "at_ms": 90,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "commit",
+      "node_id": "",
+      "domain_id": 300,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 135,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "recover",
+      "node_id": "h",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 15,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "recover",
+      "node_id": "a",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 125,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "h",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 85,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "wg",
+      "amount_bytes": 1024
+    },
+    {
+      "at_ms": 55,
+      "at_tick": null,
+      "seq": 2,
+      "kind": "recover",
+      "node_id": "d",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 65,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "wd",
+      "amount_bytes": 3072
+    },
+    {
+      "at_ms": 30,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "d",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "seq": 3,
+      "kind": "probe",
+      "node_id": "c",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 10,
+      "at_tick": null,
+      "seq": 2,
+      "kind": "recover",
+      "node_id": "c",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 0,
+      "at_tick": null,
+      "seq": 2,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "wb",
+      "amount_bytes": 1024
+    },
+    {
+      "at_ms": 10,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "commit",
+      "node_id": "",
+      "domain_id": 100,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 90,
+      "at_tick": null,
+      "seq": 2,
+      "kind": "recover",
+      "node_id": "f",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 130,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "commit",
+      "node_id": "",
+      "domain_id": 400,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 80,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "probe",
+      "node_id": "f",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 35,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "wd",
+      "amount_bytes": 2048
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "seq": 4,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "wb",
+      "amount_bytes": 2048
+    },
+    {
+      "at_ms": 30,
+      "at_tick": null,
+      "seq": 2,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "we",
+      "amount_bytes": 2048
+    },
+    {
+      "at_ms": 0,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "request",
+      "node_id": "",
+      "domain_id": null,
+      "workload_id": "wa",
+      "amount_bytes": 1024
+    },
+    {
+      "at_ms": 5,
+      "at_tick": null,
+      "seq": 2,
+      "kind": "probe",
+      "node_id": "b",
+      "domain_id": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_ms": 55,
+      "at_tick": null,
+      "seq": 1,
+      "kind": "commit",
+      "node_id": "",
+      "domain_id": 200,
+      "workload_id": "",
+      "amount_bytes": 0
+    }
+  ],
+  "worker_budget": 4,
+  "per_domain_pending_limit": 3
+}

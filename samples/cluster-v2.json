@@ -1,0 +1,414 @@
+{
+  "schema": "cluster/v2",
+  "meta": {
+    "project_id": "snapshot-424242",
+    "snapshot_id": "snapshot-424242",
+    "revision": "rev-1",
+    "tick_millis_num": 5,
+    "tick_millis_den": 2,
+    "timeout_bits": 32,
+    "default_timeout_ticks": 20
+  },
+  "topology": {
+    "racks": [
+      {
+        "rack_id": "rack-d",
+        "zone_base": 390,
+        "nodes": [
+          {
+            "id": "i",
+            "zone_offset": 10,
+            "workloads": [
+              {
+                "id": "wi",
+                "budget_kib": 4,
+                "used_kib": 0
+              }
+            ]
+          },
+          {
+            "id": "h",
+            "zone_offset": 10,
+            "workloads": [
+              {
+                "id": "wh",
+                "budget_kib": 4,
+                "used_kib": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "rack_id": "rack-a",
+        "zone_base": 100,
+        "nodes": [
+          {
+            "id": "c",
+            "zone_offset": 0,
+            "workloads": [
+              {
+                "id": "wc",
+                "budget_kib": 4,
+                "used_kib": 2
+              }
+            ],
+            "isolation_timeout_ticks": 12
+          },
+          {
+            "id": "b",
+            "zone_offset": 0,
+            "workloads": [
+              {
+                "id": "wb",
+                "budget_kib": 4,
+                "used_kib": 1
+              }
+            ],
+            "isolation_timeout_ticks": 12
+          },
+          {
+            "id": "a",
+            "zone_offset": 0,
+            "workloads": [
+              {
+                "id": "wa",
+                "budget_kib": 4,
+                "used_kib": 1
+              }
+            ],
+            "isolation_timeout_ticks": 12
+          }
+        ]
+      },
+      {
+        "rack_id": "rack-b",
+        "zone_base": 190,
+        "nodes": [
+          {
+            "id": "e",
+            "zone_offset": 10,
+            "workloads": [
+              {
+                "id": "we",
+                "budget_kib": 4,
+                "used_kib": 1
+              }
+            ],
+            "isolation_timeout_ticks": 8
+          },
+          {
+            "id": "d",
+            "zone_offset": 10,
+            "workloads": [
+              {
+                "id": "wd",
+                "budget_kib": 4,
+                "used_kib": 0
+              }
+            ],
+            "isolation_timeout_ticks": 8
+          }
+        ]
+      },
+      {
+        "rack_id": "rack-c",
+        "zone_base": 290,
+        "nodes": [
+          {
+            "id": "f",
+            "zone_offset": 10,
+            "workloads": [
+              {
+                "id": "wf",
+                "budget_kib": 4,
+                "used_kib": 0
+              }
+            ]
+          },
+          {
+            "id": "g",
+            "zone_offset": 10,
+            "workloads": [
+              {
+                "id": "wg",
+                "budget_kib": 4,
+                "used_kib": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dependencies": [
+    {
+      "source": "g",
+      "target": "f"
+    },
+    {
+      "source": "d",
+      "target": "c"
+    },
+    {
+      "source": "i",
+      "target": "g"
+    },
+    {
+      "source": "b",
+      "target": "a"
+    },
+    {
+      "source": "e",
+      "target": "d"
+    },
+    {
+      "source": "c",
+      "target": "b"
+    }
+  ],
+  "timeline": [
+    {
+      "at_tick": 12,
+      "at_ms": null,
+      "order": 2,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "we",
+      "amount_bytes": 2048
+    },
+    {
+      "at_tick": 26,
+      "at_ms": null,
+      "order": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wd",
+      "amount_bytes": 3072
+    },
+    {
+      "at_tick": 36,
+      "at_ms": null,
+      "order": 2,
+      "type": "recovery",
+      "node": "f",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 0,
+      "at_ms": null,
+      "order": 2,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wb",
+      "amount_bytes": 1024
+    },
+    {
+      "at_tick": 36,
+      "at_ms": null,
+      "order": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 300,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 4,
+      "at_ms": null,
+      "order": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 100,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 12,
+      "at_ms": null,
+      "order": 1,
+      "type": "fault_detected",
+      "node": "d",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 32,
+      "at_ms": null,
+      "order": 1,
+      "type": "fault_detected",
+      "node": "f",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 22,
+      "at_ms": null,
+      "order": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 200,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 2,
+      "at_ms": null,
+      "order": 1,
+      "type": "fault_detected",
+      "node": "a",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 52,
+      "at_ms": null,
+      "order": 1,
+      "type": "isolation_committed",
+      "node": "",
+      "domain": 400,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 54,
+      "at_ms": null,
+      "order": 1,
+      "type": "recovery",
+      "node": "h",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 8,
+      "at_ms": null,
+      "order": 2,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wb",
+      "amount_bytes": 4096
+    },
+    {
+      "at_tick": 2,
+      "at_ms": null,
+      "order": 3,
+      "type": "fault_detected",
+      "node": "c",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 6,
+      "at_ms": null,
+      "order": 1,
+      "type": "recovery",
+      "node": "a",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 50,
+      "at_ms": null,
+      "order": 1,
+      "type": "fault_detected",
+      "node": "h",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 34,
+      "at_ms": null,
+      "order": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wg",
+      "amount_bytes": 1024
+    },
+    {
+      "at_tick": 8,
+      "at_ms": null,
+      "order": 1,
+      "type": "recovery",
+      "node": "b",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 14,
+      "at_ms": null,
+      "order": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wd",
+      "amount_bytes": 2048
+    },
+    {
+      "at_tick": 2,
+      "at_ms": null,
+      "order": 2,
+      "type": "fault_detected",
+      "node": "b",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 2,
+      "at_ms": null,
+      "order": 4,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wb",
+      "amount_bytes": 2048
+    },
+    {
+      "at_tick": 22,
+      "at_ms": null,
+      "order": 2,
+      "type": "recovery",
+      "node": "d",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 4,
+      "at_ms": null,
+      "order": 2,
+      "type": "recovery",
+      "node": "c",
+      "domain": null,
+      "workload_id": "",
+      "amount_bytes": 0
+    },
+    {
+      "at_tick": 0,
+      "at_ms": null,
+      "order": 1,
+      "type": "resource_request",
+      "node": "",
+      "domain": null,
+      "workload_id": "wa",
+      "amount_bytes": 1024
+    }
+  ],
+  "worker_budget": 4,
+  "per_domain_pending_limit": 3
+}
