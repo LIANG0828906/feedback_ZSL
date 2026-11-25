@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TerrainPatch 远景分块诊断</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "Microsoft YaHei", system-ui, sans-serif; }
+    body { margin: 0; background: #f6f7fb; color: #172033; }
+    header { padding: 18px 24px; background: #111827; color: white; }
+    header h1 { margin: 0 0 4px; font-size: 20px; }
+    header p { margin: 0; color: #b8c2d6; font-size: 13px; }
+    main { padding: 18px 24px; display: grid; grid-template-columns: minmax(720px, 1.5fr) minmax(360px, .8fr); gap: 16px; }
+    .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 2px #0f172a10; }
+    .card h2 { font-size: 15px; margin: 0 0 10px; }
+    .wide { grid-column: 1 / -1; }
+    svg { width: 100%; height: auto; background: #f8fafc; border-radius: 8px; border: 1px solid #e5e7eb; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid #edf0f5; padding: 6px 7px; text-align: left; vertical-align: top; }
+    th { background: #f8fafc; position: sticky; top: 0; }
+    code { background: #f1f5f9; padding: 1px 4px; border-radius: 4px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+    input, select, button { border-radius: 8px; border: 1px solid #cbd5e1; padding: 7px 9px; font-size: 13px; background: white; }
+    button { cursor: pointer; background: #2563eb; color: white; border-color: #2563eb; }
+    button.secondary { background: #475569; border-color: #475569; }
+    button.danger { background: #dc2626; border-color: #dc2626; }
+    button.ok { background: #059669; border-color: #059669; }
+    .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+    .pill.green { background: #dcfce7; color: #166534; }
+    .pill.blue { background: #dbeafe; color: #1e40af; }
+    .pill.red { background: #fee2e2; color: #991b1b; }
+    .pill.amber { background: #fef3c7; color: #92400e; }
+    .pill.gray { background: #e5e7eb; color: #374151; }
+    pre { background: #0f172a; color: #d7e3ff; padding: 12px; border-radius: 8px; overflow: auto; max-height: 360px; font-size: 12px; }
+    .muted { color: #64748b; font-size: 12px; }
+    .metric { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+    .metric div { background: #f8fafc; border-radius: 8px; padding: 8px; }
+    .metric b { display: block; font-size: 16px; }
+    .scroll { max-height: 360px; overflow: auto; }
+    a.button { text-decoration: none; background: #0f766e; color: white; padding: 7px 10px; border-radius: 8px; font-size: 13px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>TerrainPatch · 远景分块极简网格与断裂归因</h1>
+  <p>固定种子样本 · 定点整数高程 · 递归三角剖分 · SQLite 版本检查点 · 增量/恢复/全量一致性</p>
+</header>
+<main>
+  <section class="card">
+    <h2>分块着色、线框与边界归因</h2>
+    <div class="metric" id="metrics"></div>
+    <svg id="scene" viewBox="0 0 760 560" role="img" aria-label="terrain mesh preview"></svg>
+    <p class="muted">颜色：块底色；红色边界/圆点表示折角超限。<span style="color:#b91c1c">● undersampling</span>，<span style="color:#7c3aed">● alignment_mismatch</span>，<span style="color:#ea580c">● unclassified/E_ATTR</span>。</p>
+  </section>
+
+  <aside class="card">
+    <h2>编辑 / 重试 / 验证</h2>
+    <div class="row">
+      <select id="tile"></select>
+      <select id="field">
+        <option value="sampleBudget">sampleBudget</option>
+        <option value="tolerance">tolerance</option>
+        <option value="height">height(中心点)</option>
+      </select>
+      <input id="value" type="number" value="120" style="width:110px" />
+      <button onclick="submitEdit()">触发增量重剖分</button>
+    </div>
+    <div class="row">
+      <button class="ok" onclick="retryTile()">逐块重试</button>
+      <button class="danger" onclick="injectFailure()">注入单块异常</button>
+      <button class="secondary" onclick="rebuildAll()">全量重剖分</button>
+      <button onclick="verifyThreeWays()">三路径一致验证</button>
+      <a class="button" href="/api/export">导出 JSON</a>
+    </div>
+    <div id="actionMsg" class="muted"></div>
+    <h2 style="margin-top:14px">失效传播清单</h2>
+    <div class="scroll"><table id="invalidation"></table></div>
+  </aside>
+
+  <section class="card wide">
+    <h2>块缓存、耗时、预算占用与排队</h2>
+    <div class="scroll"><table id="tiles"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>边界折角与归因</h2>
+    <div class="scroll"><table id="boundaries"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>依赖图 / 预算 / 队列</h2>
+    <div id="graphInfo" class="scroll"></div>
+  </section>
+
+  <section class="card wide">
+    <h2>三路径比对结果</h2>
+    <pre id="verify">点击“三路径一致验证”运行草稿增量、SQLite 断点恢复和空缓存全量比对。</pre>
+  </section>
+</main>
+
+<script>
+let state = null;
+const palette = ["#60a5fa", "#34d399", "#fbbf24", "#a78bfa", "#fb7185", "#22d3ee"];
+
+async function refresh() {
+  const r = await fetch("/api/state");
+  state = await r.json();
+  renderControls();
+  renderMetrics();
+  renderScene();
+  renderInvalidation();
+  renderTiles();
+  renderBoundaries();
+  renderGraph();
+}
+
+function renderControls() {
+  const sel = document.getElementById("tile");
+  if (sel.options.length) return;
+  for (const t of state.project.tiles) {
+    const o = document.createElement("option");
+    o.value = t.id; o.textContent = t.id;
+    sel.appendChild(o);
+  }
+  const field = document.getElementById("field");
+  const value = document.getElementById("value");
+  field.addEventListener("change", () => {
+    value.value = field.value === "height" ? 52000 : field.value === "tolerance" ? 100 : 120;
+  });
+}
+
+function xy(x, y) {
+  const minX = 0, minY = 0, maxX = 32000, maxY = 32000;
+  return [50 + (x - minX) / (maxX - minX) * 660, 35 + (y - minY) / (maxY - minY) * 480];
+}
+
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function renderScene() {
+  const svg = document.getElementById("scene");
+  let html = `<rect x="0" y="0" width="760" height="560" fill="#f8fafc"/>`;
+  const reports = state.report || {meshes:{}, boundaries:[]};
+  const tiles = state.project.tiles || [];
+
+  tiles.forEach((t, idx) => {
+    const [x,y] = xy(t.coverage.minX,t.coverage.minY);
+    const [x2,y2] = xy(t.coverage.maxX,t.coverage.maxY);
+    const info = (reports.tiles||[]).find(q => q.tileId === t.id);
+    let fill = palette[idx % palette.length];
+    let opacity = .16;
+    if (info?.status === "failed") { fill = "#dc2626"; opacity = .22; }
+    else if (info?.reused) { fill = "#16a34a"; opacity = .13; }
+    html += `<rect x="${x}" y="${y}" width="${x2-x}" height="${y2-y}" fill="${fill}" fill-opacity="${opacity}" stroke="#334155" stroke-width="1.4"/>`;
+    html += `<text x="${x+8}" y="${y+18}" font-size="13" font-weight="700" fill="#0f172a">${t.id}</text>`;
+  });
+
+  for (const [id, m] of Object.entries(reports.meshes || {})) {
+    const vmap = Object.fromEntries(m.vertices.map(v => [v.id,v]));
+    const emap = Object.fromEntries((m.triangleErrors||[]).map(e => [e.triangleId,e]));
+    const idx = tiles.findIndex(t => t.id === id);
+    m.triangles.forEach(tr => {
+      const vs = [vmap[tr.v0],vmap[tr.v1],vmap[tr.v2]].filter(Boolean);
+      const pts = vs.map(v => xy(v.x,v.y).join(",")).join(" ");
+      const err = emap[tr.id]?.maxAbsError || 0;
+      const bad = err > (state.project.tiles.find(t=>t.id===id)?.tolerance || 0);
+      html += `<polygon points="${pts}" fill="${bad ? "#ef4444" : palette[idx%palette.length]}" fill-opacity="${bad ? .20 : .28}" stroke="#1e293b" stroke-width=".55"><title>${id} tri#${tr.id} err=${err}</title></polygon>`;
+    });
+  }
+
+  for (const b of reports.boundaries || []) {
+    if (!b.position) continue;
+    const [cx,cy] = xy(b.position.x,b.position.y);
+    const color = b.category === "undersampling" ? "#b91c1c" : b.category === "alignment_mismatch" ? "#7c3aed" : "#ea580c";
+    html += `<circle cx="${cx}" cy="${cy}" r="6" fill="${color}" stroke="white" stroke-width="2"><title>${esc(b.boundaryId)} ${esc(b.category||b.code)} angle=${b.maxAngleMicroDeg}</title></circle>`;
+    html += `<text x="${cx+8}" y="${cy-7}" font-size="11" font-weight="700" fill="${color}">${esc(b.category || b.code || "ok")} ${(b.maxAngleMicroDeg/1e6).toFixed(2)}°</text>`;
+  }
+  svg.innerHTML = html;
+}
+
+function renderMetrics() {
+  const r = state.report;
+  const tiles = r?.tiles || [];
+  const hits = tiles.filter(t=>t.reused).length;
+  const failed = tiles.filter(t=>t.status==="failed").length;
+  const tris = tiles.reduce((a,t)=>a+(t.triangleCount||0),0);
+  const ms = r?.durationMs || 0;
+  document.getElementById("metrics").innerHTML = `
+    <div><span class="muted">缓存复用</span><b>${hits}/${state.project.tiles.length}</b></div>
+    <div><span class="muted">失败块</span><b>${failed}</b></div>
+    <div><span class="muted">三角形</span><b>${tris}</b></div>
+    <div><span class="muted">本轮耗时</span><b>${ms}ms</b></div>`;
+}
+
+function statusPill(t) {
+  if (t.status === "failed") return `<span class="pill red">failed</span>`;
+  if (t.reused) return `<span class="pill green">cache-hit</span>`;
+  if (t.status === "committed") return `<span class="pill blue">committed</span>`;
+  return `<span class="pill amber">${esc(t.status||"pending")}</span>`;
+}
+
+function renderInvalidation() {
+  const inv = state.report?.invalidations || [];
+  document.getElementById("invalidation").innerHTML = `<tr><th>块</th><th>原因</th><th>状态</th></tr>` +
+    inv.map(x => `<tr><td><code>${x.tileId}</code></td><td>${esc(x.reason)}</td><td>${x.reused?'<span class="pill green">复用</span>':'<span class="pill blue">失效</span>'}</td></tr>`).join("");
+}
+
+function renderTiles() {
+  const rows = state.report?.tiles || [];
+  document.getElementById("tiles").innerHTML = `<tr><th>块</th><th>状态</th><th>原因</th><th>复用</th><th>深度</th><th>顶点</th><th>三角形</th><th>耗时</th><th>排队</th><th>commit#</th><th>hash</th><th>错误</th></tr>` +
+    rows.map(t => `<tr>
+      <td><code>${t.tileId}</code></td><td>${statusPill(t)}</td><td>${esc(t.reason)}</td><td>${t.reused?"是":"否"}</td>
+      <td>${t.depth ?? ""}</td><td>${t.vertexCount ?? ""}</td><td>${t.triangleCount ?? ""}</td><td>${t.durationMs||0}ms</td>
+      <td>${t.queueWaitMs||0}ms</td><td>${t.commitSeq||""}</td><td><code>${(t.contentHash||"").slice(0,12)}</code></td>
+      <td>${t.error ? `<span class="pill red">${esc(t.error.code)}</span> ${esc(t.error.message)} actual=${esc(JSON.stringify(t.error.actual))}` : ""}</td>
+    </tr>`).join("");
+}
+
+function renderBoundaries() {
+  const rows = state.report?.boundaries || [];
+  document.getElementById("boundaries").innerHTML = `<tr><th>边界</th><th>折角</th><th>阈值</th><th>类别/码</th><th>高度误差 A/B</th><th>容差 A/B</th><th>对齐差异</th><th>位置</th></tr>` +
+    rows.map(b => `<tr>
+      <td><code>${b.boundaryId}</code><br><span class="muted">${b.tileA}/${b.tileB}</span></td>
+      <td>${(b.maxAngleMicroDeg/1e6).toFixed(4)}°</td><td>${(b.angleThresholdMicroDeg??b.thresholdMicroDeg??0)/1e6}°</td>
+      <td>${b.category?`<span class="pill amber">${b.category}</span>`:""} ${b.code?`<span class="pill red">${b.code}</span>`:""}</td>
+      <td>${b.heightErrorA} / ${b.heightErrorB}</td><td>${b.toleranceA} / ${b.toleranceB}</td>
+      <td>${b.alignmentMismatchCount}<br><span class="muted">${b.sequenceA||""}/${b.sequenceB||""}</span></td>
+      <td>${b.position?`${b.position.x},${b.position.y}`:""}</td>
+    </tr>`).join("");
+}
+
+function renderGraph() {
+  const g = state.graph;
+  const q = state.report?.queue || [];
+  const budget = state.report?.budget || {};
+  document.getElementById("graphInfo").innerHTML = `
+    <p><b>双向依赖：</b></p>
+    <table><tr><th>块</th><th>邻接/边界依赖</th></tr>
+    ${state.project.tiles.map(t => `<tr><td><code>${t.id}</code></td><td>${(g.dependencies[t.id]||[]).map(x=>`<code>${x}</code>`).join(" ")}</td></tr>`).join("")}
+    </table>
+    <p><b>调度预算：</b> workers=${budget.maxParallelism}, vertexBufferCap=${budget.vertexBufferCap}, memoryBudget=${budget.memoryBudgetBytes}, peak=${budget.memoryPeakBytes||0}, taskEstimate=${budget.taskMemoryBytes||0}
+      <span class="muted">(${(budget.memoryBudgetBytes ? ((budget.memoryPeakBytes||0)/budget.memoryBudgetBytes*100).toFixed(1) : "0")}% peak)</span>
+    </p>
+    <p><b>排队明细：</b></p>
+    <table><tr><th>块</th><th>失效原因</th><th>资源排队原因</th><th>等待</th></tr>${q.map(x=>`<tr><td>${x.tileId}</td><td>${esc(x.reason)}</td><td>${esc((x.reasons||[]).join(", ") || "scheduled")}</td><td>${x.waitMs}ms</td></tr>`).join("") || '<tr><td colspan=4 class=muted>本轮无资源等待</td></tr>'}</table>`;
+}
+
+async function post(url, body) {
+  const msg = document.getElementById("actionMsg");
+  msg.textContent = "执行中...";
+  const r = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body)});
+  const data = await r.json();
+  if (!r.ok || data.ok === false) {
+    msg.innerHTML = `<span style="color:#b91c1c">${esc(data.error?.code)} ${esc(data.error?.message)}</span>`;
+    if (data.report) document.getElementById("verify").textContent = JSON.stringify(data.error || data.report.firstDifference || data, null, 2);
+  } else {
+    msg.textContent = "完成 " + new Date().toLocaleTimeString();
+  }
+  await refresh();
+  return data;
+}
+
+function submitEdit() {
+  return post("/api/edit", {tileId: document.getElementById("tile").value, field: document.getElementById("field").value, value: Number(document.getElementById("value").value)});
+}
+function retryTile() { return post("/api/retry", {tileId: document.getElementById("tile").value}); }
+function injectFailure() { return post("/api/failure", {tileId: document.getElementById("tile").value}); }
+function rebuildAll() { return post("/api/rebuild", {}); }
+async function verifyThreeWays() {
+  document.getElementById("verify").textContent = "运行中：生成编辑、模拟提交中断、重开 SQLite 恢复...";
+  const data = await post("/api/verify", {});
+  document.getElementById("verify").textContent = JSON.stringify({
+    equal: data.report?.equal,
+    firstDifference: data.report?.firstDifference,
+    recoveryInfo: data.report?.recoveryInfo,
+    commitSequence: data.report?.commitSequence,
+    draftWrites: data.report?.draft?.writtenSequence?.length,
+    recoveryWrites: data.report?.recovery?.writtenSequence?.length,
+    fullWrites: data.report?.full?.writtenSequence?.length
+  }, null, 2);
+}
+
+refresh().catch(e => document.getElementById("actionMsg").textContent = e);
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>

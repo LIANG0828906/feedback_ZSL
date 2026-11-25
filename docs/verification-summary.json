@@ -1,0 +1,130 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "triangulation-budget",
+      "ok": true
+    },
+    {
+      "name": "analytic-expected-heights",
+      "ok": true
+    },
+    {
+      "name": "declared-max-triangles",
+      "ok": true
+    },
+    {
+      "name": "shared-boundary-aligned-sequence",
+      "ok": true
+    },
+    {
+      "name": "fault-attribution-truth",
+      "ok": true
+    },
+    {
+      "name": "three-path-consistency",
+      "ok": true
+    }
+  ],
+  "threeWay": {
+    "equal": true,
+    "commitSequence": [
+      "T00",
+      "T10",
+      "T01",
+      "T11"
+    ],
+    "recoveryReset": false,
+    "recovered": [
+      "T00",
+      "T01",
+      "T10",
+      "T11"
+    ],
+    "draftLastWritten": [
+      "T10",
+      "T01",
+      "T11"
+    ],
+    "recoveryLastWritten": [
+      "T10",
+      "T01",
+      "T11"
+    ],
+    "fullWritten": [
+      "T00",
+      "T10",
+      "T01",
+      "T11"
+    ]
+  },
+  "baseBoundaries": [
+    {
+      "id": "E01",
+      "angleDeg": 9.9938,
+      "category": "undersampling",
+      "code": null,
+      "heightErrorA": 140,
+      "heightErrorB": 0,
+      "toleranceA": 20,
+      "toleranceB": 20,
+      "alignmentMismatch": 16,
+      "position": [
+        16000,
+        8000
+      ]
+    },
+    {
+      "id": "E02",
+      "angleDeg": 9.9565,
+      "category": "undersampling",
+      "code": null,
+      "heightErrorA": 140,
+      "heightErrorB": 0,
+      "toleranceA": 20,
+      "toleranceB": 20,
+      "alignmentMismatch": 16,
+      "position": [
+        8000,
+        16000
+      ]
+    },
+    {
+      "id": "E13",
+      "angleDeg": 2.5671,
+      "category": null,
+      "code": null,
+      "heightErrorA": 0,
+      "heightErrorB": 0,
+      "toleranceA": 20,
+      "toleranceB": 20,
+      "alignmentMismatch": 0,
+      "position": [
+        17000,
+        16000
+      ]
+    },
+    {
+      "id": "E23",
+      "angleDeg": 2.6668,
+      "category": null,
+      "code": null,
+      "heightErrorA": 0,
+      "heightErrorB": 0,
+      "toleranceA": 20,
+      "toleranceB": 20,
+      "alignmentMismatch": 0,
+      "position": [
+        16000,
+        17000
+      ]
+    }
+  ],
+  "budgetExample": {
+    "maxParallelism": 2,
+    "vertexBufferCap": 4096,
+    "memoryBudgetBytes": 16777216,
+    "memoryPeakBytes": 137664,
+    "taskMemoryBytes": 275328
+  }
+}

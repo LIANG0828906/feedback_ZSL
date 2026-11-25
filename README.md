@@ -1,3 +1,27 @@
+# TerrainPatch
+
+可运行的 Go 1.22+ 服务端原型：确定性样本生成、递归三角剖分、边界对齐与断裂归因、依赖图增量调度、SQLite 版本检查点、三路径一致性比对和本地诊断页面。
+
+**快速开始（Windows `cmd.exe`）**
+
+```bat
+scripts\verify.bat
+scripts\serve.bat
+```
+
+然后打开 <http://localhost:8080>。也可以手动执行：
+
+```bat
+go test ./...
+go run ./cmd/terrainpatch generate -dir samples\local -seed 42
+go run ./cmd/terrainpatch verify -samples samples\local -db data\verify.db
+go run ./cmd/terrainpatch serve -addr :8080 -samples samples\local -db data\terrain.db
+```
+
+SQLite 驱动使用纯 Go 的 `modernc.org/sqlite`，不需要 CGO、Docker 或外部服务。设计与实测结果见 `docs/TECHNICAL.md` 和 `docs/VERIFICATION.md`。
+
+---
+
 工作区目前仅为空目录，团队要在 Windows 上落一个面向开放世界远景地形的服务端能力：把高程场转换成分块极简着色网格，用于远距离视口的低开销绘制，并对网格块之间出现的轮廓断裂做归因诊断。本地确定性样本生成器按固定种子产出多块地形高程栅格、每块的采样预算与误差容限声明、块间共享边界的顶点对齐约束，并直接记录解析真值：若干指定格点的期望网格顶点高度、每块声明的最大三角形数、共享边界上的对齐顶点序列与若干断裂位置的真值归因类别。所有高度、坐标与容差均以声明定点整型表达，真值仅来自生成器的解析构造，是精度观测与归因判定的唯一来源。核心矛盾在于：采样预算收紧会同时抬高欠采样误差并使边界对齐顶点减少，而边界对齐又必须与相邻块的剖分结果互相牵制，任何一侧的收紧都可能把另一侧推向断裂。
 
 任务环境与准备：
