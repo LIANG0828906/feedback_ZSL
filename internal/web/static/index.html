@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>亮度蒙版边缘细化诊断台</title>
+<style>
+:root { color-scheme: dark; font-family: system-ui, "Microsoft YaHei", sans-serif; }
+body { margin: 0; background: #0b1020; color: #e5eefc; }
+header { padding: 16px 22px; background: linear-gradient(120deg,#10243f,#172554); border-bottom: 1px solid #28436b; }
+h1 { margin: 0 0 6px; font-size: 20px; }
+main { padding: 18px 22px; display: grid; gap: 16px; }
+.panel { background: #111a2e; border: 1px solid #263653; border-radius: 12px; padding: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+label { font-size: 13px; color: #b8c7e0; }
+select,input,button { background:#0d1628; color:#e5eefc; border:1px solid #334766; border-radius:8px; padding:7px 10px; }
+button { cursor:pointer; }
+button.primary { background:#0e7490; border-color:#22d3ee; }
+button.good { background:#166534; border-color:#4ade80; }
+button.warn { background:#854d0e; border-color:#facc15; }
+.images { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+figure { margin:0; background:#0b1324; border:1px solid #22324d; border-radius:10px; padding:8px; }
+figcaption { font-size:12px; color:#9fb3d1; margin-bottom:6px; }
+img { width:100%; image-rendering:pixelated; background:repeating-conic-gradient(#1b2740 0% 25%,#111a2e 0% 50%) 50% / 16px 16px; border-radius:6px; }
+pre { max-height:360px; overflow:auto; background:#080d19; border:1px solid #20304d; border-radius:8px; padding:10px; font-size:12px; }
+.matrix { display:grid; gap:4px; margin:10px 0; }
+.tile { display:grid; grid-template-columns: repeat(3, 1fr); gap:4px; border:1px solid #263653; border-radius:8px; padding:5px; }
+.cell { height:22px; border-radius:5px; font-size:10px; display:grid; place-items:center; background:#334155; title:attr(data-tip); }
+.cell.processing { background:#ca8a04; animation:pulse 1s infinite; }
+.cell.committed { background:#16a34a; }
+.cell.failed { background:#dc2626; }
+@keyframes pulse { 50% { opacity:.45; } }
+.metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; }
+.metric { background:#0b1324; border:1px solid #22324d; border-radius:10px; padding:10px; }
+.metric b { display:block; font-size:20px; color:#67e8f9; margin-top:4px; }
+.ok { color:#4ade80; } .bad { color:#f87171; } .muted { color:#94a3b8; }
+</style>
+</head>
+<body>
+<header>
+  <h1>交互式亮度蒙版边缘细化管线</h1>
+  <div class="muted">确定性样本 · 分位阈值 · 形态学追踪 · 亚像素偏差 · SQLite 检查点 · 三路径一致性</div>
+</header>
+<main>
+  <section class="panel">
+    <div class="row">
+      <label>样本 <select id="sample"></select></label>
+      <label>半径 <input id="radius" type="range" min="0" max="4" value="1"><span id="radiusVal">1</span></label>
+      <label><input id="manual" type="checkbox"> 手动阈值</label>
+      <input id="threshold" type="range" min="0" max="255" value="128" disabled><span id="thresholdVal">128</span>
+      <button class="primary" onclick="runPipeline()">全量运行/恢复</button>
+      <button class="good" onclick="finalize()">停止拖动后精确重算</button>
+      <button class="warn" onclick="post('/api/pause')">暂停</button>
+      <button onclick="post('/api/resume')">续跑</button>
+      <label>块X <input id="tx" type="number" value="0" style="width:64px"></label>
+      <label>块Y <input id="ty" type="number" value="0" style="width:64px"></label>
+      <button onclick="retryTile()">逐块重试</button>
+      <button onclick="verify()">独立验证</button>
+      <button onclick="threePath()">三路径比对</button>
+      <a id="exportLink" href="#"><button type="button">导出 ZIP</button></a>
+    </div>
+    <div id="metrics" class="metrics" style="margin-top:12px"></div>
+  </section>
+
+  <section class="panel">
+    <strong>分块 × 三阶段状态矩阵</strong>
+    <div id="matrix" class="matrix"></div>
+  </section>
+
+  <section class="panel images">
+    <figure><figcaption>原图</figcaption><img id="img-original"></figure>
+    <figure><figcaption>前景分离掩码</figcaption><img id="img-separation"></figure>
+    <figure><figcaption>开闭清理</figcaption><img id="img-clean"></figure>
+    <figure><figcaption>边缘骨架</figcaption><img id="img-skeleton"></figure>
+    <figure><figcaption>细化掩码</figcaption><img id="img-refined"></figure>
+    <figure><figcaption>边缘叠加</figcaption><img id="img-overlay"></figure>
+    <figure><figcaption>逐像素残差热力图</figcaption><img id="img-heatmap"></figure>
+    <figure><figcaption>预览/精确差异热力图</figcaption><img id="img-diff"></figure>
+  </section>
+
+  <section class="panel">
+    <strong>状态与结果</strong>
+    <pre id="json">点击“全量运行/恢复”开始。拖动半径或阈值会调用粗略预览；松开控件后自动精确重算并判定 E_DIVERGE。</pre>
+  </section>
+</main>
+<script>
+let manifests = [];
+let pollTimer = null;
+const $ = id => document.getElementById(id);
+function qs(){ return $('sample').value ? 'sample='+encodeURIComponent($('sample').value) : ''; }
+function cacheBust(){ return '&t=' + Date.now(); }
+async function loadSamples(){
+  const r = await fetch('/api/samples'); manifests = await r.json();
+  $('sample').innerHTML = manifests.map(m=>`<option value="${m.sample_id}">${m.sample_id} (${m.width}×${m.height})</option>`).join('');
+  updateImages(); refreshState();
+}
+$('sample').onchange = () => { updateImages(); refreshState(); };
+$('radius').oninput = e => { $('radiusVal').textContent=e.target.value; schedulePreview(); };
+$('radius').onchange = () => finalize();
+$('threshold').oninput = e => { $('thresholdVal').textContent=e.target.value; schedulePreview(); };
+$('threshold').onchange = () => finalize();
+$('manual').onchange = e => $('threshold').disabled = !e.target.checked;
+let previewTimer;
+function currentParams(){
+  let p = new URLSearchParams(); p.set('sample',$('sample').value); p.set('radius',$('radius').value);
+  if($('manual').checked) p.set('threshold',$('threshold').value);
+  return p;
+}
+function schedulePreview(){
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(runPreview, 35);
+}
+async function runPreview(){
+  const r = await fetch('/api/preview?'+currentParams().toString());
+  const j = await r.json();
+  $('json').textContent = JSON.stringify(j,null,2);
+  updateImages();
+}
+async function finalize(){
+  const r = await fetch('/api/finalize?'+currentParams().toString());
+  const j = await r.json();
+  $('json').textContent = JSON.stringify(j,null,2);
+  updateImages(); refreshState();
+}
+async function runPipeline(){
+  const p = currentParams(); p.set('workers','4');
+  $('json').textContent = '运行中...';
+  const r = await fetch('/api/run?'+p.toString());
+  const j = await r.json();
+  $('json').textContent = JSON.stringify(j,null,2);
+  updateImages(); refreshState();
+}
+async function post(path){
+  const p = new URLSearchParams(); p.set('sample',$('sample').value);
+  const r = await fetch(path+'?'+p.toString()); const j=await r.json();
+  $('json').textContent = JSON.stringify(j,null,2);
+}
+async function retryTile(){
+  const p = currentParams(); p.set('tx',$('tx').value); p.set('ty',$('ty').value);
+  const r = await fetch('/api/retry?'+p.toString()); const j=await r.json();
+  $('json').textContent = JSON.stringify(j,null,2); updateImages(); refreshState();
+}
+async function verify(){
+  const r = await fetch('/api/verify?'+qs()); const j=await r.json();
+  $('json').textContent = JSON.stringify(j,null,2);
+}
+async function threePath(){
+  $('json').textContent = '运行三路径与恢复校验...';
+  const r = await fetch('/api/three-path?'+qs()); const j=await r.json();
+  $('json').textContent = JSON.stringify(j,null,2);
+}
+function updateImages(){
+  const id=$('sample').value; if(!id) return;
+  $('exportLink').href='/api/export?sample='+encodeURIComponent(id);
+  for (const kind of ['original','separation','clean','skeleton','refined','overlay','heatmap','diff']){
+    $( 'img-'+kind).src = kind==='original' ? `/viz?sample=${id}&kind=original&t=${Date.now()}` : `/viz?sample=${id}&kind=${kind}${cacheBust()}`;
+  }
+}
+function metric(label,value,good){
+  return `<div class="metric"><span class="muted">${label}</span><b class="${good===false?'bad':good===true?'ok':''}">${value}</b></div>`;
+}
+async function refreshState(){
+  if(!$('sample').value) return;
+  const r=await fetch('/api/state?'+qs()); const j=await r.json();
+  const a=j.accuracy||j.report?.accuracy;
+  $('metrics').innerHTML = [
+    metric('提交进度', `${j.committed_stages||j.report?.committed_stages||0}/${j.total_stages||j.report?.total_stages||0}`),
+    metric('收敛块比例', ((j.report?.converged_tile_ratio??0)*100).toFixed(1)+'%'),
+    metric('边缘中位误差', a?a.median_px.toFixed(3)+' px':'-', a?.pass),
+    metric('最大/P95', a?a.upper_px.toFixed(2)+' / '+a.p95_px.toFixed(2)+' px':'-', a?.pass),
+    metric('三路径一致', j.report?.divergence ? (j.report.divergence.pass?'发散检查通过':'E_DIVERGE') : '未执行'),
+    metric('暂停状态', j.paused ? '已暂停' : '运行/空闲')
+  ].join('');
+  const matrix=$('matrix'); matrix.innerHTML='';
+  (j.matrix||[]).forEach(m=>{
+    const tile=document.createElement('div'); tile.className='tile';
+    m.states.forEach((st,i)=>{
+      const c=document.createElement('div'); c.className='cell '+st;
+      c.textContent=['分','边','细'][i]; c.title=`(${m.tile.tx},${m.tile.ty}) ${st}`;
+      tile.appendChild(c);
+    });
+    matrix.appendChild(tile);
+  });
+}
+loadSamples();
+setInterval(refreshState, 1500);
+</script>
+</body>
+</html>

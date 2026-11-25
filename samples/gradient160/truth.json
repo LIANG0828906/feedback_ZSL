@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "algorithm_version": "edge-refine-v1.0.0",
+  "sample_id": "gradient160",
+  "seed": 42026802,
+  "image_file": "image.png",
+  "width": 160,
+  "height": 128,
+  "channels": 1,
+  "bit_depth": 8,
+  "reference_mask_file": "reference_mask.png",
+  "reference_mask_hash": "142d37bb8ece566b6728f7d95cf0ffd0ae1b8ebac01a39247a8d1b2f61ef9c77",
+  "params": {
+    "tile_size": 32,
+    "iter_budget": 5,
+    "radius": 1,
+    "preview_delay_ms": 100,
+    "bit_depth": 8,
+    "fg_quantile": 0.96,
+    "bg_quantile": 0.04,
+    "converge_tolerance_px": 0.85,
+    "edge_tolerance_px": 0.75,
+    "edge_upper_bound_px": 4,
+    "preview_median_tol_px": 0.75,
+    "preview_pixel_ratio_tol": 0.08,
+    "converge_ratio_tol": 0.1,
+    "param_version": 1
+  },
+  "edges": [
+    {
+      "id": 1,
+      "kind": "step-left",
+      "polarity": "bright",
+      "x1": 44.3,
+      "y1": 26.2,
+      "x2": 44.3,
+      "y2": 71.7,
+      "subpixel_offset": 0.29999999999999716,
+      "reference_line": "x=44.3000"
+    },
+    {
+      "id": 2,
+      "kind": "step-top",
+      "polarity": "bright",
+      "x1": 44.3,
+      "y1": 26.2,
+      "x2": 115.4,
+      "y2": 26.2,
+      "subpixel_offset": 0.1999999999999993,
+      "reference_line": "y=26.2000"
+    },
+    {
+      "id": 3,
+      "kind": "step-right",
+      "polarity": "bright-reverse",
+      "x1": 115.4,
+      "y1": 26.2,
+      "x2": 115.4,
+      "y2": 71.7,
+      "subpixel_offset": 0.4000000000000057,
+      "reference_line": "x=115.4000"
+    },
+    {
+      "id": 4,
+      "kind": "step-bottom",
+      "polarity": "bright-reverse",
+      "x1": 44.3,
+      "y1": 71.7,
+      "x2": 115.4,
+      "y2": 71.7,
+      "subpixel_offset": 0.7000000000000028,
+      "reference_line": "y=71.7000"
+    },
+    {
+      "id": 5,
+      "kind": "gradient-band-left",
+      "polarity": "bright",
+      "x1": 87.8,
+      "y1": 90.4,
+      "x2": 87.8,
+      "y2": 109.6,
+      "subpixel_offset": 0.7999999999999972,
+      "reference_line": "x=87.8000"
+    },
+    {
+      "id": 6,
+      "kind": "gradient-band-top",
+      "polarity": "bright",
+      "x1": 87.8,
+      "y1": 90.4,
+      "x2": 141.5,
+      "y2": 90.4,
+      "subpixel_offset": 0.4000000000000057,
+      "reference_line": "y=90.4000"
+    },
+    {
+      "id": 7,
+      "kind": "gradient-band-right",
+      "polarity": "bright-reverse",
+      "x1": 141.5,
+      "y1": 90.4,
+      "x2": 141.5,
+      "y2": 109.6,
+      "subpixel_offset": 0.5,
+      "reference_line": "x=141.5000"
+    },
+    {
+      "id": 8,
+      "kind": "gradient-band-bottom",
+      "polarity": "bright-reverse",
+      "x1": 87.8,
+      "y1": 109.6,
+      "x2": 141.5,
+      "y2": 109.6,
+      "subpixel_offset": 0.5999999999999943,
+      "reference_line": "y=109.6000"
+    },
+    {
+      "id": 9,
+      "kind": "diagonal-1",
+      "polarity": "bright",
+      "x1": 19.5,
+      "y1": 91.6,
+      "x2": 67.2,
+      "y2": 79.5,
+      "subpixel_offset": 0.5825610876742786,
+      "reference_line": "normal=(0.2459,0.9693)"
+    },
+    {
+      "id": 10,
+      "kind": "diagonal-2",
+      "polarity": "bright",
+      "x1": 67.2,
+      "y1": 79.5,
+      "x2": 73.7,
+      "y2": 114.8,
+      "subpixel_offset": 0.6921561474467808,
+      "reference_line": "normal=(-0.9835,0.1811)"
+    },
+    {
+      "id": 11,
+      "kind": "diagonal-3",
+      "polarity": "bright",
+      "x1": 73.7,
+      "y1": 114.8,
+      "x2": 19.5,
+      "y2": 91.6,
+      "subpixel_offset": 0.5363071088249001,
+      "reference_line": "normal=(0.3935,-0.9193)"
+    }
+  ],
+  "truth_fingerprint": "c6681e79d3800662ae473da4897895fc57b4bfd258621e48d32d720911a7f52a"
+}
