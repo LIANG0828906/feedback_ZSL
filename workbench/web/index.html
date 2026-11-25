@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ChaosDiag 注入编排与一致性工作台</title>
+  <style>
+    :root {
+      --bg: #0b1220; --panel: #121b2e; --panel2: #18233a; --line: #26344f;
+      --text: #e7eefc; --muted: #93a4c3; --accent: #5eead4; --blue: #60a5fa;
+      --warn: #fbbf24; --bad: #fb7185; --ok: #34d399; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:linear-gradient(180deg,#0b1220,#0e1628 240px); color:var(--text); font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    header { padding:18px 24px; border-bottom:1px solid var(--line); display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    h1 { font-size:20px; margin:0; letter-spacing:.2px; }
+    .sub { color:var(--muted); font-size:13px; }
+    main { padding:18px 24px; display:grid; grid-template-columns:360px 1fr; gap:16px; }
+    .panel { background:rgba(18,27,46,.92); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+    .panel h2 { font-size:14px; margin:0 0 10px; color:#c9d8f5; display:flex; justify-content:space-between; align-items:center; }
+    .stack { display:flex; flex-direction:column; gap:12px; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    button, select, input { background:#0f182a; color:var(--text); border:1px solid var(--line); border-radius:9px; padding:8px 10px; font-size:13px; }
+    button { cursor:pointer; background:#1b2a45; transition:.15s; }
+    button:hover { border-color:var(--accent); transform:translateY(-1px); }
+    button.primary { background:#0f766e; border-color:#14b8a6; }
+    button.danger { border-color:#7f1d1d; background:#3b1220; }
+    .version.active { outline:2px solid var(--accent); }
+    .cards { display:grid; grid-template-columns:repeat(5,minmax(120px,1fr)); gap:10px; margin-bottom:14px; }
+    .metric { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; }
+    .metric b { display:block; font-size:22px; margin-top:2px; }
+    .metric span { color:var(--muted); font-size:12px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th, td { border-bottom:1px solid var(--line); padding:8px; text-align:left; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; position:sticky; top:0; background:var(--panel); }
+    tr.clickable { cursor:pointer; }
+    tr.clickable:hover, tr.selected { background:#1b2a45; }
+    .badge { display:inline-flex; border-radius:999px; padding:2px 8px; font-size:12px; border:1px solid var(--line); white-space:nowrap; }
+    .MATCH { color:var(--ok); border-color:#065f46; background:#052e2b; }
+    .INJECTION_DEVIATION { color:var(--warn); border-color:#92400e; background:#3a2608; }
+    .SERVICE_FAILURE { color:#fda4af; border-color:#9f1239; background:#3b0a19; }
+    .EXPECTATION_INVALID { color:#c4b5fd; border-color:#5b21b6; background:#241344; }
+    .completed { color:var(--ok); } .timeout { color:var(--warn); } .failure { color:var(--bad); }
+    .mono { font-family:var(--mono); font-size:12px; }
+    pre { background:#080e1c; border:1px solid var(--line); border-radius:10px; padding:12px; overflow:auto; max-height:420px; font-size:12px; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .tick { border:1px solid var(--line); border-radius:12px; padding:10px; background:var(--panel2); min-width:260px; }
+    .tick h3 { margin:0 0 8px; font-size:13px; }
+    .kv { color:var(--muted); font-size:12px; }
+    .kv b { color:var(--text); }
+    .hop { border-left:3px solid var(--blue); padding:8px 10px; margin:8px 0; background:#0e1830; border-radius:0 10px 10px 0; }
+    .hop.timeout { border-left-color:var(--warn); } .hop.failure { border-left-color:var(--bad); } .hop.completed { border-left-color:var(--ok); }
+    .small { font-size:12px; color:var(--muted); }
+    .okbox { border:1px solid #065f46; background:#052e2b; color:#a7f3d0; padding:10px; border-radius:10px; }
+    .errbox { border:1px solid #9f1239; background:#3b0a19; color:#fecdd3; padding:10px; border-radius:10px; white-space:pre-wrap; }
+    .warningbox { border:1px solid #92400e; background:#3a2608; color:#fde68a; padding:10px; border-radius:10px; }
+    label { display:grid; gap:4px; font-size:12px; color:var(--muted); margin-bottom:8px; }
+    input, select { width:100%; }
+    .tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+    .tab { background:#101a2e; }
+    .tab.active { background:#0f766e; border-color:#14b8a6; }
+    .hidden { display:none; }
+    .chips { display:flex; gap:5px; flex-wrap:wrap; }
+    .chip { font-family:var(--mono); font-size:11px; border:1px solid var(--line); padding:1px 6px; border-radius:999px; color:#c7d6f4; }
+    .chip.hit { border-color:#0e7490; color:#a5f3fc; } .chip.applied { border-color:#a16207; color:#fde68a; } .chip.exempt { border-color:#059669; color:#a7f3d0; }
+    @media (max-width: 1100px) { main { grid-template-columns:1fr; } .cards { grid-template-columns:repeat(2,1fr); } .grid2 { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>ChaosDiag 诊断工作台</h1>
+  <div class="sub">固定种子 42 · 三 schema · 逻辑毫秒推演 · SQLite 事务检查点 · 无真实集群依赖</div>
+  <div style="flex:1"></div>
+  <div class="row" id="versions"></div>
+</header>
+<main>
+  <aside class="stack">
+    <section class="panel">
+      <h2>施加编辑（源工程不被修改）</h2>
+      <label>编辑类型
+        <select id="mutationKind">
+          <option value="instruction_amplitude">指令幅度</option>
+          <option value="instruction_window">生效区间</option>
+          <option value="instruction_selector">目标选择器</option>
+          <option value="edge_latency">依赖边延迟</option>
+        </select>
+      </label>
+      <label id="instructionLabel">指令
+        <select id="instructionId"></select>
+      </label>
+      <label id="edgeLabel" class="hidden">依赖边
+        <select id="edgeId"></select>
+      </label>
+      <div id="amplitudeFields">
+        <label>归一幅度（整数 ms）<input id="amplitudeMs" type="number" value="100" /></label>
+      </div>
+      <div id="windowFields" class="hidden">
+        <div class="row">
+          <label>起始 tick<input id="startTick" type="number" value="3" /></label>
+          <label>结束 tick<input id="endTick" type="number" value="4" /></label>
+        </div>
+      </div>
+      <div id="selectorFields" class="hidden">
+        <label>选择器类型
+          <select id="selectorKind"><option value="edge">edge</option><option value="service">service</option></select>
+        </label>
+        <label>服务名 / Edge ID<input id="selectorValue" value="edge-order-inventory" /></label>
+      </div>
+      <div class="row">
+        <button class="primary" id="applyEdit">应用并增量重算</button>
+        <button id="resetVersion">重置样本</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>异常注入链路</h2>
+      <div class="row" id="anomalyButtons"></div>
+      <div id="anomalyResult" class="small" style="margin-top:10px">异常只作用于克隆或临时检查点，当前已提交结果保持可用。</div>
+    </section>
+
+    <section class="panel">
+      <h2>检查点恢复对照</h2>
+      <button class="primary" id="checkpointDemo">跑到 tick 10 → 恢复 → 续跑</button>
+      <div id="checkpointResult" class="small" style="margin-top:10px"></div>
+    </section>
+  </aside>
+
+  <section class="stack">
+    <div class="cards" id="metrics"></div>
+    <section class="panel">
+      <div class="tabs">
+        <button class="tab active" data-tab="requests">请求与对账</button>
+        <button class="tab" data-tab="schedule">逐时刻/等待队列</button>
+        <button class="tab" data-tab="incremental">增量差异与闭包</button>
+        <button class="tab" data-tab="checkpoint">恢复对照</button>
+        <button class="tab" data-tab="doc">当前 Schema 原文</button>
+      </div>
+
+      <div id="tab-requests">
+        <div class="grid2">
+          <div style="max-height:520px;overflow:auto">
+            <table>
+              <thead><tr><th>请求</th><th>tick</th><th>终态</th><th>对账</th><th>真值</th></tr></thead>
+              <tbody id="requestRows"></tbody>
+            </table>
+          </div>
+          <div id="requestDetail" style="max-height:520px;overflow:auto"></div>
+        </div>
+      </div>
+
+      <div id="tab-schedule" class="hidden">
+        <div class="row" id="scheduleGrid" style="align-items:stretch"></div>
+      </div>
+
+      <div id="tab-incremental" class="hidden">
+        <div id="incrementalEmpty" class="small">尚未编辑。应用一次编辑后，这里展示差异、缓存复用判定与失效传播闭包。</div>
+        <div id="incrementalContent" class="hidden"></div>
+      </div>
+
+      <div id="tab-checkpoint" class="hidden">
+        <div id="checkpointTabEmpty" class="small">点击左侧“检查点恢复对照”查看先落请求/队列、最后更新 tick 的 SQLite 恢复结果。</div>
+        <div id="checkpointTabContent" class="hidden"></div>
+      </div>
+
+      <div id="tab-doc" class="hidden">
+        <div class="row" style="margin-bottom:8px"><button id="reloadDoc">刷新原文</button><span class="small" id="docVersion"></span></div>
+        <pre id="docPre"></pre>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+const state = { version: 'chaosdiag.io/v3', data: null, selectedRequest: null, incremental: null, checkpoint: null };
+const anomalies = [
+  ['cycle_dependency','成环依赖'], ['missing_service_target','缺失服务'], ['negative_delay','负延迟'],
+  ['zero_timeout_budget','预算为零'], ['concurrency_limit_out_of_range','越界并发'],
+  ['truncated_checkpoint','截断检查点'], ['version_mismatch_snapshot','版本不匹配']
+];
+
+function h(tag, attrs={}, ...children) {
+  const el = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)) {
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+    else if (v !== null && v !== undefined) el.setAttribute(k, v);
+  }
+  for (const c of children.flat()) {
+    if (c === null || c === undefined) continue;
+    el.append(c.nodeType ? c : document.createTextNode(String(c)));
+  }
+  return el;
+}
+async function api(path, opts) {
+  const res = await fetch(path, opts);
+  const json = await res.json();
+  if (!res.ok || json.error) throw json.error || json;
+  return json;
+}
+function shortVersion(v) { return v.endsWith('/v1') ? 'v1' : v.endsWith('/v2') ? 'v2' : 'v3'; }
+function truthResult(id) { return state.data.truth.results.find(r => r.request_id === id); }
+function sameTruth(r) { const t = truthResult(r.request_id); return !!t && JSON.stringify(r) === JSON.stringify(t); }
+
+async function loadState(version=state.version) {
+  state.version = version;
+  state.data = await api('/api/state?version=' + encodeURIComponent(version));
+  state.incremental = null;
+  renderAll();
+  loadDoc();
+}
+async function loadDoc() {
+  const text = await fetch('/api/doc?version=' + encodeURIComponent(state.version)).then(r => r.text());
+  document.getElementById('docPre').textContent = JSON.stringify(JSON.parse(text), null, 2);
+  document.getElementById('docVersion').textContent = state.version;
+}
+
+function renderAll() {
+  renderVersions(); renderMetrics(); renderSelectors(); renderRequests(); renderSchedule(); renderIncremental();
+}
+function renderVersions() {
+  const box = document.getElementById('versions'); box.innerHTML = '';
+  for (const v of state.data.versions) {
+    box.append(h('button', {class:'version ' + (v.version===state.version?'active':''), onclick:()=>loadState(v.version)}, v.short));
+  }
+}
+function renderMetrics() {
+  const p = state.data.project, r = state.data.report;
+  const items = [
+    ['服务', p.services.length], ['依赖边', p.edges.length], ['指令', p.instructions.length],
+    ['请求', p.requests.length], ['对账结论', new Set(r.verdicts.map(v=>v.classification)).size + ' 类']
+  ];
+  const box = document.getElementById('metrics'); box.innerHTML='';
+  for (const [label,value] of items) box.append(h('div',{class:'metric'}, h('span',{},label), h('b',{},value)));
+}
+function renderSelectors() {
+  const ins = document.getElementById('instructionId'); ins.innerHTML='';
+  for (const x of state.data.project.instructions) ins.append(h('option',{value:x.id}, `${x.id} · ${x.kind}`));
+  const ed = document.getElementById('edgeId'); ed.innerHTML='';
+  for (const e of state.data.project.edges) ed.append(h('option',{value:e.id}, e.id));
+}
+
+document.getElementById('mutationKind').addEventListener('change', e => {
+  const kind = e.target.value;
+  document.getElementById('instructionLabel').classList.toggle('hidden', kind === 'edge_latency');
+  document.getElementById('edgeLabel').classList.toggle('hidden', kind !== 'edge_latency');
+  document.getElementById('amplitudeFields').classList.toggle('hidden', !kind.includes('amplitude') && kind !== 'edge_latency');
+  document.getElementById('windowFields').classList.toggle('hidden', kind !== 'instruction_window');
+  document.getElementById('selectorFields').classList.toggle('hidden', kind !== 'instruction_selector');
+  if (kind === 'edge_latency') document.getElementById('amplitudeMs').value = 35;
+  if (kind === 'instruction_amplitude') document.getElementById('amplitudeMs').value = 100;
+});
+
+document.getElementById('applyEdit').addEventListener('click', async () => {
+  const kind = document.getElementById('mutationKind').value;
+  const body = { kind };
+  if (kind === 'edge_latency') {
+    body.edge_id = document.getElementById('edgeId').value;
+    body.edge_latency_ms = Number(document.getElementById('amplitudeMs').value);
+  } else {
+    body.instruction_id = document.getElementById('instructionId').value;
+    if (kind === 'instruction_amplitude') body.amplitude_ms = Number(document.getElementById('amplitudeMs').value);
+    if (kind === 'instruction_window') {
+      body.start_tick = Number(document.getElementById('startTick').value);
+      body.end_tick = Number(document.getElementById('endTick').value);
+    }
+    if (kind === 'instruction_selector') {
+      const sk = document.getElementById('selectorKind').value;
+      const val = document.getElementById('selectorValue').value;
+      body.selector = sk === 'service' ? {kind:'service', service:val} : {kind:'edge', edge_id:val};
+    }
+  }
+  try {
+    state.incremental = await api('/api/edit?version=' + encodeURIComponent(state.version), {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
+    });
+    state.data.report = state.incremental.report;
+    renderAll(); switchTab('incremental');
+  } catch (e) { showAnomaly(e); }
+});
+document.getElementById('resetVersion').addEventListener('click', async () => {
+  state.data = await api('/api/reset?version=' + encodeURIComponent(state.version), {method:'POST'});
+  state.incremental = null; state.selectedRequest = null; renderAll();
+});
+
+function renderRequests() {
+  const rows = document.getElementById('requestRows'); rows.innerHTML='';
+  for (const v of state.data.report.verdicts) {
+    const r = state.data.report.results.find(x => x.request_id === v.request_id);
+    rows.append(h('tr', {class:'clickable ' + (state.selectedRequest===v.request_id?'selected':''), onclick:()=>{state.selectedRequest=v.request_id; renderRequests(); renderDetail();}},
+      h('td',{class:'mono'},v.request_id), h('td',{},r.tick),
+      h('td',{class:r.status}, r.status + (r.code ? ` (${r.code})` : '')),
+      h('td',{}, h('span',{class:'badge '+v.classification}, v.classification)),
+      h('td',{}, sameTruth(r) ? h('span',{class:'badge MATCH'}, '真值一致') : h('span',{class:'badge INJECTION_DEVIATION'}, '差异'))
+    ));
+  }
+  if (!state.selectedRequest && state.data.report.results[0]) state.selectedRequest = state.data.report.results[0].request_id;
+  renderDetail();
+}
+function chips(ids, cls='') { return h('div',{class:'chips'}, ...(ids||[]).map(x=>h('span',{class:'chip '+cls},x))); }
+function renderDetail() {
+  const box = document.getElementById('requestDetail'); box.innerHTML='';
+  const r = state.data.report.results.find(x => x.request_id === state.selectedRequest);
+  const v = state.data.report.verdicts.find(x => x.request_id === state.selectedRequest);
+  if (!r) return;
+  box.append(h('h3',{class:'mono'}, r.request_id));
+  box.append(h('div',{class:'row'}, h('span',{class:'badge '+v.classification},v.classification), h('span',{class:'small'},v.reason)));
+  box.append(h('p',{class:'small'}, `总耗时 ${r.total_ms}ms / 预算 ${r.budget_ms}ms；偏差量 ${v.deviation_ms}ms`));
+  if (v.deviation_instruction_ids?.length) box.append(h('p',{}, '偏差来源：', chips(v.deviation_instruction_ids,'applied')));
+  for (const hop of r.hops) {
+    box.append(h('div',{class:'hop '+hop.status},
+      h('div',{class:'row'}, h('b',{},`hop ${hop.index}: ${hop.from} → ${hop.to}`), h('span',{class:'badge '+hop.status},hop.status), h('span',{class:'small'},`${hop.start_ms}→${hop.end_ms}ms / base ${hop.base_ms}ms / correction ${hop.correction_ms}ms`)),
+      hop.edge_id ? h('div',{class:'kv'},'edge ', h('b',{class:'mono'},hop.edge_id), ' source ', h('b',{class:'mono'},hop.source || 'topology')) : null,
+      h('div',{class:'kv'},'命中：'), chips(hop.matched_instruction_ids,'hit'),
+      hop.exemption_hits?.length ? h('div',{}, ...hop.exemption_hits.map(x=>h('div',{class:'okbox small',style:'margin:6px 0'},`豁免 ${x.exemption_id} / ${x.source} 覆盖 ${x.instruction_id}`))) : null,
+      h('div',{class:'kv',style:'margin-top:6px'},'裁决路径：', h('span',{class:'mono'}, (hop.adjudication.ranked_instruction_ids||[]).join(' > ') || '无指令')),
+      ...(hop.adjudication.decisions||[]).map(d => h('div',{class:'small mono'}, `${d.dimension}: winner=${d.winner_id}; candidates=[${(d.candidate_ids||[]).join(',')}]`)),
+      hop.applied_instruction_ids?.length ? h('div',{class:'kv',style:'margin-top:6px'},'生效：') : null,
+      hop.applied_instruction_ids?.length ? chips(hop.applied_instruction_ids,'applied') : null
+    ));
+  }
+}
+
+function renderSchedule() {
+  const grid = document.getElementById('scheduleGrid'); grid.innerHTML='';
+  for (const t of state.data.report.schedules || []) {
+    grid.append(h('div',{class:'tick'},
+      h('h3',{},`tick ${t.tick}`),
+      h('div',{class:'kv'},'提交：', h('span',{class:'mono'},(t.submitted||[]).join(', ') || '—')),
+      h('div',{class:'kv'},'准入：', h('span',{class:'mono applied'},(t.admitted||[]).join(', ') || '—')),
+      h('div',{class:'kv'},'释放：', h('span',{class:'mono'},(t.released||[]).join(', ') || '—')),
+      h('div',{class:'kv',style:'margin-top:6px'},'活动：', (t.active||[]).length),
+      ...(t.queued||[]).map(q => h('div',{class:'warningbox small',style:'margin-top:6px'},
+        h('b',{},`#${q.position} ${q.instruction_id}`), h('div',{},q.violated_constraints.join(' + ')), h('div',{class:'mono'},q.constraint_id)))
+    ));
+  }
+}
+
+function renderIncremental() {
+  const empty = document.getElementById('incrementalEmpty'), content = document.getElementById('incrementalContent');
+  const x = state.incremental;
+  if (!x) { empty.classList.remove('hidden'); content.classList.add('hidden'); return; }
+  empty.classList.add('hidden'); content.classList.remove('hidden'); content.innerHTML='';
+  content.append(h('div',{class:'row',style:'margin-bottom:10px'},
+    h('span',{class:'badge INJECTION_DEVIATION'},`重算 ${x.recomputed.length}`),
+    h('span',{class:'badge MATCH'},`缓存复用 ${x.reused.length}`),
+    h('span',{class:'badge EXPECTATION_INVALID'},`差异请求 ${x.diff.changed_count}`)
+  ));
+  content.append(h('div',{class:'grid2'},
+    h('div',{class:'panel',style:'background:#0e1830'}, h('h2',{},'缓存判定'),
+      h('table',{}, h('thead',{},h('tr',{},h('th',{},'请求'),h('th',{},'缓存'),h('th',{},'来源/原因'))),
+        h('tbody',{}, ...x.cache_decisions.map(d => h('tr',{},
+          h('td',{class:'mono'},d.request_id),
+          h('td',{}, h('span',{class:'badge '+(d.reused?'MATCH':'INJECTION_DEVIATION')}, d.reused?'REUSED':'RECOMPUTED')),
+          h('td',{class:'small'}, d.reason, d.sources?.length ? h('div',{class:'mono'}, d.sources.map(s=>`${s.object_id}:${s.field}:${s.reason}`).join(' | ')) : null)
+        )))
+      )
+    ),
+    h('div',{class:'panel',style:'background:#0e1830'}, h('h2',{},'传播闭包与差异'),
+      h('div',{class:'small'},`对象 ${x.closure.changed_object}；区间 ${JSON.stringify(x.closure.intervals)}`),
+      h('div',{class:'small',style:'margin:6px 0'},`请求：${x.closure.request_ids.join(', ') || '无'}`),
+      h('pre',{}, JSON.stringify({first_affected_hop:x.closure.first_affected_hop, edges:x.closure.edges}, null, 2)),
+      h('table',{}, h('thead',{},h('tr',{},h('th',{},'请求'),h('th',{},'状态/耗时差异'),h('th',{},'命中增删'))),
+        h('tbody',{}, ...x.diff.requests.filter(d=>d.changed).map(d => h('tr',{},
+          h('td',{class:'mono'},d.request_id),
+          h('td',{class:'small'},`${d.before_status}/${d.before_total_ms}ms → ${d.after_status}/${d.after_total_ms}ms (Δ${d.total_delta_ms})`),
+          h('td',{class:'small mono'},`+[${(d.hit_added||[]).join(',')}] -[${(d.hit_removed||[]).join(',')}]`)
+        )))
+      )
+    )
+  ));
+}
+
+document.getElementById('checkpointDemo').addEventListener('click', runCheckpointDemo);
+async function runCheckpointDemo() {
+  const box = document.getElementById('checkpointResult'); box.innerHTML = '<span class="small">运行中…</span>';
+  try {
+    state.checkpoint = await api('/api/checkpoint-demo?version=' + encodeURIComponent(state.version), {method:'POST'});
+    box.innerHTML = '';
+    box.append(h('div',{class: state.checkpoint.full_results_equal ? 'okbox' : 'errbox'},
+      state.checkpoint.full_results_equal ? '恢复后续跑与全量重算逐请求一致' : '恢复结果不一致'));
+    box.append(h('div',{class:'small mono',style:'margin-top:8px'}, state.checkpoint.path));
+    box.append(h('div',{class:'small'}, `提交 tick=${state.checkpoint.partial.last_tick}，等待队列 ${state.checkpoint.partial.queue.length} 项`));
+    renderCheckpointTab(); switchTab('checkpoint');
+  } catch (e) { showAnomaly(e); }
+}
+function renderCheckpointTab() {
+  const x = state.checkpoint, empty=document.getElementById('checkpointTabEmpty'), content=document.getElementById('checkpointTabContent');
+  if (!x) return;
+  empty.classList.add('hidden'); content.classList.remove('hidden'); content.innerHTML='';
+  content.append(h('div',{class:'row',style:'margin-bottom:10px'}, h('span',{class:x.full_results_equal?'badge MATCH':'badge INJECTION_DEVIATION'}, x.full_results_equal?'DEEP EQUAL':'MISMATCH')));
+  content.append(h('p',{class:'small'},x.recovery_note));
+  content.append(h('div',{class:'grid2'},
+    h('pre',{}, JSON.stringify({path:x.path, partial_tick:x.partial.last_tick, queue:x.partial.queue, persisted_requests:x.partial.requests.length}, null, 2)),
+    h('pre',{}, JSON.stringify(x.resumed_report.results.map(r=>({id:r.request_id,status:r.status,total_ms:r.total_ms,hops:r.hops.length})), null, 2))
+  ));
+}
+
+function renderAnomalyButtons() {
+  const box = document.getElementById('anomalyButtons');
+  for (const [type,label] of anomalies) box.append(h('button',{class:'danger', onclick:()=>injectAnomaly(type)},label));
+}
+async function injectAnomaly(type) {
+  try {
+    const resp = await api('/api/anomaly',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,version:state.version})});
+    if (resp.ok === false) { showAnomaly(resp); return; }
+    document.getElementById('anomalyResult').innerHTML='';
+    document.getElementById('anomalyResult').append(h('div',{class:'okbox'}, `${resp.code || 'OK'}：${resp.message || '异常注入未返回错误'}`));
+  } catch (e) { showAnomaly(e); }
+}
+function showAnomaly(e) {
+  const code = e.code || 'ERROR', field = e.field || '';
+  document.getElementById('anomalyResult').innerHTML='';
+  document.getElementById('anomalyResult').append(h('div',{class:'errbox'}, `${code} ${field}\n${e.message||''}\n${JSON.stringify(e.context||{},null,2)}`));
+}
+
+document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab===name));
+  for (const id of ['requests','schedule','incremental','checkpoint','doc']) document.getElementById('tab-'+id).classList.toggle('hidden', id!==name);
+  if (name==='doc') loadDoc();
+}
+document.getElementById('reloadDoc').addEventListener('click', loadDoc);
+
+renderAnomalyButtons();
+loadState('chaosdiag.io/v3').catch(showAnomaly);
+</script>
+</body>
+</html>
