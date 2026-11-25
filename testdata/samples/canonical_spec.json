@@ -1,0 +1,714 @@
+{
+  "Seed": 20261126,
+  "TickMs": 100,
+  "HorizonTicks": 60,
+  "ConversionWidth": 64,
+  "FixedTolerance": 1,
+  "FunctionCount": 4,
+  "RequestsPerFunc": 18,
+  "Tenants": [
+    "tenant-a",
+    "tenant-b",
+    "tenant-c"
+  ],
+  "Functions": [
+    {
+      "ID": "fn-a",
+      "ConcurrencyLimit": 4,
+      "Reserved": 1,
+      "WarmPoolSize": 0,
+      "ColdMinTicks": 3,
+      "ColdMaxTicks": 6,
+      "ColdTimeoutTicks": 12,
+      "BudgetPermyriad": 4730,
+      "QueueLimit": 3,
+      "WaitLimitTicks": 8
+    },
+    {
+      "ID": "fn-b",
+      "ConcurrencyLimit": 6,
+      "Reserved": 3,
+      "WarmPoolSize": 0,
+      "ColdMinTicks": 3,
+      "ColdMaxTicks": 7,
+      "ColdTimeoutTicks": 12,
+      "BudgetPermyriad": 6770,
+      "QueueLimit": 4,
+      "WaitLimitTicks": 8
+    },
+    {
+      "ID": "fn-c",
+      "ConcurrencyLimit": 8,
+      "Reserved": 3,
+      "WarmPoolSize": 1,
+      "ColdMinTicks": 2,
+      "ColdMaxTicks": 5,
+      "ColdTimeoutTicks": 12,
+      "BudgetPermyriad": 4520,
+      "QueueLimit": 3,
+      "WaitLimitTicks": 8
+    },
+    {
+      "ID": "fn-d",
+      "ConcurrencyLimit": 10,
+      "Reserved": 4,
+      "WarmPoolSize": 2,
+      "ColdMinTicks": 3,
+      "ColdMaxTicks": 8,
+      "ColdTimeoutTicks": 12,
+      "BudgetPermyriad": 6080,
+      "QueueLimit": 4,
+      "WaitLimitTicks": 8
+    }
+  ],
+  "Requests": [
+    {
+      "ID": "req-05",
+      "FunctionID": "fn-a",
+      "ArriveTick": 0,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 5
+    },
+    {
+      "ID": "req-13",
+      "FunctionID": "fn-a",
+      "ArriveTick": 0,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 7
+    },
+    {
+      "ID": "req-21",
+      "FunctionID": "fn-b",
+      "ArriveTick": 1,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-42",
+      "FunctionID": "fn-c",
+      "ArriveTick": 2,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 5
+    },
+    {
+      "ID": "req-49",
+      "FunctionID": "fn-c",
+      "ArriveTick": 2,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-68",
+      "FunctionID": "fn-d",
+      "ArriveTick": 2,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-04",
+      "FunctionID": "fn-a",
+      "ArriveTick": 4,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-41",
+      "FunctionID": "fn-c",
+      "ArriveTick": 4,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-43",
+      "FunctionID": "fn-c",
+      "ArriveTick": 4,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 5
+    },
+    {
+      "ID": "req-51",
+      "FunctionID": "fn-c",
+      "ArriveTick": 4,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 7
+    },
+    {
+      "ID": "req-28",
+      "FunctionID": "fn-b",
+      "ArriveTick": 5,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-11",
+      "FunctionID": "fn-a",
+      "ArriveTick": 6,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-48",
+      "FunctionID": "fn-c",
+      "ArriveTick": 6,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 7
+    },
+    {
+      "ID": "req-58",
+      "FunctionID": "fn-d",
+      "ArriveTick": 6,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-23",
+      "FunctionID": "fn-b",
+      "ArriveTick": 7,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-71",
+      "FunctionID": "fn-d",
+      "ArriveTick": 7,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 5
+    },
+    {
+      "ID": "req-66",
+      "FunctionID": "fn-d",
+      "ArriveTick": 8,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-01",
+      "FunctionID": "fn-a",
+      "ArriveTick": 9,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-70",
+      "FunctionID": "fn-d",
+      "ArriveTick": 10,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-16",
+      "FunctionID": "fn-a",
+      "ArriveTick": 11,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-34",
+      "FunctionID": "fn-b",
+      "ArriveTick": 12,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-09",
+      "FunctionID": "fn-a",
+      "ArriveTick": 13,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-17",
+      "FunctionID": "fn-a",
+      "ArriveTick": 15,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 7
+    },
+    {
+      "ID": "req-15",
+      "FunctionID": "fn-a",
+      "ArriveTick": 16,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-27",
+      "FunctionID": "fn-b",
+      "ArriveTick": 17,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-45",
+      "FunctionID": "fn-c",
+      "ArriveTick": 17,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-69",
+      "FunctionID": "fn-d",
+      "ArriveTick": 18,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-12",
+      "FunctionID": "fn-a",
+      "ArriveTick": 19,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-37",
+      "FunctionID": "fn-c",
+      "ArriveTick": 19,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 5
+    },
+    {
+      "ID": "req-06",
+      "FunctionID": "fn-a",
+      "ArriveTick": 22,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-18",
+      "FunctionID": "fn-b",
+      "ArriveTick": 22,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-53",
+      "FunctionID": "fn-c",
+      "ArriveTick": 22,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-39",
+      "FunctionID": "fn-c",
+      "ArriveTick": 24,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 7
+    },
+    {
+      "ID": "req-56",
+      "FunctionID": "fn-d",
+      "ArriveTick": 25,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-61",
+      "FunctionID": "fn-d",
+      "ArriveTick": 25,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-29",
+      "FunctionID": "fn-b",
+      "ArriveTick": 26,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-35",
+      "FunctionID": "fn-b",
+      "ArriveTick": 26,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-25",
+      "FunctionID": "fn-b",
+      "ArriveTick": 28,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-40",
+      "FunctionID": "fn-c",
+      "ArriveTick": 29,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-10",
+      "FunctionID": "fn-a",
+      "ArriveTick": 30,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-19",
+      "FunctionID": "fn-b",
+      "ArriveTick": 30,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-36",
+      "FunctionID": "fn-c",
+      "ArriveTick": 31,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-46",
+      "FunctionID": "fn-c",
+      "ArriveTick": 31,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-60",
+      "FunctionID": "fn-d",
+      "ArriveTick": 31,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-32",
+      "FunctionID": "fn-b",
+      "ArriveTick": 32,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-47",
+      "FunctionID": "fn-c",
+      "ArriveTick": 33,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-57",
+      "FunctionID": "fn-d",
+      "ArriveTick": 33,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-64",
+      "FunctionID": "fn-d",
+      "ArriveTick": 33,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-07",
+      "FunctionID": "fn-a",
+      "ArriveTick": 35,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-14",
+      "FunctionID": "fn-a",
+      "ArriveTick": 35,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-59",
+      "FunctionID": "fn-d",
+      "ArriveTick": 35,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-02",
+      "FunctionID": "fn-a",
+      "ArriveTick": 36,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-52",
+      "FunctionID": "fn-c",
+      "ArriveTick": 36,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 7
+    },
+    {
+      "ID": "req-03",
+      "FunctionID": "fn-a",
+      "ArriveTick": 38,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-44",
+      "FunctionID": "fn-c",
+      "ArriveTick": 39,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-20",
+      "FunctionID": "fn-b",
+      "ArriveTick": 40,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-24",
+      "FunctionID": "fn-b",
+      "ArriveTick": 44,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-38",
+      "FunctionID": "fn-c",
+      "ArriveTick": 44,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 4
+    },
+    {
+      "ID": "req-00",
+      "FunctionID": "fn-a",
+      "ArriveTick": 45,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-54",
+      "FunctionID": "fn-d",
+      "ArriveTick": 45,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 5
+    },
+    {
+      "ID": "req-50",
+      "FunctionID": "fn-c",
+      "ArriveTick": 46,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-62",
+      "FunctionID": "fn-d",
+      "ArriveTick": 46,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-63",
+      "FunctionID": "fn-d",
+      "ArriveTick": 48,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-67",
+      "FunctionID": "fn-d",
+      "ArriveTick": 48,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 7
+    },
+    {
+      "ID": "req-65",
+      "FunctionID": "fn-d",
+      "ArriveTick": 49,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-b",
+      "HoldTicks": 5
+    },
+    {
+      "ID": "req-55",
+      "FunctionID": "fn-d",
+      "ArriveTick": 50,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-33",
+      "FunctionID": "fn-b",
+      "ArriveTick": 51,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-08",
+      "FunctionID": "fn-a",
+      "ArriveTick": 52,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-26",
+      "FunctionID": "fn-b",
+      "ArriveTick": 53,
+      "Slots": 2,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 2
+    },
+    {
+      "ID": "req-22",
+      "FunctionID": "fn-b",
+      "ArriveTick": 54,
+      "Slots": 1,
+      "Priority": "RESERVED",
+      "Tenant": "tenant-c",
+      "HoldTicks": 6
+    },
+    {
+      "ID": "req-30",
+      "FunctionID": "fn-b",
+      "ArriveTick": 55,
+      "Slots": 1,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 3
+    },
+    {
+      "ID": "req-31",
+      "FunctionID": "fn-b",
+      "ArriveTick": 55,
+      "Slots": 2,
+      "Priority": "SHARED",
+      "Tenant": "tenant-a",
+      "HoldTicks": 3
+    }
+  ]
+}

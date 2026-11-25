@@ -20,3 +20,21 @@
 
 验收：
 用本地三版本样本验证逐时刻放行、排队与冷启动判定、增量重算及检查点恢复的一致性。
+
+---
+
+## 实现交付与运行入口
+
+本工作区已实现该可验收内核（Go module `coldkernel`），纯 Go SQLite 驱动，
+`CGO_ENABLED=0` 可构建，不依赖 Docker 或外部服务。
+
+- 设计与口径：`docs/DESIGN.md`
+- 实际验证结果：`docs/VERIFICATION.md`
+- 生成确定性三版本样本：`go run ./cmd/gensample`
+- 完整本地演示（三版装载/逐 tick 闸门/冷启动/增量/检查点恢复）：`go run ./cmd/demo`
+- 异常注入业务码演示：`go run ./cmd/demo -inject`
+- 全量测试与竞态检测：`go test ./... -count=1`、`go test -race ./...`
+
+核心代码位于 `internal/`（装载器、定点运算、fncore 状态机、oracle 真值、
+并行引擎、增量失效、SQLite 检查点），验收测试位于 `acceptance/`，
+生成样本与检查点分别落在 `testdata/samples`、`testdata/checkpoints`。
