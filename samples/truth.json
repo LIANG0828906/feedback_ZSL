@@ -1,0 +1,2136 @@
+{
+  "project_id": "deterministic-tls-probe",
+  "snapshot_hash": "43a2435e3f8c3b626473fd6495a3cad9f4ed70f5d58c21307596e4795a6a65f6",
+  "seed": 420261126,
+  "results": [
+    {
+      "request_id": "A-1",
+      "endpoint_id": "alpha-ok",
+      "event_sequence": 1,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 1000,
+      "started_at_ms": 1000,
+      "completed_at_ms": 2000,
+      "final_admission_at_ms": 1000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-alpha"
+      ],
+      "selected_chain_id": "chain-alpha",
+      "chain_results": [
+        {
+          "chain_id": "chain-alpha",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:b903b18320d70d4b5a542181ed22bcf2",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:7fd56f2088e1b803684683b6530d12ff",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:d2bdeda11ef8bbb754a8853660afbd3c",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "B-1",
+      "endpoint_id": "beta-parallel",
+      "event_sequence": 2,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 1000,
+      "started_at_ms": 1000,
+      "completed_at_ms": 3000,
+      "final_admission_at_ms": 1000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-beta"
+      ],
+      "selected_chain_id": "chain-beta",
+      "chain_results": [
+        {
+          "chain_id": "chain-beta",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:75e5258a0f9f6e0d213ad4ae9fb2b8ae",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:faf0461dd37b9db2a32ce03376312606",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:9d4fb243a4dc711ab03ca825b3ed56d3",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "B-2",
+      "endpoint_id": "beta-parallel",
+      "event_sequence": 3,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 3000,
+      "started_at_ms": 3000,
+      "completed_at_ms": 5000,
+      "final_admission_at_ms": 3000,
+      "has_final_admission": true,
+      "queue_no": 1,
+      "endpoint_queue_seq": 1,
+      "violated_constraints": [
+        "C04_MAX_PARALLEL"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C04_MAX_PARALLEL",
+          "code": "PARALLEL_EXHAUSTED",
+          "message": "endpoint reached max parallel handshake limit"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-beta"
+      ],
+      "selected_chain_id": "chain-beta",
+      "chain_results": [
+        {
+          "chain_id": "chain-beta",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:75e5258a0f9f6e0d213ad4ae9fb2b8ae",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:faf0461dd37b9db2a32ce03376312606",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:9d4fb243a4dc711ab03ca825b3ed56d3",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "admission_gate",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "G-1",
+      "endpoint_id": "gamma-budget",
+      "event_sequence": 4,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 1000,
+      "started_at_ms": 1000,
+      "completed_at_ms": 2000,
+      "final_admission_at_ms": 1000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-gamma"
+      ],
+      "selected_chain_id": "chain-gamma",
+      "chain_results": [
+        {
+          "chain_id": "chain-gamma",
+          "valid": true,
+          "total_cost_bp": 200,
+          "charged_cost_bp": 200,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:d6f8bde4fbc90efc36854e080d3d973b",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:ef807b2e1ae59a40e44f53b03155f8da",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 200,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "G-2",
+      "endpoint_id": "gamma-budget",
+      "event_sequence": 5,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 1000,
+      "started_at_ms": 1000,
+      "completed_at_ms": 2000,
+      "final_admission_at_ms": 1000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-gamma"
+      ],
+      "selected_chain_id": "chain-gamma",
+      "chain_results": [
+        {
+          "chain_id": "chain-gamma",
+          "valid": true,
+          "total_cost_bp": 200,
+          "charged_cost_bp": 200,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:d6f8bde4fbc90efc36854e080d3d973b",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:ef807b2e1ae59a40e44f53b03155f8da",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 200,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "G-3",
+      "endpoint_id": "gamma-budget",
+      "event_sequence": 6,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 10000,
+      "started_at_ms": 10000,
+      "completed_at_ms": 11000,
+      "final_admission_at_ms": 10000,
+      "has_final_admission": true,
+      "queue_no": 2,
+      "endpoint_queue_seq": 1,
+      "violated_constraints": [
+        "C03_CHAIN_BUDGET"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C03_CHAIN_BUDGET",
+          "code": "BUDGET_EXHAUSTED",
+          "message": "committed or reserved chain budget is insufficient"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-gamma"
+      ],
+      "selected_chain_id": "chain-gamma",
+      "chain_results": [
+        {
+          "chain_id": "chain-gamma",
+          "valid": true,
+          "total_cost_bp": 200,
+          "charged_cost_bp": 200,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:d6f8bde4fbc90efc36854e080d3d973b",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:ef807b2e1ae59a40e44f53b03155f8da",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 200,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "admission_gate",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "Z-1",
+      "endpoint_id": "zeta-issuer",
+      "event_sequence": 7,
+      "arrival_at_ms": 1000,
+      "status": "REJECTED",
+      "gate_category": "CHAIN_INVALID",
+      "handshake_conclusion": "CHAIN_INVALID",
+      "admitted": false,
+      "completed_at_ms": 1000,
+      "final_admission_at_ms": 0,
+      "has_final_admission": false,
+      "violated_constraints": [
+        "C02_CERTIFICATE_CHAIN"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C02_CERTIFICATE_CHAIN",
+          "code": "CHAIN_INVALID",
+          "message": "current chain is invalid and no last committed valid fallback passes revalidation"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-zeta"
+      ],
+      "chain_results": [
+        {
+          "chain_id": "chain-zeta",
+          "valid": false,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 100,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:b80a7763acef5e6d5729f183de5af183",
+              "code": "ISSUER_SUBJECT_MISMATCH",
+              "reason": "issuer \"CN=wrong-issuer\" does not match next subject \"CN=zeta-bad-intermediate\"",
+              "passed": false,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:96631a1ce50a3972366df3d71076ec16",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:b337727ecc35c8335d48e51adc3e1581",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 0,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "chain_validation_at_arrival"
+        ]
+      }
+    },
+    {
+      "request_id": "H-1",
+      "endpoint_id": "eta-backpressure",
+      "event_sequence": 8,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 1000,
+      "started_at_ms": 1000,
+      "completed_at_ms": 2000,
+      "final_admission_at_ms": 1000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-eta"
+      ],
+      "selected_chain_id": "chain-eta",
+      "chain_results": [
+        {
+          "chain_id": "chain-eta",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:6c480e18e1fc1c2e3da152a6146367db",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:402ba6b1b1cdcc083c11aa17a86189ec",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:81c7f4ac3a44ed9bf3eecab0c14e1b61",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "H-2",
+      "endpoint_id": "eta-backpressure",
+      "event_sequence": 9,
+      "arrival_at_ms": 1000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 2000,
+      "started_at_ms": 2000,
+      "completed_at_ms": 3000,
+      "final_admission_at_ms": 2000,
+      "has_final_admission": true,
+      "queue_no": 3,
+      "endpoint_queue_seq": 1,
+      "violated_constraints": [
+        "C04_MAX_PARALLEL"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C04_MAX_PARALLEL",
+          "code": "PARALLEL_EXHAUSTED",
+          "message": "endpoint reached max parallel handshake limit"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-eta"
+      ],
+      "selected_chain_id": "chain-eta",
+      "chain_results": [
+        {
+          "chain_id": "chain-eta",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:6c480e18e1fc1c2e3da152a6146367db",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:402ba6b1b1cdcc083c11aa17a86189ec",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:81c7f4ac3a44ed9bf3eecab0c14e1b61",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "admission_gate",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "H-3",
+      "endpoint_id": "eta-backpressure",
+      "event_sequence": 10,
+      "arrival_at_ms": 1000,
+      "status": "REJECTED",
+      "gate_category": "BUFFER_FULL",
+      "admitted": false,
+      "completed_at_ms": 1000,
+      "final_admission_at_ms": 0,
+      "has_final_admission": false,
+      "violated_constraints": [
+        "C04_MAX_PARALLEL",
+        "C06_PENDING_BUFFER"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C04_MAX_PARALLEL",
+          "code": "PARALLEL_EXHAUSTED",
+          "message": "endpoint reached max parallel handshake limit"
+        }
+      ],
+      "budget_charged_bp": 0,
+      "backpressure_code": "E_BUFFER_FULL",
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "endpoint_buffer_capacity"
+        ]
+      }
+    },
+    {
+      "request_id": "A-2",
+      "endpoint_id": "alpha-ok",
+      "event_sequence": 12,
+      "arrival_at_ms": 2000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 2000,
+      "started_at_ms": 2000,
+      "completed_at_ms": 3000,
+      "final_admission_at_ms": 2000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-alpha"
+      ],
+      "selected_chain_id": "chain-alpha",
+      "chain_results": [
+        {
+          "chain_id": "chain-alpha",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:b903b18320d70d4b5a542181ed22bcf2",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:7fd56f2088e1b803684683b6530d12ff",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:d2bdeda11ef8bbb754a8853660afbd3c",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "B-3",
+      "endpoint_id": "beta-parallel",
+      "event_sequence": 13,
+      "arrival_at_ms": 2000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 5000,
+      "started_at_ms": 5000,
+      "completed_at_ms": 7000,
+      "final_admission_at_ms": 5000,
+      "has_final_admission": true,
+      "queue_no": 4,
+      "endpoint_queue_seq": 2,
+      "violated_constraints": [
+        "C04_MAX_PARALLEL"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C04_MAX_PARALLEL",
+          "code": "PARALLEL_EXHAUSTED",
+          "message": "endpoint reached max parallel handshake limit"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-beta"
+      ],
+      "selected_chain_id": "chain-beta",
+      "chain_results": [
+        {
+          "chain_id": "chain-beta",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:75e5258a0f9f6e0d213ad4ae9fb2b8ae",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:faf0461dd37b9db2a32ce03376312606",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:9d4fb243a4dc711ab03ca825b3ed56d3",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "admission_gate",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "G-4",
+      "endpoint_id": "gamma-budget",
+      "event_sequence": 14,
+      "arrival_at_ms": 2000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 10000,
+      "started_at_ms": 10000,
+      "completed_at_ms": 11000,
+      "final_admission_at_ms": 10000,
+      "has_final_admission": true,
+      "queue_no": 5,
+      "endpoint_queue_seq": 2,
+      "violated_constraints": [
+        "C03_CHAIN_BUDGET"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C03_CHAIN_BUDGET",
+          "code": "BUDGET_EXHAUSTED",
+          "message": "committed or reserved chain budget is insufficient"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-gamma"
+      ],
+      "selected_chain_id": "chain-gamma",
+      "chain_results": [
+        {
+          "chain_id": "chain-gamma",
+          "valid": true,
+          "total_cost_bp": 200,
+          "charged_cost_bp": 200,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:d6f8bde4fbc90efc36854e080d3d973b",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:ef807b2e1ae59a40e44f53b03155f8da",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 200,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "admission_gate",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "D-1",
+      "endpoint_id": "delta-freeze",
+      "event_sequence": 15,
+      "arrival_at_ms": 3000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 4000,
+      "started_at_ms": 4000,
+      "completed_at_ms": 5000,
+      "final_admission_at_ms": 4000,
+      "has_final_admission": true,
+      "queue_no": 6,
+      "endpoint_queue_seq": 1,
+      "violated_constraints": [
+        "C05_BUDGET_FREEZE"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C05_BUDGET_FREEZE",
+          "code": "BUDGET_FROZEN",
+          "message": "endpoint budget is frozen until chain update commit"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-delta-v2"
+      ],
+      "selected_chain_id": "chain-delta-v2",
+      "chain_results": [
+        {
+          "chain_id": "chain-delta-v2",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:c5568a8925a1ee34a501f95a726659ca",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:cb41049b0d7faaa49a67f4bf40b6cdec",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:7c2f6f5a54a4ad0e6fd8ebf4a36f0459",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "admission_gate",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "D-2",
+      "endpoint_id": "delta-freeze",
+      "event_sequence": 17,
+      "arrival_at_ms": 4000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 4000,
+      "started_at_ms": 4000,
+      "completed_at_ms": 5000,
+      "final_admission_at_ms": 4000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-delta-v2"
+      ],
+      "selected_chain_id": "chain-delta-v2",
+      "chain_results": [
+        {
+          "chain_id": "chain-delta-v2",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:c5568a8925a1ee34a501f95a726659ca",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:cb41049b0d7faaa49a67f4bf40b6cdec",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:7c2f6f5a54a4ad0e6fd8ebf4a36f0459",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "budget_charged_bp": 300,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "E-1",
+      "endpoint_id": "epsilon-fallback",
+      "event_sequence": 18,
+      "arrival_at_ms": 5000,
+      "status": "COMPLETED",
+      "gate_category": "OK",
+      "handshake_conclusion": "SUCCESS",
+      "admitted": true,
+      "admission_at_ms": 5000,
+      "started_at_ms": 5000,
+      "completed_at_ms": 6000,
+      "final_admission_at_ms": 5000,
+      "has_final_admission": true,
+      "checked_chain_ids": [
+        "chain-epsilon-v2",
+        "chain-epsilon-v1"
+      ],
+      "selected_chain_id": "chain-epsilon-v1",
+      "chain_results": [
+        {
+          "chain_id": "chain-epsilon-v2",
+          "valid": false,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 100,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:028590801a1d2bfeab51ec39d2a74921",
+              "code": "CERT_EXPIRED",
+              "reason": "time 5000 is after not_after 3000",
+              "passed": false,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:d06a47beaaf27604ce7f5008df441220",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:536e61ff6cbfca265a9628cad5590dda",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            }
+          ]
+        },
+        {
+          "chain_id": "chain-epsilon-v1",
+          "valid": true,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 300,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:2799165e67c0af2fd8a7053999858a78",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:382c11f0ac075339f45af12351b5c6ee",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:8d9622de5307b258e74713a3bae2d800",
+              "code": "OK",
+              "reason": "valid interval and issuer/subject relation",
+              "passed": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "fallback": {
+        "attempted_chain_id": "chain-epsilon-v2",
+        "fallback_chain_id": "chain-epsilon-v1",
+        "reason": "current chain failed at request time; using last committed valid chain",
+        "last_committed_update_id": "E-U1",
+        "committed_at_ms": 4000,
+        "revalidated_at_ms": 5000,
+        "revalidation_passed": true
+      },
+      "budget_charged_bp": 600,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "deterministic_simulation",
+          "admission_committed"
+        ]
+      }
+    },
+    {
+      "request_id": "E-2",
+      "endpoint_id": "epsilon-fallback",
+      "event_sequence": 19,
+      "arrival_at_ms": 9000,
+      "status": "REJECTED",
+      "gate_category": "CHAIN_INVALID",
+      "handshake_conclusion": "CHAIN_INVALID",
+      "admitted": false,
+      "completed_at_ms": 9000,
+      "final_admission_at_ms": 0,
+      "has_final_admission": false,
+      "violated_constraints": [
+        "C02_CERTIFICATE_CHAIN"
+      ],
+      "violations": [
+        {
+          "constraint_id": "C02_CERTIFICATE_CHAIN",
+          "code": "CHAIN_INVALID",
+          "message": "current chain is invalid and no last committed valid fallback passes revalidation"
+        }
+      ],
+      "checked_chain_ids": [
+        "chain-epsilon-v2",
+        "chain-epsilon-v1"
+      ],
+      "chain_results": [
+        {
+          "chain_id": "chain-epsilon-v2",
+          "valid": false,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 100,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:028590801a1d2bfeab51ec39d2a74921",
+              "code": "CERT_EXPIRED",
+              "reason": "time 9000 is after not_after 3000",
+              "passed": false,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:d06a47beaaf27604ce7f5008df441220",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:536e61ff6cbfca265a9628cad5590dda",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            }
+          ]
+        },
+        {
+          "chain_id": "chain-epsilon-v1",
+          "valid": false,
+          "total_cost_bp": 300,
+          "charged_cost_bp": 100,
+          "levels": [
+            {
+              "index": 0,
+              "digest": "sha256:2799165e67c0af2fd8a7053999858a78",
+              "code": "CERT_EXPIRED",
+              "reason": "time 9000 is after not_after 8000",
+              "passed": false,
+              "cost_bp": 100
+            },
+            {
+              "index": 1,
+              "digest": "sha256:382c11f0ac075339f45af12351b5c6ee",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            },
+            {
+              "index": 2,
+              "digest": "sha256:8d9622de5307b258e74713a3bae2d800",
+              "code": "SKIPPED_AFTER_PRIOR_FAILURE",
+              "reason": "later levels are not judged passed after an earlier failure",
+              "passed": false,
+              "skipped": true,
+              "cost_bp": 100
+            }
+          ]
+        }
+      ],
+      "fallback": {
+        "attempted_chain_id": "chain-epsilon-v2",
+        "fallback_chain_id": "chain-epsilon-v1",
+        "reason": "last committed valid chain no longer passes revalidation",
+        "last_committed_update_id": "E-U1",
+        "committed_at_ms": 4000,
+        "revalidated_at_ms": 9000,
+        "revalidation_passed": false
+      },
+      "budget_charged_bp": 0,
+      "provenance": {
+        "recomputed": false,
+        "reused": false,
+        "sources": [
+          "chain_validation_at_arrival"
+        ]
+      }
+    }
+  ],
+  "queue_records": [
+    {
+      "queue_no": 1,
+      "endpoint_queue_seq": 1,
+      "request_id": "B-2",
+      "endpoint_id": "beta-parallel",
+      "event_sequence": 3,
+      "enqueued_at_ms": 1000,
+      "final_admission_at_ms": 3000,
+      "has_final_admission": true,
+      "status": "ADMITTED",
+      "primary_gate": "PARALLEL_EXHAUSTED",
+      "violated_constraints": [
+        "C04_MAX_PARALLEL"
+      ]
+    },
+    {
+      "queue_no": 2,
+      "endpoint_queue_seq": 1,
+      "request_id": "G-3",
+      "endpoint_id": "gamma-budget",
+      "event_sequence": 6,
+      "enqueued_at_ms": 1000,
+      "final_admission_at_ms": 10000,
+      "has_final_admission": true,
+      "status": "ADMITTED",
+      "primary_gate": "BUDGET_EXHAUSTED",
+      "violated_constraints": [
+        "C03_CHAIN_BUDGET"
+      ]
+    },
+    {
+      "queue_no": 3,
+      "endpoint_queue_seq": 1,
+      "request_id": "H-2",
+      "endpoint_id": "eta-backpressure",
+      "event_sequence": 9,
+      "enqueued_at_ms": 1000,
+      "final_admission_at_ms": 2000,
+      "has_final_admission": true,
+      "status": "ADMITTED",
+      "primary_gate": "PARALLEL_EXHAUSTED",
+      "violated_constraints": [
+        "C04_MAX_PARALLEL"
+      ]
+    },
+    {
+      "queue_no": 4,
+      "endpoint_queue_seq": 2,
+      "request_id": "B-3",
+      "endpoint_id": "beta-parallel",
+      "event_sequence": 13,
+      "enqueued_at_ms": 2000,
+      "final_admission_at_ms": 5000,
+      "has_final_admission": true,
+      "status": "ADMITTED",
+      "primary_gate": "PARALLEL_EXHAUSTED",
+      "violated_constraints": [
+        "C04_MAX_PARALLEL"
+      ]
+    },
+    {
+      "queue_no": 5,
+      "endpoint_queue_seq": 2,
+      "request_id": "G-4",
+      "endpoint_id": "gamma-budget",
+      "event_sequence": 14,
+      "enqueued_at_ms": 2000,
+      "final_admission_at_ms": 10000,
+      "has_final_admission": true,
+      "status": "ADMITTED",
+      "primary_gate": "BUDGET_EXHAUSTED",
+      "violated_constraints": [
+        "C03_CHAIN_BUDGET"
+      ]
+    },
+    {
+      "queue_no": 6,
+      "endpoint_queue_seq": 1,
+      "request_id": "D-1",
+      "endpoint_id": "delta-freeze",
+      "event_sequence": 15,
+      "enqueued_at_ms": 3000,
+      "final_admission_at_ms": 4000,
+      "has_final_admission": true,
+      "status": "ADMITTED",
+      "primary_gate": "BUDGET_FROZEN",
+      "violated_constraints": [
+        "C05_BUDGET_FREEZE"
+      ]
+    }
+  ],
+  "moments": [
+    {
+      "time_ms": 1000,
+      "logical_sequence": 1,
+      "endpoints": {
+        "alpha-ok": {
+          "used_budget_bp": 300,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [],
+          "current_chain_id": "chain-alpha",
+          "last_valid_chain_id": "chain-alpha"
+        },
+        "beta-parallel": {
+          "used_budget_bp": 300,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [
+            "B-2"
+          ],
+          "current_chain_id": "chain-beta",
+          "last_valid_chain_id": "chain-beta"
+        },
+        "eta-backpressure": {
+          "used_budget_bp": 300,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [
+            "H-2"
+          ],
+          "current_chain_id": "chain-eta",
+          "last_valid_chain_id": "chain-eta"
+        },
+        "gamma-budget": {
+          "used_budget_bp": 400,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 2,
+          "queue_ids": [
+            "G-3"
+          ],
+          "current_chain_id": "chain-gamma",
+          "last_valid_chain_id": "chain-gamma"
+        },
+        "zeta-issuer": {
+          "used_budget_bp": 0,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-zeta",
+          "last_valid_chain_id": ""
+        }
+      }
+    },
+    {
+      "time_ms": 2000,
+      "logical_sequence": 2,
+      "endpoints": {
+        "alpha-ok": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [],
+          "current_chain_id": "chain-alpha",
+          "last_valid_chain_id": "chain-alpha"
+        },
+        "beta-parallel": {
+          "used_budget_bp": 300,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [
+            "B-2",
+            "B-3"
+          ],
+          "current_chain_id": "chain-beta",
+          "last_valid_chain_id": "chain-beta"
+        },
+        "delta-freeze": {
+          "used_budget_bp": 0,
+          "reserved_budget_bp": 0,
+          "frozen": true,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-delta-v1",
+          "last_valid_chain_id": "chain-delta-v1"
+        },
+        "eta-backpressure": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [],
+          "current_chain_id": "chain-eta",
+          "last_valid_chain_id": "chain-eta"
+        },
+        "gamma-budget": {
+          "used_budget_bp": 400,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [
+            "G-3",
+            "G-4"
+          ],
+          "current_chain_id": "chain-gamma",
+          "last_valid_chain_id": "chain-gamma"
+        }
+      }
+    },
+    {
+      "time_ms": 3000,
+      "logical_sequence": 3,
+      "endpoints": {
+        "alpha-ok": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-alpha",
+          "last_valid_chain_id": "chain-alpha"
+        },
+        "beta-parallel": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [
+            "B-3"
+          ],
+          "current_chain_id": "chain-beta",
+          "last_valid_chain_id": "chain-beta"
+        },
+        "delta-freeze": {
+          "used_budget_bp": 0,
+          "reserved_budget_bp": 0,
+          "frozen": true,
+          "active_count": 0,
+          "queue_ids": [
+            "D-1"
+          ],
+          "current_chain_id": "chain-delta-v1",
+          "last_valid_chain_id": "chain-delta-v1"
+        },
+        "eta-backpressure": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-eta",
+          "last_valid_chain_id": "chain-eta"
+        }
+      }
+    },
+    {
+      "time_ms": 4000,
+      "logical_sequence": 4,
+      "endpoints": {
+        "delta-freeze": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 2,
+          "queue_ids": [],
+          "current_chain_id": "chain-delta-v2",
+          "last_valid_chain_id": "chain-delta-v2"
+        },
+        "epsilon-fallback": {
+          "used_budget_bp": 0,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-epsilon-v2",
+          "last_valid_chain_id": "chain-epsilon-v1"
+        }
+      }
+    },
+    {
+      "time_ms": 5000,
+      "logical_sequence": 5,
+      "endpoints": {
+        "beta-parallel": {
+          "used_budget_bp": 900,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [],
+          "current_chain_id": "chain-beta",
+          "last_valid_chain_id": "chain-beta"
+        },
+        "delta-freeze": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-delta-v2",
+          "last_valid_chain_id": "chain-delta-v2"
+        },
+        "epsilon-fallback": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 1,
+          "queue_ids": [],
+          "current_chain_id": "chain-epsilon-v2",
+          "last_valid_chain_id": "chain-epsilon-v1"
+        }
+      }
+    },
+    {
+      "time_ms": 6000,
+      "logical_sequence": 6,
+      "endpoints": {
+        "epsilon-fallback": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-epsilon-v2",
+          "last_valid_chain_id": "chain-epsilon-v1"
+        }
+      }
+    },
+    {
+      "time_ms": 7000,
+      "logical_sequence": 7,
+      "endpoints": {
+        "beta-parallel": {
+          "used_budget_bp": 900,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-beta",
+          "last_valid_chain_id": "chain-beta"
+        }
+      }
+    },
+    {
+      "time_ms": 9000,
+      "logical_sequence": 8,
+      "endpoints": {
+        "epsilon-fallback": {
+          "used_budget_bp": 600,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-epsilon-v2",
+          "last_valid_chain_id": "chain-epsilon-v1"
+        }
+      }
+    },
+    {
+      "time_ms": 10000,
+      "logical_sequence": 9,
+      "endpoints": {
+        "gamma-budget": {
+          "used_budget_bp": 400,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 2,
+          "queue_ids": [],
+          "current_chain_id": "chain-gamma",
+          "last_valid_chain_id": "chain-gamma"
+        }
+      }
+    },
+    {
+      "time_ms": 11000,
+      "logical_sequence": 10,
+      "endpoints": {
+        "gamma-budget": {
+          "used_budget_bp": 400,
+          "reserved_budget_bp": 0,
+          "frozen": false,
+          "active_count": 0,
+          "queue_ids": [],
+          "current_chain_id": "chain-gamma",
+          "last_valid_chain_id": "chain-gamma"
+        }
+      }
+    }
+  ],
+  "endpoint_states": {
+    "alpha-ok": {
+      "endpoint_id": "alpha-ok",
+      "period_start_ms": 0,
+      "used_budget_bp": 600,
+      "reserved_budget_bp": 0,
+      "active_count": 0,
+      "frozen": false,
+      "current_chain_id": "chain-alpha",
+      "last_valid_chain_id": "chain-alpha",
+      "last_commit_at_ms": 0,
+      "next_queue_sequence": 1,
+      "queue": null,
+      "charges": [
+        {
+          "time_ms": 1000,
+          "request_id": "A-1",
+          "chain_id": "chain-alpha",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "A-1",
+          "chain_id": "chain-alpha",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "A-1",
+          "chain_id": "chain-alpha",
+          "level": 2,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 2000,
+          "request_id": "A-2",
+          "chain_id": "chain-alpha",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 2000,
+          "request_id": "A-2",
+          "chain_id": "chain-alpha",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 2000,
+          "request_id": "A-2",
+          "chain_id": "chain-alpha",
+          "level": 2,
+          "amount_bp": 100
+        }
+      ],
+      "committed_time_ms": 3000,
+      "processed_events": {
+        "1": true,
+        "12": true
+      }
+    },
+    "beta-parallel": {
+      "endpoint_id": "beta-parallel",
+      "period_start_ms": 0,
+      "used_budget_bp": 900,
+      "reserved_budget_bp": 0,
+      "active_count": 0,
+      "frozen": false,
+      "current_chain_id": "chain-beta",
+      "last_valid_chain_id": "chain-beta",
+      "last_commit_at_ms": 0,
+      "next_queue_sequence": 3,
+      "queue": [],
+      "history": [
+        {
+          "status": "ADMITTED",
+          "endpoint_id": "beta-parallel",
+          "endpoint_queue_seq": 1,
+          "request_id": "B-2",
+          "event_sequence": 3,
+          "enqueued_at_ms": 1000,
+          "last_attempt_at_ms": 2000,
+          "admitted_at_ms": 3000,
+          "has_admission": true,
+          "primary_gate": "PARALLEL_EXHAUSTED",
+          "violated_constraints": [
+            "C04_MAX_PARALLEL"
+          ],
+          "violations": [
+            {
+              "constraint_id": "C04_MAX_PARALLEL",
+              "code": "PARALLEL_EXHAUSTED",
+              "message": "endpoint reached max parallel handshake limit"
+            }
+          ]
+        },
+        {
+          "status": "ADMITTED",
+          "endpoint_id": "beta-parallel",
+          "endpoint_queue_seq": 2,
+          "request_id": "B-3",
+          "event_sequence": 13,
+          "enqueued_at_ms": 2000,
+          "last_attempt_at_ms": 3000,
+          "admitted_at_ms": 5000,
+          "has_admission": true,
+          "primary_gate": "PARALLEL_EXHAUSTED",
+          "violated_constraints": [
+            "C04_MAX_PARALLEL"
+          ],
+          "violations": [
+            {
+              "constraint_id": "C04_MAX_PARALLEL",
+              "code": "PARALLEL_EXHAUSTED",
+              "message": "endpoint reached max parallel handshake limit"
+            }
+          ]
+        }
+      ],
+      "charges": [
+        {
+          "time_ms": 1000,
+          "request_id": "B-1",
+          "chain_id": "chain-beta",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "B-1",
+          "chain_id": "chain-beta",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "B-1",
+          "chain_id": "chain-beta",
+          "level": 2,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 3000,
+          "request_id": "B-2",
+          "chain_id": "chain-beta",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 3000,
+          "request_id": "B-2",
+          "chain_id": "chain-beta",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 3000,
+          "request_id": "B-2",
+          "chain_id": "chain-beta",
+          "level": 2,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "B-3",
+          "chain_id": "chain-beta",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "B-3",
+          "chain_id": "chain-beta",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "B-3",
+          "chain_id": "chain-beta",
+          "level": 2,
+          "amount_bp": 100
+        }
+      ],
+      "committed_time_ms": 7000,
+      "processed_events": {
+        "13": true,
+        "2": true,
+        "3": true
+      }
+    },
+    "delta-freeze": {
+      "endpoint_id": "delta-freeze",
+      "period_start_ms": 0,
+      "used_budget_bp": 600,
+      "reserved_budget_bp": 0,
+      "active_count": 0,
+      "frozen": false,
+      "current_chain_id": "chain-delta-v2",
+      "last_valid_chain_id": "chain-delta-v2",
+      "last_committed_update_id": "D-U1",
+      "last_commit_at_ms": 4000,
+      "next_queue_sequence": 2,
+      "queue": [],
+      "history": [
+        {
+          "status": "ADMITTED",
+          "endpoint_id": "delta-freeze",
+          "endpoint_queue_seq": 1,
+          "request_id": "D-1",
+          "event_sequence": 15,
+          "enqueued_at_ms": 3000,
+          "last_attempt_at_ms": 3000,
+          "admitted_at_ms": 4000,
+          "has_admission": true,
+          "primary_gate": "BUDGET_FROZEN",
+          "violated_constraints": [
+            "C05_BUDGET_FREEZE"
+          ],
+          "violations": [
+            {
+              "constraint_id": "C05_BUDGET_FREEZE",
+              "code": "BUDGET_FROZEN",
+              "message": "endpoint budget is frozen until chain update commit"
+            }
+          ]
+        }
+      ],
+      "charges": [
+        {
+          "time_ms": 4000,
+          "request_id": "D-1",
+          "chain_id": "chain-delta-v2",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 4000,
+          "request_id": "D-1",
+          "chain_id": "chain-delta-v2",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 4000,
+          "request_id": "D-1",
+          "chain_id": "chain-delta-v2",
+          "level": 2,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 4000,
+          "request_id": "D-2",
+          "chain_id": "chain-delta-v2",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 4000,
+          "request_id": "D-2",
+          "chain_id": "chain-delta-v2",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 4000,
+          "request_id": "D-2",
+          "chain_id": "chain-delta-v2",
+          "level": 2,
+          "amount_bp": 100
+        }
+      ],
+      "committed_time_ms": 5000,
+      "processed_events": {
+        "11": true,
+        "15": true,
+        "17": true
+      }
+    },
+    "epsilon-fallback": {
+      "endpoint_id": "epsilon-fallback",
+      "period_start_ms": 0,
+      "used_budget_bp": 600,
+      "reserved_budget_bp": 0,
+      "active_count": 0,
+      "frozen": false,
+      "current_chain_id": "chain-epsilon-v2",
+      "last_valid_chain_id": "chain-epsilon-v1",
+      "last_committed_update_id": "E-U1",
+      "last_commit_at_ms": 4000,
+      "next_queue_sequence": 1,
+      "queue": null,
+      "charges": [
+        {
+          "time_ms": 5000,
+          "request_id": "E-1",
+          "chain_id": "chain-epsilon-v2",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "E-1",
+          "chain_id": "chain-epsilon-v2",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "E-1",
+          "chain_id": "chain-epsilon-v2",
+          "level": 2,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "E-1",
+          "chain_id": "chain-epsilon-v1",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "E-1",
+          "chain_id": "chain-epsilon-v1",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 5000,
+          "request_id": "E-1",
+          "chain_id": "chain-epsilon-v1",
+          "level": 2,
+          "amount_bp": 100
+        }
+      ],
+      "committed_time_ms": 9000,
+      "processed_events": {
+        "16": true,
+        "18": true,
+        "19": true
+      }
+    },
+    "eta-backpressure": {
+      "endpoint_id": "eta-backpressure",
+      "period_start_ms": 0,
+      "used_budget_bp": 600,
+      "reserved_budget_bp": 0,
+      "active_count": 0,
+      "frozen": false,
+      "current_chain_id": "chain-eta",
+      "last_valid_chain_id": "chain-eta",
+      "last_commit_at_ms": 0,
+      "next_queue_sequence": 2,
+      "queue": [],
+      "history": [
+        {
+          "status": "ADMITTED",
+          "endpoint_id": "eta-backpressure",
+          "endpoint_queue_seq": 1,
+          "request_id": "H-2",
+          "event_sequence": 9,
+          "enqueued_at_ms": 1000,
+          "last_attempt_at_ms": 1000,
+          "admitted_at_ms": 2000,
+          "has_admission": true,
+          "primary_gate": "PARALLEL_EXHAUSTED",
+          "violated_constraints": [
+            "C04_MAX_PARALLEL"
+          ],
+          "violations": [
+            {
+              "constraint_id": "C04_MAX_PARALLEL",
+              "code": "PARALLEL_EXHAUSTED",
+              "message": "endpoint reached max parallel handshake limit"
+            }
+          ]
+        }
+      ],
+      "charges": [
+        {
+          "time_ms": 1000,
+          "request_id": "H-1",
+          "chain_id": "chain-eta",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "H-1",
+          "chain_id": "chain-eta",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "H-1",
+          "chain_id": "chain-eta",
+          "level": 2,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 2000,
+          "request_id": "H-2",
+          "chain_id": "chain-eta",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 2000,
+          "request_id": "H-2",
+          "chain_id": "chain-eta",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 2000,
+          "request_id": "H-2",
+          "chain_id": "chain-eta",
+          "level": 2,
+          "amount_bp": 100
+        }
+      ],
+      "committed_time_ms": 3000,
+      "processed_events": {
+        "10": true,
+        "8": true,
+        "9": true
+      }
+    },
+    "gamma-budget": {
+      "endpoint_id": "gamma-budget",
+      "period_start_ms": 10000,
+      "used_budget_bp": 400,
+      "reserved_budget_bp": 0,
+      "active_count": 0,
+      "frozen": false,
+      "current_chain_id": "chain-gamma",
+      "last_valid_chain_id": "chain-gamma",
+      "last_commit_at_ms": 0,
+      "next_queue_sequence": 3,
+      "queue": [],
+      "history": [
+        {
+          "status": "ADMITTED",
+          "endpoint_id": "gamma-budget",
+          "endpoint_queue_seq": 1,
+          "request_id": "G-3",
+          "event_sequence": 6,
+          "enqueued_at_ms": 1000,
+          "last_attempt_at_ms": 2000,
+          "admitted_at_ms": 10000,
+          "has_admission": true,
+          "primary_gate": "BUDGET_EXHAUSTED",
+          "violated_constraints": [
+            "C03_CHAIN_BUDGET"
+          ],
+          "violations": [
+            {
+              "constraint_id": "C03_CHAIN_BUDGET",
+              "code": "BUDGET_EXHAUSTED",
+              "message": "committed or reserved chain budget is insufficient"
+            }
+          ]
+        },
+        {
+          "status": "ADMITTED",
+          "endpoint_id": "gamma-budget",
+          "endpoint_queue_seq": 2,
+          "request_id": "G-4",
+          "event_sequence": 14,
+          "enqueued_at_ms": 2000,
+          "last_attempt_at_ms": 2000,
+          "admitted_at_ms": 10000,
+          "has_admission": true,
+          "primary_gate": "BUDGET_EXHAUSTED",
+          "violated_constraints": [
+            "C03_CHAIN_BUDGET"
+          ],
+          "violations": [
+            {
+              "constraint_id": "C03_CHAIN_BUDGET",
+              "code": "BUDGET_EXHAUSTED",
+              "message": "committed or reserved chain budget is insufficient"
+            }
+          ]
+        }
+      ],
+      "charges": [
+        {
+          "time_ms": 1000,
+          "request_id": "G-1",
+          "chain_id": "chain-gamma",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "G-1",
+          "chain_id": "chain-gamma",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "G-2",
+          "chain_id": "chain-gamma",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 1000,
+          "request_id": "G-2",
+          "chain_id": "chain-gamma",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 10000,
+          "request_id": "G-3",
+          "chain_id": "chain-gamma",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 10000,
+          "request_id": "G-3",
+          "chain_id": "chain-gamma",
+          "level": 1,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 10000,
+          "request_id": "G-4",
+          "chain_id": "chain-gamma",
+          "level": 0,
+          "amount_bp": 100
+        },
+        {
+          "time_ms": 10000,
+          "request_id": "G-4",
+          "chain_id": "chain-gamma",
+          "level": 1,
+          "amount_bp": 100
+        }
+      ],
+      "committed_time_ms": 11000,
+      "processed_events": {
+        "14": true,
+        "4": true,
+        "5": true,
+        "6": true
+      }
+    },
+    "zeta-issuer": {
+      "endpoint_id": "zeta-issuer",
+      "period_start_ms": 0,
+      "used_budget_bp": 0,
+      "reserved_budget_bp": 0,
+      "active_count": 0,
+      "frozen": false,
+      "current_chain_id": "chain-zeta",
+      "last_valid_chain_id": "",
+      "last_commit_at_ms": 0,
+      "next_queue_sequence": 1,
+      "queue": null,
+      "committed_time_ms": 1000,
+      "processed_events": {
+        "7": true
+      }
+    }
+  },
+  "diagnostics": {}
+}

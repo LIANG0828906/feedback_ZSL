@@ -1,0 +1,835 @@
+{
+  "api_version": "probe.project.v3",
+  "project_uuid": "deterministic-tls-probe",
+  "random_seed": 420261126,
+  "concurrency_budget": 4,
+  "budget_scale": 10000,
+  "hosts": [
+    {
+      "host": "alpha-ok",
+      "tls_version_interval": [
+        "TLS1.2",
+        "TLS1.3"
+      ],
+      "cipher_set": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "interval_seconds": 100,
+      "interval_ms": null,
+      "timeout_seconds": 5,
+      "timeout_ms": null,
+      "parallel_limit": 2,
+      "buffer_limit": 8,
+      "chain_budget_per_10000": 5000,
+      "chain_refs": [
+        "chain-alpha"
+      ],
+      "handshake_water_level": 2,
+      "pin_fingerprint_sha256": "sha256:b903b18320d70d4b5a542181ed22bcf2"
+    },
+    {
+      "host": "beta-parallel",
+      "tls_version_interval": [
+        "TLS1.2",
+        "TLS1.3"
+      ],
+      "cipher_set": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "interval_seconds": 100,
+      "interval_ms": null,
+      "timeout_seconds": 10,
+      "timeout_ms": null,
+      "parallel_limit": 1,
+      "buffer_limit": 8,
+      "chain_budget_per_10000": 5000,
+      "chain_refs": [
+        "chain-beta"
+      ],
+      "handshake_water_level": null,
+      "pin_fingerprint_sha256": ""
+    },
+    {
+      "host": "delta-freeze",
+      "tls_version_interval": [
+        "TLS1.2",
+        "TLS1.3"
+      ],
+      "cipher_set": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "interval_seconds": 100,
+      "interval_ms": null,
+      "timeout_seconds": 5,
+      "timeout_ms": null,
+      "parallel_limit": 2,
+      "buffer_limit": 8,
+      "chain_budget_per_10000": 5000,
+      "chain_refs": [
+        "chain-delta-v1",
+        "chain-delta-v2"
+      ],
+      "handshake_water_level": 1,
+      "pin_fingerprint_sha256": ""
+    },
+    {
+      "host": "epsilon-fallback",
+      "tls_version_interval": [
+        "TLS1.2",
+        "TLS1.3"
+      ],
+      "cipher_set": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "interval_seconds": 100,
+      "interval_ms": null,
+      "timeout_seconds": 5,
+      "timeout_ms": null,
+      "parallel_limit": 2,
+      "buffer_limit": 8,
+      "chain_budget_per_10000": 5000,
+      "chain_refs": [
+        "chain-epsilon-v1",
+        "chain-epsilon-v2"
+      ],
+      "handshake_water_level": null,
+      "pin_fingerprint_sha256": ""
+    },
+    {
+      "host": "eta-backpressure",
+      "tls_version_interval": [
+        "TLS1.2",
+        "TLS1.3"
+      ],
+      "cipher_set": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "interval_seconds": 100,
+      "interval_ms": null,
+      "timeout_seconds": 5,
+      "timeout_ms": null,
+      "parallel_limit": 1,
+      "buffer_limit": 1,
+      "chain_budget_per_10000": 5000,
+      "chain_refs": [
+        "chain-eta"
+      ],
+      "handshake_water_level": 1,
+      "pin_fingerprint_sha256": ""
+    },
+    {
+      "host": "gamma-budget",
+      "tls_version_interval": [
+        "TLS1.2",
+        "TLS1.3"
+      ],
+      "cipher_set": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "interval_seconds": 10,
+      "interval_ms": null,
+      "timeout_seconds": 5,
+      "timeout_ms": null,
+      "parallel_limit": 3,
+      "buffer_limit": 8,
+      "chain_budget_per_10000": 500,
+      "chain_refs": [
+        "chain-gamma"
+      ],
+      "handshake_water_level": null,
+      "pin_fingerprint_sha256": ""
+    },
+    {
+      "host": "zeta-issuer",
+      "tls_version_interval": [
+        "TLS1.2",
+        "TLS1.3"
+      ],
+      "cipher_set": [
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "interval_seconds": 100,
+      "interval_ms": null,
+      "timeout_seconds": 5,
+      "timeout_ms": null,
+      "parallel_limit": 2,
+      "buffer_limit": 8,
+      "chain_budget_per_10000": 5000,
+      "chain_refs": [
+        "chain-zeta"
+      ],
+      "handshake_water_level": null,
+      "pin_fingerprint_sha256": ""
+    }
+  ],
+  "trust_chains": [
+    {
+      "chain_ref": "chain-alpha",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:b903b18320d70d4b5a542181ed22bcf2",
+          "subject": "CN=alpha-leaf",
+          "issuer": "CN=alpha-intermediate",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:7fd56f2088e1b803684683b6530d12ff",
+          "subject": "CN=alpha-intermediate",
+          "issuer": "CN=alpha-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:d2bdeda11ef8bbb754a8853660afbd3c",
+          "subject": "CN=alpha-root",
+          "issuer": "CN=alpha-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-beta",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:75e5258a0f9f6e0d213ad4ae9fb2b8ae",
+          "subject": "CN=beta-leaf",
+          "issuer": "CN=beta-intermediate",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:faf0461dd37b9db2a32ce03376312606",
+          "subject": "CN=beta-intermediate",
+          "issuer": "CN=beta-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:9d4fb243a4dc711ab03ca825b3ed56d3",
+          "subject": "CN=beta-root",
+          "issuer": "CN=beta-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-gamma",
+      "declared_depth": 2,
+      "path": [
+        {
+          "fingerprint": "sha256:d6f8bde4fbc90efc36854e080d3d973b",
+          "subject": "CN=gamma-leaf",
+          "issuer": "CN=gamma-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:ef807b2e1ae59a40e44f53b03155f8da",
+          "subject": "CN=gamma-root",
+          "issuer": "CN=gamma-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-delta-v1",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:9beb4b06d78954fbf7f4438b0e6067fa",
+          "subject": "CN=delta1-leaf",
+          "issuer": "CN=delta1-intermediate",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:274c11f2e3539b4f7ae1e10c328ba0f5",
+          "subject": "CN=delta1-intermediate",
+          "issuer": "CN=delta1-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:ffe2723ed66869331a65233e2bc30b66",
+          "subject": "CN=delta1-root",
+          "issuer": "CN=delta1-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-delta-v2",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:c5568a8925a1ee34a501f95a726659ca",
+          "subject": "CN=delta2-leaf",
+          "issuer": "CN=delta2-intermediate",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:cb41049b0d7faaa49a67f4bf40b6cdec",
+          "subject": "CN=delta2-intermediate",
+          "issuer": "CN=delta2-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:7c2f6f5a54a4ad0e6fd8ebf4a36f0459",
+          "subject": "CN=delta2-root",
+          "issuer": "CN=delta2-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-epsilon-v1",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:2799165e67c0af2fd8a7053999858a78",
+          "subject": "CN=epsilon1-leaf",
+          "issuer": "CN=epsilon1-intermediate",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 8,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:382c11f0ac075339f45af12351b5c6ee",
+          "subject": "CN=epsilon1-intermediate",
+          "issuer": "CN=epsilon1-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 8,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:8d9622de5307b258e74713a3bae2d800",
+          "subject": "CN=epsilon1-root",
+          "issuer": "CN=epsilon1-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 8,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-epsilon-v2",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:028590801a1d2bfeab51ec39d2a74921",
+          "subject": "CN=epsilon2-leaf",
+          "issuer": "CN=epsilon2-intermediate",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 3,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:d06a47beaaf27604ce7f5008df441220",
+          "subject": "CN=epsilon2-intermediate",
+          "issuer": "CN=epsilon2-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 3,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:536e61ff6cbfca265a9628cad5590dda",
+          "subject": "CN=epsilon2-root",
+          "issuer": "CN=epsilon2-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 3,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-zeta",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:b80a7763acef5e6d5729f183de5af183",
+          "subject": "CN=zeta-bad-leaf",
+          "issuer": "CN=wrong-issuer",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:96631a1ce50a3972366df3d71076ec16",
+          "subject": "CN=zeta-bad-intermediate",
+          "issuer": "CN=zeta-bad-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:b337727ecc35c8335d48e51adc3e1581",
+          "subject": "CN=zeta-bad-root",
+          "issuer": "CN=zeta-bad-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    },
+    {
+      "chain_ref": "chain-eta",
+      "declared_depth": 3,
+      "path": [
+        {
+          "fingerprint": "sha256:6c480e18e1fc1c2e3da152a6146367db",
+          "subject": "CN=eta-leaf",
+          "issuer": "CN=eta-intermediate",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:402ba6b1b1cdcc083c11aa17a86189ec",
+          "subject": "CN=eta-intermediate",
+          "issuer": "CN=eta-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        },
+        {
+          "fingerprint": "sha256:81c7f4ac3a44ed9bf3eecab0c14e1b61",
+          "subject": "CN=eta-root",
+          "issuer": "CN=eta-root",
+          "not_before_seconds": 0,
+          "not_before_ms": null,
+          "not_after_seconds": 200,
+          "not_after_ms": null,
+          "level_budget_per_10000": 100
+        }
+      ],
+      "fixed_pin_sha256": ""
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "EVT-1",
+      "logical_sequence": 1,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "A-1",
+        "host": "alpha-ok",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-2",
+      "logical_sequence": 2,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "B-1",
+        "host": "beta-parallel",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 2,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-3",
+      "logical_sequence": 3,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "B-2",
+        "host": "beta-parallel",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "duration_seconds": 2,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-4",
+      "logical_sequence": 4,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "G-1",
+        "host": "gamma-budget",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-5",
+      "logical_sequence": 5,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "G-2",
+        "host": "gamma-budget",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-6",
+      "logical_sequence": 6,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "G-3",
+        "host": "gamma-budget",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-7",
+      "logical_sequence": 7,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "Z-1",
+        "host": "zeta-issuer",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-8",
+      "logical_sequence": 8,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "H-1",
+        "host": "eta-backpressure",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-9",
+      "logical_sequence": 9,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "H-2",
+        "host": "eta-backpressure",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-10",
+      "logical_sequence": 10,
+      "kind": "handshake_request",
+      "at_second": 1,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "H-3",
+        "host": "eta-backpressure",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-11",
+      "logical_sequence": 11,
+      "kind": "chain_update",
+      "at_second": 2,
+      "at_ms": null,
+      "switch": {
+        "switch_id": "D-U1",
+        "host": "delta-freeze",
+        "to_chain_ref": "chain-delta-v2",
+        "commit_second": 4,
+        "commit_ms": null,
+        "interrupt_before_commit": false
+      }
+    },
+    {
+      "event_id": "EVT-12",
+      "logical_sequence": 12,
+      "kind": "handshake_request",
+      "at_second": 2,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "A-2",
+        "host": "alpha-ok",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-13",
+      "logical_sequence": 13,
+      "kind": "handshake_request",
+      "at_second": 2,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "B-3",
+        "host": "beta-parallel",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "duration_seconds": 2,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-14",
+      "logical_sequence": 14,
+      "kind": "handshake_request",
+      "at_second": 2,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "G-4",
+        "host": "gamma-budget",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-15",
+      "logical_sequence": 15,
+      "kind": "handshake_request",
+      "at_second": 3,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "D-1",
+        "host": "delta-freeze",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-16",
+      "logical_sequence": 16,
+      "kind": "chain_update",
+      "at_second": 4,
+      "at_ms": null,
+      "switch": {
+        "switch_id": "E-U1",
+        "host": "epsilon-fallback",
+        "to_chain_ref": "chain-epsilon-v2",
+        "commit_second": 4,
+        "commit_ms": null,
+        "interrupt_before_commit": false
+      }
+    },
+    {
+      "event_id": "EVT-17",
+      "logical_sequence": 17,
+      "kind": "handshake_request",
+      "at_second": 4,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "D-2",
+        "host": "delta-freeze",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-18",
+      "logical_sequence": 18,
+      "kind": "handshake_request",
+      "at_second": 5,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "E-1",
+        "host": "epsilon-fallback",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    },
+    {
+      "event_id": "EVT-19",
+      "logical_sequence": 19,
+      "kind": "handshake_request",
+      "at_second": 9,
+      "at_ms": null,
+      "probe": {
+        "probe_id": "E-2",
+        "host": "epsilon-fallback",
+        "tls_version": "TLS1.3",
+        "ciphers": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "duration_seconds": 1,
+        "duration_ms": null,
+        "interrupt_after_level": 0
+      }
+    }
+  ]
+}

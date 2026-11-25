@@ -1,0 +1,770 @@
+{
+  "schemaVersion": "probe.project.v2",
+  "projectId": "deterministic-tls-probe",
+  "deterministicSeed": 420261126,
+  "workerThreads": 4,
+  "budgetScale": 10000,
+  "probeTree": [
+    {
+      "chainGroup": {
+        "chainId": "chain-alpha",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:b903b18320d70d4b5a542181ed22bcf2",
+            "subjectDistinguishedName": "CN=alpha-leaf",
+            "issuerDistinguishedName": "CN=alpha-intermediate",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:7fd56f2088e1b803684683b6530d12ff",
+            "subjectDistinguishedName": "CN=alpha-intermediate",
+            "issuerDistinguishedName": "CN=alpha-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:d2bdeda11ef8bbb754a8853660afbd3c",
+            "subjectDistinguishedName": "CN=alpha-root",
+            "issuerDistinguishedName": "CN=alpha-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": [
+        {
+          "endpointName": "alpha-ok",
+          "tlsProtocolRange": [
+            "TLS1.2",
+            "TLS1.3"
+          ],
+          "cipherSuiteSet": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ],
+          "probePeriodMs": 100000,
+          "handshakeTimeoutMs": 5000,
+          "maxParallelHandshakes": 2,
+          "pendingRequestBuffer": 8,
+          "validationBudgetBp": 5000,
+          "candidateChainIds": [
+            "chain-alpha"
+          ],
+          "handshakeWatermark": 2,
+          "certificatePinned": true,
+          "pinDigest": "sha256:b903b18320d70d4b5a542181ed22bcf2"
+        }
+      ]
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-beta",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:75e5258a0f9f6e0d213ad4ae9fb2b8ae",
+            "subjectDistinguishedName": "CN=beta-leaf",
+            "issuerDistinguishedName": "CN=beta-intermediate",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:faf0461dd37b9db2a32ce03376312606",
+            "subjectDistinguishedName": "CN=beta-intermediate",
+            "issuerDistinguishedName": "CN=beta-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:9d4fb243a4dc711ab03ca825b3ed56d3",
+            "subjectDistinguishedName": "CN=beta-root",
+            "issuerDistinguishedName": "CN=beta-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": [
+        {
+          "endpointName": "beta-parallel",
+          "tlsProtocolRange": [
+            "TLS1.2",
+            "TLS1.3"
+          ],
+          "cipherSuiteSet": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ],
+          "probePeriodMs": 100000,
+          "handshakeTimeoutMs": 10000,
+          "maxParallelHandshakes": 1,
+          "pendingRequestBuffer": 8,
+          "validationBudgetBp": 5000,
+          "candidateChainIds": [
+            "chain-beta"
+          ],
+          "handshakeWatermark": null,
+          "certificatePinned": false,
+          "pinDigest": ""
+        }
+      ]
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-gamma",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:d6f8bde4fbc90efc36854e080d3d973b",
+            "subjectDistinguishedName": "CN=gamma-leaf",
+            "issuerDistinguishedName": "CN=gamma-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:ef807b2e1ae59a40e44f53b03155f8da",
+            "subjectDistinguishedName": "CN=gamma-root",
+            "issuerDistinguishedName": "CN=gamma-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": [
+        {
+          "endpointName": "gamma-budget",
+          "tlsProtocolRange": [
+            "TLS1.2",
+            "TLS1.3"
+          ],
+          "cipherSuiteSet": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ],
+          "probePeriodMs": 10000,
+          "handshakeTimeoutMs": 5000,
+          "maxParallelHandshakes": 3,
+          "pendingRequestBuffer": 8,
+          "validationBudgetBp": 500,
+          "candidateChainIds": [
+            "chain-gamma"
+          ],
+          "handshakeWatermark": null,
+          "certificatePinned": false,
+          "pinDigest": ""
+        }
+      ]
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-delta-v1",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:9beb4b06d78954fbf7f4438b0e6067fa",
+            "subjectDistinguishedName": "CN=delta1-leaf",
+            "issuerDistinguishedName": "CN=delta1-intermediate",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:274c11f2e3539b4f7ae1e10c328ba0f5",
+            "subjectDistinguishedName": "CN=delta1-intermediate",
+            "issuerDistinguishedName": "CN=delta1-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:ffe2723ed66869331a65233e2bc30b66",
+            "subjectDistinguishedName": "CN=delta1-root",
+            "issuerDistinguishedName": "CN=delta1-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": [
+        {
+          "endpointName": "delta-freeze",
+          "tlsProtocolRange": [
+            "TLS1.2",
+            "TLS1.3"
+          ],
+          "cipherSuiteSet": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ],
+          "probePeriodMs": 100000,
+          "handshakeTimeoutMs": 5000,
+          "maxParallelHandshakes": 2,
+          "pendingRequestBuffer": 8,
+          "validationBudgetBp": 5000,
+          "candidateChainIds": [
+            "chain-delta-v1",
+            "chain-delta-v2"
+          ],
+          "handshakeWatermark": 1,
+          "certificatePinned": false,
+          "pinDigest": ""
+        }
+      ]
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-delta-v2",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:c5568a8925a1ee34a501f95a726659ca",
+            "subjectDistinguishedName": "CN=delta2-leaf",
+            "issuerDistinguishedName": "CN=delta2-intermediate",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:cb41049b0d7faaa49a67f4bf40b6cdec",
+            "subjectDistinguishedName": "CN=delta2-intermediate",
+            "issuerDistinguishedName": "CN=delta2-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:7c2f6f5a54a4ad0e6fd8ebf4a36f0459",
+            "subjectDistinguishedName": "CN=delta2-root",
+            "issuerDistinguishedName": "CN=delta2-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": null
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-epsilon-v1",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:2799165e67c0af2fd8a7053999858a78",
+            "subjectDistinguishedName": "CN=epsilon1-leaf",
+            "issuerDistinguishedName": "CN=epsilon1-intermediate",
+            "validFromMs": 0,
+            "validToMs": 8000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:382c11f0ac075339f45af12351b5c6ee",
+            "subjectDistinguishedName": "CN=epsilon1-intermediate",
+            "issuerDistinguishedName": "CN=epsilon1-root",
+            "validFromMs": 0,
+            "validToMs": 8000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:8d9622de5307b258e74713a3bae2d800",
+            "subjectDistinguishedName": "CN=epsilon1-root",
+            "issuerDistinguishedName": "CN=epsilon1-root",
+            "validFromMs": 0,
+            "validToMs": 8000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": [
+        {
+          "endpointName": "epsilon-fallback",
+          "tlsProtocolRange": [
+            "TLS1.2",
+            "TLS1.3"
+          ],
+          "cipherSuiteSet": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ],
+          "probePeriodMs": 100000,
+          "handshakeTimeoutMs": 5000,
+          "maxParallelHandshakes": 2,
+          "pendingRequestBuffer": 8,
+          "validationBudgetBp": 5000,
+          "candidateChainIds": [
+            "chain-epsilon-v1",
+            "chain-epsilon-v2"
+          ],
+          "handshakeWatermark": null,
+          "certificatePinned": false,
+          "pinDigest": ""
+        }
+      ]
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-epsilon-v2",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:028590801a1d2bfeab51ec39d2a74921",
+            "subjectDistinguishedName": "CN=epsilon2-leaf",
+            "issuerDistinguishedName": "CN=epsilon2-intermediate",
+            "validFromMs": 0,
+            "validToMs": 3000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:d06a47beaaf27604ce7f5008df441220",
+            "subjectDistinguishedName": "CN=epsilon2-intermediate",
+            "issuerDistinguishedName": "CN=epsilon2-root",
+            "validFromMs": 0,
+            "validToMs": 3000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:536e61ff6cbfca265a9628cad5590dda",
+            "subjectDistinguishedName": "CN=epsilon2-root",
+            "issuerDistinguishedName": "CN=epsilon2-root",
+            "validFromMs": 0,
+            "validToMs": 3000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": null
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-zeta",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:b80a7763acef5e6d5729f183de5af183",
+            "subjectDistinguishedName": "CN=zeta-bad-leaf",
+            "issuerDistinguishedName": "CN=wrong-issuer",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:96631a1ce50a3972366df3d71076ec16",
+            "subjectDistinguishedName": "CN=zeta-bad-intermediate",
+            "issuerDistinguishedName": "CN=zeta-bad-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:b337727ecc35c8335d48e51adc3e1581",
+            "subjectDistinguishedName": "CN=zeta-bad-root",
+            "issuerDistinguishedName": "CN=zeta-bad-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": [
+        {
+          "endpointName": "zeta-issuer",
+          "tlsProtocolRange": [
+            "TLS1.2",
+            "TLS1.3"
+          ],
+          "cipherSuiteSet": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ],
+          "probePeriodMs": 100000,
+          "handshakeTimeoutMs": 5000,
+          "maxParallelHandshakes": 2,
+          "pendingRequestBuffer": 8,
+          "validationBudgetBp": 5000,
+          "candidateChainIds": [
+            "chain-zeta"
+          ],
+          "handshakeWatermark": null,
+          "certificatePinned": false,
+          "pinDigest": ""
+        }
+      ]
+    },
+    {
+      "chainGroup": {
+        "chainId": "chain-eta",
+        "certificatePath": [
+          {
+            "certificateDigest": "sha256:6c480e18e1fc1c2e3da152a6146367db",
+            "subjectDistinguishedName": "CN=eta-leaf",
+            "issuerDistinguishedName": "CN=eta-intermediate",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:402ba6b1b1cdcc083c11aa17a86189ec",
+            "subjectDistinguishedName": "CN=eta-intermediate",
+            "issuerDistinguishedName": "CN=eta-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          },
+          {
+            "certificateDigest": "sha256:81c7f4ac3a44ed9bf3eecab0c14e1b61",
+            "subjectDistinguishedName": "CN=eta-root",
+            "issuerDistinguishedName": "CN=eta-root",
+            "validFromMs": 0,
+            "validToMs": 200000,
+            "validationCostBp": 100
+          }
+        ],
+        "pinned": false,
+        "pinSha256": ""
+      },
+      "nestedTargets": [
+        {
+          "endpointName": "eta-backpressure",
+          "tlsProtocolRange": [
+            "TLS1.2",
+            "TLS1.3"
+          ],
+          "cipherSuiteSet": [
+            "TLS_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          ],
+          "probePeriodMs": 100000,
+          "handshakeTimeoutMs": 5000,
+          "maxParallelHandshakes": 1,
+          "pendingRequestBuffer": 1,
+          "validationBudgetBp": 5000,
+          "candidateChainIds": [
+            "chain-eta"
+          ],
+          "handshakeWatermark": 1,
+          "certificatePinned": false,
+          "pinDigest": ""
+        }
+      ]
+    }
+  ],
+  "eventLog": [
+    {
+      "eventSequence": 1,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "A-1",
+        "endpointName": "alpha-ok",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 2,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "B-1",
+        "endpointName": "beta-parallel",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 2000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 3,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "B-2",
+        "endpointName": "beta-parallel",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "simulatedDurationMs": 2000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 4,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "G-1",
+        "endpointName": "gamma-budget",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 5,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "G-2",
+        "endpointName": "gamma-budget",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 6,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "G-3",
+        "endpointName": "gamma-budget",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 7,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "Z-1",
+        "endpointName": "zeta-issuer",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 8,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "H-1",
+        "endpointName": "eta-backpressure",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 9,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "H-2",
+        "endpointName": "eta-backpressure",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 10,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 1000,
+      "handshakeRequest": {
+        "requestId": "H-3",
+        "endpointName": "eta-backpressure",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 11,
+      "eventType": "chain_update",
+      "logicalTimeMs": 2000,
+      "handshakeRequest": null,
+      "certChainUpdate": {
+        "updateId": "D-U1",
+        "endpointName": "delta-freeze",
+        "nextChainId": "chain-delta-v2",
+        "commitTimeMs": 4000,
+        "interruptBeforeCommit": false
+      }
+    },
+    {
+      "eventSequence": 12,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 2000,
+      "handshakeRequest": {
+        "requestId": "A-2",
+        "endpointName": "alpha-ok",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 13,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 2000,
+      "handshakeRequest": {
+        "requestId": "B-3",
+        "endpointName": "beta-parallel",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "simulatedDurationMs": 2000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 14,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 2000,
+      "handshakeRequest": {
+        "requestId": "G-4",
+        "endpointName": "gamma-budget",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 15,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 3000,
+      "handshakeRequest": {
+        "requestId": "D-1",
+        "endpointName": "delta-freeze",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 16,
+      "eventType": "chain_update",
+      "logicalTimeMs": 4000,
+      "handshakeRequest": null,
+      "certChainUpdate": {
+        "updateId": "E-U1",
+        "endpointName": "epsilon-fallback",
+        "nextChainId": "chain-epsilon-v2",
+        "commitTimeMs": 4000,
+        "interruptBeforeCommit": false
+      }
+    },
+    {
+      "eventSequence": 17,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 4000,
+      "handshakeRequest": {
+        "requestId": "D-2",
+        "endpointName": "delta-freeze",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 18,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 5000,
+      "handshakeRequest": {
+        "requestId": "E-1",
+        "endpointName": "epsilon-fallback",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_AES_256_GCM_SHA384"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    },
+    {
+      "eventSequence": 19,
+      "eventType": "handshake_request",
+      "logicalTimeMs": 9000,
+      "handshakeRequest": {
+        "requestId": "E-2",
+        "endpointName": "epsilon-fallback",
+        "offeredProtocol": "TLS1.3",
+        "offeredCipherSuites": [
+          "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+        ],
+        "simulatedDurationMs": 1000,
+        "interruptAfterLevel": 0
+      },
+      "certChainUpdate": null
+    }
+  ]
+}
