@@ -21,3 +21,19 @@ SQLite 通过纯 Go 驱动引入，避免依赖 CGO 与外部数据库服务；�
 
 验收：
 用本地确定性样本核对分段透射率、散射累积与三路径像素一致，并覆盖注入异常。
+
+---
+
+## 实现交付入口
+
+本目录已按上述立项要求完成可验收内核。架构与需求映射见 `docs/DELIVERY.md`，实际命令输出与精度数据见 `docs/VALIDATION.md`。
+
+```bash
+go version                 # go1.22.12 linux/amd64 实测
+CGO_ENABLED=0 go build ./...
+go test -count=1 ./...
+go run ./cmd/workbench -verify
+go run ./cmd/workbench -addr 127.0.0.1:8088 -db artifacts/workbench.db
+```
+
+打开 `http://127.0.0.1:8088/` 即进入本地诊断工作台。固定种子为 `0x464f4731`，样本为 32×18 视口、8×6 分块，共 12 块；SQLite 使用纯 Go 驱动 `modernc.org/sqlite`，`CGO_ENABLED=0` 下可构建且产物为静态链接。
