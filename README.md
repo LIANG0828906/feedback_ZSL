@@ -19,3 +19,110 @@
 
 验收：
 用本地样本验证三版本互操作、逐帧灯光输出与增量重算，并核对三路径一致及异常码。
+
+---
+
+# 实现说明（stage-engine/1.0.0）
+
+工作区现有实现是一个不依赖外部服务的 Go 模块，入口如下：
+
+- `load.go`：`Load` / `LoadFile` 统一读取 v1、v2、v3，并保留 `SourceVersion`。
+- `export.go`：`Export` 输出可继续加载的 v1/v2/v3 工程；`ExportStrict` 在存在损失时返回 `E_LOSSY`。
+- `engine.go`：整数时间推进、参数轨道、逐帧插值、单灯覆盖和分组优先级裁决。
+- `checkpoint.go`：SQLite 四态窗口状态机、事务提交、内容哈希校验和恢复。
+- `incremental.go`：编辑后比较窗口依赖与窗口时间边界，只编译候选窗口；内容未变的窗口继续复用。
+- `run.go`：实时、断点恢复、全量重算三条路径及首个不一致帧/灯具定位。
+- `sample/`：固定种子样本生成器和真值构造。
+- `cmd/stagectl`：样本生成与一键验收命令。
+
+## 格式映射
+
+| 语义 | v1 | v2 | v3 |
+|---|---|---|---|
+| 时间 | `frame` | `time_ms` | `at_ms` |
+| 颜色 | 归一化三元组 | 8 位 RGB 三元组 | 归一化三元组 |
+| 插值 | 字符串 | `0`/`1` | `transition.kind` |
+| 变化点 | 逐帧烘焙 | `keyframes` | `changes` |
+| 分组 | 无 | 扁平 `light_ids` | 嵌套 `members.groups` |
+
+内部时间单位为整数微秒，内部颜色为 16 位通道。归一化颜色先按工程声明的 `color_step`
+量化为整数，再展开到 16 位；帧与毫秒换算全部使用整数除法并显式选择 `nearest`、
+`floor` 或 `ceil`。调度、插值和窗口哈希中不会进行浮点累积。
+
+v1 只有 8 位颜色精度，因此 v1 往返的色差容差是 `257`（一个 8 位步长）；v2/v3 为
+`0`。时间容差是 `ceil(1_000_000/fps)`，30fps 时为 `33334us`。
+
+## 裁决规则
+
+1. 单灯变化点优先于任何分组值，依据记录为 `fixture_override`。
+2. 没有单灯覆盖时，启用分组中 `priority` 最高者生效；同优先级按分组 ID 字典序稳定决胜，
+   依据记录为 `group_priority`。
+3. 只有同一灯具、同一原子参数存在两个及以上候选来源时才写裁决记录。颜色拆为
+   `color.r/g/b`，位置拆为 `position.x/y/z`。
+4. 分组成员关系按传递闭包展开；分组环返回 `E_GROUP`。
+5. 线性变化点在当前点和同一来源、同一参数的下一个变化点之间整数插值；下一变化点为
+   `hold` 时，在前一值保持到该时刻再切换。
+
+## 窗口与增量
+
+窗口按固定逻辑时间切分，状态迁移为：
+
+```text
+pending -> scheduling -> committed
+                     \-> failed -> scheduling
+```
+
+`committed` 为终态；非法迁移返回 `E_STATE` 且不改变原状态。每个窗口在单个 SQLite
+事务中写入输出、决策、变化点消费、分组快照、依赖、内容哈希和算法版本。读回时重新
+计算内容哈希，任何篡改返回 `E_DECODE`。
+
+窗口依赖显式包含变化点、分组、插值区间和导出口。编辑变化点或分组后，增量路径先比较
+新旧窗口依赖及时间边界；仅对候选窗口调用 `ScheduleWindows`，再按内容哈希确认是否真正
+失效。未失效窗口直接复用持久化结果并更新项目版本戳，不重新逐帧计算。
+
+## Windows 构建与验收
+
+环境要求：Go 1.22+，无需 Docker、CGO 或外部服务。SQLite 使用纯 Go 的
+`modernc.org/sqlite v1.34.5`。
+
+```powershell
+go mod download
+go build ./...
+go test ./...
+
+go run ./cmd/stagectl generate --seed 421337 --out artifacts/samples
+go run ./cmd/stagectl verify `
+  --samples artifacts/samples `
+  --db artifacts/verify-checkpoints.db `
+  --json artifacts/verification.json
+```
+
+离线复用本地模块缓存：
+
+```powershell
+$env:GOPROXY = "off"
+go build ./...
+go test ./...
+```
+
+## 实际验证结果
+
+本地 Go 1.22.12 上执行 `go test ./...`、`go vet ./...` 和完整 CLI 验收均通过。固定种子
+`421337` 的结果：
+
+本执行环境为 WSL/Linux，因此还额外执行了
+`GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build ./...` 与
+`go test -c -o lightshow.test.exe .`，Windows/amd64 构建和测试二进制编译均通过；
+纯 Go SQLite 驱动不需要 CGO。
+
+- v1/v2/v3 均调度 `180` 帧；v2/v3 各 `1440` 条裁决，v1 的逐帧烘焙无分组裁决。
+- v1 真值容差 `257`，v2/v3 色差 `0`；v2/v3 与真值的 12 项变化点消费顺序一致，v1 消费
+  其烘焙后的 720 个逐帧变化点。
+- 实时、取消后恢复、全量重算三路径的所有帧输出、裁决和消费序列一致。
+- 取消发生在第 3 个窗口提交后，重启复用 `3` 个已提交窗口。
+- 编辑 `C30_L4` 仅失效窗口 `10`、`11`，复用 `10` 个窗口，导出失效项为
+  `export:window-0010`、`export:window-0011`；增量结果与全量重算逐帧相等。
+- 已观测并核对：`E_VERSION`、`E_ORDER`、`E_GROUP`、`E_STATE`、`E_LOSSY`、
+  `E_DECODE`、`E_CANCELED`。
+
+机器可读明细见 `artifacts/verification.json`；样本与真值位于 `artifacts/samples/`。
