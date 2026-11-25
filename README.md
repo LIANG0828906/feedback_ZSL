@@ -21,3 +21,18 @@
 
 验收：
 用本地样本验证三版本装载、逐帧首触与穿透结算，并核对增量、断点与全量三路径一致及异常码。
+
+---
+
+## 交付运行说明
+
+实现、需求映射和实测结果见 `docs/DELIVERY.md`。
+
+```bash
+go run ./cmd/samplegen -out samples
+go test -timeout 120s ./...
+go run ./cmd/judge -once
+go run ./cmd/judge -addr 127.0.0.1:8099
+```
+
+诊断页地址为 `http://127.0.0.1:8099/`，展示 XZ 投影轨迹/碰撞体/命中点、失效区间、复用区间、预算排队、版本损失清单和实时/断点/全量比对结果。

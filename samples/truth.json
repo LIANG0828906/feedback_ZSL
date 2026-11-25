@@ -1,0 +1,204 @@
+{
+  "schema": "truth-v1",
+  "battle_id": "deterministic-battle-001",
+  "tolerance_q": 5000,
+  "generator_seed": 428691,
+  "samples": [
+    {
+      "frame": 2,
+      "sweep_id": "sw_primary",
+      "hit": false,
+      "first_collider_no": 0,
+      "first_part": "",
+      "first_surface": "",
+      "remaining_damage_q": 40000000,
+      "nearest_distance_q": 500000,
+      "expected_hits": null
+    },
+    {
+      "frame": 3,
+      "sweep_id": "sw_primary",
+      "hit": true,
+      "first_collider_no": 1,
+      "first_part": "torso",
+      "first_surface": "aabb:face:-X",
+      "remaining_damage_q": 20000000,
+      "nearest_distance_q": 0,
+      "expected_hits": null
+    },
+    {
+      "frame": 5,
+      "sweep_id": "sw_primary",
+      "hit": true,
+      "first_collider_no": 2,
+      "first_part": "pylon_shaft",
+      "first_surface": "capsule:shaft",
+      "remaining_damage_q": 10000000,
+      "nearest_distance_q": 0,
+      "expected_hits": null
+    },
+    {
+      "frame": 6,
+      "sweep_id": "sw_primary",
+      "hit": true,
+      "first_collider_no": 3,
+      "first_part": "rear_core",
+      "first_surface": "aabb:face:-X",
+      "remaining_damage_q": 5000000,
+      "nearest_distance_q": 0,
+      "expected_hits": null
+    }
+  ],
+  "sequences": [
+    {
+      "sweep_id": "sw_primary",
+      "segments": [
+        {
+          "segment": 1,
+          "status": "hit",
+          "collider_no": 1,
+          "collider_id": "box_front",
+          "part": "torso",
+          "surface": "aabb:face:-X",
+          "remaining_damage_q": 20000000,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 2,
+          "status": "hit",
+          "collider_no": 2,
+          "collider_id": "capsule_pylon",
+          "part": "pylon_shaft",
+          "surface": "capsule:shaft",
+          "remaining_damage_q": 10000000,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 3,
+          "status": "hit",
+          "collider_no": 3,
+          "collider_id": "box_rear",
+          "part": "rear_core",
+          "surface": "aabb:face:-X",
+          "remaining_damage_q": 5000000,
+          "nearest_distance_q": 0
+        }
+      ]
+    },
+    {
+      "sweep_id": "sw_exhaust",
+      "segments": [
+        {
+          "segment": 1,
+          "status": "hit",
+          "collider_no": 4,
+          "collider_id": "exhaust_gate_a",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 500,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 2,
+          "status": "hit",
+          "collider_no": 5,
+          "collider_id": "exhaust_gate_b",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 250,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 3,
+          "status": "hit",
+          "collider_no": 6,
+          "collider_id": "exhaust_gate_c",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 125,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 4,
+          "status": "hit",
+          "collider_no": 7,
+          "collider_id": "exhaust_gate_d",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 62,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 5,
+          "status": "hit",
+          "collider_no": 8,
+          "collider_id": "exhaust_gate_e",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 31,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 6,
+          "status": "hit",
+          "collider_no": 9,
+          "collider_id": "exhaust_gate_f",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 15,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 7,
+          "status": "hit",
+          "collider_no": 10,
+          "collider_id": "exhaust_gate_g",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 7,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 8,
+          "status": "hit",
+          "collider_no": 11,
+          "collider_id": "exhaust_gate_h",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 3,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 9,
+          "status": "hit",
+          "collider_no": 12,
+          "collider_id": "exhaust_gate_i",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 1,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 10,
+          "status": "hit",
+          "collider_no": 13,
+          "collider_id": "exhaust_gate_j",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 0,
+          "nearest_distance_q": 0
+        },
+        {
+          "segment": 11,
+          "status": "depleted",
+          "collider_no": 14,
+          "collider_id": "exhaust_gate_k",
+          "part": "gate_body",
+          "surface": "aabb:face:-Z",
+          "remaining_damage_q": 0,
+          "nearest_distance_q": 0
+        }
+      ]
+    }
+  ]
+}

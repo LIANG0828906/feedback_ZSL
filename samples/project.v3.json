@@ -1,0 +1,349 @@
+{
+  "schemaVersion": "battleformat-v3",
+  "battleId": "deterministic-battle-001",
+  "frameStepMs": 16,
+  "colliders": [
+    {
+      "colliderNo": 1,
+      "id": "box_front",
+      "kind": "aabb",
+      "part": "torso",
+      "min": {
+        "x": 3000000,
+        "y": -1000000,
+        "z": -1000000
+      },
+      "max": {
+        "x": 4000000,
+        "y": 1000000,
+        "z": 1000000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 2,
+      "id": "capsule_pylon",
+      "kind": "oriented_capsule",
+      "part": "pylon_shaft",
+      "p0": {
+        "x": 7500000,
+        "y": -1500000,
+        "z": 0
+      },
+      "p1": {
+        "x": 7500000,
+        "y": 1500000,
+        "z": 0
+      },
+      "radiusQ": 500000
+    },
+    {
+      "colliderNo": 3,
+      "id": "box_rear",
+      "kind": "aabb",
+      "part": "rear_core",
+      "min": {
+        "x": 9000000,
+        "y": -1000000,
+        "z": -1000000
+      },
+      "max": {
+        "x": 10000000,
+        "y": 1000000,
+        "z": 1000000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 4,
+      "id": "exhaust_gate_a",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 20900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 21100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 5,
+      "id": "exhaust_gate_b",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 21900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 22100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 6,
+      "id": "exhaust_gate_c",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 22900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 23100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 7,
+      "id": "exhaust_gate_d",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 23900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 24100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 8,
+      "id": "exhaust_gate_e",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 24900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 25100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 9,
+      "id": "exhaust_gate_f",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 25900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 26100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 10,
+      "id": "exhaust_gate_g",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 26900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 27100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 11,
+      "id": "exhaust_gate_h",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 27900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 28100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 12,
+      "id": "exhaust_gate_i",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 28900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 29100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 13,
+      "id": "exhaust_gate_j",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 29900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 30100000
+      },
+      "radiusQ": 0
+    },
+    {
+      "colliderNo": 14,
+      "id": "exhaust_gate_k",
+      "kind": "aabb",
+      "part": "gate_body",
+      "min": {
+        "x": -1000000,
+        "y": -1000000,
+        "z": 30900000
+      },
+      "max": {
+        "x": 1000000,
+        "y": 1000000,
+        "z": 31100000
+      },
+      "radiusQ": 0
+    }
+  ],
+  "sweeps": [
+    {
+      "sweepNo": 1,
+      "id": "sw_primary",
+      "fromQ": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "toQ": {
+        "x": 10000000,
+        "y": 0,
+        "z": 0
+      },
+      "radiusQ": 500000,
+      "startFrame": 1,
+      "endFrame": 6,
+      "damageQ": 40000000,
+      "penetration": true,
+      "decayQ": 500000,
+      "multiHit": true,
+      "maxSegments": 12,
+      "repeatPolicy": "once_per_collider",
+      "endpointMode": "absolute"
+    },
+    {
+      "sweepNo": 2,
+      "id": "sw_exhaust",
+      "fromQ": {
+        "x": 0,
+        "y": 0,
+        "z": 20000000
+      },
+      "toQ": {
+        "x": 0,
+        "y": 0,
+        "z": 32000000
+      },
+      "radiusQ": 250000,
+      "startFrame": 1,
+      "endFrame": 7,
+      "damageQ": 1000,
+      "penetration": true,
+      "decayQ": 500000,
+      "multiHit": true,
+      "maxSegments": 12,
+      "repeatPolicy": "once_per_collider",
+      "endpointMode": "absolute"
+    }
+  ],
+  "requests": [
+    {
+      "frame": 1,
+      "sweepId": "sw_primary"
+    },
+    {
+      "frame": 2,
+      "sweepId": "sw_primary"
+    },
+    {
+      "frame": 3,
+      "sweepId": "sw_primary"
+    },
+    {
+      "frame": 4,
+      "sweepId": "sw_primary"
+    },
+    {
+      "frame": 5,
+      "sweepId": "sw_primary"
+    },
+    {
+      "frame": 6,
+      "sweepId": "sw_primary"
+    },
+    {
+      "frame": 1,
+      "sweepId": "sw_exhaust"
+    },
+    {
+      "frame": 2,
+      "sweepId": "sw_exhaust"
+    },
+    {
+      "frame": 3,
+      "sweepId": "sw_exhaust"
+    },
+    {
+      "frame": 4,
+      "sweepId": "sw_exhaust"
+    },
+    {
+      "frame": 5,
+      "sweepId": "sw_exhaust"
+    },
+    {
+      "frame": 6,
+      "sweepId": "sw_exhaust"
+    },
+    {
+      "frame": 7,
+      "sweepId": "sw_exhaust"
+    }
+  ]
+}

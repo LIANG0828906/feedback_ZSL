@@ -1,0 +1,370 @@
+{
+  "schema": "battleformat-v2",
+  "battle_id": "deterministic-battle-001",
+  "frame_step_ms": 16,
+  "unit_scale": 10000,
+  "colliders": [
+    {
+      "collider_no": 1,
+      "id": "box_front",
+      "kind": "axis_aligned_box",
+      "part": "torso",
+      "mins_q": [
+        3000000,
+        -1000000,
+        -1000000
+      ],
+      "maxs_q": [
+        4000000,
+        1000000,
+        1000000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 2,
+      "id": "capsule_pylon",
+      "kind": "oriented_capsule",
+      "part": "pylon_shaft",
+      "mins_q": null,
+      "maxs_q": null,
+      "center_q": [
+        7500000,
+        0,
+        0
+      ],
+      "half_axis_delta_q": [
+        0,
+        1500000,
+        0
+      ],
+      "radius_myriad": 5000
+    },
+    {
+      "collider_no": 3,
+      "id": "box_rear",
+      "kind": "axis_aligned_box",
+      "part": "rear_core",
+      "mins_q": [
+        9000000,
+        -1000000,
+        -1000000
+      ],
+      "maxs_q": [
+        10000000,
+        1000000,
+        1000000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 4,
+      "id": "exhaust_gate_a",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        20900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        21100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 5,
+      "id": "exhaust_gate_b",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        21900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        22100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 6,
+      "id": "exhaust_gate_c",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        22900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        23100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 7,
+      "id": "exhaust_gate_d",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        23900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        24100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 8,
+      "id": "exhaust_gate_e",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        24900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        25100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 9,
+      "id": "exhaust_gate_f",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        25900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        26100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 10,
+      "id": "exhaust_gate_g",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        26900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        27100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 11,
+      "id": "exhaust_gate_h",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        27900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        28100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 12,
+      "id": "exhaust_gate_i",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        28900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        29100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 13,
+      "id": "exhaust_gate_j",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        29900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        30100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    },
+    {
+      "collider_no": 14,
+      "id": "exhaust_gate_k",
+      "kind": "axis_aligned_box",
+      "part": "gate_body",
+      "mins_q": [
+        -1000000,
+        -1000000,
+        30900000
+      ],
+      "maxs_q": [
+        1000000,
+        1000000,
+        31100000
+      ],
+      "center_q": null,
+      "half_axis_delta_q": null,
+      "radius_myriad": null
+    }
+  ],
+  "sweeps": [
+    {
+      "sweep_no": 1,
+      "sweep_id": "sw_primary",
+      "origin_q": [
+        0,
+        0,
+        0
+      ],
+      "advance_delta_q": [
+        10000000,
+        0,
+        0
+      ],
+      "radius_myriad": 5000,
+      "start_ms": 0,
+      "end_ms": 80,
+      "damage_myriad": 400000,
+      "penetrate": true,
+      "decay_myriad": 5000
+    },
+    {
+      "sweep_no": 2,
+      "sweep_id": "sw_exhaust",
+      "origin_q": [
+        0,
+        0,
+        20000000
+      ],
+      "advance_delta_q": [
+        0,
+        0,
+        12000000
+      ],
+      "radius_myriad": 2500,
+      "start_ms": 0,
+      "end_ms": 96,
+      "damage_myriad": 10,
+      "penetrate": true,
+      "decay_myriad": 5000
+    }
+  ],
+  "requests": [
+    {
+      "at_ms": 0,
+      "sweep_id": "sw_primary"
+    },
+    {
+      "at_ms": 16,
+      "sweep_id": "sw_primary"
+    },
+    {
+      "at_ms": 32,
+      "sweep_id": "sw_primary"
+    },
+    {
+      "at_ms": 48,
+      "sweep_id": "sw_primary"
+    },
+    {
+      "at_ms": 64,
+      "sweep_id": "sw_primary"
+    },
+    {
+      "at_ms": 80,
+      "sweep_id": "sw_primary"
+    },
+    {
+      "at_ms": 0,
+      "sweep_id": "sw_exhaust"
+    },
+    {
+      "at_ms": 16,
+      "sweep_id": "sw_exhaust"
+    },
+    {
+      "at_ms": 32,
+      "sweep_id": "sw_exhaust"
+    },
+    {
+      "at_ms": 48,
+      "sweep_id": "sw_exhaust"
+    },
+    {
+      "at_ms": 64,
+      "sweep_id": "sw_exhaust"
+    },
+    {
+      "at_ms": 80,
+      "sweep_id": "sw_exhaust"
+    },
+    {
+      "at_ms": 96,
+      "sweep_id": "sw_exhaust"
+    }
+  ]
+}
