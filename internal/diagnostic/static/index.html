@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>弹道反弹网格校验内核</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #111c31;
+      --panel-2: #17243d;
+      --line: #263653;
+      --text: #dbe7ff;
+      --muted: #8ea3c8;
+      --cyan: #22d3ee;
+      --amber: #f59e0b;
+      --red: #f43f5e;
+      --green: #4ade80;
+      --purple: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: radial-gradient(circle at top left, #14233f, var(--bg) 42%);
+      color: var(--text); font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 16px 22px; border-bottom: 1px solid var(--line);
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+      background: rgba(10, 17, 32, .86); position: sticky; top: 0; z-index: 5;
+      backdrop-filter: blur(10px);
+    }
+    h1 { font-size: 18px; margin: 0 12px 0 0; letter-spacing: .02em; }
+    .seed { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+    button {
+      border: 1px solid #314567; background: linear-gradient(#1c2d4d, #172541);
+      color: var(--text); border-radius: 8px; padding: 7px 11px; cursor: pointer; font-weight: 650;
+    }
+    button:hover { border-color: var(--cyan); color: white; }
+    button.danger:hover { border-color: var(--red); }
+    button.good:hover { border-color: var(--green); }
+    main { padding: 18px 22px 40px; display: grid; grid-template-columns: minmax(720px, 1.45fr) minmax(360px, .8fr); gap: 16px; }
+    .card {
+      background: rgba(17, 28, 49, .92); border: 1px solid var(--line); border-radius: 14px;
+      padding: 14px; box-shadow: 0 16px 40px rgba(0,0,0,.22); margin-bottom: 16px;
+    }
+    .card h2 { font-size: 14px; margin: 0 0 10px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .card h2 .pill { font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 7px; }
+    .scene-wrap { overflow: auto; border-radius: 10px; background: #0f172a; border: 1px solid #1e293b; }
+    svg { display: block; width: 100%; min-width: 760px; height: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { text-align: left; padding: 6px 7px; border-bottom: 1px solid rgba(38,54,83,.75); vertical-align: top; }
+    th { color: var(--muted); font-weight: 700; position: sticky; top: 0; background: var(--panel); }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .muted { color: var(--muted); }
+    .ok { color: var(--green); font-weight: 800; }
+    .bad { color: var(--red); font-weight: 800; }
+    .warn { color: var(--amber); font-weight: 800; }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; max-height: 130px; overflow: auto; }
+    .chip { font: 11px ui-monospace, monospace; border: 1px solid #314567; border-radius: 6px; padding: 2px 5px; background: var(--panel-2); }
+    .chip.invalid { border-color: rgba(244,63,94,.7); color: #fecdd3; background: rgba(244,63,94,.13); }
+    .chip.reused { border-color: rgba(74,222,128,.45); color: #bbf7d0; background: rgba(74,222,128,.09); }
+    .chip.tile { min-width: 58px; text-align: center; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .metric { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px; }
+    .metric b { display: block; font-size: 18px; color: #fff; }
+    .metric span { color: var(--muted); font-size: 11px; }
+    .scroll { max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: 9px; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0a1222; border: 1px solid var(--line); padding: 9px; border-radius: 9px; font-size: 11px; max-height: 240px; overflow: auto; }
+    img.frame { width: 100%; image-rendering: pixelated; border-radius: 10px; border: 1px solid #1e293b; background: #0f172a; }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 12px; margin-top: 9px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+    @media (max-width: 1100px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>弹道预测 · 反弹网格校验内核</h1>
+  <span class="seed mono" id="seed"></span>
+  <button class="good" onclick="edit('endpoint')">编辑远端端点</button>
+  <button onclick="edit('restitution')">切换主平台反弹系数</button>
+  <button onclick="resetDemo()">重置样本/快照</button>
+  <span style="width:1px;height:24px;background:var(--line)"></span>
+  <button class="danger" onclick="inject('schema')">E_SCHEMA</button>
+  <button class="danger" onclick="inject('decode')">E_DECODE</button>
+  <button class="danger" onclick="inject('order')">E_ORDER</button>
+  <button class="danger" onclick="inject('para')">E_PARA</button>
+  <button class="danger" onclick="inject('block')">E_BLOCK</button>
+</header>
+
+<main>
+  <section>
+    <div class="card">
+      <h2>屏幕分块、弹道折线与反弹点 <span class="pill" id="algo"></span></h2>
+      <div class="scene-wrap">
+        <svg id="scene" viewBox="0 0 960 576" role="img" aria-label="弹道和障碍分块图"></svg>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--amber)"></i>障碍线段</span>
+        <span><i class="dot" style="background:var(--cyan)"></i>弹道折线</span>
+        <span><i class="dot" style="background:var(--red)"></i>反弹点</span>
+        <span><i class="dot" style="background:var(--green)"></i>首次命中</span>
+        <span><i class="dot" style="background:rgba(244,63,94,.55)"></i>失效分块</span>
+        <span><i class="dot" style="background:rgba(74,222,128,.35)"></i>持久化复用</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>精确像素缓冲 <span class="pill">增量帧 / 全量参考逐像素比较</span></h2>
+      <img class="frame" id="framePNG" alt="精确 RGBA 分块渲染帧" />
+      <div id="comparison" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <h2>命中归因</h2>
+      <div style="overflow:auto"><table id="attributionTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2>分块哈希 / 覆盖率 / 快照摘要</h2>
+      <div class="scroll"><table id="tileTable"></table></div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="card">
+      <h2>失效传播清单</h2>
+      <div id="plan"><span class="muted">尚未编辑；初始帧为全量提交。</span></div>
+    </div>
+
+    <div class="card">
+      <h2>异常注入定位</h2>
+      <div id="injection"><span class="muted">点击顶部异常按钮查看结构化错误。</span></div>
+    </div>
+
+    <div class="card">
+      <h2>SQLite 快照状态 <span class="pill" id="dbPath"></span></h2>
+      <div class="grid" id="snapshotMetrics"></div>
+      <div class="scroll" style="margin-top:10px"><table id="snapshotTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2>并发资源边界 <span class="pill">max=2 / buffer=256KiB</span></h2>
+      <div class="scroll"><table id="poolTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2>三版本 Schema 转录</h2>
+      <div id="schemaInfo"></div>
+      <p class="muted" style="margin-bottom:0">
+        原始文档：
+        <a href="/api/document?v=1" style="color:var(--cyan)">v1</a> ·
+        <a href="/api/document?v=2" style="color:var(--cyan)">v2</a> ·
+        <a href="/api/document?v=3" style="color:var(--cyan)">v3</a> ·
+        <a href="/api/truth" style="color:var(--cyan)">truth</a>
+      </p>
+    </div>
+  </aside>
+</main>
+
+<script>
+const PS = 1024;
+let lastState = null;
+
+function el(name, attrs = {}, parent) {
+  const node = document.createElementNS('http://www.w3.org/2000/svg', name);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  if (parent) parent.appendChild(node);
+  return node;
+}
+function h(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') node.className = v;
+    else if (k.startsWith('on')) node[k] = v;
+    else node.setAttribute(k, v);
+  }
+  for (const child of children.flat()) {
+    if (child == null) continue;
+    node.append(child.nodeType ? child : document.createTextNode(String(child)));
+  }
+  return node;
+}
+function project(p, cam) {
+  return {
+    x: Number(p.x) * Number(cam.focal_x_px) / (PS * PS) + Number(cam.principal_x || 0),
+    y: Number(p.y) * Number(cam.focal_y_px) / (PS * PS) + Number(cam.principal_y || 0)
+  };
+}
+function clearSVG(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+function renderScene(s) {
+  const svg = document.getElementById('scene');
+  clearSVG(svg);
+  const cam = s.camera;
+  const invalid = new Set(s.plan?.invalid_tiles || []);
+  const reused = new Set(s.plan?.reused_tiles || []);
+
+  el('rect', {x:0,y:0,width:cam.viewport_w,height:cam.viewport_h,fill:'#0f172a'}, svg);
+  for (let y=0; y<cam.tile_rows ?? Math.ceil(cam.viewport_h/cam.tile_h); y++) {
+    for (let x=0; x<cam.tile_columns ?? Math.ceil(cam.viewport_w/cam.tile_w); x++) {
+      const id = `tx${String(x).padStart(2,'0')}_ty${String(y).padStart(2,'0')}`;
+      let fill = 'rgba(148,163,184,.025)';
+      if (invalid.has(id)) fill = 'rgba(244,63,94,.16)';
+      else if (reused.has(id)) fill = 'rgba(74,222,128,.07)';
+      el('rect', {
+        x:x*cam.tile_w, y:y*cam.tile_h, width:cam.tile_w, height:cam.tile_h,
+        fill, stroke:'#22314d', 'stroke-width':1
+      }, svg);
+    }
+  }
+
+  for (const seg of s.scene.segments || []) {
+    const a = project(seg.a, cam), b = project(seg.b, cam);
+    el('line', {x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:'rgba(245,158,11,.25)','stroke-width':9,'stroke-linecap':'round'}, svg);
+    el('line', {x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:'#f59e0b','stroke-width':3,'stroke-linecap':'round'}, svg);
+    const mid = {x:(a.x+b.x)/2, y:(a.y+b.y)/2};
+    const t = h('text', {x:mid.x+5,y:mid.y-5,fill:'#fcd34d','font-size':11,class:'mono'}, seg.id);
+    const foreign = document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
+  }
+
+  const colors = ['#22d3ee','#a78bfa','#60a5fa','#4ade80'];
+  (s.report?.trajectories || []).forEach((tr, ti) => {
+    const pts = tr.samples.map(sample => {
+      const p = project(sample.position, cam);
+      return `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    }).join(' ');
+    el('polyline', {points:pts, fill:'none', stroke:colors[ti%colors.length], 'stroke-width':2.4, 'stroke-linejoin':'round','stroke-linecap':'round'}, svg);
+    for (const b of tr.bounces || []) {
+      const p = project(b.position, cam);
+      el('circle', {cx:p.x, cy:p.y, r:b.index===0?6:4.5, fill:b.index===0?'#4ade80':'#f43f5e', stroke:'#fff', 'stroke-width':1.2}, svg);
+    }
+    const first = tr.samples[0]?.position;
+    if (first) {
+      const p = project(first, cam);
+      el('rect', {x:p.x-5,y:p.y-5,width:10,height:10,rx:2,fill:colors[ti%colors.length],stroke:'#fff','stroke-width':1}, svg);
+    }
+  });
+}
+
+function renderAttribution(s) {
+  const table = document.getElementById('attributionTable');
+  table.innerHTML = '';
+  table.append(h('tr', {}, h('th',{},'请求'), h('th',{},'首次命中'), h('th',{},'反弹'), h('th',{},'命中序列'), h('th',{},'终态'), h('th',{},'结果')));
+  for (const tr of s.report?.trajectories || []) {
+    const a = tr.attribution;
+    table.append(h('tr', {},
+      h('td',{class:'mono'}, a.request_id),
+      h('td',{class:a.first_hit_segment_id?'warn':'muted'}, a.first_hit_segment_id || '无'),
+      h('td',{}, String(a.bounce_count)),
+      h('td',{class:'mono'}, (a.hit_segment_ids||[]).join(' → ') || '—'),
+      h('td',{class:a.escaped?'ok':'muted'}, a.escaped ? '逃逸' : '界内'),
+      h('td',{class:'mono'}, a.outcome)
+    ));
+  }
+}
+
+function renderComparison(s) {
+  const c = s.comparison;
+  const box = document.getElementById('comparison');
+  box.innerHTML = '';
+  if (!c) {
+    box.append(h('span',{class:'muted'}, '初始全量帧已提交到 SQLite。执行编辑后这里显示增量/全量比对。'));
+    return;
+  }
+  const rows = [
+    ['逐像素相等', c.pixel_equal], ['内容哈希逐项相等', c.hash_equal],
+    ['覆盖率逐项相等', c.tile_metrics_equal], ['命中统计相等', c.hit_stats_equal]
+  ];
+  box.append(h('div',{class:'grid'}, ...rows.map(([label, ok]) =>
+    h('div',{class:'metric'}, h('b',{class:ok?'ok':'bad'}, ok?'PASS':'FAIL'), h('span',{}, label)))));
+  if (!c.pixel_equal || c.first_mismatch_tile) {
+    box.append(h('pre',{}, `first_mismatch_tile=${c.first_mismatch_tile || '-'}\npixel=${JSON.stringify(c.first_mismatch_pixel)}\nmismatched_pixels=${c.mismatched_pixels}\n${c.first_metric_mismatch || ''}`));
+  }
+}
+
+function renderPlan(s) {
+  const plan = s.plan;
+  const box = document.getElementById('plan');
+  box.innerHTML = '';
+  if (!plan) {
+    box.append(h('div',{class:'muted'}, '无编辑。所有分块由确定性渲染器产出并按 tile 顺序单事务提交。'));
+    return;
+  }
+  box.append(h('div',{class:'chips', style:'margin-bottom:8px'},
+    ...(plan.changes||[]).map(c => h('span',{class:'chip invalid'}, `${c.component}: ${c.before}→${c.after}`))));
+  const section = (title, ids, cls) => h('div',{},
+    h('div',{style:'margin:8px 0 4px;font-weight:700'}, `${title} (${ids.length})`),
+    h('div',{class:'chips'}, ...ids.map(id => h('span',{class:`chip ${cls}`}, id))));
+  box.append(section('直接失效', plan.direct_tiles||[], 'invalid'));
+  box.append(section('下游传播', plan.downstream_tiles||[], 'invalid'));
+  box.append(section('哈希变化', plan.changed_hash_tiles||[], 'invalid'));
+  box.append(section('归因失效', plan.attribution_ids||[], 'invalid'));
+  box.append(section('持久化复用', plan.reused_tiles||[], 'reused'));
+}
+
+function renderTiles(s) {
+  const table = document.getElementById('tileTable');
+  table.innerHTML = '';
+  table.append(h('tr',{}, h('th',{},'Tile'), h('th',{},'Content Hash'), h('th',{},'覆盖 bp'), h('th',{},'折线 bp'), h('th',{},'折线占比'), h('th',{},'反弹')));
+  for (const t of s.tiles || []) {
+    table.append(h('tr',{},
+      h('td',{class:'mono'}, t.tile.id),
+      h('td',{class:'mono muted', title:t.content_hash}, t.content_hash.slice(0,12)),
+      h('td',{}, String(t.coverage_bp)),
+      h('td',{}, String(t.polyline_coverage_bp)),
+      h('td',{}, String(t.polyline_share_bp)),
+      h('td',{}, String(t.bounce_markers?.length || 0))
+    ));
+  }
+}
+
+function renderSnapshots(s) {
+  const snaps = s.snapshots || [];
+  const metrics = document.getElementById('snapshotMetrics');
+  metrics.innerHTML = '';
+  metrics.append(
+    h('div',{class:'metric'}, h('b',{}, String(snaps.length)), h('span',{},'当前快照分块')),
+    h('div',{class:'metric'}, h('b',{}, String((s.commit_log||[]).length)), h('span',{},'有序提交日志')),
+    h('div',{class:'metric'}, h('b',{class:'ok'}, 'SQLite'), h('span',{},'modernc 纯 Go 驱动')),
+    h('div',{class:'metric'}, h('b',{}, '1 tx/tile'), h('span',{},'颜色+深度+版本'))
+  );
+  const table = document.getElementById('snapshotTable');
+  table.innerHTML = '';
+  table.append(h('tr',{}, h('th',{},'#'), h('th',{},'Tile'), h('th',{},'Color'), h('th',{},'Depth'), h('th',{},'Order')));
+  for (const r of snaps.slice(0, 40)) {
+    table.append(h('tr',{},
+      h('td',{}, String(r.commit_order)),
+      h('td',{class:'mono'}, r.tile_id),
+      h('td',{class:'mono muted', title:r.color_digest}, r.color_digest.slice(0,10)),
+      h('td',{class:'mono muted', title:r.depth_digest}, r.depth_digest.slice(0,10)),
+      h('td',{}, String(r.commit_order))
+    ));
+  }
+}
+
+function renderPool(s) {
+  const table = document.getElementById('poolTable');
+  table.innerHTML = '';
+  table.append(h('tr',{}, h('th',{},'Tile'), h('th',{},'事件'), h('th',{},'原因'), h('th',{},'活跃')));
+  for (const e of (s.pool_audit||[]).slice(-30).reverse()) {
+    table.append(h('tr',{},
+      h('td',{class:'mono'}, e.tile_id),
+      h('td',{class:e.event==='queued'?'warn':'muted'}, e.event),
+      h('td',{class:'muted'}, e.reason || ''),
+      h('td',{}, `${e.active_workers}/${e.max_workers}`)
+    ));
+  }
+}
+
+function renderSchema(s) {
+  const box = document.getElementById('schemaInfo');
+  box.innerHTML = '';
+  for (const info of s.schema_info || []) {
+    box.append(h('div',{style:'margin-bottom:10px'},
+      h('div',{style:'display:flex;justify-content:space-between;gap:8px'},
+        h('b',{}, `schema v${info.version}`),
+        info.loaded ? h('span',{class:'ok'}, 'LOADED') : h('span',{class:'bad'}, info.error?.code || 'ERROR')),
+      info.loaded
+        ? h('div',{class:'muted'}, `${info.segment_count} segments · fills ${info.fill_count} · E_LOSSY ${info.loss_count}`)
+        : h('pre',{}, JSON.stringify(info.error, null, 2)),
+      info.fills?.length ? h('details',{}, h('summary',{class:'muted'}, `补齐痕迹 ${info.fills.length}`), h('pre',{}, JSON.stringify(info.fills.slice(0,4), null, 2))) : null,
+      info.losses?.length ? h('details',{}, h('summary',{class:'warn'}, `降级损失 ${info.losses.length}`), h('pre',{}, JSON.stringify(info.losses.slice(0,4), null, 2))) : null
+    ));
+  }
+}
+
+function renderInjection(s) {
+  const box = document.getElementById('injection');
+  const x = s.injection;
+  if (!x) return;
+  box.innerHTML = '';
+  box.append(h('div',{class:x.ok?'ok':'bad', style:'margin-bottom:8px'}, x.ok ? `✓ ${x.expected_code} 已定位` : '注入结果不符合预期'));
+  box.append(h('pre',{}, JSON.stringify(x.issue || {message:x.message}, null, 2)));
+}
+
+async function loadState() {
+  const s = await (await fetch('/api/state', {cache:'no-store'})).json();
+  lastState = s;
+  document.getElementById('seed').textContent = `seed=0x${s.seed.toString(16)} · ${s.db_path}`;
+  document.getElementById('dbPath').textContent = s.db_path;
+  document.getElementById('algo').textContent = s.algorithm_version;
+  document.getElementById('framePNG').src = `/api/frame.png?t=${Date.now()}`;
+  renderScene(s); renderAttribution(s); renderComparison(s); renderPlan(s);
+  renderTiles(s); renderSnapshots(s); renderPool(s); renderSchema(s); renderInjection(s);
+}
+async function edit(kind) {
+  await fetch(`/api/edit?kind=${kind}`, {method:'POST'});
+  await loadState();
+}
+async function inject(kind) {
+  await fetch(`/api/inject?case=${kind}`, {method:'POST'});
+  await loadState();
+}
+async function resetDemo() {
+  await fetch('/api/reset', {method:'POST'});
+  await loadState();
+}
+loadState().catch(err => {
+  document.body.insertAdjacentHTML('beforeend', `<pre style="color:#fecdd3;padding:20px">${err}</pre>`);
+});
+setInterval(() => { if (!document.hidden) loadState(); }, 5000);
+</script>
+</body>
+</html>
