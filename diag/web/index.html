@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VolFog 体积雾分块诊断工作台</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, "Noto Sans SC", system-ui, sans-serif; background:#0b1020; color:#e5eefc; }
+    body { margin:0; }
+    header { padding:16px 22px; background:linear-gradient(120deg,#101a35,#172554); border-bottom:1px solid #263766; }
+    h1 { margin:0 0 4px; font-size:20px; }
+    main { padding:18px 22px; display:grid; grid-template-columns: 340px 1fr 360px; gap:16px; align-items:start; }
+    .card { background:#111a31; border:1px solid #263766; border-radius:12px; padding:14px; box-shadow:0 8px 24px #0003; }
+    .card h2 { font-size:14px; margin:0 0 10px; color:#9cc2ff; letter-spacing:.04em; }
+    button { width:100%; margin:4px 0; border:1px solid #35508f; background:#18274a; color:#eaf2ff; border-radius:8px; padding:8px 10px; cursor:pointer; }
+    button:hover { background:#213766; border-color:#5b82d9; }
+    button.danger { border-color:#8f3550; background:#401827; }
+    button.good { border-color:#2f7d55; background:#143826; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .metrics { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+    .metric { background:#0c1428; border-radius:8px; padding:8px; }
+    .metric b { display:block; font-size:16px; color:#fff; }
+    .metric span { font-size:12px; color:#91a4c7; }
+    canvas { width:100%; image-rendering:pixelated; border:1px solid #2b3d70; border-radius:8px; background:#050914; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    td,th { border-bottom:1px solid #24345f; padding:5px 4px; text-align:left; }
+    pre { white-space:pre-wrap; word-break:break-word; background:#070d1d; border:1px solid #24345f; border-radius:8px; padding:10px; max-height:360px; overflow:auto; font-size:11px; }
+    .chain { border-left:3px solid #60a5fa; padding:8px; margin:8px 0; background:#0c1730; border-radius:0 8px 8px 0; font-size:12px; }
+    .pill { display:inline-block; border-radius:999px; padding:2px 8px; margin:2px; background:#1e3a8a; font-size:11px; }
+    .pill.bad { background:#7f1d1d; }
+    .pill.ok { background:#14532d; }
+    .muted { color:#91a4c7; font-size:12px; line-height:1.5; }
+    #status { font-size:12px; color:#a7f3d0; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>透明介质体积雾 · 分块积分渲染内核</h1>
+  <div class="muted">固定种子确定性样本 / 定点区间 / 精确失效传播 / SQLite 原子检查点 / 三路径比对</div>
+  <div id="status">等待状态…</div>
+</header>
+<main>
+  <section class="card">
+    <h2>操作与异常注入</h2>
+    <button class="good" onclick="previewCompare()">模拟拖动：预览 + 全精度一致性判定</button>
+    <label class="muted" for="previewSteps">拖动期间预览步进：<b id="previewStepsValue">6</b> / 全精度 18</label>
+    <input id="previewSteps" type="range" min="2" max="12" value="6" style="width:100%" oninput="previewDrag()" onchange="previewCompare()" />
+    <button onclick="checkpointRender()">执行分块检查点渲染</button>
+    <button onclick="densityEdit(true)">应用生成器声明的密度编辑</button>
+    <button onclick="coefficientEdit()">系数编辑：左雾 absorption=0.08</button>
+    <button onclick="verifyTruth()">核对解析真值</button>
+    <button onclick="verifyPaths()">三路径 + 字段级自动比对</button>
+    <div class="row">
+      <button class="danger" onclick="fault('decode')">注入 E_DECODE</button>
+      <button class="danger" onclick="fault('order')">注入 E_ORDER</button>
+      <button class="danger" onclick="fault('density')">注入 E_DENS</button>
+      <button class="danger" onclick="faultBlock()">注入 E_BLOCK #7</button>
+    </div>
+    <button class="good" onclick="retryBlock(7)">清理故障并重试块 #7</button>
+    <h2 style="margin-top:14px">场景摘要</h2>
+    <div id="summary" class="muted"></div>
+    <h2 style="margin-top:14px">判定输出</h2>
+    <pre id="output">点击操作后显示结构化报告。</pre>
+  </section>
+
+  <section class="card">
+    <h2>块透射率热力图（蓝→白表示透射率）</h2>
+    <canvas id="tCanvas" width="384" height="216"></canvas>
+    <h2 style="margin-top:14px">散射辐亮度热力图（黑→紫→橙）</h2>
+    <canvas id="lCanvas" width="384" height="216"></canvas>
+    <div id="frameMetrics" class="metrics" style="margin-top:10px"></div>
+  </section>
+
+  <section>
+    <div class="card">
+      <h2>预算占用与排队明细</h2>
+      <div id="budget" class="metrics"></div>
+      <table style="margin-top:8px"><thead><tr><th>块</th><th>原因</th><th>等待 ms</th></tr></thead>
+        <tbody id="queueRows"></tbody></table>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h2>精确失效传播示意</h2>
+      <div id="manifest" class="muted">尚未编辑。</div>
+    </div>
+  </section>
+</main>
+<script>
+let state = null;
+async function api(path, body) {
+  const opt = { method:'POST', headers:{'Content-Type':'application/json'}, body: body ? JSON.stringify(body) : '{}' };
+  const res = await fetch(path, opt);
+  return await res.json();
+}
+function show(v) { document.getElementById('output').textContent = JSON.stringify(v, null, 2); }
+function errText(e) { return e ? `[${e.code}] ${e.message}` : 'OK'; }
+
+async function refresh() {
+  state = await (await fetch('/api/state')).json();
+  const sc = state.scenario;
+  document.getElementById('status').textContent = `DB: ${state.db_path} · ${sc.width}×${sc.height} · ${state.viewport.tiles.length} blocks · graph ${state.graph_node_count} nodes / ${state.graph_edge_count} edges`;
+  document.getElementById('summary').innerHTML = `
+    <div>种子：<b>${sc.seed}</b>，定点刻度：<b>${sc.fixed_scale}</b></div>
+    <div>介质：${sc.media.map(m=>`<span class="pill">${m.id}</span>`).join('')}</div>
+    <div>相机轨迹：${sc.cameras.cameras.map(c=>`t=${c.time} ${c.id}`).join('，')}</div>
+    <div>配方：steps=${sc.recipe.steps}, preview=${sc.recipe.preview_steps}, shadows=${sc.recipe.shadow_samples}/${sc.recipe.preview_shadow_samples}, ${sc.recipe.phase}</div>
+    <div>真值：${sc.truth.pixels.length} pixels，${sc.truth.density_integrals.length} density segments；声明失效块 ${JSON.stringify(sc.truth.density_invalidation.expected_blocks)}</div>`;
+  drawHeat('tCanvas', state.last_frame, 't', false);
+  drawHeat('lCanvas', state.last_frame, 'radiance', true);
+  renderMetrics(state.last_frame);
+  renderBudget(state.last_frame);
+  renderManifest(state.last_manifest);
+}
+function drawHeat(id, frame, key, radiance) {
+  const c = document.getElementById(id), ctx = c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  if (!frame) { ctx.fillStyle='#64748b'; ctx.fillText('暂无帧', 12, 20); return; }
+  const scale = Math.min(c.width/frame.width, c.height/frame.height);
+  let max = 1;
+  if (radiance) { max = Math.max(1e-9, ...frame[key]); }
+  for (let y=0;y<frame.height;y++) for(let x=0;x<frame.width;x++) {
+    const v = frame[key][y*frame.width+x];
+    if (radiance) {
+      const q = Math.min(1, v/max);
+      ctx.fillStyle = q<.5 ? `rgb(${Math.floor(20+q*180)},${Math.floor(10+q*40)},${Math.floor(60+q*260)})` : `rgb(255,${Math.floor(80+(1-q)*220)},${Math.floor(20+q*40)})`;
+    } else {
+      const q = Math.max(0,Math.min(1,v));
+      ctx.fillStyle = `rgb(${Math.floor(10+70*(1-q))},${Math.floor(30+150*q)},${Math.floor(80+175*q)})`;
+    }
+    ctx.fillRect(x*scale,y*scale,Math.ceil(scale),Math.ceil(scale));
+  }
+  ctx.strokeStyle='rgba(255,255,255,.28)'; ctx.lineWidth=1;
+  const ts = state.scenario.recipe.tile_size;
+  for(let x=0;x<=frame.width;x+=ts){ ctx.beginPath(); ctx.moveTo(x*scale,0); ctx.lineTo(x*scale,frame.height*scale); ctx.stroke(); }
+  for(let y=0;y<=frame.height;y+=ts){ ctx.beginPath(); ctx.moveTo(0,y*scale); ctx.lineTo(frame.width*scale,y*scale); ctx.stroke(); }
+}
+function metric(label, value) { return `<div class="metric"><b>${value}</b><span>${label}</span></div>`; }
+function renderMetrics(f) {
+  const el = document.getElementById('frameMetrics');
+  if (!f) { el.innerHTML=''; return; }
+  el.innerHTML = [
+    metric('模式', f.mode), metric('块数', f.blocks.filter(b=>b&&b.status!=='failed').length + '/' + f.blocks.length),
+    metric('步进/段', f.quality.step_budget_per_span), metric('阴影/步', f.quality.shadow_samples_per_step),
+    metric('总步进', f.quality.total_steps_used), metric('总阴影', f.quality.total_shadow_samples),
+    metric('耗时 ms', f.quality.elapsed_ms.toFixed(2)), metric('预览延迟', f.quality.within_delay_limit ? '达标' : '超限')
+  ].join('');
+}
+function renderBudget(f) {
+  const b = f?.budget;
+  document.getElementById('budget').innerHTML = b ? [
+    metric('最大并行', b.max_parallel_blocks), metric('峰值并行', b.peak_parallel),
+    metric('射线缓冲', b.ray_buffer_per_worker), metric('阴影已用/预算', `${b.shadow_used}/${b.shadow_budget}`)
+  ].join('') : '<span class="muted">暂无预算数据</span>';
+  const rows = b?.queue || [];
+  document.getElementById('queueRows').innerHTML = rows.length ? rows.map(q=>`<tr><td>#${q.block_id}</td><td>${q.reason}</td><td>${q.wait_ms.toFixed(3)}</td></tr>`).join('') : '<tr><td colspan=3 class=muted>无排队（预算充足）</td></tr>';
+}
+function renderManifest(m) {
+  const el = document.getElementById('manifest');
+  if (!m || !m.items?.length) { el.innerHTML = m ? `<span class="pill ok">${m.reason}: 无块失效</span>` : '尚未编辑。'; return; }
+  el.innerHTML = `<div><span class="pill bad">${m.reason}</span> 失效块：${m.blocks.map(id=>`<span class="pill bad">#${id}</span>`).join('')}</div>` +
+    m.items.map(it=>`<div class="chain">介质 <b>${it.medium_id||'-'}</b><br>字段 ${it.field_path||it.reason}<br>voxel ${it.voxel_key||'-'}<br>→ ray segments → block <b>#${it.block_id}</b> → ${it.pixels?.length||0} pixels</div>`).join('');
+}
+let dragTimer = null;
+function previewDrag() {
+  const value = Number(document.getElementById('previewSteps').value);
+  document.getElementById('previewStepsValue').textContent = value;
+  clearTimeout(dragTimer);
+  dragTimer = setTimeout(async () => {
+    const r = await api('/api/render/preview', {preview_steps: value});
+    if (r.ok) {
+      drawHeat('tCanvas', r.frame, 't', false);
+      drawHeat('lCanvas', r.frame, 'radiance', true);
+      renderMetrics(r.frame);
+      renderBudget(r.frame);
+    } else {
+      show(r);
+    }
+  }, 90);
+}
+async function previewCompare(){
+  const preview_steps = Number(document.getElementById('previewSteps').value);
+  const r=await api('/api/render/preview-compare', {preview_steps});
+  show({ok:r.ok, comparison_error:r.comparison_error, preview_quality:r.preview?.quality, full_quality:r.full?.quality});
+  await refresh();
+}
+async function checkpointRender(){ const r=await api('/api/render/checkpoint'); show({ok:r.ok,error:r.error,committed:r.result?.committed_blocks,sequence:r.result?.commit_sequence,cache_hits:r.result?.cache_hits}); await refresh(); }
+async function densityEdit(){ const r=await api('/api/edit/density',{declared:true}); show({ok:r.ok,changed:r.changed,manifest:r.manifest,error:r.error,computed:r.result?.computed_blocks,cache_hits:r.result?.cache_hits,sequence:r.result?.commit_sequence}); await refresh(); }
+async function coefficientEdit(){ const r=await api('/api/edit/coefficient',{medium_id:'fog-uniform-left',field:'absorption',value:0.08}); show({ok:r.ok,manifest:r.manifest,error:r.error,computed:r.result?.computed_blocks,cache_hits:r.result?.cache_hits}); await refresh(); }
+async function verifyTruth(){ const r=await api('/api/verify/truth'); show(r); }
+async function verifyPaths(){ const r=await api('/api/verify/paths'); show(r); }
+async function fault(kind){ const r=await api('/api/faults/inject',{kind}); show(r); await refresh(); }
+async function faultBlock(){ const r=await api('/api/faults/inject',{kind:'block',block_id:7}); show({ok:r.ok,error:r.error,failed:r.result?.frame?.failed_blocks,committed:r.result?.committed_blocks}); await refresh(); }
+async function retryBlock(id){ const r=await api('/api/faults/retry',{block_id:id}); show({ok:r.ok,error:r.error,recovered:r.result?.recovered_blocks,committed:r.result?.committed_blocks,sequence:r.result?.commit_sequence}); await refresh(); }
+refresh();
+</script>
+</body>
+</html>
