@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lip Arbitration Diagnostics</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2f;--panel2:#17213a;--ink:#e9eefc;--muted:#91a0c7;
+--cyan:#53d8ff;--green:#55e6a5;--amber:#ffc857;--red:#ff6b7a;--violet:#b18cff;--line:#263453}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 15% -10%,#18305a 0,var(--bg) 55%);
+color:var(--ink);font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+main{max-width:1500px;margin:0 auto;padding:26px}
+h1{font-size:26px;letter-spacing:.02em;margin:0 0 4px}
+h2{font-size:16px;margin:28px 0 12px;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase}
+.sub{color:var(--muted);margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+border-radius:12px;padding:14px;box-shadow:0 12px 32px #0005}
+.k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.v{font-size:22px;font-weight:700;margin-top:4px}
+.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;background:#0e1628}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 7px;margin:1px;
+font-size:11px;background:#0d1527}
+.a{color:var(--green);border-color:#24694d}.d{color:var(--amber);border-color:#725a22}
+.p{color:var(--red);border-color:#7a303b}.r{color:var(--violet);border-color:#5a4388}
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto}
+.row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;margin:8px 0}
+.track{position:relative;height:30px;background:#0a1122;border:1px solid var(--line);border-radius:6px}
+.bar{position:absolute;top:4px;bottom:4px;background:linear-gradient(90deg,var(--red),var(--amber));
+border-radius:4px;opacity:.8;min-width:2px}
+.ticks{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-left:130px}
+.version{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+.version .card h3{margin:0 0 8px;font-size:15px;color:var(--violet)}
+.muted{color:var(--muted)}.small{font-size:11px}
+button{background:#142342;color:var(--ink);border:1px solid #355382;border-radius:8px;padding:8px 11px;
+font:inherit;cursor:pointer}button:hover{border-color:var(--cyan);color:var(--cyan)}
+pre{white-space:pre-wrap;word-break:break-word;background:#080e1b;border:1px solid var(--line);
+border-radius:10px;padding:12px;max-height:360px;overflow:auto}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin:8px 0 14px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+</style>
+</head>
+<body>
+<main>
+<h1>口型包帧预算仲裁 · 本地诊断</h1>
+<div class="sub" id="sub">loading deterministic sample…</div>
+<section class="grid" id="summary"></section>
+
+<h2>三版本装载与降级映射</h2>
+<div class="version" id="versions"></div>
+
+<h2>逐帧通道仲裁</h2>
+<div class="legend">
+<span><i class="sw" style="background:var(--green)"></i>受理</span>
+<span><i class="sw" style="background:var(--amber)"></i>延后</span>
+<span><i class="sw" style="background:var(--red)"></i>抢占</span>
+<span><i class="sw" style="background:var(--violet)"></i>恢复</span>
+</div>
+<div style="overflow:auto"><table id="frames"></table></div>
+
+<h2>抢占余量与恢复排程</h2>
+<div style="overflow:auto"><table id="preempts"></table></div>
+<div style="overflow:auto;margin-top:12px"><table id="packets"></table></div>
+
+<h2>编辑失效传播</h2>
+<div class="grid" id="invalidationCards"></div>
+<div class="chart" id="charts"></div>
+
+<h2>异常注入</h2>
+<div class="card">
+<div class="legend">
+<button data-fault="decode">工程损坏 · E_DECODE</button>
+<button data-fault="order">帧序倒置 · E_ORDER</button>
+<button data-fault="cap">槽位/预算矛盾 · E_CAP</button>
+</div>
+<pre id="faultOut">选择一种注入查看结构化错误。</pre>
+</div>
+</main>
+<script>
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const pill = (v, cls) => `<span class="pill ${cls}">${esc(v)}</span>`;
+const pills = (arr, cls) => (arr || []).length ? arr.map(v => pill(v, cls)).join("") : '<span class="muted">—</span>';
+
+fetch('/api/state').then(r => r.json()).then(state => {
+  document.querySelector('#sub').textContent =
+    `${state.project} · seed ${state.seed} · ${state.run.algorithm_version} · SQLite ${state.database}`;
+  const trace = state.run;
+  const summary = [
+    ['真值一致', state.truth_matches ? 'YES' : 'NO', state.truth_matches ? 'ok' : 'bad'],
+    ['帧数', trace.frames.length, ''],
+    ['窗口提交', trace.commit_sequence.join(' → '), ''],
+    ['抢占事件', trace.preemptions.length, 'warn'],
+    ['实际恢复', trace.resumes.length, 'ok'],
+    ['放弃', trace.abandonments.length, 'bad'],
+    ['最大并行度', trace.parallel_stats.max_running + '/' + state.limits.max_workers, ''],
+    ['队列/缓冲等待', trace.parallel_stats.queue_waits + '/' + trace.parallel_stats.candidate_buffer_waits, ''],
+  ];
+  document.querySelector('#summary').innerHTML = summary.map(([k,v,c]) =>
+    `<div class="card"><div class="k">${esc(k)}</div><div class="v ${c}">${esc(v)}</div></div>`).join('');
+
+  document.querySelector('#versions').innerHTML = state.versions.map(v => {
+    const channels = v.channels.map(c =>
+      `<div class="small">${esc(c.id)} · ${c.slots} slots · ${c.budget} bp` +
+      (c.source_scale ? ` <span class="muted">← ${c.source_budget} ${c.source_scale}</span>` : '') + `</div>`).join('');
+    const fills = v.default_fills.length ? v.default_fills.map(f =>
+      `<span class="pill">${esc(f.path)} = ${esc(JSON.stringify(f.default_value))}</span>`).join('') :
+      '<span class="muted small">无补全</span>';
+    const losses = v.losses && v.losses.items && v.losses.items.length ?
+      v.losses.items.slice(0,6).map(x => `<span class="pill p">${esc(x.kind)}</span>`).join('') :
+      '<span class="muted small">无降级损失</span>';
+    return `<div class="card">
+      <h3>${esc(v.version)}</h3>
+      <div class="small muted">${esc(v.field_naming)} / ${esc(v.time_base)} / ${esc(v.budget_scale)} / ${esc(v.channel_layout)}</div>
+      <div style="margin:8px 0">${channels}</div>
+      <div class="k">order</div><div class="small">${esc(v.arbitration_order.join(' → '))}</div>
+      <div class="k" style="margin-top:8px">升级补全</div><div>${fills}</div>
+      <div class="k" style="margin-top:8px">降级损失</div><div>${losses}</div>
+    </div>`;
+  }).join('');
+
+  const frameRows = trace.frames.map(f => {
+    const cells = f.channels.map(c => `<td>
+      <div class="small"><b>${esc(c.channel_id)}</b> · ${c.occupied_slots} slot · ${c.used_budget_basis_points} bp</div>
+      <div>A ${pills(c.accepted,'a')}</div>
+      <div>D ${pills(c.delayed,'d')}</div>
+      <div>P ${pills(c.preempted,'p')}</div>
+      <div>R ${pills(c.resumed,'r')}</div>
+    </td>`).join('');
+    return `<tr><td><b>${f.frame}</b></td>${cells}</tr>`;
+  }).join('');
+  document.querySelector('#frames').innerHTML =
+    `<thead><tr><th>frame</th>${trace.frames[0].channels.map(c=>`<th>${esc(c.channel_id)}</th>`).join('')}</tr></thead><tbody>${frameRows}</tbody>`;
+
+  const preemptRows = trace.preemptions.map(p => `<tr>
+    <td>${p.frame}</td><td>${esc(p.channel_id)}</td><td>${esc(p.packet_id)}</td><td>${esc(p.by_packet_id)}</td>
+    <td>${p.delivered_frames}</td><td>${p.remaining_frames}</td><td>${p.recovery_frame}</td>
+  </tr>`).join('');
+  document.querySelector('#preempts').innerHTML =
+    `<thead><tr><th>frame</th><th>channel</th><th>被抢占包</th><th>触发包</th><th>已下发</th><th>剩余</th><th>计划恢复帧</th></tr></thead><tbody>${preemptRows}</tbody>`;
+
+  const packetRows = trace.packet_states.map(p => `<tr>
+    <td>${esc(p.id)}</td><td>${esc(p.channel_id)}</td><td>${esc(p.status)}</td><td>${p.delivered_frames}</td>
+    <td>${p.remaining_frames}</td><td>${p.recovery_frame || '—'}</td><td>${p.protected_until || '—'}</td>
+    <td>${p.abandon_reason ? esc(p.abandon_reason) : '—'}</td>
+  </tr>`).join('');
+  document.querySelector('#packets').innerHTML =
+    `<thead><tr><th>packet</th><th>channel</th><th>状态</th><th>已下发</th><th>剩余</th><th>恢复帧</th><th>保护至</th><th>放弃依据</th></tr></thead><tbody>${packetRows}</tbody>`;
+
+  const inv = state.invalidations;
+  document.querySelector('#invalidationCards').innerHTML = Object.entries(inv).map(([k,r]) =>
+    `<div class="card"><div class="k">${esc(k)}</div>
+      <div class="v warn">${r.recomputed_frames} 帧失效</div>
+      <div class="small muted">复用 ${r.reused_frames} · store hits ${r.store_hits} · 包 ${r.invalidated_packet_ids.length}</div>
+    </div>`).join('');
+
+  const maxFrame = Math.max(...trace.frames.map(f => f.frame), 1);
+  const colors = {budget:'var(--red)',order:'var(--amber)',recovery:'var(--violet)'};
+  document.querySelector('#charts').innerHTML = Object.entries(inv).map(([k,r]) => {
+    const rows = r.intervals.map(i => {
+      const left = (i.start_frame / (maxFrame+1)) * 100;
+      const width = ((i.end_frame - i.start_frame + 1) / (maxFrame+1)) * 100;
+      return `<div class="row"><div class="small">${esc(i.channel_id)} [${i.start_frame}-${i.end_frame}]</div>
+        <div class="track"><div class="bar" title="${esc(i.packet_ids.join(', '))}"
+          style="left:${left}%;width:${width}%;background:${colors[k] || 'var(--red)'}"></div></div></div>`;
+    }).join('') || '<div class="muted">没有帧失效</div>';
+    return `<h3 class="small">${esc(k)} · ${esc(r.change.kind)}</h3>${rows}`;
+  }).join('') + `<div class="ticks"><span>frame 0</span><span>${maxFrame}</span></div>`;
+}).catch(err => {
+  document.querySelector('#sub').textContent = 'failed: ' + err;
+});
+
+document.querySelectorAll('[data-fault]').forEach(btn => btn.addEventListener('click', () => {
+  const kind = btn.dataset.fault;
+  fetch('/api/fault?kind=' + encodeURIComponent(kind)).then(r=>r.json()).then(v => {
+    document.querySelector('#faultOut').textContent = JSON.stringify(v, null, 2);
+  });
+}));
+</script>
+</body>
+</html>
