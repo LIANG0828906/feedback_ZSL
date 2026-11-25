@@ -1,22 +1,259 @@
-骨骼动画与动作重定向这条链路眼下还没有一行可运行代码，工作目录刚被创建成空目录，没有任何样本与历史约定可参照，首个可验收版本要在这里独立成形。目标是把同一份骨骼绑定与动作片段在三个发行格式之间无损装载为统一内部模型，再把源骨架的逐帧姿态按重定向规则迁移到目标骨架，输出目标骨架各关节的旋转与位移，并在设计师修改骨骼拓扑、重定向系数或精度参数后只重算真正受影响的帧区间。全部绑定、动作与真值由题内确定性生成器按固定种子产出：骨骼层级与关节约束、逐帧关节旋转与根位移、重定向映射与缩放系数、目标骨架比例声明，以及若干采样帧各关节的期望旋转四元数与位移向量；真值只来自生成器的解析构造，是精度观测的唯一来源，不从任何计算输出反推。
+# Skeleton Retarget
 
-任务环境与准备：
-安装 Go 1.22 或以上版本，确认 go 命令可用，执行 go env 检查工作目录位于 Linux 文件系统而非跨盘挂载路径。
-准备纯 Go 的 SQLite 依赖（如 modernc.org/sqlite），在模块内执行 go get 并在 go.mod 中锁定版本，不依赖 CGO 与本机数据库服务。
-确认可用本地回环端口与磁盘临时目录，用于启动诊断页面与写入持久化文件；不需要任何外部账号、集群、GPU 或网络资源。
-运行前执行 go build ./... 与 go vet ./... 确认工程可构建，本地确定性生成器与全部样本由实现自行产出，不引入外部数据文件。
+Deterministic, pure-Go implementation of the bone-animation/retarget acceptance
+chain. The first release is intentionally self-contained: all bindings, motion,
+target proportions and truth samples are generated from a fixed seed by code in
+this repository. There are no external data files, services, GPUs or containers.
 
-业务要求：
-1. 实现三发行格式骨骼绑定与动作工程的统一装载器：读取骨骼层级、关节约束、逐帧旋转与根位移、重定向映射与目标骨架比例声明及真值清单，把字段命名差异、旋转四元数的分量顺序与整型定点刻度、角度与弧度表达、时间基准（帧序号与毫秒）、骨骼层级扁平表与嵌套树表达统一映射为内部模型并保留源版本标识；未知版本号或必填字段缺失返回 E_SCHEMA 并指出字段路径与源版本。
-2. 实现旋转四元数与整型定点的规范化核心：装载后对每个关节每帧的四元数按声明定点刻度做整型归一化，归一化残差与分量截断位置逐帧记录，全链路禁止浮点累积；同一四元数经高版本到低版本再回高版本的往返后，各分量与原始值的偏差不得超过声明取整容差，模长偏离单位值的程度须落在声明容差内，越界返回 E_NORM 并指出关节标识与帧号。
-3. 实现帧与毫秒基准、角度与弧度、骨骼层级扁平表与嵌套树之间的整型换算与结构等价校验：换算按声明取舍方向处理余数并记录截断位置，同一动作在两个时间基准版本下的逐帧姿态须等价；骨骼层级在扁平表与嵌套树两种表达下必须得到相同的父子关系与拓扑序，拓扑存在环或关节引用不存在的父级时返回 E_TOPO 并给出首个违规关节。
-4. 实现源骨架到目标骨架的重定向核心：按重定向映射与目标骨架比例声明，把源骨架逐帧关节旋转经父子链累积换算为世界朝向，再按映射重新分配到目标关节，随比例调整关节位移与旋转缩放并输出目标骨架逐帧各关节旋转与位移；要求未编辑时目标关节旋转与真值的偏差落在声明容差内，容差收紧时偏差统计单调不增，映射引用的关节在目标骨架不存在时返回 E_MAP。
-5. 实现数值精度传播报告：逐帧逐关节记录四元数归一化残差、父子链累积的定点乘法截断误差、比例缩放的取整偏差与重定向映射重分配带来的朝向偏移，并给出这四项对目标关节旋转偏差的累积上界估计；上界只能由已观测的定点刻度、链长、比例系数与映射关系推导，不得使用真值参与计算，且实际偏差超出上界时返回 E_BOUND 并指出关节与帧号。
-6. 实现帧区间的精确失效传播与增量重算：显式记录骨骼拓扑、重定向映射、比例系数、精度参数与逐帧目标姿态之间的依赖关系，缓存键由动作内容哈希、帧区间标识、拓扑版本、参数版本与上游缓存键共同决定；编辑某关节约束、映射关系或精度参数时只将实际受影响帧区间及其下游标记失效并输出含帧区间编号、失效关节与失效依据的清单，未受影响区间复用持久化结果，增量重算与从空缓存全量重算的目标旋转与位移须逐帧逐项相等。
-7. 实现帧区间级状态机与基于 SQLite 的原子检查点：每个帧区间在待装载、待重定向、重定向中、已提交、失败五类状态间只能沿合法迁移推进，非法迁移返回 E_STATE 并保持原状态与进度；每提交一个区间把该区间各目标关节旋转与位移摘要、换算与归一化残差、依赖集合、内容哈希、参数版本与算法版本在单一事务中串行写入，写入不得交错且区间提交顺序稳定；重启加载时任一内容哈希或版本不匹配须整体作废快照并从最近一致区间继续，用户取消或进程被强制终止后只依据已提交区间恢复，不承诺生成退出报告。
-8. 实现受限预算下的多帧并行重算、异常隔离与本地诊断页面：帧内各关节重定向与误差统计在工作线程池并行推进时须限制最大并行度、每线程关节状态缓冲上限与待处理帧队列预算，预算耗尽时阻塞排队并记录排队原因与等待时长而非静默丢弃帧，共享检查点写入串行且区间顺序稳定；单帧内部异常须置该帧为失败并允许重试且不污染其他帧与已提交区间，注入绑定数据损坏、旋转分量越界、帧序倒置与单帧内部失败分别走 E_DECODE、E_COMP、E_ORDER、E_FRAME 链路；页面展示骨骼层级、逐帧目标关节姿态、残差与上界曲线、失效区间与命中情况以及装载、增量、恢复三条路径的比对结果。
+## Quick Start
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+Requirements: Go 1.22+ on a Linux filesystem. SQLite is
+`modernc.org/sqlite v1.34.5` (pure Go, no CGO).
 
-验收：
-用本地样本验证三格式装载、重定向精度、失效传播与断点恢复，并比对三条路径逐帧目标姿态一致。
+```sh
+go build ./...
+go vet ./...
+go test ./...
+go run ./cmd/skeletonretarget verify
+go run ./cmd/skeletonretarget demo
+go run ./cmd/skeletonretarget demo --json
+go run ./cmd/skeletonretarget serve --addr 127.0.0.1:0
+```
+
+`serve` refuses non-loopback addresses and prints the selected ephemeral port.
+It exposes `/` for the diagnostic page and `/api/report` for the same data as
+JSON. The page shows the source hierarchy, target proportions, mapping table,
+per-frame target rotations/positions, residual and derived-bound curves, the
+edited interval invalidation list, cache hits, and load/incremental/recovery
+comparisons.
+
+## Architecture
+
+| Package | Responsibility |
+| --- | --- |
+| `internal/model` | Unified document, skeleton, clip, mapping, truth and error model |
+| `internal/fixed` | Integer fixed-point quaternion/vector math, rounding and time conversion |
+| `internal/topology` | Flat/nested topology normalization, cycle and missing-parent checks |
+| `internal/generator` | Seeded analytic sample + three release-format encoders + truth |
+| `internal/codec` | Studio v3, Engine v2 and Legacy v1 loaders |
+| `internal/retarget` | World-orientation accumulation, remapping, translation, precision report and bounded worker pool |
+| `internal/state` | Five-state per-interval state machine |
+| `internal/checkpoint` | Atomic SQLite interval checkpoints, validation and prefix recovery |
+| `internal/pipeline` | Dependency-aware interval cache, invalidation, incremental/full/recovery runs |
+| `internal/demo` | One deterministic demo used by CLI, page and tests |
+| `internal/webui` | Loopback diagnostic HTTP server |
+
+## Release Formats
+
+All three formats carry the same semantic action and are normalized into
+`model.Document`. A cross-format semantic action hash is used for cache identity.
+
+| Format | Version | Hierarchy | Quaternion order | Fixed scales | Time | Constraint angles |
+| --- | --- | --- | --- | --- | --- | --- |
+| Studio | `studio-3` | Nested tree | `xyzw` | rotation/translation `1e5` | frame sequence | degrees |
+| Engine | `engine-2` | Flat bone table | `wxyz` | `1e6` | milliseconds | radians |
+| Legacy | `legacy-1` | Flat table with per-offset scale | `xyzw` | `1e7` | frame sequence | radians |
+
+The loader records time and degree/radian conversions, including remainder,
+divisor and rounding direction. Required fields and unknown versions return
+`E_SCHEMA` with a JSON path and source version. Malformed JSON returns
+`E_DECODE`; an out-of-range fixed component returns `E_COMP`; non-increasing
+frame/time sequences return `E_ORDER`; topology faults return `E_TOPO`; mapping
+faults return `E_MAP`.
+
+## Fixed-Point Rules
+
+The retarget chain does not accumulate floating-point state. Input quaternions
+are rescaled to the configured working scale, normalized with integer square
+roots and rounded division, and every component division records its remainder.
+Multiplication is performed in fixed point and normalized after each parent
+link. Scale, rotation ratio and vector proportion operations all use the same
+rounding primitives.
+
+`fixed.QuantizeRoundTrip` models high -> low -> high release conversion. The
+test suite checks component drift and norm drift against the declared tolerance
+(20 ppm / 10 ppm in the generated sample). Normalization residuals and
+per-component truncation positions are retained in every `FrameResult` under
+`normalizations`.
+
+## Retarget Semantics
+
+1. Source local rotations are normalized and clamped to their joint constraints.
+2. Source world rotations are accumulated parent-first with normalized fixed
+   quaternion multiplication.
+3. A mapping copies the mapped source world orientation to the target, then
+   applies the mapping's rotation scale to the quaternion vector part.
+4. Target local rotations are derived from the target parent world orientation.
+5. Root displacement is scaled by mapping translation and target proportion;
+   child positions use the target rest offset rotated by the target parent's
+   world orientation.
+6. Output includes target world and local rotations plus world displacement.
+   Truth comparison uses target world orientation and world position, and only
+   on generator-provided analytic samples.
+
+The default working scale is `1e6`. Generated truth is evaluated independently
+inside the generator at `1e9`; it does not consume retarget output.
+
+## Precision Bound
+
+Each target joint report records:
+
+- normalization residual;
+- parent-chain fixed multiplication truncation;
+- ratio/scale rounding, including mapping coefficient rounding;
+- remap orientation term;
+- a conservative cumulative upper bound.
+
+For chain depth `d`, working scale `S`, observed normalization residual `n`, and
+observed multiplication truncation `m`, the implementation estimates:
+
+```text
+multiply = d * ceil(8_000_000 / S)
+remap    = d * ceil(4_000_000 / S)
+scale    = ratio_rounding + ceil(4_000_000 / S)
+bound    = n + multiply + m + scale + remap + 32 ppm
+```
+
+No truth value is used to compute this bound. If a truth-backed observation
+exceeds the bound or the document's declared rotation tolerance, `E_BOUND`
+names the joint and frame.
+
+## Incremental Cache And Invalidation
+
+Frames are grouped into stable intervals (default size 4). Each interval record
+stores:
+
+- interval number, frame range and state;
+- target rotations/positions, residuals and interval summary;
+- dependency list and dependency hash;
+- cache key = SHA-256(action hash, interval ID, topology version, parameter
+  version, dependency hash, upstream cache key);
+- content hash, parameter version and algorithm version.
+
+The dependency set includes action, topology, mapping, precision, upstream
+interval and every constraint actually active in that interval. Tightening or
+loosening a constraint therefore changes keys only where a frame is actually
+outside the new limit. All downstream intervals are invalidated through their
+upstream key dependency. Unaffected prefix intervals are reused from SQLite.
+
+Edits can be applied with `pipeline.ApplyEdits`; the corresponding `Edit` value
+produces the invalidation report. Mapping, topology and precision changes
+invalidate all intervals because every interval contains target poses affected
+by those dependencies.
+
+The tests assert byte-for-byte target rotation/position equality between:
+
+- full load and incremental recomputation;
+- full load and restart recovery;
+- three release formats;
+- edited full recomputation and edited incremental recomputation.
+
+## State Machine And Checkpoints
+
+Interval states are `pending_load`, `pending_retarget`, `retargeting`,
+`committed`, and `failed`. The legal graph is:
+
+```text
+pending_load -> pending_retarget -> retargeting -> committed
+                                      |              |
+                                      +-> failed <---+ (via invalidation/retry)
+failed -> pending_retarget
+committed -> pending_retarget
+pending_load -> failed
+```
+
+An illegal transition returns `E_STATE` and leaves state/progress unchanged.
+Only `committed` records are written. Each commit is one SQLite transaction with
+payload, summary, residuals, dependencies, hashes and versions. A process-wide
+write mutex plus a monotonic interval check keeps commits serial and ordered.
+
+On restart, the snapshot action/algorithm and each interval payload hash,
+versions, dependencies and committed state are checked. The first invalid
+interval and its suffix are deleted atomically; the consistent prefix is
+returned. Forced termination is simulated with `StopAfter`, then recovery is
+verified to load only committed intervals and complete the remainder.
+
+## Concurrency And Failure Isolation
+
+Target joints are dispatched by target-topology level across all requested
+frames. A bounded worker pool enforces maximum parallelism, queue budget and
+per-worker joint-state buffer limit. When the queue budget is exhausted,
+submission blocks and records a wait event containing the job label, reason
+`frame_queue_budget_exhausted` and elapsed nanoseconds. Frames are never
+silently dropped.
+
+`FailFrames` injects a single-frame internal error. The failed frame is reported
+as `E_FRAME`; other frames remain available and a retry succeeds. The pipeline
+does not commit a failed interval and does not disturb already committed
+intervals.
+
+The loader tests exercise `E_DECODE`, `E_COMP`, `E_ORDER`, `E_TOPO`, and
+`E_MAP`; retarget tests exercise `E_NORM` and `E_BOUND`; state/cache tests
+exercise `E_STATE`.
+
+## Error Codes
+
+| Code | Meaning |
+| --- | --- |
+| `E_SCHEMA` | Unknown version or missing/invalid required field |
+| `E_DECODE` | Malformed binding JSON/payload |
+| `E_COMP` | Fixed rotation component outside its declared scale |
+| `E_ORDER` | Frame/time sequence is not strictly increasing |
+| `E_NORM` | Normalization residual exceeds declared tolerance |
+| `E_TOPO` | Missing parent, duplicate joint or hierarchy cycle |
+| `E_MAP` | Mapping references a missing source/target or invalid mapping |
+| `E_BOUND` | Truth-backed deviation exceeds derived bound/declared tolerance |
+| `E_STATE` | Illegal interval transition or checkpoint ordering |
+| `E_FRAME` | Single-frame internal failure, isolated and retryable |
+
+## Verified Results
+
+Environment used:
+
+```text
+go1.22.12 linux/amd64
+module /home/liang/feedback/uid42a8691e-default-316/go.mod
+GOCACHE on the Linux filesystem
+modernc.org/sqlite v1.34.5
+```
+
+The following commands pass:
+
+```sh
+go build ./...
+go vet ./...
+go test ./...
+go test -race ./internal/retarget ./internal/pipeline ./internal/checkpoint
+go run ./cmd/skeletonretarget verify
+```
+
+`verify` output for seed 42:
+
+```text
+format=studio version=studio-3 action=38ee1d1a605c frames=24 conversions=36
+format=engine version=engine-2 action=38ee1d1a605c frames=24 conversions=24
+format=legacy version=legacy-1 action=38ee1d1a605c frames=24 conversions=24
+path=load complete=true frames=24 hits=0 recomputed=6 recovered=0 digest=d5f2a838dce2
+path=incremental complete=true frames=24 hits=6 recomputed=0 recovered=6 digest=d5f2a838dce2
+path=recovery complete=true frames=24 hits=6 recomputed=0 recovered=6 digest=d5f2a838dce2
+compare=load/incremental equal=true
+compare=load/recovery equal=true
+compare=studio/engine equal=true
+compare=studio/legacy equal=true
+edit invalidations=2 cacheHits=4 recomputed=2 fullEqualsIncremental=true
+verification: PASS
+```
+
+Precision sweep at working scales `1e5`, `5e5`, `1e6`, `1e7`:
+
+```text
+scale=100000   actual=20ppm bound=1122ppm
+scale=500000   actual=4ppm  bound=252ppm
+scale=1000000  actual=2ppm  bound=141ppm
+scale=10000000 actual=0ppm  bound=58ppm
+```
+
+At the default scale the three formats each achieve a maximum observed
+rotation deviation of `2 ppm` and translation deviation of `5 ppm` against
+generator truth. Tightening precision never increases either actual deviation
+or the derived bound in this sweep.
