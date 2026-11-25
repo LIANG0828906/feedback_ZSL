@@ -1,0 +1,455 @@
+{
+  "schemaVersion": 1,
+  "paramsVersion": 5,
+  "algorithmVersion": "reflection-fixed-v1",
+  "rooms": [
+    {
+      "id": 1,
+      "rect": {
+        "minX": 0,
+        "minY": 0,
+        "maxX": 4000,
+        "maxY": 3000
+      }
+    },
+    {
+      "id": 2,
+      "rect": {
+        "minX": 4000,
+        "minY": 0,
+        "maxX": 8000,
+        "maxY": 3000
+      }
+    },
+    {
+      "id": 3,
+      "rect": {
+        "minX": 8000,
+        "minY": 0,
+        "maxX": 12000,
+        "maxY": 3000
+      }
+    }
+  ],
+  "walls": [
+    {
+      "id": 101,
+      "roomA": 1,
+      "roomB": 2,
+      "a": {
+        "x": 4000,
+        "y": 0
+      },
+      "b": {
+        "x": 4000,
+        "y": 3000
+      }
+    },
+    {
+      "id": 102,
+      "roomA": 2,
+      "roomB": 3,
+      "a": {
+        "x": 8000,
+        "y": 0
+      },
+      "b": {
+        "x": 8000,
+        "y": 3000
+      }
+    }
+  ],
+  "openings": [
+    {
+      "id": 201,
+      "wallId": 101,
+      "start": 1000,
+      "width": 1000
+    },
+    {
+      "id": 202,
+      "wallId": 102,
+      "start": 1400,
+      "width": 1400
+    }
+  ],
+  "sources": [
+    {
+      "id": 11,
+      "roomId": 1,
+      "pos": {
+        "x": 800,
+        "y": 800
+      },
+      "levelDb": 80
+    },
+    {
+      "id": 12,
+      "roomId": 2,
+      "pos": {
+        "x": 5000,
+        "y": 2200
+      },
+      "levelDb": 82
+    },
+    {
+      "id": 13,
+      "roomId": 3,
+      "pos": {
+        "x": 9000,
+        "y": 2000
+      },
+      "levelDb": 78
+    }
+  ],
+  "reflectors": [
+    {
+      "id": 31,
+      "roomId": 1,
+      "a": {
+        "x": 1800,
+        "y": 800
+      },
+      "b": {
+        "x": 1800,
+        "y": 2600
+      },
+      "nx": 1000,
+      "ny": 0,
+      "absorption": 0.05
+    },
+    {
+      "id": 32,
+      "roomId": 1,
+      "a": {
+        "x": 400,
+        "y": 1000
+      },
+      "b": {
+        "x": 2600,
+        "y": 1000
+      },
+      "nx": 0,
+      "ny": 1000,
+      "absorption": 0.08
+    },
+    {
+      "id": 33,
+      "roomId": 2,
+      "a": {
+        "x": 7100,
+        "y": 700
+      },
+      "b": {
+        "x": 7100,
+        "y": 2900
+      },
+      "nx": 1000,
+      "ny": 0,
+      "absorption": 0.06
+    },
+    {
+      "id": 34,
+      "roomId": 2,
+      "a": {
+        "x": 4500,
+        "y": 1600
+      },
+      "b": {
+        "x": 7500,
+        "y": 1600
+      },
+      "nx": 0,
+      "ny": 1000,
+      "absorption": 0.04
+    },
+    {
+      "id": 35,
+      "roomId": 3,
+      "a": {
+        "x": 10600,
+        "y": 1000
+      },
+      "b": {
+        "x": 10600,
+        "y": 2600
+      },
+      "nx": 1000,
+      "ny": 0,
+      "absorption": 0.07
+    },
+    {
+      "id": 36,
+      "roomId": 3,
+      "a": {
+        "x": 8500,
+        "y": 1800
+      },
+      "b": {
+        "x": 11500,
+        "y": 1800
+      },
+      "nx": 0,
+      "ny": 1000,
+      "absorption": 0.03
+    }
+  ],
+  "listeners": [
+    {
+      "id": 21,
+      "roomId": 1,
+      "pos": {
+        "x": 1200,
+        "y": 2200
+      }
+    },
+    {
+      "id": 22,
+      "roomId": 2,
+      "pos": {
+        "x": 6500,
+        "y": 2500
+      }
+    },
+    {
+      "id": 23,
+      "roomId": 3,
+      "pos": {
+        "x": 10000,
+        "y": 2200
+      }
+    }
+  ],
+  "tolerance": {
+    "coordinateTicks": 2,
+    "pathTicks": 4,
+    "incidenceCos": 1000,
+    "splDb": 0.05
+  },
+  "truth": [
+    {
+      "listenerId": 21,
+      "roomId": 1,
+      "validPathCount": 1,
+      "sources": [
+        {
+          "sourceId": 11,
+          "chainRoomIds": [
+            1
+          ],
+          "chainLengthTicks": 1456,
+          "validPathCount": 1,
+          "paths": [
+            {
+              "sourceId": 11,
+              "reflectorId": 31,
+              "reflectionPoint": {
+                "x": 1800,
+                "y": 1675
+              },
+              "pathLengthTicks": 2126,
+              "incidenceCos": 753,
+              "splDb": 72.52542472773504
+            }
+          ]
+        },
+        {
+          "sourceId": 12,
+          "chainRoomIds": [
+            2,
+            1
+          ],
+          "chainOpeningIds": [
+            201
+          ],
+          "chainLengthTicks": 4107,
+          "validPathCount": 0,
+          "paths": []
+        },
+        {
+          "sourceId": 13,
+          "chainRoomIds": [
+            3,
+            2,
+            1
+          ],
+          "chainOpeningIds": [
+            202,
+            201
+          ],
+          "chainLengthTicks": 7936,
+          "validPathCount": 0,
+          "paths": []
+        }
+      ]
+    },
+    {
+      "listenerId": 22,
+      "roomId": 2,
+      "validPathCount": 3,
+      "sources": [
+        {
+          "sourceId": 11,
+          "chainRoomIds": [
+            1,
+            2
+          ],
+          "chainOpeningIds": [
+            201
+          ],
+          "chainLengthTicks": 5969,
+          "validPathCount": 1,
+          "paths": [
+            {
+              "sourceId": 11,
+              "reflectorId": 33,
+              "reflectionPoint": {
+                "x": 7100,
+                "y": 2352
+              },
+              "pathLengthTicks": 7106,
+              "incidenceCos": 971,
+              "splDb": 59.26418003087613
+            }
+          ]
+        },
+        {
+          "sourceId": 12,
+          "chainRoomIds": [
+            2
+          ],
+          "chainLengthTicks": 1530,
+          "validPathCount": 2,
+          "paths": [
+            {
+              "sourceId": 12,
+              "reflectorId": 33,
+              "reflectionPoint": {
+                "x": 7100,
+                "y": 2433
+              },
+              "pathLengthTicks": 2717,
+              "incidenceCos": 994,
+              "splDb": 71.90223350285542
+            },
+            {
+              "sourceId": 12,
+              "reflectorId": 34,
+              "reflectionPoint": {
+                "x": 5600,
+                "y": 1600
+              },
+              "pathLengthTicks": 2122,
+              "incidenceCos": 707,
+              "splDb": 74.72783409622012
+            }
+          ]
+        },
+        {
+          "sourceId": 13,
+          "chainRoomIds": [
+            3,
+            2
+          ],
+          "chainOpeningIds": [
+            202
+          ],
+          "chainLengthTicks": 2557,
+          "validPathCount": 0,
+          "paths": []
+        }
+      ]
+    },
+    {
+      "listenerId": 23,
+      "roomId": 3,
+      "validPathCount": 4,
+      "sources": [
+        {
+          "sourceId": 11,
+          "chainRoomIds": [
+            1,
+            2,
+            3
+          ],
+          "chainOpeningIds": [
+            201,
+            202
+          ],
+          "chainLengthTicks": 9323,
+          "validPathCount": 1,
+          "paths": [
+            {
+              "sourceId": 11,
+              "reflectorId": 35,
+              "reflectionPoint": {
+                "x": 10600,
+                "y": 2119
+              },
+              "pathLengthTicks": 10493,
+              "incidenceCos": 991,
+              "splDb": 53.20213374474189
+            }
+          ]
+        },
+        {
+          "sourceId": 12,
+          "chainRoomIds": [
+            2,
+            3
+          ],
+          "chainOpeningIds": [
+            202
+          ],
+          "chainLengthTicks": 5004,
+          "validPathCount": 1,
+          "paths": [
+            {
+              "sourceId": 12,
+              "reflectorId": 35,
+              "reflectionPoint": {
+                "x": 10600,
+                "y": 2200
+              },
+              "pathLengthTicks": 6200,
+              "incidenceCos": 1000,
+              "splDb": 62.38249010714292
+            }
+          ]
+        },
+        {
+          "sourceId": 13,
+          "chainRoomIds": [
+            3
+          ],
+          "chainLengthTicks": 1020,
+          "validPathCount": 2,
+          "paths": [
+            {
+              "sourceId": 13,
+              "reflectorId": 35,
+              "reflectionPoint": {
+                "x": 10600,
+                "y": 2145
+              },
+              "pathLengthTicks": 2210,
+              "incidenceCos": 996,
+              "splDb": 69.76844739929919
+            },
+            {
+              "sourceId": 13,
+              "reflectorId": 36,
+              "reflectionPoint": {
+                "x": 9333,
+                "y": 1800
+              },
+              "pathLengthTicks": 1166,
+              "incidenceCos": 515,
+              "splDb": 76.36219657200284
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
