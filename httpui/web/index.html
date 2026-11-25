@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wardrobe Batch Diagnostics</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0d1117;
+    --panel: #151b23;
+    --panel-2: #1b2430;
+    --border: #2b3948;
+    --text: #e6edf3;
+    --muted: #8b98a7;
+    --accent: #57d4a2;
+    --accent-2: #62a8ff;
+    --warn: #ffc857;
+    --bad: #ff6b6b;
+    --chip: #223140;
+    --shadow: 0 16px 40px rgb(0 0 0 / 28%);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background:
+      radial-gradient(circle at 10% -10%, #183044 0, transparent 34rem),
+      radial-gradient(circle at 92% 0, #183b32 0, transparent 28rem),
+      var(--bg);
+    color: var(--text); font: 14px/1.45 "Segoe UI", "Noto Sans CJK SC", sans-serif;
+  }
+  header {
+    padding: 22px 28px 16px; display: flex; align-items: center; gap: 18px;
+    border-bottom: 1px solid var(--border); background: rgb(13 17 23 / 78%);
+    backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 5;
+  }
+  header h1 { margin: 0; font-size: 20px; letter-spacing: .02em; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  .version {
+    margin-left: auto; border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 10px; color: var(--accent); background: #10231d; font-size: 12px;
+  }
+  main { padding: 20px 28px 60px; max-width: 1600px; margin: 0 auto; }
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: end;
+    padding: 14px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: var(--shadow);
+  }
+  label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; }
+  select, input, button {
+    font: inherit; color: var(--text); background: var(--panel-2);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+  }
+  select, input { min-width: 150px; }
+  button { cursor: pointer; transition: .15s border-color, .15s background, .15s transform; }
+  button:hover { border-color: var(--accent-2); background: #223042; }
+  button:active { transform: translateY(1px); }
+  button.primary { background: #143b31; border-color: #2b7f63; color: #baf5df; }
+  button.warn { background: #3a2f14; border-color: #8a6a24; color: #ffe4a3; }
+  .spacer { flex: 1; }
+  .status {
+    min-height: 34px; margin: 12px 0; padding: 9px 12px; border-radius: 9px;
+    border: 1px solid var(--border); background: #111821; color: var(--muted);
+    white-space: pre-wrap; overflow-wrap: anywhere; font-family: ui-monospace, monospace; font-size: 12px;
+  }
+  .status.ok { color: #bdf6df; border-color: #285d4c; background: #10231d; }
+  .status.bad { color: #ffc5c5; border-color: #70383c; background: #2a1518; }
+  .status.warn { color: #ffe4a3; border-color: #7b632f; background: #2b2415; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(340px, .8fr); gap: 16px; margin-top: 16px; }
+  .stack { display: grid; gap: 16px; align-content: start; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 13px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .panel h2 {
+    margin: 0; padding: 12px 15px; font-size: 14px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px; letter-spacing: .02em;
+  }
+  .panel h2 .count { margin-left: auto; color: var(--muted); font-weight: normal; font-size: 12px; }
+  .panel-body { padding: 14px 15px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .kpi { padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: #101721; }
+  .kpi b { display: block; font-size: 19px; color: var(--accent); }
+  .kpi span { color: var(--muted); font-size: 11px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px;
+    border-radius: 999px; border: 1px solid var(--border); background: var(--chip);
+    font-size: 11px; color: #c8d4df; white-space: nowrap;
+  }
+  .chip.ok { border-color: #2c6c56; color: #a8edcf; background: #10251e; }
+  .chip.warn { border-color: #7b632f; color: #ffdf9e; background: #2b2415; }
+  .chip.bad { border-color: #7b3539; color: #ffc0c0; background: #2c1719; }
+  svg { width: 100%; min-height: 240px; display: block; background: #0d141c; }
+  .mount-editor { border-top: 1px solid var(--border); }
+  .mount-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+  .mount-row:last-child { border-bottom: 0; }
+  .mount-name { color: var(--accent-2); font-weight: 600; }
+  .mount-name small { display: block; color: var(--muted); font-weight: normal; }
+  .part-checks { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+  .part-checks label { display: flex; flex-direction: row; align-items: center; gap: 6px; color: var(--text); font-size: 12px; }
+  .part-checks input { min-width: auto; }
+  .part-checks .accepted { color: var(--accent); }
+  .batch { border: 1px solid var(--border); border-radius: 11px; margin-bottom: 12px; background: #101721; overflow: hidden; }
+  .batch:last-child { margin-bottom: 0; }
+  .batch-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #17212c; border-bottom: 1px solid var(--border); }
+  .batch-head b { color: var(--accent); }
+  .batch-head .meta { margin-left: auto; color: var(--muted); font-size: 11px; }
+  .budget { padding: 10px 12px 3px; display: grid; gap: 7px; }
+  .barline { display: grid; grid-template-columns: 50px 1fr 110px; gap: 8px; align-items: center; font-size: 11px; color: var(--muted); }
+  .bar { height: 6px; border-radius: 999px; background: #263240; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .batch table, .decisions table, .conflicts table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .batch table { margin: 8px 0 0; }
+  th, td { text-align: left; padding: 6px 8px; border-top: 1px solid #202b36; vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; background: #121a23; }
+  .batch-scroll { overflow: auto; max-height: 300px; }
+  .material-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--border); }
+  .material-row:last-child { border-bottom: 0; }
+  .material-row b { min-width: 100px; color: var(--accent-2); }
+  .decisions-wrap, .conflicts-wrap { overflow: auto; max-height: 340px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .muted { color: var(--muted); }
+  .empty { color: var(--muted); text-align: center; padding: 18px; font-style: italic; }
+  .form-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+  .path-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .path-card { padding: 10px; border: 1px solid var(--border); border-radius: 9px; background: #101721; }
+  .path-card b { color: var(--accent); }
+  .path-card small { display: block; color: var(--muted); overflow-wrap: anywhere; margin-top: 4px; }
+  .mismatch { margin-top: 10px; padding: 10px; border-radius: 8px; background: #2a1518; border: 1px solid #70383c; color: #ffc5c5; font-family: ui-monospace, monospace; font-size: 11px; overflow-wrap: anywhere; }
+  .schedule-events { max-height: 200px; overflow: auto; }
+  @media (max-width: 1050px) {
+    .grid { grid-template-columns: 1fr; }
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 620px) {
+    main, header { padding-left: 14px; padding-right: 14px; }
+    .path-cards { grid-template-columns: 1fr; }
+    .mount-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Wardrobe Batch Diagnostics</h1>
+    <div class="sub">确定性合批 · 装配冲突 · 增量 / 恢复 / 全量比对</div>
+  </div>
+  <div class="version" id="version">algorithm loading</div>
+</header>
+
+<main>
+  <section class="toolbar">
+    <label>角色工程
+      <select id="projectSelect"></select>
+    </label>
+    <label>采样姿态 / 真值用例
+      <select id="caseSelect"></select>
+    </label>
+    <button class="primary" id="loadButton">加载诊断</button>
+    <button id="recoverButton">SQLite 恢复</button>
+    <button id="truthButton">核对真值</button>
+    <div class="spacer"></div>
+    <span class="chip" id="revisionChip">rev -</span>
+    <span class="chip" id="caseChip">case -</span>
+  </section>
+
+  <div class="status" id="status">选择工程与姿态后加载。</div>
+
+  <section class="grid">
+    <div class="stack">
+      <article class="panel">
+        <h2>总览 <span class="count" id="overviewCount"></span></h2>
+        <div class="panel-body">
+          <div class="kpis" id="kpis"></div>
+          <div style="margin-top:12px" class="chips" id="constraintChips"></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>挂点装配图 <span class="count" id="graphCount"></span></h2>
+        <div id="graph"></div>
+      </article>
+
+      <article class="panel">
+        <h2>装配集合编辑 <span class="count">勾选后立即验证冲突</span></h2>
+        <div class="panel-body">
+          <div id="mountEditor" class="mount-editor"></div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="primary" id="validateButton">验证装配集合</button>
+            <button id="selectAllButton">全选候选</button>
+            <button id="selectMainButton">恢复姿态</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>批次与预算 <span class="count" id="batchCount"></span></h2>
+        <div class="panel-body" id="batches"></div>
+      </article>
+
+      <article class="panel">
+        <h2>取舍依据 <span class="count" id="decisionCount"></span></h2>
+        <div class="decisions-wrap" id="decisions"></div>
+      </article>
+    </div>
+
+    <div class="stack">
+      <article class="panel">
+        <h2>装配冲突 <span class="count" id="conflictCount"></span></h2>
+        <div class="conflicts-wrap" id="conflicts"></div>
+      </article>
+
+      <article class="panel">
+        <h2>材质槽分布 <span class="count" id="materialCount"></span></h2>
+        <div class="panel-body" id="materials"></div>
+      </article>
+
+      <article class="panel">
+        <h2>部件编辑</h2>
+        <div class="panel-body">
+          <div class="form-row">
+            <label>部件<select id="editPart"></select></label>
+            <label>材质槽<select id="editMaterial"></select></label>
+            <label>几何比例 %<input id="editScale" type="number" min="10" max="500" value="90"></label>
+            <button class="warn" id="editButton">应用编辑</button>
+          </div>
+          <div class="muted" style="margin-top:8px">材质槽编辑会提升槽版本；几何比例仅缩放该部件，随后只重放真实受影响批次。</div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>三路径比对</h2>
+        <div class="panel-body">
+          <div class="form-row">
+            <button class="primary" id="triButton">运行 full / incremental / recovery</button>
+          </div>
+          <div id="triResult" style="margin-top:12px"><div class="empty">尚未运行。</div></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>并行调度 <span class="count" id="scheduleCount"></span></h2>
+        <div class="panel-body" id="schedule"></div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+let projects = [];
+let diagnostics = null;
+let selectedParts = new Set();
+
+async function api(path, options = {}) {
+  const response = await fetch(path, options);
+  const text = await response.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch (_) { data = text; }
+  if (!response.ok) {
+    const message = data && typeof data === "object"
+      ? `${data.code || response.status}: ${data.message || response.statusText}${data.issues ? "\n" + data.issues.map(i => `${i.path} [${i.objectId}] ${i.message}`).join("\n") : ""}`
+      : `${response.status}: ${text}`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+function setStatus(message, kind = "") {
+  const el = $("status");
+  el.textContent = message;
+  el.className = "status " + kind;
+}
+
+async function loadProjects() {
+  projects = await api("/api/projects");
+  $("version").textContent = "schema v1 · algorithm wardrobe.batch/v1";
+  const projectSelect = $("projectSelect");
+  projectSelect.innerHTML = projects.map(p => `<option value="${esc(p.projectId)}">${esc(p.name)} · ${esc(p.projectId)}</option>`).join("");
+  projectSelect.addEventListener("change", () => {
+    populateCases();
+    loadDiagnostics();
+  });
+  populateCases();
+  if (projects.length) await loadDiagnostics();
+}
+
+function currentProject() {
+  return projects.find(p => p.projectId === $("projectSelect").value);
+}
+
+function populateCases() {
+  const project = currentProject();
+  $("caseSelect").innerHTML = (project?.cases || []).map(c =>
+    `<option value="${esc(c.caseId)}">${esc(c.caseId)} · ${c.batchCount} batches · ${c.valid ? "valid" : "conflicts"}</option>`
+  ).join("");
+}
+
+async function loadDiagnostics() {
+  try {
+    const projectId = $("projectSelect").value;
+    const caseId = $("caseSelect").value;
+    setStatus("加载诊断…");
+    diagnostics = await api(`/api/diagnostics?project=${encodeURIComponent(projectId)}&case=${encodeURIComponent(caseId)}`);
+    selectedParts = new Set(diagnostics.result.selectedPartIds);
+    render();
+    const mismatch = diagnostics.truthMismatch;
+    if (mismatch && diagnostics.project.revision > 1) {
+      setStatus(`工程已编辑到 rev ${diagnostics.project.revision}；初始解析真值保留为基线。当前三路径仍可独立核验。`, "warn");
+    } else {
+      setStatus(mismatch ? `真值不一致：${mismatch.path} / ${mismatch.field}` : "真值逐项一致。批次、偏移、冲突与取舍序列均来自解析构造。", mismatch ? "bad" : "ok");
+    }
+  } catch (error) {
+    setStatus(error.message, "bad");
+  }
+}
+
+function render() {
+  const d = diagnostics;
+  if (!d) return;
+  $("revisionChip").textContent = `rev ${d.project.revision}`;
+  $("caseChip").textContent = `valid=${d.result.valid}`;
+  renderOverview(d);
+  renderGraph(d);
+  renderMountEditor(d);
+  renderBatches(d);
+  renderConflicts(d);
+  renderMaterials(d);
+  renderDecisions(d);
+  renderSchedule(d);
+  renderEditControls(d);
+}
+
+function renderOverview(d) {
+  const r = d.result;
+  $("overviewCount").textContent = `${d.project.projectId} · ${d.truthCase.caseId}`;
+  $("kpis").innerHTML = [
+    ["批次", r.batches.length],
+    ["合法装配部件", r.acceptedPartIds.length],
+    ["冲突", r.conflicts.length],
+    ["取舍记录", r.decisions.length],
+  ].map(([label, value]) => `<div class="kpi"><b>${value}</b><span>${label}</span></div>`).join("");
+  const c = d.project.constraints;
+  $("constraintChips").innerHTML = [
+    `slots ≤ ${c.maxMaterialSlots}`,
+    `vertices ≤ ${c.maxVertices}`,
+    `indices ≤ ${c.maxIndices}`,
+    `cross-skin ${c.allowCrossSkin ? "allowed" : "blocked"}`,
+    `constraint ${c.version}`,
+    `dependency graph ${d.dependencyGraph?.nodes.length || 0} nodes / ${d.dependencyGraph?.edges.length || 0} edges`,
+  ].map(text => `<span class="chip">${esc(text)}</span>`).join("");
+}
+
+function mountDepths(d) {
+  const byID = new Map(d.mounts.map(m => [m.id, m]));
+  const depths = new Map();
+  function depth(id, seen = new Set()) {
+    if (depths.has(id)) return depths.get(id);
+    if (seen.has(id)) return 0;
+    seen.add(id);
+    const mount = byID.get(id);
+    const value = mount?.parentId ? depth(mount.parentId, seen) + 1 : 0;
+    depths.set(id, value);
+    return value;
+  }
+  d.mounts.forEach(m => depth(m.id));
+  return depths;
+}
+
+function renderGraph(d) {
+  const width = 960;
+  const colWidth = Math.max(130, width / Math.max(1, d.mounts.length));
+  const depths = mountDepths(d);
+  const maxDepth = Math.max(0, ...depths.values());
+  const height = 78 + (maxDepth + 1) * 150;
+  const positions = new Map();
+  d.mounts.forEach((mount, index) => {
+    positions.set(mount.id, {x: 24 + index * colWidth + colWidth / 2, y: 45 + (depths.get(mount.id) || 0) * 150});
+  });
+  let svg = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="挂点装配图"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3f5368"/></marker></defs>`;
+  for (const mount of d.mounts) {
+    if (!mount.parentId || !positions.has(mount.parentId)) continue;
+    const a = positions.get(mount.parentId), b = positions.get(mount.id);
+    svg += `<path d="M${a.x},${a.y + 42} C${a.x},${a.y + 95} ${b.x},${b.y - 65} ${b.x},${b.y - 45}" fill="none" stroke="#3f5368" stroke-width="1.4" marker-end="url(#arrow)"/>`;
+  }
+  for (const mount of d.mounts) {
+    const p = positions.get(mount.id);
+    const conflict = mount.selectedPartIds.length > 1;
+    const stroke = conflict ? "#ff6b6b" : mount.acceptedPartIds.length ? "#57d4a2" : "#38516a";
+    const accepted = mount.acceptedPartIds.map(id => d.parts.find(part => part.id === id)?.name || id);
+    const selected = mount.selectedPartIds.map(id => d.parts.find(part => part.id === id)?.name || id);
+    svg += `<g>
+      <rect x="${p.x - 74}" y="${p.y - 40}" width="148" height="84" rx="12" fill="#151f2a" stroke="${stroke}" stroke-width="${conflict ? 2 : 1.2}"/>
+      <text x="${p.x}" y="${p.y - 15}" text-anchor="middle" fill="#e6edf3" font-size="12" font-weight="600">${esc(mount.name)}</text>
+      <text x="${p.x}" y="${p.y + 3}" text-anchor="middle" fill="#8b98a7" font-size="10">${esc(mount.id)} · ${esc(mount.skinMode)}</text>
+      <text x="${p.x}" y="${p.y + 20}" text-anchor="middle" fill="${conflict ? "#ff9d9d" : "#8fe9c7"}" font-size="9">${esc(accepted.join(", ") || "empty")}</text>
+      ${selected.length > 1 ? `<text x="${p.x}" y="${p.y + 34}" text-anchor="middle" fill="#ffc857" font-size="9">selected ${selected.length}</text>` : ""}
+    </g>`;
+  }
+  svg += "</svg>";
+  $("graph").innerHTML = svg;
+  $("graphCount").textContent = `${d.mounts.length} mounts · ${d.parts.length} parts`;
+}
+
+function renderMountEditor(d) {
+  $("mountEditor").innerHTML = d.mounts.map(mount => {
+    const parts = d.parts.filter(part => part.mountId === mount.id);
+    return `<div class="mount-row">
+      <div class="mount-name">${esc(mount.name)}<small>${esc(mount.id)} · ${esc(mount.skinMode)}</small></div>
+      <div class="part-checks">
+        ${parts.length ? parts.map(part => `<label class="${part.accepted ? "accepted" : ""}">
+          <input type="checkbox" data-part="${esc(part.id)}" ${selectedParts.has(part.id) ? "checked" : ""}>
+          ${esc(part.name)} <span class="mono muted">${part.vertexCount}v/${part.triangleCount}t${part.batchId ? " · " + esc(part.batchId) : ""}</span>
+        </label>`).join("") : '<span class="muted">无部件</span>'}
+      </div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll("[data-part]").forEach(input => {
+    input.addEventListener("change", () => {
+      if (input.checked) selectedParts.add(input.dataset.part);
+      else selectedParts.delete(input.dataset.part);
+    });
+  });
+}
+
+function renderBatches(d) {
+  const maxV = d.project.constraints.maxVertices;
+  const maxI = d.project.constraints.maxIndices;
+  const maxS = d.project.constraints.maxMaterialSlots;
+  $("batchCount").textContent = `${d.result.batches.length} commits`;
+  if (!d.result.batches.length) {
+    $("batches").innerHTML = '<div class="empty">没有可合批部件。</div>';
+    return;
+  }
+  $("batches").innerHTML = d.result.batches.map(batch => {
+    const vp = Math.min(100, batch.vertexUsed / maxV * 100);
+    const ip = Math.min(100, batch.indexUsed / maxI * 100);
+    const sp = Math.min(100, batch.materialSlots.length / maxS * 100);
+    const rows = batch.parts.map(placement => placement.submeshes.map((sm, index) => `<tr>
+      ${index === 0 ? `<td rowspan="${placement.submeshes.length}" class="mono">${esc(placement.partId)}<br><span class="muted">v+${placement.vertexOffset} i+${placement.indexOffset}</span></td>` : ""}
+      <td class="mono">${esc(sm.submeshId)}</td>
+      <td>${esc(sm.materialSlot)}</td>
+      <td class="mono">${sm.vertexOffset} .. ${sm.vertexOffset + sm.vertexCount - 1}</td>
+      <td class="mono">${sm.indexOffset} .. ${sm.indexOffset + sm.indexCount - 1}</td>
+    </tr>`).join("")).join("");
+    return `<div class="batch">
+      <div class="batch-head">
+        <b>${esc(batch.id)}</b>
+        <span class="chip">commit ${batch.commitSequence}</span>
+        <span class="chip ${batch.source === "reused" ? "ok" : ""}">${esc(batch.source || "full")}</span>
+        <span class="meta mono">${esc(batch.cacheKey.slice(0, 16))}</span>
+        <button data-retry="${esc(batch.id)}">重试</button>
+      </div>
+      <div class="budget">
+        <div class="barline"><span>顶点</span><div class="bar"><i style="width:${vp}%"></i></div><span class="mono">${batch.vertexUsed}/${maxV}</span></div>
+        <div class="barline"><span>索引</span><div class="bar"><i style="width:${ip}%"></i></div><span class="mono">${batch.indexUsed}/${maxI}</span></div>
+        <div class="barline"><span>材质</span><div class="bar"><i style="width:${sp}%"></i></div><span class="mono">${batch.materialSlots.length}/${maxS} · ${esc(batch.materialSlots.join(", "))}</span></div>
+      </div>
+      <div class="batch-scroll"><table>
+        <thead><tr><th>部件</th><th>子网格</th><th>材质槽</th><th>顶点区间</th><th>索引区间</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll("[data-retry]").forEach(button => button.addEventListener("click", () => retryBatch(button.dataset.retry)));
+}
+
+function renderConflicts(d) {
+  const conflicts = d.result.conflicts || [];
+  $("conflictCount").textContent = `${conflicts.length} items`;
+  if (!conflicts.length) {
+    $("conflicts").innerHTML = '<div class="empty">该姿态无装配冲突。</div>';
+    return;
+  }
+  $("conflicts").innerHTML = `<table><thead><tr><th>类别</th><th>对象</th><th>说明</th></tr></thead><tbody>${
+    conflicts.map(c => `<tr>
+      <td><span class="chip bad">${esc(c.category)}</span></td>
+      <td class="mono">${esc(c.partIds.join(" / "))}${c.mountId ? "<br><span class=\"muted\">" + esc(c.mountId) + "</span>" : ""}${c.ruleId ? "<br><span class=\"muted\">" + esc(c.ruleId) + "</span>" : ""}</td>
+      <td>${esc(c.message)}</td>
+    </tr>`).join("")
+  }</tbody></table>`;
+}
+
+function renderMaterials(d) {
+  $("materialCount").textContent = `${d.materials.length} slots`;
+  $("materials").innerHTML = d.materials.length ? d.materials.map(material => `<div class="material-row">
+    <b>${esc(material.slotId)}</b>
+    <span class="chip">v${material.version}</span>
+    <span class="chips">${material.batchIds.map(id => `<span class="chip ok">${esc(id)}</span>`).join("")}</span>
+    <span class="muted mono">${esc(material.partIds.join(", "))}</span>
+  </div>`).join("") : '<div class="empty">无已合批材质槽。</div>';
+}
+
+function renderDecisions(d) {
+  const decisions = d.result.decisions || [];
+  $("decisionCount").textContent = `${decisions.length} records`;
+  if (!decisions.length) {
+    $("decisions").innerHTML = '<div class="empty">无取舍记录。</div>';
+    return;
+  }
+  $("decisions").innerHTML = `<table><thead><tr><th>#</th><th>部件</th><th>结果</th><th>原因</th><th>目标</th><th>依据</th></tr></thead><tbody>${
+    decisions.map(decision => `<tr>
+      <td class="mono">${decision.sequence}</td>
+      <td class="mono">${esc(decision.partId)}</td>
+      <td><span class="chip ${decision.result === "split_new_batch" ? "warn" : "ok"}">${esc(decision.result)}</span></td>
+      <td class="mono">${esc(decision.reason)}</td>
+      <td class="mono">${esc(decision.batchId)}${decision.consideredBatchId ? `<br><span class="muted">vs ${esc(decision.consideredBatchId)}</span>` : ""}</td>
+      <td>${esc(decision.detail)}${decision.blockedBy?.length ? `<br><span class="muted mono">${esc(decision.blockedBy.join(", "))}</span>` : ""}</td>
+    </tr>`).join("")
+  }</tbody></table>`;
+}
+
+function renderSchedule(d) {
+  const schedule = d.result.schedule;
+  $("scheduleCount").textContent = schedule ? `${schedule.totalTaskWeight} part-tasks` : "not scheduled";
+  if (!schedule) {
+    $("schedule").innerHTML = '<div class="empty">缓存复用结果未重新调度。</div>';
+    return;
+  }
+  $("schedule").innerHTML = `<div class="chips" style="margin-bottom:10px">
+    <span class="chip">workers ≤ ${schedule.maxWorkers}</span>
+    <span class="chip">buffer/worker ≤ ${schedule.perWorkerBuffer}</span>
+    <span class="chip">pending parts ≤ ${schedule.pendingQueueBudget}</span>
+    <span class="chip">peak pending ${schedule.maxPendingParts}</span>
+  </div>
+  <div class="schedule-events">${schedule.waitEvents?.length ? `<table><thead><tr><th>任务</th><th>阶段</th><th>原因</th><th>等待</th></tr></thead><tbody>${schedule.waitEvents.map(event => `<tr><td class="mono">${esc(event.taskId)}</td><td>${esc(event.stage)}</td><td>${esc(event.reason)}</td><td>${event.waitMilliseconds} ms</td></tr>`).join("")}</tbody></table>` : '<div class="empty">本次没有发生阻塞排队。</div>'}</div>`;
+}
+
+function renderEditControls(d) {
+  const currentPart = $("editPart").value;
+  $("editPart").innerHTML = d.parts.map(part => `<option value="${esc(part.id)}">${esc(part.name)} · ${esc(part.id)}</option>`).join("");
+  if (d.parts.some(part => part.id === currentPart)) $("editPart").value = currentPart;
+  const slots = [...new Set(d.parts.flatMap(part => part.materialSlots))].sort();
+  $("editMaterial").innerHTML = `<option value="">不修改材质槽</option>` + slots.map(slot => `<option value="${esc(slot)}">${esc(slot)}</option>`).join("");
+}
+
+async function validateAssembly() {
+  try {
+    const payload = {
+      projectId: diagnostics.project.projectId,
+      selectedPartIds: [...selectedParts].sort(),
+    };
+    setStatus("即时验证装配集合…");
+    const result = await api("/api/validate-assembly", {
+      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload),
+    });
+    setStatus(`装配 valid=${result.valid}；接受 ${result.acceptedPartIds.length} 个部件；冲突 ${result.conflicts.length} 条。`, result.valid ? "ok" : "bad");
+    $("conflictCount").textContent = `${result.conflicts.length} items`;
+    $("conflicts").innerHTML = result.conflicts.length ? `<table><thead><tr><th>类别</th><th>对象</th><th>说明</th></tr></thead><tbody>${result.conflicts.map(c => `<tr><td><span class="chip bad">${esc(c.category)}</span></td><td class="mono">${esc(c.partIds.join(" / "))}<br><span class="muted">${esc(c.mountId || c.ruleId || "")}</span></td><td>${esc(c.message)}</td></tr>`).join("")}</tbody></table>` : '<div class="empty">该选择合法。</div>';
+  } catch (error) {
+    setStatus(error.message, "bad");
+  }
+}
+
+async function applyEdit() {
+  try {
+    if (!diagnostics) return;
+    const request = {
+      projectId: diagnostics.project.projectId,
+      caseId: diagnostics.truthCase.caseId,
+      partId: $("editPart").value,
+      materialSlot: $("editMaterial").value || undefined,
+      scalePercent: Number($("editScale").value) || undefined,
+    };
+    if (!request.materialSlot && !request.scalePercent) throw new Error("请选择材质槽或填写几何比例");
+    setStatus("应用编辑并增量重划分…");
+    const report = await api("/api/edit-part", {
+      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(request),
+    });
+    const conflictText = report.immediateConflicts.length ? `；即时冲突 ${report.immediateConflicts.length} 条` : "；即时冲突 0";
+    setStatus(`编辑完成：复用 [${report.reusedBatchIds.join(", ") || "none"}]；失效 [${report.invalidatedBatchIds.join(", ") || "none"}]${conflictText}。`, report.immediateConflicts.length ? "bad" : "ok");
+    await loadDiagnostics();
+  } catch (error) {
+    setStatus(error.message, "bad");
+  }
+}
+
+async function retryBatch(batchId) {
+  try {
+    setStatus(`重试单批次 ${batchId}…`);
+    await api("/api/retry-batch", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        projectId: diagnostics.project.projectId,
+        caseId: diagnostics.truthCase.caseId,
+        batchId,
+      }),
+    });
+    setStatus(`批次 ${batchId} 重试成功，其他批次未被改写。`, "ok");
+    await loadDiagnostics();
+  } catch (error) {
+    setStatus(error.message, "bad");
+  }
+}
+
+async function runTriCompare() {
+  try {
+    const request = {
+      projectId: diagnostics.project.projectId,
+      caseId: diagnostics.truthCase.caseId,
+      partId: $("editPart").value,
+      materialSlot: $("editMaterial").value || undefined,
+      scalePercent: Number($("editScale").value) || 90,
+    };
+    setStatus("运行全量、增量与 SQLite 恢复三路径…");
+    const report = await api("/api/tri-compare", {
+      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(request),
+    });
+    $("triResult").innerHTML = `<div class="path-cards">${report.paths.map(path => `<div class="path-card">
+      <b>${esc(path.name)}</b>
+      <div>${path.batchCount} batches</div>
+      <small>${esc(path.source)}</small>
+      <small class="mono">${esc(path.resultHash.slice(0, 24))}</small>
+      <small class="mono">${esc(path.commitSequence.join(" → "))}</small>
+    </div>`).join("")}</div>
+    ${report.equal ? '<div class="status ok" style="margin-bottom:0">三路径逐项一致：批次、偏移、冲突、取舍与提交序列完全相同。</div>' : `<div class="mismatch">${esc(JSON.stringify(report.firstMismatch, null, 2))}</div>`}`;
+    setStatus(report.equal ? "三路径一致。" : `三路径首个差异：${report.firstMismatch?.path} / ${report.firstMismatch?.field}`, report.equal ? "ok" : "bad");
+  } catch (error) {
+    setStatus(error.message, "bad");
+    $("triResult").innerHTML = `<div class="mismatch">${esc(error.message)}</div>`;
+  }
+}
+
+async function recoverCase() {
+  try {
+    setStatus("从 SQLite 强制恢复…");
+    const report = await api("/api/recover", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({projectId: diagnostics.project.projectId, caseId: diagnostics.truthCase.caseId}),
+    });
+    const detail = report.recovered ? "恢复成功" : report.invalidated ? `快照作废并重建：${report.reason}` : "无快照，已全量重建";
+    setStatus(detail, report.invalidated ? "bad" : "ok");
+    await loadDiagnostics();
+  } catch (error) {
+    setStatus(error.message, "bad");
+  }
+}
+
+$("loadButton").addEventListener("click", loadDiagnostics);
+$("recoverButton").addEventListener("click", recoverCase);
+$("truthButton").addEventListener("click", () => {
+  if (!diagnostics) return;
+  const mismatch = diagnostics.truthMismatch;
+  if (mismatch && diagnostics.project.revision > 1) {
+    setStatus(`rev ${diagnostics.project.revision} 已偏离初始真值，这是编辑后的预期状态。请用三路径比对核验增量/恢复/全量。`, "warn");
+  } else {
+    setStatus(mismatch ? `真值不一致：${mismatch.path} / ${mismatch.field}\nexpected=${mismatch.expected}\nactual=${mismatch.actual}` : "真值逐项一致。", mismatch ? "bad" : "ok");
+  }
+});
+$("validateButton").addEventListener("click", validateAssembly);
+$("selectAllButton").addEventListener("click", () => {
+  selectedParts = new Set(diagnostics.parts.map(part => part.id));
+  renderMountEditor(diagnostics);
+});
+$("selectMainButton").addEventListener("click", () => {
+  selectedParts = new Set(diagnostics.truthCase.selectedPartIds);
+  renderMountEditor(diagnostics);
+});
+$("editButton").addEventListener("click", applyEdit);
+$("triButton").addEventListener("click", runTriCompare);
+
+loadProjects().catch(error => setStatus(error.message, "bad"));
+</script>
+</body>
+</html>
