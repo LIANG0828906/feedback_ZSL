@@ -1,0 +1,730 @@
+{
+  "schema_version": "v1",
+  "project_id": "feature-project-003",
+  "batch_id": "batch-003",
+  "seed": 20276964,
+  "time_base_ms": 1704067200000,
+  "tick_ms": 60000,
+  "fixed_tolerance": 0.000001,
+  "channels": [
+    "web",
+    "ios",
+    "android"
+  ],
+  "feature_defs": [
+    {
+      "feature_id": "latency_ms",
+      "window_width_ms": 180000,
+      "slide_ms": 60000,
+      "agg_funcs": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max",
+        "weighted_avg"
+      ],
+      "window_base": "epoch_hour",
+      "allowed_lateness_ms": 120000,
+      "weight_scale": 1000,
+      "channel_weights": {
+        "android": 200,
+        "ios": 300,
+        "web": 500
+      }
+    },
+    {
+      "feature_id": "amount_cent",
+      "window_width_ms": 180000,
+      "slide_ms": 60000,
+      "agg_funcs": [
+        "count",
+        "sum",
+        "avg",
+        "max",
+        "weighted_avg"
+      ],
+      "window_base": "epoch_hour",
+      "allowed_lateness_ms": 120000,
+      "weight_scale": 1000,
+      "channel_weights": {
+        "android": 200,
+        "ios": 300,
+        "web": 500
+      }
+    },
+    {
+      "feature_id": "jitter_ms",
+      "window_width_ms": 150000,
+      "slide_ms": 60000,
+      "agg_funcs": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ],
+      "window_base": "epoch_hour",
+      "allowed_lateness_ms": 120000,
+      "weight_scale": 1000,
+      "channel_weights": {
+        "android": 200,
+        "ios": 300,
+        "web": 500
+      }
+    },
+    {
+      "feature_id": "event_volume",
+      "window_width_ms": 300000,
+      "slide_ms": 60000,
+      "agg_funcs": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ],
+      "window_base": "epoch_hour",
+      "allowed_lateness_ms": 120000,
+      "weight_scale": 1000,
+      "channel_weights": {
+        "android": 200,
+        "ios": 300,
+        "web": 500
+      }
+    }
+  ],
+  "derived_metrics": [
+    {
+      "derived_id": "amount_per_latency_sum_ratio",
+      "base_feature_id": "latency_ms",
+      "numerator_feature_id": "amount_cent",
+      "denominator_feature_id": "latency_ms",
+      "expression": "sum_ratio"
+    }
+  ],
+  "records": [
+    {
+      "seq": 1,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067200000,
+      "channel": "android",
+      "sample_value": 66
+    },
+    {
+      "seq": 2,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067200000,
+      "channel": "android",
+      "sample_value": 689
+    },
+    {
+      "seq": 3,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067200000,
+      "channel": "web",
+      "sample_value": 34
+    },
+    {
+      "seq": 4,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067200000,
+      "channel": "android",
+      "sample_value": 5
+    },
+    {
+      "seq": 5,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067260000,
+      "channel": "web",
+      "sample_value": 29
+    },
+    {
+      "seq": 6,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067260000,
+      "channel": "android",
+      "sample_value": 967
+    },
+    {
+      "seq": 7,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067260000,
+      "channel": "android",
+      "sample_value": 15
+    },
+    {
+      "seq": 8,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067260000,
+      "channel": "ios",
+      "sample_value": 5
+    },
+    {
+      "seq": 9,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067320000,
+      "channel": "ios",
+      "sample_value": 34
+    },
+    {
+      "seq": 10,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067320000,
+      "channel": "android",
+      "sample_value": 288
+    },
+    {
+      "seq": 11,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067320000,
+      "channel": "ios",
+      "sample_value": 1
+    },
+    {
+      "seq": 12,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067320000,
+      "channel": "android",
+      "sample_value": 4
+    },
+    {
+      "seq": 13,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067380000,
+      "channel": "android",
+      "sample_value": 34
+    },
+    {
+      "seq": 14,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067380000,
+      "channel": "web",
+      "sample_value": 642
+    },
+    {
+      "seq": 15,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067380000,
+      "channel": "android",
+      "sample_value": 25
+    },
+    {
+      "seq": 16,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067380000,
+      "channel": "ios",
+      "sample_value": 1
+    },
+    {
+      "seq": 17,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067440000,
+      "channel": "ios",
+      "sample_value": 25
+    },
+    {
+      "seq": 18,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067440000,
+      "channel": "web",
+      "sample_value": 291
+    },
+    {
+      "seq": 19,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067440000,
+      "channel": "android",
+      "sample_value": 19
+    },
+    {
+      "seq": 20,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067440000,
+      "channel": "ios",
+      "sample_value": 4
+    },
+    {
+      "seq": 21,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067500000,
+      "channel": "android",
+      "sample_value": 64
+    },
+    {
+      "seq": 22,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067500000,
+      "channel": "web",
+      "sample_value": 837
+    },
+    {
+      "seq": 23,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067500000,
+      "channel": "android",
+      "sample_value": 39
+    },
+    {
+      "seq": 24,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067500000,
+      "channel": "android",
+      "sample_value": 4
+    },
+    {
+      "seq": 25,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067560000,
+      "channel": "ios",
+      "sample_value": 72
+    },
+    {
+      "seq": 26,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067560000,
+      "channel": "web",
+      "sample_value": 377
+    },
+    {
+      "seq": 27,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067560000,
+      "channel": "web",
+      "sample_value": 27
+    },
+    {
+      "seq": 28,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067560000,
+      "channel": "web",
+      "sample_value": 1
+    },
+    {
+      "seq": 29,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067620000,
+      "channel": "web",
+      "sample_value": 60
+    },
+    {
+      "seq": 30,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067620000,
+      "channel": "ios",
+      "sample_value": 736
+    },
+    {
+      "seq": 31,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067620000,
+      "channel": "ios",
+      "sample_value": 27
+    },
+    {
+      "seq": 32,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067620000,
+      "channel": "ios",
+      "sample_value": 3
+    },
+    {
+      "seq": 33,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067680000,
+      "channel": "ios",
+      "sample_value": 41
+    },
+    {
+      "seq": 34,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067680000,
+      "channel": "android",
+      "sample_value": 292
+    },
+    {
+      "seq": 35,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067680000,
+      "channel": "ios",
+      "sample_value": 35
+    },
+    {
+      "seq": 36,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067680000,
+      "channel": "ios",
+      "sample_value": 5
+    },
+    {
+      "seq": 37,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067740000,
+      "channel": "ios",
+      "sample_value": 84
+    },
+    {
+      "seq": 38,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067740000,
+      "channel": "android",
+      "sample_value": 493
+    },
+    {
+      "seq": 39,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067740000,
+      "channel": "android",
+      "sample_value": 16
+    },
+    {
+      "seq": 40,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067740000,
+      "channel": "ios",
+      "sample_value": 3
+    },
+    {
+      "seq": 41,
+      "kind": "watermark",
+      "watermark_ms": 1704067680000
+    },
+    {
+      "seq": 42,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067620000,
+      "channel": "web",
+      "sample_value": 14
+    },
+    {
+      "seq": 43,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067620000,
+      "channel": "web",
+      "sample_value": 211
+    },
+    {
+      "seq": 44,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067620000,
+      "channel": "web",
+      "sample_value": 6
+    },
+    {
+      "seq": 45,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067620000,
+      "channel": "web",
+      "sample_value": 1
+    },
+    {
+      "seq": 46,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067440000,
+      "channel": "ios",
+      "sample_value": 6
+    },
+    {
+      "seq": 47,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067440000,
+      "channel": "ios",
+      "sample_value": 458
+    },
+    {
+      "seq": 48,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067440000,
+      "channel": "ios",
+      "sample_value": 9
+    },
+    {
+      "seq": 49,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067440000,
+      "channel": "ios",
+      "sample_value": 2
+    },
+    {
+      "seq": 50,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067800000,
+      "channel": "android",
+      "sample_value": 85
+    },
+    {
+      "seq": 51,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067800000,
+      "channel": "ios",
+      "sample_value": 868
+    },
+    {
+      "seq": 52,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067800000,
+      "channel": "ios",
+      "sample_value": 26
+    },
+    {
+      "seq": 53,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067800000,
+      "channel": "android",
+      "sample_value": 5
+    },
+    {
+      "seq": 54,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067860000,
+      "channel": "web",
+      "sample_value": 41
+    },
+    {
+      "seq": 55,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067860000,
+      "channel": "web",
+      "sample_value": 170
+    },
+    {
+      "seq": 56,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067860000,
+      "channel": "ios",
+      "sample_value": 24
+    },
+    {
+      "seq": 57,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067860000,
+      "channel": "ios",
+      "sample_value": 5
+    },
+    {
+      "seq": 58,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067920000,
+      "channel": "ios",
+      "sample_value": 54
+    },
+    {
+      "seq": 59,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067920000,
+      "channel": "android",
+      "sample_value": 206
+    },
+    {
+      "seq": 60,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067920000,
+      "channel": "android",
+      "sample_value": 21
+    },
+    {
+      "seq": 61,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067920000,
+      "channel": "android",
+      "sample_value": 2
+    },
+    {
+      "seq": 62,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067980000,
+      "channel": "ios",
+      "sample_value": 96
+    },
+    {
+      "seq": 63,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067980000,
+      "channel": "web",
+      "sample_value": 732
+    },
+    {
+      "seq": 64,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067980000,
+      "channel": "ios",
+      "sample_value": 40
+    },
+    {
+      "seq": 65,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067980000,
+      "channel": "web",
+      "sample_value": 2
+    },
+    {
+      "seq": 66,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704068040000,
+      "channel": "ios",
+      "sample_value": 39
+    },
+    {
+      "seq": 67,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704068040000,
+      "channel": "web",
+      "sample_value": 292
+    },
+    {
+      "seq": 68,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704068040000,
+      "channel": "web",
+      "sample_value": 1
+    },
+    {
+      "seq": 69,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704068040000,
+      "channel": "android",
+      "sample_value": 2
+    },
+    {
+      "seq": 70,
+      "kind": "watermark",
+      "watermark_ms": 1704067980000
+    },
+    {
+      "seq": 71,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067920000,
+      "channel": "android",
+      "sample_value": 12
+    },
+    {
+      "seq": 72,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067920000,
+      "channel": "android",
+      "sample_value": 228
+    },
+    {
+      "seq": 73,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067920000,
+      "channel": "android",
+      "sample_value": 0
+    },
+    {
+      "seq": 74,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067920000,
+      "channel": "android",
+      "sample_value": 1
+    },
+    {
+      "seq": 75,
+      "kind": "event",
+      "feature_id": "latency_ms",
+      "event_time_ms": 1704067740000,
+      "channel": "web",
+      "sample_value": 4
+    },
+    {
+      "seq": 76,
+      "kind": "event",
+      "feature_id": "amount_cent",
+      "event_time_ms": 1704067740000,
+      "channel": "web",
+      "sample_value": 30
+    },
+    {
+      "seq": 77,
+      "kind": "event",
+      "feature_id": "jitter_ms",
+      "event_time_ms": 1704067740000,
+      "channel": "web",
+      "sample_value": 9
+    },
+    {
+      "seq": 78,
+      "kind": "event",
+      "feature_id": "event_volume",
+      "event_time_ms": 1704067740000,
+      "channel": "web",
+      "sample_value": 3
+    }
+  ],
+  "watermark_lag_ms": 60000,
+  "path_ratio_threshold": 3,
+  "worker_budget": 4,
+  "window_buffer_per_feature": 256
+}

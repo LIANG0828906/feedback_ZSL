@@ -1,0 +1,730 @@
+{
+  "schemaVersion": "v2",
+  "projectId": "feature-project-002",
+  "batchId": "batch-002",
+  "seed": 20269045,
+  "timeBaseMs": 1704067200000,
+  "tickMs": 60000,
+  "fixedPointTolerance": 0.000001,
+  "channels": [
+    "web",
+    "ios",
+    "android"
+  ],
+  "featureDefinitions": [
+    {
+      "featureId": "latency_ms",
+      "windowWidthMs": 180000,
+      "slideIntervalMs": 60000,
+      "aggregations": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max",
+        "weighted_avg"
+      ],
+      "windowBase": "first_data_point",
+      "allowedLatenessMs": 120000,
+      "weightScalePer10K": 10000,
+      "channelWeights": {
+        "android": 2000,
+        "ios": 3000,
+        "web": 5000
+      }
+    },
+    {
+      "featureId": "amount_cent",
+      "windowWidthMs": 180000,
+      "slideIntervalMs": 60000,
+      "aggregations": [
+        "count",
+        "sum",
+        "avg",
+        "max",
+        "weighted_avg"
+      ],
+      "windowBase": "first_data_point",
+      "allowedLatenessMs": 120000,
+      "weightScalePer10K": 10000,
+      "channelWeights": {
+        "android": 2000,
+        "ios": 3000,
+        "web": 5000
+      }
+    },
+    {
+      "featureId": "jitter_ms",
+      "windowWidthMs": 150000,
+      "slideIntervalMs": 60000,
+      "aggregations": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ],
+      "windowBase": "first_data_point",
+      "allowedLatenessMs": 120000,
+      "weightScalePer10K": 10000,
+      "channelWeights": {
+        "android": 2000,
+        "ios": 3000,
+        "web": 5000
+      }
+    },
+    {
+      "featureId": "event_volume",
+      "windowWidthMs": 300000,
+      "slideIntervalMs": 60000,
+      "aggregations": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max"
+      ],
+      "windowBase": "first_data_point",
+      "allowedLatenessMs": 120000,
+      "weightScalePer10K": 10000,
+      "channelWeights": {
+        "android": 2000,
+        "ios": 3000,
+        "web": 5000
+      }
+    }
+  ],
+  "derivedMetrics": [
+    {
+      "derivedId": "amount_per_latency_sum_ratio",
+      "baseFeatureId": "latency_ms",
+      "numeratorFeatureId": "amount_cent",
+      "denominatorFeatureId": "latency_ms",
+      "expression": "sum_ratio"
+    }
+  ],
+  "eventStream": [
+    {
+      "sequence": 1,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 0,
+      "channelName": "android",
+      "sampleValue": 42
+    },
+    {
+      "sequence": 2,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 0,
+      "channelName": "android",
+      "sampleValue": 544
+    },
+    {
+      "sequence": 3,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 0,
+      "channelName": "web",
+      "sampleValue": 33
+    },
+    {
+      "sequence": 4,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 0,
+      "channelName": "web",
+      "sampleValue": 3
+    },
+    {
+      "sequence": 5,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 1,
+      "channelName": "android",
+      "sampleValue": 74
+    },
+    {
+      "sequence": 6,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 1,
+      "channelName": "web",
+      "sampleValue": 716
+    },
+    {
+      "sequence": 7,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 1,
+      "channelName": "web",
+      "sampleValue": 12
+    },
+    {
+      "sequence": 8,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 1,
+      "channelName": "web",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 9,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 2,
+      "channelName": "ios",
+      "sampleValue": 67
+    },
+    {
+      "sequence": 10,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 2,
+      "channelName": "web",
+      "sampleValue": 140
+    },
+    {
+      "sequence": 11,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 2,
+      "channelName": "web",
+      "sampleValue": 11
+    },
+    {
+      "sequence": 12,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 2,
+      "channelName": "web",
+      "sampleValue": 5
+    },
+    {
+      "sequence": 13,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 3,
+      "channelName": "web",
+      "sampleValue": 98
+    },
+    {
+      "sequence": 14,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 3,
+      "channelName": "ios",
+      "sampleValue": 765
+    },
+    {
+      "sequence": 15,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 3,
+      "channelName": "android",
+      "sampleValue": 18
+    },
+    {
+      "sequence": 16,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 3,
+      "channelName": "ios",
+      "sampleValue": 5
+    },
+    {
+      "sequence": 17,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 4,
+      "channelName": "ios",
+      "sampleValue": 30
+    },
+    {
+      "sequence": 18,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 4,
+      "channelName": "ios",
+      "sampleValue": 146
+    },
+    {
+      "sequence": 19,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 4,
+      "channelName": "ios",
+      "sampleValue": 31
+    },
+    {
+      "sequence": 20,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 4,
+      "channelName": "android",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 21,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 5,
+      "channelName": "web",
+      "sampleValue": 79
+    },
+    {
+      "sequence": 22,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 5,
+      "channelName": "android",
+      "sampleValue": 418
+    },
+    {
+      "sequence": 23,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 5,
+      "channelName": "ios",
+      "sampleValue": 38
+    },
+    {
+      "sequence": 24,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 5,
+      "channelName": "ios",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 25,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 6,
+      "channelName": "android",
+      "sampleValue": 83
+    },
+    {
+      "sequence": 26,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 6,
+      "channelName": "android",
+      "sampleValue": 185
+    },
+    {
+      "sequence": 27,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 6,
+      "channelName": "android",
+      "sampleValue": 21
+    },
+    {
+      "sequence": 28,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 6,
+      "channelName": "android",
+      "sampleValue": 4
+    },
+    {
+      "sequence": 29,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 7,
+      "channelName": "ios",
+      "sampleValue": 54
+    },
+    {
+      "sequence": 30,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 7,
+      "channelName": "web",
+      "sampleValue": 582
+    },
+    {
+      "sequence": 31,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 7,
+      "channelName": "ios",
+      "sampleValue": 27
+    },
+    {
+      "sequence": 32,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 7,
+      "channelName": "android",
+      "sampleValue": 2
+    },
+    {
+      "sequence": 33,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 8,
+      "channelName": "web",
+      "sampleValue": 44
+    },
+    {
+      "sequence": 34,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 8,
+      "channelName": "web",
+      "sampleValue": 680
+    },
+    {
+      "sequence": 35,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 8,
+      "channelName": "android",
+      "sampleValue": 23
+    },
+    {
+      "sequence": 36,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 8,
+      "channelName": "web",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 37,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 9,
+      "channelName": "web",
+      "sampleValue": 88
+    },
+    {
+      "sequence": 38,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 9,
+      "channelName": "web",
+      "sampleValue": 665
+    },
+    {
+      "sequence": 39,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 9,
+      "channelName": "web",
+      "sampleValue": 37
+    },
+    {
+      "sequence": 40,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 9,
+      "channelName": "ios",
+      "sampleValue": 4
+    },
+    {
+      "sequence": 41,
+      "recordType": "watermark",
+      "watermarkSequence": 8
+    },
+    {
+      "sequence": 42,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 7,
+      "channelName": "web",
+      "sampleValue": 2
+    },
+    {
+      "sequence": 43,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 7,
+      "channelName": "web",
+      "sampleValue": 289
+    },
+    {
+      "sequence": 44,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 7,
+      "channelName": "web",
+      "sampleValue": 3
+    },
+    {
+      "sequence": 45,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 7,
+      "channelName": "web",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 46,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 4,
+      "channelName": "ios",
+      "sampleValue": 17
+    },
+    {
+      "sequence": 47,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 4,
+      "channelName": "ios",
+      "sampleValue": 410
+    },
+    {
+      "sequence": 48,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 4,
+      "channelName": "ios",
+      "sampleValue": 5
+    },
+    {
+      "sequence": 49,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 4,
+      "channelName": "ios",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 50,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 10,
+      "channelName": "android",
+      "sampleValue": 42
+    },
+    {
+      "sequence": 51,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 10,
+      "channelName": "ios",
+      "sampleValue": 267
+    },
+    {
+      "sequence": 52,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 10,
+      "channelName": "ios",
+      "sampleValue": 18
+    },
+    {
+      "sequence": 53,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 10,
+      "channelName": "ios",
+      "sampleValue": 5
+    },
+    {
+      "sequence": 54,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 11,
+      "channelName": "ios",
+      "sampleValue": 28
+    },
+    {
+      "sequence": 55,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 11,
+      "channelName": "web",
+      "sampleValue": 330
+    },
+    {
+      "sequence": 56,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 11,
+      "channelName": "web",
+      "sampleValue": 26
+    },
+    {
+      "sequence": 57,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 11,
+      "channelName": "ios",
+      "sampleValue": 3
+    },
+    {
+      "sequence": 58,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 12,
+      "channelName": "ios",
+      "sampleValue": 90
+    },
+    {
+      "sequence": 59,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 12,
+      "channelName": "android",
+      "sampleValue": 817
+    },
+    {
+      "sequence": 60,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 12,
+      "channelName": "android",
+      "sampleValue": 6
+    },
+    {
+      "sequence": 61,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 12,
+      "channelName": "web",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 62,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 13,
+      "channelName": "ios",
+      "sampleValue": 84
+    },
+    {
+      "sequence": 63,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 13,
+      "channelName": "android",
+      "sampleValue": 939
+    },
+    {
+      "sequence": 64,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 13,
+      "channelName": "android",
+      "sampleValue": 2
+    },
+    {
+      "sequence": 65,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 13,
+      "channelName": "android",
+      "sampleValue": 2
+    },
+    {
+      "sequence": 66,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 14,
+      "channelName": "android",
+      "sampleValue": 40
+    },
+    {
+      "sequence": 67,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 14,
+      "channelName": "ios",
+      "sampleValue": 357
+    },
+    {
+      "sequence": 68,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 14,
+      "channelName": "ios",
+      "sampleValue": 36
+    },
+    {
+      "sequence": 69,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 14,
+      "channelName": "ios",
+      "sampleValue": 3
+    },
+    {
+      "sequence": 70,
+      "recordType": "watermark",
+      "watermarkSequence": 13
+    },
+    {
+      "sequence": 71,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 12,
+      "channelName": "android",
+      "sampleValue": 3
+    },
+    {
+      "sequence": 72,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 12,
+      "channelName": "android",
+      "sampleValue": 295
+    },
+    {
+      "sequence": 73,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 12,
+      "channelName": "android",
+      "sampleValue": 9
+    },
+    {
+      "sequence": 74,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 12,
+      "channelName": "android",
+      "sampleValue": 3
+    },
+    {
+      "sequence": 75,
+      "recordType": "event",
+      "featureId": "latency_ms",
+      "observedSequence": 9,
+      "channelName": "web",
+      "sampleValue": 1
+    },
+    {
+      "sequence": 76,
+      "recordType": "event",
+      "featureId": "amount_cent",
+      "observedSequence": 9,
+      "channelName": "web",
+      "sampleValue": 96
+    },
+    {
+      "sequence": 77,
+      "recordType": "event",
+      "featureId": "jitter_ms",
+      "observedSequence": 9,
+      "channelName": "web",
+      "sampleValue": 8
+    },
+    {
+      "sequence": 78,
+      "recordType": "event",
+      "featureId": "event_volume",
+      "observedSequence": 9,
+      "channelName": "web",
+      "sampleValue": 1
+    }
+  ],
+  "watermarkLagMs": 60000,
+  "incrementalRatioThreshold": 3,
+  "workerCount": 4,
+  "windowBufferPerFeature": 256
+}

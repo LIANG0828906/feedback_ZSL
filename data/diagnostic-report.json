@@ -1,0 +1,126 @@
+{
+  "all_stable": true,
+  "cases": [
+    {
+      "name": "negative_width",
+      "expected_code": "E_DEFINITION_NEGATIVE_WIDTH",
+      "observed_code": "E_DEFINITION_NEGATIVE_WIDTH",
+      "stable": true,
+      "context": {
+        "feature_id": "latency_ms",
+        "width_ms": -1
+      }
+    },
+    {
+      "name": "zero_slide",
+      "expected_code": "E_DEFINITION_ZERO_STEP",
+      "observed_code": "E_DEFINITION_ZERO_STEP",
+      "stable": true,
+      "context": {
+        "feature_id": "latency_ms",
+        "slide_ms": 0
+      }
+    },
+    {
+      "name": "weight_out_of_range",
+      "expected_code": "E_AGG_WEIGHT_OUT_OF_RANGE",
+      "observed_code": "E_AGG_WEIGHT_OUT_OF_RANGE",
+      "stable": true,
+      "context": {
+        "channel": "web",
+        "feature_id": "latency_ms",
+        "max_ppm": 1000000,
+        "min_ppm": 0,
+        "weight_ppm": 1000001
+      }
+    },
+    {
+      "name": "watermark_before_committed_window",
+      "expected_code": "E_WATERMARK_BEFORE_COMMITTED_WINDOW",
+      "observed_code": "E_WATERMARK_BEFORE_COMMITTED_WINDOW",
+      "stable": true,
+      "context": {
+        "feature_id": "latency_ms",
+        "previous": 1704067980000,
+        "watermark": 1704067260000,
+        "window_end": 1704067380000,
+        "window_id": "latency_ms:w:0"
+      }
+    },
+    {
+      "name": "worker_budget_out_of_range",
+      "expected_code": "E_BUDGET_WORKERS_OUT_OF_RANGE",
+      "observed_code": "E_BUDGET_WORKERS_OUT_OF_RANGE",
+      "stable": true,
+      "context": {
+        "max": 64,
+        "min": 1,
+        "workers": 0
+      }
+    },
+    {
+      "name": "buffer_budget_out_of_range",
+      "expected_code": "E_BUDGET_BUFFER_OUT_OF_RANGE",
+      "observed_code": "E_BUDGET_BUFFER_OUT_OF_RANGE",
+      "stable": true,
+      "context": {
+        "max": 4096,
+        "max_windows_per_feature": 0,
+        "min": 1
+      }
+    },
+    {
+      "name": "buffer_backpressure",
+      "expected_code": "E_BACKPRESSURE_BUFFER_FULL",
+      "observed_code": "E_BACKPRESSURE_BUFFER_FULL",
+      "stable": true,
+      "context": {
+        "arrival_seq": 4,
+        "existing_windows": 0,
+        "feature_id": "event_volume",
+        "limit": 1,
+        "projected_windows": 5,
+        "required_new_windows": 5
+      }
+    },
+    {
+      "name": "thread_backpressure",
+      "expected_code": "E_BACKPRESSURE_THREAD_EXHAUSTED",
+      "observed_code": "E_BACKPRESSURE_THREAD_EXHAUSTED",
+      "stable": true,
+      "context": {
+        "worker_budget": 1
+      }
+    },
+    {
+      "name": "unknown_schema_field",
+      "expected_code": "E_SCHEMA_UNKNOWN_FIELD",
+      "observed_code": "E_SCHEMA_UNKNOWN_FIELD",
+      "stable": true,
+      "context": {
+        "stage": "strict_json_decode"
+      }
+    },
+    {
+      "name": "truncated_checkpoint",
+      "expected_code": "E_CHECKPOINT_TRUNCATED",
+      "observed_code": "E_CHECKPOINT_TRUNCATED",
+      "stable": true,
+      "context": {
+        "path": "/tmp/featurectl-diagnose-534459690/truncated.json",
+        "stage": "snapshot_envelope"
+      }
+    },
+    {
+      "name": "version_mismatch_snapshot",
+      "expected_code": "E_CHECKPOINT_VERSION_MISMATCH",
+      "observed_code": "E_CHECKPOINT_VERSION_MISMATCH",
+      "stable": true,
+      "context": {
+        "current": "canonical.v1",
+        "stored": "canonical.v9"
+      }
+    }
+  ],
+  "writes": "in-memory projects and temporary checkpoint files only; source samples are not modified"
+}

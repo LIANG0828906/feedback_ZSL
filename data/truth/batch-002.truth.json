@@ -1,0 +1,3296 @@
+{
+  "schema_version": "truth.v1",
+  "project_id": "feature-project-002",
+  "batch_id": "batch-002",
+  "seed": 20269045,
+  "fixed_tolerance": 0.000001,
+  "summary": {
+    "window_count": 70,
+    "recomputed_window_count": 28,
+    "recomputation_count": 28,
+    "discarded_record_count": 28,
+    "derived_window_count": 17
+  },
+  "expected": {
+    "project_id": "feature-project-002",
+    "batch_id": "batch-002",
+    "canonical_version": "canonical.v1",
+    "windows": [
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:-2",
+        "window_index": -2,
+        "start_ms": 1704067080000,
+        "end_ms": 1704067260000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 42
+          },
+          {
+            "func": "avg",
+            "value": 42
+          },
+          {
+            "func": "min",
+            "value": 42
+          },
+          {
+            "func": "max",
+            "value": 42
+          },
+          {
+            "func": "weighted_avg",
+            "value": 42
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:-1",
+        "window_index": -1,
+        "start_ms": 1704067140000,
+        "end_ms": 1704067320000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 116
+          },
+          {
+            "func": "avg",
+            "value": 58
+          },
+          {
+            "func": "min",
+            "value": 42
+          },
+          {
+            "func": "max",
+            "value": 74
+          },
+          {
+            "func": "weighted_avg",
+            "value": 58
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:0",
+        "window_index": 0,
+        "start_ms": 1704067200000,
+        "end_ms": 1704067380000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 183
+          },
+          {
+            "func": "avg",
+            "value": 61
+          },
+          {
+            "func": "min",
+            "value": 42
+          },
+          {
+            "func": "max",
+            "value": 74
+          },
+          {
+            "func": "weighted_avg",
+            "value": 61.857142857142854
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:1",
+        "window_index": 1,
+        "start_ms": 1704067260000,
+        "end_ms": 1704067440000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 239
+          },
+          {
+            "func": "avg",
+            "value": 79.66666666666667
+          },
+          {
+            "func": "min",
+            "value": 67
+          },
+          {
+            "func": "max",
+            "value": 98
+          },
+          {
+            "func": "weighted_avg",
+            "value": 83.9
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067500000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 195
+          },
+          {
+            "func": "avg",
+            "value": 65
+          },
+          {
+            "func": "min",
+            "value": 30
+          },
+          {
+            "func": "max",
+            "value": 98
+          },
+          {
+            "func": "weighted_avg",
+            "value": 71
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067560000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 207
+          },
+          {
+            "func": "avg",
+            "value": 69
+          },
+          {
+            "func": "min",
+            "value": 30
+          },
+          {
+            "func": "max",
+            "value": 98
+          },
+          {
+            "func": "weighted_avg",
+            "value": 75
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067620000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 192
+          },
+          {
+            "func": "avg",
+            "value": 64
+          },
+          {
+            "func": "min",
+            "value": 30
+          },
+          {
+            "func": "max",
+            "value": 83
+          },
+          {
+            "func": "weighted_avg",
+            "value": 65.1
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:5",
+        "window_index": 5,
+        "start_ms": 1704067500000,
+        "end_ms": 1704067680000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 218
+          },
+          {
+            "func": "avg",
+            "value": 54.5
+          },
+          {
+            "func": "min",
+            "value": 2
+          },
+          {
+            "func": "max",
+            "value": 83
+          },
+          {
+            "func": "weighted_avg",
+            "value": 48.86666666666667
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:6",
+        "window_index": 6,
+        "start_ms": 1704067560000,
+        "end_ms": 1704067740000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 183
+          },
+          {
+            "func": "avg",
+            "value": 45.75
+          },
+          {
+            "func": "min",
+            "value": 2
+          },
+          {
+            "func": "max",
+            "value": 83
+          },
+          {
+            "func": "weighted_avg",
+            "value": 37.2
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067800000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 188
+          },
+          {
+            "func": "avg",
+            "value": 47
+          },
+          {
+            "func": "min",
+            "value": 2
+          },
+          {
+            "func": "max",
+            "value": 88
+          },
+          {
+            "func": "weighted_avg",
+            "value": 46.22222222222222
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067860000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 174
+          },
+          {
+            "func": "avg",
+            "value": 58
+          },
+          {
+            "func": "min",
+            "value": 42
+          },
+          {
+            "func": "max",
+            "value": 88
+          },
+          {
+            "func": "weighted_avg",
+            "value": 62
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704067920000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 158
+          },
+          {
+            "func": "avg",
+            "value": 52.666666666666664
+          },
+          {
+            "func": "min",
+            "value": 28
+          },
+          {
+            "func": "max",
+            "value": 88
+          },
+          {
+            "func": "weighted_avg",
+            "value": 60.8
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:10",
+        "window_index": 10,
+        "start_ms": 1704067800000,
+        "end_ms": 1704067980000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 163
+          },
+          {
+            "func": "avg",
+            "value": 40.75
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 90
+          },
+          {
+            "func": "weighted_avg",
+            "value": 44.4
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:11",
+        "window_index": 11,
+        "start_ms": 1704067860000,
+        "end_ms": 1704068040000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 205
+          },
+          {
+            "func": "avg",
+            "value": 51.25
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 90
+          },
+          {
+            "func": "weighted_avg",
+            "value": 55.63636363636363
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:12",
+        "window_index": 12,
+        "start_ms": 1704067920000,
+        "end_ms": 1704068100000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 217
+          },
+          {
+            "func": "avg",
+            "value": 54.25
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 90
+          },
+          {
+            "func": "weighted_avg",
+            "value": 60.8
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:13",
+        "window_index": 13,
+        "start_ms": 1704067980000,
+        "end_ms": 1704068160000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 124
+          },
+          {
+            "func": "avg",
+            "value": 62
+          },
+          {
+            "func": "min",
+            "value": 40
+          },
+          {
+            "func": "max",
+            "value": 84
+          },
+          {
+            "func": "weighted_avg",
+            "value": 66.4
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:14",
+        "window_index": 14,
+        "start_ms": 1704068040000,
+        "end_ms": 1704068220000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 40
+          },
+          {
+            "func": "avg",
+            "value": 40
+          },
+          {
+            "func": "min",
+            "value": 40
+          },
+          {
+            "func": "max",
+            "value": 40
+          },
+          {
+            "func": "weighted_avg",
+            "value": 40
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:-2",
+        "window_index": -2,
+        "start_ms": 1704067080000,
+        "end_ms": 1704067260000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 544
+          },
+          {
+            "func": "avg",
+            "value": 544
+          },
+          {
+            "func": "max",
+            "value": 544
+          },
+          {
+            "func": "weighted_avg",
+            "value": 544
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:-1",
+        "window_index": -1,
+        "start_ms": 1704067140000,
+        "end_ms": 1704067320000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 1260
+          },
+          {
+            "func": "avg",
+            "value": 630
+          },
+          {
+            "func": "max",
+            "value": 716
+          },
+          {
+            "func": "weighted_avg",
+            "value": 666.8571428571429
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:0",
+        "window_index": 0,
+        "start_ms": 1704067200000,
+        "end_ms": 1704067380000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 1400
+          },
+          {
+            "func": "avg",
+            "value": 466.6666666666667
+          },
+          {
+            "func": "max",
+            "value": 716
+          },
+          {
+            "func": "weighted_avg",
+            "value": 447.3333333333333
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:1",
+        "window_index": 1,
+        "start_ms": 1704067260000,
+        "end_ms": 1704067440000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 1621
+          },
+          {
+            "func": "avg",
+            "value": 540.3333333333334
+          },
+          {
+            "func": "max",
+            "value": 765
+          },
+          {
+            "func": "weighted_avg",
+            "value": 505.7692307692308
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067500000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 1051
+          },
+          {
+            "func": "avg",
+            "value": 350.3333333333333
+          },
+          {
+            "func": "max",
+            "value": 765
+          },
+          {
+            "func": "weighted_avg",
+            "value": 312.09090909090907
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067560000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 1329
+          },
+          {
+            "func": "avg",
+            "value": 443
+          },
+          {
+            "func": "max",
+            "value": 765
+          },
+          {
+            "func": "weighted_avg",
+            "value": 446.125
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067620000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 749
+          },
+          {
+            "func": "avg",
+            "value": 249.66666666666666
+          },
+          {
+            "func": "max",
+            "value": 418
+          },
+          {
+            "func": "weighted_avg",
+            "value": 234.85714285714286
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:5",
+        "window_index": 5,
+        "start_ms": 1704067500000,
+        "end_ms": 1704067680000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 1474
+          },
+          {
+            "func": "avg",
+            "value": 368.5
+          },
+          {
+            "func": "max",
+            "value": 582
+          },
+          {
+            "func": "weighted_avg",
+            "value": 397.2142857142857
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:6",
+        "window_index": 6,
+        "start_ms": 1704067560000,
+        "end_ms": 1704067740000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 1736
+          },
+          {
+            "func": "avg",
+            "value": 434
+          },
+          {
+            "func": "max",
+            "value": 680
+          },
+          {
+            "func": "weighted_avg",
+            "value": 477.94117647058823
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067800000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 2216
+          },
+          {
+            "func": "avg",
+            "value": 554
+          },
+          {
+            "func": "max",
+            "value": 680
+          },
+          {
+            "func": "weighted_avg",
+            "value": 554
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067860000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 1612
+          },
+          {
+            "func": "avg",
+            "value": 537.3333333333334
+          },
+          {
+            "func": "max",
+            "value": 680
+          },
+          {
+            "func": "weighted_avg",
+            "value": 578.9230769230769
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704067920000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 1262
+          },
+          {
+            "func": "avg",
+            "value": 420.6666666666667
+          },
+          {
+            "func": "max",
+            "value": 665
+          },
+          {
+            "func": "weighted_avg",
+            "value": 444.3076923076923
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:10",
+        "window_index": 10,
+        "start_ms": 1704067800000,
+        "end_ms": 1704067980000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 1709
+          },
+          {
+            "func": "avg",
+            "value": 427.25
+          },
+          {
+            "func": "max",
+            "value": 817
+          },
+          {
+            "func": "weighted_avg",
+            "value": 389.5833333333333
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:11",
+        "window_index": 11,
+        "start_ms": 1704067860000,
+        "end_ms": 1704068040000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 2381
+          },
+          {
+            "func": "avg",
+            "value": 595.25
+          },
+          {
+            "func": "max",
+            "value": 939
+          },
+          {
+            "func": "weighted_avg",
+            "value": 522.9090909090909
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:12",
+        "window_index": 12,
+        "start_ms": 1704067920000,
+        "end_ms": 1704068100000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 2408
+          },
+          {
+            "func": "avg",
+            "value": 602
+          },
+          {
+            "func": "max",
+            "value": 939
+          },
+          {
+            "func": "weighted_avg",
+            "value": 574.7777777777778
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:13",
+        "window_index": 13,
+        "start_ms": 1704067980000,
+        "end_ms": 1704068160000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 1296
+          },
+          {
+            "func": "avg",
+            "value": 648
+          },
+          {
+            "func": "max",
+            "value": 939
+          },
+          {
+            "func": "weighted_avg",
+            "value": 589.8
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:14",
+        "window_index": 14,
+        "start_ms": 1704068040000,
+        "end_ms": 1704068220000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 357
+          },
+          {
+            "func": "avg",
+            "value": 357
+          },
+          {
+            "func": "max",
+            "value": 357
+          },
+          {
+            "func": "weighted_avg",
+            "value": 357
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:-2",
+        "window_index": -2,
+        "start_ms": 1704067080000,
+        "end_ms": 1704067230000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 33
+          },
+          {
+            "func": "avg",
+            "value": 33
+          },
+          {
+            "func": "min",
+            "value": 33
+          },
+          {
+            "func": "max",
+            "value": 33
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:-1",
+        "window_index": -1,
+        "start_ms": 1704067140000,
+        "end_ms": 1704067290000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 45
+          },
+          {
+            "func": "avg",
+            "value": 22.5
+          },
+          {
+            "func": "min",
+            "value": 12
+          },
+          {
+            "func": "max",
+            "value": 33
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:0",
+        "window_index": 0,
+        "start_ms": 1704067200000,
+        "end_ms": 1704067350000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 56
+          },
+          {
+            "func": "avg",
+            "value": 18.666666666666668
+          },
+          {
+            "func": "min",
+            "value": 11
+          },
+          {
+            "func": "max",
+            "value": 33
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:1",
+        "window_index": 1,
+        "start_ms": 1704067260000,
+        "end_ms": 1704067410000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 41
+          },
+          {
+            "func": "avg",
+            "value": 13.666666666666666
+          },
+          {
+            "func": "min",
+            "value": 11
+          },
+          {
+            "func": "max",
+            "value": 18
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067470000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 60
+          },
+          {
+            "func": "avg",
+            "value": 20
+          },
+          {
+            "func": "min",
+            "value": 11
+          },
+          {
+            "func": "max",
+            "value": 31
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067530000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 87
+          },
+          {
+            "func": "avg",
+            "value": 29
+          },
+          {
+            "func": "min",
+            "value": 18
+          },
+          {
+            "func": "max",
+            "value": 38
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067590000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 90
+          },
+          {
+            "func": "avg",
+            "value": 30
+          },
+          {
+            "func": "min",
+            "value": 21
+          },
+          {
+            "func": "max",
+            "value": 38
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:5",
+        "window_index": 5,
+        "start_ms": 1704067500000,
+        "end_ms": 1704067650000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 89
+          },
+          {
+            "func": "avg",
+            "value": 22.25
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 38
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:6",
+        "window_index": 6,
+        "start_ms": 1704067560000,
+        "end_ms": 1704067710000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 74
+          },
+          {
+            "func": "avg",
+            "value": 18.5
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 27
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067770000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 90
+          },
+          {
+            "func": "avg",
+            "value": 22.5
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 37
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067830000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 78
+          },
+          {
+            "func": "avg",
+            "value": 26
+          },
+          {
+            "func": "min",
+            "value": 18
+          },
+          {
+            "func": "max",
+            "value": 37
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": true
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704067890000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 81
+          },
+          {
+            "func": "avg",
+            "value": 27
+          },
+          {
+            "func": "min",
+            "value": 18
+          },
+          {
+            "func": "max",
+            "value": 37
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:10",
+        "window_index": 10,
+        "start_ms": 1704067800000,
+        "end_ms": 1704067950000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 59
+          },
+          {
+            "func": "avg",
+            "value": 14.75
+          },
+          {
+            "func": "min",
+            "value": 6
+          },
+          {
+            "func": "max",
+            "value": 26
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:11",
+        "window_index": 11,
+        "start_ms": 1704067860000,
+        "end_ms": 1704068010000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 43
+          },
+          {
+            "func": "avg",
+            "value": 10.75
+          },
+          {
+            "func": "min",
+            "value": 2
+          },
+          {
+            "func": "max",
+            "value": 26
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:12",
+        "window_index": 12,
+        "start_ms": 1704067920000,
+        "end_ms": 1704068070000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 53
+          },
+          {
+            "func": "avg",
+            "value": 13.25
+          },
+          {
+            "func": "min",
+            "value": 2
+          },
+          {
+            "func": "max",
+            "value": 36
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:13",
+        "window_index": 13,
+        "start_ms": 1704067980000,
+        "end_ms": 1704068130000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 38
+          },
+          {
+            "func": "avg",
+            "value": 19
+          },
+          {
+            "func": "min",
+            "value": 2
+          },
+          {
+            "func": "max",
+            "value": 36
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:14",
+        "window_index": 14,
+        "start_ms": 1704068040000,
+        "end_ms": 1704068190000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 36
+          },
+          {
+            "func": "avg",
+            "value": 36
+          },
+          {
+            "func": "min",
+            "value": 36
+          },
+          {
+            "func": "max",
+            "value": 36
+          }
+        ],
+        "attribution_rule": "R-WIN-FRACTIONAL-RATIO",
+        "path": "full_window_rescan",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:-4",
+        "window_index": -4,
+        "start_ms": 1704066960000,
+        "end_ms": 1704067260000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 3
+          },
+          {
+            "func": "avg",
+            "value": 3
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 3
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:-3",
+        "window_index": -3,
+        "start_ms": 1704067020000,
+        "end_ms": 1704067320000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 4
+          },
+          {
+            "func": "avg",
+            "value": 2
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 3
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:-2",
+        "window_index": -2,
+        "start_ms": 1704067080000,
+        "end_ms": 1704067380000,
+        "event_count": 3,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 3
+          },
+          {
+            "func": "sum",
+            "value": 9
+          },
+          {
+            "func": "avg",
+            "value": 3
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:-1",
+        "window_index": -1,
+        "start_ms": 1704067140000,
+        "end_ms": 1704067440000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 14
+          },
+          {
+            "func": "avg",
+            "value": 3.5
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:0",
+        "window_index": 0,
+        "start_ms": 1704067200000,
+        "end_ms": 1704067500000,
+        "event_count": 5,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 5
+          },
+          {
+            "func": "sum",
+            "value": 15
+          },
+          {
+            "func": "avg",
+            "value": 3
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:1",
+        "window_index": 1,
+        "start_ms": 1704067260000,
+        "end_ms": 1704067560000,
+        "event_count": 5,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 5
+          },
+          {
+            "func": "sum",
+            "value": 13
+          },
+          {
+            "func": "avg",
+            "value": 2.6
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067620000,
+        "event_count": 5,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 5
+          },
+          {
+            "func": "sum",
+            "value": 16
+          },
+          {
+            "func": "avg",
+            "value": 3.2
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067680000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 14
+          },
+          {
+            "func": "avg",
+            "value": 2.3333333333333335
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067740000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 10
+          },
+          {
+            "func": "avg",
+            "value": 1.6666666666666667
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 4
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:5",
+        "window_index": 5,
+        "start_ms": 1704067500000,
+        "end_ms": 1704067800000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 13
+          },
+          {
+            "func": "avg",
+            "value": 2.1666666666666665
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 4
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:6",
+        "window_index": 6,
+        "start_ms": 1704067560000,
+        "end_ms": 1704067860000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 17
+          },
+          {
+            "func": "avg",
+            "value": 2.8333333333333335
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": true
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067920000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 16
+          },
+          {
+            "func": "avg",
+            "value": 2.6666666666666665
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067980000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 17
+          },
+          {
+            "func": "avg",
+            "value": 2.8333333333333335
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704068040000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 18
+          },
+          {
+            "func": "avg",
+            "value": 3
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:10",
+        "window_index": 10,
+        "start_ms": 1704067800000,
+        "end_ms": 1704068100000,
+        "event_count": 6,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 6
+          },
+          {
+            "func": "sum",
+            "value": 17
+          },
+          {
+            "func": "avg",
+            "value": 2.8333333333333335
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 5
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:11",
+        "window_index": 11,
+        "start_ms": 1704067860000,
+        "end_ms": 1704068160000,
+        "event_count": 5,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 5
+          },
+          {
+            "func": "sum",
+            "value": 12
+          },
+          {
+            "func": "avg",
+            "value": 2.4
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 3
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:12",
+        "window_index": 12,
+        "start_ms": 1704067920000,
+        "end_ms": 1704068220000,
+        "event_count": 4,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 4
+          },
+          {
+            "func": "sum",
+            "value": 9
+          },
+          {
+            "func": "avg",
+            "value": 2.25
+          },
+          {
+            "func": "min",
+            "value": 1
+          },
+          {
+            "func": "max",
+            "value": 3
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:13",
+        "window_index": 13,
+        "start_ms": 1704067980000,
+        "end_ms": 1704068280000,
+        "event_count": 2,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 2
+          },
+          {
+            "func": "sum",
+            "value": 5
+          },
+          {
+            "func": "avg",
+            "value": 2.5
+          },
+          {
+            "func": "min",
+            "value": 2
+          },
+          {
+            "func": "max",
+            "value": 3
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:14",
+        "window_index": 14,
+        "start_ms": 1704068040000,
+        "end_ms": 1704068340000,
+        "event_count": 1,
+        "aggregations": [
+          {
+            "func": "count",
+            "value": 1
+          },
+          {
+            "func": "sum",
+            "value": 3
+          },
+          {
+            "func": "avg",
+            "value": 3
+          },
+          {
+            "func": "min",
+            "value": 3
+          },
+          {
+            "func": "max",
+            "value": 3
+          }
+        ],
+        "attribution_rule": "R-WIN-INT-RATIO",
+        "path": "incremental_accumulation",
+        "submitted": false
+      }
+    ],
+    "derived": [
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:-2",
+        "window_index": -2,
+        "start_ms": 1704067080000,
+        "end_ms": 1704067260000,
+        "value": 12.952380952380953,
+        "dependencies": [
+          "amount_cent|1704067080000|1704067260000",
+          "latency_ms|1704067080000|1704067260000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:-1",
+        "window_index": -1,
+        "start_ms": 1704067140000,
+        "end_ms": 1704067320000,
+        "value": 10.862068965517242,
+        "dependencies": [
+          "amount_cent|1704067140000|1704067320000",
+          "latency_ms|1704067140000|1704067320000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:0",
+        "window_index": 0,
+        "start_ms": 1704067200000,
+        "end_ms": 1704067380000,
+        "value": 7.6502732240437155,
+        "dependencies": [
+          "amount_cent|1704067200000|1704067380000",
+          "latency_ms|1704067200000|1704067380000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:1",
+        "window_index": 1,
+        "start_ms": 1704067260000,
+        "end_ms": 1704067440000,
+        "value": 6.7824267782426775,
+        "dependencies": [
+          "amount_cent|1704067260000|1704067440000",
+          "latency_ms|1704067260000|1704067440000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067500000,
+        "value": 5.38974358974359,
+        "dependencies": [
+          "amount_cent|1704067320000|1704067500000",
+          "latency_ms|1704067320000|1704067500000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067560000,
+        "value": 6.420289855072464,
+        "dependencies": [
+          "amount_cent|1704067380000|1704067560000",
+          "latency_ms|1704067380000|1704067560000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067620000,
+        "value": 3.9010416666666665,
+        "dependencies": [
+          "amount_cent|1704067440000|1704067620000",
+          "latency_ms|1704067440000|1704067620000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:5",
+        "window_index": 5,
+        "start_ms": 1704067500000,
+        "end_ms": 1704067680000,
+        "value": 6.761467889908257,
+        "dependencies": [
+          "amount_cent|1704067500000|1704067680000",
+          "latency_ms|1704067500000|1704067680000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:6",
+        "window_index": 6,
+        "start_ms": 1704067560000,
+        "end_ms": 1704067740000,
+        "value": 9.486338797814208,
+        "dependencies": [
+          "amount_cent|1704067560000|1704067740000",
+          "latency_ms|1704067560000|1704067740000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067800000,
+        "value": 11.787234042553191,
+        "dependencies": [
+          "amount_cent|1704067620000|1704067800000",
+          "latency_ms|1704067620000|1704067800000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067860000,
+        "value": 9.264367816091953,
+        "dependencies": [
+          "amount_cent|1704067680000|1704067860000",
+          "latency_ms|1704067680000|1704067860000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704067920000,
+        "value": 7.987341772151899,
+        "dependencies": [
+          "amount_cent|1704067740000|1704067920000",
+          "latency_ms|1704067740000|1704067920000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:10",
+        "window_index": 10,
+        "start_ms": 1704067800000,
+        "end_ms": 1704067980000,
+        "value": 10.484662576687116,
+        "dependencies": [
+          "amount_cent|1704067800000|1704067980000",
+          "latency_ms|1704067800000|1704067980000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:11",
+        "window_index": 11,
+        "start_ms": 1704067860000,
+        "end_ms": 1704068040000,
+        "value": 11.614634146341464,
+        "dependencies": [
+          "amount_cent|1704067860000|1704068040000",
+          "latency_ms|1704067860000|1704068040000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:12",
+        "window_index": 12,
+        "start_ms": 1704067920000,
+        "end_ms": 1704068100000,
+        "value": 11.096774193548388,
+        "dependencies": [
+          "amount_cent|1704067920000|1704068100000",
+          "latency_ms|1704067920000|1704068100000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:13",
+        "window_index": 13,
+        "start_ms": 1704067980000,
+        "end_ms": 1704068160000,
+        "value": 10.451612903225806,
+        "dependencies": [
+          "amount_cent|1704067980000|1704068160000",
+          "latency_ms|1704067980000|1704068160000"
+        ]
+      },
+      {
+        "derived_id": "amount_per_latency_sum_ratio",
+        "window_id": "amount_per_latency_sum_ratio:latency_ms:w:14",
+        "window_index": 14,
+        "start_ms": 1704068040000,
+        "end_ms": 1704068220000,
+        "value": 8.925,
+        "dependencies": [
+          "amount_cent|1704068040000|1704068220000",
+          "latency_ms|1704068040000|1704068220000"
+        ]
+      }
+    ],
+    "recomputations": [
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:5",
+        "window_index": 5,
+        "trigger_seq": 43,
+        "event_arrival_seq": 43,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:6",
+        "window_index": 6,
+        "trigger_seq": 43,
+        "event_arrival_seq": 43,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:7",
+        "window_index": 7,
+        "trigger_seq": 43,
+        "event_arrival_seq": 43,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:10",
+        "window_index": 10,
+        "trigger_seq": 72,
+        "event_arrival_seq": 72,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:11",
+        "window_index": 11,
+        "trigger_seq": 72,
+        "event_arrival_seq": 72,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:12",
+        "window_index": 12,
+        "trigger_seq": 72,
+        "event_arrival_seq": 72,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:3",
+        "window_index": 3,
+        "trigger_seq": 45,
+        "event_arrival_seq": 45,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:4",
+        "window_index": 4,
+        "trigger_seq": 45,
+        "event_arrival_seq": 45,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:5",
+        "window_index": 5,
+        "trigger_seq": 45,
+        "event_arrival_seq": 45,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:6",
+        "window_index": 6,
+        "trigger_seq": 45,
+        "event_arrival_seq": 45,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:7",
+        "window_index": 7,
+        "trigger_seq": 45,
+        "event_arrival_seq": 45,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:8",
+        "window_index": 8,
+        "trigger_seq": 74,
+        "event_arrival_seq": 74,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:9",
+        "window_index": 9,
+        "trigger_seq": 74,
+        "event_arrival_seq": 74,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:10",
+        "window_index": 10,
+        "trigger_seq": 74,
+        "event_arrival_seq": 74,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:11",
+        "window_index": 11,
+        "trigger_seq": 74,
+        "event_arrival_seq": 74,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:12",
+        "window_index": 12,
+        "trigger_seq": 74,
+        "event_arrival_seq": 74,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:5",
+        "window_index": 5,
+        "trigger_seq": 44,
+        "event_arrival_seq": 44,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:6",
+        "window_index": 6,
+        "trigger_seq": 44,
+        "event_arrival_seq": 44,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:7",
+        "window_index": 7,
+        "trigger_seq": 44,
+        "event_arrival_seq": 44,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:10",
+        "window_index": 10,
+        "trigger_seq": 73,
+        "event_arrival_seq": 73,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:11",
+        "window_index": 11,
+        "trigger_seq": 73,
+        "event_arrival_seq": 73,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:12",
+        "window_index": 12,
+        "trigger_seq": 73,
+        "event_arrival_seq": 73,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:5",
+        "window_index": 5,
+        "trigger_seq": 42,
+        "event_arrival_seq": 42,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:6",
+        "window_index": 6,
+        "trigger_seq": 42,
+        "event_arrival_seq": 42,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:7",
+        "window_index": 7,
+        "trigger_seq": 42,
+        "event_arrival_seq": 42,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:10",
+        "window_index": 10,
+        "trigger_seq": 71,
+        "event_arrival_seq": 71,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:11",
+        "window_index": 11,
+        "trigger_seq": 71,
+        "event_arrival_seq": 71,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      },
+      {
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:12",
+        "window_index": 12,
+        "trigger_seq": 71,
+        "event_arrival_seq": 71,
+        "late_ms": 60000,
+        "reason": "reference_late_event_within_allowed_lateness"
+      }
+    ],
+    "recomputed_windows": [
+      "amount_cent:w:10",
+      "amount_cent:w:11",
+      "amount_cent:w:12",
+      "amount_cent:w:5",
+      "amount_cent:w:6",
+      "amount_cent:w:7",
+      "event_volume:w:10",
+      "event_volume:w:11",
+      "event_volume:w:12",
+      "event_volume:w:3",
+      "event_volume:w:4",
+      "event_volume:w:5",
+      "event_volume:w:6",
+      "event_volume:w:7",
+      "event_volume:w:8",
+      "event_volume:w:9",
+      "jitter_ms:w:10",
+      "jitter_ms:w:11",
+      "jitter_ms:w:12",
+      "jitter_ms:w:5",
+      "jitter_ms:w:6",
+      "jitter_ms:w:7",
+      "latency_ms:w:10",
+      "latency_ms:w:11",
+      "latency_ms:w:12",
+      "latency_ms:w:5",
+      "latency_ms:w:6",
+      "latency_ms:w:7"
+    ],
+    "discarded": [
+      {
+        "arrival_seq": 47,
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067500000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 410,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 47,
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067560000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 410,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 47,
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067620000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 410,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 76,
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067800000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 96,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 76,
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067860000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 96,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 76,
+        "feature_id": "amount_cent",
+        "window_id": "amount_cent:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704067920000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 96,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 49,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:0",
+        "window_index": 0,
+        "start_ms": 1704067200000,
+        "end_ms": 1704067500000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 49,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:1",
+        "window_index": 1,
+        "start_ms": 1704067260000,
+        "end_ms": 1704067560000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 49,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067620000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 49,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067680000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 49,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067740000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 78,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:5",
+        "window_index": 5,
+        "start_ms": 1704067500000,
+        "end_ms": 1704067800000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 78,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:6",
+        "window_index": 6,
+        "start_ms": 1704067560000,
+        "end_ms": 1704067860000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 78,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067920000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 78,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067980000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 78,
+        "feature_id": "event_volume",
+        "window_id": "event_volume:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704068040000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 48,
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067470000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 5,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 48,
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067530000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 5,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 48,
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067590000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 5,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 77,
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067770000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 8,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 77,
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067830000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 8,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 77,
+        "feature_id": "jitter_ms",
+        "window_id": "jitter_ms:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704067890000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 8,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 46,
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:2",
+        "window_index": 2,
+        "start_ms": 1704067320000,
+        "end_ms": 1704067500000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 17,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 46,
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:3",
+        "window_index": 3,
+        "start_ms": 1704067380000,
+        "end_ms": 1704067560000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 17,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 46,
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:4",
+        "window_index": 4,
+        "start_ms": 1704067440000,
+        "end_ms": 1704067620000,
+        "time_ms": 1704067440000,
+        "channel": "ios",
+        "value": 17,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 75,
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:7",
+        "window_index": 7,
+        "start_ms": 1704067620000,
+        "end_ms": 1704067800000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 75,
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:8",
+        "window_index": 8,
+        "start_ms": 1704067680000,
+        "end_ms": 1704067860000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      },
+      {
+        "arrival_seq": 75,
+        "feature_id": "latency_ms",
+        "window_id": "latency_ms:w:9",
+        "window_index": 9,
+        "start_ms": 1704067740000,
+        "end_ms": 1704067920000,
+        "time_ms": 1704067740000,
+        "channel": "web",
+        "value": 1,
+        "late_ms": 240000,
+        "code": "E_LATE_BEYOND_ALLOWED"
+      }
+    ],
+    "path_decisions": [
+      {
+        "feature_id": "",
+        "ratio": 3,
+        "threshold": 3,
+        "path": "full_window_rescan",
+        "rule": "PATH-WIDTH-STEP-RATIO-GT-THRESHOLD",
+        "boundary": "EQUAL_TO_THRESHOLD_FALLS_BACK_TO_RESCAN"
+      },
+      {
+        "feature_id": "",
+        "ratio": 3,
+        "threshold": 3,
+        "path": "full_window_rescan",
+        "rule": "PATH-WIDTH-STEP-RATIO-GT-THRESHOLD",
+        "boundary": "EQUAL_TO_THRESHOLD_FALLS_BACK_TO_RESCAN"
+      },
+      {
+        "feature_id": "",
+        "ratio": 2.5,
+        "threshold": 3,
+        "path": "full_window_rescan",
+        "rule": "PATH-WIDTH-STEP-RATIO-GT-THRESHOLD",
+        "boundary": "EQUAL_TO_THRESHOLD_FALLS_BACK_TO_RESCAN"
+      },
+      {
+        "feature_id": "",
+        "ratio": 5,
+        "threshold": 3,
+        "path": "incremental_accumulation",
+        "rule": "PATH-WIDTH-STEP-RATIO-GT-THRESHOLD",
+        "boundary": "EQUAL_TO_THRESHOLD_FALLS_BACK_TO_RESCAN"
+      }
+    ],
+    "watermark_status": {
+      "explicit_field_enabled": true,
+      "degraded": false,
+      "rule": "D-WM-MAX-SEEN-LAG",
+      "lag_ms": 60000,
+      "status": "explicit_generated"
+    }
+  }
+}
