@@ -1,0 +1,122 @@
+{
+  "schema": "",
+  "id": "octa",
+  "name": "细长自相交八面体（三角孔/重复顶点/翻转/非流形）",
+  "seed": 424242,
+  "input_vertices": 7,
+  "input_faces": 8,
+  "truth": {
+    "primitive": "octahedron",
+    "vertices": 6,
+    "faces": 8,
+    "edges": 12,
+    "euler": 2
+  },
+  "known_points": [
+    {
+      "id": "kp-o-1",
+      "position": [
+        -1,
+        0,
+        0
+      ],
+      "tolerance": 1.1
+    },
+    {
+      "id": "kp-o-5",
+      "position": [
+        0,
+        0,
+        -1
+      ],
+      "tolerance": 1.1
+    },
+    {
+      "id": "kp-o-south",
+      "position": [
+        0,
+        -0.333333333333,
+        -0.333333333333
+      ],
+      "tolerance": 1.1
+    }
+  ],
+  "hole_rings": [
+    {
+      "id": "hole-o-0",
+      "coordinates": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "tolerance": 1e-8
+    }
+  ],
+  "defects": [
+    {
+      "kind": "small_hole",
+      "description": "移除原始三角面 {0,2,4}",
+      "coordinates": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "kind": "duplicate_vertex",
+      "description": "顶点 6 是南极点 5 的副本，输入面 5 改引副本",
+      "faces": [
+        5
+      ]
+    },
+    {
+      "kind": "flipped_face",
+      "description": "输入面 0 被反向",
+      "faces": [
+        0
+      ]
+    },
+    {
+      "kind": "non_manifold_duplicate_face",
+      "description": "输入面 7 重复底面 {2,0,5}",
+      "faces": [
+        7
+      ]
+    },
+    {
+      "kind": "self_intersecting_sliver",
+      "description": "赤道顶点 3 被推过中心，形成自相交薄片",
+      "coordinates": [
+        [
+          0.08,
+          0.72,
+          0.08
+        ]
+      ]
+    }
+  ]
+}

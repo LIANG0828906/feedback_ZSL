@@ -1,0 +1,111 @@
+{
+  "schema": "",
+  "id": "tetra",
+  "name": "开裂四面体（重复顶点/翻转面/非流形重复面/小孔）",
+  "seed": 424242,
+  "input_vertices": 5,
+  "input_faces": 4,
+  "truth": {
+    "primitive": "tetrahedron",
+    "vertices": 4,
+    "faces": 4,
+    "edges": 6,
+    "euler": 2
+  },
+  "known_points": [
+    {
+      "id": "kp-t-0",
+      "position": [
+        1,
+        1,
+        1
+      ],
+      "tolerance": 1e-7,
+      "note": "孔环接缝角点，平滑时固定"
+    },
+    {
+      "id": "kp-t-1",
+      "position": [
+        1,
+        -1,
+        -1
+      ],
+      "tolerance": 1e-7,
+      "note": "孔环接缝角点，平滑时固定"
+    }
+  ],
+  "hole_rings": [
+    {
+      "id": "hole-t-0",
+      "coordinates": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          -1
+        ]
+      ],
+      "tolerance": 1e-8
+    }
+  ],
+  "defects": [
+    {
+      "kind": "duplicate_vertex",
+      "description": "顶点 4 是顶点 3 的精确副本，一个面改引副本",
+      "faces": [
+        0
+      ],
+      "coordinates": [
+        [
+          -1,
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "kind": "flipped_face",
+      "description": "面 1 索引顺序被反转",
+      "faces": [
+        1
+      ]
+    },
+    {
+      "kind": "non_manifold_duplicate_face",
+      "description": "末尾重复面造成边引用数大于 2",
+      "faces": [
+        3
+      ]
+    },
+    {
+      "kind": "small_hole",
+      "description": "移除原始三角面 0",
+      "coordinates": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1,
+          -1
+        ]
+      ]
+    }
+  ]
+}

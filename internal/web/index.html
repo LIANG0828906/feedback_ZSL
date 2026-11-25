@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MeshDoctor 三角网格修复诊断台</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a31;--line:#26345c;--text:#e8efff;--muted:#93a4cc;--ok:#38d39f;--bad:#ff6b6b;--warn:#ffd166;--accent:#6aa6ff;--orig:#8b98b8;--fix:#42e6a4;--hole:#ff5c7a}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0b1020,#0e1530);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+h1{font-size:20px;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:4px}
+main{padding:18px 24px;display:grid;grid-template-columns:320px 1fr 360px;gap:16px;align-items:start}
+.panel{background:rgba(18,26,49,.92);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.panel h2{font-size:14px;margin:0 0 10px;color:#fff;letter-spacing:.04em}
+.tabs{display:flex;flex-direction:column;gap:8px}.tab{text-align:left;border:1px solid var(--line);background:#0e1730;color:var(--text);border-radius:10px;padding:9px 10px;cursor:pointer}.tab.active{border-color:var(--accent);background:#18294f}.tab small{display:block;color:var(--muted);margin-top:2px}
+label{display:block;color:var(--muted);font-size:12px;margin:10px 0 4px}select,input{width:100%;background:#0b1328;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px}
+button,.btn{border:1px solid var(--line);background:#1b2b52;color:var(--text);border-radius:9px;padding:8px 10px;cursor:pointer;text-decoration:none;display:inline-block;font-size:13px}button.primary{background:#2457c5;border-color:#3b73ef}button.good{background:#145c46;border-color:#1f9b73}button.danger{background:#6d2434;border-color:#b33a52}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+canvas{width:100%;height:430px;background:radial-gradient(circle at 50% 40%,#14214a,#090e1f 75%);border:1px solid var(--line);border-radius:12px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:8px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid var(--line);padding:7px 5px;text-align:center}th{color:var(--muted);font-weight:600}.committed{color:var(--ok);font-weight:700}.failed{color:var(--bad)}.pending{color:var(--muted)}.running{color:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat{background:#0c142b;border:1px solid var(--line);border-radius:10px;padding:9px}.stat b{display:block;font-size:18px}.stat span{color:var(--muted);font-size:11px}
+.check{border-left:3px solid var(--line);padding:7px 9px;margin:7px 0;background:#0c142b;border-radius:0 8px 8px 0}.check.ok{border-color:var(--ok)}.check.bad{border-color:var(--bad)}.check code{color:#b9ccff;word-break:break-all}
+.muted{color:var(--muted)}.ok-text{color:var(--ok)}.bad-text{color:var(--bad)}.warn-text{color:var(--warn)}
+pre{white-space:pre-wrap;word-break:break-all;background:#080d1d;border:1px solid var(--line);border-radius:10px;padding:10px;max-height:260px;overflow:auto;font-size:11px}
+.full{grid-column:1/-1}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:1200px){main{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>MeshDoctor 三角网格修复与拓扑验证台</h1><div class="sub">127.0.0.1 本地回环 · 固定种子样本 · SQLite 检查点 · 无外部账号/网络数据集</div></div>
+  <div class="row" style="min-width:420px">
+    <button class="primary" onclick="verify(true)">重新运行三路径验证</button>
+    <button onclick="loadState()">刷新状态</button>
+    <a class="btn" href="/api/export?format=report" target="_blank">导出完整 JSON</a>
+  </div>
+</header>
+<main>
+  <section class="panel">
+    <h2>本地样本</h2>
+    <div id="sampleTabs" class="tabs"></div>
+    <label>查看路径</label>
+    <select id="pathSelect" onchange="renderAll()">
+      <option value="resume">断点恢复路径</option>
+      <option value="segmented">实时分段路径</option>
+      <option value="one_shot">一次性全量重算</option>
+    </select>
+    <label>逐阶段网格</label>
+    <select id="stageSelect" onchange="renderAll()"></select>
+    <label>拉普拉斯权重（新参数版本）</label>
+    <input id="weight" type="number" min="0" max="1" step="0.05" value="0.5" />
+    <label>迭代次数</label>
+    <input id="iterations" type="number" min="0" max="1000" step="1" value="2" />
+    <div class="row" style="margin-top:10px">
+      <button class="good" onclick="runSample()">增量/重试</button>
+      <button class="danger" onclick="cancelSample()">取消</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="primary" onclick="runToStage()">执行到所选阶段</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <a class="btn" id="exportObj" href="#">导出 OBJ</a>
+      <a class="btn" id="exportJson" href="#">导出阶段 JSON</a>
+    </div>
+    <div id="runStatus" class="check muted" style="margin-top:12px">尚未查询运行状态。</div>
+  </section>
+
+  <section class="panel">
+    <h2>原网格 / 修复网格叠加</h2>
+    <canvas id="view" width="900" height="430"></canvas>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--orig)"></i>原始缺陷网格</span>
+      <span><i class="dot" style="background:var(--fix)"></i>所选阶段网格</span>
+      <span><i class="dot" style="background:var(--hole)"></i>真值孔环</span>
+      <span><i class="dot" style="background:var(--warn)"></i>缺陷/自相交位置</span>
+    </div>
+    <div id="stageStats" class="stats" style="margin-top:12px"></div>
+    <h2 style="margin-top:16px">已知点与孔环增量校验</h2>
+    <div id="truth"></div>
+  </section>
+
+  <aside class="panel">
+    <h2>缓存 / 恢复统计</h2>
+    <div id="cacheStats" class="stats"></div>
+    <h2 style="margin-top:16px">三路径比对</h2>
+    <div id="compare"></div>
+    <h2 style="margin-top:16px">错误码边界</h2>
+    <div id="boundary" style="max-height:300px;overflow:auto"></div>
+  </aside>
+
+  <section class="panel full">
+    <h2>六阶段状态矩阵（已提交阶段冻结，不会被静默改写）</h2>
+    <div id="matrix"></div>
+  </section>
+  <section class="panel full">
+    <h2>阶段拓扑与报告摘要</h2>
+    <div class="two">
+      <pre id="topoJson"></pre>
+      <pre id="reportJson"></pre>
+    </div>
+  </section>
+</main>
+<script>
+const STAGES=["diagnostic","weld","fill","orient","smooth","stats"];
+const STAGE_CN={diagnostic:"诊断",weld:"焊接",fill:"填补",orient:"定向",smooth:"去噪",stats:"统计"};
+let state=null, sampleIndex=0, timer=null;
+
+async function loadState(){
+  state=await (await fetch('/api/state')).json();
+  renderTabs(); renderStageOptions(); renderAll();
+  if(!timer){ timer=setInterval(async()=>{ if(document.hidden) return; const s=await (await fetch('/api/state')).json(); state.runs=s.runs; renderRun(); },1500); timer; }
+}
+function currentManifest(){ return state.manifests[sampleIndex]; }
+function currentVerification(){ return (state.report?.samples||[]).find(x=>x.sample_id===currentManifest()?.id); }
+function currentResult(){ const v=currentVerification(); const p=document.getElementById('pathSelect').value; return v?.[p] || v?.resume || null; }
+function currentStageIndex(){ return Number(document.getElementById('stageSelect').value); }
+function currentSnapshot(){ const r=currentResult(); return r?.stages?.[currentStageIndex()] || null; }
+
+function renderTabs(){
+  const el=document.getElementById('sampleTabs'); el.innerHTML='';
+  state.manifests.forEach((m,i)=>{
+    const b=document.createElement('button'); b.className='tab'+(i===sampleIndex?' active':'');
+    b.innerHTML=`<b>${m.id}</b><small>${m.name}</small>`; b.onclick=()=>{sampleIndex=i; renderTabs(); renderAll();};
+    el.appendChild(b);
+  });
+}
+function renderStageOptions(){
+  const sel=document.getElementById('stageSelect'); const old=sel.value||'5'; sel.innerHTML='';
+  STAGES.forEach((s,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=`${i+1}. ${STAGE_CN[s]} (${s})`; if(String(i)===old)o.selected=true; sel.appendChild(o); });
+  sel.onchange=renderAll;
+}
+function renderAll(){ renderCanvas(); renderStats(); renderTruth(); renderCompare(); renderCache(); renderMatrix(); renderBoundary(); renderRun(); renderLinks(); renderJson(); }
+
+function boundsFor(meshes){
+  let min=[1e9,1e9,1e9], max=[-1e9,-1e9,-1e9];
+  const visit=v=>{for(let i=0;i<3;i++){min[i]=Math.min(min[i],v[i]);max[i]=Math.max(max[i],v[i]);}};
+  meshes.forEach(m=>m?.vertices?.forEach(visit));
+  const c=min.map((x,i)=>(x+max[i])/2), r=Math.max(...max.map((x,i)=>Math.max(Math.abs(max[i]-c[i]),Math.abs(min[i]-c[i]))),.001);
+  return {c,r};
+}
+function projector(W,H,b){
+  const scale=Math.min(W,H)*0.34/b.r, a=0.72,t=.42, ca=Math.cos(a),sa=Math.sin(a),ct=Math.cos(t),st=Math.sin(t);
+  return v=>{
+    let x=v[0]-b.c[0], y=v[1]-b.c[1], z=v[2]-b.c[2];
+    let x1=x*ca-y*sa, y1=x*sa+y*ca;
+    let y2=y1*ct-z*st;
+    return [W/2+x1*scale,H/2-y2*scale];
+  };
+}
+function drawMesh(ctx,m,proj,color,width){
+  if(!m)return; ctx.strokeStyle=color; ctx.lineWidth=width||1.2; ctx.beginPath();
+  m.faces.forEach(f=>{ const ids=[f.a,f.b,f.c,f.a]; ids.forEach((id,i)=>{const p=proj(m.vertices[id]); i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}); });
+  ctx.stroke();
+}
+function drawPath(ctx,coords,proj,color){
+  if(!coords?.length)return; ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.beginPath();
+  coords.forEach((v,i)=>{const p=proj(v); i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}); ctx.closePath(); ctx.stroke();
+  coords.forEach(v=>{const p=proj(v);ctx.fillStyle=color;ctx.beginPath();ctx.arc(p[0],p[1],3,0,7);ctx.fill();});
+}
+function renderCanvas(){
+  const canvas=document.getElementById('view'), dpr=window.devicePixelRatio||1, rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*dpr; canvas.height=430*dpr; const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr); const W=rect.width,H=430; ctx.clearRect(0,0,W,H);
+  const m=currentManifest(), v=currentVerification(), snap=currentSnapshot();
+  const original=v?.one_shot?.stages?.[0]?.mesh || null;
+  const bounds=boundsFor([original,snap?.mesh]); const proj=projector(W,H,bounds);
+  drawMesh(ctx,original,proj,'rgba(139,152,184,.55)',1);
+  drawMesh(ctx,snap?.mesh,proj,'rgba(66,230,164,.95)',1.8);
+  m?.hole_rings?.forEach(h=>drawPath(ctx,h.coordinates,proj,'#ff5c7a'));
+  drawDefects(ctx,m,original,proj);
+}
+function drawDefects(ctx,m,original,proj){
+  (m?.defects||[]).forEach(d=>{
+    (d.faces||[]).forEach(fi=>{
+      const f=original?.faces?.[fi]; if(!f)return;
+      const ids=[f.a,f.b,f.c,f.a];
+      ctx.beginPath();
+      ids.forEach((id,i)=>{const p=proj(original.vertices[id]); i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});
+      ctx.fillStyle='rgba(255,107,107,.16)'; ctx.fill();
+      ctx.strokeStyle='#ff6b6b'; ctx.lineWidth=2.2; ctx.stroke();
+    });
+    (d.coordinates||[]).forEach(c=>{const p=proj(c);ctx.fillStyle='#ffd166';ctx.fillRect(p[0]-4,p[1]-4,8,8);});
+  });
+}
+function statCard(label,value,cls){return `<div class="stat"><b class="${cls||''}">${value??'-'}</b><span>${label}</span></div>`}
+function renderStats(){
+  const s=currentSnapshot()?.stats; const el=document.getElementById('stageStats');
+  if(!s){el.innerHTML='<p class="muted">报告尚未生成。</p>';return;}
+  el.innerHTML=[statCard('顶点',s.vertices),statCard('面片',s.faces),statCard('边',s.edges),statCard('欧拉 χ',s.euler,s.euler===2?'ok-text':'bad-text'),statCard('边界边',s.boundary_edges,s.boundary_edges?'warn-text':'ok-text'),statCard('非流形',s.non_manifold_edges,s.non_manifold_edges?'bad-text':'ok-text'),statCard('连通分量',s.connected_components),statCard('自相交标记',s.self_intersections??'—')].join('');
+  document.getElementById('topoJson').textContent=JSON.stringify(currentSnapshot(),(k,val)=>k==='mesh'?'[Mesh]':val,2);
+}
+function renderTruth(){
+  const t=currentSnapshot()?.truth; const el=document.getElementById('truth'); if(!t){el.innerHTML='<p class="muted">无真值报告。</p>';return;}
+  let html=`<p class="${t.ok?'ok-text':'bad-text'}">总判定：${t.ok?'通过':'超差'}</p>`;
+  t.points.forEach(p=>html+=`<div class="check ${p.passed?'ok':'bad'}"><b>${p.point_id}</b> 距离 <code>${p.distance.toExponential(4)}</code> / 容差 <code>${p.tolerance.toExponential(2)}</code></div>`);
+  t.loops.forEach(l=>html+=`<div class="check ${l.passed?'ok':'bad'}"><b>${l.ring_id}</b> 闭合误差 <code>${l.closure_error.toExponential(4)}</code> / 容差 <code>${l.tolerance.toExponential(2)}</code></div>`);
+  el.innerHTML=html;
+}
+function renderCompare(){
+  const v=currentVerification(), el=document.getElementById('compare'); if(!v?.comparison){el.innerHTML=`<div class="check bad">${v?.error||'尚未比对'}</div>`;return;}
+  const c=v.comparison, ok=c.all_identical;
+  let html=`<div class="check ${ok?'ok':'bad'}"><b>${ok?'三条路径逐字节一致':'发现差异'}</b></div>`;
+  [['分段 vs 全量',c.segmented_vs_one_shot],['恢复 vs 全量',c.resume_vs_one_shot]].forEach(([name,d])=>{ if(!d)return; html+=`<div class="check ${d.identical?'ok':'bad'}">${name}: ${d.identical?'相同':`${d.first_stage} / ${d.diff_type} / offset=${d.byte_offset??'-'} vertex=${d.vertex_index??'-'}`}</div>`; });
+  el.innerHTML=html;
+}
+function renderCache(){
+  const v=currentVerification(), el=document.getElementById('cacheStats'); const c=v?.resume_cache||state?.report?.cache_stats||{};
+  el.innerHTML=[statCard('命中',c.cache_hits??0,'ok-text'),statCard('未命中',c.cache_misses??0,'warn-text'),statCard('提交',c.commits??6),statCard('作废',c.invalidations??0,c.invalidations?'bad-text':'')].join('');
+}
+function renderMatrix(){
+  const el=document.getElementById('matrix'); let html='<table><thead><tr><th>样本</th>'+STAGES.map(s=>`<th>${STAGE_CN[s]}</th>`).join('')+'</tr></thead><tbody>';
+  (state.manifests||[]).forEach(m=>{ const v=state.report?.samples?.find(x=>x.sample_id===m.id); const stages=v?.resume?.stages||[]; html+=`<tr><td><b>${m.id}</b></td>`+STAGES.map((name,i)=>{const st=stages.find(x=>x.stage===name); const cls=st?.state==='committed'?'committed':(st?.error_code?'failed':'pending'); return `<td class="${cls}">${st?'✓ 已提交':'○ 待处理'}${st?.error_code?`<div title="${st.error_message}">!</div>`:''}</td>`;}).join('')+'</tr>'; });
+  el.innerHTML=html+'</tbody></table>';
+}
+function renderBoundary(){
+  const checks=state.report?.boundary_checks||[]; const el=document.getElementById('boundary');
+  el.innerHTML=checks.map(b=>`<div class="check ${b.ok?'ok':'bad'}"><b>${b.ok?'PASS':'FAIL'} ${b.code}</b><div class="muted">${b.name}</div><code>${b.detail||''}</code></div>`).join('') || '<p class="muted">无边界检查。</p>';
+}
+function renderRun(){
+  const id=currentManifest()?.id, r=state?.runs?.[id], el=document.getElementById('runStatus'); if(!el)return;
+  if(!r){el.textContent='无活动运行；同参数调用会命中已提交快照。';el.className='check muted';return;}
+  el.className='check '+(r.error_code?'bad':'ok'); el.textContent=`${r.sample_id} ${r.mode}: ${r.running?'运行中':'结束'} · ${r.message||''} ${r.error_code?('· '+r.error_code):''}`;
+}
+function renderLinks(){
+  const m=currentManifest(); if(!m)return; const p=document.getElementById('pathSelect').value, s=currentStageIndex();
+  document.getElementById('exportObj').href=`/api/export?format=obj&sample=${m.id}&path=${p}&stage=${s}`;
+  document.getElementById('exportJson').href=`/api/export?format=json&sample=${m.id}&path=${p}&stage=${s}`;
+  document.getElementById('reportJson').textContent=JSON.stringify({selected:m.id,path:p,stage:s,comparison:currentVerification()?.comparison,cache:currentVerification()?.resume_cache},null,2);
+}
+async function verify(parallel){ await fetch(`/api/verify?parallel=${parallel?1:0}`); await loadState(); }
+async function runSample(stage){
+  const m=currentManifest(); const w=document.getElementById('weight').value, it=document.getElementById('iterations').value;
+  let url=`/api/run?sample=${m.id}&weight=${w}&iterations=${it}&mode=ui-version`;
+  if(stage!==undefined) url+=`&stage=${stage}`;
+  await fetch(url,{method:'POST'});
+  setTimeout(loadState,300);
+}
+function runToStage(){ runSample(currentStageIndex()); }
+async function cancelSample(){ const m=currentManifest(); await fetch(`/api/cancel?sample=${m.id}`,{method:'POST'}); setTimeout(loadState,300); }
+window.addEventListener('resize',renderCanvas);
+loadState();
+</script>
+</body>
+</html>

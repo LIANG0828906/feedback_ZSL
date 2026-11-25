@@ -1,0 +1,393 @@
+[
+  {
+    "schema": "",
+    "id": "tetra",
+    "name": "开裂四面体（重复顶点/翻转面/非流形重复面/小孔）",
+    "seed": 424242,
+    "input_vertices": 5,
+    "input_faces": 4,
+    "truth": {
+      "primitive": "tetrahedron",
+      "vertices": 4,
+      "faces": 4,
+      "edges": 6,
+      "euler": 2
+    },
+    "known_points": [
+      {
+        "id": "kp-t-0",
+        "position": [
+          1,
+          1,
+          1
+        ],
+        "tolerance": 1e-7,
+        "note": "孔环接缝角点，平滑时固定"
+      },
+      {
+        "id": "kp-t-1",
+        "position": [
+          1,
+          -1,
+          -1
+        ],
+        "tolerance": 1e-7,
+        "note": "孔环接缝角点，平滑时固定"
+      }
+    ],
+    "hole_rings": [
+      {
+        "id": "hole-t-0",
+        "coordinates": [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            -1,
+            -1
+          ],
+          [
+            -1,
+            1,
+            -1
+          ]
+        ],
+        "tolerance": 1e-8
+      }
+    ],
+    "defects": [
+      {
+        "kind": "duplicate_vertex",
+        "description": "顶点 4 是顶点 3 的精确副本，一个面改引副本",
+        "faces": [
+          0
+        ],
+        "coordinates": [
+          [
+            -1,
+            -1,
+            1
+          ]
+        ]
+      },
+      {
+        "kind": "flipped_face",
+        "description": "面 1 索引顺序被反转",
+        "faces": [
+          1
+        ]
+      },
+      {
+        "kind": "non_manifold_duplicate_face",
+        "description": "末尾重复面造成边引用数大于 2",
+        "faces": [
+          3
+        ]
+      },
+      {
+        "kind": "small_hole",
+        "description": "移除原始三角面 0",
+        "coordinates": [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            -1,
+            -1
+          ],
+          [
+            -1,
+            1,
+            -1
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "schema": "",
+    "id": "cube",
+    "name": "自相交薄片立方体（四边形孔/重复顶点/翻转/非流形）",
+    "seed": 424242,
+    "input_vertices": 9,
+    "input_faces": 11,
+    "truth": {
+      "primitive": "triangulated-cube",
+      "vertices": 8,
+      "faces": 12,
+      "edges": 18,
+      "euler": 2
+    },
+    "known_points": [
+      {
+        "id": "kp-c-4",
+        "position": [
+          -0.5,
+          -0.5,
+          0.5
+        ],
+        "tolerance": 1e-7,
+        "note": "孔环接缝角点，平滑时固定"
+      },
+      {
+        "id": "kp-c-1",
+        "position": [
+          0.5,
+          -0.5,
+          -0.5
+        ],
+        "tolerance": 0.8
+      },
+      {
+        "id": "kp-c-center-front",
+        "position": [
+          0,
+          -0.5,
+          0
+        ],
+        "tolerance": 0.8,
+        "note": "前面解析中心点，允许拉普拉斯收缩"
+      }
+    ],
+    "hole_rings": [
+      {
+        "id": "hole-c-top",
+        "coordinates": [
+          [
+            -0.5,
+            -0.5,
+            0.5
+          ],
+          [
+            0.5,
+            -0.5,
+            0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ],
+          [
+            -0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "tolerance": 1e-8
+      }
+    ],
+    "defects": [
+      {
+        "kind": "quad_hole",
+        "description": "移除顶面两个三角面，形成四边形边界环",
+        "coordinates": [
+          [
+            -0.5,
+            -0.5,
+            0.5
+          ],
+          [
+            0.5,
+            -0.5,
+            0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ],
+          [
+            -0.5,
+            0.5,
+            0.5
+          ]
+        ]
+      },
+      {
+        "kind": "duplicate_vertex",
+        "description": "顶点 8 是顶点 0 的精确副本",
+        "faces": [
+          0
+        ],
+        "coordinates": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ]
+        ]
+      },
+      {
+        "kind": "flipped_face",
+        "description": "输入面 4（背面）被翻转",
+        "faces": [
+          4
+        ]
+      },
+      {
+        "kind": "non_manifold_duplicate_face",
+        "description": "输入面 10 是重复右面三角面",
+        "faces": [
+          10
+        ],
+        "coordinates": [
+          [
+            0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.02,
+            0.02,
+            0.43
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ]
+      },
+      {
+        "kind": "self_intersecting_sliver",
+        "description": "顶点 2 被推入顶面附近，形成细长相交薄片",
+        "coordinates": [
+          [
+            0.02,
+            0.02,
+            0.43
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "schema": "",
+    "id": "octa",
+    "name": "细长自相交八面体（三角孔/重复顶点/翻转/非流形）",
+    "seed": 424242,
+    "input_vertices": 7,
+    "input_faces": 8,
+    "truth": {
+      "primitive": "octahedron",
+      "vertices": 6,
+      "faces": 8,
+      "edges": 12,
+      "euler": 2
+    },
+    "known_points": [
+      {
+        "id": "kp-o-1",
+        "position": [
+          -1,
+          0,
+          0
+        ],
+        "tolerance": 1.1
+      },
+      {
+        "id": "kp-o-5",
+        "position": [
+          0,
+          0,
+          -1
+        ],
+        "tolerance": 1.1
+      },
+      {
+        "id": "kp-o-south",
+        "position": [
+          0,
+          -0.333333333333,
+          -0.333333333333
+        ],
+        "tolerance": 1.1
+      }
+    ],
+    "hole_rings": [
+      {
+        "id": "hole-o-0",
+        "coordinates": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "tolerance": 1e-8
+      }
+    ],
+    "defects": [
+      {
+        "kind": "small_hole",
+        "description": "移除原始三角面 {0,2,4}",
+        "coordinates": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "kind": "duplicate_vertex",
+        "description": "顶点 6 是南极点 5 的副本，输入面 5 改引副本",
+        "faces": [
+          5
+        ]
+      },
+      {
+        "kind": "flipped_face",
+        "description": "输入面 0 被反向",
+        "faces": [
+          0
+        ]
+      },
+      {
+        "kind": "non_manifold_duplicate_face",
+        "description": "输入面 7 重复底面 {2,0,5}",
+        "faces": [
+          7
+        ]
+      },
+      {
+        "kind": "self_intersecting_sliver",
+        "description": "赤道顶点 3 被推过中心，形成自相交薄片",
+        "coordinates": [
+          [
+            0.08,
+            0.72,
+            0.08
+          ]
+        ]
+      }
+    ]
+  }
+]
