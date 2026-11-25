@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>游戏对白声学内核诊断台</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a31;
+      --panel-2: #18223f;
+      --text: #e8eefc;
+      --muted: #9fb0d0;
+      --line: #2b3a63;
+      --blue: #5aa7ff;
+      --cyan: #42d4c4;
+      --green: #46d18f;
+      --yellow: #f4c95d;
+      --red: #ff6b7a;
+      --purple: #b58cff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b1020 0%, #0e1530 100%);
+      color: var(--text);
+      font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", sans-serif;
+    }
+    header {
+      padding: 24px 32px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    h1 { font-size: 22px; margin: 0; letter-spacing: .02em; }
+    h2 { font-size: 16px; margin: 0 0 12px; }
+    main { padding: 24px 32px 48px; max-width: 1480px; margin: 0 auto; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px; font-weight: 700;
+      background: rgba(70, 209, 143, .14); color: var(--green);
+      border: 1px solid rgba(70, 209, 143, .35);
+    }
+    .badge.bad { background: rgba(255,107,122,.14); color: var(--red); border-color: rgba(255,107,122,.35); }
+    .meta { color: var(--muted); font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 16px; }
+    .card {
+      background: rgba(18, 26, 49, .92);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    }
+    .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+    .span-3 { grid-column: span 3; }
+    @media (max-width: 1100px) {
+      .span-8,.span-6,.span-4,.span-3 { grid-column: span 12; }
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid rgba(43,58,99,.65); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    code { color: #c9d8ff; background: rgba(90,167,255,.1); padding: 1px 5px; border-radius: 5px; }
+    .ok { color: var(--green); font-weight: 700; }
+    .fail { color: var(--red); font-weight: 700; }
+    .muted { color: var(--muted); }
+    .state-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .state {
+      border: 1px solid var(--line); border-radius: 10px; padding: 10px;
+      background: var(--panel-2);
+    }
+    .state .id { font-weight: 700; margin-bottom: 4px; }
+    .state .st { font-size: 12px; color: var(--muted); }
+    .state.committed { border-color: rgba(70,209,143,.55); }
+    .state.failed { border-color: rgba(255,107,122,.65); }
+    .state.extracting { border-color: rgba(90,167,255,.65); }
+    .state.calibrating { border-color: rgba(181,140,255,.65); }
+    .buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    button {
+      border: 1px solid var(--line); background: var(--panel-2); color: var(--text);
+      padding: 7px 12px; border-radius: 9px; cursor: pointer; font-weight: 650;
+    }
+    button.active { border-color: var(--blue); background: rgba(90,167,255,.18); color: #dceaff; }
+    .flow { display: grid; grid-template-columns: 1fr 40px 1fr 40px 1fr; gap: 8px; align-items: stretch; }
+    .flow .box { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: var(--panel-2); min-height: 92px; }
+    .arrow { display: grid; place-items: center; color: var(--blue); font-size: 22px; }
+    .pill { display: inline-block; padding: 2px 7px; border-radius: 999px; font-size: 12px; margin: 2px; }
+    .pill.hot { background: rgba(255,107,122,.16); color: #ffb3bc; border: 1px solid rgba(255,107,122,.35); }
+    .pill.cool { background: rgba(70,209,143,.13); color: #a9efd1; border: 1px solid rgba(70,209,143,.3); }
+    .pill.blue { background: rgba(90,167,255,.14); color: #c6deff; border: 1px solid rgba(90,167,255,.32); }
+    ul { margin: 6px 0 0 18px; padding: 0; }
+    li { margin: 3px 0; }
+    svg { width: 100%; height: auto; display: block; }
+    .scroll { max-height: 280px; overflow: auto; border: 1px solid rgba(43,58,99,.6); border-radius: 10px; }
+    .scroll table { margin: 0; }
+    .kpi { font-size: 26px; font-weight: 800; margin: 4px 0; }
+    .small { font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>游戏对白 · 逐帧声学特征与响度校准内核</h1>
+    <span id="overall" class="badge">加载中…</span>
+    <span id="seed" class="meta"></span>
+  </header>
+  <main>
+    <section class="grid">
+      <div class="card span-12">
+        <h2>验收检查</h2>
+        <div id="checks"></div>
+      </div>
+
+      <div class="card span-8">
+        <h2>逐帧定点能量与瞬态位置</h2>
+        <div id="energyChart"></div>
+        <div class="meta">蓝条为 <code>energy_fixed</code>；红色菱形为超过阈值的瞬态峰，静音帧能量为 0。</div>
+      </div>
+
+      <div class="card span-4">
+        <h2>关键指标</h2>
+        <div id="kpis"></div>
+      </div>
+
+      <div class="card span-8">
+        <h2>校准前后响度曲线</h2>
+        <div id="loudChart"></div>
+        <div class="meta">灰线：校准前；青线：校准后；红虚线：目标响度。静音点按 -40 dB 显示。</div>
+      </div>
+
+      <div class="card span-4">
+        <h2>三路径逐帧比对</h2>
+        <div id="paths"></div>
+      </div>
+
+      <div class="card span-12">
+        <h2>片段状态矩阵</h2>
+        <div id="states" class="state-grid"></div>
+      </div>
+
+      <div class="card span-12">
+        <h2>依赖图与精确失效传播</h2>
+        <div class="buttons">
+          <button data-plan="gain" class="active">片段增益编辑</button>
+          <button data-plan="target">目标响度编辑</button>
+          <button data-plan="fps">帧率编辑 25 → 30</button>
+        </div>
+        <div id="flow" class="flow"></div>
+        <div id="planDetail" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card span-6">
+        <h2>业务码异常覆盖</h2>
+        <div class="scroll"><table id="errors"></table></div>
+      </div>
+
+      <div class="card span-6">
+        <h2>版本往返与降级损失</h2>
+        <div id="roundtrips"></div>
+      </div>
+
+      <div class="card span-12">
+        <h2>逐帧结果明细</h2>
+        <div class="scroll"><table id="frames"></table></div>
+      </div>
+    </section>
+  </main>
+
+<script>
+const state = { data: null, plan: "gain" };
+
+function pct(v) { return (v * 100).toFixed(1) + "%"; }
+function esc(v) { return String(v ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function okBadge(ok, yes="一致", no="不一致") { return `<span class="${ok ? "ok" : "fail"}">${ok ? "✓ " + yes : "✕ " + no}</span>`; }
+
+async function load() {
+  const res = await fetch("/api/diagnostic");
+  state.data = await res.json();
+  render();
+}
+
+function render() {
+  const d = state.data;
+  document.getElementById("overall").textContent = d.ok ? "全部自验通过" : "存在验收失败";
+  document.getElementById("overall").className = "badge" + (d.ok ? "" : " bad");
+  document.getElementById("seed").textContent =
+    `固定种子 ${d.seed} · ${d.project.sample_rate} Hz · ${d.project.frame_rate} fps · ${d.frames.length} 帧`;
+  renderChecks();
+  renderKPIs();
+  renderEnergy();
+  renderLoudness();
+  renderStates();
+  renderPaths();
+  renderFlow();
+  renderErrors();
+  renderRoundTrips();
+  renderFrames();
+  document.querySelectorAll("button[data-plan]").forEach(btn => {
+    btn.onclick = () => {
+      state.plan = btn.dataset.plan;
+      document.querySelectorAll("button[data-plan]").forEach(b => b.classList.toggle("active", b === btn));
+      renderFlow();
+    };
+  });
+}
+
+function renderChecks() {
+  document.getElementById("checks").innerHTML =
+    `<table><tbody>${state.data.checks.map(c => `<tr>
+      <td style="width:260px">${okBadge(c.ok, "PASS", "FAIL")} ${esc(c.name)}</td>
+      <td class="muted">${esc(c.detail)}</td></tr>`).join("")}</tbody></table>`;
+}
+
+function renderKPIs() {
+  const d = state.data;
+  const adjustments = d.project.clips.map(c => c.truth?.gain_adjust_bp ?? 0);
+  const sum = adjustments.reduce((a,b)=>a+Math.abs(b),0);
+  document.getElementById("kpis").innerHTML = `
+    <div><div class="muted">提交进度</div><div class="kpi">${d.scheduler.state.committed_clips}/${d.scheduler.state.total_clips}</div></div>
+    <div><div class="muted">增益调整绝对和 / 预算</div><div class="kpi">${sum} / ${d.project.total_budget_bp} BP</div></div>
+    <div><div class="muted">零容差能量通过率</div><div class="kpi">${pct(d.tolerance_rates.at(-1).pass_rate)}</div></div>
+    <div><div class="muted">依赖图节点 / 边</div><div class="kpi">${d.graph.nodes.length} / ${d.graph.edges.length}</div></div>`;
+}
+
+function renderEnergy() {
+  const rows = state.data.frames;
+  const W = 900, H = 260, pad = 34;
+  const maxE = Math.max(100, ...rows.map(r => r.feature.energy_fixed));
+  const bw = (W - pad*2) / rows.length * .72;
+  const step = (W - pad*2) / rows.length;
+  let bars = rows.map((r,i) => {
+    const h = Math.max(1, (H-pad*2) * r.feature.energy_fixed / maxE);
+    const x = pad + i*step + step*.14;
+    const y = H-pad-h;
+    const tip = `${r.range_id}\\nenergy=${r.feature.energy_fixed} zcr=${r.feature.zcr_bp}`;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${r.feature.transient ? "#b58cff" : "#5aa7ff"}"><title>${esc(tip)}</title></rect>`;
+  }).join("");
+  let peaks = rows.filter(r => r.feature.transient).map((r) => {
+    const i = rows.indexOf(r);
+    const x = pad + i*step + step/2;
+    const y = pad + 8;
+    return `<path d="M${x},${y} l7,7 l-7,7 l-7,-7 z" fill="#ff6b7a"><title>${esc(r.range_id+" peak="+r.feature.peak_sample)}</title></path>`;
+  }).join("");
+  document.getElementById("energyChart").innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}" role="img">
+      <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#2b3a63"/>
+      <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#2b3a63"/>
+      ${bars}${peaks}
+      <text x="${pad}" y="${H-10}" fill="#9fb0d0" font-size="12">帧顺序 →</text>
+      <text x="8" y="${pad+4}" fill="#9fb0d0" font-size="12">${maxE}</text>
+    </svg>`;
+}
+
+function loudY(db, H, pad) {
+  const min = -40000, max = 500;
+  const v = Math.max(min, Math.min(max, db));
+  return pad + (H-pad*2) * (max-v)/(max-min);
+}
+function loudPath(rows, key, W,H,pad) {
+  const step = (W-pad*2)/(rows.length-1 || 1);
+  return rows.map((r,i) => `${i ? "L" : "M"}${(pad+i*step).toFixed(1)},${loudY(r.calibration[key],H,pad).toFixed(1)}`).join(" ");
+}
+function renderLoudness() {
+  const rows = state.data.frames, W=900,H=280,pad=38;
+  const targetY = loudY(state.data.project.target_loud_mdb,H,pad);
+  document.getElementById("loudChart").innerHTML = `<svg viewBox="0 0 ${W} ${H}">
+    <line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#2b3a63"/>
+    <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#2b3a63"/>
+    <line x1="${pad}" y1="${targetY}" x2="${W-pad}" y2="${targetY}" stroke="#ff6b7a" stroke-dasharray="6 5"/>
+    <path d="${loudPath(rows,"loud_before_mdb",W,H,pad)}" fill="none" stroke="#9fb0d0" stroke-width="2"/>
+    <path d="${loudPath(rows,"loud_after_mdb",W,H,pad)}" fill="none" stroke="#42d4c4" stroke-width="3"/>
+    <text x="${W-180}" y="${targetY-6}" fill="#ff8d99" font-size="12">target ${(state.data.project.target_loud_mdb/1000).toFixed(1)} dB</text>
+  </svg>`;
+}
+
+function renderStates() {
+  const s = state.data.scheduler.state;
+  document.getElementById("states").innerHTML = s.order.map(id => {
+    const st = s.states[id];
+    return `<div class="state ${esc(st)}"><div class="id">${esc(id)}</div><div class="st">${stateLabel(st)}</div></div>`;
+  }).join("");
+}
+function stateLabel(s) {
+  return {pending:"待装载",extracting:"特征提取中",calibrating:"响度校准中",committed:"已提交",failed:"失败"}[s] || s;
+}
+
+function renderPaths() {
+  const p = state.data.paths;
+  document.getElementById("paths").innerHTML = `
+    <table>
+      <tr><td>全量帧数</td><td><b>${p.full_frame_count}</b></td></tr>
+      <tr><td>断点恢复</td><td>${okBadge(p.recovery_equals_full)} 恢复 ${p.recovery.restored_clips.length}，重建 ${p.recovery.rebuilt_clips.length}</td></tr>
+      <tr><td>恢复后增量 vs 全量</td><td>${okBadge(p.recovery_incremental_equals_full)}</td></tr>
+      <tr><td>增益增量 vs 全量</td><td>${okBadge(state.data.invalidation.gain_three_path_equal)}</td></tr>
+      <tr><td>目标增量 vs 全量</td><td>${okBadge(state.data.invalidation.target_path_equal)}</td></tr>
+      <tr><td>帧率增量 vs 全量</td><td>${okBadge(state.data.invalidation.fps_path_equal)}</td></tr>
+    </table>`;
+}
+
+function currentPlan() {
+  const inv = state.data.invalidation;
+  return {gain: inv.gain_plan, target: inv.target_plan, fps: inv.fps_plan}[state.plan];
+}
+function renderFlow() {
+  if (!state.data) return;
+  const p = currentPlan();
+  const hotFeat = Object.keys(p.feature_rebuild_ranges || {}).length;
+  const calib = (p.rebuilt_calibration_frames || []).length;
+  const retained = (p.retained_feature_frames || []).length;
+  document.getElementById("flow").innerHTML = `
+    <div class="box"><h2>片段 / 参数</h2>
+      <div>${(p.affected_clips||[]).map(x=>`<span class="pill blue">${esc(x)}</span>`).join("") || '<span class="muted">无</span>'}</div>
+      ${(p.frozen_clips||[]).length ? `<div style="margin-top:8px">冻结：${p.frozen_clips.map(x=>`<span class="pill cool">${esc(x)}</span>`).join("")}</div>` : ""}
+    </div>
+    <div class="arrow">→</div>
+    <div class="box"><h2>特征帧区间</h2>
+      <div><span class="pill hot">重建 ${hotFeat}</span><span class="pill cool">保留 ${retained}</span></div>
+      <div class="small muted">缓存键 = content hash + range id + quant version + upstream key</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="box"><h2>校准下游</h2><span class="pill hot">重建 ${calib} 帧</span>
+      <div class="small muted">目标/增益变化使 calibration params hash 更新</div>
+    </div>`;
+  document.getElementById("planDetail").innerHTML = `
+    <div class="grid" style="margin-top:0">
+      <div class="card span-6"><h2>传播步骤</h2><ul>${(p.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
+        ${(p.attribution||[]).length ? `<h2 style="margin-top:12px">采样点归属追溯</h2><div class="scroll"><table><tbody>${p.attribution.slice(0,12).map(a=>`<tr><td><code>sample ${a.sample}</code></td><td>${a.old_fps}fps f${a.old_frame_no} → ${a.new_fps}fps f${a.new_frame_no}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      </div>
+      <div class="card span-6"><h2>失效节点（前 40 项）</h2><div class="scroll"><table><tbody>${(p.invalid_node_ids||[]).slice(0,40).map(x=>`<tr><td><code>${esc(x)}</code></td></tr>`).join("") || '<tr><td class="muted">无</td></tr>'}</tbody></table></div></div>
+    </div>`;
+}
+
+function renderErrors() {
+  const rows = state.data.error_cases;
+  document.getElementById("errors").innerHTML =
+    `<thead><tr><th>场景</th><th>码</th><th>定位</th><th>结果</th></tr></thead><tbody>` +
+    rows.map(e => `<tr><td>${esc(e.name)}<div class="muted small">${esc(e.message)}</div></td>
+      <td><code>${esc(e.expected_code)}</code></td>
+      <td class="small">${e.clip_id ? esc(e.clip_id) : ""} ${e.path ? `<div class="muted">${esc(e.path)}</div>` : ""}</td>
+      <td>${okBadge(e.ok,"覆盖","缺失")}<div class="small muted">${esc(e.returned_code)}</div></td></tr>`).join("") + `</tbody>`;
+}
+
+function renderRoundTrips() {
+  const d = state.data;
+  document.getElementById("roundtrips").innerHTML = [1,2].map(v => {
+    const r = d.round_trips[v];
+    const losses = r.loss?.losses || [];
+    return `<div style="margin-bottom:14px"><h2>v3 → v${v} → v3 ${okBadge(r.ok)}</h2>
+      <div class="muted small">${losses.length} 条 E_LOSSY；残差 ${r.residuals.filter(x=>!x.ok).length} 条超差</div>
+      <div class="scroll" style="max-height:170px"><table><tbody>
+        ${r.residuals.slice(0,10).map(x=>`<tr><td>${esc(x.path)}</td><td>Δ=${x.delta}</td><td>tol=${x.tolerance}</td><td class="${x.ok?"ok":"fail"}">${x.ok?"OK":"BAD"}</td></tr>`).join("")}
+      </tbody></table></div>
+      <div class="small" style="margin-top:6px">${losses.slice(0,4).map(l=>`<span class="pill hot">${esc(l.code)} ${esc(l.path)}</span>`).join("")}</div>
+    </div>`;
+  }).join("") + `<div class="muted small">路径漂移：${okBadge(d.drift.ok)} 不同版本路径得到相同增益/目标。</div>`;
+}
+
+function renderFrames() {
+  const rows = state.data.frames;
+  document.getElementById("frames").innerHTML =
+    `<thead><tr><th>Clip</th><th>Frame</th><th>Energy</th><th>RMS µ</th><th>ZCR BP</th><th>Peak</th><th>Before dB</th><th>After dB</th><th>Adj BP</th></tr></thead><tbody>` +
+    rows.map(r => `<tr>
+      <td>${esc(r.clip_id)}</td><td>${r.frame_no}</td>
+      <td>${r.feature.energy_fixed}</td><td>${r.feature.rms_micro}</td><td>${r.feature.zcr_bp}</td>
+      <td>${r.feature.transient ? "◆ "+r.feature.peak_sample : "—"}</td>
+      <td>${(r.calibration.loud_before_mdb/1000).toFixed(2)}</td>
+      <td>${(r.calibration.loud_after_mdb/1000).toFixed(2)}</td>
+      <td>${r.calibration.gain_adjust_bp}</td></tr>`).join("") + `</tbody>`;
+}
+
+load().catch(err => {
+  document.getElementById("overall").textContent = "诊断数据加载失败";
+  document.getElementById("overall").className = "badge bad";
+  document.getElementById("checks").textContent = String(err);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+{
+  "from_version": 3,
+  "to_version": 1,
+  "losses": [
+    {
+      "code": "E_LOSSY",
+      "path": "$.calibration_markers[0]",
+      "original": {
+        "id": "marker-clip-01-transient",
+        "clip_id": "clip-01",
+        "kind": "transient_peak",
+        "sample": 1440,
+        "frame_no": 1,
+        "value": 26000
+      },
+      "disposition": "drop_optional_calibration_marker",
+      "message": "schema version does not express marker marker-clip-01-transient"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.calibration_markers[1]",
+      "original": {
+        "id": "marker-clip-02-transient",
+        "clip_id": "clip-02",
+        "kind": "transient_peak",
+        "sample": 7200,
+        "frame_no": 7,
+        "value": 26000
+      },
+      "disposition": "drop_optional_calibration_marker",
+      "message": "schema version does not express marker marker-clip-02-transient"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.calibration_markers[2]",
+      "original": {
+        "id": "marker-clip-03-transient",
+        "clip_id": "clip-03",
+        "kind": "transient_peak",
+        "sample": 12960,
+        "frame_no": 13,
+        "value": 26000
+      },
+      "disposition": "drop_optional_calibration_marker",
+      "message": "schema version does not express marker marker-clip-03-transient"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.calibration_markers[3]",
+      "original": {
+        "id": "marker-clip-04-transient",
+        "clip_id": "clip-04",
+        "kind": "transient_peak",
+        "sample": 18720,
+        "frame_no": 19,
+        "value": 26000
+      },
+      "disposition": "drop_optional_calibration_marker",
+      "message": "schema version does not express marker marker-clip-04-transient"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.scenes[0]",
+      "original": {
+        "child_groups": 0,
+        "clip_ids": [
+          "clip-01"
+        ],
+        "name": "prologue"
+      },
+      "disposition": "flatten_nested_scene_tree_to_scene_path",
+      "message": "nested scene grouping is not representable in flat schema"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.scenes[1]",
+      "original": {
+        "child_groups": 2,
+        "clip_ids": null,
+        "name": "dialogue"
+      },
+      "disposition": "flatten_nested_scene_tree_to_scene_path",
+      "message": "nested scene grouping is not representable in flat schema"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.scenes[1].children[0]",
+      "original": {
+        "child_groups": 0,
+        "clip_ids": [
+          "clip-02"
+        ],
+        "name": "hero"
+      },
+      "disposition": "flatten_nested_scene_tree_to_scene_path",
+      "message": "nested scene grouping is not representable in flat schema"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.scenes[1].children[1]",
+      "original": {
+        "child_groups": 0,
+        "clip_ids": [
+          "clip-03"
+        ],
+        "name": "guard"
+      },
+      "disposition": "flatten_nested_scene_tree_to_scene_path",
+      "message": "nested scene grouping is not representable in flat schema"
+    },
+    {
+      "code": "E_LOSSY",
+      "path": "$.scenes[2]",
+      "original": {
+        "child_groups": 0,
+        "clip_ids": [
+          "clip-04"
+        ],
+        "name": "epilogue"
+      },
+      "disposition": "flatten_nested_scene_tree_to_scene_path",
+      "message": "nested scene grouping is not representable in flat schema"
+    }
+  ]
+}
