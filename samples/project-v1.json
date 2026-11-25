@@ -1,0 +1,153 @@
+{
+  "api_version": "gray/v1",
+  "project_revision": "eng-deterministic-v1",
+  "traffic_name": "checkout-gray-kernel-sample",
+  "tick_duration_ms": 100,
+  "upstreams": [
+    {
+      "name": "checkout",
+      "main_cluster": "checkout-main:8080",
+      "gray_cluster": "checkout-gray:8080",
+      "downstream": [
+        "payment",
+        "inventory"
+      ]
+    },
+    {
+      "name": "payment",
+      "main_cluster": "payment-main:8080",
+      "gray_cluster": "payment-gray:8080",
+      "downstream": [
+        "ledger"
+      ]
+    },
+    {
+      "name": "inventory",
+      "main_cluster": "inventory-main:8080",
+      "gray_cluster": "inventory-gray:8080",
+      "downstream": null
+    },
+    {
+      "name": "ledger",
+      "main_cluster": "ledger-main:8080",
+      "gray_cluster": "ledger-gray:8080",
+      "downstream": null
+    }
+  ],
+  "gray_rules": [
+    {
+      "rule_id": "R-CHK-BETA",
+      "rule_no": 101,
+      "service": "checkout",
+      "priority": 100,
+      "declaration_order": 0,
+      "match_labels": {
+        "lane": "beta"
+      },
+      "weight_permille": 500,
+      "weight_bps": null
+    },
+    {
+      "rule_id": "R-CHK-DEFAULT",
+      "rule_no": 102,
+      "service": "checkout",
+      "priority": 10,
+      "declaration_order": 1,
+      "match_labels": null,
+      "weight_permille": 200,
+      "weight_bps": null
+    },
+    {
+      "rule_id": "R-PAY-VIP",
+      "rule_no": 201,
+      "service": "payment",
+      "priority": 100,
+      "declaration_order": 0,
+      "match_labels": {
+        "tier": "vip"
+      },
+      "weight_permille": 1000,
+      "weight_bps": null
+    },
+    {
+      "rule_id": "R-PAY-DEFAULT",
+      "rule_no": 202,
+      "service": "payment",
+      "priority": 10,
+      "declaration_order": 1,
+      "match_labels": null,
+      "weight_permille": 0,
+      "weight_bps": null
+    },
+    {
+      "rule_id": "R-INV-CN",
+      "rule_no": 301,
+      "service": "inventory",
+      "priority": 50,
+      "declaration_order": 0,
+      "match_labels": {
+        "region": "cn"
+      },
+      "weight_permille": 250,
+      "weight_bps": null
+    },
+    {
+      "rule_id": "R-INV-DEFAULT",
+      "rule_no": 302,
+      "service": "inventory",
+      "priority": 10,
+      "declaration_order": 1,
+      "match_labels": null,
+      "weight_permille": 100,
+      "weight_bps": null
+    },
+    {
+      "rule_id": "R-LED-AUDIT",
+      "rule_no": 401,
+      "service": "ledger",
+      "priority": 60,
+      "declaration_order": 0,
+      "match_labels": {
+        "audit": "true"
+      },
+      "weight_permille": 0,
+      "weight_bps": null
+    },
+    {
+      "rule_id": "R-LED-DEFAULT",
+      "rule_no": 402,
+      "service": "ledger",
+      "priority": 10,
+      "declaration_order": 1,
+      "match_labels": null,
+      "weight_permille": 750,
+      "weight_bps": null
+    }
+  ],
+  "mirror_rules": [
+    {
+      "service": "checkout",
+      "rule_id": "R-CHK-BETA",
+      "mirror_permille": 300,
+      "mirror_bps": null
+    },
+    {
+      "service": "payment",
+      "rule_id": "R-PAY-VIP",
+      "mirror_permille": 1000,
+      "mirror_bps": null
+    },
+    {
+      "service": "inventory",
+      "rule_id": "R-INV-CN",
+      "mirror_permille": 500,
+      "mirror_bps": null
+    },
+    {
+      "service": "ledger",
+      "rule_id": "R-LED-DEFAULT",
+      "mirror_permille": 150,
+      "mirror_bps": null
+    }
+  ]
+}

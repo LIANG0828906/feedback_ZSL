@@ -1,0 +1,223 @@
+{
+  "apiVersion": "gray/v3",
+  "kind": "TrafficEngineering",
+  "metadata": {
+    "name": "checkout-gray-kernel-sample",
+    "revision": "eng-deterministic-v1"
+  },
+  "spec": {
+    "release": {
+      "revision": "eng-deterministic-v1"
+    },
+    "timing": {
+      "windowMs": 100
+    },
+    "topology": {
+      "nodes": [
+        {
+          "name": "checkout",
+          "baselineCluster": "checkout-main:8080",
+          "canaryCluster": "checkout-gray:8080",
+          "calls": [
+            "payment",
+            "inventory"
+          ]
+        },
+        {
+          "name": "payment",
+          "baselineCluster": "payment-main:8080",
+          "canaryCluster": "payment-gray:8080",
+          "calls": [
+            "ledger"
+          ]
+        },
+        {
+          "name": "inventory",
+          "baselineCluster": "inventory-main:8080",
+          "canaryCluster": "inventory-gray:8080",
+          "calls": null
+        },
+        {
+          "name": "ledger",
+          "baselineCluster": "ledger-main:8080",
+          "canaryCluster": "ledger-gray:8080",
+          "calls": null
+        }
+      ]
+    },
+    "ruleGroups": [
+      {
+        "serviceName": "checkout",
+        "rules": [
+          {
+            "ruleID": "R-CHK-BETA",
+            "ruleNumber": 101,
+            "precedence": 100,
+            "sequence": 0,
+            "when": {
+              "tags": {
+                "lane": "beta"
+              }
+            },
+            "weight": {
+              "basisPoints": 5000,
+              "permille": null
+            }
+          },
+          {
+            "ruleID": "R-CHK-DEFAULT",
+            "ruleNumber": 102,
+            "precedence": 10,
+            "sequence": 1,
+            "when": {
+              "tags": null
+            },
+            "weight": {
+              "basisPoints": 2000,
+              "permille": null
+            }
+          }
+        ]
+      },
+      {
+        "serviceName": "payment",
+        "rules": [
+          {
+            "ruleID": "R-PAY-VIP",
+            "ruleNumber": 201,
+            "precedence": 100,
+            "sequence": 0,
+            "when": {
+              "tags": {
+                "tier": "vip"
+              }
+            },
+            "weight": {
+              "basisPoints": 10000,
+              "permille": null
+            }
+          },
+          {
+            "ruleID": "R-PAY-DEFAULT",
+            "ruleNumber": 202,
+            "precedence": 10,
+            "sequence": 1,
+            "when": {
+              "tags": null
+            },
+            "weight": {
+              "basisPoints": 0,
+              "permille": null
+            }
+          }
+        ]
+      },
+      {
+        "serviceName": "inventory",
+        "rules": [
+          {
+            "ruleID": "R-INV-CN",
+            "ruleNumber": 301,
+            "precedence": 50,
+            "sequence": 0,
+            "when": {
+              "tags": {
+                "region": "cn"
+              }
+            },
+            "weight": {
+              "basisPoints": 2500,
+              "permille": null
+            }
+          },
+          {
+            "ruleID": "R-INV-DEFAULT",
+            "ruleNumber": 302,
+            "precedence": 10,
+            "sequence": 1,
+            "when": {
+              "tags": null
+            },
+            "weight": {
+              "basisPoints": 1000,
+              "permille": null
+            }
+          }
+        ]
+      },
+      {
+        "serviceName": "ledger",
+        "rules": [
+          {
+            "ruleID": "R-LED-AUDIT",
+            "ruleNumber": 401,
+            "precedence": 60,
+            "sequence": 0,
+            "when": {
+              "tags": {
+                "audit": "true"
+              }
+            },
+            "weight": {
+              "basisPoints": 0,
+              "permille": null
+            }
+          },
+          {
+            "ruleID": "R-LED-DEFAULT",
+            "ruleNumber": 402,
+            "precedence": 10,
+            "sequence": 1,
+            "when": {
+              "tags": null
+            },
+            "weight": {
+              "basisPoints": 7500,
+              "permille": null
+            }
+          }
+        ]
+      }
+    ],
+    "mirroring": {
+      "policies": [
+        {
+          "targetService": "checkout",
+          "ruleName": "R-CHK-BETA",
+          "copy": {
+            "basisPoints": 3000,
+            "permille": null
+          },
+          "sampling": null
+        },
+        {
+          "targetService": "payment",
+          "ruleName": "R-PAY-VIP",
+          "copy": {
+            "basisPoints": 10000,
+            "permille": null
+          },
+          "sampling": null
+        },
+        {
+          "targetService": "inventory",
+          "ruleName": "R-INV-CN",
+          "copy": {
+            "basisPoints": 5000,
+            "permille": null
+          },
+          "sampling": null
+        },
+        {
+          "targetService": "ledger",
+          "ruleName": "R-LED-DEFAULT",
+          "copy": {
+            "basisPoints": 1500,
+            "permille": null
+          },
+          "sampling": null
+        }
+      ]
+    }
+  }
+}

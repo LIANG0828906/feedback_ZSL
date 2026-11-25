@@ -1,0 +1,323 @@
+{
+  "seed": 4208691,
+  "engineering_version": "eng-deterministic-v1",
+  "schema_versions": [
+    "gray/v1",
+    "gray/v2",
+    "gray/v3"
+  ],
+  "service_names": [
+    "checkout",
+    "payment",
+    "inventory",
+    "ledger"
+  ],
+  "rule_order": [
+    {
+      "id": "R-CHK-BETA",
+      "service": "checkout",
+      "rule_no": 101,
+      "priority": 100,
+      "order": 0,
+      "weight_bps": 5000,
+      "v1_permille": 500,
+      "v2_bps": 5000,
+      "v3_bps": 5000
+    },
+    {
+      "id": "R-CHK-DEFAULT",
+      "service": "checkout",
+      "rule_no": 102,
+      "priority": 10,
+      "order": 1,
+      "weight_bps": 2000,
+      "v1_permille": 200,
+      "v2_bps": 2000,
+      "v3_bps": 2000
+    },
+    {
+      "id": "R-PAY-VIP",
+      "service": "payment",
+      "rule_no": 201,
+      "priority": 100,
+      "order": 0,
+      "weight_bps": 10000,
+      "v1_permille": 1000,
+      "v2_bps": 10000,
+      "v3_bps": 10000
+    },
+    {
+      "id": "R-PAY-DEFAULT",
+      "service": "payment",
+      "rule_no": 202,
+      "priority": 10,
+      "order": 1,
+      "weight_bps": 0,
+      "v1_permille": 0,
+      "v2_bps": 0,
+      "v3_bps": 0
+    },
+    {
+      "id": "R-INV-CN",
+      "service": "inventory",
+      "rule_no": 301,
+      "priority": 50,
+      "order": 0,
+      "weight_bps": 2500,
+      "v1_permille": 250,
+      "v2_bps": 2500,
+      "v3_bps": 2500
+    },
+    {
+      "id": "R-INV-DEFAULT",
+      "service": "inventory",
+      "rule_no": 302,
+      "priority": 10,
+      "order": 1,
+      "weight_bps": 1000,
+      "v1_permille": 100,
+      "v2_bps": 1000,
+      "v3_bps": 1000
+    },
+    {
+      "id": "R-LED-AUDIT",
+      "service": "ledger",
+      "rule_no": 401,
+      "priority": 60,
+      "order": 0,
+      "weight_bps": 0,
+      "v1_permille": 0,
+      "v2_bps": 0,
+      "v3_bps": 0
+    },
+    {
+      "id": "R-LED-DEFAULT",
+      "service": "ledger",
+      "rule_no": 402,
+      "priority": 10,
+      "order": 1,
+      "weight_bps": 7500,
+      "v1_permille": 750,
+      "v2_bps": 7500,
+      "v3_bps": 7500
+    }
+  ],
+  "keys": [
+    "key-001",
+    "key-002",
+    "key-003",
+    "key-004",
+    "key-005",
+    "key-006",
+    "key-007",
+    "key-008",
+    "key-009",
+    "key-010",
+    "key-011",
+    "key-012",
+    "key-013",
+    "key-014",
+    "key-015",
+    "key-016"
+  ],
+  "request_count": 384,
+  "tick_count": 6,
+  "canonical_project": {
+    "schema_version": "gray/v2",
+    "engineering_version": "eng-deterministic-v1",
+    "name": "checkout-gray-kernel-sample",
+    "tick_interval_ms": 100,
+    "services": [
+      {
+        "name": "checkout",
+        "baseline": "checkout-main:8080",
+        "canary": "checkout-gray:8080",
+        "dependencies": [
+          "payment",
+          "inventory"
+        ]
+      },
+      {
+        "name": "payment",
+        "baseline": "payment-main:8080",
+        "canary": "payment-gray:8080",
+        "dependencies": [
+          "ledger"
+        ]
+      },
+      {
+        "name": "inventory",
+        "baseline": "inventory-main:8080",
+        "canary": "inventory-gray:8080"
+      },
+      {
+        "name": "ledger",
+        "baseline": "ledger-main:8080",
+        "canary": "ledger-gray:8080"
+      }
+    ],
+    "rules": [
+      {
+        "id": "R-CHK-BETA",
+        "rule_no": 101,
+        "service": "checkout",
+        "priority": 100,
+        "order": 0,
+        "match": {
+          "labels": {
+            "lane": "beta"
+          }
+        },
+        "weight_bps": 5000
+      },
+      {
+        "id": "R-CHK-DEFAULT",
+        "rule_no": 102,
+        "service": "checkout",
+        "priority": 10,
+        "order": 1,
+        "match": {},
+        "weight_bps": 2000
+      },
+      {
+        "id": "R-PAY-VIP",
+        "rule_no": 201,
+        "service": "payment",
+        "priority": 100,
+        "order": 0,
+        "match": {
+          "labels": {
+            "tier": "vip"
+          }
+        },
+        "weight_bps": 10000
+      },
+      {
+        "id": "R-PAY-DEFAULT",
+        "rule_no": 202,
+        "service": "payment",
+        "priority": 10,
+        "order": 1,
+        "match": {},
+        "weight_bps": 0
+      },
+      {
+        "id": "R-INV-CN",
+        "rule_no": 301,
+        "service": "inventory",
+        "priority": 50,
+        "order": 0,
+        "match": {
+          "labels": {
+            "region": "cn"
+          }
+        },
+        "weight_bps": 2500
+      },
+      {
+        "id": "R-INV-DEFAULT",
+        "rule_no": 302,
+        "service": "inventory",
+        "priority": 10,
+        "order": 1,
+        "match": {},
+        "weight_bps": 1000
+      },
+      {
+        "id": "R-LED-AUDIT",
+        "rule_no": 401,
+        "service": "ledger",
+        "priority": 60,
+        "order": 0,
+        "match": {
+          "labels": {
+            "audit": "true"
+          }
+        },
+        "weight_bps": 0
+      },
+      {
+        "id": "R-LED-DEFAULT",
+        "rule_no": 402,
+        "service": "ledger",
+        "priority": 10,
+        "order": 1,
+        "match": {},
+        "weight_bps": 7500
+      }
+    ],
+    "mirrors": [
+      {
+        "service": "checkout",
+        "rule_id": "R-CHK-BETA",
+        "ratio_bps": 3000
+      },
+      {
+        "service": "payment",
+        "rule_id": "R-PAY-VIP",
+        "ratio_bps": 10000
+      },
+      {
+        "service": "inventory",
+        "rule_id": "R-INV-CN",
+        "ratio_bps": 5000
+      },
+      {
+        "service": "ledger",
+        "rule_id": "R-LED-DEFAULT",
+        "ratio_bps": 1500
+      }
+    ],
+    "source_format": ""
+  },
+  "migration_truth": [
+    {
+      "key": "key-003",
+      "service": "checkout",
+      "rule_id": "R-CHK-BETA",
+      "old_side": "baseline",
+      "new_side": "canary",
+      "old_bucket": 5393,
+      "new_bucket": 5393,
+      "old_weight_bps": 5000,
+      "new_weight_bps": 6500,
+      "allowed_reason": "weight-window-expansion"
+    },
+    {
+      "key": "key-007",
+      "service": "checkout",
+      "rule_id": "R-CHK-BETA",
+      "old_side": "baseline",
+      "new_side": "canary",
+      "old_bucket": 5869,
+      "new_bucket": 5869,
+      "old_weight_bps": 5000,
+      "new_weight_bps": 6500,
+      "allowed_reason": "weight-window-expansion"
+    },
+    {
+      "key": "key-010",
+      "service": "checkout",
+      "rule_id": "R-CHK-BETA",
+      "old_side": "baseline",
+      "new_side": "canary",
+      "old_bucket": 5345,
+      "new_bucket": 5345,
+      "old_weight_bps": 5000,
+      "new_weight_bps": 6500,
+      "allowed_reason": "weight-window-expansion"
+    },
+    {
+      "key": "key-014",
+      "service": "checkout",
+      "rule_id": "R-CHK-BETA",
+      "old_side": "baseline",
+      "new_side": "canary",
+      "old_bucket": 5821,
+      "new_bucket": 5821,
+      "old_weight_bps": 5000,
+      "new_weight_bps": 6500,
+      "allowed_reason": "weight-window-expansion"
+    }
+  ]
+}

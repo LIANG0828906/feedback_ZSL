@@ -1,0 +1,189 @@
+{
+  "apiVersion": "gray/v2",
+  "engineeringVersion": "eng-deterministic-v1",
+  "name": "checkout-gray-kernel-sample",
+  "tickIntervalMs": 100,
+  "services": [
+    {
+      "name": "checkout",
+      "baselineCluster": "checkout-main:8080",
+      "canaryCluster": "checkout-gray:8080",
+      "dependencies": [
+        "payment",
+        "inventory"
+      ]
+    },
+    {
+      "name": "payment",
+      "baselineCluster": "payment-main:8080",
+      "canaryCluster": "payment-gray:8080",
+      "dependencies": [
+        "ledger"
+      ]
+    },
+    {
+      "name": "inventory",
+      "baselineCluster": "inventory-main:8080",
+      "canaryCluster": "inventory-gray:8080",
+      "dependencies": null
+    },
+    {
+      "name": "ledger",
+      "baselineCluster": "ledger-main:8080",
+      "canaryCluster": "ledger-gray:8080",
+      "dependencies": null
+    }
+  ],
+  "ruleTree": [
+    {
+      "service": "checkout",
+      "rules": [
+        {
+          "id": "R-CHK-BETA",
+          "ruleNo": 101,
+          "priority": 100,
+          "declarationOrder": 0,
+          "match": {
+            "labels": {
+              "lane": "beta"
+            }
+          },
+          "weightBps": 5000,
+          "weightPermille": null
+        },
+        {
+          "id": "R-CHK-DEFAULT",
+          "ruleNo": 102,
+          "priority": 10,
+          "declarationOrder": 1,
+          "match": {
+            "labels": null
+          },
+          "weightBps": 2000,
+          "weightPermille": null
+        }
+      ]
+    },
+    {
+      "service": "payment",
+      "rules": [
+        {
+          "id": "R-PAY-VIP",
+          "ruleNo": 201,
+          "priority": 100,
+          "declarationOrder": 0,
+          "match": {
+            "labels": {
+              "tier": "vip"
+            }
+          },
+          "weightBps": 10000,
+          "weightPermille": null
+        },
+        {
+          "id": "R-PAY-DEFAULT",
+          "ruleNo": 202,
+          "priority": 10,
+          "declarationOrder": 1,
+          "match": {
+            "labels": null
+          },
+          "weightBps": 0,
+          "weightPermille": null
+        }
+      ]
+    },
+    {
+      "service": "inventory",
+      "rules": [
+        {
+          "id": "R-INV-CN",
+          "ruleNo": 301,
+          "priority": 50,
+          "declarationOrder": 0,
+          "match": {
+            "labels": {
+              "region": "cn"
+            }
+          },
+          "weightBps": 2500,
+          "weightPermille": null
+        },
+        {
+          "id": "R-INV-DEFAULT",
+          "ruleNo": 302,
+          "priority": 10,
+          "declarationOrder": 1,
+          "match": {
+            "labels": null
+          },
+          "weightBps": 1000,
+          "weightPermille": null
+        }
+      ]
+    },
+    {
+      "service": "ledger",
+      "rules": [
+        {
+          "id": "R-LED-AUDIT",
+          "ruleNo": 401,
+          "priority": 60,
+          "declarationOrder": 0,
+          "match": {
+            "labels": {
+              "audit": "true"
+            }
+          },
+          "weightBps": 0,
+          "weightPermille": null
+        },
+        {
+          "id": "R-LED-DEFAULT",
+          "ruleNo": 402,
+          "priority": 10,
+          "declarationOrder": 1,
+          "match": {
+            "labels": null
+          },
+          "weightBps": 7500,
+          "weightPermille": null
+        }
+      ]
+    }
+  ],
+  "mirrorPolicies": [
+    {
+      "service": "checkout",
+      "ruleId": "R-CHK-BETA",
+      "copyRatioBps": 3000,
+      "ratioPermille": null,
+      "sampleModulus": null,
+      "sampleRemainder": 0
+    },
+    {
+      "service": "payment",
+      "ruleId": "R-PAY-VIP",
+      "copyRatioBps": 10000,
+      "ratioPermille": null,
+      "sampleModulus": null,
+      "sampleRemainder": 0
+    },
+    {
+      "service": "inventory",
+      "ruleId": "R-INV-CN",
+      "copyRatioBps": 5000,
+      "ratioPermille": null,
+      "sampleModulus": null,
+      "sampleRemainder": 0
+    },
+    {
+      "service": "ledger",
+      "ruleId": "R-LED-DEFAULT",
+      "copyRatioBps": 1500,
+      "ratioPermille": null,
+      "sampleModulus": null,
+      "sampleRemainder": 0
+    }
+  ]
+}
