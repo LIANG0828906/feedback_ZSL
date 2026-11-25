@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atelier · 资源采集点重建立</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div>
+          <h1>ATELIER</h1>
+          <p>开放世界资源采集点分布重建工作台</p>
+        </div>
+      </div>
+      <div class="top-controls">
+        <label class="field inline">
+          <span>样本区域</span>
+          <select id="region-select" aria-label="样本区域"></select>
+        </label>
+        <div class="status-chip" id="engine-status">
+          <i></i><span>等待加载</span>
+        </div>
+        <input type="file" id="scenario-file" accept=".json,application/json" hidden />
+        <button class="ghost" id="btn-import" title="加载生成器导出的样本 JSON">导入样本</button>
+        <button class="ghost" id="btn-save-sample" title="将当前种子样本写为 JSON">保存样本</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="panel zones-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">STRATA</p>
+            <h2>地带与禁采区</h2>
+          </div>
+          <span class="counter" id="zone-counter">0</span>
+        </div>
+        <div id="zone-list" class="zone-list empty-state">正在生成确定性样本…</div>
+        <div class="subheading">
+          <span>禁采区</span>
+          <small>拖动增量编辑</small>
+        </div>
+        <div id="exclusion-list" class="exclusion-list"></div>
+        <div class="panel-foot">
+          <div class="kv"><span>种子</span><b id="seed-value">—</b></div>
+          <div class="kv"><span>算法</span><b id="algorithm-value">—</b></div>
+        </div>
+      </aside>
+
+      <section class="map-column">
+        <div class="map-toolbar">
+          <div class="layer-switches" id="layer-switches">
+            <label><input type="checkbox" data-layer="terrain" checked /><span>地形</span></label>
+            <label><input type="checkbox" data-layer="heat" checked /><span>热力面</span></label>
+            <label><input type="checkbox" data-layer="zones" checked /><span>地带</span></label>
+            <label><input type="checkbox" data-layer="samples" checked /><span>采样</span></label>
+            <label><input type="checkbox" data-layer="points" checked /><span>重建点</span></label>
+            <label><input type="checkbox" data-layer="exclusions" checked /><span>禁采区</span></label>
+          </div>
+          <div class="action-row">
+            <button class="ghost" id="btn-full">全量重建</button>
+            <button class="ghost" id="btn-compare">一致性比对</button>
+            <button class="ghost" id="btn-export">导出</button>
+            <button class="danger-ghost" id="btn-cancel">取消</button>
+          </div>
+        </div>
+
+        <div class="map-frame">
+          <canvas id="map-canvas"></canvas>
+          <div class="map-overlay">
+            <div class="map-badge">
+              <span id="map-region">边境盆地</span>
+              <small id="map-bounds">—</small>
+            </div>
+            <div class="legend">
+              <span><i class="dot common"></i>常见</span>
+              <span><i class="dot uncommon"></i>少见</span>
+              <span><i class="dot rare"></i>稀有</span>
+              <span><i class="ring"></i>采样格点</span>
+            </div>
+          </div>
+          <div class="map-loader" id="map-loader">重建中…</div>
+        </div>
+
+        <div class="diagnostic-grid">
+          <article class="panel inset-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">PROPAGATION</p>
+                <h2>失效传播</h2>
+              </div>
+              <span class="mini-stat" id="reuse-stat">—</span>
+            </div>
+            <div class="graph-wrap"><svg id="graph-svg" viewBox="0 0 900 340" role="img" aria-label="失效传播图"></svg></div>
+          </article>
+          <article class="panel inset-panel">
+            <div class="panel-heading compact">
+              <div>
+                <p class="eyebrow">BOUNDS</p>
+                <h2>累计偏差上界</h2>
+              </div>
+              <span class="mini-stat">仅由观测输入推导</span>
+            </div>
+            <div id="bound-charts" class="bound-charts"></div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="panel inspector-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">INSPECTOR</p>
+            <h2 id="inspector-title">选择地带</h2>
+          </div>
+          <span class="zone-token" id="inspector-token">—</span>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric"><span>估计密度</span><b id="metric-density">—</b><small>点 / 面积</small></div>
+          <div class="metric"><span>采样点</span><b id="metric-samples">—</b><small>分层格点</small></div>
+          <div class="metric"><span>重建点</span><b id="metric-points">—</b><small>有效区域</small></div>
+          <div class="metric"><span>有效面积</span><b id="metric-area">—</b><small>栅格面积</small></div>
+        </div>
+
+        <div class="edit-block">
+          <div class="block-title"><h3>地带参数</h3><span id="param-version">—</span></div>
+          <label class="range-field">
+            <span><b>密度系数</b><output id="density-output">1.00</output></span>
+            <input type="range" id="density-scale" min="0.5" max="1.5" step="0.01" value="1" />
+          </label>
+          <label class="range-field">
+            <span><b>稀有度偏移</b><output id="rarity-output">0.00</output></span>
+            <input type="range" id="rarity-shift" min="-0.3" max="0.3" step="0.01" value="0" />
+          </label>
+          <div class="button-row">
+            <button class="primary" id="btn-apply-zone">增量应用</button>
+            <button class="ghost small" id="btn-retry-zone">逐地带重试</button>
+            <button class="ghost small" id="btn-shrink-zone" title="围绕形心内缩 3%，触发边界级失效">边界 −3%</button>
+          </div>
+        </div>
+
+        <div class="edit-block">
+          <div class="block-title"><h3>禁采区位移</h3><span>无外部服务</span></div>
+          <label class="field">
+            <span>目标禁采区</span>
+            <select id="exclusion-select"></select>
+          </label>
+          <div class="two-col">
+            <label class="field"><span>ΔX</span><input id="exclusion-dx" type="number" value="0" step="1" /></label>
+            <label class="field"><span>ΔY</span><input id="exclusion-dy" type="number" value="0" step="1" /></label>
+          </div>
+          <button class="primary" id="btn-move-exclusion">移动并传播失效</button>
+        </div>
+
+        <div class="edit-block checkpoint-block">
+          <div class="block-title"><h3>检查点</h3><span id="checkpoint-state">—</span></div>
+          <div class="kv"><span>会话</span><b id="checkpoint-session">—</b></div>
+          <div class="kv"><span>已提交</span><b id="checkpoint-count">—</b></div>
+          <div class="recovery-note" id="recovery-note"></div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="lower-deck">
+      <div class="tab-row">
+        <button class="tab active" data-tab="invalidation">失效清单</button>
+        <button class="tab" data-tab="report">偏差报告</button>
+        <button class="tab" data-tab="layers">分层估计</button>
+        <button class="tab" data-tab="checkpoints">检查点与运行</button>
+      </div>
+      <div class="tab-panel active" id="tab-invalidation">
+        <div class="table-head">
+          <span id="invalidation-summary">等待重建</span>
+          <label class="mini-filter"><input type="checkbox" id="only-changed" checked /> 仅看实际变更</label>
+        </div>
+        <div class="table-scroll"><table class="data-table" id="invalidation-table"></table></div>
+      </div>
+      <div class="tab-panel" id="tab-report">
+        <div class="table-scroll"><table class="data-table" id="report-table"></table></div>
+      </div>
+      <div class="tab-panel" id="tab-layers">
+        <div class="table-scroll"><table class="data-table" id="layer-table"></table></div>
+      </div>
+      <div class="tab-panel" id="tab-checkpoints">
+        <div class="checkpoint-grid">
+          <div>
+            <h3>运行与资源边界</h3>
+            <div class="kv"><span>工作线程</span><b id="run-workers">—</b></div>
+            <div class="kv"><span>每线程缓冲</span><b id="run-buffer">—</b></div>
+            <div class="kv"><span>执行任务</span><b id="run-tasks">—</b></div>
+            <div class="kv"><span>缓冲阻塞</span><b id="run-blocked">—</b></div>
+            <div class="kv"><span>阻塞原因</span><b id="run-reason">—</b></div>
+          </div>
+          <div>
+            <h3>检查点状态</h3>
+            <div class="kv"><span>会话状态</span><b id="run-session-state">—</b></div>
+            <div class="kv"><span>算法版本</span><b id="run-algorithm">—</b></div>
+            <div class="kv"><span>恢复来源</span><b id="run-recovery">—</b></div>
+            <div class="kv"><span>快照处置</span><b id="run-discard">—</b></div>
+            <div class="kv"><span>数据库</span><b>atelier-checkpoints.db</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="statusbar">
+      <span id="status-message">初始化…</span>
+      <div class="statusbar-right">
+        <span id="status-revision">rev —</span>
+        <span id="status-tolerance">容差已声明</span>
+        <span class="dot-live"></span><span>LOCAL</span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="overlay" id="busy-overlay">
+    <div class="busy-card">
+      <div class="spinner"></div>
+      <b id="busy-title">正在计算</b>
+      <span id="busy-detail">运行受限工作线程池…</span>
+      <button class="danger-ghost" id="busy-cancel">取消当前任务</button>
+    </div>
+  </div>
+  <div class="toast-stack" id="toast-stack"></div>
+  <script src="app.js"></script>
+</body>
+</html>
