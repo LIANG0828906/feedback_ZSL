@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StrokeForge 字形笔触诊断工作台</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◈</span>
+      <div>
+        <h1>StrokeForge</h1>
+        <p>可交互笔触填充与诊断工具 · <span id="algo">—</span></p>
+      </div>
+    </div>
+    <div class="actions">
+      <label>字形
+        <select id="glyphSelect"></select>
+      </label>
+      <button id="reRender" class="primary">全量重绘</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel controls">
+      <h2>笔触参数</h2>
+      <label>宽度 width
+        <input type="range" id="pWidth" min="1" max="64" step="0.5" />
+        <output id="vWidth"></output>
+      </label>
+      <label>间距 spacing
+        <input type="range" id="pSpacing" min="0.5" max="40" step="0.5" />
+        <output id="vSpacing"></output>
+      </label>
+      <label>扁平化容差 tolerance
+        <input type="range" id="pTolerance" min="0.1" max="8" step="0.05" />
+        <output id="vTolerance"></output>
+      </label>
+      <label>缩放 scale
+        <input type="range" id="pScale" min="0.5" max="8" step="0.1" />
+        <output id="vScale"></output>
+      </label>
+      <label>外扩 padding
+        <input type="range" id="pPadding" min="0" max="48" step="1" />
+        <output id="vPadding"></output>
+      </label>
+      <label>连接 join
+        <select id="pJoin">
+          <option value="round">round</option>
+          <option value="miter">miter</option>
+          <option value="bevel">bevel</option>
+        </select>
+      </label>
+      <label>笔尖 cap
+        <select id="pCap">
+          <option value="round">round</option>
+          <option value="square">square</option>
+        </select>
+      </label>
+      <button id="applyParams" class="primary">应用参数（增量重绘）</button>
+
+      <h2>异常注入</h2>
+      <div class="fault-grid">
+        <button data-fault="self-intersection">骨架自交 E_SELF</button>
+        <button data-fault="zero-length">零长度段 E_ZLEN</button>
+        <button data-fault="density-overflow">密度溢出 E_DENS</button>
+        <button data-fault="stage-failure">阶段失败 E_STAGE</button>
+      </div>
+      <label>注入段编号
+        <input type="number" id="faultSegment" value="0" min="0" max="9" />
+      </label>
+      <div id="faultResult" class="fault-result"></div>
+    </aside>
+
+    <section class="panel canvas-panel">
+      <nav class="tabs">
+        <button class="tab active" data-tab="geometry">轮廓与骨架</button>
+        <button class="tab" data-tab="stroke">笔触叠加</button>
+        <button class="tab" data-tab="heat">密度热力图</button>
+      </nav>
+      <canvas id="stage" width="720" height="640"></canvas>
+      <p class="hint">扫描线超采样 4×4 · 掩膜尺寸由包围盒与缩放推导 · 灰度 0–255</p>
+    </section>
+
+    <aside class="panel side">
+      <h2>段状态矩阵</h2>
+      <div id="stateMatrix" class="state-matrix"></div>
+      <h2>失效传播</h2>
+      <div id="invalidation" class="invalidation">
+        <p class="muted">调整参数或编辑控制点后，这里列出受影响段与原因。</p>
+      </div>
+      <h2>真值对照</h2>
+      <div id="truth" class="truth"></div>
+    </aside>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
