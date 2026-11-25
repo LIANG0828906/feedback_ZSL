@@ -1,22 +1,103 @@
-工作区里还没有任何源码，团队要在 Windows 上从头交付一套面向游戏美术材质的光谱渲染数据处理管线与结果验证工具。本地确定性样本生成器按固定种子产出场景：若干网格物体，每个顶点携带反照率、粗糙度与金属度；一组在声明波长采样点上给出的光源，每个光源提供逐波长强度；每个物体给出一条由基函数以定点整型系数线性组合表达的光谱反射率曲线；另附色匹配函数表、白点、目标色域与解析真值，真值给出若干已知像素的期望线性 RGB 值、峰值辐亮度与色度坐标，真值只来自生成器的解析构造，是精度观测的唯一来源。管线须在受限工作线程、每线程像素缓冲与屏幕分块预算下并行完成光谱积分与逐块光栅化，并在参数或采样编辑后只重算真正受影响的分块。
+# SpectralForge
 
-任务环境与准备：
-Windows 10 或 11 开发机，已安装 Go 1.22 或更高版本并确认 go 命令可用。
-工作区为空目录，直接在该目录初始化 Go 模块，不引入任何容器或外部服务。
-仅使用 Go 标准库完成样本生成、渲染、持久化与本地页面，持久化采用本地文件或嵌入式数据库，无需网络账号与外部数据。
-运行前先执行 go build 确认可编译，再按题面命令生成本地样本并启动本地页面进行验证。
+SpectralForge 是一个仅使用 Go 标准库的本地光谱材质渲染管线与结果验证工具。它面向固定的美术材质样本，提供：
 
-业务要求：
-1. 实现场景与光谱数据加载校验：读取网格几何、逐顶点材质参数、光源逐波长强度、基函数定点系数、波长采样表、色匹配函数、白点与真值清单；校验基函数系数落在声明位深范围、波长采样点严格递增且与色匹配函数表逐点对齐、逐顶点材质参数数量与网格声明一致；字段缺失返回 E_SCHEMA，数值越界返回 E_PARA 并指出字段名与坐标范围。
-2. 实现光谱采样与色匹配积分核心：在采样波长上逐点计算光源强度与反射率乘积后与色匹配函数做数值积分得到 XYZ，支持可配置波长步数与至少两种积分方式，经白点归一后转换到目标色域输出线性 RGB；要求同一未改动场景在相同参数下重复渲染得到逐像素相同的线性 RGB，且不随分块调度顺序与线程标识变化。
-3. 实现定点量化下的材质数值稳定性约束：反照率、粗糙度、金属度与基函数系数按声明量化单位参与积分，逐样本记录量化前后误差，并保证量化位深增加时误差统计单调不增；材质缓存键必须由内容哈希与量化参数共同决定，量化参数变化时不得复用旧材质缓存，复用违规返回 E_QMIX。
-4. 实现屏幕分块并行的光照累积光栅化：划分固定尺寸屏幕块，每块完成多光源直接光照与可配置次数间接反弹近似并累加到块缓冲；须限制最大并行块数、每线程像素缓冲上限与块队列预算，预算耗尽时阻塞排队并记录排队原因而非静默丢块；要求偏移半像素的块边界采样不产生可见接缝，接缝处亮度跳变超过声明阈值返回 E_SEAM 并给出相邻块编号与跳变实测值。
-5. 实现色调映射与显示编码的版本快照一致性：对线性 RGB 施加可配置曝光与色调映射曲线后做伽马编码输出；连续交互预览只读最新参数快照，精确渲染启动时锁定其版本快照，两任务不得混用版本，混用返回 E_VER 并指出两侧版本号；要求预览与精确帧在曝光与曲线一致时逐像素误差落在声明容差内。
-6. 实现可暂停可重启的检查点与三条路径逐像素一致：每完成并校验一个屏幕块，把累加缓冲、光谱采样版本、材质缓存键、参数版本与场景内容哈希原子且串行写入本地持久化存储，写入不得交错；重启加载时若内容哈希、采样版本或参数版本任一不匹配须整体作废快照并全量重算；实时渲染、断点恢复渲染与一次性全量渲染三条路径须产出相同像素与相同块提交序列。
-7. 实现资源预算下的独立调试验证工具：仅凭持久化的块快照、场景清单与渲染参数重新计算各块光谱累积结果与最终像素，并与主链路记录的块摘要和图像逐项比对，不得调用渲染主路径；发现不一致时输出首个不一致像素坐标、块编号与差异字段名；同时输出逐块等待原因统计与两路径渲染耗时对比，供性能与正确性取舍诊断。
-8. 处理异常链路并保证分块隔离：场景或光谱表损坏返回 E_DECODE，单块内部渲染异常须置该块为失败并允许重试且不污染其他块与已提交结果，参数注入导致色域越界返回 E_GAMUT 并指出像素与通道；重试后输出须与未发生失败路径逐像素一致，用户取消或强制终止后重启只能依据已持久化且版本匹配的块恢复，不得承诺强制终止后仍能生成完整退出报告。
+- 固定种子场景、逐顶点材质、逐波长光源、基函数定点系数、CMF、白点、目标色域和解析真值生成。
+- 严格输入校验与稳定错误码：`E_SCHEMA`、`E_PARA`、`E_DECODE`、`E_GAMUT`、`E_QMIX`、`E_VER`、`E_SEAM` 等。
+- 两种数值积分（梯形、中点）、可配置波长步数、白点归一和 sRGB 线性 RGB 输出。
+- 固定点量化、逐样本量化误差报告、内容哈希与量化签名共同决定的材质缓存键。
+- 固定屏幕块、多工作线程、每线程像素缓冲上限、有界块队列和等待原因统计。
+- 原子串行块检查点、版本不匹配整体作废、暂停/恢复、全量/实时/恢复三条路径一致。
+- 独立验证器：不导入 `internal/render`，从持久化块快照重新计算并定位首个不一致像素、块和字段。
+- 本地页面：最新参数预览、精确版本锁定、恢复、独立校验和参数编辑。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 环境
 
-验收：
-用本地样本验证光谱积分与分块渲染的像素精度、预算调度、断点恢复与三条路径一致性。
+- Windows 10/11，Go 1.22 或更高版本；Linux/macOS 同样可运行。
+- 不依赖 Docker、数据库、网络服务或第三方 Go 模块。
+
+## Windows PowerShell 快速开始
+
+```powershell
+go build -o spectralforge.exe ./cmd/spectralforge
+go test ./...
+
+.\spectralforge.exe sample --dir sample --seed 20261125
+.\spectralforge.exe validate --sample sample
+
+.\spectralforge.exe render --sample sample --checkpoints checkpoints\exact --out render\exact --mode full
+.\spectralforge.exe verify --sample sample --checkpoints checkpoints\exact --out render\exact
+
+.\spectralforge.exe serve --sample sample --checkpoints checkpoints --out render --addr 127.0.0.1:8080
+```
+
+打开 `http://127.0.0.1:8080`。页面中的 `Exact (lock version)` 会锁定点击时的参数快照，`Resume exact` 只恢复已持久化且版本匹配的块。
+
+## 三条路径
+
+```powershell
+# 一次性全量
+.\spectralforge.exe render --sample sample --checkpoints checkpoints\full --out render\full --mode full
+
+# 实时路径（增量提交，提交序仍为块索引序）
+.\spectralforge.exe render --sample sample --checkpoints checkpoints\realtime --out render\realtime --mode realtime
+
+# 暂停，再恢复
+.\spectralforge.exe render --sample sample --checkpoints checkpoints\resume --out render\resume --mode realtime --stop-after 5
+.\spectralforge.exe render --sample sample --checkpoints checkpoints\resume --out render\resume --mode resume
+```
+
+比较像素摘要与提交序列：
+
+```powershell
+.\spectralforge.exe compare `
+  --a render\full --b render\resume `
+  --a-checkpoints checkpoints\full --b-checkpoints checkpoints\resume
+```
+
+## 常用参数
+
+- `--config <path>`：覆盖 `render-config.json`，用于编辑积分方式、波长步数、量化位深、曝光、色调曲线等。
+- `--stop-after N`：提交 N 个新块后暂停。暂停报告不承诺完整帧。
+- `--fail-tile N --fail-count 1`：注入一次可重试块失败；最终像素仍应与无失败路径一致。
+- `--inject-gamut x:y:r:-0.5`：注入确定性的色域越界，用于验证 `E_GAMUT` 的像素和通道定位。
+- `--snapshot-version <hash>`：声明期望参数版本；不一致返回包含两侧版本的 `E_VER`。
+
+## 样本文件
+
+`sample/` 中是可重新生成的固定种子样本：
+
+| 文件 | 内容 |
+| --- | --- |
+| `scene.json` | 分辨率、网格、顶点位置/法线、反照率、粗糙度、金属度、基函数系数 |
+| `spectral.json` | 波长、CMF、白点、色域矩阵、基函数采样、逐波长光源 |
+| `truth.json` | 生成器解析构造的线性 RGB、峰值辐亮度、色度真值 |
+| `render-config.json` | 渲染参数与量化参数 |
+| `manifest.json` | 样本内容哈希与文件清单 |
+
+`truth.json` 只由 `internal/sample` 在生成阶段计算，渲染器不回写真值。
+
+## 输出
+
+- `render/<name>/frame.json`：最终线性 RGB、显示 RGB、对象 ID、峰值辐亮度、块摘要和真值对照。
+- `render/<name>/frame.png`：便于目视检查的显示图像。
+- `render/<name>/blocks.json`：块摘要列表。
+- `render/<name>/quantization.json`：逐样本量化前后值和误差统计。
+- `render/<name>/verification.json`：独立验证报告。
+- `<checkpoints>/manifest.json`、`tiles/*.json`、`commits.log`、`run-stats.json`：检查点和调度统计。
+
+## 测试与自动化验收
+
+```powershell
+go test ./...
+go test -race ./...
+.\scripts\validate.ps1
+```
+
+Linux/macOS 可运行 `./scripts/validate.sh`。脚本执行构建、测试、样本生成、三条路径、恢复、独立校验、帧摘要比较，并输出 PNG 哈希。
+
+更详细的算法、并发、检查点协议和需求映射见 [docs/DESIGN.md](docs/DESIGN.md)，实际运行结果见 [docs/VALIDATION.md](docs/VALIDATION.md)。
+
+## 强制终止语义
+
+每提交一个块都会原子写入其线性缓冲、场景内容哈希、采样版本、参数版本和材质缓存键。进程被强制终止时，只保证磁盘上已经完成且通过摘要校验的连续块前缀可恢复；不承诺生成完整退出报告或补齐未提交块。
