@@ -1,0 +1,593 @@
+{
+  "schema": "maintenance.project/v2",
+  "metadata": {
+    "project_name": "hw-maint-9065eb6c",
+    "random_seed": 424242
+  },
+  "timeline_basis": "window_relative_offset",
+  "maintenance_window": {
+    "base_tick": 10,
+    "length_ticks": 12
+  },
+  "probe_offsets": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "force": {
+    "armed": true
+  },
+  "runtime_policy": {
+    "max_parallel_migrations": 2,
+    "move_timeout_ticks": 3,
+    "threads": 4,
+    "queue_per_node": 8,
+    "checkpoint_version": 1,
+    "recall_rule": "lowest_priority_first"
+  },
+  "nodes": [
+    {
+      "name": "m-fast",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 0,
+      "used_millicores": 2000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "m-slot",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 0,
+      "used_millicores": 1000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "m-wave2",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 0,
+      "used_millicores": 1000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "m-block",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 0,
+      "used_millicores": 5000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "t-1",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 2000,
+      "used_millicores": 5000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "t-2",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 2000,
+      "used_millicores": 5000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "t-3",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 2000,
+      "used_millicores": 6000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "t-4",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 2000,
+      "used_millicores": 5000,
+      "lifecycle": "online"
+    },
+    {
+      "name": "t-over",
+      "capacity_millicores": 8000,
+      "watermark_basis_points": 7500,
+      "max_borrowed_millicores": 1000,
+      "used_millicores": 5000,
+      "lifecycle": "online"
+    }
+  ],
+  "instances": [
+    {
+      "id": "i-fast-1",
+      "node_name": "m-fast",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 1,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-slot-1",
+      "node_name": "m-slot",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 2,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-fast-2",
+      "node_name": "m-fast",
+      "request_millicores": 1000,
+      "rank_priority": 20,
+      "sequence": 3,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-wave2-1",
+      "node_name": "m-wave2",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 4,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-block-1",
+      "node_name": "m-block",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 101,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-block-2",
+      "node_name": "m-block",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 102,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-block-3",
+      "node_name": "m-block",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 103,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-block-4",
+      "node_name": "m-block",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 104,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "i-block-5",
+      "node_name": "m-block",
+      "request_millicores": 1000,
+      "rank_priority": 10,
+      "sequence": 105,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-1-1",
+      "node_name": "t-1",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 201,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-1-2",
+      "node_name": "t-1",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 202,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-1-3",
+      "node_name": "t-1",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 203,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-1-4",
+      "node_name": "t-1",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 204,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-1-5",
+      "node_name": "t-1",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 205,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-2-1",
+      "node_name": "t-2",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 201,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-2-2",
+      "node_name": "t-2",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 202,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-2-3",
+      "node_name": "t-2",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 203,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-2-4",
+      "node_name": "t-2",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 204,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-2-5",
+      "node_name": "t-2",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 205,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-4-1",
+      "node_name": "t-4",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 201,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-4-2",
+      "node_name": "t-4",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 202,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-4-3",
+      "node_name": "t-4",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 203,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-4-4",
+      "node_name": "t-4",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 204,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t-4-5",
+      "node_name": "t-4",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 205,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t3-1",
+      "node_name": "t-3",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 301,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t3-2",
+      "node_name": "t-3",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 302,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t3-3",
+      "node_name": "t-3",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 303,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t3-4",
+      "node_name": "t-3",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 304,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t3-five",
+      "node_name": "t-3",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 310,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-t3-degrade",
+      "node_name": "t-3",
+      "request_millicores": 1000,
+      "rank_priority": 1000,
+      "sequence": 399,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 1000
+    },
+    {
+      "id": "w-tover-1",
+      "node_name": "t-over",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 401,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-tover-2",
+      "node_name": "t-over",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 402,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-tover-3",
+      "node_name": "t-over",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 403,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-tover-4",
+      "node_name": "t-over",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 404,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    },
+    {
+      "id": "w-tover-5",
+      "node_name": "t-over",
+      "request_millicores": 1000,
+      "rank_priority": 500,
+      "sequence": 405,
+      "duration_ticks": 1,
+      "exempt_return": false,
+      "degrade_millicores": 0
+    }
+  ],
+  "wave_plan": {
+    "waves": [
+      {
+        "wave_no": 1,
+        "batches": [
+          {
+            "batch_name": "batch-wave1",
+            "node_names": [
+              "m-fast",
+              "m-slot"
+            ],
+            "priority": 10,
+            "order": 1,
+            "force_flag": true
+          }
+        ]
+      },
+      {
+        "wave_no": 2,
+        "batches": [
+          {
+            "batch_name": "batch-wave2",
+            "node_names": [
+              "m-wave2"
+            ],
+            "priority": 10,
+            "order": 2,
+            "force_flag": false
+          }
+        ]
+      },
+      {
+        "wave_no": 3,
+        "batches": [
+          {
+            "batch_name": "batch-wave3",
+            "node_names": [
+              "m-block"
+            ],
+            "priority": 10,
+            "order": 3,
+            "force_flag": false
+          }
+        ]
+      }
+    ]
+  },
+  "events": [
+    {
+      "id": "evt-mark-fast",
+      "node_name": "m-fast",
+      "type": "marked_pending",
+      "at_offset_ticks": 0
+    },
+    {
+      "id": "evt-mark-slot",
+      "node_name": "m-slot",
+      "type": "marked_pending",
+      "at_offset_ticks": 0
+    },
+    {
+      "id": "evt-mark-wave2",
+      "node_name": "m-wave2",
+      "type": "marked_pending",
+      "at_offset_ticks": 0
+    },
+    {
+      "id": "evt-mark-block",
+      "node_name": "m-block",
+      "type": "marked_pending",
+      "at_offset_ticks": 0
+    },
+    {
+      "id": "evt-return-wave2",
+      "node_name": "m-wave2",
+      "type": "returned",
+      "at_offset_ticks": 4
+    },
+    {
+      "id": "evt-return-fast",
+      "node_name": "m-fast",
+      "type": "returned",
+      "at_offset_ticks": 8
+    },
+    {
+      "id": "evt-return-slot",
+      "node_name": "m-slot",
+      "type": "returned",
+      "at_offset_ticks": 10
+    }
+  ],
+  "leases": [
+    {
+      "id": "loan-fast-t3",
+      "lot": "lot-m-fast",
+      "lender_name": "m-fast",
+      "borrower_name": "t-3",
+      "millicores": 2000,
+      "start_offset_ticks": 1,
+      "expiry_offset_ticks": 7,
+      "priority": 10,
+      "order": 1,
+      "recall_rule": "expiry_then_policy"
+    },
+    {
+      "id": "loan-slot-over",
+      "lot": "lot-m-slot",
+      "lender_name": "m-slot",
+      "borrower_name": "t-over",
+      "millicores": 1000,
+      "start_offset_ticks": 1,
+      "expiry_offset_ticks": 9,
+      "priority": 100,
+      "order": 1,
+      "recall_rule": "lowest_priority_first"
+    },
+    {
+      "id": "loan-wave2-over",
+      "lot": "lot-m-wave2",
+      "lender_name": "m-wave2",
+      "borrower_name": "t-over",
+      "millicores": 1000,
+      "start_offset_ticks": 3,
+      "expiry_offset_ticks": 10,
+      "priority": 200,
+      "order": 2,
+      "recall_rule": "lowest_priority_first"
+    }
+  ]
+}

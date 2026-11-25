@@ -1,0 +1,93 @@
+== time(utc) ==
+2026-11-25T23:31:09Z
+== go version ==
+go version go1.22.12 linux/amd64
+== go env ==
+https://proxy.golang.org,direct
+1
+linux
+amd64
+== gofmt ==
+clean
+== go vet ==
+pass
+== go test -count=1 ./... ==
+?   	maintenanceorchestrator/cmd/maintctl	[no test files]
+?   	maintenanceorchestrator/internal/app	[no test files]
+?   	maintenanceorchestrator/internal/domain	[no test files]
+?   	maintenanceorchestrator/internal/gate	[no test files]
+?   	maintenanceorchestrator/internal/generator	[no test files]
+?   	maintenanceorchestrator/internal/incremental	[no test files]
+?   	maintenanceorchestrator/internal/lease	[no test files]
+?   	maintenanceorchestrator/internal/parallel	[no test files]
+?   	maintenanceorchestrator/internal/schema	[no test files]
+?   	maintenanceorchestrator/internal/solver	[no test files]
+?   	maintenanceorchestrator/internal/truth	[no test files]
+ok  	maintenanceorchestrator	0.039s
+ok  	maintenanceorchestrator/internal/store	0.006s
+== go test -race -count=1 ./... ==
+?   	maintenanceorchestrator/cmd/maintctl	[no test files]
+?   	maintenanceorchestrator/internal/app	[no test files]
+?   	maintenanceorchestrator/internal/domain	[no test files]
+?   	maintenanceorchestrator/internal/gate	[no test files]
+?   	maintenanceorchestrator/internal/generator	[no test files]
+?   	maintenanceorchestrator/internal/incremental	[no test files]
+?   	maintenanceorchestrator/internal/lease	[no test files]
+?   	maintenanceorchestrator/internal/parallel	[no test files]
+?   	maintenanceorchestrator/internal/schema	[no test files]
+?   	maintenanceorchestrator/internal/solver	[no test files]
+?   	maintenanceorchestrator/internal/truth	[no test files]
+ok  	maintenanceorchestrator	1.303s
+ok  	maintenanceorchestrator/internal/store	1.047s
+== deterministic bytes ==
+MATCH project.v1.json
+MATCH project.v2.json
+MATCH project.v3.json
+MATCH truth.json
+== sample verify ==
+ok True
+summary {'project_id': 'hw-maint-9065eb6c', 'nodes': 9, 'instances': 35, 'waves': 5, 'migrations': 7, 'spillovers': 8, 'lease_recalls': 1, 'degradations': 1, 'gate_nodes_ready': 3, 'gate_nodes_blocked': 1}
+check three_schema_canonical_equivalence True
+check three_schema_analysis_equivalence True
+check truth_feasibility_ticks True
+check truth_waves True
+check truth_leases_and_degradation True
+check truth_return_gates True
+check parallel_feasibility_determinism True
+== recovery ==
+matches True wave 1 resumed 7 full 7
+== incremental lease ==
+feasibility:10 reused none
+wave:2 recomputed lease:loan-fast-t3
+lease:fast recomputed lease:loan-fast-t3
+gate:m-fast recomputed lease:loan-fast-t3
+unrelated reused none
+== fault codes ==
+negative_watermark E_INPUT_NEGATIVE_WATERMARK
+time_conflict E_TIME_BASE_CONFLICT
+unknown_field E_SCHEMA_UNKNOWN_FIELD_COMBO
+migration_window E_MIGRATION_EXCEEDS_WINDOW
+loan_order E_LEASE_EXPIRY_BEFORE_START
+loan_maintenance E_LEASE_TARGET_MAINTENANCE_NODE
+thread_budget E_THREAD_BUDGET_INVALID
+queue_budget E_QUEUE_BUDGET_INVALID
+backpressure_queue E_BACKPRESSURE_QUEUE_FULL
+backpressure_thread E_BACKPRESSURE_THREAD_EXHAUSTED
+double_booking E_LOAN_DOUBLE_BOOKED
+truncated_checkpoint E_CHECKPOINT_TRUNCATED
+version_mismatch E_STATE_VERSION_MISMATCH
+== post-additional-test race ==
+2026-11-25T23:32:23Z
+?   	maintenanceorchestrator/cmd/maintctl	[no test files]
+?   	maintenanceorchestrator/internal/app	[no test files]
+?   	maintenanceorchestrator/internal/domain	[no test files]
+?   	maintenanceorchestrator/internal/gate	[no test files]
+?   	maintenanceorchestrator/internal/generator	[no test files]
+?   	maintenanceorchestrator/internal/incremental	[no test files]
+?   	maintenanceorchestrator/internal/lease	[no test files]
+?   	maintenanceorchestrator/internal/parallel	[no test files]
+?   	maintenanceorchestrator/internal/schema	[no test files]
+?   	maintenanceorchestrator/internal/truth	[no test files]
+ok  	maintenanceorchestrator	1.283s
+ok  	maintenanceorchestrator/internal/solver	1.008s
+ok  	maintenanceorchestrator/internal/store	1.048s

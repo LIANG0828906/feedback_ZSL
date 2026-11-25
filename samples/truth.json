@@ -1,0 +1,1371 @@
+{
+  "schema_version": "construction-truth/v1",
+  "seed": 424242,
+  "project_id": "hw-maint-9065eb6c",
+  "constraint_ids": {
+    "borrow": "C-LEASE-BORROWER-CAP",
+    "capacity": "C-CAPACITY-HARD-LIMIT",
+    "duration": "C-MIGRATION-MAX-DURATION",
+    "gate": "C-RETURN-GATE",
+    "lease": "C-LEASE-CAPACITY-EXCLUSIVE",
+    "watermark": "C-WATERMARK-NONDISRUPTION",
+    "wave": "C-WAVE-CONCURRENCY-LIMIT",
+    "window": "C-MAINTENANCE-WINDOW"
+  },
+  "ticks": [
+    {
+      "tick": 10,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "active_lease_ids": null,
+      "borrowed_by_borrower": {},
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 11,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "active_lease_ids": [
+        "loan-fast-t3",
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-3": 2000,
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 12,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "active_lease_ids": [
+        "loan-fast-t3",
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-3": 2000,
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 13,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "active_lease_ids": [
+        "loan-fast-t3",
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-3": 2000,
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 14,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot"
+      ],
+      "active_lease_ids": [
+        "loan-fast-t3",
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-3": 2000,
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 15,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot"
+      ],
+      "active_lease_ids": [
+        "loan-fast-t3",
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-3": 2000,
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot"
+      ],
+      "active_lease_ids": [
+        "loan-fast-t3",
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-3": 2000,
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 17,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot"
+      ],
+      "active_lease_ids": [
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 18,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-slot"
+      ],
+      "active_lease_ids": [
+        "loan-slot-over"
+      ],
+      "borrowed_by_borrower": {
+        "t-over": 1000
+      },
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 19,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block",
+        "m-slot"
+      ],
+      "active_lease_ids": null,
+      "borrowed_by_borrower": {},
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 20,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block"
+      ],
+      "active_lease_ids": null,
+      "borrowed_by_borrower": {},
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 21,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block"
+      ],
+      "active_lease_ids": null,
+      "borrowed_by_borrower": {},
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 22,
+      "marked_nodes": [
+        "m-block",
+        "m-fast",
+        "m-slot",
+        "m-wave2"
+      ],
+      "event_pending_nodes": [
+        "m-block"
+      ],
+      "active_lease_ids": null,
+      "borrowed_by_borrower": {},
+      "feasibility": [
+        {
+          "node_id": "m-block",
+          "evacuable_count": 4,
+          "instances": [
+            {
+              "instance_id": "i-block-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-block-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            },
+            {
+              "instance_id": "i-block-3",
+              "movable": true,
+              "target_node_id": "t-4"
+            },
+            {
+              "instance_id": "i-block-4",
+              "movable": true,
+              "target_node_id": "t-over"
+            },
+            {
+              "instance_id": "i-block-5",
+              "movable": false,
+              "reason_code": "R_TARGET_WATERMARK_FULL",
+              "constraint_id": "C-WATERMARK-NONDISRUPTION"
+            }
+          ]
+        },
+        {
+          "node_id": "m-fast",
+          "evacuable_count": 2,
+          "instances": [
+            {
+              "instance_id": "i-fast-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            },
+            {
+              "instance_id": "i-fast-2",
+              "movable": true,
+              "target_node_id": "t-2"
+            }
+          ]
+        },
+        {
+          "node_id": "m-slot",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-slot-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        },
+        {
+          "node_id": "m-wave2",
+          "evacuable_count": 1,
+          "instances": [
+            {
+              "instance_id": "i-wave2-1",
+              "movable": true,
+              "target_node_id": "t-1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "waves": [
+    {
+      "wave": 1,
+      "start_tick": 10,
+      "end_tick": 11,
+      "migrations": [
+        {
+          "instance_id": "i-fast-1",
+          "target_node_id": "t-1",
+          "wave": 1,
+          "start_tick": 10,
+          "end_tick": 11
+        },
+        {
+          "instance_id": "i-slot-1",
+          "target_node_id": "t-2",
+          "wave": 1,
+          "start_tick": 10,
+          "end_tick": 11
+        }
+      ],
+      "spillovers": [
+        {
+          "instance_id": "i-fast-2",
+          "from_wave": 1,
+          "to_wave": 2,
+          "reason_code": "R_WAVE_CONCURRENCY_FULL"
+        }
+      ]
+    },
+    {
+      "wave": 2,
+      "start_tick": 11,
+      "end_tick": 12,
+      "migrations": [
+        {
+          "instance_id": "i-wave2-1",
+          "target_node_id": "t-4",
+          "wave": 2,
+          "start_tick": 11,
+          "end_tick": 12
+        },
+        {
+          "instance_id": "i-fast-2",
+          "target_node_id": "t-3",
+          "wave": 2,
+          "start_tick": 11,
+          "end_tick": 12
+        }
+      ],
+      "spillovers": null
+    },
+    {
+      "wave": 3,
+      "start_tick": 12,
+      "end_tick": 13,
+      "migrations": [
+        {
+          "instance_id": "i-block-1",
+          "target_node_id": "t-3",
+          "wave": 3,
+          "start_tick": 12,
+          "end_tick": 13
+        },
+        {
+          "instance_id": "i-block-2",
+          "target_node_id": "t-over",
+          "wave": 3,
+          "start_tick": 12,
+          "end_tick": 13
+        }
+      ],
+      "spillovers": [
+        {
+          "instance_id": "i-block-3",
+          "from_wave": 3,
+          "to_wave": 4,
+          "reason_code": "R_WAVE_CONCURRENCY_FULL"
+        },
+        {
+          "instance_id": "i-block-4",
+          "from_wave": 3,
+          "to_wave": 4,
+          "reason_code": "R_WAVE_CONCURRENCY_FULL"
+        },
+        {
+          "instance_id": "i-block-5",
+          "from_wave": 3,
+          "to_wave": 4,
+          "reason_code": "R_WAVE_CONCURRENCY_FULL"
+        }
+      ]
+    },
+    {
+      "wave": 4,
+      "start_tick": 13,
+      "end_tick": 14,
+      "migrations": [
+        {
+          "instance_id": "i-block-3",
+          "target_node_id": "t-over",
+          "wave": 4,
+          "start_tick": 13,
+          "end_tick": 14
+        }
+      ],
+      "spillovers": null
+    }
+  ],
+  "lease_events": [
+    {
+      "tick": 13,
+      "lease_id": "loan-wave2-over",
+      "kind": "recalled",
+      "reason_code": "R_BORROWER_LIMIT_RECALL"
+    },
+    {
+      "tick": 17,
+      "lease_id": "loan-fast-t3",
+      "kind": "expired"
+    },
+    {
+      "tick": 19,
+      "lease_id": "loan-slot-over",
+      "kind": "expired"
+    }
+  ],
+  "degradations": [
+    {
+      "tick": 17,
+      "node_id": "t-3",
+      "instance_ids": [
+        "w-t3-degrade"
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "tick": 22,
+      "node_id": "m-fast",
+      "schedulable": true,
+      "outstanding_lease_ids": [],
+      "pending_return_count": 0,
+      "not_evacuated_count": 0
+    },
+    {
+      "tick": 22,
+      "node_id": "m-slot",
+      "schedulable": true,
+      "outstanding_lease_ids": [],
+      "pending_return_count": 0,
+      "not_evacuated_count": 0
+    },
+    {
+      "tick": 22,
+      "node_id": "m-wave2",
+      "schedulable": true,
+      "outstanding_lease_ids": [],
+      "pending_return_count": 0,
+      "not_evacuated_count": 0
+    },
+    {
+      "tick": 22,
+      "node_id": "m-block",
+      "schedulable": false,
+      "outstanding_lease_ids": [],
+      "pending_return_count": 0,
+      "not_evacuated_count": 2
+    }
+  ]
+}
