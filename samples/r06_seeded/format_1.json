@@ -1,0 +1,242 @@
+{
+  "format": 1,
+  "replay_id": "r06_seeded",
+  "ms_per_turn": 3000,
+  "entities": [
+    {
+      "id": "f1",
+      "side": "blue",
+      "max_hp": 120,
+      "max_mp": 120,
+      "initial_mp": 60
+    },
+    {
+      "id": "f2",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 40
+    },
+    {
+      "id": "g1",
+      "side": "red",
+      "max_hp": 140,
+      "max_mp": 80
+    },
+    {
+      "id": "g2",
+      "side": "red",
+      "max_hp": 90,
+      "max_mp": 80
+    }
+  ],
+  "flag_defs": [
+    {
+      "id": "flagdef:fuzzflag",
+      "name": "fuzzflag",
+      "value": true,
+      "priority": 0
+    }
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at": 1,
+      "kind": "gain",
+      "chain": [
+        "f2"
+      ],
+      "targets": [
+        "f2"
+      ],
+      "amount": 13,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at": 2,
+      "kind": "heal",
+      "chain": [
+        "g2"
+      ],
+      "targets": [
+        "g2"
+      ],
+      "amount": 29,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at": 3,
+      "kind": "spend",
+      "chain": [
+        "f1"
+      ],
+      "targets": [
+        "f1"
+      ],
+      "amount": 23,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at": 3,
+      "kind": "damage",
+      "chain": [
+        "f2"
+      ],
+      "targets": [
+        "g1"
+      ],
+      "amount": 11,
+      "cond_flag": "fuzzflag",
+      "cond_want": false,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at": 4,
+      "kind": "heal",
+      "chain": [
+        "g2"
+      ],
+      "targets": [
+        "g1"
+      ],
+      "amount": 5,
+      "cond_flag": "fuzzflag",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e006",
+      "at": 4,
+      "kind": "gain",
+      "chain": [
+        "f1"
+      ],
+      "targets": [
+        "f1"
+      ],
+      "amount": 15,
+      "priority": 0
+    },
+    {
+      "id": "e007",
+      "at": 5,
+      "kind": "spend",
+      "chain": [
+        "f1"
+      ],
+      "targets": [
+        "f1"
+      ],
+      "amount": 8,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at": 6,
+      "kind": "damage",
+      "chain": [
+        "f2"
+      ],
+      "targets": [
+        "g1"
+      ],
+      "amount": 27,
+      "priority": 0
+    },
+    {
+      "id": "e009",
+      "at": 7,
+      "kind": "heal",
+      "chain": [
+        "g2"
+      ],
+      "targets": [
+        "g2"
+      ],
+      "amount": 18,
+      "priority": 0
+    },
+    {
+      "id": "e010",
+      "at": 7,
+      "kind": "damage",
+      "chain": [
+        "f1"
+      ],
+      "targets": [
+        "g2"
+      ],
+      "amount": 6,
+      "priority": 0
+    },
+    {
+      "id": "e011",
+      "at": 8,
+      "kind": "gain",
+      "chain": [
+        "f1"
+      ],
+      "targets": [
+        "f1"
+      ],
+      "amount": 25,
+      "priority": 0
+    },
+    {
+      "id": "e012",
+      "at": 9,
+      "kind": "spend",
+      "chain": [
+        "f2"
+      ],
+      "targets": [
+        "f2"
+      ],
+      "amount": 8,
+      "priority": 0
+    },
+    {
+      "id": "e013",
+      "at": 9,
+      "kind": "damage",
+      "chain": [
+        "f1"
+      ],
+      "targets": [
+        "g1"
+      ],
+      "amount": 18,
+      "priority": 0
+    },
+    {
+      "id": "e014",
+      "at": 11,
+      "kind": "damage",
+      "chain": [
+        "f1"
+      ],
+      "targets": [
+        "g1"
+      ],
+      "amount": 1000,
+      "priority": 0
+    },
+    {
+      "id": "e015",
+      "at": 12,
+      "kind": "damage",
+      "chain": [
+        "f2"
+      ],
+      "targets": [
+        "g2"
+      ],
+      "amount": 1000,
+      "priority": 0
+    }
+  ]
+}

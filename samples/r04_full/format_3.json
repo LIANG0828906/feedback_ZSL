@@ -1,0 +1,170 @@
+{
+  "format": 3,
+  "replay_id": "r04_full",
+  "entities": [
+    {
+      "id": "p1",
+      "side": "blue",
+      "max_hp": 110,
+      "max_mp": 100,
+      "initial_mp": 50
+    },
+    {
+      "id": "p2",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 80,
+      "initial_mp": 30
+    },
+    {
+      "id": "q1",
+      "side": "red",
+      "max_hp": 130,
+      "max_mp": 60
+    },
+    {
+      "id": "q2",
+      "side": "red",
+      "max_hp": 90,
+      "max_mp": 60
+    }
+  ],
+  "flag_defs": [
+    {
+      "id": "flagdef:enraged",
+      "name": "enraged",
+      "value": true,
+      "priority": 0
+    }
+  ],
+  "sync_points": [
+    3000,
+    15000,
+    21000
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at_ms": 0,
+      "kind": "damage",
+      "caster_seq": [
+        "p1"
+      ],
+      "target_seq": [
+        "q1"
+      ],
+      "amount": 15,
+      "skill": "slash",
+      "cooldown_ms": 3000,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at_ms": 0,
+      "kind": "damage",
+      "caster_seq": [
+        "p2"
+      ],
+      "target_seq": [
+        "q2"
+      ],
+      "amount": 15,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at_ms": 6000,
+      "kind": "damage",
+      "caster_seq": [
+        "p1"
+      ],
+      "target_seq": [
+        "q1"
+      ],
+      "amount": 40,
+      "cond_flag": "enraged",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at_ms": 6000,
+      "kind": "damage",
+      "caster_seq": [
+        "p2"
+      ],
+      "target_seq": [
+        "q2"
+      ],
+      "amount": 40,
+      "cond_flag": "enraged",
+      "cond_want": false,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at_ms": 12000,
+      "kind": "damage",
+      "caster_seq": [
+        "p1"
+      ],
+      "target_seq": [
+        "q1"
+      ],
+      "amount": 30,
+      "priority": 9
+    },
+    {
+      "id": "e006",
+      "at_ms": 12000,
+      "kind": "damage",
+      "caster_seq": [
+        "p2"
+      ],
+      "target_seq": [
+        "q1"
+      ],
+      "amount": 30,
+      "priority": 2
+    },
+    {
+      "id": "e007",
+      "at_ms": 18000,
+      "kind": "gain",
+      "caster_seq": [
+        "p1"
+      ],
+      "target_seq": [
+        "p2"
+      ],
+      "amount": 20,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at_ms": 18000,
+      "kind": "damage",
+      "caster_seq": [
+        "p1"
+      ],
+      "target_seq": [
+        "q1"
+      ],
+      "amount": 300,
+      "priority": 0
+    },
+    {
+      "id": "e009",
+      "at_ms": 21000,
+      "kind": "damage",
+      "caster_seq": [
+        "p2"
+      ],
+      "target_seq": [
+        "q2"
+      ],
+      "amount": 300,
+      "priority": 0
+    }
+  ]
+}

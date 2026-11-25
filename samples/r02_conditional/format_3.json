@@ -1,0 +1,165 @@
+{
+  "format": 3,
+  "replay_id": "r02_conditional",
+  "entities": [
+    {
+      "id": "a1",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 40
+    },
+    {
+      "id": "a2",
+      "side": "blue",
+      "max_hp": 90,
+      "max_mp": 60,
+      "initial_mp": 60
+    },
+    {
+      "id": "b1",
+      "side": "red",
+      "max_hp": 120,
+      "max_mp": 50
+    },
+    {
+      "id": "b2",
+      "side": "red",
+      "max_hp": 80,
+      "max_mp": 80
+    }
+  ],
+  "flag_defs": [
+    {
+      "id": "flagdef:ult_unlocked",
+      "name": "ult_unlocked",
+      "value": true,
+      "priority": 0
+    },
+    {
+      "id": "flagdef:weather_rain",
+      "name": "weather_rain",
+      "value": false,
+      "priority": 0
+    }
+  ],
+  "sync_points": [
+    12000
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at_ms": 0,
+      "kind": "damage",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 10,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at_ms": 3000,
+      "kind": "damage",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 50,
+      "cond_flag": "ult_unlocked",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at_ms": 6000,
+      "kind": "damage",
+      "caster_seq": [
+        "a2"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 999,
+      "cond_flag": "weather_rain",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at_ms": 9000,
+      "kind": "heal",
+      "caster_seq": [
+        "b2"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 30,
+      "cond_flag": "ult_unlocked",
+      "cond_want": false,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at_ms": 12000,
+      "kind": "gain",
+      "caster_seq": [
+        "a2"
+      ],
+      "target_seq": [
+        "a2"
+      ],
+      "amount": 25,
+      "cond_flag": "weather_rain",
+      "cond_want": false,
+      "priority": 0
+    },
+    {
+      "id": "e006",
+      "at_ms": 15000,
+      "kind": "spend",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "a1"
+      ],
+      "amount": 10,
+      "cond_flag": "ult_unlocked",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e007",
+      "at_ms": 18000,
+      "kind": "damage",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 200,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at_ms": 21000,
+      "kind": "damage",
+      "caster_seq": [
+        "a2"
+      ],
+      "target_seq": [
+        "b2"
+      ],
+      "amount": 200,
+      "priority": 0
+    }
+  ]
+}

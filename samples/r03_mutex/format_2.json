@@ -1,0 +1,141 @@
+{
+  "format": 2,
+  "replay_id": "r03_mutex",
+  "entities": [
+    {
+      "id": "a1",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 40
+    },
+    {
+      "id": "a2",
+      "side": "blue",
+      "max_hp": 90,
+      "max_mp": 60,
+      "initial_mp": 60
+    },
+    {
+      "id": "b1",
+      "side": "red",
+      "max_hp": 120,
+      "max_mp": 50
+    },
+    {
+      "id": "b2",
+      "side": "red",
+      "max_hp": 80,
+      "max_mp": 80
+    }
+  ],
+  "sync_points": [
+    15000
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at": 0,
+      "kind": "damage",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "a1"
+      ],
+      "amount": 10,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at": 3000,
+      "kind": "damage",
+      "chain": [
+        "b2"
+      ],
+      "casters": [
+        "a2"
+      ],
+      "amount": 10,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at": 9000,
+      "kind": "damage",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "a1"
+      ],
+      "amount": 50,
+      "priority": 10
+    },
+    {
+      "id": "e004",
+      "at": 9000,
+      "kind": "damage",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "a2"
+      ],
+      "amount": 50,
+      "priority": 1
+    },
+    {
+      "id": "e005",
+      "at": 15000,
+      "kind": "heal",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "b2"
+      ],
+      "amount": 10,
+      "priority": 0
+    },
+    {
+      "id": "e006",
+      "at": 15000,
+      "kind": "heal",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "b2"
+      ],
+      "amount": 999,
+      "priority": 0
+    },
+    {
+      "id": "e007",
+      "at": 21000,
+      "kind": "damage",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "a1"
+      ],
+      "amount": 200,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at": 24000,
+      "kind": "damage",
+      "chain": [
+        "b2"
+      ],
+      "casters": [
+        "a2"
+      ],
+      "amount": 200,
+      "priority": 0
+    }
+  ]
+}

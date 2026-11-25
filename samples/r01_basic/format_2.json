@@ -1,0 +1,161 @@
+{
+  "format": 2,
+  "replay_id": "r01_basic",
+  "entities": [
+    {
+      "id": "a1",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 40
+    },
+    {
+      "id": "a2",
+      "side": "blue",
+      "max_hp": 90,
+      "max_mp": 60,
+      "initial_mp": 60
+    },
+    {
+      "id": "b1",
+      "side": "red",
+      "max_hp": 120,
+      "max_mp": 50
+    },
+    {
+      "id": "b2",
+      "side": "red",
+      "max_hp": 80,
+      "max_mp": 80
+    }
+  ],
+  "sync_points": [
+    9000,
+    21000
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at": 0,
+      "kind": "damage",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "a1"
+      ],
+      "amount": 20,
+      "skill": "strike",
+      "cooldown_ms": 3000,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at": 3000,
+      "kind": "heal",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "b2"
+      ],
+      "amount": 15,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at": 3000,
+      "kind": "gain",
+      "chain": [
+        "a1"
+      ],
+      "casters": [
+        "a1"
+      ],
+      "amount": 30,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at": 6000,
+      "kind": "spend",
+      "chain": [
+        "a1"
+      ],
+      "casters": [
+        "a2"
+      ],
+      "amount": 25,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at": 9000,
+      "kind": "damage",
+      "chain": [
+        "b2"
+      ],
+      "casters": [
+        "a1"
+      ],
+      "amount": 45,
+      "skill": "fire",
+      "cooldown_ms": 6000,
+      "priority": 0
+    },
+    {
+      "id": "e006",
+      "at": 12000,
+      "kind": "heal",
+      "chain": [
+        "b2"
+      ],
+      "casters": [
+        "b2"
+      ],
+      "amount": 20,
+      "priority": 0
+    },
+    {
+      "id": "e007",
+      "at": 15000,
+      "kind": "damage",
+      "chain": [
+        "a2"
+      ],
+      "casters": [
+        "b1"
+      ],
+      "amount": 40,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at": 18000,
+      "kind": "damage",
+      "chain": [
+        "b1"
+      ],
+      "casters": [
+        "a1"
+      ],
+      "amount": 200,
+      "skill": "execute",
+      "cooldown_ms": 9000,
+      "priority": 0
+    },
+    {
+      "id": "e009",
+      "at": 21000,
+      "kind": "damage",
+      "chain": [
+        "b2"
+      ],
+      "casters": [
+        "a2"
+      ],
+      "amount": 200,
+      "priority": 0
+    }
+  ]
+}

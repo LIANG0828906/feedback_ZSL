@@ -11,3 +11,9 @@ node_modules/
 .venv/
 venv/
 __pycache__/
+
+# replay audit runtime artifacts (keep reports/logs, drop sqlite binaries)
+/artifacts/checkpoint-dbs/
+*.db
+*.db-wal
+*.db-shm

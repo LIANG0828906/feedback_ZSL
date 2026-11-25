@@ -1,0 +1,163 @@
+{
+  "format": 1,
+  "replay_id": "r02_conditional",
+  "ms_per_turn": 3000,
+  "entities": [
+    {
+      "id": "a1",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 40
+    },
+    {
+      "id": "a2",
+      "side": "blue",
+      "max_hp": 90,
+      "max_mp": 60,
+      "initial_mp": 60
+    },
+    {
+      "id": "b1",
+      "side": "red",
+      "max_hp": 120,
+      "max_mp": 50
+    },
+    {
+      "id": "b2",
+      "side": "red",
+      "max_hp": 80,
+      "max_mp": 80
+    }
+  ],
+  "flag_defs": [
+    {
+      "id": "flagdef:ult_unlocked",
+      "name": "ult_unlocked",
+      "value": true,
+      "priority": 0
+    },
+    {
+      "id": "flagdef:weather_rain",
+      "name": "weather_rain",
+      "value": false,
+      "priority": 0
+    }
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at": 1,
+      "kind": "damage",
+      "chain": [
+        "a1"
+      ],
+      "targets": [
+        "b1"
+      ],
+      "amount": 10,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at": 2,
+      "kind": "damage",
+      "chain": [
+        "a1"
+      ],
+      "targets": [
+        "b1"
+      ],
+      "amount": 50,
+      "cond_flag": "ult_unlocked",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at": 3,
+      "kind": "damage",
+      "chain": [
+        "a2"
+      ],
+      "targets": [
+        "b1"
+      ],
+      "amount": 999,
+      "cond_flag": "weather_rain",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at": 4,
+      "kind": "heal",
+      "chain": [
+        "b2"
+      ],
+      "targets": [
+        "b1"
+      ],
+      "amount": 30,
+      "cond_flag": "ult_unlocked",
+      "cond_want": false,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at": 5,
+      "kind": "gain",
+      "chain": [
+        "a2"
+      ],
+      "targets": [
+        "a2"
+      ],
+      "amount": 25,
+      "cond_flag": "weather_rain",
+      "cond_want": false,
+      "priority": 0
+    },
+    {
+      "id": "e006",
+      "at": 6,
+      "kind": "spend",
+      "chain": [
+        "a1"
+      ],
+      "targets": [
+        "a1"
+      ],
+      "amount": 10,
+      "cond_flag": "ult_unlocked",
+      "cond_want": true,
+      "priority": 0
+    },
+    {
+      "id": "e007",
+      "at": 7,
+      "kind": "damage",
+      "chain": [
+        "a1"
+      ],
+      "targets": [
+        "b1"
+      ],
+      "amount": 200,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at": 8,
+      "kind": "damage",
+      "chain": [
+        "a2"
+      ],
+      "targets": [
+        "b2"
+      ],
+      "amount": 200,
+      "priority": 0
+    }
+  ]
+}

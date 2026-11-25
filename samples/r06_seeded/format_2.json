@@ -1,0 +1,235 @@
+{
+  "format": 2,
+  "replay_id": "r06_seeded",
+  "entities": [
+    {
+      "id": "f1",
+      "side": "blue",
+      "max_hp": 120,
+      "max_mp": 120,
+      "initial_mp": 60
+    },
+    {
+      "id": "f2",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 40
+    },
+    {
+      "id": "g1",
+      "side": "red",
+      "max_hp": 140,
+      "max_mp": 80
+    },
+    {
+      "id": "g2",
+      "side": "red",
+      "max_hp": 90,
+      "max_mp": 80
+    }
+  ],
+  "sync_points": [
+    6000,
+    15000,
+    24000,
+    33000
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at": 0,
+      "kind": "gain",
+      "chain": [
+        "f2"
+      ],
+      "casters": [
+        "f2"
+      ],
+      "amount": 13,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at": 3000,
+      "kind": "heal",
+      "chain": [
+        "g2"
+      ],
+      "casters": [
+        "g2"
+      ],
+      "amount": 29,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at": 6000,
+      "kind": "spend",
+      "chain": [
+        "f1"
+      ],
+      "casters": [
+        "f1"
+      ],
+      "amount": 23,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at": 6000,
+      "kind": "damage",
+      "chain": [
+        "g1"
+      ],
+      "casters": [
+        "f2"
+      ],
+      "amount": 11,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at": 9000,
+      "kind": "heal",
+      "chain": [
+        "g1"
+      ],
+      "casters": [
+        "g2"
+      ],
+      "amount": 5,
+      "priority": 0
+    },
+    {
+      "id": "e006",
+      "at": 9000,
+      "kind": "gain",
+      "chain": [
+        "f1"
+      ],
+      "casters": [
+        "f1"
+      ],
+      "amount": 15,
+      "priority": 0
+    },
+    {
+      "id": "e007",
+      "at": 12000,
+      "kind": "spend",
+      "chain": [
+        "f1"
+      ],
+      "casters": [
+        "f1"
+      ],
+      "amount": 8,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at": 15000,
+      "kind": "damage",
+      "chain": [
+        "g1"
+      ],
+      "casters": [
+        "f2"
+      ],
+      "amount": 27,
+      "priority": 0
+    },
+    {
+      "id": "e009",
+      "at": 18000,
+      "kind": "heal",
+      "chain": [
+        "g2"
+      ],
+      "casters": [
+        "g2"
+      ],
+      "amount": 18,
+      "priority": 0
+    },
+    {
+      "id": "e010",
+      "at": 18000,
+      "kind": "damage",
+      "chain": [
+        "g2"
+      ],
+      "casters": [
+        "f1"
+      ],
+      "amount": 6,
+      "priority": 0
+    },
+    {
+      "id": "e011",
+      "at": 21000,
+      "kind": "gain",
+      "chain": [
+        "f1"
+      ],
+      "casters": [
+        "f1"
+      ],
+      "amount": 25,
+      "priority": 0
+    },
+    {
+      "id": "e012",
+      "at": 24000,
+      "kind": "spend",
+      "chain": [
+        "f2"
+      ],
+      "casters": [
+        "f2"
+      ],
+      "amount": 8,
+      "priority": 0
+    },
+    {
+      "id": "e013",
+      "at": 24000,
+      "kind": "damage",
+      "chain": [
+        "g1"
+      ],
+      "casters": [
+        "f1"
+      ],
+      "amount": 18,
+      "priority": 0
+    },
+    {
+      "id": "e014",
+      "at": 30000,
+      "kind": "damage",
+      "chain": [
+        "g1"
+      ],
+      "casters": [
+        "f1"
+      ],
+      "amount": 1000,
+      "priority": 0
+    },
+    {
+      "id": "e015",
+      "at": 33000,
+      "kind": "damage",
+      "chain": [
+        "g2"
+      ],
+      "casters": [
+        "f2"
+      ],
+      "amount": 1000,
+      "priority": 0
+    }
+  ]
+}

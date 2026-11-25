@@ -1,0 +1,158 @@
+{
+  "format": 2,
+  "replay_id": "r04_full",
+  "entities": [
+    {
+      "id": "p1",
+      "side": "blue",
+      "max_hp": 110,
+      "max_mp": 100,
+      "initial_mp": 50
+    },
+    {
+      "id": "p2",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 80,
+      "initial_mp": 30
+    },
+    {
+      "id": "q1",
+      "side": "red",
+      "max_hp": 130,
+      "max_mp": 60
+    },
+    {
+      "id": "q2",
+      "side": "red",
+      "max_hp": 90,
+      "max_mp": 60
+    }
+  ],
+  "sync_points": [
+    3000,
+    15000,
+    21000
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at": 0,
+      "kind": "damage",
+      "chain": [
+        "q1"
+      ],
+      "casters": [
+        "p1"
+      ],
+      "amount": 15,
+      "skill": "slash",
+      "cooldown_ms": 3000,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at": 0,
+      "kind": "damage",
+      "chain": [
+        "q2"
+      ],
+      "casters": [
+        "p2"
+      ],
+      "amount": 15,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at": 6000,
+      "kind": "damage",
+      "chain": [
+        "q1"
+      ],
+      "casters": [
+        "p1"
+      ],
+      "amount": 40,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at": 6000,
+      "kind": "damage",
+      "chain": [
+        "q2"
+      ],
+      "casters": [
+        "p2"
+      ],
+      "amount": 40,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at": 12000,
+      "kind": "damage",
+      "chain": [
+        "q1"
+      ],
+      "casters": [
+        "p1"
+      ],
+      "amount": 30,
+      "priority": 9
+    },
+    {
+      "id": "e006",
+      "at": 12000,
+      "kind": "damage",
+      "chain": [
+        "q1"
+      ],
+      "casters": [
+        "p2"
+      ],
+      "amount": 30,
+      "priority": 2
+    },
+    {
+      "id": "e007",
+      "at": 18000,
+      "kind": "gain",
+      "chain": [
+        "p2"
+      ],
+      "casters": [
+        "p1"
+      ],
+      "amount": 20,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at": 18000,
+      "kind": "damage",
+      "chain": [
+        "q1"
+      ],
+      "casters": [
+        "p1"
+      ],
+      "amount": 300,
+      "priority": 0
+    },
+    {
+      "id": "e009",
+      "at": 21000,
+      "kind": "damage",
+      "chain": [
+        "q2"
+      ],
+      "casters": [
+        "p2"
+      ],
+      "amount": 300,
+      "priority": 0
+    }
+  ]
+}

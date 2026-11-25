@@ -1,0 +1,110 @@
+{
+  "format": 1,
+  "replay_id": "r05_chain",
+  "ms_per_turn": 3000,
+  "entities": [
+    {
+      "id": "a1",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 50
+    },
+    {
+      "id": "a2",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 50
+    },
+    {
+      "id": "b1",
+      "side": "red",
+      "max_hp": 100,
+      "max_mp": 100
+    },
+    {
+      "id": "b2",
+      "side": "red",
+      "max_hp": 100,
+      "max_mp": 100
+    }
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at": 1,
+      "kind": "damage",
+      "chain": [
+        "a1",
+        "a2"
+      ],
+      "targets": [
+        "b1",
+        "b2"
+      ],
+      "amount": 10,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at": 2,
+      "kind": "gain",
+      "chain": [
+        "a1",
+        "a2"
+      ],
+      "targets": [
+        "a1",
+        "a2"
+      ],
+      "amount": 20,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at": 3,
+      "kind": "spend",
+      "chain": [
+        "a1",
+        "a2"
+      ],
+      "targets": [
+        "a1",
+        "a2"
+      ],
+      "amount": 15,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at": 4,
+      "kind": "heal",
+      "chain": [
+        "b1",
+        "b2"
+      ],
+      "targets": [
+        "b1",
+        "b2"
+      ],
+      "amount": 5,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at": 6,
+      "kind": "damage",
+      "chain": [
+        "a1",
+        "a2"
+      ],
+      "targets": [
+        "b1",
+        "b2"
+      ],
+      "amount": 300,
+      "priority": 0
+    }
+  ]
+}

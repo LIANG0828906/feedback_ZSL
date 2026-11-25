@@ -1,0 +1,161 @@
+{
+  "format": 3,
+  "replay_id": "r01_basic",
+  "entities": [
+    {
+      "id": "a1",
+      "side": "blue",
+      "max_hp": 100,
+      "max_mp": 100,
+      "initial_mp": 40
+    },
+    {
+      "id": "a2",
+      "side": "blue",
+      "max_hp": 90,
+      "max_mp": 60,
+      "initial_mp": 60
+    },
+    {
+      "id": "b1",
+      "side": "red",
+      "max_hp": 120,
+      "max_mp": 50
+    },
+    {
+      "id": "b2",
+      "side": "red",
+      "max_hp": 80,
+      "max_mp": 80
+    }
+  ],
+  "sync_points": [
+    9000,
+    21000
+  ],
+  "events": [
+    {
+      "id": "e001",
+      "at_ms": 0,
+      "kind": "damage",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 20,
+      "skill": "strike",
+      "cooldown_ms": 3000,
+      "priority": 0
+    },
+    {
+      "id": "e002",
+      "at_ms": 3000,
+      "kind": "heal",
+      "caster_seq": [
+        "b2"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 15,
+      "priority": 0
+    },
+    {
+      "id": "e003",
+      "at_ms": 3000,
+      "kind": "gain",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "a1"
+      ],
+      "amount": 30,
+      "priority": 0
+    },
+    {
+      "id": "e004",
+      "at_ms": 6000,
+      "kind": "spend",
+      "caster_seq": [
+        "a2"
+      ],
+      "target_seq": [
+        "a1"
+      ],
+      "amount": 25,
+      "priority": 0
+    },
+    {
+      "id": "e005",
+      "at_ms": 9000,
+      "kind": "damage",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "b2"
+      ],
+      "amount": 45,
+      "skill": "fire",
+      "cooldown_ms": 6000,
+      "priority": 0
+    },
+    {
+      "id": "e006",
+      "at_ms": 12000,
+      "kind": "heal",
+      "caster_seq": [
+        "b2"
+      ],
+      "target_seq": [
+        "b2"
+      ],
+      "amount": 20,
+      "priority": 0
+    },
+    {
+      "id": "e007",
+      "at_ms": 15000,
+      "kind": "damage",
+      "caster_seq": [
+        "b1"
+      ],
+      "target_seq": [
+        "a2"
+      ],
+      "amount": 40,
+      "priority": 0
+    },
+    {
+      "id": "e008",
+      "at_ms": 18000,
+      "kind": "damage",
+      "caster_seq": [
+        "a1"
+      ],
+      "target_seq": [
+        "b1"
+      ],
+      "amount": 200,
+      "skill": "execute",
+      "cooldown_ms": 9000,
+      "priority": 0
+    },
+    {
+      "id": "e009",
+      "at_ms": 21000,
+      "kind": "damage",
+      "caster_seq": [
+        "a2"
+      ],
+      "target_seq": [
+        "b2"
+      ],
+      "amount": 200,
+      "priority": 0
+    }
+  ]
+}
