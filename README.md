@@ -1,22 +1,177 @@
-团队新近接手了一批美术贴图的通道转换维护工作，原先的拼接脚本已无人能讲清，于是决定在 Windows 上用一个内部工具重建这条链路，工作区目前没有既有代码。本地确定性样本生成器按固定种子产出一批源图像与一份通道转换计划清单：源图像分辨率从数百到数千像素、位深为 8 位或 16 位、通道布局为 RGBA 或 BGRA，图像内嵌已知色块、渐变带与 alpha 台阶区域；转换计划条目声明目标位深、通道置换顺序、通道增减时的填充或丢弃策略以及 alpha 处理方式。计划本身以三个格式版本存在，版本差异体现在字段命名、通道布局表达方式、alpha 处理约定以及位深与填充来源的组织上。样本附带解析真值，给出若干采样点在每个转换条目后的期望像素值、被丢弃通道标识与最终量化误差上界，真值仅来自生成器构造。交付可集成的 Go 领域组件与完整本地示例，转换需可中断续跑且结果可核对。
+# channelpipe：美术贴图通道转换领域组件与本地验收示例
 
-任务环境与准备：
-Windows 10 或 11 开发机，安装 Go 1.22 或以上并确认 go env 正常，PATH 中可用。
-采用 Go 标准库实现图像与计划读写、并行调度与本地示例；引入纯 Go 的 SQLite 驱动（如 modernc.org/sqlite），用 go get 安装并写入 go.mod，无需 CGO 与本地数据库服务。
-样本生成器随组件交付，按固定种子在本地生成源图像、三版本转换计划与真值清单，不依赖外部素材、账号或网络。
-运行前在临时目录准备输出与 SQLite 数据文件路径，确保工作区可写；示例以命令行入口运行，最终比对结果与验证报告以文件形式输出。
+纯 Go 1.22+ 实现，SQLite 使用纯 Go 驱动 `modernc.org/sqlite`，不需要 CGO、Docker、外部素材或网络服务。样本生成器以固定种子生成本地图像、三版本计划和真值；命令行示例会完成加载、转换、检查点、中断续跑、增量失效、三路径比对和独立验证。
 
-业务要求：
-1. 实现转换计划的多版本统一加载器：读取至少三个格式版本的计划描述，各版本在字段命名、通道布局表达、alpha 处理约定与位深填充来源组织上互不相同；加载后映射为内部转换模型并保留源版本标识，未知版本号返回 E_VERSION 并指出版本字段，必填字段缺失返回 E_SCHEMA 并给出字段路径。
-2. 实现版本升降级的显式转换规则与可追溯痕迹：低版本升级时按声明默认值补齐缺失条目字段，每次补齐记录字段路径、旧值与来源默认值；内部模型导出到低版本时对无法表达的条目生成 E_LOSSY 损失清单并记录降级处置方式；导出产物须能被对应版本加载器重新读回并恢复相同转换语义。
-3. 实现跨版本位深与通道布局表达的整型换算及往返一致：位深与通道增减在各版本间的表达差异须用整型运算按声明取舍方向换算并统一为内部形式，禁止浮点累积；同一转换条目经高版本到低版本再回到高版本后，目标位深、通道置换顺序、填充或丢弃策略与 alpha 处理语义须逐项保持等价。
-4. 实现单个转换条目的确定性通道重排与位深量化核心：按通道置换与通道数变化把源通道映射到目标通道，按填充约定补齐新增通道或记录被丢弃通道标识，按目标位深与声明取舍方向做量化；要求各采样点像素值落在目标位深取值范围内，且与真值中该条目后的期望像素值偏差落在声明容差内。
-5. 实现条目序列的阶段依赖图与内容哈希缓存键：缓存键由输入区域内容哈希、条目序号、条目参数值与上游缓存键共同决定，并显式记录条目之间以及条目与实际覆盖像素区域之间的依赖；当编辑某条目的置换、位深、填充约定或调整条目顺序时，仅将依赖该条目的下游阶段及其实际覆盖像素区域标记失效，并输出含条目序号、失效像素区域与失效原因的清单。
-6. 实现分块与条目双层状态机与基于 SQLite 的原子检查点：每个条目在每个图像分块上只能沿待处理、处理中、已提交、失败合法迁移，非法迁移返回 E_STATE 并保持原状态，进度以已提交分块数与总分块数表示；每提交一个分块把该分块在各条目上的输出、缓存键、计划内容指纹、参数版本与算法版本原子且串行写入 SQLite，重启时任一哈希或版本不匹配须整体作废快照并全量重算，不得部分混用旧结果。
-7. 保证实时增量、断点恢复与一次性全量重算三条路径逐像素一致：三者对同一源图像、同一编辑序列与同一参数须产出相同最终像素、相同逐条目中间结果摘要与相同分块提交序列，并提供自动比对功能定位首个不一致像素坐标、条目序号与差异字段名；比对不一致时返回 E_DIFF 并保留两侧摘要供复核。
-8. 实现并发调度、资源边界与独立验证工具：分块转换可在工作线程池并行推进，须限制最大并行度与每线程像素缓冲上限，缓冲耗尽时阻塞排队并记录排队原因与等待时长而非静默丢弃，共享检查点写入串行且提交顺序稳定；独立验证工具仅从 SQLite 持久化的分块结果、计划清单与真值指纹重新计算最终图像与采样点偏差，不调用转换主路径，发现不一致时输出首个违规像素坐标、条目序号与字段名；单分块内部异常须置该分块为失败并允许重试且不污染其他分块与已提交结果。
+## 快速运行（Windows PowerShell）
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+```powershell
+go version
+go env GOPATH GOMODCACHE CGO_ENABLED
+go mod download
+go test ./...
 
-验收：
-使用本地样本验证多版本计划加载与三路径逐像素一致，并核对断点续跑与异常隔离结果。
+$out = Join-Path $env:TEMP "channelpipe-demo"
+go run ./cmd/channelpipe demo --out $out --workers 2
+
+go run ./cmd/verify `
+  --sample (Join-Path $out "sample") `
+  --db (Join-Path $out "checkpoint-main.sqlite") `
+  --out (Join-Path $out "standalone-verify.json")
+
+Get-Content (Join-Path $out "validation-report.md")
+```
+
+不传 `--out` 时，`demo` 会在系统临时目录创建 `channelpipe-demo-*`。Linux/macOS 使用相同命令，把 PowerShell 路径替换为 `"$(mktemp -d)/demo"` 即可。
+
+仅生成样本：
+
+```bash
+go run ./cmd/channelpipe generate --out ./artifacts/sample
+```
+
+## 实际验证结果
+
+最近一次标准样本和测试结果记录在 `VALIDATION.md`，原始命令输出保存在 `reports/`。当前结果：
+
+- `go test ./... -count=1`：PASS。
+- `go test -race ./internal/acceptance -count=1`：PASS。
+- `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build ./...`：PASS。
+- 标准样本：3 张图，覆盖 `320x240 RGBA8`、`1024x512 BGRA16`、`1280x720 RGBA16`。
+- 真值：36 个采样点、108 个条目采样；独立工具扫描 4,568,064 个条目阶段像素。
+- 实时增量、断点续跑、一次性全量三条路径：5 个修订版的像素、阶段摘要和分块提交序列一致。
+
+## 代码结构
+
+- `errors.go`：`E_VERSION`、`E_SCHEMA`、`E_LOSSY`、`E_STATE`、`E_DIFF`、`E_CHECKPOINT` 等统一错误码。
+- `model.go`：内部 `Plan`、`Stage`、`Buffer`、矩形分块、规范 JSON 和 SHA-256 辅助。
+- `plan_codec.go`、`plan_v1.go`、`plan_v2.go`、`plan_v3.go`：三版本探测、解析、默认值补齐和字段路径校验。
+- `export.go`：导出到 v1/v2/v3、默认字段降级和 `E_LOSSY` 损失清单；`ExportSetAsStrict` 在有损失项时返回 `E_LOSSY`。
+- `convert.go`：整型位深换算、通道重排、填充、丢弃标识、alpha 处理、内容哈希和缓存键。
+- `graph.go`：阶段依赖图、区域依赖、参数/顺序编辑失效范围。
+- `state.go`：`pending -> processing -> committed/failed` 双层状态机和非法迁移错误。
+- `compare.go`：阶段缓冲区摘要与首个不一致坐标、条目、字段定位。
+- `imageio.go`：标准库 PNG 预览输出。
+- `internal/sample`：固定种子样本、独立构造真值、原始像素文件和清单写入。
+- `internal/checkpoint`：SQLite schema、原子分块事务、串行写入、快照身份和哈希校验。
+- `internal/runner`：worker 池、像素缓冲门、有序提交、失败隔离、恢复和增量重算。
+- `internal/independent`：只通过 `database/sql` 直读 SQLite BLOB、manifest 和 truth 的独立验证器；不调用 `ApplyStage` 或 runner 主链路。
+- `internal/acceptance`：完整本地验收场景和 Markdown/JSON 报告。
+- `cmd/channelpipe`：完整示例入口。
+- `cmd/verify`：独立验证命令。
+
+## 三版本计划差异
+
+加载入口是 `channelpipe.LoadPlanSet([]byte)`：
+
+| 版本 | 版本字段 | 典型差异 |
+|---:|---|---|
+| v1 | `plan_ver` | `jobs[].tasks[]`、`src_bitness`、`depth_code=D8/D16`、字符串布局 `BGRA`、`index_map`、数字 `alpha_rule`、`pad` 填充来源 |
+| v2 | `schemaVersion` | `pipelines[].operations[]`、`source.bitDepth/pixelFormat`、`quantization.outputDepth`、`channelFlow.sources` 语义通道引用、`fillSource.samples`、`alphaConvention` |
+| v3 | `version` | `plans[].stages[]` 直接使用内部模型：`target_depth`、`swizzle`、`fills`、`alpha_mode` |
+
+错误约定：
+
+- 未知版本：返回 `E_VERSION`，`Error.Field` 指向实际版本字段，例如 `plan_ver`。
+- 必填字段缺失：返回 `E_SCHEMA`，`Error.Field` 是完整路径，例如 `plans[0].width` 或 `plans[0].stages[1].target_depth`。
+- 非法状态迁移：返回 `E_STATE`，存储层不更新原状态。
+- 三路径像素不一致：返回 `E_DIFF`，`Mismatch` 含 `image_id`、`x`、`y`、`stage_index`、`field`、期望值和实际值。
+
+## 版本往返与损失痕迹
+
+低版本加载时，省略的 `round_mode`、`drop_policy`、`alpha_rule` 等字段会按默认值补齐，并在 `LoadResult.UpgradeTraces` 中记录：
+
+- `field_path`
+- `old_value`（缺失时为 JSON `null`）
+- `source_default`
+- 所属 plan/stage 和原因
+
+导出低版本时，核心语义字段（目标位深、通道顺序、填充/丢弃、alpha）均可往返。任意 `metadata` 等低版本未声明字段会进入 `LossReport.Items`，每项带 `code=E_LOSSY`、字段路径和 `disposition`。示例生成的 v1/v2 损失仅丢弃非语义元数据，因此重新加载后 `SemanticEquivalentPlan` 为 true。
+
+## 整型换算
+
+所有位深和 alpha 预乘换算均使用 `uint64` 整数运算：
+
+```go
+scaled := QuantizeRatio(uint64(value)*toMax, fromMax, rounding)
+```
+
+支持 `nearest`、`floor`、`ceil`，没有浮点累积。8 到 16 的标准扩展为 `v * 257`，16 到 8 使用同一整数比例公式。
+
+## 缓存键与失效图
+
+每个“图像分块 × 条目”的缓存键输入为：
+
+```text
+SHA256(cache_version, input_region_hash, stage_index, stage_params, upstream_key, param_version, algorithm_version)
+```
+
+首个条目的 `upstream_key` 为 `source:<源区域哈希>`；后续条目使用上一条缓存键。SQLite 的 `chunk_outputs` 持久化 `cache_key`、`output_hash`、计划指纹、参数版本和算法版本。
+
+编辑位深、置换、填充/alpha 或顺序时，`InvalidatePlanEdit` 输出每个受影响的 `stage_index`、`chunk_index`、实际 `Rect` 和原因。顺序链中只有被改条目及其下游失效；其前条目可在增量提交时复用，同时仍随该分块所有条目在一个 SQLite 事务中重写身份字段，避免同一快照内新旧指纹混用。
+
+## 状态机与检查点
+
+合法迁移：
+
+```text
+pending    -> processing
+processing -> committed | failed | pending(crash recovery)
+failed     -> processing | pending
+committed  -> pending(explicit graph invalidation/new revision)
+```
+
+每个分块提交是一个 SQLite 事务，写入该分块全部条目的 BLOB、缓存键、输出哈希、计划指纹、参数版本、算法版本和提交日志。连接池限制为 1，另有互斥锁串行化写入；执行器按分块序号有序收集结果，因此正常路径提交序列稳定。
+
+重新打开数据库时会检查：
+
+- `meta.plan_fingerprint`
+- `meta.param_version`
+- `meta.algorithm_version`
+- 每行身份字段
+- 每个 BLOB 的重算内容哈希
+
+任一不符都会清空旧表并以新身份重建快照，不会部分混用旧结果。
+
+## 并发与资源边界
+
+- 默认 worker 数为 2，可通过 `--workers` 调整。
+- `BufferGate` 限制总缓冲预算为 `workers * PerThreadBufferPixels`，并拒绝超过单线程上限的分块任务。
+- 缓冲不足时阻塞等待，恢复后继续，不丢弃任务。
+- `queue_events` 记录 `worker-slot` 和 `pixel-buffer-budget` 的原因与等待毫秒数。
+- 注入的单分块错误只将该分块置为 failed；其他分块继续提交，重试成功后不污染已提交数据。
+
+## 输出文件
+
+一次完整 demo 的输出目录包含：
+
+- `sample/images/*.chimg.json`、`*.pixels.bin`、`*.preview.png`
+- `sample/plans/plan-v1.json`、`plan-v2.json`、`plan-v3.json` 及 `*.lossy.json`
+- `sample/truth/truth.json`
+- `sample/manifest.json`
+- `checkpoint-main.sqlite`
+- `demo-report.json`
+- `validation-report.md`
+- `three-path-report.json`
+- `invalidation-report.json`
+- `cache-keys-chunk0.json`
+- `queue-events.json`
+- `standalone-verify.json`（如果运行 `cmd/verify --out ...`）
+- `final/*.final.bin`、`*.final.png`、`*.summary.json`
+
+## 集成方式
+
+领域组件可直接被其他 Go 程序引用：
+
+```go
+loaded, err := channelpipe.LoadPlanSet(planJSON)
+if err != nil { /* E_VERSION / E_SCHEMA */ }
+
+ok, diff, err := channelpipe.SemanticEquivalentPlan(original, loaded.Set.Plans[0])
+key, err := channelpipe.StageCacheKey(regionHash, stage.Index, stage, upstreamKey)
+mismatch := channelpipe.CompareBuffers(imageID, stageIndex, expected, actual)
+if mismatch != nil {
+    return channelpipe.DiffError(mismatch) // E_DIFF
+}
+```
+
+检查点和调度器位于 `internal/checkpoint` 与 `internal/runner`，也可以按同样的构造函数和 Config 模式接入自己的 CLI 或服务。
