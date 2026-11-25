@@ -1,0 +1,95 @@
+{
+  "name": "fixed_four_step_edit_sequence",
+  "parameter_version": 1,
+  "alignment_version": 1,
+  "steps": [
+    {
+      "name": "01_initial",
+      "params": {
+        "luma": {
+          "denoise_strength": 0.32,
+          "sharpen_amount": 0.65,
+          "sharpen_threshold": 0.008,
+          "contrast_strength": 0.24,
+          "contrast_radius": 4
+        },
+        "chroma_u": {
+          "smooth_sigma": 1.1,
+          "gain": 1.04,
+          "offset": 0.0
+        },
+        "chroma_v": {
+          "smooth_sigma": 1.1,
+          "gain": 1.03,
+          "offset": 0.0
+        }
+      }
+    },
+    {
+      "name": "02_chroma_u_gain_only",
+      "params": {
+        "luma": {
+          "denoise_strength": 0.32,
+          "sharpen_amount": 0.65,
+          "sharpen_threshold": 0.008,
+          "contrast_strength": 0.24,
+          "contrast_radius": 4
+        },
+        "chroma_u": {
+          "smooth_sigma": 1.1,
+          "gain": 1.12,
+          "offset": 0.01
+        },
+        "chroma_v": {
+          "smooth_sigma": 1.1,
+          "gain": 1.03,
+          "offset": 0.0
+        }
+      }
+    },
+    {
+      "name": "03_luma_sharpen_and_contrast",
+      "params": {
+        "luma": {
+          "denoise_strength": 0.32,
+          "sharpen_amount": 0.82,
+          "sharpen_threshold": 0.012,
+          "contrast_strength": 0.31,
+          "contrast_radius": 5
+        },
+        "chroma_u": {
+          "smooth_sigma": 1.1,
+          "gain": 1.12,
+          "offset": 0.01
+        },
+        "chroma_v": {
+          "smooth_sigma": 1.1,
+          "gain": 1.03,
+          "offset": 0.0
+        }
+      }
+    },
+    {
+      "name": "04_chroma_v_bandwidth_and_gain",
+      "params": {
+        "luma": {
+          "denoise_strength": 0.32,
+          "sharpen_amount": 0.82,
+          "sharpen_threshold": 0.012,
+          "contrast_strength": 0.31,
+          "contrast_radius": 5
+        },
+        "chroma_u": {
+          "smooth_sigma": 1.1,
+          "gain": 1.12,
+          "offset": 0.01
+        },
+        "chroma_v": {
+          "smooth_sigma": 1.45,
+          "gain": 1.07,
+          "offset": -0.008
+        }
+      }
+    }
+  ]
+}
