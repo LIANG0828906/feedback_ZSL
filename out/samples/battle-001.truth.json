@@ -1,0 +1,714 @@
+{
+  "project_id": "battle-001",
+  "seed": 20261125,
+  "rounds": [
+    {
+      "round": 1,
+      "timestamp_ms": 1760000000000,
+      "order": [
+        {
+          "position": 1,
+          "round": 1,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "weight": 8,
+          "tie_ordinal": 1,
+          "basis": "weight=8:desc;tie_ordinal=1:asc;unit_id=u1:asc;skill_id=s1-heavy:asc"
+        },
+        {
+          "position": 2,
+          "round": 1,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "basis": "weight=5:desc;tie_ordinal=2:asc;unit_id=u2:asc;skill_id=s2-quick:asc"
+        },
+        {
+          "position": 3,
+          "round": 1,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "basis": "weight=3:desc;tie_ordinal=4:asc;unit_id=u4:asc;skill_id=s4-jab:asc"
+        }
+      ],
+      "casts": [
+        {
+          "position": 1,
+          "queue_position": 1,
+          "round": 1,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "decision": "cast",
+          "weight": 8,
+          "tie_ordinal": 1,
+          "resource_before": 6,
+          "resource_after": 5,
+          "cooldown_before": 0,
+          "cooldown_after": 1,
+          "power": 6,
+          "damage": 6
+        },
+        {
+          "position": 2,
+          "queue_position": 3,
+          "round": 1,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "decision": "cast",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "resource_before": 8,
+          "resource_after": 8,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 3,
+          "damage": 3
+        }
+      ],
+      "unqueued": [
+        {
+          "round": 1,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "reason": "flag_false",
+          "detail": "normalized condition flag is false"
+        }
+      ],
+      "states": [
+        {
+          "unit_id": "u1",
+          "resource": 5,
+          "cooldown_remaining": 1,
+          "alive": true
+        },
+        {
+          "unit_id": "u2",
+          "resource": 3,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u3",
+          "resource": 6,
+          "cooldown_remaining": 1,
+          "alive": true
+        },
+        {
+          "unit_id": "u4",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        }
+      ],
+      "total_damage": 9
+    },
+    {
+      "round": 2,
+      "timestamp_ms": 1760000001000,
+      "order": [
+        {
+          "position": 1,
+          "round": 2,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "basis": "weight=5:desc;tie_ordinal=2:asc;unit_id=u2:asc;skill_id=s2-quick:asc"
+        },
+        {
+          "position": 2,
+          "round": 2,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "basis": "weight=3:desc;tie_ordinal=4:asc;unit_id=u4:asc;skill_id=s4-jab:asc"
+        }
+      ],
+      "casts": [
+        {
+          "position": 1,
+          "queue_position": 1,
+          "round": 2,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "resource_before": 3,
+          "resource_after": 3,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 4,
+          "damage": 4
+        },
+        {
+          "position": 2,
+          "queue_position": 2,
+          "round": 2,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "decision": "cast",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "resource_before": 8,
+          "resource_after": 8,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 3,
+          "damage": 3
+        }
+      ],
+      "unqueued": [
+        {
+          "round": 2,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "reason": "cooldown_wait",
+          "detail": "cooldown_remaining=1"
+        },
+        {
+          "round": 2,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "reason": "flag_false",
+          "detail": "normalized condition flag is false"
+        }
+      ],
+      "states": [
+        {
+          "unit_id": "u1",
+          "resource": 7,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u2",
+          "resource": 3,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u3",
+          "resource": 8,
+          "cooldown_remaining": 1,
+          "alive": true
+        },
+        {
+          "unit_id": "u4",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        }
+      ],
+      "total_damage": 7
+    },
+    {
+      "round": 3,
+      "timestamp_ms": 1760000002000,
+      "order": [
+        {
+          "position": 1,
+          "round": 3,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "weight": 8,
+          "tie_ordinal": 1,
+          "basis": "weight=8:desc;tie_ordinal=1:asc;unit_id=u1:asc;skill_id=s1-heavy:asc"
+        },
+        {
+          "position": 2,
+          "round": 3,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "basis": "weight=5:desc;tie_ordinal=2:asc;unit_id=u2:asc;skill_id=s2-quick:asc"
+        },
+        {
+          "position": 3,
+          "round": 3,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "basis": "weight=3:desc;tie_ordinal=4:asc;unit_id=u4:asc;skill_id=s4-jab:asc"
+        }
+      ],
+      "casts": [
+        {
+          "position": 1,
+          "queue_position": 1,
+          "round": 3,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "decision": "cast",
+          "weight": 8,
+          "tie_ordinal": 1,
+          "resource_before": 7,
+          "resource_after": 6,
+          "cooldown_before": 0,
+          "cooldown_after": 1,
+          "power": 6,
+          "damage": 6
+        },
+        {
+          "position": 2,
+          "queue_position": 2,
+          "round": 3,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "resource_before": 3,
+          "resource_after": 3,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 4,
+          "damage": 4
+        },
+        {
+          "position": 3,
+          "queue_position": 3,
+          "round": 3,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "decision": "cast",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "resource_before": 8,
+          "resource_after": 8,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 3,
+          "damage": 3
+        }
+      ],
+      "unqueued": [
+        {
+          "round": 3,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "reason": "cooldown_wait",
+          "detail": "cooldown_remaining=1"
+        }
+      ],
+      "states": [
+        {
+          "unit_id": "u1",
+          "resource": 6,
+          "cooldown_remaining": 1,
+          "alive": true
+        },
+        {
+          "unit_id": "u2",
+          "resource": 3,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u3",
+          "resource": 10,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u4",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        }
+      ],
+      "total_damage": 13
+    },
+    {
+      "round": 4,
+      "timestamp_ms": 1760000003000,
+      "order": [
+        {
+          "position": 1,
+          "round": 4,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "weight": 5,
+          "tie_ordinal": 0,
+          "basis": "weight=5:desc;tie_ordinal=0:asc;unit_id=u3:asc;skill_id=s3-rite:asc"
+        },
+        {
+          "position": 2,
+          "round": 4,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "basis": "weight=5:desc;tie_ordinal=2:asc;unit_id=u2:asc;skill_id=s2-quick:asc"
+        },
+        {
+          "position": 3,
+          "round": 4,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "basis": "weight=3:desc;tie_ordinal=4:asc;unit_id=u4:asc;skill_id=s4-jab:asc"
+        }
+      ],
+      "casts": [
+        {
+          "position": 1,
+          "queue_position": 1,
+          "round": 4,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 0,
+          "resource_before": 10,
+          "resource_after": 9,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 8,
+          "damage": 8
+        },
+        {
+          "position": 2,
+          "queue_position": 2,
+          "round": 4,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "resource_before": 3,
+          "resource_after": 3,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 4,
+          "damage": 4
+        },
+        {
+          "position": 3,
+          "queue_position": 3,
+          "round": 4,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "decision": "cast",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "resource_before": 8,
+          "resource_after": 8,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 3,
+          "damage": 3
+        }
+      ],
+      "unqueued": [
+        {
+          "round": 4,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "reason": "cooldown_wait",
+          "detail": "cooldown_remaining=1"
+        }
+      ],
+      "states": [
+        {
+          "unit_id": "u1",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u2",
+          "resource": 3,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u3",
+          "resource": 9,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u4",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        }
+      ],
+      "total_damage": 15
+    },
+    {
+      "round": 5,
+      "timestamp_ms": 1760000004000,
+      "order": [
+        {
+          "position": 1,
+          "round": 5,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "weight": 8,
+          "tie_ordinal": 1,
+          "basis": "weight=8:desc;tie_ordinal=1:asc;unit_id=u1:asc;skill_id=s1-heavy:asc"
+        },
+        {
+          "position": 2,
+          "round": 5,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "weight": 5,
+          "tie_ordinal": 0,
+          "basis": "weight=5:desc;tie_ordinal=0:asc;unit_id=u3:asc;skill_id=s3-rite:asc"
+        },
+        {
+          "position": 3,
+          "round": 5,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "basis": "weight=5:desc;tie_ordinal=2:asc;unit_id=u2:asc;skill_id=s2-quick:asc"
+        },
+        {
+          "position": 4,
+          "round": 5,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "basis": "weight=3:desc;tie_ordinal=4:asc;unit_id=u4:asc;skill_id=s4-jab:asc"
+        }
+      ],
+      "casts": [
+        {
+          "position": 1,
+          "queue_position": 1,
+          "round": 5,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "decision": "cast",
+          "weight": 8,
+          "tie_ordinal": 1,
+          "resource_before": 8,
+          "resource_after": 7,
+          "cooldown_before": 0,
+          "cooldown_after": 1,
+          "power": 6,
+          "damage": 6
+        },
+        {
+          "position": 2,
+          "queue_position": 2,
+          "round": 5,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 0,
+          "resource_before": 9,
+          "resource_after": 8,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 8,
+          "damage": 8
+        },
+        {
+          "position": 3,
+          "queue_position": 3,
+          "round": 5,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "resource_before": 3,
+          "resource_after": 3,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 4,
+          "damage": 4
+        },
+        {
+          "position": 4,
+          "queue_position": 4,
+          "round": 5,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "decision": "cast",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "resource_before": 8,
+          "resource_after": 8,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 3,
+          "damage": 3
+        }
+      ],
+      "unqueued": null,
+      "states": [
+        {
+          "unit_id": "u1",
+          "resource": 7,
+          "cooldown_remaining": 1,
+          "alive": true
+        },
+        {
+          "unit_id": "u2",
+          "resource": 3,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u3",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u4",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        }
+      ],
+      "total_damage": 21
+    },
+    {
+      "round": 6,
+      "timestamp_ms": 1760000005000,
+      "order": [
+        {
+          "position": 1,
+          "round": 6,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "weight": 5,
+          "tie_ordinal": 0,
+          "basis": "weight=5:desc;tie_ordinal=0:asc;unit_id=u3:asc;skill_id=s3-rite:asc"
+        },
+        {
+          "position": 2,
+          "round": 6,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "basis": "weight=5:desc;tie_ordinal=2:asc;unit_id=u2:asc;skill_id=s2-quick:asc"
+        },
+        {
+          "position": 3,
+          "round": 6,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "basis": "weight=3:desc;tie_ordinal=4:asc;unit_id=u4:asc;skill_id=s4-jab:asc"
+        }
+      ],
+      "casts": [
+        {
+          "position": 1,
+          "queue_position": 1,
+          "round": 6,
+          "unit_id": "u3",
+          "skill_id": "s3-rite",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 0,
+          "resource_before": 8,
+          "resource_after": 7,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 8,
+          "damage": 8
+        },
+        {
+          "position": 2,
+          "queue_position": 2,
+          "round": 6,
+          "unit_id": "u2",
+          "skill_id": "s2-quick",
+          "decision": "cast",
+          "weight": 5,
+          "tie_ordinal": 2,
+          "resource_before": 3,
+          "resource_after": 3,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 4,
+          "damage": 4
+        },
+        {
+          "position": 3,
+          "queue_position": 3,
+          "round": 6,
+          "unit_id": "u4",
+          "skill_id": "s4-jab",
+          "decision": "cast",
+          "weight": 3,
+          "tie_ordinal": 4,
+          "resource_before": 8,
+          "resource_after": 8,
+          "cooldown_before": 0,
+          "cooldown_after": 0,
+          "power": 3,
+          "damage": 3
+        }
+      ],
+      "unqueued": [
+        {
+          "round": 6,
+          "unit_id": "u1",
+          "skill_id": "s1-heavy",
+          "reason": "cooldown_wait",
+          "detail": "cooldown_remaining=1"
+        }
+      ],
+      "states": [
+        {
+          "unit_id": "u1",
+          "resource": 9,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u2",
+          "resource": 3,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u3",
+          "resource": 7,
+          "cooldown_remaining": 0,
+          "alive": true
+        },
+        {
+          "unit_id": "u4",
+          "resource": 8,
+          "cooldown_remaining": 0,
+          "alive": true
+        }
+      ],
+      "total_damage": 15
+    }
+  ],
+  "final_winner": "attacker",
+  "enemy_hp": 70,
+  "fingerprint": "b9e6791c95b7cedc647dd8ea9af4b8b79377e4ba9ab61f0e7fd98b26753203ab",
+  "round_hashes": [
+    "0609179cd2c1d9aafd9c07f67dd2e4d0ed4697fa3eac3e8157a329c703eb2a31",
+    "d67f33edd4077f1ea7464acda16269607fc8e32b8b6730c93c495ae3003cf6ee",
+    "254b228c77d46ffba78c0834d437529b434893e22a34259770509cfac8c9803e",
+    "1959fa920a86cbdbd93892b99d36f5deff1706324de1223f8fdf0138dec5e6fb",
+    "fa632060a1dbd879b76d879dc45de91303e572e2201bbf6eb3ed09f4129be4d7",
+    "3ac0f37c75ec1bdbbee39afe651936278c16ffee7b9feb56ba2ea66cde843679"
+  ]
+}

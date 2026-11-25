@@ -1,3 +1,31 @@
+# BattleKernel：回合制技能排队与检查点内核
+
+可运行实现、设计映射和实际验收结果见：
+
+- `docs/DESIGN.md`
+- `docs/VALIDATION.md`
+- `scripts/verify-windows.ps1`
+
+快速运行：
+
+```bash
+go vet ./...
+go test ./...
+go run ./cmd/battlekernel verify
+go run ./cmd/battlekernel serve --addr 127.0.0.1:8080
+```
+
+独立复核：
+
+```bash
+go run ./cmd/review --db out/data/battle-001.realtime.db \
+  --truth out/truth-fingerprints.json --project-id battle-001
+```
+
+以下为原始任务说明。
+
+---
+
 工作区刚创建，一台 Windows 开发机上只有空目录，没有任何既有代码与样本，团队要为回合制战斗的技能释放排队先落一版可核验内核。本地确定性样本生成器按固定种子产出多份战斗编排工程，同一场战斗以三个发行格式描述：同一整型字段在一个格式是行动权重、在另一格式是技能冷却剩余回合；同一列表字段在一个格式是技能释放序列、在另一格式是行动者排队序列；回合字段存在以回合序号与以毫秒时间戳为基准的差异；另有仅当某标志位为真才参与排队的条件技能，以及每回合可选的编成重排指令。每份工程附带解析真值：每回合实际出手顺序、每单位剩余冷却与资源、条件技能是否入队及终局胜负判定，真值仅来自生成器的解析构造。
 
 任务环境与准备：

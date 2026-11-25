@@ -1,0 +1,304 @@
+{
+  "formatNo": 2,
+  "formatName": "chrono-swapped-v2",
+  "schema": "battle.chrono.v2",
+  "battleId": "battle-002",
+  "seed": 20271098,
+  "tickMilliseconds": 1000,
+  "epochMilliseconds": 1760000000000,
+  "startRound": 1,
+  "totalRounds": 6,
+  "enemyHp": 73,
+  "unitRecords": [
+    {
+      "unitId": "u1",
+      "displayName": "Vanguard",
+      "priority": 0,
+      "recast": 8,
+      "slotIndex": 1,
+      "energy": 7,
+      "energyCap": 12,
+      "regen": 2
+    },
+    {
+      "unitId": "u2",
+      "displayName": "Skirmisher",
+      "priority": 0,
+      "recast": 5,
+      "slotIndex": 2,
+      "energy": 0,
+      "energyCap": 10,
+      "regen": 2
+    },
+    {
+      "unitId": "u3",
+      "displayName": "Oracle",
+      "priority": 1,
+      "recast": 5,
+      "slotIndex": 3,
+      "energy": 4,
+      "energyCap": 12,
+      "regen": 2
+    },
+    {
+      "unitId": "u4",
+      "displayName": "Darter",
+      "priority": 0,
+      "recast": 3,
+      "slotIndex": 4,
+      "energy": 8,
+      "energyCap": 8,
+      "regen": 1
+    }
+  ],
+  "skillRecords": [
+    {
+      "skillId": "s1-heavy",
+      "ownerId": "u1",
+      "energyCost": 3,
+      "cooldown": 1,
+      "potency": 6,
+      "conditional": false
+    },
+    {
+      "skillId": "s2-quick",
+      "ownerId": "u2",
+      "energyCost": 2,
+      "cooldown": 0,
+      "potency": 4,
+      "conditional": false
+    },
+    {
+      "skillId": "s3-rite",
+      "ownerId": "u3",
+      "energyCost": 3,
+      "cooldown": 0,
+      "potency": 8,
+      "conditional": true
+    },
+    {
+      "skillId": "s4-jab",
+      "ownerId": "u4",
+      "energyCost": 1,
+      "cooldown": 0,
+      "potency": 3,
+      "conditional": false
+    }
+  ],
+  "timePoints": [
+    {
+      "atMilliseconds": 1760000000000,
+      "commands": [
+        {
+          "actorId": "u1",
+          "techniqueId": "s1-heavy",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u2",
+          "techniqueId": "s2-quick",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u3",
+          "techniqueId": "s3-rite",
+          "conditionFlag": false
+        },
+        {
+          "actorId": "u4",
+          "techniqueId": "s4-jab",
+          "conditionFlag": null
+        }
+      ]
+    },
+    {
+      "atMilliseconds": 1760000001000,
+      "commands": [
+        {
+          "actorId": "u1",
+          "techniqueId": "s1-heavy",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u2",
+          "techniqueId": "s2-quick",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u3",
+          "techniqueId": "s3-rite",
+          "conditionFlag": true
+        },
+        {
+          "actorId": "u4",
+          "techniqueId": "s4-jab",
+          "conditionFlag": null
+        }
+      ]
+    },
+    {
+      "atMilliseconds": 1760000002000,
+      "commands": [
+        {
+          "actorId": "u1",
+          "techniqueId": "s1-heavy",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u2",
+          "techniqueId": "s2-quick",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u3",
+          "techniqueId": "s3-rite",
+          "conditionFlag": true
+        },
+        {
+          "actorId": "u4",
+          "techniqueId": "s4-jab",
+          "conditionFlag": null
+        }
+      ]
+    },
+    {
+      "atMilliseconds": 1760000003000,
+      "commands": [
+        {
+          "actorId": "u1",
+          "techniqueId": "s1-heavy",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u2",
+          "techniqueId": "s2-quick",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u3",
+          "techniqueId": "s3-rite",
+          "conditionFlag": false
+        },
+        {
+          "actorId": "u4",
+          "techniqueId": "s4-jab",
+          "conditionFlag": null
+        }
+      ]
+    },
+    {
+      "atMilliseconds": 1760000004000,
+      "commands": [
+        {
+          "actorId": "u1",
+          "techniqueId": "s1-heavy",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u2",
+          "techniqueId": "s2-quick",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u3",
+          "techniqueId": "s3-rite",
+          "conditionFlag": true
+        },
+        {
+          "actorId": "u4",
+          "techniqueId": "s4-jab",
+          "conditionFlag": null
+        }
+      ]
+    },
+    {
+      "atMilliseconds": 1760000005000,
+      "commands": [
+        {
+          "actorId": "u1",
+          "techniqueId": "s1-heavy",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u2",
+          "techniqueId": "s2-quick",
+          "conditionFlag": null
+        },
+        {
+          "actorId": "u3",
+          "techniqueId": "s3-rite",
+          "conditionFlag": true
+        },
+        {
+          "actorId": "u4",
+          "techniqueId": "s4-jab",
+          "conditionFlag": null
+        }
+      ]
+    }
+  ],
+  "sequenceBox": {
+    "alpha": [
+      "A|1|u1",
+      "A|1|u2",
+      "A|1|u3",
+      "A|1|u4",
+      "A|2|u1",
+      "A|2|u2",
+      "A|2|u3",
+      "A|2|u4",
+      "A|3|u1",
+      "A|3|u2",
+      "A|3|u3",
+      "A|3|u4",
+      "A|4|u1",
+      "A|4|u2",
+      "A|4|u3",
+      "A|4|u4",
+      "A|5|u1",
+      "A|5|u2",
+      "A|5|u3",
+      "A|5|u4",
+      "A|6|u1",
+      "A|6|u2",
+      "A|6|u3",
+      "A|6|u4"
+    ],
+    "beta": [
+      "S|1|u1|s1-heavy",
+      "S|1|u2|s2-quick",
+      "S|1|u3|s3-rite",
+      "S|1|u4|s4-jab",
+      "S|2|u1|s1-heavy",
+      "S|2|u2|s2-quick",
+      "S|2|u3|s3-rite",
+      "S|2|u4|s4-jab",
+      "S|3|u1|s1-heavy",
+      "S|3|u2|s2-quick",
+      "S|3|u3|s3-rite",
+      "S|3|u4|s4-jab",
+      "S|4|u1|s1-heavy",
+      "S|4|u2|s2-quick",
+      "S|4|u3|s3-rite",
+      "S|4|u4|s4-jab",
+      "S|5|u1|s1-heavy",
+      "S|5|u2|s2-quick",
+      "S|5|u3|s3-rite",
+      "S|5|u4|s4-jab",
+      "S|6|u1|s1-heavy",
+      "S|6|u2|s2-quick",
+      "S|6|u3|s3-rite",
+      "S|6|u4|s4-jab"
+    ]
+  },
+  "reorderCommands": [
+    {
+      "offset": 0,
+      "instruction_id": "ro-u3-after-r2",
+      "actor": "u3",
+      "after_round": 2,
+      "new_slot": 0,
+      "reason": "formation moves Oracle ahead of equal-weight Skirmisher after round 2"
+    }
+  ]
+}

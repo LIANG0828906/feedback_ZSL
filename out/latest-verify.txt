@@ -1,0 +1,22 @@
+battlekernel verification: ok=true samples=3 seed=20261125 window=2
+  [PASS] load-set:battle-001 formats=tick-weight-v1,chrono-swapped-v2,compact-legacy-v3 semantic_hash=3778f12bc7ff
+  [PASS] load-set:battle-002 formats=tick-weight-v1,chrono-swapped-v2,compact-legacy-v3 semantic_hash=b31518d83f82
+  [PASS] load-set:battle-003 formats=tick-weight-v1,chrono-swapped-v2,compact-legacy-v3 semantic_hash=f98e83065520
+  [PASS] integer-roundtrip floor ms -> round=3 canonical_ms=1760000002000
+  [PASS] overflow-e_ovf E_OVF field=probe.round: integer conversion overflow value[0]=9223372036854775806 value[1]=1000
+  [PASS] corrupt-engineering-e_decode E_DECODE field=$: document is not valid JSON: invalid character '{' after object key:value pair
+  [PASS] unknown-format-e_schema E_SCHEMA field=format: unknown format number: 99
+  [PASS] missing-required-e_schema E_SCHEMA field=battle_id: required field is missing
+  [PASS] flag-contradiction-e_flag E_FLAG field=timePoints[0].commands[2].conditionFlag round=1 unit=u3: conditional flag representations contradict each other
+  [PASS] cooldown-bound-e_cool E_COOL field=units[id=u1].recast unit=u1: cooldown remaining exceeds protocol bound value[0]=101 value[1]=99
+  [PASS] weight-edit-invalidation first=3 invalidations=12 compare=true
+  [PASS] insert-reorder-invalidation first=4 invalidations=6 compare=true
+  [PASS] ineffective-edit-reuses-all no semantic change; persistent snapshots retained
+  [PASS] bounded-buffer-blocking wait_events=1 max_wait_ms=30 reason=buffer-exhausted-should-wait
+  project battle-001 truth=true realtime=true resume=true failure_retry=true snapshot_reset=true review=true
+  project battle-002 truth=true realtime=true resume=true failure_retry=true snapshot_reset=true review=true
+  project battle-003 truth=true realtime=true resume=true failure_retry=true snapshot_reset=true review=true
+  weight invalidation: first_round=3 invalidations=12 reused=[1 2] recomputed=[3 4 5 6]
+  reorder invalidation: first_round=4 invalidations=6 reused=[1 2 3] recomputed=[4 5 6]
+  scheduler: workers=2 buffer=1 wait_events=0 max_wait_ms=0
+  report: out/reports/verification-report.json

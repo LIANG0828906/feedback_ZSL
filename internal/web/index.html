@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>回合制技能排队内核</title>
+  <style>
+    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { margin: 0; max-width: 1100px; padding: 32px; line-height: 1.55; }
+    h1 { margin-top: 0; }
+    .bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 20px 0; }
+    button { border: 0; border-radius: 8px; padding: 10px 16px; font-weight: 700; cursor: pointer; background: #2563eb; color: white; }
+    button:disabled { opacity: .55; cursor: wait; }
+    .pill { padding: 4px 10px; border-radius: 999px; font-size: 13px; background: rgba(127,127,127,.18); }
+    .ok { color: #15803d; font-weight: 800; }
+    .bad { color: #b91c1c; font-weight: 800; }
+    pre { padding: 16px; border-radius: 12px; overflow: auto; max-height: 65vh; background: rgba(127,127,127,.12); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .card { border: 1px solid rgba(127,127,127,.3); border-radius: 12px; padding: 14px; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <h1>回合制战斗技能释放排队内核</h1>
+  <p>固定种子本地生成三份发行格式与真值；页面会执行实时结算、断点恢复、全量重算、异常注入、增量失效和独立 SQLite 复核。</p>
+  <div class="bar">
+    <button id="run">运行完整核验</button>
+    <span id="status" class="pill">尚未运行</span>
+    <a href="/api/report" target="_blank">最近 JSON 报告</a>
+  </div>
+  <div id="summary" class="grid"></div>
+  <pre id="output">等待运行……</pre>
+  <script>
+    const btn = document.getElementById('run');
+    const statusEl = document.getElementById('status');
+    const output = document.getElementById('output');
+    const summary = document.getElementById('summary');
+    function card(title, body, good) {
+      const cls = good === undefined ? '' : (good ? 'ok' : 'bad');
+      return `<div class="card"><div class="${cls}"><strong>${title}</strong></div><div>${body}</div></div>`;
+    }
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      statusEl.textContent = '核验运行中……';
+      output.textContent = '正在生成样本并比对三条结算路径……';
+      try {
+        const resp = await fetch('/api/verify', { method: 'POST' });
+        const data = await resp.json();
+        output.textContent = JSON.stringify(data, null, 2);
+        statusEl.innerHTML = data.ok ? '<span class="ok">全部通过</span>' : '<span class="bad">存在失败</span>';
+        const projects = (data.projects || []).map(p => card(p.project_id,
+          `真值：${p.truth_verified ? '一致' : '不一致'}<br>` +
+          `实时/全量：${p.realtime_compare.equal ? '一致' : '差异'}<br>` +
+          `恢复/全量：${p.resume_compare.equal ? '一致' : '差异'}<br>` +
+          `失败重试：${p.failure_retry_compare.equal ? '一致' : '差异'}<br>` +
+          `独立复核：${p.review.ok ? '通过' : '失败'}`,
+          p.truth_verified && p.realtime_compare.equal && p.resume_compare.equal && p.failure_retry_compare.equal && p.review.ok
+        )).join('');
+        const checks = (data.checks || []).map(c => card(c.name, `${c.ok ? '通过' : '失败'}<br><small>${c.detail || c.code || ''}</small>`, c.ok)).join('');
+        summary.innerHTML = projects + checks;
+      } catch (err) {
+        statusEl.innerHTML = '<span class="bad">请求失败</span>';
+        output.textContent = String(err);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
