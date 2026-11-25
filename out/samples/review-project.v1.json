@@ -1,0 +1,1257 @@
+{
+  "schema_version": "v1",
+  "project_id": "INC-20231114-42",
+  "revision": "rev-seed-42",
+  "seed": 42,
+  "window": {
+    "start_epoch_ms": 1700000000000,
+    "end_epoch_ms": 1700000480000,
+    "tick_interval_ms": 5000
+  },
+  "policy": {
+    "dedup_window_seconds": 10,
+    "merge_gap_seconds": 60,
+    "lookback_seconds": 600,
+    "max_propagation_generation": 3,
+    "score_scale": 10000,
+    "score_tolerance_raw": 1000
+  },
+  "services": [
+    {
+      "service_id": "gateway",
+      "display_name": "Edge Gateway",
+      "error_unhealthy_threshold_bp": 500,
+      "saturation_unhealthy_threshold_bp": 9000,
+      "steady_error_baseline_bp": 40,
+      "steady_saturation_baseline_bp": 3500
+    },
+    {
+      "service_id": "order",
+      "display_name": "Order API",
+      "error_unhealthy_threshold_bp": 500,
+      "saturation_unhealthy_threshold_bp": 8500,
+      "steady_error_baseline_bp": 50,
+      "steady_saturation_baseline_bp": 4000
+    },
+    {
+      "service_id": "payment",
+      "display_name": "Payment Core",
+      "error_unhealthy_threshold_bp": 450,
+      "saturation_unhealthy_threshold_bp": 8000,
+      "steady_error_baseline_bp": 60,
+      "steady_saturation_baseline_bp": 4500
+    },
+    {
+      "service_id": "inventory",
+      "display_name": "Inventory DB",
+      "error_unhealthy_threshold_bp": 400,
+      "saturation_unhealthy_threshold_bp": 8000,
+      "steady_error_baseline_bp": 30,
+      "steady_saturation_baseline_bp": 5000
+    }
+  ],
+  "dependencies": [
+    {
+      "upstream_caller_id": "gateway",
+      "downstream_dependency_id": "order"
+    },
+    {
+      "upstream_caller_id": "order",
+      "downstream_dependency_id": "inventory"
+    },
+    {
+      "upstream_caller_id": "order",
+      "downstream_dependency_id": "payment"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "obs-gw-01",
+      "logical_sequence": 1,
+      "source_kind": "health",
+      "service_id": "gateway",
+      "event_kind": "http_error_rate",
+      "dedup_fingerprint": "health-gateway",
+      "occurred_at_epoch_ms": 1700000030000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 40
+    },
+    {
+      "event_id": "obs-order-01",
+      "logical_sequence": 2,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "http_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000030000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 50
+    },
+    {
+      "event_id": "obs-pay-01",
+      "logical_sequence": 3,
+      "source_kind": "health",
+      "service_id": "payment",
+      "event_kind": "http_error_rate",
+      "dedup_fingerprint": "health-payment",
+      "occurred_at_epoch_ms": 1700000030000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 60
+    },
+    {
+      "event_id": "cap-inv-01",
+      "logical_sequence": 4,
+      "source_kind": "capacity",
+      "service_id": "inventory",
+      "event_kind": "saturation",
+      "dedup_fingerprint": "capacity-inventory",
+      "occurred_at_epoch_ms": 1700000030000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "saturation_bp": 5200
+    },
+    {
+      "event_id": "chg-pay-deploy",
+      "logical_sequence": 5,
+      "source_kind": "change",
+      "service_id": "payment",
+      "event_kind": "deployment",
+      "dedup_fingerprint": "deploy-pay-v842",
+      "occurred_at_epoch_ms": 1700000060000,
+      "ingest_lag_seconds": 2,
+      "alive_ttl_seconds": 300,
+      "change_type": "deploy",
+      "change_weight_permyriad": 10000
+    },
+    {
+      "event_id": "obs-inv-02",
+      "logical_sequence": 6,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000060000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 650
+    },
+    {
+      "event_id": "obs-pay-02",
+      "logical_sequence": 7,
+      "source_kind": "health",
+      "service_id": "payment",
+      "event_kind": "http_error_rate",
+      "dedup_fingerprint": "health-payment",
+      "occurred_at_epoch_ms": 1700000090000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 820
+    },
+    {
+      "event_id": "cap-pay-02",
+      "logical_sequence": 8,
+      "source_kind": "capacity",
+      "service_id": "payment",
+      "event_kind": "saturation",
+      "dedup_fingerprint": "capacity-payment",
+      "occurred_at_epoch_ms": 1700000090000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 4000,
+      "saturation_bp": 9100
+    },
+    {
+      "event_id": "obs-inv-03",
+      "logical_sequence": 9,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000090000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 700
+    },
+    {
+      "event_id": "alert-pay-01",
+      "logical_sequence": 10,
+      "source_kind": "alert",
+      "service_id": "payment",
+      "event_kind": "high_error_rate",
+      "dedup_fingerprint": "alert-payment-errors",
+      "occurred_at_epoch_ms": 1700000100000,
+      "ingest_lag_seconds": 1,
+      "alive_ttl_seconds": 120,
+      "change_weight_permyriad": 4500
+    },
+    {
+      "event_id": "alert-pay-01-retry",
+      "logical_sequence": 11,
+      "source_kind": "alert",
+      "service_id": "payment",
+      "event_kind": "high_error_rate",
+      "dedup_fingerprint": "alert-payment-errors",
+      "occurred_at_epoch_ms": 1700000105000,
+      "ingest_lag_seconds": 6,
+      "alive_ttl_seconds": 120,
+      "change_weight_permyriad": 4500
+    },
+    {
+      "event_id": "obs-order-02",
+      "logical_sequence": 12,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "dependency_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000120000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 620
+    },
+    {
+      "event_id": "obs-inv-04",
+      "logical_sequence": 13,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000120000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 120
+    },
+    {
+      "event_id": "alert-order-01",
+      "logical_sequence": 14,
+      "source_kind": "alert",
+      "service_id": "order",
+      "event_kind": "dependency_failures",
+      "dedup_fingerprint": "alert-order-dep",
+      "occurred_at_epoch_ms": 1700000130000,
+      "ingest_lag_seconds": 2,
+      "alive_ttl_seconds": 120,
+      "change_weight_permyriad": 4500
+    },
+    {
+      "event_id": "alert-order-01-retry",
+      "logical_sequence": 15,
+      "source_kind": "alert",
+      "service_id": "order",
+      "event_kind": "dependency_failures",
+      "dedup_fingerprint": "alert-order-dep",
+      "occurred_at_epoch_ms": 1700000135000,
+      "ingest_lag_seconds": 6,
+      "alive_ttl_seconds": 120,
+      "change_weight_permyriad": 4500
+    },
+    {
+      "event_id": "obs-order-03",
+      "logical_sequence": 16,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "dependency_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000150000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 700
+    },
+    {
+      "event_id": "obs-inv-05",
+      "logical_sequence": 17,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000150000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 650
+    },
+    {
+      "event_id": "obs-gw-02",
+      "logical_sequence": 18,
+      "source_kind": "health",
+      "service_id": "gateway",
+      "event_kind": "http_5xx",
+      "dedup_fingerprint": "health-gateway",
+      "occurred_at_epoch_ms": 1700000180000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 720
+    },
+    {
+      "event_id": "obs-order-04",
+      "logical_sequence": 19,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "dependency_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000180000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 680
+    },
+    {
+      "event_id": "obs-inv-06",
+      "logical_sequence": 20,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000180000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 720
+    },
+    {
+      "event_id": "alert-gw-01",
+      "logical_sequence": 21,
+      "source_kind": "alert",
+      "service_id": "gateway",
+      "event_kind": "edge_5xx",
+      "dedup_fingerprint": "alert-gateway-5xx",
+      "occurred_at_epoch_ms": 1700000190000,
+      "ingest_lag_seconds": 1,
+      "alive_ttl_seconds": 120,
+      "change_weight_permyriad": 4500
+    },
+    {
+      "event_id": "alert-gw-01-retry",
+      "logical_sequence": 22,
+      "source_kind": "alert",
+      "service_id": "gateway",
+      "event_kind": "edge_5xx",
+      "dedup_fingerprint": "alert-gateway-5xx",
+      "occurred_at_epoch_ms": 1700000195000,
+      "ingest_lag_seconds": 6,
+      "alive_ttl_seconds": 120,
+      "change_weight_permyriad": 4500
+    },
+    {
+      "event_id": "obs-inv-07",
+      "logical_sequence": 23,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000210000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 100
+    },
+    {
+      "event_id": "obs-pay-03",
+      "logical_sequence": 24,
+      "source_kind": "health",
+      "service_id": "payment",
+      "event_kind": "http_error_rate",
+      "dedup_fingerprint": "health-payment",
+      "occurred_at_epoch_ms": 1700000210000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 870
+    },
+    {
+      "event_id": "cap-pay-03",
+      "logical_sequence": 25,
+      "source_kind": "capacity",
+      "service_id": "payment",
+      "event_kind": "saturation",
+      "dedup_fingerprint": "capacity-payment",
+      "occurred_at_epoch_ms": 1700000210000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 4000,
+      "saturation_bp": 8800
+    },
+    {
+      "event_id": "obs-order-05",
+      "logical_sequence": 26,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "dependency_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000210000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 590
+    },
+    {
+      "event_id": "obs-gw-03",
+      "logical_sequence": 27,
+      "source_kind": "health",
+      "service_id": "gateway",
+      "event_kind": "http_5xx",
+      "dedup_fingerprint": "health-gateway",
+      "occurred_at_epoch_ms": 1700000210000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 680
+    },
+    {
+      "event_id": "obs-gw-04",
+      "logical_sequence": 28,
+      "source_kind": "health",
+      "service_id": "gateway",
+      "event_kind": "http_5xx",
+      "dedup_fingerprint": "health-gateway",
+      "occurred_at_epoch_ms": 1700000240000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 610
+    },
+    {
+      "event_id": "obs-pay-04",
+      "logical_sequence": 29,
+      "source_kind": "health",
+      "service_id": "payment",
+      "event_kind": "http_error_rate",
+      "dedup_fingerprint": "health-payment",
+      "occurred_at_epoch_ms": 1700000270000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 760
+    },
+    {
+      "event_id": "obs-order-06",
+      "logical_sequence": 30,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "dependency_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000270000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 540
+    },
+    {
+      "event_id": "rec-pay-01",
+      "logical_sequence": 31,
+      "source_kind": "recovery",
+      "service_id": "payment",
+      "event_kind": "service_recovered",
+      "dedup_fingerprint": "recovery-payment",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 30,
+      "change_weight_permyriad": 0,
+      "recovery_for": "chg-pay-deploy"
+    },
+    {
+      "event_id": "obs-pay-05",
+      "logical_sequence": 32,
+      "source_kind": "health",
+      "service_id": "payment",
+      "event_kind": "http_error_rate",
+      "dedup_fingerprint": "health-payment",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 80
+    },
+    {
+      "event_id": "cap-pay-05",
+      "logical_sequence": 33,
+      "source_kind": "capacity",
+      "service_id": "payment",
+      "event_kind": "saturation",
+      "dedup_fingerprint": "capacity-payment",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "saturation_bp": 5000
+    },
+    {
+      "event_id": "rec-order-01",
+      "logical_sequence": 34,
+      "source_kind": "recovery",
+      "service_id": "order",
+      "event_kind": "dependency_recovered",
+      "dedup_fingerprint": "recovery-order",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 30,
+      "change_weight_permyriad": 0
+    },
+    {
+      "event_id": "obs-order-07",
+      "logical_sequence": 35,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "dependency_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 90
+    },
+    {
+      "event_id": "rec-gw-01",
+      "logical_sequence": 36,
+      "source_kind": "recovery",
+      "service_id": "gateway",
+      "event_kind": "edge_recovered",
+      "dedup_fingerprint": "recovery-gateway",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 30,
+      "change_weight_permyriad": 0
+    },
+    {
+      "event_id": "obs-gw-05",
+      "logical_sequence": 37,
+      "source_kind": "health",
+      "service_id": "gateway",
+      "event_kind": "http_5xx",
+      "dedup_fingerprint": "health-gateway",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 70
+    },
+    {
+      "event_id": "obs-inv-08",
+      "logical_sequence": 38,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000300000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 650
+    },
+    {
+      "event_id": "obs-inv-09",
+      "logical_sequence": 39,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000330000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 3000,
+      "error_rate_bp": 680
+    },
+    {
+      "event_id": "obs-inv-10",
+      "logical_sequence": 40,
+      "source_kind": "health",
+      "service_id": "inventory",
+      "event_kind": "db_error_rate",
+      "dedup_fingerprint": "health-inventory",
+      "occurred_at_epoch_ms": 1700000360000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 110
+    },
+    {
+      "event_id": "cap-inv-11",
+      "logical_sequence": 41,
+      "source_kind": "capacity",
+      "service_id": "inventory",
+      "event_kind": "saturation",
+      "dedup_fingerprint": "capacity-inventory",
+      "occurred_at_epoch_ms": 1700000390000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "saturation_bp": 5100
+    },
+    {
+      "event_id": "obs-gw-06",
+      "logical_sequence": 42,
+      "source_kind": "health",
+      "service_id": "gateway",
+      "event_kind": "http_5xx",
+      "dedup_fingerprint": "health-gateway",
+      "occurred_at_epoch_ms": 1700000420000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 40
+    },
+    {
+      "event_id": "obs-order-08",
+      "logical_sequence": 43,
+      "source_kind": "health",
+      "service_id": "order",
+      "event_kind": "dependency_error_rate",
+      "dedup_fingerprint": "health-order",
+      "occurred_at_epoch_ms": 1700000420000,
+      "ingest_lag_seconds": 0,
+      "alive_ttl_seconds": 90,
+      "change_weight_permyriad": 0,
+      "error_rate_bp": 50
+    }
+  ],
+  "truth": {
+    "aligned_events": [
+      {
+        "event_id": "obs-gw-01",
+        "kept_id": "obs-gw-01",
+        "effective_ms": 1700000030000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-order-01",
+        "kept_id": "obs-order-01",
+        "effective_ms": 1700000030000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-pay-01",
+        "kept_id": "obs-pay-01",
+        "effective_ms": 1700000030000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "cap-inv-01",
+        "kept_id": "cap-inv-01",
+        "effective_ms": 1700000030000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "chg-pay-deploy",
+        "kept_id": "chg-pay-deploy",
+        "effective_ms": 1700000060000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-02",
+        "kept_id": "obs-inv-02",
+        "effective_ms": 1700000060000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-pay-02",
+        "kept_id": "obs-pay-02",
+        "effective_ms": 1700000090000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "cap-pay-02",
+        "kept_id": "cap-pay-02",
+        "effective_ms": 1700000090000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-03",
+        "kept_id": "obs-inv-03",
+        "effective_ms": 1700000090000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "alert-pay-01",
+        "kept_id": "alert-pay-01",
+        "effective_ms": 1700000100000,
+        "service_id": "payment",
+        "deduped_count": 1,
+        "merged_raw_count": 2,
+        "merged_ids": [
+          "alert-pay-01-retry"
+        ]
+      },
+      {
+        "event_id": "alert-pay-01-retry",
+        "kept_id": "alert-pay-01",
+        "effective_ms": 1700000105000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 0
+      },
+      {
+        "event_id": "obs-order-02",
+        "kept_id": "obs-order-02",
+        "effective_ms": 1700000120000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-04",
+        "kept_id": "obs-inv-04",
+        "effective_ms": 1700000120000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "alert-order-01",
+        "kept_id": "alert-order-01",
+        "effective_ms": 1700000130000,
+        "service_id": "order",
+        "deduped_count": 1,
+        "merged_raw_count": 2,
+        "merged_ids": [
+          "alert-order-01-retry"
+        ]
+      },
+      {
+        "event_id": "alert-order-01-retry",
+        "kept_id": "alert-order-01",
+        "effective_ms": 1700000135000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 0
+      },
+      {
+        "event_id": "obs-order-03",
+        "kept_id": "obs-order-03",
+        "effective_ms": 1700000150000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-05",
+        "kept_id": "obs-inv-05",
+        "effective_ms": 1700000150000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-gw-02",
+        "kept_id": "obs-gw-02",
+        "effective_ms": 1700000180000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-order-04",
+        "kept_id": "obs-order-04",
+        "effective_ms": 1700000180000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-06",
+        "kept_id": "obs-inv-06",
+        "effective_ms": 1700000180000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "alert-gw-01",
+        "kept_id": "alert-gw-01",
+        "effective_ms": 1700000190000,
+        "service_id": "gateway",
+        "deduped_count": 1,
+        "merged_raw_count": 2,
+        "merged_ids": [
+          "alert-gw-01-retry"
+        ]
+      },
+      {
+        "event_id": "alert-gw-01-retry",
+        "kept_id": "alert-gw-01",
+        "effective_ms": 1700000195000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 0
+      },
+      {
+        "event_id": "obs-inv-07",
+        "kept_id": "obs-inv-07",
+        "effective_ms": 1700000210000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-pay-03",
+        "kept_id": "obs-pay-03",
+        "effective_ms": 1700000210000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "cap-pay-03",
+        "kept_id": "cap-pay-03",
+        "effective_ms": 1700000210000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-order-05",
+        "kept_id": "obs-order-05",
+        "effective_ms": 1700000210000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-gw-03",
+        "kept_id": "obs-gw-03",
+        "effective_ms": 1700000210000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-gw-04",
+        "kept_id": "obs-gw-04",
+        "effective_ms": 1700000240000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-pay-04",
+        "kept_id": "obs-pay-04",
+        "effective_ms": 1700000270000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-order-06",
+        "kept_id": "obs-order-06",
+        "effective_ms": 1700000270000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "rec-pay-01",
+        "kept_id": "rec-pay-01",
+        "effective_ms": 1700000300000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-pay-05",
+        "kept_id": "obs-pay-05",
+        "effective_ms": 1700000300000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "cap-pay-05",
+        "kept_id": "cap-pay-05",
+        "effective_ms": 1700000300000,
+        "service_id": "payment",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "rec-order-01",
+        "kept_id": "rec-order-01",
+        "effective_ms": 1700000300000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-order-07",
+        "kept_id": "obs-order-07",
+        "effective_ms": 1700000300000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "rec-gw-01",
+        "kept_id": "rec-gw-01",
+        "effective_ms": 1700000300000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-gw-05",
+        "kept_id": "obs-gw-05",
+        "effective_ms": 1700000300000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-08",
+        "kept_id": "obs-inv-08",
+        "effective_ms": 1700000300000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-09",
+        "kept_id": "obs-inv-09",
+        "effective_ms": 1700000330000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-inv-10",
+        "kept_id": "obs-inv-10",
+        "effective_ms": 1700000360000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "cap-inv-11",
+        "kept_id": "cap-inv-11",
+        "effective_ms": 1700000390000,
+        "service_id": "inventory",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-gw-06",
+        "kept_id": "obs-gw-06",
+        "effective_ms": 1700000420000,
+        "service_id": "gateway",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      },
+      {
+        "event_id": "obs-order-08",
+        "kept_id": "obs-order-08",
+        "effective_ms": 1700000420000,
+        "service_id": "order",
+        "deduped_count": 0,
+        "merged_raw_count": 1
+      }
+    ],
+    "intervals": [
+      {
+        "ordinal": 1,
+        "service_id": "inventory",
+        "start_ms": 1700000060000,
+        "end_ms": 1700000210000,
+        "evidence_ids": [
+          "obs-inv-02",
+          "obs-inv-03",
+          "obs-inv-04",
+          "obs-inv-05",
+          "obs-inv-06",
+          "obs-inv-07"
+        ],
+        "threshold_bp": 400,
+        "metric": "error_rate"
+      },
+      {
+        "ordinal": 2,
+        "service_id": "payment",
+        "start_ms": 1700000090000,
+        "end_ms": 1700000300000,
+        "evidence_ids": [
+          "cap-pay-02",
+          "cap-pay-03",
+          "cap-pay-05",
+          "obs-pay-02",
+          "obs-pay-03",
+          "obs-pay-04",
+          "obs-pay-05"
+        ],
+        "threshold_bp": 8000,
+        "metric": "saturation"
+      },
+      {
+        "ordinal": 3,
+        "service_id": "order",
+        "start_ms": 1700000120000,
+        "end_ms": 1700000300000,
+        "evidence_ids": [
+          "obs-order-02",
+          "obs-order-03",
+          "obs-order-04",
+          "obs-order-05",
+          "obs-order-06",
+          "obs-order-07"
+        ],
+        "threshold_bp": 500,
+        "metric": "error_rate"
+      },
+      {
+        "ordinal": 4,
+        "service_id": "gateway",
+        "start_ms": 1700000180000,
+        "end_ms": 1700000300000,
+        "evidence_ids": [
+          "obs-gw-02",
+          "obs-gw-03",
+          "obs-gw-04",
+          "obs-gw-05"
+        ],
+        "threshold_bp": 500,
+        "metric": "error_rate"
+      },
+      {
+        "ordinal": 5,
+        "service_id": "inventory",
+        "start_ms": 1700000300000,
+        "end_ms": 1700000360000,
+        "evidence_ids": [
+          "obs-inv-08",
+          "obs-inv-09",
+          "obs-inv-10"
+        ],
+        "threshold_bp": 400,
+        "metric": "error_rate"
+      }
+    ],
+    "candidates": [
+      {
+        "event_id": "chg-pay-deploy",
+        "rank": 1,
+        "score_permyriad": 16000
+      },
+      {
+        "event_id": "obs-inv-06",
+        "rank": 2,
+        "score_permyriad": 7650
+      },
+      {
+        "event_id": "alert-pay-01",
+        "rank": 3,
+        "score_permyriad": 7650
+      },
+      {
+        "event_id": "obs-inv-05",
+        "rank": 4,
+        "score_permyriad": 7463
+      },
+      {
+        "event_id": "obs-inv-03",
+        "rank": 5,
+        "score_permyriad": 7013
+      },
+      {
+        "event_id": "cap-pay-03",
+        "rank": 6,
+        "score_permyriad": 7000
+      },
+      {
+        "event_id": "obs-inv-02",
+        "rank": 7,
+        "score_permyriad": 6750
+      },
+      {
+        "event_id": "cap-pay-02",
+        "rank": 8,
+        "score_permyriad": 6750
+      },
+      {
+        "event_id": "alert-order-01",
+        "rank": 9,
+        "score_permyriad": 6562
+      },
+      {
+        "event_id": "obs-pay-03",
+        "rank": 10,
+        "score_permyriad": 5250
+      },
+      {
+        "event_id": "obs-pay-04",
+        "rank": 11,
+        "score_permyriad": 5250
+      },
+      {
+        "event_id": "obs-pay-02",
+        "rank": 12,
+        "score_permyriad": 5063
+      },
+      {
+        "event_id": "obs-order-04",
+        "rank": 13,
+        "score_permyriad": 4500
+      },
+      {
+        "event_id": "alert-gw-01",
+        "rank": 14,
+        "score_permyriad": 4500
+      },
+      {
+        "event_id": "obs-order-05",
+        "rank": 15,
+        "score_permyriad": 4500
+      },
+      {
+        "event_id": "obs-order-06",
+        "rank": 16,
+        "score_permyriad": 4500
+      },
+      {
+        "event_id": "obs-order-03",
+        "rank": 17,
+        "score_permyriad": 4425
+      },
+      {
+        "event_id": "obs-order-02",
+        "rank": 18,
+        "score_permyriad": 4350
+      },
+      {
+        "event_id": "obs-gw-02",
+        "rank": 19,
+        "score_permyriad": 3000
+      },
+      {
+        "event_id": "obs-gw-03",
+        "rank": 20,
+        "score_permyriad": 3000
+      },
+      {
+        "event_id": "obs-gw-04",
+        "rank": 21,
+        "score_permyriad": 3000
+      },
+      {
+        "event_id": "obs-inv-08",
+        "rank": 22,
+        "score_permyriad": 3000
+      },
+      {
+        "event_id": "obs-inv-09",
+        "rank": 23,
+        "score_permyriad": 3000
+      },
+      {
+        "event_id": "obs-gw-01",
+        "rank": 24,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-order-01",
+        "rank": 25,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-pay-01",
+        "rank": 26,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "cap-inv-01",
+        "rank": 27,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-inv-04",
+        "rank": 28,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-inv-07",
+        "rank": 29,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "rec-pay-01",
+        "rank": 30,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-pay-05",
+        "rank": 31,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "cap-pay-05",
+        "rank": 32,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "rec-order-01",
+        "rank": 33,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-order-07",
+        "rank": 34,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "rec-gw-01",
+        "rank": 35,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-gw-05",
+        "rank": 36,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-inv-10",
+        "rank": 37,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "cap-inv-11",
+        "rank": 38,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-gw-06",
+        "rank": 39,
+        "score_permyriad": 0
+      },
+      {
+        "event_id": "obs-order-08",
+        "rank": 40,
+        "score_permyriad": 0
+      }
+    ]
+  }
+}
