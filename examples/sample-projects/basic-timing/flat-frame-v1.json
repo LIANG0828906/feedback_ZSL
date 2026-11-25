@@ -1,0 +1,164 @@
+{
+  "branches": [
+    {
+      "delay_frames": 2,
+      "id": "b_basic_q",
+      "macro_id": "m_attack",
+      "name": "Q attack",
+      "steps": [
+        {
+          "action": "draw_weapon",
+          "id": "s_draw",
+          "lane": "attack-lane"
+        },
+        {
+          "action": "strike",
+          "delay_frames": 1,
+          "id": "s_strike",
+          "lane": "attack-lane"
+        },
+        {
+          "action": "recover",
+          "delay_frames": 2,
+          "id": "s_recover",
+          "lane": "attack-lane"
+        }
+      ],
+      "trigger_window_frames": 4,
+      "when_ref": "b_basic_q_when"
+    },
+    {
+      "cancel_keys": [
+        "Escape"
+      ],
+      "delay_frames": 4,
+      "id": "b_cancel_r",
+      "macro_id": "m_cancel_demo",
+      "name": "Cancelable R",
+      "steps": [
+        {
+          "action": "chant",
+          "hold_frames": 1,
+          "id": "s_chant",
+          "lane": "cancel-lane"
+        },
+        {
+          "action": "fire",
+          "delay_frames": 3,
+          "id": "s_fire",
+          "lane": "cancel-lane"
+        }
+      ],
+      "trigger_window_frames": 4,
+      "when_ref": "b_cancel_r_when"
+    },
+    {
+      "delay_frames": 1,
+      "id": "b_flag_e",
+      "macro_id": "m_magic",
+      "name": "Flag plus E",
+      "steps": [
+        {
+          "action": "scan",
+          "id": "s_scan",
+          "lane": "magic-lane"
+        },
+        {
+          "action": "blast",
+          "delay_frames": 2,
+          "id": "s_blast",
+          "lane": "magic-lane"
+        }
+      ],
+      "trigger_window_frames": 4,
+      "when_ref": "b_flag_e_when"
+    },
+    {
+      "delay_frames": 1,
+      "id": "b_followup",
+      "macro_id": "m_combo",
+      "name": "After Q follow-up",
+      "steps": [
+        {
+          "action": "dash",
+          "id": "s_dash",
+          "lane": "combo-lane"
+        },
+        {
+          "action": "heavy_strike",
+          "delay_frames": 2,
+          "id": "s_heavy",
+          "lane": "combo-lane"
+        }
+      ],
+      "trigger_window_frames": 4,
+      "when_ref": "b_followup_when"
+    }
+  ],
+  "condition_table": [
+    {
+      "id": "b_followup_when",
+      "op": "all",
+      "refs": [
+        "b_followup_when_0",
+        "b_followup_when_1"
+      ]
+    },
+    {
+      "branch_id": "b_basic_q",
+      "id": "b_followup_when_1",
+      "op": "branch",
+      "outcome": "completed"
+    },
+    {
+      "id": "b_followup_when_0",
+      "key": "KeyF",
+      "op": "key",
+      "state": "pressed"
+    },
+    {
+      "id": "b_flag_e_when",
+      "op": "all",
+      "refs": [
+        "b_flag_e_when_0",
+        "b_flag_e_when_1"
+      ]
+    },
+    {
+      "flag": "advanced",
+      "id": "b_flag_e_when_1",
+      "op": "flag"
+    },
+    {
+      "id": "b_flag_e_when_0",
+      "key": "KeyE",
+      "op": "key",
+      "state": "pressed"
+    },
+    {
+      "id": "b_cancel_r_when",
+      "key": "KeyR",
+      "op": "key",
+      "state": "pressed"
+    },
+    {
+      "id": "b_basic_q_when",
+      "key": "KeyQ",
+      "op": "key",
+      "state": "pressed"
+    }
+  ],
+  "flags": {
+    "advanced": true
+  },
+  "format": 1,
+  "frame_rate": 60,
+  "name": "Basic timing, cancellation and predecessor",
+  "project_id": "basic-timing",
+  "schema_version": "flat-frame-v1.0",
+  "seed": 20261125,
+  "time_policy": {
+    "frame_to_ms": "floor",
+    "ms_to_frame": "ceil"
+  }
+}

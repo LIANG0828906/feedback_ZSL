@@ -1,0 +1,84 @@
+{
+  "branches": [
+    {
+      "delay_frames": 1,
+      "id": "p_high",
+      "macro_id": "m_high",
+      "name": "",
+      "priority": 20,
+      "steps": [
+        {
+          "action": "slash",
+          "hold_frames": 2,
+          "id": "s_high_slash",
+          "lane": "shared-combat-lane"
+        }
+      ],
+      "trigger_window_frames": 1,
+      "when_ref": "p_high_when"
+    },
+    {
+      "delay_frames": 1,
+      "id": "p_low",
+      "macro_id": "m_low",
+      "name": "",
+      "priority": 5,
+      "steps": [
+        {
+          "action": "slash",
+          "hold_frames": 2,
+          "id": "s_low_slash",
+          "lane": "shared-combat-lane"
+        }
+      ],
+      "trigger_window_frames": 1,
+      "when_ref": "p_low_when"
+    },
+    {
+      "id": "p_other",
+      "macro_id": "m_movement",
+      "name": "",
+      "priority": 1,
+      "steps": [
+        {
+          "action": "jump",
+          "id": "s_jump",
+          "lane": "movement-lane"
+        }
+      ],
+      "trigger_window_frames": 1,
+      "when_ref": "p_other_when"
+    }
+  ],
+  "condition_table": [
+    {
+      "id": "p_other_when",
+      "key": "Space",
+      "op": "key",
+      "state": "pressed"
+    },
+    {
+      "id": "p_low_when",
+      "key": "Space",
+      "op": "key",
+      "state": "pressed"
+    },
+    {
+      "id": "p_high_when",
+      "key": "Space",
+      "op": "key",
+      "state": "pressed"
+    }
+  ],
+  "flags": {},
+  "format": 1,
+  "frame_rate": 60,
+  "name": "Priority arbitration for same-frame lane conflicts",
+  "project_id": "priority-conflict",
+  "schema_version": "flat-frame-v1.0",
+  "seed": 20261125,
+  "time_policy": {
+    "frame_to_ms": "floor",
+    "ms_to_frame": "ceil"
+  }
+}

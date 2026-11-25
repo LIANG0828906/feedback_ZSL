@@ -1,0 +1,52 @@
+{
+  "seed": 20261125,
+  "project_id": "priority-conflict",
+  "frame_count": 8,
+  "branches": [
+    {
+      "id": "p_high",
+      "macro_id": "m_high",
+      "triggered": true,
+      "trigger_frame": 3,
+      "delay_frames": 1,
+      "steps": [
+        "s_high_slash"
+      ],
+      "step_frames": [
+        4
+      ],
+      "step_gaps": null,
+      "completed": true,
+      "canceled": false
+    },
+    {
+      "id": "p_low",
+      "macro_id": "m_low",
+      "triggered": true,
+      "trigger_frame": 3,
+      "delay_frames": 0,
+      "steps": null,
+      "step_frames": null,
+      "step_gaps": null,
+      "completed": false,
+      "canceled": false,
+      "suppressed_by": "p_high"
+    },
+    {
+      "id": "p_other",
+      "macro_id": "m_movement",
+      "triggered": true,
+      "trigger_frame": 3,
+      "delay_frames": 0,
+      "steps": [
+        "s_jump"
+      ],
+      "step_frames": [
+        3
+      ],
+      "step_gaps": null,
+      "completed": true,
+      "canceled": false
+    }
+  ]
+}

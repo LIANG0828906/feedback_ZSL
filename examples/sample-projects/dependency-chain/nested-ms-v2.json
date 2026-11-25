@@ -1,0 +1,111 @@
+{
+  "branches": [
+    {
+      "branchId": "d_a",
+      "delayMs": 16,
+      "macroId": "m_chain_a",
+      "name": "",
+      "steps": [
+        {
+          "actionName": "a1",
+          "laneName": "lane-a",
+          "stepId": "s_a1"
+        },
+        {
+          "actionName": "a2",
+          "delayMs": 16,
+          "laneName": "lane-a",
+          "stepId": "s_a2"
+        }
+      ],
+      "triggerWindowMs": 16,
+      "when": {
+        "keyCode": "KeyZ",
+        "op": "key",
+        "state": "pressed"
+      }
+    },
+    {
+      "branchId": "d_b",
+      "delayMs": 33,
+      "macroId": "m_chain_b",
+      "name": "",
+      "steps": [
+        {
+          "actionName": "b1",
+          "laneName": "lane-b",
+          "stepId": "s_b1"
+        },
+        {
+          "actionName": "b2",
+          "delayMs": 16,
+          "laneName": "lane-b",
+          "stepId": "s_b2"
+        }
+      ],
+      "triggerWindowMs": 16,
+      "when": {
+        "children": [
+          {
+            "keyCode": "KeyX",
+            "op": "key",
+            "state": "pressed"
+          },
+          {
+            "branchId": "d_a",
+            "expectOutcome": "completed",
+            "op": "branch"
+          }
+        ],
+        "op": "all"
+      }
+    },
+    {
+      "branchId": "d_c",
+      "macroId": "m_chain_c",
+      "name": "",
+      "steps": [
+        {
+          "actionName": "c1",
+          "laneName": "lane-c",
+          "stepId": "s_c1"
+        }
+      ],
+      "triggerWindowMs": 16,
+      "when": {
+        "branchId": "d_b",
+        "expectOutcome": "completed",
+        "op": "branch"
+      }
+    },
+    {
+      "branchId": "d_ind",
+      "macroId": "m_independent",
+      "name": "",
+      "steps": [
+        {
+          "actionName": "ind1",
+          "laneName": "lane-ind",
+          "stepId": "s_ind1"
+        }
+      ],
+      "triggerWindowMs": 16,
+      "when": {
+        "keyCode": "KeyC",
+        "op": "key",
+        "state": "pressed"
+      }
+    }
+  ],
+  "flags": {},
+  "format": 2,
+  "frameRate": 60,
+  "name": "Branch dependency graph and incremental invalidation",
+  "projectId": "dependency-chain",
+  "schemaVersion": "nested-ms-v2.0",
+  "seed": 20261125,
+  "timePolicy": {
+    "frameToMS": "floor",
+    "msToFrame": "ceil"
+  }
+}

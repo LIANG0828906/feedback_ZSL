@@ -20,3 +20,27 @@
 
 验收：
 使用本地宏工程验证触发帧、步骤序列与换算往返一致，并覆盖增量重算、异常注入与断点恢复。
+
+---
+
+## 交付实现与快速验证
+
+本目录已交付 Go 领域组件、确定性样本生成器、SQLite 检查点和本地 CLI。详细设计见 `docs/DESIGN.md`，实际验证结果见 `docs/VALIDATION.md`。
+
+```powershell
+go version
+go env -w GOFLAGS=-mod=mod
+.\scripts\verify.ps1
+```
+
+手动执行：
+
+```powershell
+$env:GOPROXY = "off"
+go test ./...
+go run .\cmd\macrotool generate
+go run .\cmd\macrotool verify
+go run .\cmd\macrotool inject -case all
+```
+
+生成的三份样例工程位于 `examples/sample-projects/`，每个工程包含 `flat-frame-v1.json`、`nested-ms-v2.json`、`tree-frame-v3.json`、`events.json` 和 `truth.json`。异常码覆盖 `E_SCHEMA`、`E_REF`、`E_OVF`、`E_CONFLICT`、`E_DIFF`、`E_FAULT`、`E_CORRUPT`、`E_VERSION`。

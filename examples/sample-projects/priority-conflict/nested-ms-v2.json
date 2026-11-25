@@ -1,0 +1,76 @@
+{
+  "branches": [
+    {
+      "branchId": "p_high",
+      "delayMs": 16,
+      "macroId": "m_high",
+      "name": "",
+      "priority": 20,
+      "steps": [
+        {
+          "actionName": "slash",
+          "holdMs": 33,
+          "laneName": "shared-combat-lane",
+          "stepId": "s_high_slash"
+        }
+      ],
+      "triggerWindowMs": 16,
+      "when": {
+        "keyCode": "Space",
+        "op": "key",
+        "state": "pressed"
+      }
+    },
+    {
+      "branchId": "p_low",
+      "delayMs": 16,
+      "macroId": "m_low",
+      "name": "",
+      "priority": 5,
+      "steps": [
+        {
+          "actionName": "slash",
+          "holdMs": 33,
+          "laneName": "shared-combat-lane",
+          "stepId": "s_low_slash"
+        }
+      ],
+      "triggerWindowMs": 16,
+      "when": {
+        "keyCode": "Space",
+        "op": "key",
+        "state": "pressed"
+      }
+    },
+    {
+      "branchId": "p_other",
+      "macroId": "m_movement",
+      "name": "",
+      "priority": 1,
+      "steps": [
+        {
+          "actionName": "jump",
+          "laneName": "movement-lane",
+          "stepId": "s_jump"
+        }
+      ],
+      "triggerWindowMs": 16,
+      "when": {
+        "keyCode": "Space",
+        "op": "key",
+        "state": "pressed"
+      }
+    }
+  ],
+  "flags": {},
+  "format": 2,
+  "frameRate": 60,
+  "name": "Priority arbitration for same-frame lane conflicts",
+  "projectId": "priority-conflict",
+  "schemaVersion": "nested-ms-v2.0",
+  "seed": 20261125,
+  "timePolicy": {
+    "frameToMS": "floor",
+    "msToFrame": "ceil"
+  }
+}

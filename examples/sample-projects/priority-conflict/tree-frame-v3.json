@@ -1,0 +1,76 @@
+{
+  "Branches": [
+    {
+      "BranchID": "p_high",
+      "Condition": {
+        "KeyCode": "Space",
+        "KeyState": "Pressed",
+        "Type": "Key"
+      },
+      "DelayFrames": 1,
+      "MacroID": "m_high",
+      "Name": "",
+      "Priority": 20,
+      "Steps": [
+        {
+          "ActionName": "slash",
+          "HoldFrames": 2,
+          "LaneName": "shared-combat-lane",
+          "StepID": "s_high_slash"
+        }
+      ],
+      "WindowFrames": 1
+    },
+    {
+      "BranchID": "p_low",
+      "Condition": {
+        "KeyCode": "Space",
+        "KeyState": "Pressed",
+        "Type": "Key"
+      },
+      "DelayFrames": 1,
+      "MacroID": "m_low",
+      "Name": "",
+      "Priority": 5,
+      "Steps": [
+        {
+          "ActionName": "slash",
+          "HoldFrames": 2,
+          "LaneName": "shared-combat-lane",
+          "StepID": "s_low_slash"
+        }
+      ],
+      "WindowFrames": 1
+    },
+    {
+      "BranchID": "p_other",
+      "Condition": {
+        "KeyCode": "Space",
+        "KeyState": "Pressed",
+        "Type": "Key"
+      },
+      "MacroID": "m_movement",
+      "Name": "",
+      "Priority": 1,
+      "Steps": [
+        {
+          "ActionName": "jump",
+          "LaneName": "movement-lane",
+          "StepID": "s_jump"
+        }
+      ],
+      "WindowFrames": 1
+    }
+  ],
+  "Flags": {},
+  "FrameRate": 60,
+  "Name": "Priority arbitration for same-frame lane conflicts",
+  "ProjectID": "priority-conflict",
+  "SchemaVersion": "tree-frame-v3.0",
+  "Seed": 20261125,
+  "TimePolicy": {
+    "FrameToMS": "floor",
+    "MSToFrame": "ceil"
+  },
+  "format": 3
+}

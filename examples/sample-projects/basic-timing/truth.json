@@ -1,0 +1,84 @@
+{
+  "seed": 20261125,
+  "project_id": "basic-timing",
+  "frame_count": 16,
+  "branches": [
+    {
+      "id": "b_basic_q",
+      "macro_id": "m_attack",
+      "triggered": true,
+      "trigger_frame": 2,
+      "delay_frames": 2,
+      "steps": [
+        "s_draw",
+        "s_strike",
+        "s_recover"
+      ],
+      "step_frames": [
+        4,
+        5,
+        7
+      ],
+      "step_gaps": [
+        1,
+        2
+      ],
+      "completed": true,
+      "canceled": false
+    },
+    {
+      "id": "b_flag_e",
+      "macro_id": "m_magic",
+      "triggered": true,
+      "trigger_frame": 5,
+      "delay_frames": 1,
+      "steps": [
+        "s_scan",
+        "s_blast"
+      ],
+      "step_frames": [
+        6,
+        8
+      ],
+      "step_gaps": [
+        2
+      ],
+      "completed": true,
+      "canceled": false
+    },
+    {
+      "id": "b_cancel_r",
+      "macro_id": "m_cancel_demo",
+      "triggered": true,
+      "trigger_frame": 6,
+      "delay_frames": 4,
+      "steps": null,
+      "step_frames": null,
+      "step_gaps": null,
+      "completed": false,
+      "canceled": true,
+      "cancel_frame": 8,
+      "cancel_reason": "cancel_key:Escape"
+    },
+    {
+      "id": "b_followup",
+      "macro_id": "m_combo",
+      "triggered": true,
+      "trigger_frame": 10,
+      "delay_frames": 1,
+      "steps": [
+        "s_dash",
+        "s_heavy"
+      ],
+      "step_frames": [
+        11,
+        13
+      ],
+      "step_gaps": [
+        2
+      ],
+      "completed": true,
+      "canceled": false
+    }
+  ]
+}

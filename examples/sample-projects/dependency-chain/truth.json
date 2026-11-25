@@ -1,0 +1,79 @@
+{
+  "seed": 20261125,
+  "project_id": "dependency-chain",
+  "frame_count": 12,
+  "branches": [
+    {
+      "id": "d_ind",
+      "macro_id": "m_independent",
+      "triggered": true,
+      "trigger_frame": 1,
+      "delay_frames": 0,
+      "steps": [
+        "s_ind1"
+      ],
+      "step_frames": [
+        1
+      ],
+      "step_gaps": null,
+      "completed": true,
+      "canceled": false
+    },
+    {
+      "id": "d_a",
+      "macro_id": "m_chain_a",
+      "triggered": true,
+      "trigger_frame": 2,
+      "delay_frames": 1,
+      "steps": [
+        "s_a1",
+        "s_a2"
+      ],
+      "step_frames": [
+        3,
+        4
+      ],
+      "step_gaps": [
+        1
+      ],
+      "completed": true,
+      "canceled": false
+    },
+    {
+      "id": "d_b",
+      "macro_id": "m_chain_b",
+      "triggered": true,
+      "trigger_frame": 6,
+      "delay_frames": 2,
+      "steps": [
+        "s_b1",
+        "s_b2"
+      ],
+      "step_frames": [
+        8,
+        9
+      ],
+      "step_gaps": [
+        1
+      ],
+      "completed": true,
+      "canceled": false
+    },
+    {
+      "id": "d_c",
+      "macro_id": "m_chain_c",
+      "triggered": true,
+      "trigger_frame": 10,
+      "delay_frames": 0,
+      "steps": [
+        "s_c1"
+      ],
+      "step_frames": [
+        10
+      ],
+      "step_gaps": null,
+      "completed": true,
+      "canceled": false
+    }
+  ]
+}

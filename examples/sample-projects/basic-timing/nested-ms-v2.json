@@ -1,0 +1,146 @@
+{
+  "branches": [
+    {
+      "branchId": "b_basic_q",
+      "delayMs": 33,
+      "macroId": "m_attack",
+      "name": "Q attack",
+      "steps": [
+        {
+          "actionName": "draw_weapon",
+          "laneName": "attack-lane",
+          "stepId": "s_draw"
+        },
+        {
+          "actionName": "strike",
+          "delayMs": 16,
+          "laneName": "attack-lane",
+          "stepId": "s_strike"
+        },
+        {
+          "actionName": "recover",
+          "delayMs": 33,
+          "laneName": "attack-lane",
+          "stepId": "s_recover"
+        }
+      ],
+      "triggerWindowMs": 66,
+      "when": {
+        "keyCode": "KeyQ",
+        "op": "key",
+        "state": "pressed"
+      }
+    },
+    {
+      "branchId": "b_cancel_r",
+      "cancelKeys": [
+        "Escape"
+      ],
+      "delayMs": 66,
+      "macroId": "m_cancel_demo",
+      "name": "Cancelable R",
+      "steps": [
+        {
+          "actionName": "chant",
+          "holdMs": 16,
+          "laneName": "cancel-lane",
+          "stepId": "s_chant"
+        },
+        {
+          "actionName": "fire",
+          "delayMs": 50,
+          "laneName": "cancel-lane",
+          "stepId": "s_fire"
+        }
+      ],
+      "triggerWindowMs": 66,
+      "when": {
+        "keyCode": "KeyR",
+        "op": "key",
+        "state": "pressed"
+      }
+    },
+    {
+      "branchId": "b_flag_e",
+      "delayMs": 16,
+      "macroId": "m_magic",
+      "name": "Flag plus E",
+      "steps": [
+        {
+          "actionName": "scan",
+          "laneName": "magic-lane",
+          "stepId": "s_scan"
+        },
+        {
+          "actionName": "blast",
+          "delayMs": 33,
+          "laneName": "magic-lane",
+          "stepId": "s_blast"
+        }
+      ],
+      "triggerWindowMs": 66,
+      "when": {
+        "children": [
+          {
+            "keyCode": "KeyE",
+            "op": "key",
+            "state": "pressed"
+          },
+          {
+            "flagName": "advanced",
+            "op": "flag"
+          }
+        ],
+        "op": "all"
+      }
+    },
+    {
+      "branchId": "b_followup",
+      "delayMs": 16,
+      "macroId": "m_combo",
+      "name": "After Q follow-up",
+      "steps": [
+        {
+          "actionName": "dash",
+          "laneName": "combo-lane",
+          "stepId": "s_dash"
+        },
+        {
+          "actionName": "heavy_strike",
+          "delayMs": 33,
+          "laneName": "combo-lane",
+          "stepId": "s_heavy"
+        }
+      ],
+      "triggerWindowMs": 66,
+      "when": {
+        "children": [
+          {
+            "keyCode": "KeyF",
+            "op": "key",
+            "state": "pressed"
+          },
+          {
+            "branchId": "b_basic_q",
+            "expectOutcome": "completed",
+            "op": "branch"
+          }
+        ],
+        "op": "all"
+      }
+    }
+  ],
+  "flags": {
+    "advanced": true
+  },
+  "format": 2,
+  "frameRate": 60,
+  "name": "Basic timing, cancellation and predecessor",
+  "projectId": "basic-timing",
+  "schemaVersion": "nested-ms-v2.0",
+  "seed": 20261125,
+  "timePolicy": {
+    "frameToMS": "floor",
+    "msToFrame": "ceil"
+  }
+}

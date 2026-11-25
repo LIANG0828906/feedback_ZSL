@@ -1,0 +1,111 @@
+{
+  "Branches": [
+    {
+      "BranchID": "d_a",
+      "Condition": {
+        "KeyCode": "KeyZ",
+        "KeyState": "Pressed",
+        "Type": "Key"
+      },
+      "DelayFrames": 1,
+      "MacroID": "m_chain_a",
+      "Name": "",
+      "Steps": [
+        {
+          "ActionName": "a1",
+          "LaneName": "lane-a",
+          "StepID": "s_a1"
+        },
+        {
+          "ActionName": "a2",
+          "GapFrames": 1,
+          "LaneName": "lane-a",
+          "StepID": "s_a2"
+        }
+      ],
+      "WindowFrames": 1
+    },
+    {
+      "BranchID": "d_b",
+      "Condition": {
+        "Nodes": [
+          {
+            "KeyCode": "KeyX",
+            "KeyState": "Pressed",
+            "Type": "Key"
+          },
+          {
+            "BranchRef": "d_a",
+            "Outcome": "completed",
+            "Type": "Branch"
+          }
+        ],
+        "Type": "All"
+      },
+      "DelayFrames": 2,
+      "MacroID": "m_chain_b",
+      "Name": "",
+      "Steps": [
+        {
+          "ActionName": "b1",
+          "LaneName": "lane-b",
+          "StepID": "s_b1"
+        },
+        {
+          "ActionName": "b2",
+          "GapFrames": 1,
+          "LaneName": "lane-b",
+          "StepID": "s_b2"
+        }
+      ],
+      "WindowFrames": 1
+    },
+    {
+      "BranchID": "d_c",
+      "Condition": {
+        "BranchRef": "d_b",
+        "Outcome": "completed",
+        "Type": "Branch"
+      },
+      "MacroID": "m_chain_c",
+      "Name": "",
+      "Steps": [
+        {
+          "ActionName": "c1",
+          "LaneName": "lane-c",
+          "StepID": "s_c1"
+        }
+      ],
+      "WindowFrames": 1
+    },
+    {
+      "BranchID": "d_ind",
+      "Condition": {
+        "KeyCode": "KeyC",
+        "KeyState": "Pressed",
+        "Type": "Key"
+      },
+      "MacroID": "m_independent",
+      "Name": "",
+      "Steps": [
+        {
+          "ActionName": "ind1",
+          "LaneName": "lane-ind",
+          "StepID": "s_ind1"
+        }
+      ],
+      "WindowFrames": 1
+    }
+  ],
+  "Flags": {},
+  "FrameRate": 60,
+  "Name": "Branch dependency graph and incremental invalidation",
+  "ProjectID": "dependency-chain",
+  "SchemaVersion": "tree-frame-v3.0",
+  "Seed": 20261125,
+  "TimePolicy": {
+    "FrameToMS": "floor",
+    "MSToFrame": "ceil"
+  },
+  "format": 3
+}

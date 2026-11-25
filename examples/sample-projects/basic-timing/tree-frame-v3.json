@@ -1,0 +1,146 @@
+{
+  "Branches": [
+    {
+      "BranchID": "b_basic_q",
+      "Condition": {
+        "KeyCode": "KeyQ",
+        "KeyState": "Pressed",
+        "Type": "Key"
+      },
+      "DelayFrames": 2,
+      "MacroID": "m_attack",
+      "Name": "Q attack",
+      "Steps": [
+        {
+          "ActionName": "draw_weapon",
+          "LaneName": "attack-lane",
+          "StepID": "s_draw"
+        },
+        {
+          "ActionName": "strike",
+          "GapFrames": 1,
+          "LaneName": "attack-lane",
+          "StepID": "s_strike"
+        },
+        {
+          "ActionName": "recover",
+          "GapFrames": 2,
+          "LaneName": "attack-lane",
+          "StepID": "s_recover"
+        }
+      ],
+      "WindowFrames": 4
+    },
+    {
+      "BranchID": "b_cancel_r",
+      "CancelKeys": [
+        "Escape"
+      ],
+      "Condition": {
+        "KeyCode": "KeyR",
+        "KeyState": "Pressed",
+        "Type": "Key"
+      },
+      "DelayFrames": 4,
+      "MacroID": "m_cancel_demo",
+      "Name": "Cancelable R",
+      "Steps": [
+        {
+          "ActionName": "chant",
+          "HoldFrames": 1,
+          "LaneName": "cancel-lane",
+          "StepID": "s_chant"
+        },
+        {
+          "ActionName": "fire",
+          "GapFrames": 3,
+          "LaneName": "cancel-lane",
+          "StepID": "s_fire"
+        }
+      ],
+      "WindowFrames": 4
+    },
+    {
+      "BranchID": "b_flag_e",
+      "Condition": {
+        "Nodes": [
+          {
+            "KeyCode": "KeyE",
+            "KeyState": "Pressed",
+            "Type": "Key"
+          },
+          {
+            "FlagName": "advanced",
+            "Type": "Flag"
+          }
+        ],
+        "Type": "All"
+      },
+      "DelayFrames": 1,
+      "MacroID": "m_magic",
+      "Name": "Flag plus E",
+      "Steps": [
+        {
+          "ActionName": "scan",
+          "LaneName": "magic-lane",
+          "StepID": "s_scan"
+        },
+        {
+          "ActionName": "blast",
+          "GapFrames": 2,
+          "LaneName": "magic-lane",
+          "StepID": "s_blast"
+        }
+      ],
+      "WindowFrames": 4
+    },
+    {
+      "BranchID": "b_followup",
+      "Condition": {
+        "Nodes": [
+          {
+            "KeyCode": "KeyF",
+            "KeyState": "Pressed",
+            "Type": "Key"
+          },
+          {
+            "BranchRef": "b_basic_q",
+            "Outcome": "completed",
+            "Type": "Branch"
+          }
+        ],
+        "Type": "All"
+      },
+      "DelayFrames": 1,
+      "MacroID": "m_combo",
+      "Name": "After Q follow-up",
+      "Steps": [
+        {
+          "ActionName": "dash",
+          "LaneName": "combo-lane",
+          "StepID": "s_dash"
+        },
+        {
+          "ActionName": "heavy_strike",
+          "GapFrames": 2,
+          "LaneName": "combo-lane",
+          "StepID": "s_heavy"
+        }
+      ],
+      "WindowFrames": 4
+    }
+  ],
+  "Flags": {
+    "advanced": true
+  },
+  "FrameRate": 60,
+  "Name": "Basic timing, cancellation and predecessor",
+  "ProjectID": "basic-timing",
+  "SchemaVersion": "tree-frame-v3.0",
+  "Seed": 20261125,
+  "TimePolicy": {
+    "FrameToMS": "floor",
+    "MSToFrame": "ceil"
+  },
+  "format": 3
+}

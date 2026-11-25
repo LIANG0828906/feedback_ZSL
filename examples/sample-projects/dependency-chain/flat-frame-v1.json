@@ -1,0 +1,125 @@
+{
+  "branches": [
+    {
+      "delay_frames": 1,
+      "id": "d_a",
+      "macro_id": "m_chain_a",
+      "name": "",
+      "steps": [
+        {
+          "action": "a1",
+          "id": "s_a1",
+          "lane": "lane-a"
+        },
+        {
+          "action": "a2",
+          "delay_frames": 1,
+          "id": "s_a2",
+          "lane": "lane-a"
+        }
+      ],
+      "trigger_window_frames": 1,
+      "when_ref": "d_a_when"
+    },
+    {
+      "delay_frames": 2,
+      "id": "d_b",
+      "macro_id": "m_chain_b",
+      "name": "",
+      "steps": [
+        {
+          "action": "b1",
+          "id": "s_b1",
+          "lane": "lane-b"
+        },
+        {
+          "action": "b2",
+          "delay_frames": 1,
+          "id": "s_b2",
+          "lane": "lane-b"
+        }
+      ],
+      "trigger_window_frames": 1,
+      "when_ref": "d_b_when"
+    },
+    {
+      "id": "d_c",
+      "macro_id": "m_chain_c",
+      "name": "",
+      "steps": [
+        {
+          "action": "c1",
+          "id": "s_c1",
+          "lane": "lane-c"
+        }
+      ],
+      "trigger_window_frames": 1,
+      "when_ref": "d_c_when"
+    },
+    {
+      "id": "d_ind",
+      "macro_id": "m_independent",
+      "name": "",
+      "steps": [
+        {
+          "action": "ind1",
+          "id": "s_ind1",
+          "lane": "lane-ind"
+        }
+      ],
+      "trigger_window_frames": 1,
+      "when_ref": "d_ind_when"
+    }
+  ],
+  "condition_table": [
+    {
+      "id": "d_ind_when",
+      "key": "KeyC",
+      "op": "key",
+      "state": "pressed"
+    },
+    {
+      "branch_id": "d_b",
+      "id": "d_c_when",
+      "op": "branch",
+      "outcome": "completed"
+    },
+    {
+      "id": "d_b_when",
+      "op": "all",
+      "refs": [
+        "d_b_when_0",
+        "d_b_when_1"
+      ]
+    },
+    {
+      "branch_id": "d_a",
+      "id": "d_b_when_1",
+      "op": "branch",
+      "outcome": "completed"
+    },
+    {
+      "id": "d_b_when_0",
+      "key": "KeyX",
+      "op": "key",
+      "state": "pressed"
+    },
+    {
+      "id": "d_a_when",
+      "key": "KeyZ",
+      "op": "key",
+      "state": "pressed"
+    }
+  ],
+  "flags": {},
+  "format": 1,
+  "frame_rate": 60,
+  "name": "Branch dependency graph and incremental invalidation",
+  "project_id": "dependency-chain",
+  "schema_version": "flat-frame-v1.0",
+  "seed": 20261125,
+  "time_policy": {
+    "frame_to_ms": "floor",
+    "ms_to_frame": "ceil"
+  }
+}
