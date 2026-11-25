@@ -1,0 +1,30 @@
+:root { color-scheme: dark; font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; background:#11131a; color:#e8ecf8; }
+body { margin:0; }
+header { padding:20px 28px; background:linear-gradient(120deg,#171b2b,#202844); display:flex; justify-content:space-between; gap:18px; align-items:center; flex-wrap:wrap; }
+h1 { font-size:22px; margin:0 0 6px; }
+header p { margin:0; color:#9fb0d0; font-size:13px; }
+.actions { display:flex; gap:8px; flex-wrap:wrap; }
+button, select { border:1px solid #3a4a72; background:#1d2740; color:#eef3ff; border-radius:8px; padding:8px 12px; cursor:pointer; }
+button:hover { background:#29385e; }
+button.danger { border-color:#7a3146; background:#421d2b; }
+main { padding:22px 28px; display:grid; grid-template-columns:repeat(3,minmax(280px,1fr)); gap:18px; }
+.card { background:#181c28; border:1px solid #2a334b; border-radius:14px; padding:16px; box-shadow:0 10px 30px #0003; }
+.span2 { grid-column:span 2; }
+.span3 { grid-column:span 3; }
+h2 { font-size:16px; margin:0 0 14px; }
+.images { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+figure { margin:0; background:#10131c; border:1px solid #26304a; border-radius:10px; padding:8px; }
+img { width:100%; image-rendering:pixelated; border-radius:6px; background:#0b0d13; min-height:96px; }
+figcaption { color:#9fb0d0; font-size:12px; margin-top:6px; text-align:center; }
+label { display:grid; grid-template-columns:80px 1fr 42px; gap:10px; align-items:center; margin:12px 0; font-size:13px; }
+pre { white-space:pre-wrap; word-break:break-all; background:#0e111a; border:1px solid #26304a; border-radius:10px; padding:12px; min-height:120px; max-height:360px; overflow:auto; font-size:12px; }
+.row { display:flex; justify-content:space-between; align-items:center; }
+.matrix { overflow:auto; }
+table { border-collapse:separate; border-spacing:5px; }
+th, td { font-size:12px; color:#9fb0d0; }
+.cell { min-width:86px; text-transform:uppercase; font-size:11px; padding:7px 9px; border-radius:7px; border:1px solid #34405c; }
+.cell.pending { background:#202637; }
+.cell.running { background:#5b4a16; border-color:#a98520; }
+.cell.committed { background:#174b39; border-color:#2d9b72; }
+.cell.failed { background:#5c1f31; border-color:#c24b6c; }
+@media (max-width:1100px) { main { grid-template-columns:1fr; } .span2,.span3 { grid-column:span1; } .images { grid-template-columns:repeat(2,1fr); } }

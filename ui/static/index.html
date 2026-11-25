@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IconCut 掩码切图验收台</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>IconCut 几何校正与掩码分割验收台</h1>
+      <p>确定性样本 · 单应/径向校正 · 分块状态机 · SQLite 版本检查点 · 三路径比对</p>
+    </div>
+    <div class="actions">
+      <select id="image"></select>
+      <button id="run">全量运行</button>
+      <button id="compare">三路径比对</button>
+      <button id="verify">独立验证</button>
+      <button id="pause">暂停</button>
+      <button id="resume">恢复</button>
+      <button id="cancel" class="danger">取消</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card span2">
+      <h2>校正前后对照</h2>
+      <div class="images">
+        <figure><img id="source" alt="source"/><figcaption>畸变源图</figcaption></figure>
+        <figure><img id="corrected" alt="corrected"/><figcaption>反向映射校正图</figcaption></figure>
+        <figure><img id="mask" alt="mask"/><figcaption>拼接标签掩码（灰度 ID）</figcaption></figure>
+        <figure><img id="reference" alt="reference"/><figcaption>像素级真值</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>交互预览</h2>
+      <label>颜色容差 <input id="tol" type="range" min="0" max="80" value="18"/><span id="tolV">18</span></label>
+      <label>梯度阈值 <input id="grad" type="range" min="0" max="80" value="12"/><span id="gradV">12</span></label>
+      <pre id="preview">拖动后显示降采样倍率、迭代预算、延迟和分歧判定。</pre>
+    </section>
+
+    <section class="card span3">
+      <div class="row">
+        <h2>分块 × 阶段状态矩阵</h2>
+        <button id="refresh">刷新状态</button>
+      </div>
+      <div id="matrix" class="matrix"></div>
+    </section>
+
+    <section class="card span3">
+      <h2>执行结果 / 异常定位 / 独立验证</h2>
+      <pre id="output">等待运行。</pre>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
