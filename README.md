@@ -20,3 +20,22 @@
 
 验收：
 用本地样本验证逐级定点输出、色带归因与三路径逐采样点一致，并覆盖预算排队与异常码。
+
+---
+
+## 交付运行说明
+
+新增实现与详细设计见 `IMPLEMENTATION.md`，实测结果见 `VALIDATION.md`。
+
+```bash
+go build ./...
+go vet ./...
+go test ./...
+go test -race .
+go run ./cmd/diagnostic -out artifacts/diagnostic
+```
+
+工程为零第三方 Go 模块依赖；SQLite 通过 cgo 直接链接本机
+`libsqlite3.so.0`。诊断程序会生成真实 `.sqlite` 检查点、JSON 报告、独立复核
+结果和提交序列。固定样本的首现色带为第 1 级 `Y` 平面坐标 `(4,1)`、块
+`c01x00`，主导算子为 `bit_round`。
