@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPECTRA — Multispectral HDR Workbench</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark"><span></span><span></span><span></span><span></span></div>
+      <div>
+        <div class="brand-name">SPECTRA</div>
+        <div class="brand-sub">MULTISPECTRAL / HDR COMPOSITING WORKBENCH</div>
+      </div>
+    </div>
+    <div class="scene-bar">
+      <label>SCENE <select id="sceneSelect"></select></label>
+      <label>SCHEMA <select id="versionSelect">
+        <option value="1">v1 / legacy</option>
+        <option value="2">v2 / capture</option>
+        <option value="3" selected>v3 / studio</option>
+      </select></label>
+      <label>PATH <select id="modeSelect">
+        <option value="resume">resume</option>
+        <option value="live">realtime</option>
+        <option value="full">full rebuild</option>
+      </select></label>
+      <button id="loadBtn" class="btn primary">Load Scene</button>
+      <button id="verifyBtn" class="btn accent">Verify 3 Paths</button>
+    </div>
+    <div id="statusPill" class="status idle"><i></i><span>IDLE</span></div>
+  </header>
+
+  <main class="workspace">
+    <aside class="rail">
+      <section class="panel progress-panel">
+        <div class="panel-label">COMMIT PROGRESS</div>
+        <div class="progress-head">
+          <div><strong id="committedCount">0</strong><span id="totalCount">/ 0</span></div>
+          <div id="progressPct" class="mono subtle">0%</div>
+        </div>
+        <div class="progress-track"><div id="progressFill"></div></div>
+        <div class="run-controls">
+          <button id="pauseBtn" class="btn compact">Pause</button>
+          <button id="resumeBtn" class="btn compact primary">Resume</button>
+          <button id="retryBtn" class="btn compact danger">Retry Segment</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-label">PROCESS CHAIN</div>
+        <div class="pipeline" id="pipeline">
+          <span data-stage="register">REGISTER</span>
+          <span data-stage="linearize">LINEARIZE</span>
+          <span data-stage="fuse">FUSE</span>
+          <span data-stage="xyz">XYZ</span>
+          <span data-stage="gamut">GAMUT</span>
+          <span data-stage="commit">COMMIT</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-label">SEGMENT MATRIX</div>
+          <div class="legend">
+            <i class="lg pending"></i><i class="lg processing"></i><i class="lg committed"></i><i class="lg failed"></i>
+          </div>
+        </div>
+        <div id="segmentGrid" class="segment-grid"></div>
+        <div id="segmentHint" class="hint">Select a failed segment, then retry.</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-label">RENDER CONTROLS</div>
+        <div class="form-grid">
+          <label>Fusion strength <output id="fusionStrengthOut"></output>
+            <input id="fusionStrength" type="range" min="1" max="10" step="0.5">
+          </label>
+          <label>Fusion power <output id="fusionPowerOut"></output>
+            <input id="fusionPower" type="range" min="1" max="4" step="0.1">
+          </label>
+          <label>Interpolation
+            <select id="interpolationOrder">
+              <option value="0">0 / nearest</option>
+              <option value="1">1 / linear</option>
+              <option value="2">2 / quadratic</option>
+              <option value="3">3 / cubic</option>
+            </select>
+          </label>
+          <label>Gamut intent
+            <select id="gamutIntent">
+              <option value="relative-colorimetric">relative colorimetric</option>
+              <option value="perceptual">perceptual</option>
+              <option value="saturation">saturation</option>
+            </select>
+          </label>
+          <label>Detail gain <output id="detailGainOut"></output>
+            <input id="detailGain" type="range" min="0" max="2" step="0.05">
+          </label>
+        </div>
+        <button id="applySettingsBtn" class="btn wide">Apply &amp; Invalidate</button>
+        <div class="separator"></div>
+        <div class="form-grid two">
+          <label>Band <select id="bandSelect"></select></label>
+          <label>Variant <select id="variantSelect">
+            <option value="1">01</option><option value="2">02</option><option value="3">03</option>
+            <option value="4">04</option><option value="5">05</option>
+          </select></label>
+        </div>
+        <button id="replaceBandBtn" class="btn wide">Replace Band Image</button>
+      </section>
+
+      <section class="panel grow">
+        <div class="panel-label">INVALIDATION LEDGER</div>
+        <div id="invalidationList" class="ledger empty">No edits in this session.</div>
+      </section>
+    </aside>
+
+    <section class="viewport">
+      <div class="hero-row">
+        <article class="panel hero">
+          <div class="panel-head">
+            <div>
+              <div class="panel-label">FUSED SPECTRAL COMPOSITE</div>
+              <div id="sceneTitle" class="scene-title">NO SCENE LOADED</div>
+            </div>
+            <div class="chips">
+              <span class="chip"><b id="peakRadiance">—</b> PEAK RADIANCE</span>
+              <span class="chip"><b id="oogCount">—</b> OUT OF GAMUT</span>
+              <span class="chip"><b id="sceneSize">—</b> PIXELS</span>
+            </div>
+          </div>
+          <div class="image-stage">
+            <img id="compositeImage" alt="Fused composite" draggable="false">
+            <div id="imagePlaceholder" class="image-placeholder">GENERATING COMMITTED SEGMENTS</div>
+          </div>
+          <div class="image-footer">
+            <span>sRGB target · linear RGB pipeline · magenta overlay = gamut boundary</span>
+            <span id="imageStamp" class="mono"></span>
+          </div>
+        </article>
+
+        <article class="panel hist-panel">
+          <div class="panel-head">
+            <div class="panel-label">RADIANCE HISTOGRAM</div>
+            <span class="mono subtle">normalized per band</span>
+          </div>
+          <canvas id="histogramCanvas"></canvas>
+          <div id="histLegend" class="hist-legend"></div>
+        </article>
+      </div>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-label">SPECTRAL BAND INSPECTOR</div>
+            <div class="subtle">Aligned and fused radiance, independently normalized for inspection.</div>
+          </div>
+          <span id="bandCountLabel" class="mono subtle">0 BANDS</span>
+        </div>
+        <div id="bandGrid" class="band-grid"></div>
+      </article>
+
+      <div class="lower-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-label">PATH DIFFERENCE HEATMAP</div>
+              <div id="verifySummary" class="subtle">Run three-path verification to compare exact pixel buffers.</div>
+            </div>
+            <span id="verifyBadge" class="badge">UNVERIFIED</span>
+          </div>
+          <canvas id="heatmapCanvas"></canvas>
+          <div class="verify-stats">
+            <div><span>LIVE DIFF</span><b id="liveDiffCount">—</b></div>
+            <div><span>RESUME DIFF</span><b id="resumeDiffCount">—</b></div>
+            <div><span>MAX Δ</span><b id="maxDelta">—</b></div>
+            <div><span>PEAK Δ</span><b id="peakDelta">—</b></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div class="panel-label">CONSTRUCTED COLOR TRUTH</div>
+            <span id="toleranceBadge" class="badge soft">TOL —</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>PATCH</th><th>EXPECTED RGB</th><th>MEASURED RGB</th><th>Δ</th></tr></thead>
+              <tbody id="patchTable"><tr><td colspan="4" class="empty-cell">Awaiting committed composite.</td></tr></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel snapshot-panel">
+          <div class="panel-label">SNAPSHOT PROVENANCE</div>
+          <dl id="snapshotMeta">
+            <dt>Scene fingerprint</dt><dd>—</dd>
+            <dt>Parameter version</dt><dd>—</dd>
+            <dt>Band metadata</dt><dd>—</dd>
+            <dt>Algorithm</dt><dd>—</dd>
+            <dt>Commit sequence</dt><dd>—</dd>
+            <dt>Checkpoint</dt><dd>—</dd>
+          </dl>
+          <div id="snapshotReset" class="snapshot-reset hidden"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
