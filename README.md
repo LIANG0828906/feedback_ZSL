@@ -1,22 +1,147 @@
-当前目录还是一个没有源码的空白工作区，团队需要在 Linux 环境里为美术切图前的掩码质检先立起一套可核验的笔画方向与连通拓扑一致性工作台，既要作为可集成的 Go 领域组件，也要作为可交互的本地应用。全部图像、候选掩码、笔刷施工记录和解析真值由自带确定性生成器按固定种子产出：图标包含前景色块、与前景近色的背景渐变、半透明描边与嵌入式噪声，施工记录按笔画声明栅格化顺序、起止像素与覆盖权重，真值给出各前景连通域的重心、面积、外接框、孔洞数量与像素级参考掩码，真值仅来自生成器构造。同一批工程以三个 schema 版本描述，版本差异体现在字段命名、笔画坐标表达、覆盖权重刻度以及笔刷硬度字段的有无上，需要在装载时统一映射为内部模型并保留源版本标识。难点在于笔画合成次序、跨版本坐标与权重换算、增量失效传播与断点续算会相互牵制：同一组笔画换一种声明顺序可能得到不同的中间掩码，权重刻度换算会引入取整残差，而按笔画粒度的缓存失效又必须在跨版本往返和强制终止后与全量重算逐像素一致。
+# MaskQA：笔画方向与连通拓扑一致性工作台
 
-任务环境与准备：
-安装 Go 1.21 或以上版本并确认 go version 可执行，系统中无需数据库服务，使用 SQLite 时采用纯 Go 驱动以避免 CGO。
-创建空工作区并初始化单一 Go 模块，模块路径在 go.mod 中声明；样本生成器、领域组件、本地应用与测试全部置于该模块内。
-样本生成、真值清单与断点数据均写入工作区本地目录，运行前无需外部网络、账号或第三方数据。
-运行本地应用与验证入口时使用 go run 或 go test，需提前确认端口可用于本地界面与数据目录可写。
+单一 Go 模块 `maskqa`，同时提供可集成领域包、确定性样本生成器、纯 Go SQLite 检查点、CLI 验证入口和本地诊断 Web UI。样本、真值、三版本工程与断点库均写入本地目录，不依赖 Docker、外部账号或运行时网络。
 
-业务要求：
-1. 实现一套本地确定性样本生成器与三版本图标工程加载器：按固定种子产出多张不同分辨率图标图像、带内缩外溢与空洞的候选掩码、笔刷施工记录与真值清单，并把字段命名、笔画坐标表达、覆盖权重刻度及笔刷硬度字段有无统一映射为内部模型，保留源版本标识与逐字段转换痕迹；未知版本号或必填字段缺失返回 E_SCHEMA 并指出字段路径。
-2. 实现笔画坐标与覆盖权重刻度的整型换算及往返一致：绝对像素与相对偏移坐标之间、不同权重刻度之间用整型运算按声明取舍方向换算，禁止浮点累积；同一笔画经高版本到低版本再回到高版本后起止坐标、笔序号与覆盖权重必须回到原值或落在声明取整残差内，否则返回 E_ROUND 并给出字段、原值与残差。
-3. 实现单笔栅格化与覆盖合成核心：按声明的笔刷硬度与覆盖权重把每笔栅格化为覆盖分量，并与候选掩码按 alpha 合成规则累加得到积算掩码，输出每个分块的中间掩码与逐像素覆盖值；笔刷硬度越界或权重刻度超出声明取值范围返回 E_PARA 并指出笔画标识与字段名，同一笔在相同参数下覆盖分量须逐像素相同。
-4. 实现笔画合成次序的确定性裁决：同一组笔画在不同声明顺序下合成可能得到不同的积算掩码，须按施工记录声明的工序优先级与笔序号定义唯一合成次序，并逐块记录每次次序裁决的依据、参与笔序号与胜出依据；最终掩码须与真值逐像素一致，次序裁决不得依赖映射遍历顺序或工作线程标识。
-5. 实现最终掩码的连通拓扑核验：由积算掩码提取各前景连通域，计算重心、面积、外接框、描边环带宽度与孔洞数量并与真值逐域比对；孔洞数量或环带宽度与真值偏差超出声明容差返回 E_TOP 并列出域编号与实测值，描边环带方向由像素梯度方向谱统计得到且与真值方向一致性须在声明容差内达成。
-6. 实现笔画与分块之间的依赖图及编辑后的精确失效传播：缓存键由分块输入内容哈希、笔画标识、合成次序版本、参数版本与上游缓存键共同决定，显式记录笔画、合成次序、连通拓扑核验与下游分块产出之间的依赖；编辑某笔坐标、权重或增删笔画时只标记实际受影响的笔画、受影响分块及其下游核验结果失效，未受影响分块必须复用持久化结果，并输出含笔画标识与失效原因的可核查失效清单。
-7. 实现基于 SQLite 的笔画级原子检查点与三条路径逐像素一致：每提交一个笔画在受影响分块上的覆盖分量，把该分量、缓存键、内容哈希、换算残差摘要、合成次序版本与算法版本原子且串行写入，写入不得交错且提交顺序稳定；实时处理、断点恢复处理与从空缓存一次性全量重算须产出相同的积算掩码、相同的连通拓扑核验结果与相同的笔画提交序列，并提供自动比对定位首个不一致像素坐标或域编号。
-8. 实现受限预算下的分块并行调度、强制终止恢复边界、异常隔离与本地诊断界面：笔画栅格化与分块覆盖累加在工作线程池并行推进时须限制最大并行度、每线程像素缓冲上限与待处理分块队列预算，预算耗尽时阻塞排队并记录排队原因与等待时长而非静默丢弃；进程被强制终止后只依据已提交且版本匹配的检查点恢复，不承诺生成退出报告；界面展示候选掩码、逐笔覆盖叠加、最终掩码、描边环带与方向谱、连通域核验对照以及三路径比对结果。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+```bash
+go version          # 已验证 go1.22.12；go.mod 声明 go 1.21
+go test ./... -count=1
 
-验收：
-使用本地生成样本与真值验证跨版本装载、笔画合成次序、连通拓扑核验及三路径逐像素一致，并附运行结果。
+# 生成样本并执行 schema、次序、拓扑、三路径、增量失效全量验证
+go run ./cmd/maskqa verify --data data --artifacts artifacts --seed 20261126
+
+# 启动本地界面
+go run ./cmd/maskqa serve --data data --addr 127.0.0.1:18080
+```
+
+打开 <http://127.0.0.1:18080/>。端口可通过 `--addr` 更改；`data/` 不可写时命令会直接返回错误。
+
+纯 Go SQLite 驱动为 `modernc.org/sqlite`，以下构建已通过：
+
+```bash
+CGO_ENABLED=0 go build ./...
+go vet ./...
+```
+
+## 已记录的实际结果
+
+最近一次完整 CLI 报告写入：
+
+- `artifacts/verification-report.md`
+- `artifacts/verification-report.json`
+- `data/verification-report.json`
+
+实际执行 `go test ./... -count=1` 的结果为所有包通过，根包验收测试 `ok maskqa`。CLI 对 3 张样本（48×48、64×48、64×64，共 334 笔施工记录）的结论为 `PASS`：
+
+- v1/v2/v3 装载笔画数与生成器一致。
+- v2 的 0..255 权重往返最大残差为 16 bp（声明容差 21 bp）；v1/v3 为 0。
+- realtime、checkpoint-resume、empty-cache-full-recompute 三路径逐像素覆盖、拓扑 JSON 与提交序列一致。
+- 每张样本在第 7 个笔画后设置强制终止边界，恢复后提交序列完整。
+- 权重编辑只使 `tone-a`、8 个相交分块和下游拓扑失效，另外 8 个分块从 SQLite 持久化结果复用。
+
+强制终止边界也以真实进程退出码验证：
+
+```text
+$ ./artifacts/maskqa force-kill-demo --data data --project glyph-48 --after 7
+forced boundary after 7 durable commits; exiting 137 without report
+FORCE_EXIT_CODE=137
+
+$ ./artifacts/maskqa resume-demo --data data --project glyph-48
+resumed and verified glyph-48: commits=92 domains=2 final_mask_bytes=2304
+```
+
+## 命令
+
+```bash
+go run ./cmd/maskqa generate --data data --seed 20261126
+go run ./cmd/maskqa verify   --data data --artifacts artifacts --parallel 4
+go run ./cmd/maskqa serve    --data data --addr 127.0.0.1:18080
+
+# 模拟提交 7 笔后立即 os.Exit(137)，不写退出报告
+go run ./cmd/maskqa force-kill-demo --after 7
+go run ./cmd/maskqa resume-demo
+```
+
+## 本地界面与 HTTP API
+
+界面展示：
+
+- 原始图标、候选掩码、逐笔彩色覆盖叠加、积算 alpha、最终掩码和真值。
+- 描边环带分层与 36-bin Sobel 切向方向谱。
+- 连通域面积、重心、外接框、孔洞、环宽和方向余弦对照。
+- realtime/resume/full 三路径首个不一致像素或域编号。
+- 增量编辑后的失效节点、原因、受影响分块和实际复用分块。
+- 并行度、队列预算、排队等待和异常隔离事件。
+
+主要 API：
+
+- `GET /api/projects`
+- `GET /api/project?id=glyph-48`
+- `GET /api/verify?id=glyph-48`
+- `GET /api/invalidation?id=glyph-48`
+- `GET /img/sample?id=...`
+- `GET /img/mask?id=...&kind=candidate|reference|final|coverage`
+- `GET /img/strokes?id=...`
+- `GET /img/ring?id=...`
+
+## 三版本 Schema
+
+| 版本 | 字段风格 | 坐标表达 | 权重刻度 | 硬度字段 |
+|---|---|---|---|---|
+| v1 | `schema`、`stroke_id`、`start_x/start_y/...` | 绝对像素 | `coverage_pct`：0..100 | `hardness_pct` |
+| v2 | camelCase：`strokeId`、`strokeOrder` | `originX/originY + deltaX/deltaY` | `weight255`：0..255 | 无，装载为声明默认 8000 bp，并保留痕迹 |
+| v3 | snake_case：`stroke_no`、`start_xy/end_xy` | 绝对整数点对 | `weight_bp`：0..10000 | `hardness_bp` |
+
+装载器在 `internal/schemaio/schema.go`。未知版本返回 `E_SCHEMA`，缺字段返回带 JSON 路径的错误，例如 `$.strokes[0].coverage_pct`；源刻度越界返回带笔画 ID 和字段名的 `E_PARA`。
+
+权重换算只使用整数四舍五入：
+
+```text
+scaled = (value * toScale + fromScale / 2) / fromScale
+```
+
+v1 往返容差 50 bp，v2 往返容差 21 bp。超差时 `E_ROUND` 错误包含 `field`、原值、返回值和残差。坐标的绝对/相对换算仅做整数加减，因此精确往返。
+
+## 核心包结构
+
+- `internal/model`：领域模型、错误码、掩码/分块和报告结构。
+- `internal/schemaio`：三版本探测、字段映射、整数刻度换算和往返校验。
+- `internal/sample`：固定 LCG 种子生成图标、候选缺陷、环域真值、施工笔画和工作区文件。
+- `internal/engine`：纯整数 Bresenham 线、笔刷印章、硬度剖面、确定性栅格化和 alpha source-over。
+- `internal/topology`：8 邻接前景域、4 邻接背景洪水填洞、重心/面积/外接框、Manhattan 深度环宽和 Sobel 方向谱。
+- `internal/deps`：笔画/分量/次序/分块/拓扑依赖图、缓存键和编辑失效传播。
+- `internal/checkpoint`：纯 Go SQLite、单连接串行事务、笔画级原子检查点和分块/拓扑持久化。
+- `internal/runner`：有界 worker 池、队列预算、异常隔离、恢复、合成、三路径比对。
+- `internal/verify`：CLI/CI 可复用报告。
+- `internal/server`：无外部前端依赖的诊断 UI 和 PNG/JSON API。
+
+## 关键一致性约定
+
+- 合成次序固定为 `process_priority ASC, stroke_no ASC, id ASC`；不遍历 Go map 决定顺序，也不读取 worker 编号。
+- 每个分块缓存键包含候选分块内容哈希、分块 ID、笔画 ID/内容哈希、次序版本、参数版本、算法版本和上游键。
+- SQLite 同时使用 `SetMaxOpenConns(1)` 与进程内互斥；一个笔画的序列行和所有受影响分块分量在同一个 `SERIALIZABLE` 事务提交。
+- 恢复查询强制匹配 `order_version`、`algorithm_version`、`params_version`。
+- 三路径比对先逐字节比较覆盖 alpha，再用拓扑规范化结果定位首个域差异，最后比较提交序列。
+- 拓扑容差集中在 `topology.DefaultTolerances()`：孔洞 0、环宽 0.75 px、重心 0.75 px、方向余弦 0.94。
+
+环宽定义为前景像素到背景的 Manhattan 深度最大值的两倍；对生成的厚环样本，这是稳定可复现的有效环带厚度。方向谱使用 Sobel 梯度方向旋转 90° 得到笔画切向，再按 36 个 5° 无向 bin 以梯度强度加权。
+
+## 数据目录
+
+```text
+data/
+  manifest.json
+  samples/<project>/
+    image.png
+    candidate.png
+    reference.png
+    project.internal.json
+    truth.json
+    project.v1.json
+    project.v2.json
+    project.v3.json
+  checkpoints/*.db
+```
+
+删除 `data/` 后重新运行 `verify` 或 `generate` 即可完整重建。

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>笔画方向与连通拓扑一致性工作台</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0e1220; --panel:#171d2e; --line:#2b3550; --text:#e8eefc; --muted:#93a0bd; --ok:#4ade80; --warn:#fbbf24; --bad:#fb7185; --accent:#5eead4; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:14px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; background:linear-gradient(180deg,#111827,#0e1220 240px); color:var(--text); }
+    header { padding:22px 28px 16px; border-bottom:1px solid var(--line); display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    h1 { font-size:20px; margin:0; letter-spacing:.02em; }
+    .sub { color:var(--muted); }
+    select, button { background:#1f2940; color:var(--text); border:1px solid #3b486b; border-radius:8px; padding:8px 12px; font:inherit; }
+    button { cursor:pointer; background:#14504b; border-color:#1f8a7d; }
+    button:hover { filter:brightness(1.15); }
+    main { padding:22px 28px 60px; max-width:1500px; margin:0 auto; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+    .card { background:rgba(23,29,46,.92); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+    .card h2 { font-size:14px; margin:0 0 10px; color:#c8d5f5; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .card img { width:100%; max-width:260px; image-rendering:pixelated; border-radius:10px; border:1px solid #33405f; background:#121827; display:block; margin:0 auto; }
+    .wide { grid-column:1/-1; }
+    table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:left; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; font-size:12px; }
+    code, pre { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    pre { max-height:260px; overflow:auto; background:#0b1020; border:1px solid var(--line); border-radius:10px; padding:10px; font-size:12px; }
+    .pill { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:3px 9px; font-size:12px; border:1px solid var(--line); }
+    .ok { color:#052e16; background:var(--ok); border-color:var(--ok); font-weight:700; }
+    .bad { color:#3f0a16; background:var(--bad); border-color:var(--bad); font-weight:700; }
+    .warn { color:#422006; background:var(--warn); border-color:var(--warn); font-weight:700; }
+    .muted { color:var(--muted); }
+    .kv { display:grid; grid-template-columns:130px 1fr; gap:4px 10px; }
+    .kv div:nth-child(odd) { color:var(--muted); }
+    canvas { width:100%; height:190px; background:#0b1020; border:1px solid var(--line); border-radius:10px; }
+    .list { max-height:300px; overflow:auto; }
+    .reason { color:#fcd34d; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>笔画方向与连通拓扑一致性工作台</h1>
+    <select id="project"></select>
+    <button id="run">运行三路径与失效传播核验</button>
+    <span id="status" class="sub">等待加载样本…</span>
+  </header>
+  <main>
+    <section class="grid">
+      <div class="card"><h2>原始图标 <span class="pill muted">确定性种子</span></h2><img id="img-sample" alt="原始图标"></div>
+      <div class="card"><h2>候选掩码 <span class="pill warn">内缩/外溢/空洞</span></h2><img id="img-candidate" alt="候选掩码"></div>
+      <div class="card"><h2>逐笔覆盖叠加 <span class="pill muted">颜色=笔序</span></h2><img id="img-strokes" alt="逐笔覆盖叠加"></div>
+      <div class="card"><h2>积算覆盖值 <span class="pill muted">alpha 0..255</span></h2><img id="img-coverage" alt="积算覆盖"></div>
+      <div class="card"><h2>最终掩码 <span class="pill ok">阈值 128</span></h2><img id="img-final" alt="最终掩码"></div>
+      <div class="card"><h2>真值参考掩码</h2><img id="img-reference" alt="真值掩码"></div>
+      <div class="card wide"><h2>描边环带与像素梯度方向谱 <span id="spectrum-meta" class="pill muted"></span></h2>
+        <img id="img-ring" alt="环带" style="max-width:360px; float:left; margin-right:18px;">
+        <canvas id="spectrum" width="900" height="190"></canvas>
+        <div style="clear:both"></div>
+      </div>
+      <div class="card wide"><h2>三路径逐像素比对 <span id="compare-pill"></span></h2><div id="compare" class="kv"></div></div>
+      <div class="card wide"><h2>连通域核验对照</h2><div style="overflow:auto"><table id="domains"><thead><tr><th>域</th><th>面积 实测/真值</th><th>重心 实测/真值</th><th>外接框</th><th>孔洞 实测/真值</th><th>环宽 实测/真值</th><th>方向余弦</th></tr></thead><tbody></tbody></table></div></div>
+      <div class="card wide"><h2>精确失效清单与分块复用 <button id="load-invalidation">构造一次权重编辑</button></h2><div id="invalidation" class="muted">点击按钮生成编辑前后依赖传播报告。</div></div>
+      <div class="card"><h2>提交序列</h2><pre id="commits"></pre></div>
+      <div class="card"><h2>调度预算与异常隔离</h2><div id="scheduler" class="muted"></div></div>
+      <div class="card wide"><h2>Schema 与逐字段转换痕迹</h2><div id="schema" class="muted"></div></div>
+    </section>
+  </main>
+<script>
+const $ = (id) => document.getElementById(id);
+let manifest = null, project = null, report = null;
+
+async function json(url) { const r = await fetch(url); if (!r.ok) throw new Error((await r.json()).error || r.statusText); return r.json(); }
+function img(id, url) { $(id).src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+function pill(cls, text) { return `<span class="pill ${cls}">${text}</span>`; }
+
+async function loadProjects() {
+  manifest = await json('/api/projects');
+  $('project').innerHTML = manifest.projects.map(p => `<option value="${p.id}">${p.id} · ${p.width}×${p.height} · ${p.stroke_count}笔 · ${p.domain_count}域</option>`).join('');
+  await loadProject();
+}
+
+async function loadProject() {
+  const id = $('project').value;
+  $('status').textContent = '装载 ' + id + ' …';
+  project = await json('/api/project?id=' + encodeURIComponent(id));
+  for (const [el, kind] of [['img-sample','sample'],['img-candidate','candidate'],['img-reference','reference']]) {
+    img(el, kind === 'sample' ? '/img/sample?id='+id : '/img/mask?id='+id+'&kind='+kind);
+  }
+  $('schema').innerHTML = `<div class="kv">
+    <div>源版本</div><div><code>${project.source_version}</code> → 内部 <code>${project.loaded_version}</code>；算法 <code>${project.truth.version}</code></div>
+    <div>笔画数</div><div>${project.strokes.length}；示例转换痕迹：<code>${(project.strokes[0]?.traces||[]).map(t=>t.source_path+' → '+t.internal_field+' ['+t.conversion+']').join('；')}</code></div>
+  </div>`;
+  $('status').textContent = '已装载 ' + id;
+}
+
+async function runVerify() {
+  const id = $('project').value;
+  $('status').textContent = '正在并行栅格化、提交检查点并比对三条路径…';
+  report = await json('/api/verify?id=' + encodeURIComponent(id));
+  const q = encodeURIComponent(id);
+  img('img-strokes', '/img/strokes?id='+q);
+  img('img-coverage', '/img/mask?id='+q+'&kind=coverage');
+  img('img-final', '/img/mask?id='+q+'&kind=final');
+  img('img-ring', '/img/ring?id='+q);
+  renderCompare(report.comparison);
+  renderDomains(project.truth.domains, report.resume.topology.domains);
+  renderSpectrum(report.resume.topology.domains);
+  renderCommits(report);
+  renderScheduler(report);
+  $('status').textContent = report.comparison.message;
+}
+
+function renderCompare(c) {
+  $('compare-pill').innerHTML = c.equal ? pill('ok','三路径一致') : pill('bad','发现不一致');
+  const rows = [
+    ['覆盖掩码', c.coverage_equal ? '逐像素一致' : '不一致'],
+    ['拓扑核验', c.topology_equal ? '逐域一致' : '不一致'],
+    ['提交序列', c.commit_sequence_equal ? '顺序一致' : '不一致'],
+    ['首个像素', c.first_pixel_x == null ? '无' : `(${c.first_pixel_x}, ${c.first_pixel_y})`],
+    ['首个域', c.first_domain == null ? '无' : 'D' + String(c.first_domain).padStart(2,'0')],
+    ['覆盖哈希', `realtime=${c.realtime_key} resume=${c.resume_key} full=${c.full_key}`],
+    ['结论', c.message]
+  ];
+  $('compare').innerHTML = rows.map(([k,v])=>`<div>${k}</div><div>${v}</div>`).join('');
+}
+
+function cosine(a,b) { let d=0,na=0,nb=0; for(let i=0;i<a.length;i++){d+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i];} return na&&nb ? d/Math.sqrt(na*nb) : 1; }
+function renderDomains(truth, got) {
+  const tb = $('domains').querySelector('tbody');
+  tb.innerHTML = truth.map((t,i) => {
+    const g = got[i] || {};
+    const cos = cosine(t.direction_bins||[], g.direction_bins||[]);
+    return `<tr><td>${t.id}</td><td>${g.area} / ${t.area}</td><td>${(g.centroid_x||0).toFixed(2)},${(g.centroid_y||0).toFixed(2)} / ${t.centroid_x.toFixed(2)},${t.centroid_y.toFixed(2)}</td><td><code>${JSON.stringify(g.bbox)}</code></td><td>${g.holes} / ${t.holes}</td><td>${(g.ring_width_px||0).toFixed(2)} / ${t.ring_width_px.toFixed(2)}</td><td>${cos.toFixed(5)} ${cos>=.94?pill('ok','达标'):pill('bad','超差')}</td></tr>`;
+  }).join('');
+}
+
+function renderSpectrum(domains) {
+  const cv = $('spectrum'), ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const bins = new Array(36).fill(0);
+  domains.forEach(d => (d.direction_bins||[]).forEach((v,i)=>bins[i]+=v));
+  const max = Math.max(1,...bins), bw = cv.width/bins.length;
+  bins.forEach((v,i)=>{ const h=(cv.height-28)*v/max; ctx.fillStyle=`hsl(${160+i*4},80%,62%)`; ctx.fillRect(i*bw+2,cv.height-24-h,bw-4,h); ctx.fillStyle='#93a0bd'; ctx.font='10px monospace'; ctx.fillText((i*5)+'°',i*bw+3,cv.height-8); });
+  const top = bins.indexOf(max);
+  $('spectrum-meta').textContent = `36 bins × 5°；峰值切向角 ${top*5}°–${top*5+5}°`;
+}
+
+function renderCommits(r) {
+  $('commits').textContent = `kill_after=${r.kill_after}\nresume sequence (${r.resume.commit_sequence.length}):\n` + r.resume.commit_sequence.join('\n');
+}
+
+function renderScheduler(r) {
+  const q = r.resume.queue_events || [], iso = r.resume.isolation_events || [];
+  const waits = q.reduce((a,e)=>a+e.wait_millis,0);
+  const waitNanos = q.reduce((a,e)=>a+(e.wait_nanos||0),0);
+  $('scheduler').innerHTML = `<div class="kv">
+    <div>最大并行度</div><div>2（Web 配置）；验收测试使用 4</div>
+    <div>排队事件</div><div>${q.length} 次，累计阻塞等待 ${waits} ms / ${waitNanos} ns；原因：pending_chunk_queue_budget_exhausted_blocked_before_enqueue</div>
+    <div>异常隔离</div><div>${iso.length ? JSON.stringify(iso) : '无；参数/panic 任务会被隔离且不中断 worker'}</div>
+    <div>未受影响分块</div><div>增量接口会显示 reused=true 的持久化分块。</div>
+  </div>`;
+}
+
+async function loadInvalidation() {
+  const id = $('project').value;
+  $('invalidation').innerHTML = '正在执行全量→编辑→增量复用…';
+  const data = await json('/api/invalidation?id=' + encodeURIComponent(id));
+  const p = data.plan;
+  const items = p.items.map(i=>`<tr><td>${i.kind}</td><td><code>${i.id}</code></td><td>${i.stroke_id?`<code>${i.stroke_id}</code>`:''}</td><td>${i.field||''}</td><td class="reason">${i.reason}</td><td>${i.old_value||''} → ${i.new_value||''}</td></tr>`).join('');
+  const reused = (data.result?.chunks||[]).filter(c=>c.reused).map(c=>c.chunk_id);
+  const recomputed = (data.result?.chunks||[]).filter(c=>!c.reused).map(c=>c.chunk_id);
+  $('invalidation').innerHTML = `
+    <p>编辑笔 <code>${data.edited_stroke_id}</code>：受影响笔画 <code>${p.affected_strokes.join(', ')}</code>；受影响分块 <code>${p.affected_chunks.join(', ')}</code>；拓扑失效=${p.invalidate_topology}。</p>
+    <p>${pill('ok',`持久化复用 ${reused.length} 块`)} ${pill('warn',`重算/写入 ${recomputed.length} 块`)} <span class="muted">复用：${reused.join(', ')}</span><br><span class="muted">重算：${recomputed.join(', ')}</span></p>
+    <table><thead><tr><th>类型</th><th>节点</th><th>笔画</th><th>字段</th><th>原因</th><th>旧→新</th></tr></thead><tbody>${items}</tbody></table>`;
+}
+
+$('project').addEventListener('change', loadProject);
+$('run').addEventListener('click', () => runVerify().catch(e => $('status').innerHTML = pill('bad', e.message)));
+$('load-invalidation').addEventListener('click', () => loadInvalidation().catch(e => $('invalidation').textContent = e.message));
+loadProjects().catch(e => $('status').innerHTML = pill('bad', e.message));
+</script>
+</body>
+</html>
