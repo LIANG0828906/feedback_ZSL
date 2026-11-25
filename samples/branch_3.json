@@ -1,0 +1,231 @@
+{
+  "branch": 3,
+  "frames": [
+    {
+      "arrival_order": 1,
+      "at": 0,
+      "aux": [
+        10,
+        10
+      ],
+      "conditional": false,
+      "event_id": "evt-01-opening-impact",
+      "flag": 1,
+      "frame_no": 1,
+      "jitter_amplitude": 18,
+      "merge_key": "opening",
+      "no_interrupt": false,
+      "p": 88,
+      "priority": 5,
+      "q": 4,
+      "seq": [
+        1,
+        101
+      ],
+      "template": "click"
+    },
+    {
+      "arrival_order": 2,
+      "at": 4,
+      "aux": [
+        10,
+        10
+      ],
+      "conditional": false,
+      "event_id": "evt-02-heavy-protected",
+      "flag": 1,
+      "frame_no": 2,
+      "jitter_amplitude": 12,
+      "no_interrupt": true,
+      "p": 104,
+      "priority": 9,
+      "q": 6,
+      "seq": [
+        2,
+        102
+      ],
+      "template": "rumble"
+    },
+    {
+      "arrival_order": 3,
+      "at": 6,
+      "aux": [
+        10,
+        10
+      ],
+      "conditional": false,
+      "event_id": "evt-03-weak-collision",
+      "flag": 1,
+      "frame_no": 3,
+      "jitter_amplitude": 8,
+      "no_interrupt": false,
+      "p": 40,
+      "priority": 2,
+      "q": 4,
+      "seq": [
+        1,
+        103
+      ],
+      "template": "click"
+    },
+    {
+      "arrival_order": 4,
+      "at": 8,
+      "aux": [
+        20,
+        20
+      ],
+      "conditional": false,
+      "event_id": "evt-04-swipe-a",
+      "flag": 1,
+      "frame_no": 4,
+      "jitter_amplitude": 10,
+      "merge_key": "swipe-merge",
+      "no_interrupt": false,
+      "p": 60,
+      "priority": 4,
+      "q": 5,
+      "seq": [
+        4,
+        204
+      ],
+      "template": "wave"
+    },
+    {
+      "arrival_order": 5,
+      "at": 12,
+      "aux": [
+        20,
+        20
+      ],
+      "conditional": false,
+      "event_id": "evt-05-swipe-b",
+      "flag": 1,
+      "frame_no": 5,
+      "jitter_amplitude": 10,
+      "merge_key": "swipe-merge",
+      "no_interrupt": false,
+      "p": 66,
+      "priority": 4,
+      "q": 4,
+      "seq": [
+        4,
+        205
+      ],
+      "template": "wave"
+    },
+    {
+      "arrival_order": 6,
+      "at": 16,
+      "aux": [
+        10,
+        10
+      ],
+      "conditional": true,
+      "event_id": "evt-06-conditional-on",
+      "flag": 0,
+      "frame_no": 6,
+      "jitter_amplitude": 6,
+      "no_interrupt": false,
+      "p": 56,
+      "priority": 4,
+      "q": 3,
+      "seq": [
+        3,
+        306
+      ],
+      "template": "wave"
+    },
+    {
+      "arrival_order": 7,
+      "at": 20,
+      "aux": [
+        10,
+        10
+      ],
+      "conditional": true,
+      "event_id": "evt-07-conditional-off",
+      "flag": 1,
+      "frame_no": 7,
+      "jitter_amplitude": 6,
+      "no_interrupt": false,
+      "p": 70,
+      "priority": 8,
+      "q": 4,
+      "seq": [
+        3,
+        307
+      ],
+      "template": "wave"
+    },
+    {
+      "arrival_order": 8,
+      "at": 20,
+      "aux": [
+        20,
+        20
+      ],
+      "conditional": false,
+      "event_id": "evt-08-parry-block",
+      "flag": 1,
+      "frame_no": 8,
+      "jitter_amplitude": 9,
+      "no_interrupt": true,
+      "p": 96,
+      "priority": 8,
+      "q": 5,
+      "seq": [
+        5,
+        508
+      ],
+      "template": "rumble"
+    },
+    {
+      "arrival_order": 9,
+      "at": 32,
+      "aux": [
+        20,
+        20
+      ],
+      "conditional": true,
+      "event_id": "evt-09-conditional-on-right",
+      "flag": 0,
+      "frame_no": 9,
+      "jitter_amplitude": 5,
+      "no_interrupt": false,
+      "p": 50,
+      "priority": 5,
+      "q": 3,
+      "seq": [
+        3,
+        309
+      ],
+      "template": "click"
+    },
+    {
+      "arrival_order": 10,
+      "at": 34,
+      "aux": [
+        20,
+        20
+      ],
+      "conditional": false,
+      "event_id": "evt-10-late-low",
+      "flag": 1,
+      "frame_no": 10,
+      "jitter_amplitude": 7,
+      "no_interrupt": false,
+      "p": 42,
+      "priority": 2,
+      "q": 4,
+      "seq": [
+        1,
+        110
+      ],
+      "template": "click"
+    }
+  ],
+  "schema": "haptic.branch-stream/v1",
+  "seed": 420243,
+  "stream_id": "battle-interaction-fixed-243"
+}
