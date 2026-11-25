@@ -1,0 +1,3255 @@
+{
+  "seed": 42,
+  "screens": 4,
+  "windows": 12,
+  "sessions": [
+    {
+      "schema_version": 1,
+      "session_id": "session-000042-00",
+      "algorithm_version": "castmap-v1",
+      "master": {
+        "id": "master",
+        "topology": {
+          "x": 0,
+          "y": 0,
+          "width": 3840,
+          "height": 2160,
+          "resolution": {
+            "width": 3840,
+            "height": 2160
+          },
+          "scale": "1/1"
+        },
+        "capability": {
+          "resolution": {
+            "width": 3840,
+            "height": 2160
+          },
+          "scale": "1/1",
+          "crop_mode": "nearest"
+        }
+      },
+      "displays": [
+        {
+          "id": "screen-a",
+          "topology": {
+            "x": 0,
+            "y": 86,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 1920,
+              "height": 1080
+            },
+            "scale": "1/2"
+          },
+          "capability": {
+            "resolution": {
+              "width": 1920,
+              "height": 1080
+            },
+            "scale": "1/2",
+            "crop_mode": "floor"
+          }
+        },
+        {
+          "id": "screen-b",
+          "topology": {
+            "x": 47,
+            "y": 43,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 2560,
+              "height": 1440
+            },
+            "scale": "2/3"
+          },
+          "capability": {
+            "resolution": {
+              "width": 2560,
+              "height": 1440
+            },
+            "scale": "2/3",
+            "crop_mode": "ceil"
+          }
+        },
+        {
+          "id": "screen-c",
+          "topology": {
+            "x": 94,
+            "y": 215,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 1280,
+              "height": 720
+            },
+            "scale": "1/3"
+          },
+          "capability": {
+            "resolution": {
+              "width": 1280,
+              "height": 720
+            },
+            "scale": "1/3",
+            "crop_mode": "nearest"
+          }
+        },
+        {
+          "id": "screen-d",
+          "topology": {
+            "x": 329,
+            "y": 86,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 3840,
+              "height": 2160
+            },
+            "scale": "1/1"
+          },
+          "capability": {
+            "resolution": {
+              "width": 3840,
+              "height": 2160
+            },
+            "scale": "1/1",
+            "crop_mode": "outward"
+          }
+        }
+      ],
+      "initial_displays": [
+        "screen-a"
+      ],
+      "events": [
+        {
+          "seq": 1,
+          "time": 0,
+          "kind": "negotiate"
+        },
+        {
+          "seq": 2,
+          "time": 1,
+          "kind": "start"
+        },
+        {
+          "seq": 3,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-b"
+        },
+        {
+          "seq": 4,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-c"
+        },
+        {
+          "seq": 5,
+          "time": 25,
+          "kind": "topology",
+          "display_id": "screen-b",
+          "topology": {
+            "x": 114,
+            "y": 88,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 2560,
+              "height": 1440
+            },
+            "scale": "2/3"
+          }
+        },
+        {
+          "seq": 6,
+          "time": 27,
+          "kind": "topology",
+          "display_id": "screen-c",
+          "topology": {
+            "x": 160,
+            "y": 215,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 1280,
+              "height": 720
+            },
+            "scale": "1/3"
+          }
+        },
+        {
+          "seq": 7,
+          "time": 35,
+          "kind": "join",
+          "display_id": "screen-d"
+        },
+        {
+          "seq": 8,
+          "time": 45,
+          "kind": "leave",
+          "display_id": "screen-a"
+        },
+        {
+          "seq": 9,
+          "time": 55,
+          "kind": "pause"
+        },
+        {
+          "seq": 10,
+          "time": 56,
+          "kind": "resume"
+        },
+        {
+          "seq": 11,
+          "time": 220,
+          "kind": "end"
+        }
+      ],
+      "windows": [
+        {
+          "index": 1,
+          "time": 10,
+          "region": {
+            "x": 316,
+            "y": 332,
+            "width": 2807,
+            "height": 1710
+          },
+          "targets": [
+            "screen-a"
+          ],
+          "interactions": [
+            {
+              "seq": 1,
+              "time": 10,
+              "kind": "pointer_move",
+              "logical_x": 1719,
+              "logical_y": 1187
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "time": 20,
+          "region": {
+            "x": 533,
+            "y": 103,
+            "width": 2085,
+            "height": 1812
+          },
+          "targets": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "interactions": [
+            {
+              "seq": 2,
+              "time": 20,
+              "kind": "pointer_move",
+              "logical_x": 1575,
+              "logical_y": 1009
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "time": 30,
+          "region": {
+            "x": 230,
+            "y": 11,
+            "width": 2043,
+            "height": 1139
+          },
+          "targets": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "interactions": [
+            {
+              "seq": 3,
+              "time": 30,
+              "kind": "pointer_move",
+              "logical_x": 1251,
+              "logical_y": 580
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "time": 40,
+          "region": {
+            "x": 278,
+            "y": 36,
+            "width": 2208,
+            "height": 1741
+          },
+          "targets": [
+            "screen-a",
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 4,
+              "time": 40,
+              "kind": "pointer_move",
+              "logical_x": 1382,
+              "logical_y": 906
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "time": 50,
+          "region": {
+            "x": 111,
+            "y": 21,
+            "width": 3227,
+            "height": 1322
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 5,
+              "time": 50,
+              "kind": "pointer_move",
+              "logical_x": 1724,
+              "logical_y": 682
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "time": 60,
+          "region": {
+            "x": 222,
+            "y": 258,
+            "width": 2257,
+            "height": 1778
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 6,
+              "time": 60,
+              "kind": "pointer_move",
+              "logical_x": 1350,
+              "logical_y": 1147
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "time": 70,
+          "region": {
+            "x": 17,
+            "y": 211,
+            "width": 3015,
+            "height": 1812
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 7,
+              "time": 70,
+              "kind": "pointer_move",
+              "logical_x": 1524,
+              "logical_y": 1117
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "time": 80,
+          "region": {
+            "x": 462,
+            "y": 124,
+            "width": 3378,
+            "height": 1759
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 8,
+              "time": 80,
+              "kind": "pointer_move",
+              "logical_x": 2151,
+              "logical_y": 1003
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "time": 90,
+          "region": {
+            "x": 388,
+            "y": 227,
+            "width": 1920,
+            "height": 1484
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 9,
+              "time": 90,
+              "kind": "pointer_move",
+              "logical_x": 1348,
+              "logical_y": 969
+            }
+          ]
+        },
+        {
+          "index": 10,
+          "time": 100,
+          "region": {
+            "x": 110,
+            "y": 298,
+            "width": 2072,
+            "height": 1710
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 10,
+              "time": 100,
+              "kind": "pointer_move",
+              "logical_x": 1146,
+              "logical_y": 1153
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "time": 110,
+          "region": {
+            "x": 285,
+            "y": 183,
+            "width": 2123,
+            "height": 1427
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 11,
+              "time": 110,
+              "kind": "pointer_move",
+              "logical_x": 1346,
+              "logical_y": 896
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "time": 120,
+          "region": {
+            "x": 200,
+            "y": 57,
+            "width": 2871,
+            "height": 1825
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 12,
+              "time": 120,
+              "kind": "pointer_move",
+              "logical_x": 1635,
+              "logical_y": 969
+            }
+          ]
+        }
+      ],
+      "total_windows": 12
+    },
+    {
+      "schema_version": 1,
+      "session_id": "session-000042-01",
+      "algorithm_version": "castmap-v1",
+      "master": {
+        "id": "master",
+        "topology": {
+          "x": 0,
+          "y": 0,
+          "width": 3840,
+          "height": 2160,
+          "resolution": {
+            "width": 3840,
+            "height": 2160
+          },
+          "scale": "1/1"
+        },
+        "capability": {
+          "resolution": {
+            "width": 3840,
+            "height": 2160
+          },
+          "scale": "1/1",
+          "crop_mode": "nearest"
+        }
+      },
+      "displays": [
+        {
+          "id": "screen-a",
+          "topology": {
+            "x": 329,
+            "y": 215,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 1920,
+              "height": 1080
+            },
+            "scale": "1/2"
+          },
+          "capability": {
+            "resolution": {
+              "width": 1920,
+              "height": 1080
+            },
+            "scale": "1/2",
+            "crop_mode": "floor"
+          }
+        },
+        {
+          "id": "screen-b",
+          "topology": {
+            "x": 188,
+            "y": 0,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 2560,
+              "height": 1440
+            },
+            "scale": "2/3"
+          },
+          "capability": {
+            "resolution": {
+              "width": 2560,
+              "height": 1440
+            },
+            "scale": "2/3",
+            "crop_mode": "ceil"
+          }
+        },
+        {
+          "id": "screen-c",
+          "topology": {
+            "x": 0,
+            "y": 86,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 1280,
+              "height": 720
+            },
+            "scale": "1/3"
+          },
+          "capability": {
+            "resolution": {
+              "width": 1280,
+              "height": 720
+            },
+            "scale": "1/3",
+            "crop_mode": "nearest"
+          }
+        },
+        {
+          "id": "screen-d",
+          "topology": {
+            "x": 141,
+            "y": 86,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 3840,
+              "height": 2160
+            },
+            "scale": "1/1"
+          },
+          "capability": {
+            "resolution": {
+              "width": 3840,
+              "height": 2160
+            },
+            "scale": "1/1",
+            "crop_mode": "outward"
+          }
+        }
+      ],
+      "initial_displays": [
+        "screen-a"
+      ],
+      "events": [
+        {
+          "seq": 1,
+          "time": 0,
+          "kind": "negotiate"
+        },
+        {
+          "seq": 2,
+          "time": 1,
+          "kind": "start"
+        },
+        {
+          "seq": 3,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-b"
+        },
+        {
+          "seq": 4,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-c"
+        },
+        {
+          "seq": 5,
+          "time": 25,
+          "kind": "topology",
+          "display_id": "screen-b",
+          "topology": {
+            "x": 272,
+            "y": 33,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 2560,
+              "height": 1440
+            },
+            "scale": "2/3"
+          }
+        },
+        {
+          "seq": 6,
+          "time": 27,
+          "kind": "topology",
+          "display_id": "screen-c",
+          "topology": {
+            "x": 56,
+            "y": 86,
+            "width": 3840,
+            "height": 2160,
+            "resolution": {
+              "width": 1280,
+              "height": 720
+            },
+            "scale": "1/3"
+          }
+        },
+        {
+          "seq": 7,
+          "time": 35,
+          "kind": "join",
+          "display_id": "screen-d"
+        },
+        {
+          "seq": 8,
+          "time": 45,
+          "kind": "leave",
+          "display_id": "screen-a"
+        },
+        {
+          "seq": 9,
+          "time": 55,
+          "kind": "pause"
+        },
+        {
+          "seq": 10,
+          "time": 56,
+          "kind": "resume"
+        },
+        {
+          "seq": 11,
+          "time": 220,
+          "kind": "end"
+        }
+      ],
+      "windows": [
+        {
+          "index": 1,
+          "time": 10,
+          "region": {
+            "x": 275,
+            "y": 306,
+            "width": 2617,
+            "height": 1854
+          },
+          "targets": [
+            "screen-a"
+          ],
+          "interactions": [
+            {
+              "seq": 1,
+              "time": 10,
+              "kind": "pointer_move",
+              "logical_x": 1583,
+              "logical_y": 1233
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "time": 20,
+          "region": {
+            "x": 576,
+            "y": 191,
+            "width": 2801,
+            "height": 1127
+          },
+          "targets": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "interactions": [
+            {
+              "seq": 2,
+              "time": 20,
+              "kind": "pointer_move",
+              "logical_x": 1976,
+              "logical_y": 754
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "time": 30,
+          "region": {
+            "x": 145,
+            "y": 329,
+            "width": 2967,
+            "height": 1188
+          },
+          "targets": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "interactions": [
+            {
+              "seq": 3,
+              "time": 30,
+              "kind": "pointer_move",
+              "logical_x": 1628,
+              "logical_y": 923
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "time": 40,
+          "region": {
+            "x": 311,
+            "y": 58,
+            "width": 2029,
+            "height": 1437
+          },
+          "targets": [
+            "screen-a",
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 4,
+              "time": 40,
+              "kind": "pointer_move",
+              "logical_x": 1325,
+              "logical_y": 776
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "time": 50,
+          "region": {
+            "x": 428,
+            "y": 282,
+            "width": 2026,
+            "height": 1533
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 5,
+              "time": 50,
+              "kind": "pointer_move",
+              "logical_x": 1441,
+              "logical_y": 1048
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "time": 60,
+          "region": {
+            "x": 209,
+            "y": 268,
+            "width": 2804,
+            "height": 1892
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 6,
+              "time": 60,
+              "kind": "pointer_move",
+              "logical_x": 1611,
+              "logical_y": 1214
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "time": 70,
+          "region": {
+            "x": 431,
+            "y": 75,
+            "width": 2240,
+            "height": 1174
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 7,
+              "time": 70,
+              "kind": "pointer_move",
+              "logical_x": 1551,
+              "logical_y": 662
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "time": 80,
+          "region": {
+            "x": 376,
+            "y": 86,
+            "width": 2793,
+            "height": 1822
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 8,
+              "time": 80,
+              "kind": "pointer_move",
+              "logical_x": 1772,
+              "logical_y": 997
+            }
+          ]
+        },
+        {
+          "index": 9,
+          "time": 90,
+          "region": {
+            "x": 367,
+            "y": 266,
+            "width": 2749,
+            "height": 1188
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 9,
+              "time": 90,
+              "kind": "pointer_move",
+              "logical_x": 1741,
+              "logical_y": 860
+            }
+          ]
+        },
+        {
+          "index": 10,
+          "time": 100,
+          "region": {
+            "x": 90,
+            "y": 55,
+            "width": 2926,
+            "height": 1333
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 10,
+              "time": 100,
+              "kind": "pointer_move",
+              "logical_x": 1553,
+              "logical_y": 721
+            }
+          ]
+        },
+        {
+          "index": 11,
+          "time": 110,
+          "region": {
+            "x": 411,
+            "y": 137,
+            "width": 3396,
+            "height": 1833
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 11,
+              "time": 110,
+              "kind": "pointer_move",
+              "logical_x": 2109,
+              "logical_y": 1053
+            }
+          ]
+        },
+        {
+          "index": 12,
+          "time": 120,
+          "region": {
+            "x": 536,
+            "y": 137,
+            "width": 3304,
+            "height": 1968
+          },
+          "targets": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "interactions": [
+            {
+              "seq": 12,
+              "time": 120,
+              "kind": "pointer_move",
+              "logical_x": 2188,
+              "logical_y": 1121
+            }
+          ]
+        }
+      ],
+      "total_windows": 12
+    }
+  ],
+  "truths": [
+    {
+      "session_id": "session-000042-00",
+      "windows": [
+        {
+          "window": 1,
+          "time": 10,
+          "endpoints": [
+            "screen-a"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 158,
+                "y": 123,
+                "width": 1403,
+                "height": 855
+              },
+              "world": {
+                "x": 316,
+                "y": 332,
+                "width": 2807,
+                "height": 1710
+              },
+              "screen_world": {
+                "x": 316,
+                "y": 246,
+                "width": 2807,
+                "height": 1710
+              },
+              "source_window": 1
+            }
+          ]
+        },
+        {
+          "window": 2,
+          "time": 20,
+          "endpoints": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 266,
+                "y": 8,
+                "width": 1043,
+                "height": 906
+              },
+              "world": {
+                "x": 533,
+                "y": 103,
+                "width": 2085,
+                "height": 1812
+              },
+              "screen_world": {
+                "x": 533,
+                "y": 17,
+                "width": 2085,
+                "height": 1812
+              },
+              "source_window": 2
+            },
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 324,
+                "y": 40,
+                "width": 1390,
+                "height": 1208
+              },
+              "world": {
+                "x": 533,
+                "y": 103,
+                "width": 2085,
+                "height": 1812
+              },
+              "screen_world": {
+                "x": 486,
+                "y": 60,
+                "width": 2085,
+                "height": 1812
+              },
+              "source_window": 2
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 146,
+                "y": 0,
+                "width": 695,
+                "height": 567
+              },
+              "world": {
+                "x": 533,
+                "y": 215,
+                "width": 2085,
+                "height": 1700
+              },
+              "screen_world": {
+                "x": 439,
+                "y": 0,
+                "width": 2085,
+                "height": 1700
+              },
+              "source_window": 2
+            }
+          ]
+        },
+        {
+          "window": 3,
+          "time": 30,
+          "endpoints": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 115,
+                "y": 0,
+                "width": 1021,
+                "height": 532
+              },
+              "world": {
+                "x": 230,
+                "y": 86,
+                "width": 2043,
+                "height": 1064
+              },
+              "screen_world": {
+                "x": 230,
+                "y": 0,
+                "width": 2043,
+                "height": 1064
+              },
+              "source_window": 3
+            },
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 78,
+                "y": 0,
+                "width": 1362,
+                "height": 708
+              },
+              "world": {
+                "x": 230,
+                "y": 88,
+                "width": 2043,
+                "height": 1062
+              },
+              "screen_world": {
+                "x": 116,
+                "y": 0,
+                "width": 2043,
+                "height": 1062
+              },
+              "source_window": 3
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 23,
+                "y": 0,
+                "width": 681,
+                "height": 312
+              },
+              "world": {
+                "x": 230,
+                "y": 215,
+                "width": 2043,
+                "height": 935
+              },
+              "screen_world": {
+                "x": 70,
+                "y": 0,
+                "width": 2043,
+                "height": 935
+              },
+              "source_window": 3
+            }
+          ]
+        },
+        {
+          "window": 4,
+          "time": 40,
+          "endpoints": [
+            "screen-a",
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 139,
+                "y": 0,
+                "width": 1104,
+                "height": 845
+              },
+              "world": {
+                "x": 278,
+                "y": 86,
+                "width": 2208,
+                "height": 1691
+              },
+              "screen_world": {
+                "x": 278,
+                "y": 0,
+                "width": 2208,
+                "height": 1691
+              },
+              "source_window": 4
+            },
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 110,
+                "y": 0,
+                "width": 1472,
+                "height": 1126
+              },
+              "world": {
+                "x": 278,
+                "y": 88,
+                "width": 2208,
+                "height": 1689
+              },
+              "screen_world": {
+                "x": 164,
+                "y": 0,
+                "width": 2208,
+                "height": 1689
+              },
+              "source_window": 4
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 39,
+                "y": 0,
+                "width": 736,
+                "height": 521
+              },
+              "world": {
+                "x": 278,
+                "y": 215,
+                "width": 2208,
+                "height": 1562
+              },
+              "screen_world": {
+                "x": 118,
+                "y": 0,
+                "width": 2208,
+                "height": 1562
+              },
+              "source_window": 4
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 2157,
+                "height": 1691
+              },
+              "world": {
+                "x": 329,
+                "y": 86,
+                "width": 2157,
+                "height": 1691
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 2157,
+                "height": 1691
+              },
+              "source_window": 4
+            }
+          ]
+        },
+        {
+          "window": 5,
+          "time": 50,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 2150,
+                "height": 837
+              },
+              "world": {
+                "x": 114,
+                "y": 88,
+                "width": 3224,
+                "height": 1255
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 3224,
+                "height": 1255
+              },
+              "source_window": 5
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 1059,
+                "height": 376
+              },
+              "world": {
+                "x": 160,
+                "y": 215,
+                "width": 3178,
+                "height": 1128
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 3178,
+                "height": 1128
+              },
+              "source_window": 5
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 3009,
+                "height": 1257
+              },
+              "world": {
+                "x": 329,
+                "y": 86,
+                "width": 3009,
+                "height": 1257
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 3009,
+                "height": 1257
+              },
+              "source_window": 5
+            }
+          ]
+        },
+        {
+          "window": 6,
+          "time": 60,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 72,
+                "y": 114,
+                "width": 1505,
+                "height": 1185
+              },
+              "world": {
+                "x": 222,
+                "y": 258,
+                "width": 2257,
+                "height": 1778
+              },
+              "screen_world": {
+                "x": 108,
+                "y": 170,
+                "width": 2257,
+                "height": 1778
+              },
+              "source_window": 6
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 21,
+                "y": 14,
+                "width": 752,
+                "height": 593
+              },
+              "world": {
+                "x": 222,
+                "y": 258,
+                "width": 2257,
+                "height": 1778
+              },
+              "screen_world": {
+                "x": 62,
+                "y": 43,
+                "width": 2257,
+                "height": 1778
+              },
+              "source_window": 6
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 172,
+                "width": 2150,
+                "height": 1778
+              },
+              "world": {
+                "x": 329,
+                "y": 258,
+                "width": 2150,
+                "height": 1778
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 172,
+                "width": 2150,
+                "height": 1778
+              },
+              "source_window": 6
+            }
+          ]
+        },
+        {
+          "window": 7,
+          "time": 70,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 0,
+                "y": 82,
+                "width": 1946,
+                "height": 1208
+              },
+              "world": {
+                "x": 114,
+                "y": 211,
+                "width": 2918,
+                "height": 1812
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 123,
+                "width": 2918,
+                "height": 1812
+              },
+              "source_window": 7
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 957,
+                "height": 603
+              },
+              "world": {
+                "x": 160,
+                "y": 215,
+                "width": 2872,
+                "height": 1808
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 2872,
+                "height": 1808
+              },
+              "source_window": 7
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 125,
+                "width": 2703,
+                "height": 1812
+              },
+              "world": {
+                "x": 329,
+                "y": 211,
+                "width": 2703,
+                "height": 1812
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 125,
+                "width": 2703,
+                "height": 1812
+              },
+              "source_window": 7
+            }
+          ]
+        },
+        {
+          "window": 8,
+          "time": 80,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 232,
+                "y": 24,
+                "width": 2252,
+                "height": 1173
+              },
+              "world": {
+                "x": 462,
+                "y": 124,
+                "width": 3378,
+                "height": 1759
+              },
+              "screen_world": {
+                "x": 348,
+                "y": 36,
+                "width": 3378,
+                "height": 1759
+              },
+              "source_window": 8
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 101,
+                "y": 0,
+                "width": 1126,
+                "height": 556
+              },
+              "world": {
+                "x": 462,
+                "y": 215,
+                "width": 3378,
+                "height": 1668
+              },
+              "screen_world": {
+                "x": 302,
+                "y": 0,
+                "width": 3378,
+                "height": 1668
+              },
+              "source_window": 8
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 133,
+                "y": 38,
+                "width": 3378,
+                "height": 1759
+              },
+              "world": {
+                "x": 462,
+                "y": 124,
+                "width": 3378,
+                "height": 1759
+              },
+              "screen_world": {
+                "x": 133,
+                "y": 38,
+                "width": 3378,
+                "height": 1759
+              },
+              "source_window": 8
+            }
+          ]
+        },
+        {
+          "window": 9,
+          "time": 90,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 183,
+                "y": 93,
+                "width": 1280,
+                "height": 989
+              },
+              "world": {
+                "x": 388,
+                "y": 227,
+                "width": 1920,
+                "height": 1484
+              },
+              "screen_world": {
+                "x": 274,
+                "y": 139,
+                "width": 1920,
+                "height": 1484
+              },
+              "source_window": 9
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 76,
+                "y": 4,
+                "width": 640,
+                "height": 495
+              },
+              "world": {
+                "x": 388,
+                "y": 227,
+                "width": 1920,
+                "height": 1484
+              },
+              "screen_world": {
+                "x": 228,
+                "y": 12,
+                "width": 1920,
+                "height": 1484
+              },
+              "source_window": 9
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 59,
+                "y": 141,
+                "width": 1920,
+                "height": 1484
+              },
+              "world": {
+                "x": 388,
+                "y": 227,
+                "width": 1920,
+                "height": 1484
+              },
+              "screen_world": {
+                "x": 59,
+                "y": 141,
+                "width": 1920,
+                "height": 1484
+              },
+              "source_window": 9
+            }
+          ]
+        },
+        {
+          "window": 10,
+          "time": 100,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 0,
+                "y": 140,
+                "width": 1379,
+                "height": 1140
+              },
+              "world": {
+                "x": 114,
+                "y": 298,
+                "width": 2068,
+                "height": 1710
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 210,
+                "width": 2068,
+                "height": 1710
+              },
+              "source_window": 10
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 0,
+                "y": 28,
+                "width": 674,
+                "height": 570
+              },
+              "world": {
+                "x": 160,
+                "y": 298,
+                "width": 2022,
+                "height": 1710
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 83,
+                "width": 2022,
+                "height": 1710
+              },
+              "source_window": 10
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 212,
+                "width": 1853,
+                "height": 1710
+              },
+              "world": {
+                "x": 329,
+                "y": 298,
+                "width": 1853,
+                "height": 1710
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 212,
+                "width": 1853,
+                "height": 1710
+              },
+              "source_window": 10
+            }
+          ]
+        },
+        {
+          "window": 11,
+          "time": 110,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 114,
+                "y": 64,
+                "width": 1416,
+                "height": 951
+              },
+              "world": {
+                "x": 285,
+                "y": 183,
+                "width": 2123,
+                "height": 1427
+              },
+              "screen_world": {
+                "x": 171,
+                "y": 95,
+                "width": 2123,
+                "height": 1427
+              },
+              "source_window": 11
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 42,
+                "y": 0,
+                "width": 707,
+                "height": 465
+              },
+              "world": {
+                "x": 285,
+                "y": 215,
+                "width": 2123,
+                "height": 1395
+              },
+              "screen_world": {
+                "x": 125,
+                "y": 0,
+                "width": 2123,
+                "height": 1395
+              },
+              "source_window": 11
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 97,
+                "width": 2079,
+                "height": 1427
+              },
+              "world": {
+                "x": 329,
+                "y": 183,
+                "width": 2079,
+                "height": 1427
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 97,
+                "width": 2079,
+                "height": 1427
+              },
+              "source_window": 11
+            }
+          ]
+        },
+        {
+          "window": 12,
+          "time": 120,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 58,
+                "y": 0,
+                "width": 1914,
+                "height": 1196
+              },
+              "world": {
+                "x": 200,
+                "y": 88,
+                "width": 2871,
+                "height": 1794
+              },
+              "screen_world": {
+                "x": 86,
+                "y": 0,
+                "width": 2871,
+                "height": 1794
+              },
+              "source_window": 12
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 13,
+                "y": 0,
+                "width": 957,
+                "height": 556
+              },
+              "world": {
+                "x": 200,
+                "y": 215,
+                "width": 2871,
+                "height": 1667
+              },
+              "screen_world": {
+                "x": 40,
+                "y": 0,
+                "width": 2871,
+                "height": 1667
+              },
+              "source_window": 12
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 2742,
+                "height": 1796
+              },
+              "world": {
+                "x": 329,
+                "y": 86,
+                "width": 2742,
+                "height": 1796
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 2742,
+                "height": 1796
+              },
+              "source_window": 12
+            }
+          ]
+        }
+      ],
+      "event_effects": [
+        {
+          "seq": 1,
+          "time": 0,
+          "kind": "negotiate",
+          "effective_time": 0,
+          "committed_window": 0,
+          "endpoints_after": [
+            "screen-a"
+          ],
+          "state_after": "negotiating"
+        },
+        {
+          "seq": 2,
+          "time": 1,
+          "kind": "start",
+          "effective_time": 1,
+          "committed_window": 0,
+          "endpoints_after": [
+            "screen-a"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 3,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-b",
+          "effective_time": 15,
+          "committed_window": 1,
+          "replay_window": 1,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b"
+          ],
+          "state_after": "casting",
+          "replay": {
+            "display_id": "screen-b",
+            "pixel": {
+              "x": 180,
+              "y": 193,
+              "width": 1871,
+              "height": 1140
+            },
+            "world": {
+              "x": 316,
+              "y": 332,
+              "width": 2807,
+              "height": 1710
+            },
+            "screen_world": {
+              "x": 269,
+              "y": 289,
+              "width": 2807,
+              "height": 1710
+            },
+            "source_window": 1
+          }
+        },
+        {
+          "seq": 4,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-c",
+          "effective_time": 15,
+          "committed_window": 1,
+          "replay_window": 1,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "state_after": "casting",
+          "replay": {
+            "display_id": "screen-c",
+            "pixel": {
+              "x": 74,
+              "y": 39,
+              "width": 936,
+              "height": 570
+            },
+            "world": {
+              "x": 316,
+              "y": 332,
+              "width": 2807,
+              "height": 1710
+            },
+            "screen_world": {
+              "x": 222,
+              "y": 117,
+              "width": 2807,
+              "height": 1710
+            },
+            "source_window": 1
+          }
+        },
+        {
+          "seq": 5,
+          "time": 25,
+          "kind": "topology",
+          "display_id": "screen-b",
+          "effective_time": 25,
+          "committed_window": 2,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 6,
+          "time": 27,
+          "kind": "topology",
+          "display_id": "screen-c",
+          "effective_time": 27,
+          "committed_window": 2,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 7,
+          "time": 35,
+          "kind": "join",
+          "display_id": "screen-d",
+          "effective_time": 35,
+          "committed_window": 3,
+          "replay_window": 3,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "casting",
+          "replay": {
+            "display_id": "screen-d",
+            "pixel": {
+              "x": 0,
+              "y": 0,
+              "width": 1944,
+              "height": 1064
+            },
+            "world": {
+              "x": 329,
+              "y": 86,
+              "width": 1944,
+              "height": 1064
+            },
+            "screen_world": {
+              "x": 0,
+              "y": 0,
+              "width": 1944,
+              "height": 1064
+            },
+            "source_window": 3
+          }
+        },
+        {
+          "seq": 8,
+          "time": 45,
+          "kind": "leave",
+          "display_id": "screen-a",
+          "effective_time": 45,
+          "committed_window": 4,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 9,
+          "time": 55,
+          "kind": "pause",
+          "effective_time": 55,
+          "committed_window": 5,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "paused"
+        },
+        {
+          "seq": 10,
+          "time": 56,
+          "kind": "resume",
+          "effective_time": 56,
+          "committed_window": 5,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 11,
+          "time": 220,
+          "kind": "end",
+          "effective_time": 220,
+          "committed_window": 12,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "ended"
+        }
+      ],
+      "final_endpoints": [
+        "screen-b",
+        "screen-c",
+        "screen-d"
+      ],
+      "final_state": "ended"
+    },
+    {
+      "session_id": "session-000042-01",
+      "windows": [
+        {
+          "window": 1,
+          "time": 10,
+          "endpoints": [
+            "screen-a"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 0,
+                "y": 45,
+                "width": 1281,
+                "height": 927
+              },
+              "world": {
+                "x": 329,
+                "y": 306,
+                "width": 2563,
+                "height": 1854
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 91,
+                "width": 2563,
+                "height": 1854
+              },
+              "source_window": 1
+            }
+          ]
+        },
+        {
+          "window": 2,
+          "time": 20,
+          "endpoints": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 123,
+                "y": 0,
+                "width": 1401,
+                "height": 551
+              },
+              "world": {
+                "x": 576,
+                "y": 215,
+                "width": 2801,
+                "height": 1103
+              },
+              "screen_world": {
+                "x": 247,
+                "y": 0,
+                "width": 2801,
+                "height": 1103
+              },
+              "source_window": 2
+            },
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 259,
+                "y": 128,
+                "width": 1867,
+                "height": 751
+              },
+              "world": {
+                "x": 576,
+                "y": 191,
+                "width": 2801,
+                "height": 1127
+              },
+              "screen_world": {
+                "x": 388,
+                "y": 191,
+                "width": 2801,
+                "height": 1127
+              },
+              "source_window": 2
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 192,
+                "y": 35,
+                "width": 934,
+                "height": 376
+              },
+              "world": {
+                "x": 576,
+                "y": 191,
+                "width": 2801,
+                "height": 1127
+              },
+              "screen_world": {
+                "x": 576,
+                "y": 105,
+                "width": 2801,
+                "height": 1127
+              },
+              "source_window": 2
+            }
+          ]
+        },
+        {
+          "window": 3,
+          "time": 30,
+          "endpoints": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 0,
+                "y": 57,
+                "width": 1391,
+                "height": 594
+              },
+              "world": {
+                "x": 329,
+                "y": 329,
+                "width": 2783,
+                "height": 1188
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 114,
+                "width": 2783,
+                "height": 1188
+              },
+              "source_window": 3
+            },
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 0,
+                "y": 198,
+                "width": 1894,
+                "height": 792
+              },
+              "world": {
+                "x": 272,
+                "y": 329,
+                "width": 2840,
+                "height": 1188
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 296,
+                "width": 2840,
+                "height": 1188
+              },
+              "source_window": 3
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 30,
+                "y": 81,
+                "width": 989,
+                "height": 396
+              },
+              "world": {
+                "x": 145,
+                "y": 329,
+                "width": 2967,
+                "height": 1188
+              },
+              "screen_world": {
+                "x": 89,
+                "y": 243,
+                "width": 2967,
+                "height": 1188
+              },
+              "source_window": 3
+            }
+          ]
+        },
+        {
+          "window": 4,
+          "time": 40,
+          "endpoints": [
+            "screen-a",
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-a",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 1005,
+                "height": 640
+              },
+              "world": {
+                "x": 329,
+                "y": 215,
+                "width": 2011,
+                "height": 1280
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 2011,
+                "height": 1280
+              },
+              "source_window": 4
+            },
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 26,
+                "y": 17,
+                "width": 1353,
+                "height": 958
+              },
+              "world": {
+                "x": 311,
+                "y": 58,
+                "width": 2029,
+                "height": 1437
+              },
+              "screen_world": {
+                "x": 39,
+                "y": 25,
+                "width": 2029,
+                "height": 1437
+              },
+              "source_window": 4
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 85,
+                "y": 0,
+                "width": 676,
+                "height": 470
+              },
+              "world": {
+                "x": 311,
+                "y": 86,
+                "width": 2029,
+                "height": 1409
+              },
+              "screen_world": {
+                "x": 255,
+                "y": 0,
+                "width": 2029,
+                "height": 1409
+              },
+              "source_window": 4
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 170,
+                "y": 0,
+                "width": 2029,
+                "height": 1409
+              },
+              "world": {
+                "x": 311,
+                "y": 86,
+                "width": 2029,
+                "height": 1409
+              },
+              "screen_world": {
+                "x": 170,
+                "y": 0,
+                "width": 2029,
+                "height": 1409
+              },
+              "source_window": 4
+            }
+          ]
+        },
+        {
+          "window": 5,
+          "time": 50,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 104,
+                "y": 166,
+                "width": 1351,
+                "height": 1022
+              },
+              "world": {
+                "x": 428,
+                "y": 282,
+                "width": 2026,
+                "height": 1533
+              },
+              "screen_world": {
+                "x": 156,
+                "y": 249,
+                "width": 2026,
+                "height": 1533
+              },
+              "source_window": 5
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 124,
+                "y": 65,
+                "width": 675,
+                "height": 511
+              },
+              "world": {
+                "x": 428,
+                "y": 282,
+                "width": 2026,
+                "height": 1533
+              },
+              "screen_world": {
+                "x": 372,
+                "y": 196,
+                "width": 2026,
+                "height": 1533
+              },
+              "source_window": 5
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 287,
+                "y": 196,
+                "width": 2026,
+                "height": 1533
+              },
+              "world": {
+                "x": 428,
+                "y": 282,
+                "width": 2026,
+                "height": 1533
+              },
+              "screen_world": {
+                "x": 287,
+                "y": 196,
+                "width": 2026,
+                "height": 1533
+              },
+              "source_window": 5
+            }
+          ]
+        },
+        {
+          "window": 6,
+          "time": 60,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 0,
+                "y": 157,
+                "width": 1828,
+                "height": 1261
+              },
+              "world": {
+                "x": 272,
+                "y": 268,
+                "width": 2741,
+                "height": 1892
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 235,
+                "width": 2741,
+                "height": 1892
+              },
+              "source_window": 6
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 51,
+                "y": 61,
+                "width": 935,
+                "height": 630
+              },
+              "world": {
+                "x": 209,
+                "y": 268,
+                "width": 2804,
+                "height": 1892
+              },
+              "screen_world": {
+                "x": 153,
+                "y": 182,
+                "width": 2804,
+                "height": 1892
+              },
+              "source_window": 6
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 68,
+                "y": 182,
+                "width": 2804,
+                "height": 1892
+              },
+              "world": {
+                "x": 209,
+                "y": 268,
+                "width": 2804,
+                "height": 1892
+              },
+              "screen_world": {
+                "x": 68,
+                "y": 182,
+                "width": 2804,
+                "height": 1892
+              },
+              "source_window": 6
+            }
+          ]
+        },
+        {
+          "window": 7,
+          "time": 70,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 106,
+                "y": 28,
+                "width": 1494,
+                "height": 783
+              },
+              "world": {
+                "x": 431,
+                "y": 75,
+                "width": 2240,
+                "height": 1174
+              },
+              "screen_world": {
+                "x": 159,
+                "y": 42,
+                "width": 2240,
+                "height": 1174
+              },
+              "source_window": 7
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 125,
+                "y": 0,
+                "width": 747,
+                "height": 388
+              },
+              "world": {
+                "x": 431,
+                "y": 86,
+                "width": 2240,
+                "height": 1163
+              },
+              "screen_world": {
+                "x": 375,
+                "y": 0,
+                "width": 2240,
+                "height": 1163
+              },
+              "source_window": 7
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 290,
+                "y": 0,
+                "width": 2240,
+                "height": 1163
+              },
+              "world": {
+                "x": 431,
+                "y": 86,
+                "width": 2240,
+                "height": 1163
+              },
+              "screen_world": {
+                "x": 290,
+                "y": 0,
+                "width": 2240,
+                "height": 1163
+              },
+              "source_window": 7
+            }
+          ]
+        },
+        {
+          "window": 8,
+          "time": 80,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 70,
+                "y": 36,
+                "width": 1862,
+                "height": 1214
+              },
+              "world": {
+                "x": 376,
+                "y": 86,
+                "width": 2793,
+                "height": 1822
+              },
+              "screen_world": {
+                "x": 104,
+                "y": 53,
+                "width": 2793,
+                "height": 1822
+              },
+              "source_window": 8
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 107,
+                "y": 0,
+                "width": 931,
+                "height": 607
+              },
+              "world": {
+                "x": 376,
+                "y": 86,
+                "width": 2793,
+                "height": 1822
+              },
+              "screen_world": {
+                "x": 320,
+                "y": 0,
+                "width": 2793,
+                "height": 1822
+              },
+              "source_window": 8
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 235,
+                "y": 0,
+                "width": 2793,
+                "height": 1822
+              },
+              "world": {
+                "x": 376,
+                "y": 86,
+                "width": 2793,
+                "height": 1822
+              },
+              "screen_world": {
+                "x": 235,
+                "y": 0,
+                "width": 2793,
+                "height": 1822
+              },
+              "source_window": 8
+            }
+          ]
+        },
+        {
+          "window": 9,
+          "time": 90,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 64,
+                "y": 156,
+                "width": 1832,
+                "height": 792
+              },
+              "world": {
+                "x": 367,
+                "y": 266,
+                "width": 2749,
+                "height": 1188
+              },
+              "screen_world": {
+                "x": 95,
+                "y": 233,
+                "width": 2749,
+                "height": 1188
+              },
+              "source_window": 9
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 104,
+                "y": 60,
+                "width": 916,
+                "height": 396
+              },
+              "world": {
+                "x": 367,
+                "y": 266,
+                "width": 2749,
+                "height": 1188
+              },
+              "screen_world": {
+                "x": 311,
+                "y": 180,
+                "width": 2749,
+                "height": 1188
+              },
+              "source_window": 9
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 226,
+                "y": 180,
+                "width": 2749,
+                "height": 1188
+              },
+              "world": {
+                "x": 367,
+                "y": 266,
+                "width": 2749,
+                "height": 1188
+              },
+              "screen_world": {
+                "x": 226,
+                "y": 180,
+                "width": 2749,
+                "height": 1188
+              },
+              "source_window": 9
+            }
+          ]
+        },
+        {
+          "window": 10,
+          "time": 100,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 0,
+                "y": 15,
+                "width": 1830,
+                "height": 889
+              },
+              "world": {
+                "x": 272,
+                "y": 55,
+                "width": 2744,
+                "height": 1333
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 22,
+                "width": 2744,
+                "height": 1333
+              },
+              "source_window": 10
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 11,
+                "y": 0,
+                "width": 976,
+                "height": 434
+              },
+              "world": {
+                "x": 90,
+                "y": 86,
+                "width": 2926,
+                "height": 1302
+              },
+              "screen_world": {
+                "x": 34,
+                "y": 0,
+                "width": 2926,
+                "height": 1302
+              },
+              "source_window": 10
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 0,
+                "y": 0,
+                "width": 2875,
+                "height": 1302
+              },
+              "world": {
+                "x": 141,
+                "y": 86,
+                "width": 2875,
+                "height": 1302
+              },
+              "screen_world": {
+                "x": 0,
+                "y": 0,
+                "width": 2875,
+                "height": 1302
+              },
+              "source_window": 10
+            }
+          ]
+        },
+        {
+          "window": 11,
+          "time": 110,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 93,
+                "y": 70,
+                "width": 2264,
+                "height": 1222
+              },
+              "world": {
+                "x": 411,
+                "y": 137,
+                "width": 3396,
+                "height": 1833
+              },
+              "screen_world": {
+                "x": 139,
+                "y": 104,
+                "width": 3396,
+                "height": 1833
+              },
+              "source_window": 11
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 118,
+                "y": 17,
+                "width": 1132,
+                "height": 611
+              },
+              "world": {
+                "x": 411,
+                "y": 137,
+                "width": 3396,
+                "height": 1833
+              },
+              "screen_world": {
+                "x": 355,
+                "y": 51,
+                "width": 3396,
+                "height": 1833
+              },
+              "source_window": 11
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 270,
+                "y": 51,
+                "width": 3396,
+                "height": 1833
+              },
+              "world": {
+                "x": 411,
+                "y": 137,
+                "width": 3396,
+                "height": 1833
+              },
+              "screen_world": {
+                "x": 270,
+                "y": 51,
+                "width": 3396,
+                "height": 1833
+              },
+              "source_window": 11
+            }
+          ]
+        },
+        {
+          "window": 12,
+          "time": 120,
+          "endpoints": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "screens": [
+            {
+              "display_id": "screen-b",
+              "pixel": {
+                "x": 176,
+                "y": 70,
+                "width": 2203,
+                "height": 1312
+              },
+              "world": {
+                "x": 536,
+                "y": 137,
+                "width": 3304,
+                "height": 1968
+              },
+              "screen_world": {
+                "x": 264,
+                "y": 104,
+                "width": 3304,
+                "height": 1968
+              },
+              "source_window": 12
+            },
+            {
+              "display_id": "screen-c",
+              "pixel": {
+                "x": 160,
+                "y": 17,
+                "width": 1101,
+                "height": 656
+              },
+              "world": {
+                "x": 536,
+                "y": 137,
+                "width": 3304,
+                "height": 1968
+              },
+              "screen_world": {
+                "x": 480,
+                "y": 51,
+                "width": 3304,
+                "height": 1968
+              },
+              "source_window": 12
+            },
+            {
+              "display_id": "screen-d",
+              "pixel": {
+                "x": 395,
+                "y": 51,
+                "width": 3304,
+                "height": 1968
+              },
+              "world": {
+                "x": 536,
+                "y": 137,
+                "width": 3304,
+                "height": 1968
+              },
+              "screen_world": {
+                "x": 395,
+                "y": 51,
+                "width": 3304,
+                "height": 1968
+              },
+              "source_window": 12
+            }
+          ]
+        }
+      ],
+      "event_effects": [
+        {
+          "seq": 1,
+          "time": 0,
+          "kind": "negotiate",
+          "effective_time": 0,
+          "committed_window": 0,
+          "endpoints_after": [
+            "screen-a"
+          ],
+          "state_after": "negotiating"
+        },
+        {
+          "seq": 2,
+          "time": 1,
+          "kind": "start",
+          "effective_time": 1,
+          "committed_window": 0,
+          "endpoints_after": [
+            "screen-a"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 3,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-b",
+          "effective_time": 15,
+          "committed_window": 1,
+          "replay_window": 1,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b"
+          ],
+          "state_after": "casting",
+          "replay": {
+            "display_id": "screen-b",
+            "pixel": {
+              "x": 58,
+              "y": 204,
+              "width": 1745,
+              "height": 1236
+            },
+            "world": {
+              "x": 275,
+              "y": 306,
+              "width": 2617,
+              "height": 1854
+            },
+            "screen_world": {
+              "x": 87,
+              "y": 306,
+              "width": 2617,
+              "height": 1854
+            },
+            "source_window": 1
+          }
+        },
+        {
+          "seq": 4,
+          "time": 15,
+          "kind": "join",
+          "display_id": "screen-c",
+          "effective_time": 15,
+          "committed_window": 1,
+          "replay_window": 1,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "state_after": "casting",
+          "replay": {
+            "display_id": "screen-c",
+            "pixel": {
+              "x": 92,
+              "y": 73,
+              "width": 872,
+              "height": 618
+            },
+            "world": {
+              "x": 275,
+              "y": 306,
+              "width": 2617,
+              "height": 1854
+            },
+            "screen_world": {
+              "x": 275,
+              "y": 220,
+              "width": 2617,
+              "height": 1854
+            },
+            "source_window": 1
+          }
+        },
+        {
+          "seq": 5,
+          "time": 25,
+          "kind": "topology",
+          "display_id": "screen-b",
+          "effective_time": 25,
+          "committed_window": 2,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 6,
+          "time": 27,
+          "kind": "topology",
+          "display_id": "screen-c",
+          "effective_time": 27,
+          "committed_window": 2,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 7,
+          "time": 35,
+          "kind": "join",
+          "display_id": "screen-d",
+          "effective_time": 35,
+          "committed_window": 3,
+          "replay_window": 3,
+          "endpoints_after": [
+            "screen-a",
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "casting",
+          "replay": {
+            "display_id": "screen-d",
+            "pixel": {
+              "x": 4,
+              "y": 243,
+              "width": 2967,
+              "height": 1188
+            },
+            "world": {
+              "x": 145,
+              "y": 329,
+              "width": 2967,
+              "height": 1188
+            },
+            "screen_world": {
+              "x": 4,
+              "y": 243,
+              "width": 2967,
+              "height": 1188
+            },
+            "source_window": 3
+          }
+        },
+        {
+          "seq": 8,
+          "time": 45,
+          "kind": "leave",
+          "display_id": "screen-a",
+          "effective_time": 45,
+          "committed_window": 4,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 9,
+          "time": 55,
+          "kind": "pause",
+          "effective_time": 55,
+          "committed_window": 5,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "paused"
+        },
+        {
+          "seq": 10,
+          "time": 56,
+          "kind": "resume",
+          "effective_time": 56,
+          "committed_window": 5,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "casting"
+        },
+        {
+          "seq": 11,
+          "time": 220,
+          "kind": "end",
+          "effective_time": 220,
+          "committed_window": 12,
+          "endpoints_after": [
+            "screen-b",
+            "screen-c",
+            "screen-d"
+          ],
+          "state_after": "ended"
+        }
+      ],
+      "final_endpoints": [
+        "screen-b",
+        "screen-c",
+        "screen-d"
+      ],
+      "final_state": "ended"
+    }
+  ]
+}
