@@ -1,22 +1,236 @@
-工作区目前只有一个未初始化的空目录，没有任何代码、样本或历史约定。上级要求先落一个可运行的最小版本：面向游戏与互动媒体音效素材库，交付一套音频指纹与相似片段检索的 Go 领域组件与本地可复现演示。本地确定性样本生成器按固定种子产出多批素材工程，每批包含若干段单声道 PCM 描述（采样率与总采样点在清单中声明）、一份检索配方（帧长、帧移、频带数、量化位宽、相似候选阈值与候选上限）以及一组按逻辑时间排列的编辑操作（替换或裁剪某段素材、调整配方参数），并附带逐帧解析真值（若干嵌入标记的期望采样点、逐帧期望指纹摘要与指定查询片段的期望近邻排名），真值仅来源于生成器的解析构造，是精度观测与判定依据的唯一来源。组件需对素材逐帧提取频谱特征并量化为帧指纹，在指纹库中完成相似片段检索，同时保证增量编辑后的结果与从空库重建完全一致。
+# soundlab
 
-任务环境与准备：
-Windows 10 及以上，安装 Go 1.22 或更高版本并确认 go 命令可用；无需外部音频文件、网络或账号。
-在空工作区初始化 Go module，使用标准库实现频谱分析与检索主链路，持久化使用 SQLite（可采用纯 Go 驱动，随 go.mod 拉取，无 CGO 依赖）。
-由仓库内命令按固定种子生成本地确定性样本与真值清单，样本规模控制在数百 MB 以内，确保可在单机重复生成与比对。
-运行 go build ./... 与 go vet ./... 确认可编译，再执行样本生成、增量与全量重算比对及异常注入演示命令。
+`soundlab` is a self-contained Go 1.22+ domain component and local demo for
+deterministic audio fingerprinting and similar-clip retrieval. It targets game
+and interactive-media sound libraries and uses only generated mono PCM, the Go
+standard library for analysis/retrieval, and pure-Go SQLite
+(`modernc.org/sqlite`) for versioned checkpoints.
 
-业务要求：
-1. 实现样本生成器与素材工程加载校验：按固定种子生成多批单声道 PCM 描述、检索配方、编辑操作序列与逐帧真值清单；加载时校验采样率与总采样点同清单一致、帧长与帧移为正且帧移不大于帧长、频带数与量化位宽在支持范围内、编辑操作逻辑时间戳单调且目标素材存在，字段缺失返回 E_SCHEMA，数值越界返回 E_PARA 并指出字段名。
-2. 实现帧指纹提取与量化核心：按可配置帧长、帧移与频带数做频谱分析，把每帧能量分布量化为位宽受限的帧指纹并附帧起始采样偏移；同一素材在相同参数下帧指纹须逐帧逐字段相同，且在窗口切分方式改变、并发数改变或缓存预热状态不同时结果不变；帧长或帧移越界返回 E_PARA，频带能量全为零的帧须显式标记为零帧而非静默丢弃。
-3. 实现指纹库索引与相似片段检索：为每段素材构建可查询的帧指纹索引，给定查询片段按可配置相似候选阈值与候选上限返回候选素材、起止采样偏移、相似度与近邻排名；要求查询结果是索引与指纹的纯函数，不随插入顺序或线程调度变化，近邻排名与真值声明的期望排名逐项一致，候选上限越界返回 E_PARA。
-4. 实现指纹库依赖图与精确失效传播：显式记录素材内容、检索配方参数、帧指纹条目与索引条目之间的依赖关系，缓存键由素材内容哈希、帧位置、配方参数值与上游缓存键共同决定；当替换或裁剪某段素材、调整帧长或频带数时，仅将实际受影响素材的指纹条目及其索引条目与检索结果标记失效，未受影响条目必须复用持久化结果，并输出含素材标识、失效条目范围与失效原因的清单。
-5. 实现增量重建调度与全量重建一致性比对：对失效条目按依赖拓扑序重算并原子替换缓存，未失效条目直接复用；增量路径与从空库全量重建的帧指纹、索引条目、指定查询的检索结果与条目提交序列须逐项相等，并提供自动比对功能定位首个不一致素材标识、帧序号与字段名，不一致时返回 E_DIFF。
-6. 实现基于 SQLite 的版本化检查点与断点恢复：每提交一个素材分片把该分片帧指纹、索引条目摘要、内容哈希、配方参数版本与算法版本原子且串行写入 SQLite，写入不得交错且提交顺序稳定；重启加载时若内容哈希或任一版本不匹配须整体作废快照并全量重建，禁止部分混用旧条目；主动取消后重启只能依据已持久化且版本匹配的分片恢复。
-7. 保证实时提取、断点恢复与一次性全量重算三条路径输出一致：三者对同一素材工程、同一编辑序列与同一配方须产出逐帧相同的指纹、逐条相同的索引条目与逐项相同的检索结果，并提供自动比对功能定位首个不一致素材标识、帧序号与差异字段；比对结果须可由独立复核工具仅凭 SQLite 中持久化条目与真值指纹重新计算后逐项核对，复核不得调用主提取路径。
-8. 实现异常注入链路与并发资源边界：通过输入或参数注入素材截断、帧时序倒置、配方参数矛盾与单分片内部失败四类异常，分别走 E_DECODE、E_ORDER、E_PARA、E_STAGE 链路并给出素材标识、分片编号与帧号；单分片失败须可重试且不污染其他分片与已提交结果；分片提取与索引构建可在工作线程池并行推进，须限制最大并行度与每线程采样缓冲上限，缓冲耗尽时阻塞排队并记录原因而非静默丢弃，共享检查点写入须串行且分片顺序稳定。
+## What is included
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- `audiofp`: the reusable domain package.
+  - Configurable framed FFT analysis, band-energy quantization, bit-packed
+    fingerprints, and explicit zero frames.
+  - Deterministic frame index construction and L1 similarity search.
+  - Explicit dependency graph, precise invalidation reports, incremental rebuild
+    session, and first-difference comparison.
+  - Versioned SQLite shard cache/snapshot store, cancellation/resume,
+    serialized atomic commits, and independent truth verifier.
+  - Typed errors: `E_SCHEMA`, `E_PARA`, `E_DECODE`, `E_ORDER`, `E_STAGE`,
+    `E_DIFF`.
+- `samplegen`: fixed-seed fixture and truth generator.
+  - Synthesizes multi-batch PCM from band profiles and marker transients.
+  - Applies replace/trim/recipe edits.
+  - Derives reference frame fingerprints with a generator-local FFT, not the
+    production extractor, and computes expected query rankings from those truth
+    frames.
+- `cmd/soundlab`: `generate`, `demo`, `inject`, and `verify` commands.
+- Tests for determinism, zero frames, parameter/order errors, search purity,
+  path parity, checkpoint cancellation/resume, version invalidation, selective
+  cache reuse, stage retry, loader validation, and verifier tamper detection.
 
-验收：
-使用本地样本验证帧指纹与检索结果、增量与全量及断点恢复一致性、异常链路，并附运行结果。
+## Requirements
+
+- Go 1.22 or newer.
+- Windows 10+ (the same commands work on Linux/macOS).
+- No external audio, accounts, services, Docker, or container runtime.
+- `modernc.org/sqlite` is downloaded by `go mod download` and uses no CGO.
+
+## Quick start
+
+Run from the repository root.
+
+```powershell
+go mod download
+go build ./...
+go vet ./...
+go test ./...
+
+go run ./cmd/soundlab generate --seed 20261125 --out ./samples --batches 4 --assets 3
+go run ./cmd/soundlab demo --samples ./samples --artifacts ./artifacts/demo --workers 4 --buffer-samples 8192 --shard-frames 24 --resume-after 2
+go run ./cmd/soundlab inject --samples ./samples --artifacts ./artifacts/faults --workers 4 --buffer-samples 8192
+go run ./cmd/soundlab verify --manifest ./samples/batch-000/project.json --db ./artifacts/demo/batch-000/full.db --project-id batch-000
+```
+
+The demo writes `artifacts/demo/report.json` and prints the same JSON report.
+Generation is byte-for-byte reproducible for a fixed seed.
+
+## Fixture format
+
+Each `samples/batch-NNN/project.json` contains:
+
+- `assets`: initial raw `s16le` mono PCM descriptors (`asset_id`, relative
+  `file`, `sample_rate`, `total_samples`, `channels`, `sample_format`,
+  `sha256`).
+- `recipe`: frame length, frame shift, band count, quantization width,
+  similarity threshold, and candidate limit.
+- `edits`: monotonic logical-time operations:
+  - `trim`: remove `[start_sample,end_sample)`.
+  - `replace`: replace the range with a referenced PCM segment.
+  - `set_param`: update a recipe field.
+- `truth`: final recipe, per-asset final content hash, per-frame expected
+  fingerprint (levels, packed hex, zero flag, summary), embedded marker sample
+  positions, and query files with expected ranked neighbors.
+
+Truth fingerprints are derived by the generator's own synthesis/reference
+transform. The production extractor is never called while generating truth.
+
+## Analysis and retrieval
+
+For each full frame:
+
+1. Copy `frame_len` samples into a zero-padded radix-2 FFT.
+2. Divide all positive FFT bins into contiguous bands and sum band power.
+3. Normalize band power per frame and quantize each band to
+   `0..2^quant_bits-1`.
+4. Pack band levels MSB-first into a stable hex fingerprint and summarize the
+   start sample, dimensions, packed bytes, and zero flag.
+
+Silent frames are retained with `zero=true` and all-zero levels.
+
+Search scans every contiguous query-length frame window. Similarity is
+`1 - sum(|query_level-candidate_level|) / (frames*bands*maxLevel)`. Ranking is
+similarity descending, then asset ID, then start sample, so it is independent of
+insertion order and scheduler timing. Query results use recipe threshold and
+candidate limit; invalid limits return `E_PARA`.
+
+## Incremental invalidation
+
+The dependency graph contains:
+
+```text
+asset content -> fingerprint(frame key) -> index entry
+recipe --------> fingerprint
+all index entries -> query result
+```
+
+Frame keys include the asset content hash, frame number/start, recipe values,
+and an upstream recipe key. Index keys include the frame key. Shard cache keys
+include content hash, recipe version, frame range, and algorithm version.
+
+- Replace/trim invalidates that asset's fingerprint/index range and all query
+  results.
+- Frame-affecting recipe fields invalidate all fingerprint/index ranges and all
+  query results.
+- Threshold/limit-only changes invalidate query results without recomputing
+  fingerprints.
+- The incremental session recomputes affected assets and reuses untouched
+  analyses. The persistent store reuses exact cache-key matches.
+
+Invalidation reports include asset ID, start/end frame range, and reason.
+
+## SQLite checkpoints and resume
+
+SQLite contains:
+
+- `snapshots`: project hash, recipe version, algorithm version, layout version.
+- `cache_shards`: fingerprint/index payload, content hash, recipe/algorithm
+  versions, range, and payload digests.
+- `snapshot_shards`: stable per-project commit sequence and cache references.
+
+Each shard is written in one transaction containing both its cache payload and
+snapshot commit row. The store uses a single serialized writer and canonical
+asset/shard order.
+
+On resume:
+
+- Matching snapshot versions reuse only persisted shards with matching cache
+  keys/digests.
+- A changed content hash, recipe version, algorithm version, layout, or corrupt
+  shard invalidates the whole snapshot and forces a zero-reuse rebuild.
+- Cancellation returns after a deterministic number of new shard commits; a
+  restart reuses exactly those matching committed shards.
+
+## Independent verification
+
+`verify` never invokes PCM extraction. It reads SQLite shard payloads plus the
+manifest truth, then:
+
+- rebuilds packed fingerprints and summaries from persisted levels;
+- rebuilds index entries and cache keys from persisted frame data and recipe;
+- recomputes query rankings from truth query frames against persisted frames;
+- reports the first mismatch as `E_DIFF` with asset ID, frame, and field.
+
+## Fault injection
+
+`inject` and the demo exercise:
+
+| Fault | Expected code | Detail |
+|---|---|---|
+| PCM shorter than declared | `E_DECODE` | asset ID and `total_samples` |
+| `frame_shift > frame_len` | `E_PARA` | field `frame_shift` |
+| injected frame timing inversion | `E_ORDER` | asset, shard, frame |
+| injected single-shard failure | `E_STAGE` | asset, shard, frame |
+
+The stage-failure demo commits other shards, then resumes without the injected
+failure and compares recovered output with a fresh full build.
+
+## Actual validation results
+
+Validated on 2026-11-25 with Go 1.22.12:
+
+```text
+go build ./...                  PASS
+go vet ./...                    PASS
+go test ./...                   PASS
+go test -race ./...             PASS
+CGO_ENABLED=0 go build ./...    PASS
+CGO_ENABLED=0 go test ./...     PASS
+GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build ./...  PASS
+```
+
+Generated fixture set: 4 batches, 3 assets/batch, 8 queries, 1,763 truth
+frames, about 1.1 MB of PCM. A separate two-run hash comparison for seed 12345
+produced byte-identical trees (`13` files).
+
+Final `demo` result:
+
+| Batch | Frames | Reused/Recomputed | Cache hit/new | Resume committed/reused | Version reset | DAG/topo nodes | Verified | Queue waits |
+|---|---:|---:|---:|---:|---|---|---:|---:|
+| batch-000 | 285 | 100 / 185 | 5 / 8 | 2 / 2 | true / 0 reuse | 575 / 575 | true | 10 |
+| batch-001 | 585 | 0 / 585 | 0 / 26 | 2 / 2 | true / 0 reuse | 1,175 / 1,175 | true | 6 |
+| batch-002 | 587 | 0 / 587 | 0 / 26 | 2 / 2 | true / 0 reuse | 1,179 / 1,179 | true | 14 |
+| batch-003 | 306 | 0 / 306 | 0 / 15 | 2 / 2 | true / 0 reuse | 617 / 617 | true | 16 |
+
+Incremental, full, and resumed analyses/indexes/commit sequences and query
+rankings compared equal for every batch. The batch-000 independent verifier
+reported:
+
+```json
+{
+  "project_id": "batch-000",
+  "algorithm_version": "afp-v1",
+  "assets_checked": 3,
+  "frames_checked": 285,
+  "index_checked": 285,
+  "queries_checked": 2,
+  "ok": true
+}
+```
+
+Standalone injection result:
+
+```json
+{
+  "faults": [
+    {"kind":"truncate","expected_code":"E_DECODE","actual_code":"E_DECODE","asset_id":"b000-a0","ok":true},
+    {"kind":"recipe_contradiction","expected_code":"E_PARA","actual_code":"E_PARA","ok":true},
+    {"kind":"frame_order","expected_code":"E_ORDER","actual_code":"E_ORDER","asset_id":"b000-a0","shard":1,"frame":2,"ok":true},
+    {"kind":"stage_failure_retry","expected_code":"E_STAGE","actual_code":"E_STAGE","asset_id":"b000-a0","committed_before_retry":12,"reused_after_retry":12,"ok":true}
+  ],
+  "ok": true
+}
+```
+
+## Notes and boundaries
+
+- Raw PCM has no embedded sample-rate header. The manifest declares the sample
+  rate; query sample rates are checked against their source assets and all
+  numeric fields are range-validated.
+- The FFT uses a rectangular window and deterministic contiguous bin bands.
+  This keeps truth construction and repeatable verification simple.
+- Demo fixtures are intentionally small. The same code paths accept larger
+  assets; worker concurrency is capped at 32 and the configured sample-buffer
+  budget can queue work while recording the reason.
+- Generated `samples/`, demo databases, and reports are local artifacts and are
+  ignored by Git.
