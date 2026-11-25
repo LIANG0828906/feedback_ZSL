@@ -21,3 +21,113 @@ SQLite 采用纯 Go 驱动以避免 CGO 依赖，通过 go get 引入并在模�
 
 验收：
 用本地确定性图标样本验证切分结果、双路径一致与断点恢复，并附运行记录。
+
+---
+
+# 实现说明
+
+本仓库是一个不依赖容器、CGO 或线上服务的 Go 实现。样本在进程内按固定种子生成，运行时才写入磁盘。
+
+## 目录
+
+- `cmd/iconseg`：`generate`、`run`、`verify`、`serve` 四个本地命令。
+- `internal/sample`：确定性图标/真值生成器、PNG 与清单加载校验。
+- `internal/seg`：梯度、开闭清理、确定性淹没、区域合并、连通域几何、匈牙利一对一匹配。
+- `internal/pipeline`：全精度路径、自适应预览路径、双路径一致性判定。
+- `internal/checkpoint`：SQLite 状态机、原子层提交、快照失效与恢复。
+- `internal/runner`：有界工作线程池、块/层产物准备、稳定顺序提交。
+- `internal/verifier`：只消费持久化层产物和真值指纹的独立重建工具。
+- `internal/diagnostics`：仅绑定回环地址的 `net/http` 诊断页面。
+
+## 环境与构建
+
+要求 Go 1.22+。SQLite 固定为纯 Go 驱动 `modernc.org/sqlite v1.34.5`，`go.mod`/`go.sum` 已锁定。
+
+Windows 本地步骤：
+
+```powershell
+go version
+go env GOOS GOCACHE
+go mod download
+go test ./...
+go build -trimpath -o iconseg.exe .\cmd\iconseg
+```
+
+验收容器实际为 `linux/amd64`；另执行了无 CGO 的 Windows 交叉编译：
+
+```text
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -o artifacts/iconseg.exe ./cmd/iconseg
+file artifacts/iconseg.exe
+=> PE32+ executable for MS Windows 6.01 (console), x86-64
+```
+
+## 命令
+
+```bash
+# 只生成确定性样本与真值清单
+go run ./cmd/iconseg generate --out artifacts/generated --seed 20261125
+
+# 预览 + 全精度 + SQLite 检查点 + 独立验证
+go run ./cmd/iconseg run --out artifacts/run --seed 20261125
+
+# 独立验证所有完整快照
+go run ./cmd/iconseg verify --db artifacts/run/checkpoints.db
+
+# 交互诊断页，只允许回环地址
+go run ./cmd/iconseg serve --addr 127.0.0.1:8090 --db artifacts/serve/checkpoints.db
+```
+
+`run` 支持 `--flood`、`--merge-cost`、`--merge-area`、`--min-region`、`--cleanup`、`--gradient`、`--smooth`、`--workers` 和 `--pause-after`。`--pause-after N` 用于模拟中途关闭并在后续进程中恢复。
+
+## 样本与真值
+
+- 固定种子 `20261125` 生成 3 张不同分辨率 RGBA 图标：`96x96`、`112x88`、`128x120`。
+- 图像包含前景圆角矩形/椭圆、近色背景渐变、半透明描边和嵌入式确定性噪声。
+- 每个清单声明 `block_size`、`worker_budget`、`per_thread_pixel_buffer`、`preview_latency_ms` 及参考容差。
+- 真值包含逐前景连通域重心、面积、外接框、孔洞数、种子点、像素级掩码、掩码哈希与整体指纹。
+- 加载校验分辨率/通道数；不匹配返回 `E_PARA`，并给出字段与合法区间。损坏 PNG、掩码或指纹返回 `E_DECODE`。
+
+## 确定性算法
+
+1. 按配置使用 Gaussian `1/3/5` 平滑核，再以 Sobel 或 Prewitt 对 RGB 三通道求梯度幅值。
+2. 前景/背景种子先写入标记；优先队列使用固定平局裁决 `(gradient, y, x, seed-label)`。淹没在队列最小梯度超过阈值时停止，剩余屏障由同一裁决规则补齐。
+3. 区域邻接图记录相邻区域边界最小梯度。合并代价固定定义为 `minBoundaryGradient + 0.02 * |areaA-areaB|`；只合并同种子归属区域，并同时受代价上限和面积差上限约束。全局最小代价先合并，平局按面积和区域编号裁决。
+4. 合并后仍小于 `min_region_size` 的区域视为孤立区域，返回 `E_REGION` 并列出区域号与面积。
+5. 按种子归属提取前景，执行开运算后闭运算，再从最终掩码按规范顺序计算连通域。真值匹配使用匈牙利算法求一对一最小代价分配。
+6. 预览使用自适应 `2x/3x/4x/6x/8x` 降采样和减少的队列采样量，实测超预算才提高倍率；结果记录实际倍率、采样量、耗时和判定依据。
+7. 停止交互后全精度重算。一致性判定只读取两条路径已有掩码和统计，比较区域数、重心偏差、面积相对误差及差异像素。版本混用返回 `E_VERSION`，超差返回 `E_DIVERGE` 并携带三项实测值、首个不一致区域号和差异像素数。
+
+## 状态机与检查点
+
+每个块有 `gradient`、`marker`、`flood_merge`、`stats` 四层，每层状态为：
+
+```text
+pending -> processing -> committed
+                   \----> failed -> processing
+```
+
+`committed` 为终态。非法迁移返回 `E_STATE`，且不修改原状态。层提交在事务中写入摘要、内容 SHA-256、参数版本、算法版本和单调提交序号；所有写操作由互斥锁和单写连接串行化。行按块号、再按层顺序提交，恢复后提交序列保持稳定。
+
+启动/恢复时校验每行版本与内容哈希。任一行不匹配会把整个快照标为 `invalid`，调用方删除该快照块记录并全量重算。独立验证器从 `flood_merge` 标签块和区域归属表重建原始前景，再独立执行清理与连通域统计，核对持久化的 `stats` 掩码、最终掩码哈希、统计哈希和真值指纹；它不导入 `pipeline`。
+
+## 资源边界
+
+- 工作线程数受清单 `worker_budget` 限制。
+- 单任务像素数超过 `per_thread_pixel_buffer` 返回 `E_PARA`。
+- 聚合像素预算为 `workers * per_thread_pixel_buffer`；预算不足时提交线程阻塞等待。
+- 结果按任务索引返回，不依赖 goroutine 完成顺序；没有静默丢块路径。
+
+## 错误码
+
+| 错误码 | 场景 |
+|---|---|
+| `E_PARA` | 参数越界、清单分辨率/通道不匹配、单任务超过线程缓冲 |
+| `E_DECODE` | PNG、参考掩码或真值指纹损坏/不一致 |
+| `E_REGION` | 区域数不匹配、孔洞/参考容差超限、残留孤立区域 |
+| `E_VERSION` | 快照/层版本或内容哈希不匹配、验证失败 |
+| `E_DIVERGE` | 预览与精确结果超过声明容差 |
+| `E_STATE` | 非法状态迁移 |
+
+## 验证记录
+
+完整证据位于 `artifacts/run/`、`artifacts/final-run/`、`artifacts/resume/` 和 `artifacts/http-check.json`，详细摘要见 `VERIFICATION.md`。
