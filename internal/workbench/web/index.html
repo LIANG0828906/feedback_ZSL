@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>多版本可见性诊断工作台</title>
+  <style>
+    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0f172a; color: #e2e8f0; }
+    header { padding: 20px 28px; background: #111827; border-bottom: 1px solid #334155; }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    main { display: grid; grid-template-columns: 360px 1fr; gap: 18px; padding: 18px 28px; }
+    .panel { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 16px; }
+    label { display: block; font-size: 13px; color: #94a3b8; margin: 10px 0 4px; }
+    select, button { width: 100%; box-sizing: border-box; border-radius: 8px; border: 1px solid #475569; padding: 9px 10px; background: #0b1220; color: #e2e8f0; }
+    button { margin-top: 10px; cursor: pointer; font-weight: 650; }
+    button.primary { background: #2563eb; border-color: #3b82f6; }
+    button.good { background: #047857; border-color: #10b981; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; min-height: 420px; max-height: 75vh; overflow: auto; font-size: 12px; }
+    .pill { display: inline-block; padding: 3px 8px; border-radius: 999px; background: #1e3a8a; color: #bfdbfe; font-size: 12px; margin-right: 6px; }
+    .ok { color: #6ee7b7; } .bad { color: #fca5a5; }
+    .hint { color: #94a3b8; font-size: 12px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>多版本可见性内核 · 本地诊断工作台</h1>
+    <div class="hint">固定种子生成三版工程；真值只来自生成器构造。所有计算均在本机完成，不访问网络服务。</div>
+  </header>
+  <main>
+    <section class="panel">
+      <label for="batch">事务工程批次</label>
+      <select id="batch"></select>
+      <label for="schema">Schema 版本</label>
+      <select id="schema">
+        <option value="">canonical（内部模型）</option>
+        <option value="mvcc.project/v1">v1 flat/global/tick</option>
+        <option value="mvcc.project/v2">v2 grouped/relative/ms</option>
+        <option value="mvcc.project/v3">v3 tree/global/ms/no-delete-field</option>
+      </select>
+      <div class="row">
+        <button class="primary" onclick="verify(false)">顺序验证</button>
+        <button class="good" onclick="verify(true)">并行验证</button>
+      </div>
+      <button onclick="document()">查看 Schema 文档</button>
+      <button onclick="crash()">中断/恢复演示</button>
+      <label>异常注入（不修改源工程）</label>
+      <div class="row">
+        <button onclick="inject('duplicate_item')">重复数据项</button>
+        <button onclick="inject('bad_delete_ref')">失效删除引用</button>
+      </div>
+      <div class="row">
+        <button onclick="inject('time_out_of_range')">越界时刻</button>
+        <button onclick="inject('unknown_schema')">未知版本</button>
+      </div>
+      <p class="hint">CLI 还提供截断检查点、快照版本不匹配、增量编辑和 SQLite 文件恢复命令。</p>
+    </section>
+    <section class="panel">
+      <div id="summary"></div>
+      <pre id="out">选择批次后运行验证。</pre>
+    </section>
+  </main>
+<script>
+async function loadBatches() {
+  const resp = await fetch('/api/batches');
+  const data = await resp.json();
+  const select = document.getElementById('batch');
+  select.innerHTML = data.batches.map(id => `<option>${id}</option>`).join('');
+}
+function params() {
+  return new URLSearchParams({ batch: batch.value, schema: schema.value });
+}
+async function verify(parallel) {
+  const p = params(); p.set('parallel', parallel ? '1' : '0');
+  if (parallel) p.set('workers', '4');
+  const data = await (await fetch('/api/verify?' + p)).json();
+  summary.innerHTML = `<span class="pill ${data.ok ? 'ok' : 'bad'}">${data.ok ? 'TRUTH MATCH' : 'MISMATCH'}</span>
+    <span class="pill">${data.execution}</span><span class="pill">reads ${data.read_count}</span>
+    <span class="pill">gc ${data.gc_count}</span>`;
+  out.textContent = JSON.stringify(data, null, 2);
+}
+async function document() {
+  const p = params();
+  const resp = await fetch('/api/document?' + p);
+  out.textContent = await resp.text();
+}
+async function inject(kind) {
+  const p = params(); p.set('kind', kind);
+  if (kind === 'unknown_schema') {
+    out.textContent = JSON.stringify({ code: 'E_SCHEMA_UNKNOWN', path: 'schema_version', injected: 'mvcc.project/v9' }, null, 2);
+    return;
+  }
+  const data = await (await fetch('/api/inject?' + p)).json();
+  out.textContent = JSON.stringify(data, null, 2);
+}
+async function crash() {
+  const p = params();
+  const data = await (await fetch('/api/crash-resume?' + p)).json();
+  out.textContent = JSON.stringify(data, null, 2);
+}
+loadBatches();
+</script>
+</body>
+</html>
