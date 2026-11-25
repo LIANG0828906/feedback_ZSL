@@ -1,0 +1,129 @@
+{
+  "concurrency": {
+    "globalPermits": 3,
+    "rackPermits": {
+      "rack-a": 2,
+      "rack-b": 2,
+      "rack-c": 1
+    }
+  },
+  "countPolicy": {
+    "halfOpenDelayMs": 200,
+    "halfOpenFailureLimit": 1,
+    "halfOpenSuccessLimit": 1,
+    "onFailureThreshold": "keep",
+    "onSuccessThreshold": "reset"
+  },
+  "instances": [
+    {
+      "activeProbe": true,
+      "address": "10.42.0.11:8080",
+      "backoffMs": 100,
+      "instanceId": "be-01",
+      "intervalMs": 200,
+      "nodeName": "node-a1",
+      "probeType": "HTTP",
+      "rackId": "rack-a",
+      "remainingFailures": 2,
+      "remainingSuccesses": 2,
+      "retryLimit": 1,
+      "stateAtStart": "HEALTHY",
+      "timeoutMs": 100,
+      "weightPerTenThousand": 5000
+    },
+    {
+      "activeProbe": true,
+      "address": "10.42.0.12:8080",
+      "backoffMs": 200,
+      "instanceId": "be-02",
+      "intervalMs": 400,
+      "nodeName": "node-a2",
+      "probeType": "HTTP",
+      "rackId": "rack-a",
+      "remainingFailures": 2,
+      "remainingSuccesses": 1,
+      "retryLimit": 1,
+      "stateAtStart": "HEALTHY",
+      "timeoutMs": 100,
+      "weightPerTenThousand": 3000
+    },
+    {
+      "activeProbe": true,
+      "address": "10.42.1.11:5432",
+      "backoffMs": 100,
+      "instanceId": "be-03",
+      "intervalMs": 200,
+      "nodeName": "node-b1",
+      "probeType": "TCP",
+      "rackId": "rack-b",
+      "remainingFailures": 3,
+      "remainingSuccesses": 2,
+      "retryLimit": 1,
+      "stateAtStart": "INITIAL",
+      "timeoutMs": 100,
+      "weightPerTenThousand": 4000
+    },
+    {
+      "activeProbe": true,
+      "address": "10.42.1.12:9090",
+      "backoffMs": 100,
+      "instanceId": "be-04",
+      "intervalMs": 300,
+      "nodeName": "node-b2",
+      "probeType": "GRPC",
+      "rackId": "rack-b",
+      "remainingFailures": 2,
+      "remainingSuccesses": 1,
+      "retryLimit": 1,
+      "stateAtStart": "HEALTHY",
+      "timeoutMs": 200,
+      "weightPerTenThousand": 2500
+    },
+    {
+      "activeProbe": true,
+      "address": "10.42.2.11:8080",
+      "backoffMs": 100,
+      "instanceId": "be-05",
+      "intervalMs": 200,
+      "nodeName": "node-c1",
+      "probeType": "HTTP",
+      "rackId": "rack-c",
+      "remainingFailures": 2,
+      "remainingSuccesses": 2,
+      "retryLimit": 1,
+      "stateAtStart": "UNHEALTHY",
+      "timeoutMs": 400,
+      "weightPerTenThousand": 1500
+    },
+    {
+      "activeProbe": true,
+      "address": "10.42.2.12:6379",
+      "backoffMs": 100,
+      "instanceId": "be-06",
+      "intervalMs": 100,
+      "nodeName": "node-c2",
+      "probeType": "TCP",
+      "rackId": "rack-c",
+      "remainingFailures": 3,
+      "remainingSuccesses": 3,
+      "retryLimit": 0,
+      "stateAtStart": "INITIAL",
+      "timeoutMs": 100,
+      "weightPerTenThousand": 1000
+    }
+  ],
+  "metadata": {
+    "projectId": "health-seed-42",
+    "projectVersion": "engineering-42.305",
+    "seed": 42
+  },
+  "probeBuffer": 8,
+  "rounds": 14,
+  "schemaVersion": "hcs/v2",
+  "slotPriority": "deferred_first",
+  "timing": {
+    "maxDeferMs": 250,
+    "stepMs": 100
+  },
+  "workerCount": 4
+}

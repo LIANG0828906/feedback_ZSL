@@ -1,0 +1,204 @@
+[
+  {
+    "id": "EVT-001",
+    "at_ms": 100,
+    "type": "probe_result",
+    "instance_id": "be-01",
+    "result": "success"
+  },
+  {
+    "id": "EVT-002",
+    "at_ms": 100,
+    "type": "probe_result",
+    "instance_id": "be-02",
+    "result": "success"
+  },
+  {
+    "id": "EVT-003",
+    "at_ms": 100,
+    "type": "probe_result",
+    "instance_id": "be-03",
+    "result": "success"
+  },
+  {
+    "id": "EVT-004",
+    "at_ms": 200,
+    "type": "probe_result",
+    "instance_id": "be-04",
+    "result": "success"
+  },
+  {
+    "id": "EVT-005",
+    "at_ms": 200,
+    "type": "probe_result",
+    "instance_id": "be-06",
+    "result": "success"
+  },
+  {
+    "id": "EVT-006",
+    "at_ms": 300,
+    "type": "probe_result",
+    "instance_id": "be-01",
+    "result": "success"
+  },
+  {
+    "id": "EVT-007",
+    "at_ms": 300,
+    "type": "probe_result",
+    "instance_id": "be-03",
+    "result": "success"
+  },
+  {
+    "id": "EVT-008",
+    "at_ms": 500,
+    "type": "probe_result",
+    "instance_id": "be-01",
+    "result": "failure"
+  },
+  {
+    "id": "EVT-009",
+    "at_ms": 500,
+    "type": "probe_result",
+    "instance_id": "be-03",
+    "result": "success"
+  },
+  {
+    "id": "EVT-010",
+    "at_ms": 600,
+    "type": "probe_result",
+    "instance_id": "be-02",
+    "result": "failure"
+  },
+  {
+    "id": "EVT-011",
+    "at_ms": 700,
+    "type": "probe_result",
+    "instance_id": "be-01",
+    "result": "failure"
+  },
+  {
+    "id": "EVT-012",
+    "at_ms": 700,
+    "type": "probe_result",
+    "instance_id": "be-06",
+    "result": "success"
+  },
+  {
+    "id": "EVT-013",
+    "at_ms": 700,
+    "type": "probe_result",
+    "instance_id": "be-04",
+    "result": "failure"
+  },
+  {
+    "id": "EVT-014",
+    "at_ms": 900,
+    "type": "probe_result",
+    "instance_id": "be-02",
+    "result": "failure"
+  },
+  {
+    "id": "EVT-015",
+    "at_ms": 800,
+    "type": "probe_result",
+    "instance_id": "be-03",
+    "result": "success"
+  },
+  {
+    "id": "EVT-016",
+    "at_ms": 900,
+    "type": "probe_result",
+    "instance_id": "be-04",
+    "result": "failure"
+  },
+  {
+    "id": "EVT-017",
+    "at_ms": 1000,
+    "type": "probe_result",
+    "instance_id": "be-01",
+    "result": "success"
+  },
+  {
+    "id": "EVT-018",
+    "at_ms": 1000,
+    "type": "probe_result",
+    "instance_id": "be-03",
+    "result": "success"
+  },
+  {
+    "id": "EVT-019",
+    "at_ms": 1000,
+    "type": "probe_result",
+    "instance_id": "be-05",
+    "result": "success"
+  },
+  {
+    "id": "EVT-020",
+    "at_ms": 1100,
+    "type": "probe_result",
+    "instance_id": "be-06",
+    "result": "success"
+  },
+  {
+    "id": "EVT-021",
+    "at_ms": 1300,
+    "type": "probe_result",
+    "instance_id": "be-02",
+    "result": "success"
+  },
+  {
+    "id": "EVT-022",
+    "at_ms": 1200,
+    "type": "probe_result",
+    "instance_id": "be-01",
+    "result": "success"
+  },
+  {
+    "id": "EVT-023",
+    "at_ms": 1200,
+    "type": "probe_result",
+    "instance_id": "be-03",
+    "result": "success"
+  },
+  {
+    "id": "EVT-024",
+    "at_ms": 1300,
+    "type": "probe_result",
+    "instance_id": "be-04",
+    "result": "success"
+  },
+  {
+    "id": "EVT-026",
+    "at_ms": 1300,
+    "type": "instance_added",
+    "instance": {
+      "id": "be-07",
+      "node_id": "node-b3",
+      "rack_id": "rack-b",
+      "protocol": "HTTP",
+      "address": "10.42.1.13:8080",
+      "interval_ms": 200,
+      "timeout_ms": 100,
+      "backoff_ms": 100,
+      "retry_limit": 1,
+      "success_threshold": 1,
+      "failure_threshold": 2,
+      "initial_state": "initial",
+      "weight_ppm": 200000,
+      "active_probe": true
+    }
+  },
+  {
+    "id": "EVT-027",
+    "at_ms": 1300,
+    "type": "rack_moved",
+    "instance_id": "be-06",
+    "to_rack_id": "rack-b"
+  },
+  {
+    "id": "EVT-028",
+    "at_ms": 1300,
+    "type": "instance_removed",
+    "instance_id": "be-02"
+  }
+]

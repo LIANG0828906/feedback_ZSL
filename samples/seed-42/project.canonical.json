@@ -1,0 +1,132 @@
+{
+  "project_id": "health-seed-42",
+  "project_version": "engineering-42.305",
+  "seed": 42,
+  "step_ms": 100,
+  "rounds": 14,
+  "max_defer_ms": 250,
+  "global_concurrency": 3,
+  "racks": [
+    {
+      "id": "rack-a",
+      "concurrency": 2
+    },
+    {
+      "id": "rack-b",
+      "concurrency": 2
+    },
+    {
+      "id": "rack-c",
+      "concurrency": 1
+    }
+  ],
+  "workers": 4,
+  "buffer_capacity": 8,
+  "slot_priority": "deferred_first",
+  "count_policy": {
+    "success_reached_action": "reset",
+    "failure_reached_action": "keep",
+    "reset_opposite_streak": true,
+    "half_open_success_limit": 1,
+    "half_open_failure_limit": 1,
+    "half_open_delay_ms": 200
+  },
+  "instances": [
+    {
+      "id": "be-01",
+      "node_id": "node-a1",
+      "rack_id": "rack-a",
+      "protocol": "HTTP",
+      "address": "10.42.0.11:8080",
+      "interval_ms": 200,
+      "timeout_ms": 100,
+      "backoff_ms": 100,
+      "retry_limit": 1,
+      "success_threshold": 2,
+      "failure_threshold": 2,
+      "initial_state": "healthy",
+      "weight_ppm": 500000,
+      "active_probe": true
+    },
+    {
+      "id": "be-02",
+      "node_id": "node-a2",
+      "rack_id": "rack-a",
+      "protocol": "HTTP",
+      "address": "10.42.0.12:8080",
+      "interval_ms": 400,
+      "timeout_ms": 100,
+      "backoff_ms": 200,
+      "retry_limit": 1,
+      "success_threshold": 1,
+      "failure_threshold": 2,
+      "initial_state": "healthy",
+      "weight_ppm": 300000,
+      "active_probe": true
+    },
+    {
+      "id": "be-03",
+      "node_id": "node-b1",
+      "rack_id": "rack-b",
+      "protocol": "TCP",
+      "address": "10.42.1.11:5432",
+      "interval_ms": 200,
+      "timeout_ms": 100,
+      "backoff_ms": 100,
+      "retry_limit": 1,
+      "success_threshold": 2,
+      "failure_threshold": 3,
+      "initial_state": "initial",
+      "weight_ppm": 400000,
+      "active_probe": true
+    },
+    {
+      "id": "be-04",
+      "node_id": "node-b2",
+      "rack_id": "rack-b",
+      "protocol": "GRPC",
+      "address": "10.42.1.12:9090",
+      "interval_ms": 300,
+      "timeout_ms": 200,
+      "backoff_ms": 100,
+      "retry_limit": 1,
+      "success_threshold": 1,
+      "failure_threshold": 2,
+      "initial_state": "healthy",
+      "weight_ppm": 250000,
+      "active_probe": true
+    },
+    {
+      "id": "be-05",
+      "node_id": "node-c1",
+      "rack_id": "rack-c",
+      "protocol": "HTTP",
+      "address": "10.42.2.11:8080",
+      "interval_ms": 200,
+      "timeout_ms": 400,
+      "backoff_ms": 100,
+      "retry_limit": 1,
+      "success_threshold": 2,
+      "failure_threshold": 2,
+      "initial_state": "unhealthy",
+      "weight_ppm": 150000,
+      "active_probe": true
+    },
+    {
+      "id": "be-06",
+      "node_id": "node-c2",
+      "rack_id": "rack-c",
+      "protocol": "TCP",
+      "address": "10.42.2.12:6379",
+      "interval_ms": 100,
+      "timeout_ms": 100,
+      "backoff_ms": 100,
+      "retry_limit": 0,
+      "success_threshold": 3,
+      "failure_threshold": 3,
+      "initial_state": "initial",
+      "weight_ppm": 100000,
+      "active_probe": true
+    }
+  ]
+}

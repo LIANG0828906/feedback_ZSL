@@ -1,0 +1,170 @@
+{
+  "budget_policy": {
+    "rack_policies": [
+      {
+        "name": "rack-a",
+        "permits": 2
+      },
+      {
+        "name": "rack-b",
+        "permits": 2
+      },
+      {
+        "name": "rack-c",
+        "permits": 1
+      }
+    ],
+    "total_permits": 3
+  },
+  "counting_rules": {
+    "half_open_bad": 1,
+    "half_open_ok": 1,
+    "half_open_wait_seconds": 0.2,
+    "on_failure_limit": "keep",
+    "on_success_limit": "reset"
+  },
+  "logic_clock": {
+    "max_defer_seconds": 0.25,
+    "round_seconds": 0.1
+  },
+  "project": {
+    "id": "health-seed-42",
+    "rounds": 14,
+    "seed": 42,
+    "version": "engineering-42.305"
+  },
+  "schema_version": "hcs/v3",
+  "topology": [
+    {
+      "az": "",
+      "nodes": [
+        {
+          "backends": [
+            {
+              "address": "10.42.0.11:8080",
+              "backend_id": "be-01",
+              "backoff_seconds": 0.1,
+              "boot_state": "healthy",
+              "failure_limit": 2,
+              "max_retries": 1,
+              "probe_interval_seconds": 0.2,
+              "probe_timeout_ms": 100,
+              "protocol": "HTTP",
+              "success_limit": 2,
+              "weight_ppm": 500000
+            }
+          ],
+          "node": "node-a1"
+        },
+        {
+          "backends": [
+            {
+              "address": "10.42.0.12:8080",
+              "backend_id": "be-02",
+              "backoff_seconds": 0.2,
+              "boot_state": "healthy",
+              "failure_limit": 2,
+              "max_retries": 1,
+              "probe_interval_seconds": 0.4,
+              "probe_timeout_ms": 100,
+              "protocol": "HTTP",
+              "success_limit": 1,
+              "weight_ppm": 300000
+            }
+          ],
+          "node": "node-a2"
+        }
+      ],
+      "rack": "rack-a"
+    },
+    {
+      "az": "",
+      "nodes": [
+        {
+          "backends": [
+            {
+              "address": "10.42.1.11:5432",
+              "backend_id": "be-03",
+              "backoff_seconds": 0.1,
+              "boot_state": "initial",
+              "failure_limit": 3,
+              "max_retries": 1,
+              "probe_interval_seconds": 0.2,
+              "probe_timeout_ms": 100,
+              "protocol": "TCP",
+              "success_limit": 2,
+              "weight_ppm": 400000
+            }
+          ],
+          "node": "node-b1"
+        },
+        {
+          "backends": [
+            {
+              "address": "10.42.1.12:9090",
+              "backend_id": "be-04",
+              "backoff_seconds": 0.1,
+              "boot_state": "healthy",
+              "failure_limit": 2,
+              "max_retries": 1,
+              "probe_interval_seconds": 0.3,
+              "probe_timeout_ms": 200,
+              "protocol": "GRPC",
+              "success_limit": 1,
+              "weight_ppm": 250000
+            }
+          ],
+          "node": "node-b2"
+        }
+      ],
+      "rack": "rack-b"
+    },
+    {
+      "az": "",
+      "nodes": [
+        {
+          "backends": [
+            {
+              "address": "10.42.2.11:8080",
+              "backend_id": "be-05",
+              "backoff_seconds": 0.1,
+              "boot_state": "unhealthy",
+              "failure_limit": 2,
+              "max_retries": 1,
+              "probe_interval_seconds": 0.2,
+              "probe_timeout_ms": 400,
+              "protocol": "HTTP",
+              "success_limit": 2,
+              "weight_ppm": 150000
+            }
+          ],
+          "node": "node-c1"
+        },
+        {
+          "backends": [
+            {
+              "address": "10.42.2.12:6379",
+              "backend_id": "be-06",
+              "backoff_seconds": 0.1,
+              "boot_state": "initial",
+              "failure_limit": 3,
+              "max_retries": 0,
+              "probe_interval_seconds": 0.1,
+              "probe_timeout_ms": 100,
+              "protocol": "TCP",
+              "success_limit": 3,
+              "weight_ppm": 100000
+            }
+          ],
+          "node": "node-c2"
+        }
+      ],
+      "rack": "rack-c"
+    }
+  ],
+  "worker_policy": {
+    "probe_buffer": 8,
+    "slot_priority": "deferred_first",
+    "threads": 4
+  }
+}

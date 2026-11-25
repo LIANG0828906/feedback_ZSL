@@ -1,0 +1,135 @@
+{
+  "budget": {
+    "global_slots": 3,
+    "rack_slots": [
+      {
+        "rack_id": "rack-a",
+        "slots": 2
+      },
+      {
+        "rack_id": "rack-b",
+        "slots": 2
+      },
+      {
+        "rack_id": "rack-c",
+        "slots": 1
+      }
+    ]
+  },
+  "buffer_capacity": 8,
+  "count_policy": {
+    "failure_threshold_action": "keep",
+    "half_open_delay_ticks": 4,
+    "half_open_failure_limit": 1,
+    "half_open_success_limit": 1,
+    "success_threshold_action": "reset"
+  },
+  "max_defer_ticks": 5,
+  "project_name": "health-seed-42",
+  "project_version": "engineering-42.305",
+  "round_ticks": 2,
+  "rounds": 14,
+  "schema": "hcs/v1",
+  "seed": 42,
+  "slot_priority": "deferred_first",
+  "targets": [
+    {
+      "active_probe": true,
+      "address": "10.42.0.11:8080",
+      "backoff_ticks": 2,
+      "failure_threshold": 2,
+      "id": "be-01",
+      "initial_state": "healthy",
+      "interval_ticks": 0,
+      "node": "node-a1",
+      "protocol": "HTTP",
+      "rack": "rack-a",
+      "retries": 1,
+      "success_threshold": 2,
+      "timeout_ticks": 2,
+      "weight_permille": 500
+    },
+    {
+      "active_probe": true,
+      "address": "10.42.0.12:8080",
+      "backoff_ticks": 4,
+      "failure_threshold": 2,
+      "id": "be-02",
+      "initial_state": "healthy",
+      "interval_ticks": 8,
+      "node": "node-a2",
+      "protocol": "HTTP",
+      "rack": "rack-a",
+      "retries": 1,
+      "success_threshold": 1,
+      "timeout_ticks": 2,
+      "weight_permille": 300
+    },
+    {
+      "active_probe": true,
+      "address": "10.42.1.11:5432",
+      "backoff_ticks": 2,
+      "failure_threshold": 3,
+      "id": "be-03",
+      "initial_state": "initial",
+      "interval_ticks": 4,
+      "node": "node-b1",
+      "protocol": "TCP",
+      "rack": "rack-b",
+      "retries": 1,
+      "success_threshold": 2,
+      "timeout_ticks": 2,
+      "weight_permille": 400
+    },
+    {
+      "active_probe": true,
+      "address": "10.42.1.12:9090",
+      "backoff_ticks": 2,
+      "failure_threshold": 2,
+      "id": "be-04",
+      "initial_state": "healthy",
+      "interval_ticks": 6,
+      "node": "node-b2",
+      "protocol": "GRPC",
+      "rack": "rack-b",
+      "retries": 1,
+      "success_threshold": 1,
+      "timeout_ticks": 4,
+      "weight_permille": 250
+    },
+    {
+      "active_probe": true,
+      "address": "10.42.2.11:8080",
+      "backoff_ticks": 2,
+      "failure_threshold": 2,
+      "id": "be-05",
+      "initial_state": "unhealthy",
+      "interval_ticks": 4,
+      "node": "node-c1",
+      "protocol": "HTTP",
+      "rack": "rack-c",
+      "retries": 1,
+      "success_threshold": 2,
+      "timeout_ticks": 8,
+      "weight_permille": 150
+    },
+    {
+      "active_probe": true,
+      "address": "10.42.2.12:6379",
+      "backoff_ticks": 2,
+      "failure_threshold": 3,
+      "id": "be-06",
+      "initial_state": "initial",
+      "interval_ticks": 2,
+      "node": "node-c2",
+      "protocol": "TCP",
+      "rack": "rack-c",
+      "retries": 0,
+      "success_threshold": 3,
+      "timeout_ticks": 2,
+      "weight_permille": 100
+    }
+  ],
+  "tick_ms": 50,
+  "worker_budget": 4
+}

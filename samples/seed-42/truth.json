@@ -1,0 +1,2264 @@
+{
+  "seed": 42,
+  "fingerprint": "cffcb023c5b5ca2649aa6d35dd41a9ebe01109ab4f87275a54a25b94ad63f8fa",
+  "instance_ids": [
+    "be-01",
+    "be-02",
+    "be-03",
+    "be-04",
+    "be-05",
+    "be-06"
+  ],
+  "rack_ids": [
+    "rack-a",
+    "rack-b",
+    "rack-c"
+  ],
+  "weight_allocation_5_slots": {
+    "be-01": 2,
+    "be-02": 1,
+    "be-03": 1,
+    "be-04": 1,
+    "be-05": 0,
+    "be-06": 0
+  },
+  "result": {
+    "project_id": "health-seed-42",
+    "version": "engineering-42.305",
+    "fingerprint": "cffcb023c5b5ca2649aa6d35dd41a9ebe01109ab4f87275a54a25b94ad63f8fa",
+    "rounds": [
+      {
+        "round": 1,
+        "now_ms": 0,
+        "eligible": [
+          "be-01",
+          "be-02",
+          "be-03",
+          "be-04",
+          "be-06"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R001-be-01",
+            "round": 1,
+            "order": 1,
+            "instance_id": "be-01",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 500000
+          },
+          {
+            "id": "P-R001-be-03",
+            "round": 1,
+            "order": 2,
+            "instance_id": "be-03",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 400000
+          },
+          {
+            "id": "P-R001-be-02",
+            "round": 1,
+            "order": 3,
+            "instance_id": "be-02",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 300000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-04",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 1,
+            "detail": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "half_open_wait",
+            "detail": "until_ms=200"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 2,
+            "detail": "global_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-04",
+            "queue_seq": 1,
+            "enqueued_round": 1,
+            "enqueued_at_ms": 0,
+            "last_round": 1,
+            "rack_id": "rack-b",
+            "weight_ppm": 250000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-06",
+            "queue_seq": 2,
+            "enqueued_round": 1,
+            "enqueued_at_ms": 0,
+            "last_round": 1,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-04",
+            "queue_seq": 1,
+            "enqueued_round": 1,
+            "enqueued_at_ms": 0,
+            "last_round": 1,
+            "rack_id": "rack-b",
+            "weight_ppm": 250000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-06",
+            "queue_seq": 2,
+            "enqueued_round": 1,
+            "enqueued_at_ms": 0,
+            "last_round": 1,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 2,
+            "rack-b": 1,
+            "rack-c": 0
+          },
+          "rack_available": {
+            "rack-a": 0,
+            "rack-b": 1,
+            "rack-c": 1
+          }
+        }
+      },
+      {
+        "round": 2,
+        "now_ms": 100,
+        "eligible": [],
+        "dispatched": [
+          {
+            "id": "P-R002-be-04",
+            "round": 2,
+            "order": 1,
+            "instance_id": "be-04",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 250000
+          },
+          {
+            "id": "P-R002-be-06",
+            "round": 2,
+            "order": 2,
+            "instance_id": "be-06",
+            "rack_id": "rack-c",
+            "half_open": false,
+            "weight_ppm": 100000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-01",
+            "reason": "interval_not_due",
+            "detail": "next_ms=200"
+          },
+          {
+            "instance_id": "be-02",
+            "reason": "interval_not_due",
+            "detail": "next_ms=400"
+          },
+          {
+            "instance_id": "be-03",
+            "reason": "interval_not_due",
+            "detail": "next_ms=200"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "half_open_wait",
+            "detail": "until_ms=200"
+          }
+        ],
+        "deferred_now": [],
+        "queue": null,
+        "rescheduled": [
+          {
+            "instance_id": "be-04",
+            "queue_seq": 1,
+            "round": 2,
+            "original_round": 1
+          },
+          {
+            "instance_id": "be-06",
+            "queue_seq": 2,
+            "round": 2,
+            "original_round": 1
+          }
+        ],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 2,
+          "global_available": 1,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 0,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 2,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 3,
+        "now_ms": 200,
+        "eligible": [
+          "be-01",
+          "be-03",
+          "be-05",
+          "be-06"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R003-be-01",
+            "round": 3,
+            "order": 1,
+            "instance_id": "be-01",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 500000
+          },
+          {
+            "id": "P-R003-be-03",
+            "round": 3,
+            "order": 2,
+            "instance_id": "be-03",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 400000
+          },
+          {
+            "id": "P-R003-be-05",
+            "round": 3,
+            "order": 3,
+            "instance_id": "be-05",
+            "rack_id": "rack-c",
+            "half_open": true,
+            "weight_ppm": 150000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-02",
+            "reason": "interval_not_due",
+            "detail": "next_ms=400"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "interval_not_due",
+            "detail": "next_ms=400"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 3,
+            "detail": "global_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 3,
+            "enqueued_round": 3,
+            "enqueued_at_ms": 200,
+            "last_round": 3,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 3,
+            "enqueued_round": 3,
+            "enqueued_at_ms": 200,
+            "last_round": 3,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 4,
+        "now_ms": 300,
+        "eligible": [],
+        "dispatched": null,
+        "suppressed": [
+          {
+            "instance_id": "be-01",
+            "reason": "interval_not_due",
+            "detail": "next_ms=400"
+          },
+          {
+            "instance_id": "be-02",
+            "reason": "interval_not_due",
+            "detail": "next_ms=400"
+          },
+          {
+            "instance_id": "be-03",
+            "reason": "interval_not_due",
+            "detail": "next_ms=400"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "interval_not_due",
+            "detail": "next_ms=400"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "probe_in_flight_timeout",
+            "detail": "deadline_ms=600"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "deferred_waiting",
+            "constraint_id": "C-RACK-rack-c-CONCURRENCY",
+            "queue_seq": 3,
+            "detail": "rack_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [],
+        "queue": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 3,
+            "enqueued_round": 3,
+            "enqueued_at_ms": 200,
+            "last_round": 4,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-RACK-rack-c-CONCURRENCY",
+            "reason": "rack_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 1,
+          "global_available": 2,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 0,
+            "rack-b": 0,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 5,
+        "now_ms": 400,
+        "eligible": [
+          "be-01",
+          "be-02",
+          "be-03",
+          "be-04"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R005-be-01",
+            "round": 5,
+            "order": 1,
+            "instance_id": "be-01",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 500000
+          },
+          {
+            "id": "P-R005-be-03",
+            "round": 5,
+            "order": 2,
+            "instance_id": "be-03",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 400000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-02",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 4,
+            "detail": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 5,
+            "detail": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "probe_in_flight_timeout",
+            "detail": "deadline_ms=600"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "deferred_waiting",
+            "constraint_id": "C-RACK-rack-c-CONCURRENCY",
+            "queue_seq": 3,
+            "detail": "rack_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-02",
+            "queue_seq": 4,
+            "enqueued_round": 5,
+            "enqueued_at_ms": 400,
+            "last_round": 5,
+            "rack_id": "rack-a",
+            "weight_ppm": 300000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "queue_seq": 5,
+            "enqueued_round": 5,
+            "enqueued_at_ms": 400,
+            "last_round": 5,
+            "rack_id": "rack-b",
+            "weight_ppm": 250000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 3,
+            "enqueued_round": 3,
+            "enqueued_at_ms": 200,
+            "last_round": 5,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-RACK-rack-c-CONCURRENCY",
+            "reason": "rack_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-02",
+            "queue_seq": 4,
+            "enqueued_round": 5,
+            "enqueued_at_ms": 400,
+            "last_round": 5,
+            "rack_id": "rack-a",
+            "weight_ppm": 300000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "queue_seq": 5,
+            "enqueued_round": 5,
+            "enqueued_at_ms": 400,
+            "last_round": 5,
+            "rack_id": "rack-b",
+            "weight_ppm": 250000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 6,
+        "now_ms": 500,
+        "eligible": [
+          "be-06"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R006-be-02",
+            "round": 6,
+            "order": 1,
+            "instance_id": "be-02",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 300000
+          },
+          {
+            "id": "P-R006-be-04",
+            "round": 6,
+            "order": 2,
+            "instance_id": "be-04",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 250000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-01",
+            "reason": "backoff_active",
+            "detail": "until_ms=600"
+          },
+          {
+            "instance_id": "be-03",
+            "reason": "interval_not_due",
+            "detail": "next_ms=600"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "probe_in_flight_timeout",
+            "detail": "deadline_ms=600"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 6,
+            "detail": "global_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 6,
+            "enqueued_round": 6,
+            "enqueued_at_ms": 500,
+            "last_round": 6,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 6,
+            "enqueued_round": 6,
+            "enqueued_at_ms": 500,
+            "last_round": 6,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [
+          {
+            "instance_id": "be-02",
+            "queue_seq": 4,
+            "round": 6,
+            "original_round": 5
+          },
+          {
+            "instance_id": "be-04",
+            "queue_seq": 5,
+            "round": 6,
+            "original_round": 5
+          }
+        ],
+        "dropped": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 3,
+            "round": 6,
+            "at_ms": 500,
+            "code": "E_DEFER_TIMEOUT",
+            "reason": "max_defer_exceeded"
+          }
+        ],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 7,
+        "now_ms": 600,
+        "eligible": [
+          "be-01",
+          "be-03"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R007-be-06",
+            "round": 7,
+            "order": 1,
+            "instance_id": "be-06",
+            "rack_id": "rack-c",
+            "half_open": false,
+            "weight_ppm": 100000
+          },
+          {
+            "id": "P-R007-be-01",
+            "round": 7,
+            "order": 2,
+            "instance_id": "be-01",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 500000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-02",
+            "reason": "backoff_active",
+            "detail": "until_ms=800"
+          },
+          {
+            "instance_id": "be-03",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 7,
+            "detail": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "probe_in_flight_timeout",
+            "detail": "deadline_ms=700"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "backoff_active",
+            "detail": "until_ms=700"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-03",
+            "queue_seq": 7,
+            "enqueued_round": 7,
+            "enqueued_at_ms": 600,
+            "last_round": 7,
+            "rack_id": "rack-b",
+            "weight_ppm": 400000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-03",
+            "queue_seq": 7,
+            "enqueued_round": 7,
+            "enqueued_at_ms": 600,
+            "last_round": 7,
+            "rack_id": "rack-b",
+            "weight_ppm": 400000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 6,
+            "round": 7,
+            "original_round": 6
+          }
+        ],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 8,
+        "now_ms": 700,
+        "eligible": [
+          "be-06"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R008-be-03",
+            "round": 8,
+            "order": 1,
+            "instance_id": "be-03",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 400000
+          },
+          {
+            "id": "P-R008-be-06",
+            "round": 8,
+            "order": 2,
+            "instance_id": "be-06",
+            "rack_id": "rack-c",
+            "half_open": false,
+            "weight_ppm": 100000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-01",
+            "reason": "backoff_active",
+            "detail": "until_ms=800"
+          },
+          {
+            "instance_id": "be-02",
+            "reason": "backoff_active",
+            "detail": "until_ms=800"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "backoff_active",
+            "detail": "until_ms=800"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "half_open_wait",
+            "detail": "until_ms=800"
+          }
+        ],
+        "deferred_now": [],
+        "queue": null,
+        "rescheduled": [
+          {
+            "instance_id": "be-03",
+            "queue_seq": 7,
+            "round": 8,
+            "original_round": 7
+          }
+        ],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 2,
+          "global_available": 1,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 0,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 2,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 9,
+        "now_ms": 800,
+        "eligible": [
+          "be-02",
+          "be-04",
+          "be-05"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R009-be-02",
+            "round": 9,
+            "order": 1,
+            "instance_id": "be-02",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 300000
+          },
+          {
+            "id": "P-R009-be-04",
+            "round": 9,
+            "order": 2,
+            "instance_id": "be-04",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 250000
+          },
+          {
+            "id": "P-R009-be-05",
+            "round": 9,
+            "order": 3,
+            "instance_id": "be-05",
+            "rack_id": "rack-c",
+            "half_open": true,
+            "weight_ppm": 150000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-01",
+            "reason": "half_open_wait",
+            "detail": "until_ms=900"
+          },
+          {
+            "instance_id": "be-03",
+            "reason": "interval_not_due",
+            "detail": "next_ms=900"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "backoff_active",
+            "detail": "until_ms=900"
+          }
+        ],
+        "deferred_now": [],
+        "queue": null,
+        "rescheduled": [],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 10,
+        "now_ms": 900,
+        "eligible": [
+          "be-01",
+          "be-03",
+          "be-06"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R010-be-01",
+            "round": 10,
+            "order": 1,
+            "instance_id": "be-01",
+            "rack_id": "rack-a",
+            "half_open": true,
+            "weight_ppm": 500000
+          },
+          {
+            "id": "P-R010-be-03",
+            "round": 10,
+            "order": 2,
+            "instance_id": "be-03",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 400000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-02",
+            "reason": "backoff_active",
+            "detail": "until_ms=1100"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "backoff_active",
+            "detail": "until_ms=1000"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "probe_in_flight_timeout",
+            "detail": "deadline_ms=1200"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 8,
+            "detail": "global_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 8,
+            "enqueued_round": 10,
+            "enqueued_at_ms": 900,
+            "last_round": 10,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 8,
+            "enqueued_round": 10,
+            "enqueued_at_ms": 900,
+            "last_round": 10,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 11,
+        "now_ms": 1000,
+        "eligible": [
+          "be-05"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R011-be-06",
+            "round": 11,
+            "order": 1,
+            "instance_id": "be-06",
+            "rack_id": "rack-c",
+            "half_open": false,
+            "weight_ppm": 100000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-01",
+            "reason": "interval_not_due",
+            "detail": "next_ms=1100"
+          },
+          {
+            "instance_id": "be-02",
+            "reason": "backoff_active",
+            "detail": "until_ms=1100"
+          },
+          {
+            "instance_id": "be-03",
+            "reason": "interval_not_due",
+            "detail": "next_ms=1100"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "half_open_wait",
+            "detail": "until_ms=1100"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "budget_deferred",
+            "constraint_id": "C-RACK-rack-c-CONCURRENCY",
+            "queue_seq": 9,
+            "detail": "rack_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-05",
+            "queue_seq": 9,
+            "enqueued_round": 11,
+            "enqueued_at_ms": 1000,
+            "last_round": 11,
+            "rack_id": "rack-c",
+            "weight_ppm": 150000,
+            "constraint_id": "C-RACK-rack-c-CONCURRENCY",
+            "reason": "rack_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-05",
+            "queue_seq": 9,
+            "enqueued_round": 11,
+            "enqueued_at_ms": 1000,
+            "last_round": 11,
+            "rack_id": "rack-c",
+            "weight_ppm": 150000,
+            "constraint_id": "C-RACK-rack-c-CONCURRENCY",
+            "reason": "rack_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 8,
+            "round": 11,
+            "original_round": 10
+          }
+        ],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 1,
+          "global_available": 2,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 0,
+            "rack-b": 0,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 12,
+        "now_ms": 1100,
+        "eligible": [
+          "be-01",
+          "be-02",
+          "be-03",
+          "be-04",
+          "be-06"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R012-be-05",
+            "round": 12,
+            "order": 1,
+            "instance_id": "be-05",
+            "rack_id": "rack-c",
+            "half_open": false,
+            "weight_ppm": 150000
+          },
+          {
+            "id": "P-R012-be-01",
+            "round": 12,
+            "order": 2,
+            "instance_id": "be-01",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 500000
+          },
+          {
+            "id": "P-R012-be-03",
+            "round": 12,
+            "order": 3,
+            "instance_id": "be-03",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 400000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-02",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 10,
+            "detail": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 11,
+            "detail": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 12,
+            "detail": "global_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-02",
+            "queue_seq": 10,
+            "enqueued_round": 12,
+            "enqueued_at_ms": 1100,
+            "last_round": 12,
+            "rack_id": "rack-a",
+            "weight_ppm": 300000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "queue_seq": 11,
+            "enqueued_round": 12,
+            "enqueued_at_ms": 1100,
+            "last_round": 12,
+            "rack_id": "rack-b",
+            "weight_ppm": 250000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-06",
+            "queue_seq": 12,
+            "enqueued_round": 12,
+            "enqueued_at_ms": 1100,
+            "last_round": 12,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-02",
+            "queue_seq": 10,
+            "enqueued_round": 12,
+            "enqueued_at_ms": 1100,
+            "last_round": 12,
+            "rack_id": "rack-a",
+            "weight_ppm": 300000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "queue_seq": 11,
+            "enqueued_round": 12,
+            "enqueued_at_ms": 1100,
+            "last_round": 12,
+            "rack_id": "rack-b",
+            "weight_ppm": 250000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-06",
+            "queue_seq": 12,
+            "enqueued_round": 12,
+            "enqueued_at_ms": 1100,
+            "last_round": 12,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [
+          {
+            "instance_id": "be-05",
+            "queue_seq": 9,
+            "round": 12,
+            "original_round": 11
+          }
+        ],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 13,
+        "now_ms": 1200,
+        "eligible": [],
+        "dispatched": [
+          {
+            "id": "P-R013-be-02",
+            "round": 13,
+            "order": 1,
+            "instance_id": "be-02",
+            "rack_id": "rack-a",
+            "half_open": true,
+            "weight_ppm": 300000
+          },
+          {
+            "id": "P-R013-be-04",
+            "round": 13,
+            "order": 2,
+            "instance_id": "be-04",
+            "rack_id": "rack-b",
+            "half_open": true,
+            "weight_ppm": 250000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-01",
+            "reason": "interval_not_due",
+            "detail": "next_ms=1300"
+          },
+          {
+            "instance_id": "be-03",
+            "reason": "interval_not_due",
+            "detail": "next_ms=1300"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "probe_in_flight_timeout",
+            "detail": "deadline_ms=1500"
+          },
+          {
+            "instance_id": "be-06",
+            "reason": "deferred_waiting",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 12,
+            "detail": "global_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [],
+        "queue": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 12,
+            "enqueued_round": 12,
+            "enqueued_at_ms": 1100,
+            "last_round": 13,
+            "rack_id": "rack-c",
+            "weight_ppm": 100000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [
+          {
+            "instance_id": "be-02",
+            "queue_seq": 10,
+            "round": 13,
+            "original_round": 12
+          },
+          {
+            "instance_id": "be-04",
+            "queue_seq": 11,
+            "round": 13,
+            "original_round": 12
+          }
+        ],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        }
+      },
+      {
+        "round": 14,
+        "now_ms": 1300,
+        "eligible": [
+          "be-01",
+          "be-03",
+          "be-07"
+        ],
+        "dispatched": [
+          {
+            "id": "P-R014-be-06",
+            "round": 14,
+            "order": 1,
+            "instance_id": "be-06",
+            "rack_id": "rack-b",
+            "half_open": false,
+            "weight_ppm": 100000
+          },
+          {
+            "id": "P-R014-be-01",
+            "round": 14,
+            "order": 2,
+            "instance_id": "be-01",
+            "rack_id": "rack-a",
+            "half_open": false,
+            "weight_ppm": 500000
+          }
+        ],
+        "suppressed": [
+          {
+            "instance_id": "be-03",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 13,
+            "detail": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-04",
+            "reason": "interval_not_due",
+            "detail": "next_ms=1500"
+          },
+          {
+            "instance_id": "be-05",
+            "reason": "probe_in_flight_timeout",
+            "detail": "deadline_ms=1500"
+          },
+          {
+            "instance_id": "be-07",
+            "reason": "budget_deferred",
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "queue_seq": 14,
+            "detail": "global_concurrency_exceeded"
+          }
+        ],
+        "deferred_now": [
+          {
+            "instance_id": "be-03",
+            "queue_seq": 13,
+            "enqueued_round": 14,
+            "enqueued_at_ms": 1300,
+            "last_round": 14,
+            "rack_id": "rack-b",
+            "weight_ppm": 400000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-07",
+            "queue_seq": 14,
+            "enqueued_round": 14,
+            "enqueued_at_ms": 1300,
+            "last_round": 14,
+            "rack_id": "rack-b",
+            "weight_ppm": 200000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "queue": [
+          {
+            "instance_id": "be-03",
+            "queue_seq": 13,
+            "enqueued_round": 14,
+            "enqueued_at_ms": 1300,
+            "last_round": 14,
+            "rack_id": "rack-b",
+            "weight_ppm": 400000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          },
+          {
+            "instance_id": "be-07",
+            "queue_seq": 14,
+            "enqueued_round": 14,
+            "enqueued_at_ms": 1300,
+            "last_round": 14,
+            "rack_id": "rack-b",
+            "weight_ppm": 200000,
+            "constraint_id": "C-GLOBAL-CONCURRENCY",
+            "reason": "global_concurrency_exceeded"
+          }
+        ],
+        "rescheduled": [
+          {
+            "instance_id": "be-06",
+            "queue_seq": 12,
+            "round": 14,
+            "original_round": 12
+          }
+        ],
+        "dropped": [],
+        "budget": {
+          "global_capacity": 3,
+          "global_active": 3,
+          "global_available": 0,
+          "rack_capacity": {
+            "rack-a": 2,
+            "rack-b": 2,
+            "rack-c": 1
+          },
+          "rack_active": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 1
+          },
+          "rack_available": {
+            "rack-a": 1,
+            "rack-b": 1,
+            "rack-c": 0
+          }
+        },
+        "topology_changes": [
+          "EVT-026:add:be-07",
+          "EVT-027:move:be-06:rack-c-\u003erack-b",
+          "EVT-028:remove:be-02"
+        ]
+      }
+    ],
+    "health_trace": [
+      {
+        "observation_id": "OBS-00001",
+        "event_id": "EVT-001",
+        "at_ms": 100,
+        "instance_id": "be-01",
+        "probe_id": "P-R001-be-01",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 1,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00002",
+        "event_id": "EVT-002",
+        "at_ms": 100,
+        "instance_id": "be-02",
+        "probe_id": "P-R001-be-02",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "success_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00003",
+        "event_id": "EVT-003",
+        "at_ms": 100,
+        "instance_id": "be-03",
+        "probe_id": "P-R001-be-03",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "initial",
+        "to_state": "initial",
+        "state_changed": false,
+        "success_streak": 1,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00004",
+        "event_id": "EVT-004",
+        "at_ms": 200,
+        "instance_id": "be-04",
+        "probe_id": "P-R002-be-04",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "success_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00005",
+        "event_id": "EVT-005",
+        "at_ms": 200,
+        "instance_id": "be-06",
+        "probe_id": "P-R002-be-06",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "initial",
+        "to_state": "initial",
+        "state_changed": false,
+        "success_streak": 1,
+        "failure_streak": 0,
+        "success_threshold": 3,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00006",
+        "event_id": "P-R003-be-05",
+        "at_ms": 200,
+        "instance_id": "be-05",
+        "probe_id": "P-R003-be-05",
+        "trigger": "half_open_dispatch",
+        "from_state": "unhealthy",
+        "to_state": "half_open",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "half_open_probe_dispatched"
+      },
+      {
+        "observation_id": "OBS-00007",
+        "event_id": "EVT-006",
+        "at_ms": 300,
+        "instance_id": "be-01",
+        "probe_id": "P-R003-be-01",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "success_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00008",
+        "event_id": "EVT-007",
+        "at_ms": 300,
+        "instance_id": "be-03",
+        "probe_id": "P-R003-be-03",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "initial",
+        "to_state": "healthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00009",
+        "event_id": "EVT-008",
+        "at_ms": 500,
+        "instance_id": "be-01",
+        "probe_id": "P-R005-be-01",
+        "result": "failure",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 1,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "failure_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00010",
+        "event_id": "EVT-009",
+        "at_ms": 500,
+        "instance_id": "be-03",
+        "probe_id": "P-R005-be-03",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 1,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00011",
+        "event_id": "EVT-010",
+        "at_ms": 600,
+        "instance_id": "be-02",
+        "probe_id": "P-R006-be-02",
+        "result": "failure",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 1,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "failure_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00012",
+        "event_id": "TIMEOUT:P-R003-be-05",
+        "at_ms": 600,
+        "instance_id": "be-05",
+        "probe_id": "P-R003-be-05",
+        "result": "timeout",
+        "trigger": "probe_result",
+        "from_state": "half_open",
+        "to_state": "unhealthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 1,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "half_open_failure_reached"
+      },
+      {
+        "observation_id": "OBS-00013",
+        "event_id": "EVT-011",
+        "at_ms": 700,
+        "instance_id": "be-01",
+        "probe_id": "P-R007-be-01",
+        "result": "failure",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "unhealthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 2,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "failure_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00014",
+        "event_id": "EVT-012",
+        "at_ms": 700,
+        "instance_id": "be-06",
+        "probe_id": "P-R007-be-06",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "initial",
+        "to_state": "initial",
+        "state_changed": false,
+        "success_streak": 2,
+        "failure_streak": 0,
+        "success_threshold": 3,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00015",
+        "event_id": "EVT-013",
+        "at_ms": 700,
+        "instance_id": "be-04",
+        "probe_id": "P-R006-be-04",
+        "result": "failure",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 1,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "failure_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00016",
+        "event_id": "EVT-015",
+        "at_ms": 800,
+        "instance_id": "be-03",
+        "probe_id": "P-R008-be-03",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00017",
+        "event_id": "TIMEOUT:P-R008-be-06",
+        "at_ms": 800,
+        "instance_id": "be-06",
+        "probe_id": "P-R008-be-06",
+        "result": "timeout",
+        "trigger": "probe_result",
+        "from_state": "initial",
+        "to_state": "initial",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 1,
+        "success_threshold": 3,
+        "failure_threshold": 3,
+        "reason": "failure_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00018",
+        "event_id": "P-R009-be-05",
+        "at_ms": 800,
+        "instance_id": "be-05",
+        "probe_id": "P-R009-be-05",
+        "trigger": "half_open_dispatch",
+        "from_state": "unhealthy",
+        "to_state": "half_open",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 1,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "half_open_probe_dispatched"
+      },
+      {
+        "observation_id": "OBS-00019",
+        "event_id": "EVT-014",
+        "at_ms": 900,
+        "instance_id": "be-02",
+        "probe_id": "P-R009-be-02",
+        "result": "failure",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "unhealthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 2,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "failure_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00020",
+        "event_id": "EVT-016",
+        "at_ms": 900,
+        "instance_id": "be-04",
+        "probe_id": "P-R009-be-04",
+        "result": "failure",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "unhealthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 2,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "failure_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00021",
+        "event_id": "P-R010-be-01",
+        "at_ms": 900,
+        "instance_id": "be-01",
+        "probe_id": "P-R010-be-01",
+        "trigger": "half_open_dispatch",
+        "from_state": "unhealthy",
+        "to_state": "half_open",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 2,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "half_open_probe_dispatched"
+      },
+      {
+        "observation_id": "OBS-00022",
+        "event_id": "EVT-017",
+        "at_ms": 1000,
+        "instance_id": "be-01",
+        "probe_id": "P-R010-be-01",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "half_open",
+        "to_state": "healthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "half_open_success_reached"
+      },
+      {
+        "observation_id": "OBS-00023",
+        "event_id": "EVT-018",
+        "at_ms": 1000,
+        "instance_id": "be-03",
+        "probe_id": "P-R010-be-03",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 1,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00024",
+        "event_id": "EVT-019",
+        "at_ms": 1000,
+        "instance_id": "be-05",
+        "probe_id": "P-R009-be-05",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "half_open",
+        "to_state": "healthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "half_open_success_reached"
+      },
+      {
+        "observation_id": "OBS-00025",
+        "event_id": "EVT-020",
+        "at_ms": 1100,
+        "instance_id": "be-06",
+        "probe_id": "P-R011-be-06",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "initial",
+        "to_state": "initial",
+        "state_changed": false,
+        "success_streak": 1,
+        "failure_streak": 0,
+        "success_threshold": 3,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00026",
+        "event_id": "EVT-022",
+        "at_ms": 1200,
+        "instance_id": "be-01",
+        "probe_id": "P-R012-be-01",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 1,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 2,
+        "reason": "success_threshold_progress"
+      },
+      {
+        "observation_id": "OBS-00027",
+        "event_id": "EVT-023",
+        "at_ms": 1200,
+        "instance_id": "be-03",
+        "probe_id": "P-R012-be-03",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "healthy",
+        "to_state": "healthy",
+        "state_changed": false,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 2,
+        "failure_threshold": 3,
+        "reason": "success_threshold_progress_reached"
+      },
+      {
+        "observation_id": "OBS-00028",
+        "event_id": "P-R013-be-02",
+        "at_ms": 1200,
+        "instance_id": "be-02",
+        "probe_id": "P-R013-be-02",
+        "trigger": "half_open_dispatch",
+        "from_state": "unhealthy",
+        "to_state": "half_open",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 2,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "half_open_probe_dispatched"
+      },
+      {
+        "observation_id": "OBS-00029",
+        "event_id": "P-R013-be-04",
+        "at_ms": 1200,
+        "instance_id": "be-04",
+        "probe_id": "P-R013-be-04",
+        "trigger": "half_open_dispatch",
+        "from_state": "unhealthy",
+        "to_state": "half_open",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 2,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "half_open_probe_dispatched"
+      },
+      {
+        "observation_id": "OBS-00030",
+        "event_id": "EVT-021",
+        "at_ms": 1300,
+        "instance_id": "be-02",
+        "probe_id": "P-R013-be-02",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "half_open",
+        "to_state": "healthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "half_open_success_reached"
+      },
+      {
+        "observation_id": "OBS-00031",
+        "event_id": "EVT-024",
+        "at_ms": 1300,
+        "instance_id": "be-04",
+        "probe_id": "P-R013-be-04",
+        "result": "success",
+        "trigger": "probe_result",
+        "from_state": "half_open",
+        "to_state": "healthy",
+        "state_changed": true,
+        "success_streak": 0,
+        "failure_streak": 0,
+        "success_threshold": 1,
+        "failure_threshold": 2,
+        "reason": "half_open_success_reached"
+      }
+    ],
+    "final_health": {
+      "be-01": "healthy",
+      "be-03": "healthy",
+      "be-04": "healthy",
+      "be-05": "healthy",
+      "be-06": "initial",
+      "be-07": "initial"
+    },
+    "final_counts": {
+      "be-01": [
+        1,
+        0
+      ],
+      "be-03": [
+        0,
+        0
+      ],
+      "be-04": [
+        0,
+        0
+      ],
+      "be-05": [
+        0,
+        0
+      ],
+      "be-06": [
+        1,
+        0
+      ],
+      "be-07": [
+        0,
+        0
+      ]
+    }
+  },
+  "incremental": [
+    {
+      "edit": {
+        "id": "EDT-001",
+        "at_ms": 300,
+        "type": "config_edited",
+        "instance_id": "be-03",
+        "edit": {
+          "field": "success_threshold",
+          "new_value": 1
+        }
+      },
+      "matches_full": true,
+      "cache_hits": 9,
+      "closure": {
+        "edit_id": "EDT-001",
+        "field": "success_threshold",
+        "affected_instance": "be-03",
+        "from_round": 4,
+        "to_round": 14,
+        "from_at_ms": 300,
+        "event_cursor_from": 28,
+        "scopes": [
+          "health-threshold",
+          "state-migration",
+          "half-open-chain",
+          "possible-budget-chain"
+        ],
+        "dependency_chain": [
+          "instance:be-03:config",
+          "round:4:eligibility-or-threshold",
+          "round:4:budget-queue",
+          "health-trace:be-03"
+        ]
+      }
+    },
+    {
+      "edit": {
+        "id": "EDT-002",
+        "at_ms": 200,
+        "type": "config_edited",
+        "instance_id": "be-06",
+        "edit": {
+          "field": "interval_ms",
+          "new_value": 250
+        }
+      },
+      "matches_full": true,
+      "cache_hits": 5,
+      "closure": {
+        "edit_id": "EDT-002",
+        "field": "interval_ms",
+        "affected_instance": "be-06",
+        "from_round": 3,
+        "to_round": 14,
+        "from_at_ms": 200,
+        "event_cursor_from": 28,
+        "scopes": [
+          "eligibility",
+          "timeout-backoff",
+          "budget-allocation",
+          "deferred-queue"
+        ],
+        "dependency_chain": [
+          "instance:be-06:config",
+          "round:3:eligibility-or-threshold",
+          "round:3:budget-queue",
+          "health-trace:be-06"
+        ]
+      }
+    },
+    {
+      "edit": {
+        "id": "EDT-003",
+        "at_ms": 1300,
+        "type": "config_edited",
+        "instance_id": "be-04",
+        "edit": {
+          "field": "weight_ppm",
+          "new_value": 900000
+        }
+      },
+      "matches_full": true,
+      "cache_hits": 42,
+      "closure": {
+        "edit_id": "EDT-003",
+        "field": "weight_ppm",
+        "affected_instance": "be-04",
+        "from_round": 14,
+        "to_round": 14,
+        "from_at_ms": 1300,
+        "event_cursor_from": 28,
+        "scopes": [
+          "weighted-order",
+          "budget-allocation",
+          "deferred-queue",
+          "other-instance-slot-chain"
+        ],
+        "dependency_chain": [
+          "instance:be-04:config",
+          "round:14:eligibility-or-threshold",
+          "round:14:budget-queue",
+          "health-trace:be-04"
+        ]
+      }
+    },
+    {
+      "edit": {
+        "id": "EDT-004",
+        "at_ms": 1100,
+        "type": "config_edited",
+        "instance_id": "be-06",
+        "edit": {
+          "field": "rack_id",
+          "new_value": "rack-a"
+        }
+      },
+      "matches_full": true,
+      "cache_hits": 35,
+      "closure": {
+        "edit_id": "EDT-004",
+        "field": "rack_id",
+        "affected_instance": "be-06",
+        "from_round": 12,
+        "to_round": 14,
+        "from_at_ms": 1100,
+        "event_cursor_from": 28,
+        "scopes": [
+          "rack-capacity",
+          "global-capacity",
+          "deferred-queue",
+          "old-and-new-rack-chain"
+        ],
+        "dependency_chain": [
+          "instance:be-06:config",
+          "round:12:eligibility-or-threshold",
+          "round:12:budget-queue",
+          "health-trace:be-06"
+        ]
+      }
+    }
+  ],
+  "expected_codes": {
+    "missing-rack.json": "E_RACK_REFERENCE_MISSING",
+    "negative-timeout.json": "E_NEGATIVE_TIMEOUT",
+    "threshold-out-of-range.json": "E_THRESHOLD_OUT_OF_RANGE",
+    "truncated-checkpoint.bin": "E_CHECKPOINT_TRUNCATED",
+    "unknown-schema.json": "E_SCHEMA_VERSION_UNSUPPORTED",
+    "version-mismatch-checkpoint": "E_CHECKPOINT_VERSION_MISMATCH",
+    "zero-interval.json": "E_PROBE_INTERVAL_ZERO"
+  }
+}

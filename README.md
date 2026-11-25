@@ -21,3 +21,12 @@
 
 验收：
 用本地种子样本验证三版装载一致、逐轮探测与状态迁移、背压与检查点续算，并核对异常业务码。
+
+## 交付入口
+
+- 设计与语义说明：`SOLUTION.md`
+- 实测验证记录：`VALIDATION.md`
+- 一键生成/复验：`make demo` 或 `go run ./cmd/hckernel demo`
+- 自动化测试：`go test ./...`、`go test -race ./...`
+- 本地样本与真值：`samples/seed-42/`
+- 复验报告：`artifacts/verification-report.json`
