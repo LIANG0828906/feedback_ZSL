@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LightProbe GI Diagnostics</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>光照探针与全局照明诊断台</h1>
+      <p id="subtitle">确定性种子 424242 · 三线性插值 · 跨域混合 · 增量失效 · SQLite 断点</p>
+    </div>
+    <div class="top-actions">
+      <button id="btn-verify">精度核验</button>
+      <button id="btn-acceptance" class="primary">运行全量验收</button>
+      <button id="btn-reset">重置演示</button>
+    </div>
+  </header>
+
+  <section id="status-bar" class="status-bar">
+    <div class="progress-wrap">
+      <div class="progress-label"><span>房间提交进度</span><strong id="progress-text">-</strong></div>
+      <div class="progress"><div id="progress-bar"></div></div>
+    </div>
+    <div id="connection" class="badge">等待 Wails 绑定…</div>
+    <div id="message" class="message"></div>
+  </section>
+
+  <main class="grid">
+    <section class="card span-2">
+      <div class="card-head">
+        <h2>房间着色预览</h2>
+        <span>XY 俯视 · 圆点为屏幕像素</span>
+      </div>
+      <canvas id="room-canvas" width="760" height="430"></canvas>
+      <div id="room-cards" class="room-cards"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>探针辐亮度热力图</h2><span id="heat-title"></span></div>
+      <div class="controls compact">
+        <label>房间
+          <select id="selected-room"></select>
+        </label>
+        <label>K 层
+          <input id="selected-k" type="range" min="0" max="1" value="0" />
+        </label>
+      </div>
+      <canvas id="heat-canvas" width="430" height="330"></canvas>
+      <div class="legend"><span>低</span><i></i><span>高</span><b id="heat-values"></b></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>跨域混合示意</h2><span>boundary / alpha</span></div>
+      <canvas id="blend-canvas" width="430" height="330"></canvas>
+      <div id="blend-info" class="detail-text"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>格点编辑与异常隔离</h2><span>committed 房间返回 E_VER</span></div>
+      <label>探针格点<select id="selected-probe"></select></label>
+      <div class="rgb-inputs">
+        <label>R <input id="rad-r" type="number" step="0.01" min="0" max="2" /></label>
+        <label>G <input id="rad-g" type="number" step="0.01" min="0" max="2" /></label>
+        <label>B <input id="rad-b" type="number" step="0.01" min="0" max="2" /></label>
+      </div>
+      <div class="button-row">
+        <button id="btn-edit" class="primary">编辑并增量重建</button>
+        <button id="btn-retry-probe">重试该格点</button>
+        <button id="btn-fault">注入单格点异常</button>
+      </div>
+      <div class="resolution-row">
+        <label>分辨率 X <input id="res-x" type="number" min="1" max="8" /></label>
+        <label>Y <input id="res-y" type="number" min="1" max="8" /></label>
+        <label>Z <input id="res-z" type="number" min="1" max="6" /></label>
+        <button id="btn-resolution">调整分辨率</button>
+      </div>
+      <div id="probe-detail" class="detail-text"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>任意位置查询 / E_RANGE</h2><span>房间留空自动定位</span></div>
+      <div class="query-grid">
+        <label>Query ID <input id="query-id" value="ui-query" /></label>
+        <label>Room <input id="query-room" placeholder="room-a 或留空" /></label>
+        <label>X <input id="query-x" type="number" step="0.1" value="2" /></label>
+        <label>Y <input id="query-y" type="number" step="0.1" value="2" /></label>
+        <label>Z <input id="query-z" type="number" step="0.1" value="1.5" /></label>
+      </div>
+      <button id="btn-query">三线性/混合查询</button>
+      <pre id="query-result" class="code-block">尚未查询。试试房间外坐标 99,99,99。</pre>
+    </section>
+
+    <section class="card span-2">
+      <div class="card-head"><h2>精确失效传播清单</h2><span id="invalidation-summary"></span></div>
+      <div class="table-wrap tall">
+        <table>
+          <thead><tr><th>节点</th><th>类型</th><th>房间</th><th>格点</th><th>相邻房间</th><th>原因</th></tr></thead>
+          <tbody id="invalidation-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>缓存命中与重算</h2><span>最近一次增量</span></div>
+      <div id="cache-stats" class="stat-grid"></div>
+      <h3>屏幕像素</h3>
+      <div class="table-wrap compact-table">
+        <table><thead><tr><th>Pixel</th><th>Color</th><th>α</th><th>缓存</th></tr></thead>
+        <tbody id="pixel-body"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>预算排队明细</h2><span>阻塞而非丢弃</span></div>
+      <div id="queue-summary" class="stat-grid"></div>
+      <div class="table-wrap compact-table">
+        <table><thead><tr><th>Probe</th><th>资源</th><th>等待 ms</th><th>原因</th></tr></thead>
+        <tbody id="queue-body"></tbody>
+      </div>
+    </section>
+
+    <section class="card span-3">
+      <div class="card-head"><h2>自动验收 / 三路径一致性</h2><span id="acceptance-summary"></span></div>
+      <div id="precision-summary" class="precision"></div>
+      <div class="table-wrap acceptance-table">
+        <table>
+          <thead><tr><th>检查项</th><th>结果</th><th>代码/详情</th></tr></thead>
+          <tbody id="acceptance-body">
+            <tr><td colspan="3">点击“运行全量验收”执行本地确定性检查。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
