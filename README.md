@@ -1,3 +1,25 @@
+# gatewayproto：网关日志多级聚合/导出/检查点原型
+
+可运行实现、测试与技术说明位于 `docs/PROTOTYPE.md`。最快验证：
+
+```bash
+go version
+bash scripts/verify.sh
+```
+
+固定种子样本入口：
+
+```bash
+go run . generate --out artifacts/sample
+go run . validate --schema artifacts/sample/schema-v1.json
+go run . run --schema artifacts/sample/schema-v1.json \
+  --db artifacts/checkpoint.sqlite --export-dir artifacts/export
+```
+
+最近一次完整验证记录见 `artifacts/verification-log.txt`。
+
+---
+
 团队决定先做一个独立原型：网关的访问日志与指标聚合导出链路目前只有一份口径草稿，代码一行未写，Linux（WSL Ubuntu）开发机上的工作目录尚未初始化，没有可继承的源码、样本与历史约定。原型的核心是把按逻辑时间到达的访问日志记录归并到服务、路由与状态码分组的多级滑动聚合窗口，按水位与允许延迟决定晚到记录是触发窗口重算还是丢弃，再按导出批次把聚合快照与逐条日志摘要落到下游导出序列，并保证导出过程中断后可依据已提交状态继续。全部输入与解析真值由题内确定性生成器按固定种子产出，不依赖真实网关、日志平台或线上服务：每份日志工程声明若干服务与路由（路由带匹配前缀、超时与错误归类规则）、一批按逻辑时刻到达的访问日志记录（含状态码、耗时、请求字节与响应字节）以及水位标记；同一份工程以三个 schema 版本描述，版本差异体现在字段命名、耗时的微秒与毫秒单位、时刻的 epoch 毫秒与相对事件序号、路由清单的扁平表与按服务分组嵌套树、以及可选水位字段的有无上，生成器按解析构造直接记录逐窗口各分组计数、耗时直方图桶、字节总量与晚到重算窗口集合，作为唯一观测真值。
 
 任务环境与准备：
