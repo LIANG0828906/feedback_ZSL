@@ -1,0 +1,76 @@
+[
+  {
+    "name": "permille-125-to-myriad",
+    "input_permille": 125,
+    "expected_weight": 1250,
+    "tolerance_q": 0,
+    "within_tolerance": true
+  },
+  {
+    "name": "permille-333-to-myriad",
+    "input_permille": 333,
+    "expected_weight": 3330,
+    "tolerance_q": 0,
+    "within_tolerance": true
+  },
+  {
+    "name": "one-third-weight-share",
+    "stream_id": 3,
+    "input_permyriad": 1,
+    "total_weight": 3,
+    "allocated_bytes": 21845,
+    "total_bytes": 65536,
+    "truth_share_q": 21845,
+    "computed_share_q": 21845,
+    "tolerance_q": 2,
+    "within_tolerance": true
+  },
+  {
+    "name": "two-third-allocation-share",
+    "stream_id": 5,
+    "input_permyriad": 2,
+    "total_weight": 3,
+    "allocated_bytes": 43691,
+    "total_bytes": 65536,
+    "truth_share_q": 43691,
+    "computed_share_q": 43691,
+    "tolerance_q": 2,
+    "within_tolerance": true
+  },
+  {
+    "name": "seven-window-updates-exact",
+    "repeat_count": 7,
+    "increment_bytes": 1024,
+    "cap_window": 65536,
+    "expected_window": 7168,
+    "tolerance_q": 0,
+    "within_tolerance": true
+  },
+  {
+    "name": "one-thousand-one-byte-updates-exact",
+    "repeat_count": 1000,
+    "increment_bytes": 1,
+    "cap_window": 2147483647,
+    "expected_window": 1000,
+    "tolerance_q": 0,
+    "within_tolerance": true
+  },
+  {
+    "name": "window-update-saturation-boundary",
+    "repeat_count": 1,
+    "increment_bytes": 10000,
+    "start_window": 60000,
+    "cap_window": 65535,
+    "expected_window": 65535,
+    "tolerance_q": 0,
+    "within_tolerance": true
+  },
+  {
+    "name": "weight-roundtrip-100-adjustments",
+    "input_permille": 123,
+    "repeat_count": 100,
+    "expected_weight": 1230,
+    "tolerance_q": 0,
+    "within_tolerance": true
+  }
+]

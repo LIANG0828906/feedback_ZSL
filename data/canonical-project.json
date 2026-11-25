@@ -1,0 +1,470 @@
+{
+  "schema_version": "frameplan/v1",
+  "source_version": "canonical-generator",
+  "project_id": "gw-f5b6-f68a",
+  "seed": 424242,
+  "fixed_point_bits": 16,
+  "weight_scale": "permyriad",
+  "time_base": "frame_sequence",
+  "frame_interval_ms": 10,
+  "orphan_policy": "reparent",
+  "frame_watermark": 42,
+  "watermark_explicit": true,
+  "connection": {
+    "id": "C-deterministic-1",
+    "initial_window_bytes": 6144,
+    "max_window_bytes": 65536
+  },
+  "streams": [
+    {
+      "id": 1,
+      "name": "control",
+      "parent_id": 0,
+      "weight_permyriad": 2000,
+      "initial_window_bytes": 2048,
+      "max_window_bytes": 16384,
+      "max_frame_bytes": 2048,
+      "body_segments": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "orphan_policy": "reparent"
+    },
+    {
+      "id": 3,
+      "name": "orders",
+      "parent_id": 1,
+      "weight_permyriad": 3000,
+      "initial_window_bytes": 1024,
+      "max_window_bytes": 16384,
+      "max_frame_bytes": 1024,
+      "body_segments": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "orphan_policy": "reparent"
+    },
+    {
+      "id": 5,
+      "name": "media",
+      "parent_id": 1,
+      "weight_permyriad": 2000,
+      "initial_window_bytes": 2048,
+      "max_window_bytes": 16384,
+      "max_frame_bytes": 2048,
+      "body_segments": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "orphan_policy": "reparent"
+    },
+    {
+      "id": 7,
+      "name": "receipts",
+      "parent_id": 3,
+      "weight_permyriad": 1500,
+      "initial_window_bytes": 1024,
+      "max_window_bytes": 16384,
+      "max_frame_bytes": 1024,
+      "body_segments": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "orphan_policy": "reparent"
+    },
+    {
+      "id": 9,
+      "name": "audit",
+      "parent_id": 3,
+      "weight_permyriad": 1500,
+      "initial_window_bytes": 1024,
+      "max_window_bytes": 16384,
+      "max_frame_bytes": 1024,
+      "body_segments": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "orphan_policy": "reparent"
+    }
+  ],
+  "events": [
+    {
+      "index": 0,
+      "frame_seq": 1,
+      "time_ms": 10,
+      "type": "HEADERS",
+      "stream_id": 1
+    },
+    {
+      "index": 1,
+      "frame_seq": 2,
+      "time_ms": 20,
+      "type": "HEADERS",
+      "stream_id": 3
+    },
+    {
+      "index": 2,
+      "frame_seq": 3,
+      "time_ms": 30,
+      "type": "HEADERS",
+      "stream_id": 5
+    },
+    {
+      "index": 3,
+      "frame_seq": 4,
+      "time_ms": 40,
+      "type": "HEADERS",
+      "stream_id": 7
+    },
+    {
+      "index": 4,
+      "frame_seq": 5,
+      "time_ms": 50,
+      "type": "HEADERS",
+      "stream_id": 9
+    },
+    {
+      "index": 5,
+      "frame_seq": 6,
+      "time_ms": 60,
+      "type": "DATA",
+      "stream_id": 1,
+      "length_bytes": 1024
+    },
+    {
+      "index": 6,
+      "frame_seq": 7,
+      "time_ms": 70,
+      "type": "DATA",
+      "stream_id": 3,
+      "length_bytes": 1024
+    },
+    {
+      "index": 7,
+      "frame_seq": 8,
+      "time_ms": 80,
+      "type": "DATA",
+      "stream_id": 5,
+      "length_bytes": 1024
+    },
+    {
+      "index": 8,
+      "frame_seq": 9,
+      "time_ms": 90,
+      "type": "DATA",
+      "stream_id": 7,
+      "length_bytes": 1024
+    },
+    {
+      "index": 9,
+      "frame_seq": 10,
+      "time_ms": 100,
+      "type": "DATA",
+      "stream_id": 9,
+      "length_bytes": 1024
+    },
+    {
+      "index": 10,
+      "frame_seq": 11,
+      "time_ms": 110,
+      "type": "DATA",
+      "stream_id": 1,
+      "length_bytes": 1024,
+      "segment_index": 1
+    },
+    {
+      "index": 11,
+      "frame_seq": 12,
+      "time_ms": 120,
+      "type": "DATA",
+      "stream_id": 3,
+      "length_bytes": 1024,
+      "segment_index": 1
+    },
+    {
+      "index": 12,
+      "frame_seq": 13,
+      "time_ms": 130,
+      "type": "DATA",
+      "stream_id": 5,
+      "length_bytes": 1024,
+      "segment_index": 1
+    },
+    {
+      "index": 13,
+      "frame_seq": 14,
+      "time_ms": 140,
+      "type": "DATA",
+      "stream_id": 7,
+      "length_bytes": 1024,
+      "segment_index": 1
+    },
+    {
+      "index": 14,
+      "frame_seq": 15,
+      "time_ms": 150,
+      "type": "DATA",
+      "stream_id": 9,
+      "length_bytes": 1024,
+      "segment_index": 1
+    },
+    {
+      "index": 15,
+      "frame_seq": 16,
+      "time_ms": 160,
+      "type": "DATA",
+      "stream_id": 1,
+      "length_bytes": 1024,
+      "segment_index": 2
+    },
+    {
+      "index": 16,
+      "frame_seq": 17,
+      "time_ms": 170,
+      "type": "DATA",
+      "stream_id": 3,
+      "length_bytes": 1024,
+      "segment_index": 2
+    },
+    {
+      "index": 17,
+      "frame_seq": 18,
+      "time_ms": 180,
+      "type": "DATA",
+      "stream_id": 5,
+      "length_bytes": 1024,
+      "segment_index": 2
+    },
+    {
+      "index": 18,
+      "frame_seq": 19,
+      "time_ms": 190,
+      "type": "DATA",
+      "stream_id": 7,
+      "length_bytes": 1024,
+      "segment_index": 2
+    },
+    {
+      "index": 19,
+      "frame_seq": 20,
+      "time_ms": 200,
+      "type": "DATA",
+      "stream_id": 9,
+      "length_bytes": 1024,
+      "segment_index": 2
+    },
+    {
+      "index": 20,
+      "frame_seq": 21,
+      "time_ms": 210,
+      "type": "DATA",
+      "stream_id": 1,
+      "length_bytes": 1024,
+      "segment_index": 3
+    },
+    {
+      "index": 21,
+      "frame_seq": 22,
+      "time_ms": 220,
+      "type": "DATA",
+      "stream_id": 3,
+      "length_bytes": 1024,
+      "segment_index": 3
+    },
+    {
+      "index": 22,
+      "frame_seq": 23,
+      "time_ms": 230,
+      "type": "DATA",
+      "stream_id": 5,
+      "length_bytes": 1024,
+      "segment_index": 3
+    },
+    {
+      "index": 23,
+      "frame_seq": 24,
+      "time_ms": 240,
+      "type": "DATA",
+      "stream_id": 7,
+      "length_bytes": 1024,
+      "segment_index": 3
+    },
+    {
+      "index": 24,
+      "frame_seq": 25,
+      "time_ms": 250,
+      "type": "DATA",
+      "stream_id": 9,
+      "length_bytes": 1024,
+      "segment_index": 3
+    },
+    {
+      "index": 25,
+      "frame_seq": 26,
+      "time_ms": 260,
+      "type": "DATA",
+      "stream_id": 1,
+      "length_bytes": 1024,
+      "segment_index": 4
+    },
+    {
+      "index": 26,
+      "frame_seq": 27,
+      "time_ms": 270,
+      "type": "DATA",
+      "stream_id": 3,
+      "length_bytes": 1024,
+      "segment_index": 4
+    },
+    {
+      "index": 27,
+      "frame_seq": 28,
+      "time_ms": 280,
+      "type": "DATA",
+      "stream_id": 5,
+      "length_bytes": 1024,
+      "segment_index": 4
+    },
+    {
+      "index": 28,
+      "frame_seq": 29,
+      "time_ms": 290,
+      "type": "DATA",
+      "stream_id": 7,
+      "length_bytes": 1024,
+      "segment_index": 4
+    },
+    {
+      "index": 29,
+      "frame_seq": 30,
+      "time_ms": 300,
+      "type": "DATA",
+      "stream_id": 9,
+      "length_bytes": 1024,
+      "segment_index": 4
+    },
+    {
+      "index": 30,
+      "frame_seq": 31,
+      "time_ms": 310,
+      "type": "WINDOW_UPDATE",
+      "stream_id": 0,
+      "increment_bytes": 16384
+    },
+    {
+      "index": 31,
+      "frame_seq": 32,
+      "time_ms": 320,
+      "type": "WINDOW_UPDATE",
+      "stream_id": 1,
+      "increment_bytes": 8192
+    },
+    {
+      "index": 32,
+      "frame_seq": 33,
+      "time_ms": 330,
+      "type": "WINDOW_UPDATE",
+      "stream_id": 3,
+      "increment_bytes": 8192
+    },
+    {
+      "index": 33,
+      "frame_seq": 34,
+      "time_ms": 340,
+      "type": "WINDOW_UPDATE",
+      "stream_id": 5,
+      "increment_bytes": 8192
+    },
+    {
+      "index": 34,
+      "frame_seq": 35,
+      "time_ms": 350,
+      "type": "WINDOW_UPDATE",
+      "stream_id": 7,
+      "increment_bytes": 8192
+    },
+    {
+      "index": 35,
+      "frame_seq": 36,
+      "time_ms": 360,
+      "type": "WINDOW_UPDATE",
+      "stream_id": 9,
+      "increment_bytes": 8192
+    },
+    {
+      "index": 36,
+      "frame_seq": 37,
+      "time_ms": 370,
+      "type": "WINDOW_UPDATE",
+      "stream_id": 0,
+      "increment_bytes": 8192
+    },
+    {
+      "index": 37,
+      "frame_seq": 38,
+      "time_ms": 380,
+      "type": "RST_STREAM",
+      "stream_id": 3
+    },
+    {
+      "index": 38,
+      "frame_seq": 39,
+      "time_ms": 390,
+      "type": "DATA",
+      "stream_id": 1,
+      "length_bytes": 1024,
+      "segment_index": 5,
+      "fin": true
+    },
+    {
+      "index": 39,
+      "frame_seq": 40,
+      "time_ms": 400,
+      "type": "DATA",
+      "stream_id": 5,
+      "length_bytes": 1024,
+      "segment_index": 5,
+      "fin": true
+    },
+    {
+      "index": 40,
+      "frame_seq": 41,
+      "time_ms": 410,
+      "type": "DATA",
+      "stream_id": 7,
+      "length_bytes": 1024,
+      "segment_index": 5,
+      "fin": true
+    },
+    {
+      "index": 41,
+      "frame_seq": 42,
+      "time_ms": 420,
+      "type": "DATA",
+      "stream_id": 9,
+      "length_bytes": 1024,
+      "segment_index": 5,
+      "fin": true
+    }
+  ]
+}

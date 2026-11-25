@@ -1,0 +1,535 @@
+{
+  "apiVersion": "multiplex.gateway/v3.0+2024-11",
+  "clock": {
+    "basis": "frame_number",
+    "tickMs": 10
+  },
+  "connection": {
+    "ceilingBytes": 65536,
+    "cid": "C-deterministic-1",
+    "creditBytes": 6144,
+    "creditMode": "absolute_remaining"
+  },
+  "engineeringId": "gw-f5b6-f68a",
+  "flows": [
+    {
+      "bodyPlan": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "ceilingBytes": 16384,
+      "creditBytes": 2048,
+      "creditMode": "absolute_remaining",
+      "fid": 1,
+      "maxPayloadBytes": 2048,
+      "name": "control",
+      "orphanRule": "reparent",
+      "shareMyriad": 2000,
+      "upstreamFid": 0
+    },
+    {
+      "bodyPlan": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "ceilingBytes": 16384,
+      "creditBytes": 1024,
+      "creditMode": "absolute_remaining",
+      "fid": 3,
+      "maxPayloadBytes": 1024,
+      "name": "orders",
+      "orphanRule": "reparent",
+      "shareMyriad": 3000,
+      "upstreamFid": 1
+    },
+    {
+      "bodyPlan": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "ceilingBytes": 16384,
+      "creditBytes": 2048,
+      "creditMode": "absolute_remaining",
+      "fid": 5,
+      "maxPayloadBytes": 2048,
+      "name": "media",
+      "orphanRule": "reparent",
+      "shareMyriad": 2000,
+      "upstreamFid": 1
+    },
+    {
+      "bodyPlan": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "ceilingBytes": 16384,
+      "creditBytes": 1024,
+      "creditMode": "absolute_remaining",
+      "fid": 7,
+      "maxPayloadBytes": 1024,
+      "name": "receipts",
+      "orphanRule": "reparent",
+      "shareMyriad": 1500,
+      "upstreamFid": 3
+    },
+    {
+      "bodyPlan": [
+        1024,
+        1024,
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "ceilingBytes": 16384,
+      "creditBytes": 1024,
+      "creditMode": "absolute_remaining",
+      "fid": 9,
+      "maxPayloadBytes": 1024,
+      "name": "audit",
+      "orphanRule": "reparent",
+      "shareMyriad": 1500,
+      "upstreamFid": 3
+    }
+  ],
+  "orphanRule": "reparent",
+  "randomSeed": 424242,
+  "timeline": [
+    {
+      "fid": 1,
+      "finish": false,
+      "op": "HEADERS",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 1,
+      "updateBytes": 0
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "HEADERS",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 2,
+      "updateBytes": 0
+    },
+    {
+      "fid": 5,
+      "finish": false,
+      "op": "HEADERS",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 3,
+      "updateBytes": 0
+    },
+    {
+      "fid": 7,
+      "finish": false,
+      "op": "HEADERS",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 4,
+      "updateBytes": 0
+    },
+    {
+      "fid": 9,
+      "finish": false,
+      "op": "HEADERS",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 5,
+      "updateBytes": 0
+    },
+    {
+      "fid": 1,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 6,
+      "updateBytes": 0
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 7,
+      "updateBytes": 0
+    },
+    {
+      "fid": 5,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 8,
+      "updateBytes": 0
+    },
+    {
+      "fid": 7,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 9,
+      "updateBytes": 0
+    },
+    {
+      "fid": 9,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 10,
+      "updateBytes": 0
+    },
+    {
+      "fid": 1,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 1,
+      "shareMyriad": 0,
+      "tick": 11,
+      "updateBytes": 0
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 1,
+      "shareMyriad": 0,
+      "tick": 12,
+      "updateBytes": 0
+    },
+    {
+      "fid": 5,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 1,
+      "shareMyriad": 0,
+      "tick": 13,
+      "updateBytes": 0
+    },
+    {
+      "fid": 7,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 1,
+      "shareMyriad": 0,
+      "tick": 14,
+      "updateBytes": 0
+    },
+    {
+      "fid": 9,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 1,
+      "shareMyriad": 0,
+      "tick": 15,
+      "updateBytes": 0
+    },
+    {
+      "fid": 1,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 2,
+      "shareMyriad": 0,
+      "tick": 16,
+      "updateBytes": 0
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 2,
+      "shareMyriad": 0,
+      "tick": 17,
+      "updateBytes": 0
+    },
+    {
+      "fid": 5,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 2,
+      "shareMyriad": 0,
+      "tick": 18,
+      "updateBytes": 0
+    },
+    {
+      "fid": 7,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 2,
+      "shareMyriad": 0,
+      "tick": 19,
+      "updateBytes": 0
+    },
+    {
+      "fid": 9,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 2,
+      "shareMyriad": 0,
+      "tick": 20,
+      "updateBytes": 0
+    },
+    {
+      "fid": 1,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 3,
+      "shareMyriad": 0,
+      "tick": 21,
+      "updateBytes": 0
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 3,
+      "shareMyriad": 0,
+      "tick": 22,
+      "updateBytes": 0
+    },
+    {
+      "fid": 5,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 3,
+      "shareMyriad": 0,
+      "tick": 23,
+      "updateBytes": 0
+    },
+    {
+      "fid": 7,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 3,
+      "shareMyriad": 0,
+      "tick": 24,
+      "updateBytes": 0
+    },
+    {
+      "fid": 9,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 3,
+      "shareMyriad": 0,
+      "tick": 25,
+      "updateBytes": 0
+    },
+    {
+      "fid": 1,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 4,
+      "shareMyriad": 0,
+      "tick": 26,
+      "updateBytes": 0
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 4,
+      "shareMyriad": 0,
+      "tick": 27,
+      "updateBytes": 0
+    },
+    {
+      "fid": 5,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 4,
+      "shareMyriad": 0,
+      "tick": 28,
+      "updateBytes": 0
+    },
+    {
+      "fid": 7,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 4,
+      "shareMyriad": 0,
+      "tick": 29,
+      "updateBytes": 0
+    },
+    {
+      "fid": 9,
+      "finish": false,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 4,
+      "shareMyriad": 0,
+      "tick": 30,
+      "updateBytes": 0
+    },
+    {
+      "fid": 0,
+      "finish": false,
+      "op": "WINDOW_UPDATE",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 31,
+      "updateBytes": 16384
+    },
+    {
+      "fid": 1,
+      "finish": false,
+      "op": "WINDOW_UPDATE",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 32,
+      "updateBytes": 8192
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "WINDOW_UPDATE",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 33,
+      "updateBytes": 8192
+    },
+    {
+      "fid": 5,
+      "finish": false,
+      "op": "WINDOW_UPDATE",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 34,
+      "updateBytes": 8192
+    },
+    {
+      "fid": 7,
+      "finish": false,
+      "op": "WINDOW_UPDATE",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 35,
+      "updateBytes": 8192
+    },
+    {
+      "fid": 9,
+      "finish": false,
+      "op": "WINDOW_UPDATE",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 36,
+      "updateBytes": 8192
+    },
+    {
+      "fid": 0,
+      "finish": false,
+      "op": "WINDOW_UPDATE",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 37,
+      "updateBytes": 8192
+    },
+    {
+      "fid": 3,
+      "finish": false,
+      "op": "RST_STREAM",
+      "payloadBytes": 0,
+      "segment": 0,
+      "shareMyriad": 0,
+      "tick": 38,
+      "updateBytes": 0
+    },
+    {
+      "fid": 1,
+      "finish": true,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 5,
+      "shareMyriad": 0,
+      "tick": 39,
+      "updateBytes": 0
+    },
+    {
+      "fid": 5,
+      "finish": true,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 5,
+      "shareMyriad": 0,
+      "tick": 40,
+      "updateBytes": 0
+    },
+    {
+      "fid": 7,
+      "finish": true,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 5,
+      "shareMyriad": 0,
+      "tick": 41,
+      "updateBytes": 0
+    },
+    {
+      "fid": 9,
+      "finish": true,
+      "op": "DATA",
+      "payloadBytes": 1024,
+      "segment": 5,
+      "shareMyriad": 0,
+      "tick": 42,
+      "updateBytes": 0
+    }
+  ]
+}

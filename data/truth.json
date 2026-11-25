@@ -1,0 +1,6565 @@
+{
+  "seed": 424242,
+  "generator": "deterministic-frame-constructor/v1",
+  "initial_windows": {
+    "connection": 6144,
+    "stream-1": 2048,
+    "stream-3": 1024,
+    "stream-5": 2048,
+    "stream-7": 1024,
+    "stream-9": 1024
+  },
+  "event_truth": [
+    {
+      "event_index": 0,
+      "frame_seq": 1,
+      "logical_ms": 10,
+      "event_type": "HEADERS",
+      "source_stream_id": 1,
+      "connection_window": 6144,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": null
+    },
+    {
+      "event_index": 1,
+      "frame_seq": 2,
+      "logical_ms": 20,
+      "event_type": "HEADERS",
+      "source_stream_id": 3,
+      "connection_window": 6144,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": null
+    },
+    {
+      "event_index": 2,
+      "frame_seq": 3,
+      "logical_ms": 30,
+      "event_type": "HEADERS",
+      "source_stream_id": 5,
+      "connection_window": 6144,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": null
+    },
+    {
+      "event_index": 3,
+      "frame_seq": 4,
+      "logical_ms": 40,
+      "event_type": "HEADERS",
+      "source_stream_id": 7,
+      "connection_window": 6144,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "IDLE",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": null
+    },
+    {
+      "event_index": 4,
+      "frame_seq": 5,
+      "logical_ms": 50,
+      "event_type": "HEADERS",
+      "source_stream_id": 9,
+      "connection_window": 6144,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": null
+    },
+    {
+      "event_index": 5,
+      "frame_seq": 6,
+      "logical_ms": 60,
+      "event_type": "DATA",
+      "source_stream_id": 1,
+      "connection_window": 5120,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 5,
+          "logical_ms": 60,
+          "frame_seq": 6,
+          "stream_id": 1,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 5120,
+          "stream_window_after": 1024,
+          "segment_index": 0
+        }
+      ]
+    },
+    {
+      "event_index": 6,
+      "frame_seq": 7,
+      "logical_ms": 70,
+      "event_type": "DATA",
+      "source_stream_id": 3,
+      "connection_window": 4096,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 2048,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 6,
+          "logical_ms": 70,
+          "frame_seq": 7,
+          "stream_id": 3,
+          "weight_permyriad": 3000,
+          "allocated_weight": 3000,
+          "bytes_sent": 1024,
+          "connection_window_after": 4096,
+          "stream_window_after": 0,
+          "segment_index": 0
+        }
+      ]
+    },
+    {
+      "event_index": 7,
+      "frame_seq": 8,
+      "logical_ms": 80,
+      "event_type": "DATA",
+      "source_stream_id": 5,
+      "connection_window": 3072,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 7,
+          "logical_ms": 80,
+          "frame_seq": 8,
+          "stream_id": 5,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 3072,
+          "stream_window_after": 1024,
+          "segment_index": 0
+        }
+      ]
+    },
+    {
+      "event_index": 8,
+      "frame_seq": 9,
+      "logical_ms": 90,
+      "event_type": "DATA",
+      "source_stream_id": 7,
+      "connection_window": 2048,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 1024,
+          "sent_bytes": 0,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 0,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 8,
+          "logical_ms": 90,
+          "frame_seq": 9,
+          "stream_id": 7,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 2048,
+          "stream_window_after": 0,
+          "segment_index": 0
+        }
+      ]
+    },
+    {
+      "event_index": 9,
+      "frame_seq": 10,
+      "logical_ms": 100,
+      "event_type": "DATA",
+      "source_stream_id": 9,
+      "connection_window": 1024,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 9,
+          "logical_ms": 100,
+          "frame_seq": 10,
+          "stream_id": 9,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 1024,
+          "stream_window_after": 0,
+          "segment_index": 0
+        }
+      ]
+    },
+    {
+      "event_index": 10,
+      "frame_seq": 11,
+      "logical_ms": 110,
+      "event_type": "DATA",
+      "source_stream_id": 1,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 10,
+          "logical_ms": 110,
+          "frame_seq": 11,
+          "stream_id": 1,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 0,
+          "stream_window_after": 0,
+          "segment_index": 1
+        }
+      ]
+    },
+    {
+      "event_index": 11,
+      "frame_seq": 12,
+      "logical_ms": 120,
+      "event_type": "DATA",
+      "source_stream_id": 3,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 12,
+      "frame_seq": 13,
+      "logical_ms": 130,
+      "event_type": "DATA",
+      "source_stream_id": 5,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 13,
+      "frame_seq": 14,
+      "logical_ms": 140,
+      "event_type": "DATA",
+      "source_stream_id": 7,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 14,
+      "frame_seq": 15,
+      "logical_ms": 150,
+      "event_type": "DATA",
+      "source_stream_id": 9,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 15,
+      "frame_seq": 16,
+      "logical_ms": 160,
+      "event_type": "DATA",
+      "source_stream_id": 1,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 16,
+      "frame_seq": 17,
+      "logical_ms": 170,
+      "event_type": "DATA",
+      "source_stream_id": 3,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 17,
+      "frame_seq": 18,
+      "logical_ms": 180,
+      "event_type": "DATA",
+      "source_stream_id": 5,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 18,
+      "frame_seq": 19,
+      "logical_ms": 190,
+      "event_type": "DATA",
+      "source_stream_id": 7,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 19,
+      "frame_seq": 20,
+      "logical_ms": 200,
+      "event_type": "DATA",
+      "source_stream_id": 9,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 1,
+          "pending_bytes": 1024,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 20,
+      "frame_seq": 21,
+      "logical_ms": 210,
+      "event_type": "DATA",
+      "source_stream_id": 1,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 21,
+      "frame_seq": 22,
+      "logical_ms": 220,
+      "event_type": "DATA",
+      "source_stream_id": 3,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 22,
+      "frame_seq": 23,
+      "logical_ms": 230,
+      "event_type": "DATA",
+      "source_stream_id": 5,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 23,
+      "frame_seq": 24,
+      "logical_ms": 240,
+      "event_type": "DATA",
+      "source_stream_id": 7,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 24,
+      "frame_seq": 25,
+      "logical_ms": 250,
+      "event_type": "DATA",
+      "source_stream_id": 9,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 2,
+          "pending_bytes": 2048,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 25,
+      "frame_seq": 26,
+      "logical_ms": 260,
+      "event_type": "DATA",
+      "source_stream_id": 1,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 26,
+      "frame_seq": 27,
+      "logical_ms": 270,
+      "event_type": "DATA",
+      "source_stream_id": 3,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 27,
+      "frame_seq": 28,
+      "logical_ms": 280,
+      "event_type": "DATA",
+      "source_stream_id": 5,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 28,
+      "frame_seq": 29,
+      "logical_ms": 290,
+      "event_type": "DATA",
+      "source_stream_id": 7,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 29,
+      "frame_seq": 30,
+      "logical_ms": 300,
+      "event_type": "DATA",
+      "source_stream_id": 9,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 160,
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 120,
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 1024,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 130,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 130
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 140,
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 150,
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 130
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO",
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": null
+    },
+    {
+      "event_index": 30,
+      "frame_seq": 31,
+      "logical_ms": 310,
+      "event_type": "WINDOW_UPDATE",
+      "connection_window": 15360,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 160,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 160
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 310,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 310
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 1,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 160
+        },
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 310
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": [
+        {
+          "event_index": 30,
+          "logical_ms": 310,
+          "frame_seq": 31,
+          "stream_id": 5,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 15360,
+          "stream_window_after": 0,
+          "segment_index": 1
+        }
+      ]
+    },
+    {
+      "event_index": 31,
+      "frame_seq": 32,
+      "logical_ms": 320,
+      "event_type": "WINDOW_UPDATE",
+      "source_stream_id": 1,
+      "connection_window": 12288,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 120,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 120
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 310,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 310
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 3,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 120
+        },
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 310
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": [
+        {
+          "event_index": 31,
+          "logical_ms": 320,
+          "frame_seq": 32,
+          "stream_id": 1,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 14336,
+          "stream_window_after": 7168,
+          "segment_index": 2
+        },
+        {
+          "event_index": 31,
+          "logical_ms": 320,
+          "frame_seq": 32,
+          "stream_id": 1,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 13312,
+          "stream_window_after": 6144,
+          "segment_index": 3
+        },
+        {
+          "event_index": 31,
+          "logical_ms": 320,
+          "frame_seq": 32,
+          "stream_id": 1,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 12288,
+          "stream_window_after": 5120,
+          "segment_index": 4
+        }
+      ]
+    },
+    {
+      "event_index": 32,
+      "frame_seq": 33,
+      "logical_ms": 330,
+      "event_type": "WINDOW_UPDATE",
+      "source_stream_id": 3,
+      "connection_window": 8192,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 310,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 310
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 5,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 310
+        },
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": [
+        {
+          "event_index": 32,
+          "logical_ms": 330,
+          "frame_seq": 33,
+          "stream_id": 3,
+          "weight_permyriad": 3000,
+          "allocated_weight": 3000,
+          "bytes_sent": 1024,
+          "connection_window_after": 11264,
+          "stream_window_after": 7168,
+          "segment_index": 1
+        },
+        {
+          "event_index": 32,
+          "logical_ms": 330,
+          "frame_seq": 33,
+          "stream_id": 3,
+          "weight_permyriad": 3000,
+          "allocated_weight": 3000,
+          "bytes_sent": 1024,
+          "connection_window_after": 10240,
+          "stream_window_after": 6144,
+          "segment_index": 2
+        },
+        {
+          "event_index": 32,
+          "logical_ms": 330,
+          "frame_seq": 33,
+          "stream_id": 3,
+          "weight_permyriad": 3000,
+          "allocated_weight": 3000,
+          "bytes_sent": 1024,
+          "connection_window_after": 9216,
+          "stream_window_after": 5120,
+          "segment_index": 3
+        },
+        {
+          "event_index": 32,
+          "logical_ms": 330,
+          "frame_seq": 33,
+          "stream_id": 3,
+          "weight_permyriad": 3000,
+          "allocated_weight": 3000,
+          "bytes_sent": 1024,
+          "connection_window_after": 8192,
+          "stream_window_after": 4096,
+          "segment_index": 4
+        }
+      ]
+    },
+    {
+      "event_index": 33,
+      "frame_seq": 34,
+      "logical_ms": 340,
+      "event_type": "WINDOW_UPDATE",
+      "source_stream_id": 5,
+      "connection_window": 5120,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 140,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 140
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 7,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 140
+        },
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": [
+        {
+          "event_index": 33,
+          "logical_ms": 340,
+          "frame_seq": 34,
+          "stream_id": 5,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 7168,
+          "stream_window_after": 7168,
+          "segment_index": 2
+        },
+        {
+          "event_index": 33,
+          "logical_ms": 340,
+          "frame_seq": 34,
+          "stream_id": 5,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 6144,
+          "stream_window_after": 6144,
+          "segment_index": 3
+        },
+        {
+          "event_index": 33,
+          "logical_ms": 340,
+          "frame_seq": 34,
+          "stream_id": 5,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 5120,
+          "stream_window_after": 5120,
+          "segment_index": 4
+        }
+      ]
+    },
+    {
+      "event_index": 34,
+      "frame_seq": 35,
+      "logical_ms": 350,
+      "event_type": "WINDOW_UPDATE",
+      "source_stream_id": 7,
+      "connection_window": 1024,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 1024,
+          "sendable_bytes": 0,
+          "pending_frames": 4,
+          "pending_bytes": 4096,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 150,
+          "reason_since_ms": {
+            "E_STREAM_WINDOW_ZERO": 150
+          },
+          "segments_total": 6,
+          "segments_sent": 1,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_STREAM_WINDOW_ZERO"
+          ],
+          "since_ms": 150
+        }
+      ],
+      "sends": [
+        {
+          "event_index": 34,
+          "logical_ms": 350,
+          "frame_seq": 35,
+          "stream_id": 7,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 4096,
+          "stream_window_after": 7168,
+          "segment_index": 1
+        },
+        {
+          "event_index": 34,
+          "logical_ms": 350,
+          "frame_seq": 35,
+          "stream_id": 7,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 3072,
+          "stream_window_after": 6144,
+          "segment_index": 2
+        },
+        {
+          "event_index": 34,
+          "logical_ms": 350,
+          "frame_seq": 35,
+          "stream_id": 7,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 2048,
+          "stream_window_after": 5120,
+          "segment_index": 3
+        },
+        {
+          "event_index": 34,
+          "logical_ms": 350,
+          "frame_seq": 35,
+          "stream_id": 7,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 1024,
+          "stream_window_after": 4096,
+          "segment_index": 4
+        }
+      ]
+    },
+    {
+      "event_index": 35,
+      "frame_seq": 36,
+      "logical_ms": 360,
+      "event_type": "WINDOW_UPDATE",
+      "source_stream_id": 9,
+      "connection_window": 0,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 7168,
+          "sent_bytes": 2048,
+          "sendable_bytes": 0,
+          "pending_frames": 3,
+          "pending_bytes": 3072,
+          "state": "BLOCKED",
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "blocked_since_ms": 360,
+          "reason_since_ms": {
+            "E_CONNECTION_WINDOW_ZERO": 360
+          },
+          "segments_total": 6,
+          "segments_sent": 2,
+          "released_credit": 0
+        }
+      ],
+      "blocked": [
+        {
+          "stream_id": 9,
+          "reasons": [
+            "E_CONNECTION_WINDOW_ZERO"
+          ],
+          "since_ms": 360
+        }
+      ],
+      "sends": [
+        {
+          "event_index": 35,
+          "logical_ms": 360,
+          "frame_seq": 36,
+          "stream_id": 9,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 0,
+          "stream_window_after": 7168,
+          "segment_index": 1
+        }
+      ]
+    },
+    {
+      "event_index": 36,
+      "frame_seq": 37,
+      "logical_ms": 370,
+      "event_type": "WINDOW_UPDATE",
+      "connection_window": 5120,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 3,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 36,
+          "logical_ms": 370,
+          "frame_seq": 37,
+          "stream_id": 9,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 7168,
+          "stream_window_after": 6144,
+          "segment_index": 2
+        },
+        {
+          "event_index": 36,
+          "logical_ms": 370,
+          "frame_seq": 37,
+          "stream_id": 9,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 6144,
+          "stream_window_after": 5120,
+          "segment_index": 3
+        },
+        {
+          "event_index": 36,
+          "logical_ms": 370,
+          "frame_seq": 37,
+          "stream_id": 9,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 5120,
+          "stream_window_after": 4096,
+          "segment_index": 4
+        }
+      ]
+    },
+    {
+      "event_index": 37,
+      "frame_seq": 38,
+      "logical_ms": 380,
+      "event_type": "RST_STREAM",
+      "source_stream_id": 3,
+      "connection_window": 5120,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "RESET",
+          "reasons": [
+            "E_STREAM_RESET"
+          ],
+          "blocked_since_ms": 380,
+          "reason_since_ms": {
+            "E_STREAM_RESET": 380
+          },
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 1,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 1,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": null,
+      "removed_stream_id": 3,
+      "removed_at_ms": 380,
+      "released_credit": 4096
+    },
+    {
+      "event_index": 38,
+      "frame_seq": 39,
+      "logical_ms": 390,
+      "event_type": "DATA",
+      "source_stream_id": 1,
+      "connection_window": 4096,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 390,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 390
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "RESET",
+          "reasons": [
+            "E_STREAM_RESET"
+          ],
+          "blocked_since_ms": 380,
+          "reason_since_ms": {
+            "E_STREAM_RESET": 380
+          },
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 5120,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 38,
+          "logical_ms": 390,
+          "frame_seq": 39,
+          "stream_id": 1,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 4096,
+          "stream_window_after": 4096,
+          "segment_index": 5
+        }
+      ]
+    },
+    {
+      "event_index": 39,
+      "frame_seq": 40,
+      "logical_ms": 400,
+      "event_type": "DATA",
+      "source_stream_id": 5,
+      "connection_window": 3072,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 390,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 390
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "RESET",
+          "reasons": [
+            "E_STREAM_RESET"
+          ],
+          "blocked_since_ms": 380,
+          "reason_since_ms": {
+            "E_STREAM_RESET": 380
+          },
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 400,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 400
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 39,
+          "logical_ms": 400,
+          "frame_seq": 40,
+          "stream_id": 5,
+          "weight_permyriad": 2000,
+          "allocated_weight": 2000,
+          "bytes_sent": 1024,
+          "connection_window_after": 3072,
+          "stream_window_after": 4096,
+          "segment_index": 5
+        }
+      ]
+    },
+    {
+      "event_index": 40,
+      "frame_seq": 41,
+      "logical_ms": 410,
+      "event_type": "DATA",
+      "source_stream_id": 7,
+      "connection_window": 2048,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 390,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 390
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "RESET",
+          "reasons": [
+            "E_STREAM_RESET"
+          ],
+          "blocked_since_ms": 380,
+          "reason_since_ms": {
+            "E_STREAM_RESET": 380
+          },
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 400,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 400
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 410,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 410
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 3072
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 4096,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "OPEN",
+          "reasons": null,
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 0
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 40,
+          "logical_ms": 410,
+          "frame_seq": 41,
+          "stream_id": 7,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 2048,
+          "stream_window_after": 3072,
+          "segment_index": 5
+        }
+      ]
+    },
+    {
+      "event_index": 41,
+      "frame_seq": 42,
+      "logical_ms": 420,
+      "event_type": "DATA",
+      "source_stream_id": 9,
+      "connection_window": 1024,
+      "connection_cap": 65536,
+      "streams": [
+        {
+          "stream_id": 1,
+          "name": "control",
+          "parent_id": 0,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 390,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 390
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 3,
+          "name": "orders",
+          "parent_id": 1,
+          "effective_parent_id": 1,
+          "weight_permyriad": 3000,
+          "window_remaining": 0,
+          "sent_bytes": 5120,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "RESET",
+          "reasons": [
+            "E_STREAM_RESET"
+          ],
+          "blocked_since_ms": 380,
+          "reason_since_ms": {
+            "E_STREAM_RESET": 380
+          },
+          "segments_total": 6,
+          "segments_sent": 5,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 5,
+          "name": "media",
+          "parent_id": 1,
+          "effective_parent_id": 0,
+          "weight_permyriad": 2000,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 400,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 400
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 4096
+        },
+        {
+          "stream_id": 7,
+          "name": "receipts",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 410,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 410
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 3072
+        },
+        {
+          "stream_id": 9,
+          "name": "audit",
+          "parent_id": 3,
+          "effective_parent_id": 0,
+          "weight_permyriad": 1500,
+          "window_remaining": 0,
+          "sent_bytes": 6144,
+          "sendable_bytes": 0,
+          "pending_frames": 0,
+          "pending_bytes": 0,
+          "state": "CLOSED",
+          "reasons": [
+            "E_STREAM_CLOSED"
+          ],
+          "blocked_since_ms": 420,
+          "reason_since_ms": {
+            "E_STREAM_CLOSED": 420
+          },
+          "segments_total": 6,
+          "segments_sent": 6,
+          "released_credit": 3072
+        }
+      ],
+      "blocked": null,
+      "sends": [
+        {
+          "event_index": 41,
+          "logical_ms": 420,
+          "frame_seq": 42,
+          "stream_id": 9,
+          "weight_permyriad": 1500,
+          "allocated_weight": 1500,
+          "bytes_sent": 1024,
+          "connection_window_after": 1024,
+          "stream_window_after": 3072,
+          "segment_index": 5
+        }
+      ]
+    }
+  ],
+  "schedule_truth": [
+    {
+      "event_index": 5,
+      "logical_ms": 60,
+      "frame_seq": 6,
+      "stream_id": 1,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 5120,
+      "stream_window_after": 1024,
+      "segment_index": 0
+    },
+    {
+      "event_index": 6,
+      "logical_ms": 70,
+      "frame_seq": 7,
+      "stream_id": 3,
+      "weight_permyriad": 3000,
+      "allocated_weight": 3000,
+      "bytes_sent": 1024,
+      "connection_window_after": 4096,
+      "stream_window_after": 0,
+      "segment_index": 0
+    },
+    {
+      "event_index": 7,
+      "logical_ms": 80,
+      "frame_seq": 8,
+      "stream_id": 5,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 3072,
+      "stream_window_after": 1024,
+      "segment_index": 0
+    },
+    {
+      "event_index": 8,
+      "logical_ms": 90,
+      "frame_seq": 9,
+      "stream_id": 7,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 2048,
+      "stream_window_after": 0,
+      "segment_index": 0
+    },
+    {
+      "event_index": 9,
+      "logical_ms": 100,
+      "frame_seq": 10,
+      "stream_id": 9,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 1024,
+      "stream_window_after": 0,
+      "segment_index": 0
+    },
+    {
+      "event_index": 10,
+      "logical_ms": 110,
+      "frame_seq": 11,
+      "stream_id": 1,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 0,
+      "stream_window_after": 0,
+      "segment_index": 1
+    },
+    {
+      "event_index": 30,
+      "logical_ms": 310,
+      "frame_seq": 31,
+      "stream_id": 5,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 15360,
+      "stream_window_after": 0,
+      "segment_index": 1
+    },
+    {
+      "event_index": 31,
+      "logical_ms": 320,
+      "frame_seq": 32,
+      "stream_id": 1,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 14336,
+      "stream_window_after": 7168,
+      "segment_index": 2
+    },
+    {
+      "event_index": 31,
+      "logical_ms": 320,
+      "frame_seq": 32,
+      "stream_id": 1,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 13312,
+      "stream_window_after": 6144,
+      "segment_index": 3
+    },
+    {
+      "event_index": 31,
+      "logical_ms": 320,
+      "frame_seq": 32,
+      "stream_id": 1,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 12288,
+      "stream_window_after": 5120,
+      "segment_index": 4
+    },
+    {
+      "event_index": 32,
+      "logical_ms": 330,
+      "frame_seq": 33,
+      "stream_id": 3,
+      "weight_permyriad": 3000,
+      "allocated_weight": 3000,
+      "bytes_sent": 1024,
+      "connection_window_after": 11264,
+      "stream_window_after": 7168,
+      "segment_index": 1
+    },
+    {
+      "event_index": 32,
+      "logical_ms": 330,
+      "frame_seq": 33,
+      "stream_id": 3,
+      "weight_permyriad": 3000,
+      "allocated_weight": 3000,
+      "bytes_sent": 1024,
+      "connection_window_after": 10240,
+      "stream_window_after": 6144,
+      "segment_index": 2
+    },
+    {
+      "event_index": 32,
+      "logical_ms": 330,
+      "frame_seq": 33,
+      "stream_id": 3,
+      "weight_permyriad": 3000,
+      "allocated_weight": 3000,
+      "bytes_sent": 1024,
+      "connection_window_after": 9216,
+      "stream_window_after": 5120,
+      "segment_index": 3
+    },
+    {
+      "event_index": 32,
+      "logical_ms": 330,
+      "frame_seq": 33,
+      "stream_id": 3,
+      "weight_permyriad": 3000,
+      "allocated_weight": 3000,
+      "bytes_sent": 1024,
+      "connection_window_after": 8192,
+      "stream_window_after": 4096,
+      "segment_index": 4
+    },
+    {
+      "event_index": 33,
+      "logical_ms": 340,
+      "frame_seq": 34,
+      "stream_id": 5,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 7168,
+      "stream_window_after": 7168,
+      "segment_index": 2
+    },
+    {
+      "event_index": 33,
+      "logical_ms": 340,
+      "frame_seq": 34,
+      "stream_id": 5,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 6144,
+      "stream_window_after": 6144,
+      "segment_index": 3
+    },
+    {
+      "event_index": 33,
+      "logical_ms": 340,
+      "frame_seq": 34,
+      "stream_id": 5,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 5120,
+      "stream_window_after": 5120,
+      "segment_index": 4
+    },
+    {
+      "event_index": 34,
+      "logical_ms": 350,
+      "frame_seq": 35,
+      "stream_id": 7,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 4096,
+      "stream_window_after": 7168,
+      "segment_index": 1
+    },
+    {
+      "event_index": 34,
+      "logical_ms": 350,
+      "frame_seq": 35,
+      "stream_id": 7,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 3072,
+      "stream_window_after": 6144,
+      "segment_index": 2
+    },
+    {
+      "event_index": 34,
+      "logical_ms": 350,
+      "frame_seq": 35,
+      "stream_id": 7,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 2048,
+      "stream_window_after": 5120,
+      "segment_index": 3
+    },
+    {
+      "event_index": 34,
+      "logical_ms": 350,
+      "frame_seq": 35,
+      "stream_id": 7,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 1024,
+      "stream_window_after": 4096,
+      "segment_index": 4
+    },
+    {
+      "event_index": 35,
+      "logical_ms": 360,
+      "frame_seq": 36,
+      "stream_id": 9,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 0,
+      "stream_window_after": 7168,
+      "segment_index": 1
+    },
+    {
+      "event_index": 36,
+      "logical_ms": 370,
+      "frame_seq": 37,
+      "stream_id": 9,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 7168,
+      "stream_window_after": 6144,
+      "segment_index": 2
+    },
+    {
+      "event_index": 36,
+      "logical_ms": 370,
+      "frame_seq": 37,
+      "stream_id": 9,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 6144,
+      "stream_window_after": 5120,
+      "segment_index": 3
+    },
+    {
+      "event_index": 36,
+      "logical_ms": 370,
+      "frame_seq": 37,
+      "stream_id": 9,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 5120,
+      "stream_window_after": 4096,
+      "segment_index": 4
+    },
+    {
+      "event_index": 38,
+      "logical_ms": 390,
+      "frame_seq": 39,
+      "stream_id": 1,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 4096,
+      "stream_window_after": 4096,
+      "segment_index": 5
+    },
+    {
+      "event_index": 39,
+      "logical_ms": 400,
+      "frame_seq": 40,
+      "stream_id": 5,
+      "weight_permyriad": 2000,
+      "allocated_weight": 2000,
+      "bytes_sent": 1024,
+      "connection_window_after": 3072,
+      "stream_window_after": 4096,
+      "segment_index": 5
+    },
+    {
+      "event_index": 40,
+      "logical_ms": 410,
+      "frame_seq": 41,
+      "stream_id": 7,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 2048,
+      "stream_window_after": 3072,
+      "segment_index": 5
+    },
+    {
+      "event_index": 41,
+      "logical_ms": 420,
+      "frame_seq": 42,
+      "stream_id": 9,
+      "weight_permyriad": 1500,
+      "allocated_weight": 1500,
+      "bytes_sent": 1024,
+      "connection_window_after": 1024,
+      "stream_window_after": 3072,
+      "segment_index": 5
+    }
+  ],
+  "numerical_cases": [
+    {
+      "name": "permille-125-to-myriad",
+      "input_permille": 125,
+      "expected_weight": 1250,
+      "tolerance_q": 0,
+      "within_tolerance": true
+    },
+    {
+      "name": "permille-333-to-myriad",
+      "input_permille": 333,
+      "expected_weight": 3330,
+      "tolerance_q": 0,
+      "within_tolerance": true
+    },
+    {
+      "name": "one-third-weight-share",
+      "stream_id": 3,
+      "input_permyriad": 1,
+      "total_weight": 3,
+      "allocated_bytes": 21845,
+      "total_bytes": 65536,
+      "truth_share_q": 21845,
+      "computed_share_q": 21845,
+      "tolerance_q": 2,
+      "within_tolerance": true
+    },
+    {
+      "name": "two-third-allocation-share",
+      "stream_id": 5,
+      "input_permyriad": 2,
+      "total_weight": 3,
+      "allocated_bytes": 43691,
+      "total_bytes": 65536,
+      "truth_share_q": 43691,
+      "computed_share_q": 43691,
+      "tolerance_q": 2,
+      "within_tolerance": true
+    },
+    {
+      "name": "seven-window-updates-exact",
+      "repeat_count": 7,
+      "increment_bytes": 1024,
+      "cap_window": 65536,
+      "expected_window": 7168,
+      "tolerance_q": 0,
+      "within_tolerance": true
+    },
+    {
+      "name": "one-thousand-one-byte-updates-exact",
+      "repeat_count": 1000,
+      "increment_bytes": 1,
+      "cap_window": 2147483647,
+      "expected_window": 1000,
+      "tolerance_q": 0,
+      "within_tolerance": true
+    },
+    {
+      "name": "window-update-saturation-boundary",
+      "repeat_count": 1,
+      "increment_bytes": 10000,
+      "start_window": 60000,
+      "cap_window": 65535,
+      "expected_window": 65535,
+      "tolerance_q": 0,
+      "within_tolerance": true
+    },
+    {
+      "name": "weight-roundtrip-100-adjustments",
+      "input_permille": 123,
+      "repeat_count": 100,
+      "expected_weight": 1230,
+      "tolerance_q": 0,
+      "within_tolerance": true
+    }
+  ],
+  "expected_error_codes": {
+    "budget_out_of_range": "E_BUDGET_RANGE",
+    "buffer_full": "E_BUFFER_FULL",
+    "checkpoint_truncated": "E_CHECKPOINT_CORRUPT",
+    "checkpoint_version": "E_CHECKPOINT_VERSION",
+    "dependency_cycle": "E_DEPENDENCY_CYCLE",
+    "frame_too_large": "E_FRAME_TOO_LARGE",
+    "incremental_mismatch": "E_INCREMENTAL_MISMATCH",
+    "negative_window": "E_WINDOW_NEGATIVE",
+    "thread_budget": "E_THREAD_BUDGET_EXHAUSTED",
+    "weight_out_of_range": "E_WEIGHT_RANGE",
+    "window_over_cap": "E_WINDOW_OVER_CAP",
+    "zero_weight": "E_WEIGHT_ZERO"
+  }
+}
