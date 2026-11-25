@@ -1,0 +1,330 @@
+{
+  "coordinate_rule": {
+    "anchor": "anchor(seq)=(3*seq,2*seq)",
+    "expression": "seq_derived_offset"
+  },
+  "height": 32,
+  "layers": {
+    "candidate_mask": "candidate.png",
+    "photo": "image.png",
+    "truth_mask": "reference.png"
+  },
+  "meta": {
+    "icon": "ring-32",
+    "seed": 424242
+  },
+  "schema": "qc.strokes.v2",
+  "strokes": [
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        19,
+        7
+      ],
+      "hardness_pm": 1000,
+      "mode": "SRC_OVER",
+      "priority": 20,
+      "radius": 3,
+      "start_off": [
+        6,
+        7
+      ],
+      "stroke_id": "ring-top",
+      "stroke_no": 1
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        16,
+        18
+      ],
+      "hardness_pm": 1000,
+      "mode": "SRC_OVER",
+      "priority": 10,
+      "radius": 3,
+      "start_off": [
+        16,
+        5
+      ],
+      "stroke_id": "ring-right",
+      "stroke_no": 2
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        13,
+        16
+      ],
+      "hardness_pm": 1000,
+      "mode": "SRC_OVER",
+      "priority": 20,
+      "radius": 3,
+      "start_off": [
+        0,
+        16
+      ],
+      "stroke_id": "ring-bottom",
+      "stroke_no": 3
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        -3,
+        14
+      ],
+      "hardness_pm": 1000,
+      "mode": "SRC_OVER",
+      "priority": 10,
+      "radius": 3,
+      "start_off": [
+        -3,
+        1
+      ],
+      "stroke_id": "ring-left",
+      "stroke_no": 4
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        -275,
+        -187
+      ],
+      "hardness_pm": 1000,
+      "mode": "DST_OUT",
+      "priority": 90,
+      "radius": 1,
+      "start_off": [
+        -275,
+        -193
+      ],
+      "stroke_id": "erase-1",
+      "stroke_no": 101
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        -291,
+        -176
+      ],
+      "hardness_pm": 1000,
+      "mode": "DST_OUT",
+      "priority": 90,
+      "radius": 1,
+      "start_off": [
+        -297,
+        -176
+      ],
+      "stroke_id": "erase-2",
+      "stroke_no": 102
+    }
+  ],
+  "truth": {
+    "domains": [
+      {
+        "area": 344,
+        "bandTolerancePermille": 100,
+        "bandWidthPixels": 11,
+        "bbox": {
+          "maxX": 25,
+          "maxY": 25,
+          "minX": 6,
+          "minY": 6
+        },
+        "centroidX1000": 15500,
+        "centroidY1000": 15500,
+        "domainId": 1,
+        "holeTolerance": 0,
+        "holes": 1
+      }
+    ],
+    "segments": [
+      {
+        "bbox": {
+          "maxX": 18,
+          "maxY": 19,
+          "minX": 13,
+          "minY": 19
+        },
+        "class": "perp_left",
+        "domainId": 1,
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 6,
+        "segmentId": "seg-d1-ring-bottom-perp_left",
+        "strokeId": "ring-bottom"
+      },
+      {
+        "bbox": {
+          "maxX": 21,
+          "maxY": 25,
+          "minX": 8,
+          "minY": 24
+        },
+        "class": "perp_right",
+        "domainId": 1,
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 13,
+        "segmentId": "seg-d1-ring-bottom-perp_right",
+        "strokeId": "ring-bottom"
+      },
+      {
+        "bbox": {
+          "maxX": 9,
+          "maxY": 25,
+          "minX": 6,
+          "minY": 22
+        },
+        "class": "reverse",
+        "domainId": 1,
+        "normalX": -1,
+        "normalY": 1,
+        "pointCount": 4,
+        "segmentId": "seg-d1-ring-bottom-reverse",
+        "strokeId": "ring-bottom"
+      },
+      {
+        "bbox": {
+          "maxX": 12,
+          "maxY": 18,
+          "minX": 12,
+          "minY": 13
+        },
+        "class": "perp_left",
+        "domainId": 1,
+        "normalX": 1,
+        "normalY": 0,
+        "pointCount": 6,
+        "segmentId": "seg-d1-ring-left-perp_left",
+        "strokeId": "ring-left"
+      },
+      {
+        "bbox": {
+          "maxX": 6,
+          "maxY": 21,
+          "minX": 6,
+          "minY": 10
+        },
+        "class": "perp_right",
+        "domainId": 1,
+        "normalX": -1,
+        "normalY": 0,
+        "pointCount": 12,
+        "segmentId": "seg-d1-ring-left-perp_right",
+        "strokeId": "ring-left"
+      },
+      {
+        "bbox": {
+          "maxX": 25,
+          "maxY": 25,
+          "minX": 22,
+          "minY": 22
+        },
+        "class": "forward",
+        "domainId": 1,
+        "normalX": 1,
+        "normalY": 1,
+        "pointCount": 4,
+        "segmentId": "seg-d1-ring-right-forward",
+        "strokeId": "ring-right"
+      },
+      {
+        "bbox": {
+          "maxX": 25,
+          "maxY": 23,
+          "minX": 24,
+          "minY": 10
+        },
+        "class": "perp_left",
+        "domainId": 1,
+        "normalX": 1,
+        "normalY": 0,
+        "pointCount": 13,
+        "segmentId": "seg-d1-ring-right-perp_left",
+        "strokeId": "ring-right"
+      },
+      {
+        "bbox": {
+          "maxX": 19,
+          "maxY": 18,
+          "minX": 19,
+          "minY": 13
+        },
+        "class": "perp_right",
+        "domainId": 1,
+        "normalX": -1,
+        "normalY": 0,
+        "pointCount": 6,
+        "segmentId": "seg-d1-ring-right-perp_right",
+        "strokeId": "ring-right"
+      },
+      {
+        "bbox": {
+          "maxX": 25,
+          "maxY": 9,
+          "minX": 22,
+          "minY": 6
+        },
+        "class": "forward",
+        "domainId": 1,
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 4,
+        "segmentId": "seg-d1-ring-top-forward",
+        "strokeId": "ring-top"
+      },
+      {
+        "bbox": {
+          "maxX": 23,
+          "maxY": 7,
+          "minX": 8,
+          "minY": 6
+        },
+        "class": "perp_left",
+        "domainId": 1,
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 14,
+        "segmentId": "seg-d1-ring-top-perp_left",
+        "strokeId": "ring-top"
+      },
+      {
+        "bbox": {
+          "maxX": 18,
+          "maxY": 12,
+          "minX": 13,
+          "minY": 12
+        },
+        "class": "perp_right",
+        "domainId": 1,
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 6,
+        "segmentId": "seg-d1-ring-top-perp_right",
+        "strokeId": "ring-top"
+      },
+      {
+        "bbox": {
+          "maxX": 9,
+          "maxY": 9,
+          "minX": 6,
+          "minY": 6
+        },
+        "class": "reverse",
+        "domainId": 1,
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 4,
+        "segmentId": "seg-d1-ring-top-reverse",
+        "strokeId": "ring-top"
+      }
+    ]
+  },
+  "width": 32
+}

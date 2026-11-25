@@ -1,0 +1,246 @@
+{
+  "assets": {
+    "candidate": "candidate.png",
+    "image": "image.png",
+    "reference": "reference.png"
+  },
+  "canvas": {
+    "h": 36,
+    "w": 48
+  },
+  "icon_id": "bars-48x36",
+  "schema": "qc.strokes.v1",
+  "seed": 424242,
+  "strokes": [
+    {
+      "brush_mode": 0,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        8,
+        10
+      ],
+      "hardness_percent": 100,
+      "id": "bar-a",
+      "ord": 1,
+      "process": 10,
+      "radius_px": 3,
+      "to_px": [
+        31,
+        10
+      ]
+    },
+    {
+      "brush_mode": 0,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        17,
+        25
+      ],
+      "hardness_percent": 100,
+      "id": "bar-b",
+      "ord": 2,
+      "process": 10,
+      "radius_px": 3,
+      "to_px": [
+        40,
+        25
+      ]
+    },
+    {
+      "brush_mode": 1,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        45,
+        9
+      ],
+      "hardness_percent": 100,
+      "id": "erase-1",
+      "ord": 101,
+      "process": 90,
+      "radius_px": 1,
+      "to_px": [
+        45,
+        17
+      ]
+    },
+    {
+      "brush_mode": 1,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        7,
+        32
+      ],
+      "hardness_percent": 100,
+      "id": "erase-2",
+      "ord": 102,
+      "process": 90,
+      "radius_px": 1,
+      "to_px": [
+        14,
+        32
+      ]
+    }
+  ],
+  "truth": {
+    "boundary_segments": [
+      {
+        "bbox": [
+          31,
+          7,
+          34,
+          13
+        ],
+        "dir_code": 1,
+        "domain_index": 1,
+        "id": "seg-d1-bar-a-forward",
+        "nx": 1,
+        "ny": -1,
+        "points": 7,
+        "stroke": "bar-a"
+      },
+      {
+        "bbox": [
+          7,
+          7,
+          32,
+          8
+        ],
+        "dir_code": 3,
+        "domain_index": 1,
+        "id": "seg-d1-bar-a-perp_left",
+        "nx": 0,
+        "ny": -1,
+        "points": 24,
+        "stroke": "bar-a"
+      },
+      {
+        "bbox": [
+          7,
+          12,
+          32,
+          13
+        ],
+        "dir_code": 4,
+        "domain_index": 1,
+        "id": "seg-d1-bar-a-perp_right",
+        "nx": 0,
+        "ny": 1,
+        "points": 24,
+        "stroke": "bar-a"
+      },
+      {
+        "bbox": [
+          5,
+          7,
+          8,
+          13
+        ],
+        "dir_code": 2,
+        "domain_index": 1,
+        "id": "seg-d1-bar-a-reverse",
+        "nx": -1,
+        "ny": -1,
+        "points": 7,
+        "stroke": "bar-a"
+      },
+      {
+        "bbox": [
+          40,
+          22,
+          43,
+          28
+        ],
+        "dir_code": 1,
+        "domain_index": 2,
+        "id": "seg-d2-bar-b-forward",
+        "nx": 1,
+        "ny": -1,
+        "points": 7,
+        "stroke": "bar-b"
+      },
+      {
+        "bbox": [
+          16,
+          22,
+          41,
+          23
+        ],
+        "dir_code": 3,
+        "domain_index": 2,
+        "id": "seg-d2-bar-b-perp_left",
+        "nx": 0,
+        "ny": -1,
+        "points": 24,
+        "stroke": "bar-b"
+      },
+      {
+        "bbox": [
+          16,
+          27,
+          41,
+          28
+        ],
+        "dir_code": 4,
+        "domain_index": 2,
+        "id": "seg-d2-bar-b-perp_right",
+        "nx": 0,
+        "ny": 1,
+        "points": 24,
+        "stroke": "bar-b"
+      },
+      {
+        "bbox": [
+          14,
+          22,
+          17,
+          28
+        ],
+        "dir_code": 2,
+        "domain_index": 2,
+        "id": "seg-d2-bar-b-reverse",
+        "nx": -1,
+        "ny": -1,
+        "points": 7,
+        "stroke": "bar-b"
+      }
+    ],
+    "domains": [
+      {
+        "area": 190,
+        "band_px": 9,
+        "band_tol_pm": 100,
+        "bbox": [
+          5,
+          7,
+          34,
+          13
+        ],
+        "cx1000": 19500,
+        "cy1000": 10000,
+        "hole_tol": 0,
+        "holes": 0,
+        "index": 1
+      },
+      {
+        "area": 190,
+        "band_px": 9,
+        "band_tol_pm": 100,
+        "bbox": [
+          14,
+          22,
+          43,
+          28
+        ],
+        "cx1000": 28500,
+        "cy1000": 25000,
+        "hole_tol": 0,
+        "holes": 0,
+        "index": 2
+      }
+    ]
+  }
+}

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>笔画方向与连通拓扑质检工作台</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>笔画方向与连通拓扑一致性工作台</h1>
+      <p>确定性种子 <code id="seed">-</code> · 三版本工程加载 · SQLite 原子检查点 · 有界并行分块</p>
+    </div>
+    <div class="top-actions">
+      <button id="refresh-state" class="secondary">刷新状态</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="card">
+        <h2>样本工程</h2>
+        <div id="project-list" class="project-list"></div>
+      </section>
+
+      <section class="card">
+        <h2>核验路径</h2>
+        <div class="button-grid">
+          <button data-mode="incremental">实时增量</button>
+          <button data-mode="resume">断点恢复</button>
+          <button data-mode="full" class="secondary">全量重算</button>
+          <button data-mode="scheduled" class="secondary">并行分块</button>
+          <button id="verify-panic" class="danger secondary">隔离 Panic 分块</button>
+        </div>
+        <p id="run-status" class="status">尚未运行。</p>
+      </section>
+
+      <section class="card">
+        <h2>笔画编辑</h2>
+        <label>笔画
+          <select id="stroke-select"></select>
+        </label>
+        <div class="grid-2">
+          <label>Sx <input id="edit-sx" type="number" /></label>
+          <label>Sy <input id="edit-sy" type="number" /></label>
+          <label>Ex <input id="edit-ex" type="number" /></label>
+          <label>Ey <input id="edit-ey" type="number" /></label>
+        </div>
+        <div class="button-grid">
+          <button id="apply-edit">应用坐标编辑</button>
+          <button id="delete-stroke" class="danger">删除该笔</button>
+          <button id="reset-project" class="secondary">恢复样本</button>
+        </div>
+        <details>
+          <summary>新增笔画</summary>
+          <div class="grid-2">
+            <label>ID <input id="add-id" type="text" placeholder="new-stroke" /></label>
+            <label>半径 <input id="add-radius" type="number" value="3" min="1" max="64" /></label>
+            <label>Sx <input id="add-sx" type="number" value="4" /></label>
+            <label>Sy <input id="add-sy" type="number" value="4" /></label>
+            <label>Ex <input id="add-ex" type="number" value="12" /></label>
+            <label>Ey <input id="add-ey" type="number" value="4" /></label>
+          </div>
+          <button id="add-stroke" class="secondary">新增并失效传播</button>
+        </details>
+      </section>
+
+      <section class="card">
+        <h2>分块覆盖分量</h2>
+        <label>笔画 <select id="component-stroke"></select></label>
+        <label>分块 <select id="component-tile"></select></label>
+        <div class="component-preview">
+          <img id="component-img" alt="tile coverage component" />
+        </div>
+      </section>
+    </aside>
+
+    <section class="content">
+      <div id="summary-cards" class="summary-cards"></div>
+
+      <section class="card">
+        <div class="card-title-row">
+          <h2>图像、候选、积算掩码与方向标注</h2>
+          <span id="image-meta" class="muted"></span>
+        </div>
+        <div class="image-grid">
+          <figure><figcaption>生成原图</figcaption><img id="img-image" alt="generated source" /></figure>
+          <figure><figcaption>含内缩/外溢/空洞候选</figcaption><img id="img-candidate" alt="candidate mask" /></figure>
+          <figure class="overlay-figure">
+            <figcaption>积算掩码 + 法向标注</figcaption>
+            <img id="img-accumulated" alt="accumulated mask" />
+            <canvas id="direction-overlay"></canvas>
+          </figure>
+          <figure><figcaption>解析真值参考掩码</figcaption><img id="img-reference" alt="reference mask" /></figure>
+        </div>
+      </section>
+
+      <div class="two-col">
+        <section class="card">
+          <h2>失效传播与分块预算</h2>
+          <div id="tile-map" class="tile-map"></div>
+          <div id="invalidation" class="info-block">编辑笔画后显示精确失效清单。</div>
+          <div id="scheduler-metrics" class="info-block"></div>
+        </section>
+
+        <section class="card">
+          <h2>笔画合成次序 / SQLite 提交序列</h2>
+          <ol id="stroke-sequence" class="sequence-list"></ol>
+          <div id="checkpoint-sequence" class="info-block"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>连通域与环带核验</h2>
+        <div class="table-wrap">
+          <table id="topology-table">
+            <thead><tr><th>域</th><th>面积</th><th>重心</th><th>外接框</th><th>孔洞</th><th>环带宽</th><th>结论</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>边界段方向核验</h2>
+        <div class="table-wrap compact">
+          <table id="direction-table">
+            <thead><tr><th>段</th><th>域</th><th>笔画</th><th>参考</th><th>实测</th><th>判定</th><th>点数</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>逐分块裁决依据</h2>
+        <div id="decisions" class="decisions"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

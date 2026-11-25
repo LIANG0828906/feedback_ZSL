@@ -1,0 +1,296 @@
+{
+  "assets": {
+    "candidate": "candidate.png",
+    "image": "image.png",
+    "reference": "reference.png"
+  },
+  "canvas": {
+    "height": 36,
+    "width": 48
+  },
+  "project": {
+    "id": "bars-48x36",
+    "seed": 424242
+  },
+  "schema": "qc.project.v3",
+  "strokes": [
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 31,
+          "y": 10
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 8,
+          "y": 10
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "bar-a",
+      "priority": 10,
+      "radius_px": 3,
+      "sequence": 1
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 40,
+          "y": 25
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 17,
+          "y": 25
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "bar-b",
+      "priority": 10,
+      "radius_px": 3,
+      "sequence": 2
+    },
+    {
+      "composite": {
+        "operator": "erase",
+        "role": "repair"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 45,
+          "y": 17
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 45,
+          "y": 9
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "erase-1",
+      "priority": 90,
+      "radius_px": 1,
+      "sequence": 101
+    },
+    {
+      "composite": {
+        "operator": "erase",
+        "role": "repair"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 14,
+          "y": 32
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 7,
+          "y": 32
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "erase-2",
+      "priority": 90,
+      "radius_px": 1,
+      "sequence": 102
+    }
+  ],
+  "truth": {
+    "domains": [
+      {
+        "domainId": 1,
+        "centroidX1000": 19500,
+        "centroidY1000": 10000,
+        "area": 190,
+        "bbox": {
+          "minX": 5,
+          "minY": 7,
+          "maxX": 34,
+          "maxY": 13
+        },
+        "holes": 0,
+        "bandWidthPixels": 9,
+        "holeTolerance": 0,
+        "bandTolerancePermille": 100
+      },
+      {
+        "domainId": 2,
+        "centroidX1000": 28500,
+        "centroidY1000": 25000,
+        "area": 190,
+        "bbox": {
+          "minX": 14,
+          "minY": 22,
+          "maxX": 43,
+          "maxY": 28
+        },
+        "holes": 0,
+        "bandWidthPixels": 9,
+        "holeTolerance": 0,
+        "bandTolerancePermille": 100
+      }
+    ],
+    "segments": [
+      {
+        "segmentId": "seg-d1-bar-a-forward",
+        "domainId": 1,
+        "strokeId": "bar-a",
+        "class": "forward",
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 7,
+        "bbox": {
+          "minX": 31,
+          "minY": 7,
+          "maxX": 34,
+          "maxY": 13
+        }
+      },
+      {
+        "segmentId": "seg-d1-bar-a-perp_left",
+        "domainId": 1,
+        "strokeId": "bar-a",
+        "class": "perp_left",
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 24,
+        "bbox": {
+          "minX": 7,
+          "minY": 7,
+          "maxX": 32,
+          "maxY": 8
+        }
+      },
+      {
+        "segmentId": "seg-d1-bar-a-perp_right",
+        "domainId": 1,
+        "strokeId": "bar-a",
+        "class": "perp_right",
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 24,
+        "bbox": {
+          "minX": 7,
+          "minY": 12,
+          "maxX": 32,
+          "maxY": 13
+        }
+      },
+      {
+        "segmentId": "seg-d1-bar-a-reverse",
+        "domainId": 1,
+        "strokeId": "bar-a",
+        "class": "reverse",
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 7,
+        "bbox": {
+          "minX": 5,
+          "minY": 7,
+          "maxX": 8,
+          "maxY": 13
+        }
+      },
+      {
+        "segmentId": "seg-d2-bar-b-forward",
+        "domainId": 2,
+        "strokeId": "bar-b",
+        "class": "forward",
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 7,
+        "bbox": {
+          "minX": 40,
+          "minY": 22,
+          "maxX": 43,
+          "maxY": 28
+        }
+      },
+      {
+        "segmentId": "seg-d2-bar-b-perp_left",
+        "domainId": 2,
+        "strokeId": "bar-b",
+        "class": "perp_left",
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 24,
+        "bbox": {
+          "minX": 16,
+          "minY": 22,
+          "maxX": 41,
+          "maxY": 23
+        }
+      },
+      {
+        "segmentId": "seg-d2-bar-b-perp_right",
+        "domainId": 2,
+        "strokeId": "bar-b",
+        "class": "perp_right",
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 24,
+        "bbox": {
+          "minX": 16,
+          "minY": 27,
+          "maxX": 41,
+          "maxY": 28
+        }
+      },
+      {
+        "segmentId": "seg-d2-bar-b-reverse",
+        "domainId": 2,
+        "strokeId": "bar-b",
+        "class": "reverse",
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 7,
+        "bbox": {
+          "minX": 14,
+          "minY": 22,
+          "maxX": 17,
+          "maxY": 28
+        }
+      }
+    ]
+  }
+}

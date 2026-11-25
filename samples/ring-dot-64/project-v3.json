@@ -1,0 +1,506 @@
+{
+  "assets": {
+    "candidate": "candidate.png",
+    "image": "image.png",
+    "reference": "reference.png"
+  },
+  "canvas": {
+    "height": 64,
+    "width": 64
+  },
+  "project": {
+    "id": "ring-dot-64",
+    "seed": 424242
+  },
+  "schema": "qc.project.v3",
+  "strokes": [
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 45,
+          "y": 18
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 18,
+          "y": 18
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "big-top",
+      "priority": 10,
+      "radius_px": 5,
+      "sequence": 1
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 45,
+          "y": 45
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 45,
+          "y": 18
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "big-right",
+      "priority": 10,
+      "radius_px": 5,
+      "sequence": 2
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 45,
+          "y": 45
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 18,
+          "y": 45
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "big-bottom",
+      "priority": 10,
+      "radius_px": 5,
+      "sequence": 3
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 18,
+          "y": 45
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 18,
+          "y": 18
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "big-left",
+      "priority": 10,
+      "radius_px": 5,
+      "sequence": 4
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 21,
+          "y": 59
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 10,
+          "y": 55
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "small-bar",
+      "priority": 20,
+      "radius_px": 3,
+      "sequence": 5
+    },
+    {
+      "composite": {
+        "operator": "erase",
+        "role": "repair"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 57,
+          "y": 31
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 57,
+          "y": 20
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "erase-1",
+      "priority": 90,
+      "radius_px": 1,
+      "sequence": 101
+    },
+    {
+      "composite": {
+        "operator": "erase",
+        "role": "repair"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 16,
+          "y": 8
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 8,
+          "y": 8
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "erase-2",
+      "priority": 90,
+      "radius_px": 1,
+      "sequence": 102
+    }
+  ],
+  "truth": {
+    "domains": [
+      {
+        "domainId": 1,
+        "centroidX1000": 31500,
+        "centroidY1000": 31500,
+        "area": 1148,
+        "bbox": {
+          "minX": 13,
+          "minY": 13,
+          "maxX": 50,
+          "maxY": 50
+        },
+        "holes": 1,
+        "bandWidthPixels": 17,
+        "holeTolerance": 0,
+        "bandTolerancePermille": 100
+      },
+      {
+        "domainId": 2,
+        "centroidX1000": 15500,
+        "centroidY1000": 57000,
+        "area": 100,
+        "bbox": {
+          "minX": 7,
+          "minY": 52,
+          "maxX": 24,
+          "maxY": 62
+        },
+        "holes": 0,
+        "bandWidthPixels": 9,
+        "holeTolerance": 0,
+        "bandTolerancePermille": 100
+      }
+    ],
+    "segments": [
+      {
+        "segmentId": "seg-d1-big-bottom-perp_left",
+        "domainId": 1,
+        "strokeId": "big-bottom",
+        "class": "perp_left",
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 16,
+        "bbox": {
+          "minX": 24,
+          "minY": 40,
+          "maxX": 39,
+          "maxY": 40
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-bottom-perp_right",
+        "domainId": 1,
+        "strokeId": "big-bottom",
+        "class": "perp_right",
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 28,
+        "bbox": {
+          "minX": 16,
+          "minY": 49,
+          "maxX": 44,
+          "maxY": 50
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-bottom-reverse",
+        "domainId": 1,
+        "strokeId": "big-bottom",
+        "class": "reverse",
+        "normalX": -1,
+        "normalY": 1,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 13,
+          "minY": 45,
+          "maxX": 18,
+          "maxY": 50
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-left-perp_left",
+        "domainId": 1,
+        "strokeId": "big-left",
+        "class": "perp_left",
+        "normalX": 1,
+        "normalY": 0,
+        "pointCount": 16,
+        "bbox": {
+          "minX": 23,
+          "minY": 24,
+          "maxX": 23,
+          "maxY": 39
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-left-perp_right",
+        "domainId": 1,
+        "strokeId": "big-left",
+        "class": "perp_right",
+        "normalX": -1,
+        "normalY": 0,
+        "pointCount": 26,
+        "bbox": {
+          "minX": 13,
+          "minY": 19,
+          "maxX": 13,
+          "maxY": 44
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-right-forward",
+        "domainId": 1,
+        "strokeId": "big-right",
+        "class": "forward",
+        "normalX": 1,
+        "normalY": 1,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 45,
+          "minY": 45,
+          "maxX": 50,
+          "maxY": 50
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-right-perp_left",
+        "domainId": 1,
+        "strokeId": "big-right",
+        "class": "perp_left",
+        "normalX": 1,
+        "normalY": 0,
+        "pointCount": 28,
+        "bbox": {
+          "minX": 49,
+          "minY": 19,
+          "maxX": 50,
+          "maxY": 47
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-right-perp_right",
+        "domainId": 1,
+        "strokeId": "big-right",
+        "class": "perp_right",
+        "normalX": -1,
+        "normalY": 0,
+        "pointCount": 16,
+        "bbox": {
+          "minX": 40,
+          "minY": 24,
+          "maxX": 40,
+          "maxY": 39
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-top-forward",
+        "domainId": 1,
+        "strokeId": "big-top",
+        "class": "forward",
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 45,
+          "minY": 13,
+          "maxX": 50,
+          "maxY": 18
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-top-perp_left",
+        "domainId": 1,
+        "strokeId": "big-top",
+        "class": "perp_left",
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 30,
+        "bbox": {
+          "minX": 16,
+          "minY": 13,
+          "maxX": 47,
+          "maxY": 14
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-top-perp_right",
+        "domainId": 1,
+        "strokeId": "big-top",
+        "class": "perp_right",
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 16,
+        "bbox": {
+          "minX": 24,
+          "minY": 23,
+          "maxX": 39,
+          "maxY": 23
+        }
+      },
+      {
+        "segmentId": "seg-d1-big-top-reverse",
+        "domainId": 1,
+        "strokeId": "big-top",
+        "class": "reverse",
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 13,
+          "minY": 13,
+          "maxX": 18,
+          "maxY": 18
+        }
+      },
+      {
+        "segmentId": "seg-d2-small-bar-forward",
+        "domainId": 2,
+        "strokeId": "small-bar",
+        "class": "forward",
+        "normalX": 1,
+        "normalY": 1,
+        "pointCount": 4,
+        "bbox": {
+          "minX": 23,
+          "minY": 58,
+          "maxX": 24,
+          "maxY": 61
+        }
+      },
+      {
+        "segmentId": "seg-d2-small-bar-perp_left",
+        "domainId": 2,
+        "strokeId": "small-bar",
+        "class": "perp_left",
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 15,
+        "bbox": {
+          "minX": 9,
+          "minY": 52,
+          "maxX": 23,
+          "maxY": 57
+        }
+      },
+      {
+        "segmentId": "seg-d2-small-bar-perp_right",
+        "domainId": 2,
+        "strokeId": "small-bar",
+        "class": "perp_right",
+        "normalX": -1,
+        "normalY": 1,
+        "pointCount": 15,
+        "bbox": {
+          "minX": 8,
+          "minY": 57,
+          "maxX": 22,
+          "maxY": 62
+        }
+      },
+      {
+        "segmentId": "seg-d2-small-bar-reverse",
+        "domainId": 2,
+        "strokeId": "small-bar",
+        "class": "reverse",
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 4,
+        "bbox": {
+          "minX": 7,
+          "minY": 53,
+          "maxX": 8,
+          "maxY": 56
+        }
+      }
+    ]
+  }
+}

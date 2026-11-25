@@ -1,0 +1,326 @@
+{
+  "assets": {
+    "candidate": "candidate.png",
+    "image": "image.png",
+    "reference": "reference.png"
+  },
+  "canvas": {
+    "h": 32,
+    "w": 32
+  },
+  "icon_id": "ring-32",
+  "schema": "qc.strokes.v1",
+  "seed": 424242,
+  "strokes": [
+    {
+      "brush_mode": 0,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        9,
+        9
+      ],
+      "hardness_percent": 100,
+      "id": "ring-top",
+      "ord": 1,
+      "process": 20,
+      "radius_px": 3,
+      "to_px": [
+        22,
+        9
+      ]
+    },
+    {
+      "brush_mode": 0,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        22,
+        9
+      ],
+      "hardness_percent": 100,
+      "id": "ring-right",
+      "ord": 2,
+      "process": 10,
+      "radius_px": 3,
+      "to_px": [
+        22,
+        22
+      ]
+    },
+    {
+      "brush_mode": 0,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        9,
+        22
+      ],
+      "hardness_percent": 100,
+      "id": "ring-bottom",
+      "ord": 3,
+      "process": 20,
+      "radius_px": 3,
+      "to_px": [
+        22,
+        22
+      ]
+    },
+    {
+      "brush_mode": 0,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        9,
+        9
+      ],
+      "hardness_percent": 100,
+      "id": "ring-left",
+      "ord": 4,
+      "process": 10,
+      "radius_px": 3,
+      "to_px": [
+        9,
+        22
+      ]
+    },
+    {
+      "brush_mode": 1,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        28,
+        9
+      ],
+      "hardness_percent": 100,
+      "id": "erase-1",
+      "ord": 101,
+      "process": 90,
+      "radius_px": 1,
+      "to_px": [
+        28,
+        15
+      ]
+    },
+    {
+      "brush_mode": 1,
+      "coverage_permille": 1000,
+      "direction_code": 0,
+      "from_px": [
+        9,
+        28
+      ],
+      "hardness_percent": 100,
+      "id": "erase-2",
+      "ord": 102,
+      "process": 90,
+      "radius_px": 1,
+      "to_px": [
+        15,
+        28
+      ]
+    }
+  ],
+  "truth": {
+    "boundary_segments": [
+      {
+        "bbox": [
+          13,
+          19,
+          18,
+          19
+        ],
+        "dir_code": 3,
+        "domain_index": 1,
+        "id": "seg-d1-ring-bottom-perp_left",
+        "nx": 0,
+        "ny": -1,
+        "points": 6,
+        "stroke": "ring-bottom"
+      },
+      {
+        "bbox": [
+          8,
+          24,
+          21,
+          25
+        ],
+        "dir_code": 4,
+        "domain_index": 1,
+        "id": "seg-d1-ring-bottom-perp_right",
+        "nx": 0,
+        "ny": 1,
+        "points": 13,
+        "stroke": "ring-bottom"
+      },
+      {
+        "bbox": [
+          6,
+          22,
+          9,
+          25
+        ],
+        "dir_code": 2,
+        "domain_index": 1,
+        "id": "seg-d1-ring-bottom-reverse",
+        "nx": -1,
+        "ny": 1,
+        "points": 4,
+        "stroke": "ring-bottom"
+      },
+      {
+        "bbox": [
+          12,
+          13,
+          12,
+          18
+        ],
+        "dir_code": 3,
+        "domain_index": 1,
+        "id": "seg-d1-ring-left-perp_left",
+        "nx": 1,
+        "ny": 0,
+        "points": 6,
+        "stroke": "ring-left"
+      },
+      {
+        "bbox": [
+          6,
+          10,
+          6,
+          21
+        ],
+        "dir_code": 4,
+        "domain_index": 1,
+        "id": "seg-d1-ring-left-perp_right",
+        "nx": -1,
+        "ny": 0,
+        "points": 12,
+        "stroke": "ring-left"
+      },
+      {
+        "bbox": [
+          22,
+          22,
+          25,
+          25
+        ],
+        "dir_code": 1,
+        "domain_index": 1,
+        "id": "seg-d1-ring-right-forward",
+        "nx": 1,
+        "ny": 1,
+        "points": 4,
+        "stroke": "ring-right"
+      },
+      {
+        "bbox": [
+          24,
+          10,
+          25,
+          23
+        ],
+        "dir_code": 3,
+        "domain_index": 1,
+        "id": "seg-d1-ring-right-perp_left",
+        "nx": 1,
+        "ny": 0,
+        "points": 13,
+        "stroke": "ring-right"
+      },
+      {
+        "bbox": [
+          19,
+          13,
+          19,
+          18
+        ],
+        "dir_code": 4,
+        "domain_index": 1,
+        "id": "seg-d1-ring-right-perp_right",
+        "nx": -1,
+        "ny": 0,
+        "points": 6,
+        "stroke": "ring-right"
+      },
+      {
+        "bbox": [
+          22,
+          6,
+          25,
+          9
+        ],
+        "dir_code": 1,
+        "domain_index": 1,
+        "id": "seg-d1-ring-top-forward",
+        "nx": 1,
+        "ny": -1,
+        "points": 4,
+        "stroke": "ring-top"
+      },
+      {
+        "bbox": [
+          8,
+          6,
+          23,
+          7
+        ],
+        "dir_code": 3,
+        "domain_index": 1,
+        "id": "seg-d1-ring-top-perp_left",
+        "nx": 0,
+        "ny": -1,
+        "points": 14,
+        "stroke": "ring-top"
+      },
+      {
+        "bbox": [
+          13,
+          12,
+          18,
+          12
+        ],
+        "dir_code": 4,
+        "domain_index": 1,
+        "id": "seg-d1-ring-top-perp_right",
+        "nx": 0,
+        "ny": 1,
+        "points": 6,
+        "stroke": "ring-top"
+      },
+      {
+        "bbox": [
+          6,
+          6,
+          9,
+          9
+        ],
+        "dir_code": 2,
+        "domain_index": 1,
+        "id": "seg-d1-ring-top-reverse",
+        "nx": -1,
+        "ny": -1,
+        "points": 4,
+        "stroke": "ring-top"
+      }
+    ],
+    "domains": [
+      {
+        "area": 344,
+        "band_px": 11,
+        "band_tol_pm": 100,
+        "bbox": [
+          6,
+          6,
+          25,
+          25
+        ],
+        "cx1000": 15500,
+        "cy1000": 15500,
+        "hole_tol": 0,
+        "holes": 1,
+        "index": 1
+      }
+    ]
+  }
+}

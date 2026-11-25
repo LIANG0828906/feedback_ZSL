@@ -1,0 +1,400 @@
+{
+  "assets": {
+    "candidate": "candidate.png",
+    "image": "image.png",
+    "reference": "reference.png"
+  },
+  "canvas": {
+    "height": 32,
+    "width": 32
+  },
+  "project": {
+    "id": "ring-32",
+    "seed": 424242
+  },
+  "schema": "qc.project.v3",
+  "strokes": [
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 22,
+          "y": 9
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 9,
+          "y": 9
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "ring-top",
+      "priority": 20,
+      "radius_px": 3,
+      "sequence": 1
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 22,
+          "y": 22
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 22,
+          "y": 9
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "ring-right",
+      "priority": 10,
+      "radius_px": 3,
+      "sequence": 2
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 22,
+          "y": 22
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 9,
+          "y": 22
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "ring-bottom",
+      "priority": 20,
+      "radius_px": 3,
+      "sequence": 3
+    },
+    {
+      "composite": {
+        "operator": "over",
+        "role": "paint"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 9,
+          "y": 22
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 9,
+          "y": 9
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "ring-left",
+      "priority": 10,
+      "radius_px": 3,
+      "sequence": 4
+    },
+    {
+      "composite": {
+        "operator": "erase",
+        "role": "repair"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 28,
+          "y": 15
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 28,
+          "y": 9
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "erase-1",
+      "priority": 90,
+      "radius_px": 1,
+      "sequence": 101
+    },
+    {
+      "composite": {
+        "operator": "erase",
+        "role": "repair"
+      },
+      "coverage": {
+        "basis": 10000,
+        "value": 10000
+      },
+      "direction": "unknown",
+      "geometry": {
+        "end": {
+          "x": 15,
+          "y": 28
+        },
+        "expression": "absolute_pixels",
+        "start": {
+          "x": 9,
+          "y": 28
+        }
+      },
+      "hardness": {
+        "basis": 1000,
+        "value": 1000
+      },
+      "id": "erase-2",
+      "priority": 90,
+      "radius_px": 1,
+      "sequence": 102
+    }
+  ],
+  "truth": {
+    "domains": [
+      {
+        "domainId": 1,
+        "centroidX1000": 15500,
+        "centroidY1000": 15500,
+        "area": 344,
+        "bbox": {
+          "minX": 6,
+          "minY": 6,
+          "maxX": 25,
+          "maxY": 25
+        },
+        "holes": 1,
+        "bandWidthPixels": 11,
+        "holeTolerance": 0,
+        "bandTolerancePermille": 100
+      }
+    ],
+    "segments": [
+      {
+        "segmentId": "seg-d1-ring-bottom-perp_left",
+        "domainId": 1,
+        "strokeId": "ring-bottom",
+        "class": "perp_left",
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 13,
+          "minY": 19,
+          "maxX": 18,
+          "maxY": 19
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-bottom-perp_right",
+        "domainId": 1,
+        "strokeId": "ring-bottom",
+        "class": "perp_right",
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 13,
+        "bbox": {
+          "minX": 8,
+          "minY": 24,
+          "maxX": 21,
+          "maxY": 25
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-bottom-reverse",
+        "domainId": 1,
+        "strokeId": "ring-bottom",
+        "class": "reverse",
+        "normalX": -1,
+        "normalY": 1,
+        "pointCount": 4,
+        "bbox": {
+          "minX": 6,
+          "minY": 22,
+          "maxX": 9,
+          "maxY": 25
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-left-perp_left",
+        "domainId": 1,
+        "strokeId": "ring-left",
+        "class": "perp_left",
+        "normalX": 1,
+        "normalY": 0,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 12,
+          "minY": 13,
+          "maxX": 12,
+          "maxY": 18
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-left-perp_right",
+        "domainId": 1,
+        "strokeId": "ring-left",
+        "class": "perp_right",
+        "normalX": -1,
+        "normalY": 0,
+        "pointCount": 12,
+        "bbox": {
+          "minX": 6,
+          "minY": 10,
+          "maxX": 6,
+          "maxY": 21
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-right-forward",
+        "domainId": 1,
+        "strokeId": "ring-right",
+        "class": "forward",
+        "normalX": 1,
+        "normalY": 1,
+        "pointCount": 4,
+        "bbox": {
+          "minX": 22,
+          "minY": 22,
+          "maxX": 25,
+          "maxY": 25
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-right-perp_left",
+        "domainId": 1,
+        "strokeId": "ring-right",
+        "class": "perp_left",
+        "normalX": 1,
+        "normalY": 0,
+        "pointCount": 13,
+        "bbox": {
+          "minX": 24,
+          "minY": 10,
+          "maxX": 25,
+          "maxY": 23
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-right-perp_right",
+        "domainId": 1,
+        "strokeId": "ring-right",
+        "class": "perp_right",
+        "normalX": -1,
+        "normalY": 0,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 19,
+          "minY": 13,
+          "maxX": 19,
+          "maxY": 18
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-top-forward",
+        "domainId": 1,
+        "strokeId": "ring-top",
+        "class": "forward",
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 4,
+        "bbox": {
+          "minX": 22,
+          "minY": 6,
+          "maxX": 25,
+          "maxY": 9
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-top-perp_left",
+        "domainId": 1,
+        "strokeId": "ring-top",
+        "class": "perp_left",
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 14,
+        "bbox": {
+          "minX": 8,
+          "minY": 6,
+          "maxX": 23,
+          "maxY": 7
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-top-perp_right",
+        "domainId": 1,
+        "strokeId": "ring-top",
+        "class": "perp_right",
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 6,
+        "bbox": {
+          "minX": 13,
+          "minY": 12,
+          "maxX": 18,
+          "maxY": 12
+        }
+      },
+      {
+        "segmentId": "seg-d1-ring-top-reverse",
+        "domainId": 1,
+        "strokeId": "ring-top",
+        "class": "reverse",
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 4,
+        "bbox": {
+          "minX": 6,
+          "minY": 6,
+          "maxX": 9,
+          "maxY": 9
+        }
+      }
+    ]
+  }
+}

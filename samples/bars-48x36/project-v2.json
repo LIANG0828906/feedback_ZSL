@@ -1,0 +1,250 @@
+{
+  "coordinate_rule": {
+    "anchor": "anchor(seq)=(3*seq,2*seq)",
+    "expression": "seq_derived_offset"
+  },
+  "height": 36,
+  "layers": {
+    "candidate_mask": "candidate.png",
+    "photo": "image.png",
+    "truth_mask": "reference.png"
+  },
+  "meta": {
+    "icon": "bars-48x36",
+    "seed": 424242
+  },
+  "schema": "qc.strokes.v2",
+  "strokes": [
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        28,
+        8
+      ],
+      "hardness_pm": 1000,
+      "mode": "SRC_OVER",
+      "priority": 10,
+      "radius": 3,
+      "start_off": [
+        5,
+        8
+      ],
+      "stroke_id": "bar-a",
+      "stroke_no": 1
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        34,
+        21
+      ],
+      "hardness_pm": 1000,
+      "mode": "SRC_OVER",
+      "priority": 10,
+      "radius": 3,
+      "start_off": [
+        11,
+        21
+      ],
+      "stroke_id": "bar-b",
+      "stroke_no": 2
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        -258,
+        -185
+      ],
+      "hardness_pm": 1000,
+      "mode": "DST_OUT",
+      "priority": 90,
+      "radius": 1,
+      "start_off": [
+        -258,
+        -193
+      ],
+      "stroke_id": "erase-1",
+      "stroke_no": 101
+    },
+    {
+      "coverage_bp": 10000,
+      "direction": "UNK",
+      "end_off": [
+        -292,
+        -172
+      ],
+      "hardness_pm": 1000,
+      "mode": "DST_OUT",
+      "priority": 90,
+      "radius": 1,
+      "start_off": [
+        -299,
+        -172
+      ],
+      "stroke_id": "erase-2",
+      "stroke_no": 102
+    }
+  ],
+  "truth": {
+    "domains": [
+      {
+        "area": 190,
+        "bandTolerancePermille": 100,
+        "bandWidthPixels": 9,
+        "bbox": {
+          "maxX": 34,
+          "maxY": 13,
+          "minX": 5,
+          "minY": 7
+        },
+        "centroidX1000": 19500,
+        "centroidY1000": 10000,
+        "domainId": 1,
+        "holeTolerance": 0,
+        "holes": 0
+      },
+      {
+        "area": 190,
+        "bandTolerancePermille": 100,
+        "bandWidthPixels": 9,
+        "bbox": {
+          "maxX": 43,
+          "maxY": 28,
+          "minX": 14,
+          "minY": 22
+        },
+        "centroidX1000": 28500,
+        "centroidY1000": 25000,
+        "domainId": 2,
+        "holeTolerance": 0,
+        "holes": 0
+      }
+    ],
+    "segments": [
+      {
+        "bbox": {
+          "maxX": 34,
+          "maxY": 13,
+          "minX": 31,
+          "minY": 7
+        },
+        "class": "forward",
+        "domainId": 1,
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 7,
+        "segmentId": "seg-d1-bar-a-forward",
+        "strokeId": "bar-a"
+      },
+      {
+        "bbox": {
+          "maxX": 32,
+          "maxY": 8,
+          "minX": 7,
+          "minY": 7
+        },
+        "class": "perp_left",
+        "domainId": 1,
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 24,
+        "segmentId": "seg-d1-bar-a-perp_left",
+        "strokeId": "bar-a"
+      },
+      {
+        "bbox": {
+          "maxX": 32,
+          "maxY": 13,
+          "minX": 7,
+          "minY": 12
+        },
+        "class": "perp_right",
+        "domainId": 1,
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 24,
+        "segmentId": "seg-d1-bar-a-perp_right",
+        "strokeId": "bar-a"
+      },
+      {
+        "bbox": {
+          "maxX": 8,
+          "maxY": 13,
+          "minX": 5,
+          "minY": 7
+        },
+        "class": "reverse",
+        "domainId": 1,
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 7,
+        "segmentId": "seg-d1-bar-a-reverse",
+        "strokeId": "bar-a"
+      },
+      {
+        "bbox": {
+          "maxX": 43,
+          "maxY": 28,
+          "minX": 40,
+          "minY": 22
+        },
+        "class": "forward",
+        "domainId": 2,
+        "normalX": 1,
+        "normalY": -1,
+        "pointCount": 7,
+        "segmentId": "seg-d2-bar-b-forward",
+        "strokeId": "bar-b"
+      },
+      {
+        "bbox": {
+          "maxX": 41,
+          "maxY": 23,
+          "minX": 16,
+          "minY": 22
+        },
+        "class": "perp_left",
+        "domainId": 2,
+        "normalX": 0,
+        "normalY": -1,
+        "pointCount": 24,
+        "segmentId": "seg-d2-bar-b-perp_left",
+        "strokeId": "bar-b"
+      },
+      {
+        "bbox": {
+          "maxX": 41,
+          "maxY": 28,
+          "minX": 16,
+          "minY": 27
+        },
+        "class": "perp_right",
+        "domainId": 2,
+        "normalX": 0,
+        "normalY": 1,
+        "pointCount": 24,
+        "segmentId": "seg-d2-bar-b-perp_right",
+        "strokeId": "bar-b"
+      },
+      {
+        "bbox": {
+          "maxX": 17,
+          "maxY": 28,
+          "minX": 14,
+          "minY": 22
+        },
+        "class": "reverse",
+        "domainId": 2,
+        "normalX": -1,
+        "normalY": -1,
+        "pointCount": 7,
+        "segmentId": "seg-d2-bar-b-reverse",
+        "strokeId": "bar-b"
+      }
+    ]
+  },
+  "width": 48
+}
