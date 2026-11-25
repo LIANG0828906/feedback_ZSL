@@ -1,22 +1,243 @@
-边缘网关的 QoS 流量整形还没有任何可执行实现，新分配到的 Linux（WSL Ubuntu）工位上只有 Go 工具链和一个尚未初始化的空目录，没有源码、样本与既有运维口径可继承。首个可验收版本要在接入真实网关之前，把出向队列的整形链路独立做成可集成组件与本地可重复演示：同一份整形工程以三个 schema 版本描述同一内容，差异体现在字段命名、整形参数表达（平坦整流量表与按通道分组的参数树）、速率与桶容量单位（千分比与万分比刻度、包数与等价字节）、时间基准（tick 与毫秒、绝对到期时刻与剩余时长）以及可选优先级提升字段的有无上。每份工程声明若干通道（每通道一条出向队列、整形速率刻度、突发桶容量、丢弃与延后策略），一批按逻辑时刻到达的报文（带通道归属、包长、优先级与可选 DSCP 类标），并直接记录逐时刻解析真值：各通道令牌余量、被整形延后的报文集合与延后时长、被丢弃集合及丢弃原因、最终发出的报文序列。确定性样本生成器由实现自行编写，按固定种子产出工程、报文流与真值。
+# Edge QoS Shaper
 
-任务环境与准备：
-在 Linux（WSL Ubuntu）上安装 Go 1.22 或以上版本，确认 go 命令可用。
-创建空工作目录并在其中执行 go mod init 初始化模块，不预置任何源码与样本。
-确认本地可读写当前目录用于 SQLite 检查点文件，无需网络、数据库服务或外部账号。
-不以容器方式运行；样本与解析真值由实现自带的确定性生成器按固定种子在本地产出。
+可在本地独立运行、可嵌入集成的出向 QoS 队列整形组件。实现以 Go 1.22 编写，
+通过 SQLite 持久化提交点，不依赖容器、数据库服务、外部账号或运行时网络。
 
-业务要求：
-1. 实现覆盖三个 schema 版本的整形工程装载器，把字段命名、整流量表与按通道分组参数树、千分比与万分比速率刻度、包数与等价字节的桶容量及水位表达、tick 与毫秒的绝对到期时刻与剩余时长、可选优先级提升字段统一映射为内部通道模型，保证同一工程经三个版本装载后的通道顺序、桶容量与速率刻度完全一致；字段冲突无法消歧时按声明规则给出可定位失败。
-2. 实现按逻辑时刻推进的令牌桶演进：依据归一后的速率与桶容量逐时刻补充与消耗令牌，令牌不足时按通道声明的丢弃或延后策略处理报文，逐时刻输出各通道令牌余量、被延后与丢弃的报文集合及原因编号；令牌余量不得为负也不得溢出桶容量，同一报文在三个版本换算后必须得到同一处置结论与同一延后时长。
-3. 实现跨版本速率刻度与容量单位的定点换算与误差界核验：千分比与万分比之间、包数与等价字节之间的换算全程使用声明位宽的整数运算并显式检测溢出与饱和，对生成器给出的临界用例输出补充令牌量、桶内余量与延后时长的计算值并逐项标注是否超出声明的定点容差；长时间演进不得使换算误差累积到改变处置结论。
-4. 实现多通道共享出向链路的整形编排：多通道同时可发而出口带宽预算不足以同时发出时，按通道声明的优先级与权重刻度确定发出次序与被压制通道，输出每时刻实际发出的报文序列、各通道被压制量与所依据的权重依据编号；发出序列不得违反桶容量与带宽预算，且同一时刻的裁决在多版本下逐条一致。
-5. 实现延迟队列与到期重放：被整形延后的报文须进入按到期时刻排序的延迟队列，到期时刻由归一后的整数毫秒与队列年龄刻度计算，到期报文按声明次序重新参与令牌消耗，同一报文在队列中不得出现两次；逐时刻输出延迟队列成员、到期时刻、重放序号与过期淘汰集合，重放结果须与真值逐条一致。
-6. 实现参数与报文流编辑后的增量失效：按逻辑顺序改动某通道速率刻度、桶容量、权重或追加减删报文时，只重算依赖链经过该通道的后续时刻区间、令牌余量与延迟队列成员，未受影响区间必须复用缓存结果，并输出每处结果所依据的失效来源；因令牌累积与延迟重放存在跨时刻传导，须显式给出失效传播的闭包范围。
-7. 实现被强制终止后的持久化续算：已提交时刻序号、各通道令牌余量、待到期延迟队列与工程版本按先落通道与队列状态再更新全局时刻序号的顺序写入 SQLite，使进程在任一提交点被强制终止后重启都不会读到未完成时刻；恢复只接受版本匹配的检查点，版本不匹配须从起点整段重算，可处理的退出信号须落盘到最后一个完整提交点。
-8. 交付可集成的领域组件与本地演示入口，并实现异常注入链路：演示能装载三版工程、逐时刻展示各通道令牌余量、延后与丢弃集合、发出序列与延迟队列，施加参数编辑展示失效来源与增量差异，提供从检查点恢复的对照；通过输入或参数注入负值速率、桶容量小于单包长、到期时刻倒序、越界线程与队列预算、截断的检查点与版本不匹配的工程快照，每种异常返回稳定的 E_xxx 业务码与可定位上下文，处理过程不得修改源工程数据。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+前置条件：
 
-验收：
-以本地样本验证三版工程装载一致、令牌桶与延迟重放逐时刻结果及异常业务码。
+- Linux / WSL Ubuntu
+- Go 1.22+
+- 依赖已 vendor，离线构建无需下载模块；SQLite 使用纯 Go 驱动
+
+```bash
+go version
+go test -mod=vendor ./...
+CGO_ENABLED=0 go test -mod=vendor ./...
+go run -mod=vendor ./cmd/qosdemo demo \
+  --seed 42 --out artifacts/demo
+```
+
+`demo` 会生成确定性工程、三版真值、逐时刻轨迹、增量失效报告、SQLite
+检查点恢复对照和异常注入报告。
+
+只运行异常注入：
+
+```bash
+go run -mod=vendor ./cmd/qosdemo inject \
+  --seed 42 --out artifacts/demo/injection-work
+```
+
+## 三版 Schema
+
+三版 JSON 描述同一份规范化内容，装载后 `RatePermyriad`、`CapacityBytes`、
+通道顺序、报文流摘要完全一致。`qos.v1`、`qos.v2`、`qos.v3` 分别覆盖不同的
+字段命名、参数表达、单位与时间基准。
+
+| 维度 | v1 | v2 | v3 |
+|---|---|---|---|
+| 参数表达 | 平坦 `shaping` 表 | `channels.profiles[].qos` 参数树 | 平坦 `shaping_table` |
+| 通道字段 | `queue` | `id` / `channel_id` | `channel` |
+| 速率 | `rate_permille` | `rate.permyriad` | `rate_value` + `rate_scale` |
+| 桶容量/水位 | 包数 | 字节 | `burst.packets` / `burst.bytes` |
+| 时间 | tick | 毫秒 | 毫秒 |
+| 队列年龄 | `queue_age_ticks` | `queue_age_ms` | `queue_age.remaining_ms` |
+| 权重 | 千分比 | 万分比 | `weight_scale=1000` |
+| 真值的到期时刻 | 绝对 tick | 绝对毫秒 | 剩余毫秒 |
+| 优先级提升 | 字段缺失，默认 0 | `priority_boost` 可存在 | 可选字段 |
+
+规范化内部模型：
+
+- 速率：`RatePermyriad`，单位是 `1/10000 byte/ms`。千分比乘 10，万分比不变。
+- 容量/水位：整数字节。包数乘声明的 `NominalPacketBytes`。
+- 时间：整数毫秒。tick 乘 `TickMS`；绝对时刻和剩余时长互转。
+- 权重：`WeightPermyriad`。
+- 优先级提升：缺失即为 0；DSCP 匹配时叠加到有效优先级。
+
+装载器对别名同时出现且归一后不一致的情况返回 `E_FIELD_CONFLICT`，错误对象含
+JSON 路径和冲突字段上下文。
+
+更完整的字段映射见 `docs/schema-contract.md`。
+
+## 整形语义
+
+时间按 `TickMS` 离散推进：
+
+1. 每通道使用整数分子补桶：
+   `(RatePermyriad * TickMS + Remainder) / 10000`。
+   余数保留到下一 tick，长时间运行不会累积截断误差。
+2. 桶内令牌被钳制在 `[0, CapacityBytes]`，饱和时显式记录 `Saturated`。
+3. 到期延迟报文先重放，新到报文后入队。
+4. 通道内按报文优先级、就绪时刻、声明顺序排队。
+5. 共享出口按有效优先级、权重 credit、通道声明顺序裁决。
+   - 有效优先级 = 通道优先级 + 报文优先级 + 可选 DSCP 提升。
+   - 每次裁决输出稳定 `WeightBasisID`。
+6. 每次发出同时检查令牌和出口预算，二者任一不足都不会发出。
+
+延后到期时间：
+
+```text
+deficit = packet_bytes - current_tokens
+exact_ms = ceil(deficit * 10000 / rate_permyriad)
+expire_at = now + ceil_to_quantum(exact_ms, queue_age_ms)
+```
+
+策略与原因编号：
+
+| 编号 | 原因 | 含义 |
+|---|---|---|
+| 1 | `TOKEN_SHORTAGE` | 丢弃策略下桶内令牌不足 |
+| 2 | `EGRESS_BUDGET` | 丢弃策略下共享出口预算不足 |
+| 3 | `QUEUE_EXPIRED` | 计算到期超过通道最大队列年龄 |
+| 4 | `QUEUE_DEPTH` | 通道未完成队列达到声明深度 |
+
+延迟队列按 `(expire_at, packet_seq, packet_id)` 排序，同一报文以报文 ID 去重。
+到期报文分配单调递增的 `ReplaySeq`，再次参与令牌消费；重放后仍不足时会重新
+计算到期时刻，但队列中始终只有一条记录。
+
+## 增量失效
+
+`qos.Incremental` 在每次 step 后保存引擎快照。编辑速率、容量、权重或报文流时：
+
+1. 取最早受影响的逻辑时刻，恢复其前一 step 的快照。
+2. 前缀 step 原样复用，保留原 `CacheToken`。
+3. 只重算从受影响 step 到结束的后缀。
+4. 因共享出口调度会产生跨通道传导，闭包显式包含所有通道。
+5. 报告 `StartStep/EndStep`、`ReusedSteps/RecomputedSteps`、根通道、闭包通道、
+   传播边、变化 step 与重算后未变化 step。
+
+## SQLite 检查点
+
+检查点使用 `journal_mode=WAL`、`synchronous=FULL`。提交顺序固定为：
+
+1. `checkpoint_channels` 通道令牌、余量、credit、ready 队列；
+2. `checkpoint_delays` 延迟队列；
+3. 最后更新 `checkpoint_meta` 全局 step/ms 与提交标记，然后 commit。
+
+一笔事务未 commit 时，重启看不到任何中间状态。`checkpoint_meta.state_checksum`
+同时覆盖工程摘要和快照事件；恢复仅接受工程 `Version + CanonicalDigest` 匹配的
+检查点。版本不匹配返回 `E_CHECKPOINT_VERSION`，调用方可从 step 0 全量重算。
+
+`qosdemo run` 每个完整 step 后提交，支持：
+
+```bash
+# 第 5 个提交点后 SIGKILL
+go run -mod=vendor ./cmd/qosdemo run \
+  --schema 1 --seed 42 --out artifacts/demo \
+  --checkpoint artifacts/demo/run.db --crash-after 5
+
+# 从最后完整提交点恢复
+go run -mod=vendor ./cmd/qosdemo resume \
+  --schema 1 --seed 42 --out artifacts/demo \
+  --checkpoint artifacts/demo/run.db
+```
+
+`SIGINT`/`SIGTERM` 会在循环边界把当前已完成快照再次落盘后退出。
+
+## 集成 API
+
+```go
+raw, _ := os.ReadFile("artifacts/demo/sample_v2.json")
+project, err := qos.LoadProject(raw)
+if err != nil {
+    // qos.CodeOf(err) 返回稳定业务码
+}
+
+eng, err := qos.NewEngine(project)
+if err != nil {
+    return err
+}
+result, err := eng.Run(ctx)
+
+trace, err := qos.ExecuteTrace(ctx, project)
+inc, err := qos.NewIncremental(ctx, project)
+newRate := int64(90000)
+newTrace, invalidation, err := inc.Apply(ctx, qos.Edit{
+    SourceID: "rate-edit", AtMS: 40, ChannelID: "gold",
+    RatePermyriad: &newRate,
+})
+
+store, err := qos.OpenCheckpoint("qos.db")
+err = store.Save(ctx, project, eng.Snapshot())
+snapshot, err := store.Load(ctx, project)
+resumed, status, err := qos.ResumeEngine(ctx, store, project)
+```
+
+## 确定性样本
+
+`qos.GenerateSample(ctx, seed, dir)` 使用本地 xorshift64 生成器，产物：
+
+- `sample_v1.json` / `sample_v2.json` / `sample_v3.json`
+- `truth_v1.json` / `truth_v2.json` / `truth_v3.json`
+- `stream.json`
+- `critical_cases.json`
+- `manifest.json`
+
+固定种子 42 的基准结果：
+
+- 34 个逻辑时刻
+- 15 次发出
+- 32 次延后事件（含重复延后）
+- 14 次丢弃
+- 3 次队列过期淘汰
+- 三版工程摘要均为
+  `58d10311c9e6b320f5501ef33e1e206e1ef91b753f4bc3a5c4cc73def66d5966`
+
+## 业务错误码
+
+| 错误码 | 场景 |
+|---|---|
+| `E_JSON` / `E_SCHEMA` | JSON 损坏或不支持的 schema |
+| `E_FIELD_MISSING` / `E_FIELD_TYPE` | 必填字段缺失/类型错误 |
+| `E_FIELD_CONFLICT` | 别名或单位表达归一后冲突 |
+| `E_RATE_NEGATIVE` / `E_RATE_ZERO` | 负速率/defer 使用零速率 |
+| `E_RATE_SCALE` / `E_RATE_OVERFLOW` | 非法刻度或位宽溢出 |
+| `E_BUCKET_TOO_SMALL` | 桶容量小于所属报文 |
+| `E_CAPACITY_NEGATIVE` / `E_WATERMARK_RANGE` | 容量或初始水位非法 |
+| `E_OVERFLOW` | 声明位宽下整数溢出 |
+| `E_TIME_ALIGNMENT` / `E_TIME_NEGATIVE` | 时间未对齐 tick 或为负 |
+| `E_EXPIRY_ORDER` | 真值到期时刻倒序 |
+| `E_DUPLICATE_PACKET` / `E_UNKNOWN_CHANNEL` | 报文重复或通道未知 |
+| `E_THREAD_RANGE` / `E_QUEUE_BUDGET` | worker 或队列预算越界 |
+| `E_WEIGHT_RANGE` / `E_PRIORITY_RANGE` | 权重/提升值越界 |
+| `E_POLICY` / `E_DELAY_QUEUE` | 策略或延迟队列非法 |
+| `E_DSCP_RANGE` | DSCP 不在 `[0,63]` |
+| `E_CHECKPOINT_TRUNCATED` | SQLite 文件截断或不可读 |
+| `E_CHECKPOINT_VERSION` | 工程版本/摘要不匹配 |
+| `E_CHECKPOINT_CORRUPT` | 检查点结构或校验和损坏 |
+| `E_CHECKPOINT_EMPTY` | 尚无已提交检查点 |
+| `E_EDIT_TARGET` | 增量编辑目标不存在或顺序非法 |
+| `E_HORIZON` | 到达 horizon 仍有未处理报文 |
+
+所有错误均带可选 `path` 与 `context`，不会修改输入工程字节或已缓存快照。
+
+## 验证入口
+
+```bash
+go test -mod=vendor ./... -count=1
+go test -race -mod=vendor ./qos -count=1
+go vet ./...
+go run -mod=vendor ./cmd/qosdemo demo --seed 42 --out artifacts/demo
+```
+
+本次实际验证结果记录在 `docs/acceptance.md`，完整演示输出在
+`artifacts/demo/demo_stdout.txt`。
+
+## 目录
+
+```text
+cmd/qosdemo/      本地演示和检查点运行入口
+qos/              可集成领域组件、schema、引擎、增量、SQLite、生成器
+docs/             schema 契约与验收记录
+artifacts/demo/   固定种子样本、真值、报告与演示输出
+vendor/           离线构建所需依赖
+```
+
+## 范围说明
+
+- 当前版本是单节点、确定性、整数时间的参考实现，不连接真实网关。
+- 出口预算是每逻辑 tick 的字节预算。
+- 共享调度闭包保守地覆盖所有通道，因为任一份额的发出都会影响同一出口预算。
+- vendor 目录针对验收目标 Linux/amd64 精简；在其他平台构建时先执行
+  `go mod vendor` 恢复对应平台文件。
