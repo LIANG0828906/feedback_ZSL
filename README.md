@@ -1,3 +1,40 @@
+# ReplayBench：回放规则结算组件
+
+本仓库已交付可构建的 Go 领域组件、确定性样本、SQLite 检查点、增量 DAG、有界调度器、测试与 `net/http` 诊断台。
+
+## 快速验证
+
+```bash
+go test -count=1 ./...
+go run ./cmd/replaydemo -samples-dir artifacts/samples
+go run ./cmd/replaydemo -serve -addr 127.0.0.1:18080
+```
+
+离线/纯 Go SQLite 验证：
+
+```bash
+GOPROXY=off GOFLAGS=-mod=vendor CGO_ENABLED=0 go test -count=1 ./...
+```
+
+关键产物：
+
+- `docs/DESIGN.md`：架构、需求映射、缓存键和恢复边界。
+- `docs/VERIFICATION.md`：实际测试、HTTP、SIGKILL 与离线构建记录。
+- `artifacts/verification-report.json`：CLI 一键验收报告。
+- `artifacts/samples/format-1.json`、`format-2.json`、`format-3.json`、`truth.json`：固定种子样本与真值。
+
+SIGKILL 恢复演练：
+
+```bash
+go build -o artifacts/replaydemo ./cmd/replaydemo
+./artifacts/replaydemo -db /tmp/rb.db -crash-after-window=1   # 预期 exit code 137
+./artifacts/replaydemo -db /tmp/rb.db -recover-only
+```
+
+---
+
+## 原始任务说明
+
 工作区里只有一个刚初始化的空 Go 模块，尚无任何可运行代码与样本；战斗判定组希望先把对局回放规则结算这条链路独立做出来，作为可集成的 Go 领域组件与本地可重复演示。同一场对局以三个发行格式描述同一内容，差异不在容器嵌套，而在时间字段语义上——同一整型字段在一个格式是行动权重、在另一格式是技能冷却剩余回合；同一列表字段在一个格式是技能释放序列、在另一格式是行动者排队序列；回合字段存在以回合序号与以毫秒时间戳为基准的差异；另有仅当某标志位为真才参与结算的条件技能。每份回放附带解析真值，给出逐回合生效技能、终态生命值与资源、裁决明细与胜负判定，真值仅来自生成器的解析构造，不从结算输出反推。内核需要按内部回合单位推进结算、在编辑规则后只重算受影响回合区间，并在中断后从已提交状态继续。
 
 任务环境与准备：
