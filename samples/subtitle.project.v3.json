@@ -1,0 +1,1183 @@
+{
+  "schemaVersion": "3.0.0",
+  "presentationProject": {
+    "id": "game-adept-dialogue-5eed42",
+    "deterministicSeed": 6221122,
+    "timingProfile": {
+      "sampleRateHz": 48000,
+      "framesPerSecond": 24,
+      "minimumReadableFrames": 2,
+      "quantization": "round-half-up",
+      "transitionToleranceFrames": 2
+    },
+    "outputScales": {
+      "weightUnit": "permyriad",
+      "volumeUnit": "permyriad",
+      "defaultVolume": 7200
+    },
+    "lipMapping": {
+      "encoding": "phoneme-to-category/v3",
+      "categories": [
+        {
+          "categoryId": "SIL",
+          "family": "silence",
+          "label": "silence / neutral rest"
+        },
+        {
+          "categoryId": "MBP",
+          "family": "closure",
+          "label": "bilabial closure"
+        },
+        {
+          "categoryId": "FV",
+          "family": "labiodental",
+          "label": "f/v lip bite"
+        },
+        {
+          "categoryId": "TDN",
+          "family": "alveolar",
+          "label": "tongue alveolar"
+        },
+        {
+          "categoryId": "SZ",
+          "family": "sibilant",
+          "label": "sibilant teeth"
+        },
+        {
+          "categoryId": "KG",
+          "family": "velar",
+          "label": "velar stop"
+        },
+        {
+          "categoryId": "L",
+          "family": "liquid",
+          "label": "l/r liquid"
+        },
+        {
+          "categoryId": "A",
+          "family": "vowel-open",
+          "label": "open a"
+        },
+        {
+          "categoryId": "E",
+          "family": "vowel-mid",
+          "label": "mid e"
+        },
+        {
+          "categoryId": "I",
+          "family": "vowel-front",
+          "label": "front i"
+        },
+        {
+          "categoryId": "O",
+          "family": "vowel-rounded",
+          "label": "rounded o"
+        },
+        {
+          "categoryId": "U",
+          "family": "vowel-rounded",
+          "label": "tight u"
+        },
+        {
+          "categoryId": "TR",
+          "family": "bridge",
+          "label": "deterministic transition bridge"
+        }
+      ],
+      "phonemeToCategory": {
+        "ah": "E",
+        "ao": "O",
+        "b": "MBP",
+        "d": "TDN",
+        "dh": "TDN",
+        "eh": "E",
+        "ey": "E",
+        "f": "FV",
+        "g": "KG",
+        "hh": "O",
+        "ih": "I",
+        "iy": "I",
+        "jh": "SZ",
+        "k": "KG",
+        "l": "L",
+        "n": "TDN",
+        "ow": "O",
+        "p": "MBP",
+        "r": "L",
+        "s": "SZ",
+        "sh": "SZ",
+        "sil": "SIL",
+        "t": "TDN",
+        "th": "FV",
+        "uw": "U",
+        "w": "U",
+        "z": "SZ"
+      }
+    },
+    "dialogues": [
+      {
+        "dialogueId": "D0",
+        "voiceName": "Mira",
+        "partitions": [
+          {
+            "partitionId": "D0-P0",
+            "spokenText": "Stay close.",
+            "durationMs": 1500,
+            "durationSamples": 72000,
+            "weights": [
+              {
+                "grapheme": "S",
+                "weightPermyriad": 430
+              },
+              {
+                "grapheme": "t",
+                "weightPermyriad": 940
+              },
+              {
+                "grapheme": "a",
+                "weightPermyriad": 1300
+              },
+              {
+                "grapheme": "y",
+                "weightPermyriad": 1170
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 940
+              },
+              {
+                "grapheme": "c",
+                "weightPermyriad": 1360
+              },
+              {
+                "grapheme": "l",
+                "weightPermyriad": 890
+              },
+              {
+                "grapheme": "o",
+                "weightPermyriad": 1120
+              },
+              {
+                "grapheme": "s",
+                "weightPermyriad": 620
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 410
+              },
+              {
+                "grapheme": ".",
+                "weightPermyriad": 820
+              }
+            ],
+            "phonemes": [
+              {
+                "sequence": 0,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 0,
+                "endSample": 4000,
+                "startMs": 0,
+                "endMs": 83
+              },
+              {
+                "sequence": 1,
+                "phoneme": "s",
+                "categoryId": "SZ",
+                "startSample": 4000,
+                "endSample": 10000,
+                "startMs": 83,
+                "endMs": 208
+              },
+              {
+                "sequence": 2,
+                "phoneme": "t",
+                "categoryId": "TDN",
+                "startSample": 10000,
+                "endSample": 16000,
+                "startMs": 208,
+                "endMs": 333
+              },
+              {
+                "sequence": 3,
+                "phoneme": "ey",
+                "categoryId": "E",
+                "startSample": 16000,
+                "endSample": 26000,
+                "startMs": 333,
+                "endMs": 542
+              },
+              {
+                "sequence": 4,
+                "phoneme": "iy",
+                "categoryId": "I",
+                "startSample": 26000,
+                "endSample": 34000,
+                "startMs": 542,
+                "endMs": 708
+              },
+              {
+                "sequence": 5,
+                "phoneme": "k",
+                "categoryId": "KG",
+                "startSample": 34000,
+                "endSample": 40000,
+                "startMs": 708,
+                "endMs": 833
+              },
+              {
+                "sequence": 6,
+                "phoneme": "l",
+                "categoryId": "L",
+                "startSample": 40000,
+                "endSample": 48000,
+                "startMs": 833,
+                "endMs": 1000
+              },
+              {
+                "sequence": 7,
+                "phoneme": "ow",
+                "categoryId": "O",
+                "startSample": 48000,
+                "endSample": 58000,
+                "startMs": 1000,
+                "endMs": 1208
+              },
+              {
+                "sequence": 8,
+                "phoneme": "uw",
+                "categoryId": "U",
+                "startSample": 58000,
+                "endSample": 66000,
+                "startMs": 1208,
+                "endMs": 1375
+              },
+              {
+                "sequence": 9,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 66000,
+                "endSample": 72000,
+                "startMs": 1375,
+                "endMs": 1500
+              }
+            ],
+            "transitions": [
+              {
+                "atFrame": 8,
+                "fromCategoryId": "TDN",
+                "toCategoryId": "E",
+                "bridgeCategoryId": "TR",
+                "offsetFrames": 1,
+                "reason": "non-continuous families alveolar -\u003e vowel-mid"
+              }
+            ]
+          },
+          {
+            "partitionId": "D0-P1",
+            "spokenText": "Signal weak.",
+            "durationMs": 1750,
+            "durationSamples": 84000,
+            "weights": [
+              {
+                "grapheme": "S",
+                "weightPermyriad": 500
+              },
+              {
+                "grapheme": "i",
+                "weightPermyriad": 1230
+              },
+              {
+                "grapheme": "g",
+                "weightPermyriad": 1260
+              },
+              {
+                "grapheme": "n",
+                "weightPermyriad": 680
+              },
+              {
+                "grapheme": "a",
+                "weightPermyriad": 400
+              },
+              {
+                "grapheme": "l",
+                "weightPermyriad": 860
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 560
+              },
+              {
+                "grapheme": "w",
+                "weightPermyriad": 1060
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 870
+              },
+              {
+                "grapheme": "a",
+                "weightPermyriad": 610
+              },
+              {
+                "grapheme": "k",
+                "weightPermyriad": 970
+              },
+              {
+                "grapheme": ".",
+                "weightPermyriad": 1000
+              }
+            ],
+            "phonemes": [
+              {
+                "sequence": 0,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 0,
+                "endSample": 6000,
+                "startMs": 0,
+                "endMs": 125
+              },
+              {
+                "sequence": 1,
+                "phoneme": "s",
+                "categoryId": "SZ",
+                "startSample": 6000,
+                "endSample": 12000,
+                "startMs": 125,
+                "endMs": 250
+              },
+              {
+                "sequence": 2,
+                "phoneme": "ih",
+                "categoryId": "I",
+                "startSample": 12000,
+                "endSample": 20000,
+                "startMs": 250,
+                "endMs": 417
+              },
+              {
+                "sequence": 3,
+                "phoneme": "g",
+                "categoryId": "KG",
+                "startSample": 20000,
+                "endSample": 28000,
+                "startMs": 417,
+                "endMs": 583
+              },
+              {
+                "sequence": 4,
+                "phoneme": "n",
+                "categoryId": "TDN",
+                "startSample": 28000,
+                "endSample": 36000,
+                "startMs": 583,
+                "endMs": 750
+              },
+              {
+                "sequence": 5,
+                "phoneme": "l",
+                "categoryId": "L",
+                "startSample": 36000,
+                "endSample": 44000,
+                "startMs": 750,
+                "endMs": 917
+              },
+              {
+                "sequence": 6,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 44000,
+                "endSample": 48000,
+                "startMs": 917,
+                "endMs": 1000
+              },
+              {
+                "sequence": 7,
+                "phoneme": "w",
+                "categoryId": "U",
+                "startSample": 48000,
+                "endSample": 58000,
+                "startMs": 1000,
+                "endMs": 1208
+              },
+              {
+                "sequence": 8,
+                "phoneme": "iy",
+                "categoryId": "I",
+                "startSample": 58000,
+                "endSample": 66000,
+                "startMs": 1208,
+                "endMs": 1375
+              },
+              {
+                "sequence": 9,
+                "phoneme": "k",
+                "categoryId": "KG",
+                "startSample": 66000,
+                "endSample": 74000,
+                "startMs": 1375,
+                "endMs": 1542
+              },
+              {
+                "sequence": 10,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 74000,
+                "endSample": 84000,
+                "startMs": 1542,
+                "endMs": 1750
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dialogueId": "D1",
+        "voiceName": "Narrator",
+        "partitions": [
+          {
+            "partitionId": "D1-P0",
+            "spokenText": "The gate opens.",
+            "durationMs": 2000,
+            "durationSamples": 96000,
+            "weights": [
+              {
+                "grapheme": "T",
+                "weightPermyriad": 770
+              },
+              {
+                "grapheme": "h",
+                "weightPermyriad": 630
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 770
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 970
+              },
+              {
+                "grapheme": "g",
+                "weightPermyriad": 310
+              },
+              {
+                "grapheme": "a",
+                "weightPermyriad": 920
+              },
+              {
+                "grapheme": "t",
+                "weightPermyriad": 380
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 370
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 540
+              },
+              {
+                "grapheme": "o",
+                "weightPermyriad": 680
+              },
+              {
+                "grapheme": "p",
+                "weightPermyriad": 720
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 960
+              },
+              {
+                "grapheme": "n",
+                "weightPermyriad": 880
+              },
+              {
+                "grapheme": "s",
+                "weightPermyriad": 350
+              },
+              {
+                "grapheme": ".",
+                "weightPermyriad": 750
+              }
+            ],
+            "phonemes": [
+              {
+                "sequence": 0,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 0,
+                "endSample": 6000,
+                "startMs": 0,
+                "endMs": 125
+              },
+              {
+                "sequence": 1,
+                "phoneme": "dh",
+                "categoryId": "TDN",
+                "startSample": 6000,
+                "endSample": 12000,
+                "startMs": 125,
+                "endMs": 250
+              },
+              {
+                "sequence": 2,
+                "phoneme": "ah",
+                "categoryId": "E",
+                "startSample": 12000,
+                "endSample": 20000,
+                "startMs": 250,
+                "endMs": 417
+              },
+              {
+                "sequence": 3,
+                "phoneme": "g",
+                "categoryId": "KG",
+                "startSample": 20000,
+                "endSample": 28000,
+                "startMs": 417,
+                "endMs": 583
+              },
+              {
+                "sequence": 4,
+                "phoneme": "ey",
+                "categoryId": "E",
+                "startSample": 28000,
+                "endSample": 36000,
+                "startMs": 583,
+                "endMs": 750
+              },
+              {
+                "sequence": 5,
+                "phoneme": "t",
+                "categoryId": "TDN",
+                "startSample": 36000,
+                "endSample": 42000,
+                "startMs": 750,
+                "endMs": 875
+              },
+              {
+                "sequence": 6,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 42000,
+                "endSample": 46000,
+                "startMs": 875,
+                "endMs": 958
+              },
+              {
+                "sequence": 7,
+                "phoneme": "ow",
+                "categoryId": "O",
+                "startSample": 46000,
+                "endSample": 56000,
+                "startMs": 958,
+                "endMs": 1167
+              },
+              {
+                "sequence": 8,
+                "phoneme": "p",
+                "categoryId": "MBP",
+                "startSample": 56000,
+                "endSample": 64000,
+                "startMs": 1167,
+                "endMs": 1333
+              },
+              {
+                "sequence": 9,
+                "phoneme": "eh",
+                "categoryId": "E",
+                "startSample": 64000,
+                "endSample": 72000,
+                "startMs": 1333,
+                "endMs": 1500
+              },
+              {
+                "sequence": 10,
+                "phoneme": "n",
+                "categoryId": "TDN",
+                "startSample": 72000,
+                "endSample": 78000,
+                "startMs": 1500,
+                "endMs": 1625
+              },
+              {
+                "sequence": 11,
+                "phoneme": "z",
+                "categoryId": "SZ",
+                "startSample": 78000,
+                "endSample": 84000,
+                "startMs": 1625,
+                "endMs": 1750
+              },
+              {
+                "sequence": 12,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 84000,
+                "endSample": 96000,
+                "startMs": 1750,
+                "endMs": 2000
+              }
+            ]
+          },
+          {
+            "partitionId": "D1-P1",
+            "spokenText": "Dawn breaks.",
+            "durationMs": 1750,
+            "durationSamples": 84000,
+            "weights": [
+              {
+                "grapheme": "D",
+                "weightPermyriad": 1010
+              },
+              {
+                "grapheme": "a",
+                "weightPermyriad": 810
+              },
+              {
+                "grapheme": "w",
+                "weightPermyriad": 850
+              },
+              {
+                "grapheme": "n",
+                "weightPermyriad": 360
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 990
+              },
+              {
+                "grapheme": "b",
+                "weightPermyriad": 470
+              },
+              {
+                "grapheme": "r",
+                "weightPermyriad": 460
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 1090
+              },
+              {
+                "grapheme": "a",
+                "weightPermyriad": 960
+              },
+              {
+                "grapheme": "k",
+                "weightPermyriad": 1170
+              },
+              {
+                "grapheme": "s",
+                "weightPermyriad": 1180
+              },
+              {
+                "grapheme": ".",
+                "weightPermyriad": 650
+              }
+            ],
+            "phonemes": [
+              {
+                "sequence": 0,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 0,
+                "endSample": 6000,
+                "startMs": 0,
+                "endMs": 125
+              },
+              {
+                "sequence": 1,
+                "phoneme": "d",
+                "categoryId": "TDN",
+                "startSample": 6000,
+                "endSample": 12000,
+                "startMs": 125,
+                "endMs": 250
+              },
+              {
+                "sequence": 2,
+                "phoneme": "ao",
+                "categoryId": "O",
+                "startSample": 12000,
+                "endSample": 22000,
+                "startMs": 250,
+                "endMs": 458
+              },
+              {
+                "sequence": 3,
+                "phoneme": "n",
+                "categoryId": "TDN",
+                "startSample": 22000,
+                "endSample": 28000,
+                "startMs": 458,
+                "endMs": 583
+              },
+              {
+                "sequence": 4,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 28000,
+                "endSample": 32000,
+                "startMs": 583,
+                "endMs": 667
+              },
+              {
+                "sequence": 5,
+                "phoneme": "b",
+                "categoryId": "MBP",
+                "startSample": 32000,
+                "endSample": 40000,
+                "startMs": 667,
+                "endMs": 833
+              },
+              {
+                "sequence": 6,
+                "phoneme": "r",
+                "categoryId": "L",
+                "startSample": 40000,
+                "endSample": 48000,
+                "startMs": 833,
+                "endMs": 1000
+              },
+              {
+                "sequence": 7,
+                "phoneme": "ey",
+                "categoryId": "E",
+                "startSample": 48000,
+                "endSample": 58000,
+                "startMs": 1000,
+                "endMs": 1208
+              },
+              {
+                "sequence": 8,
+                "phoneme": "k",
+                "categoryId": "KG",
+                "startSample": 58000,
+                "endSample": 66000,
+                "startMs": 1208,
+                "endMs": 1375
+              },
+              {
+                "sequence": 9,
+                "phoneme": "s",
+                "categoryId": "SZ",
+                "startSample": 66000,
+                "endSample": 72000,
+                "startMs": 1375,
+                "endMs": 1500
+              },
+              {
+                "sequence": 10,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 72000,
+                "endSample": 84000,
+                "startMs": 1500,
+                "endMs": 1750
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "dialogueId": "D2",
+        "voiceName": "Captain",
+        "partitions": [
+          {
+            "partitionId": "D2-P0",
+            "spokenText": "Three shields left.",
+            "durationMs": 2375,
+            "durationSamples": 114000,
+            "weights": [
+              {
+                "grapheme": "T",
+                "weightPermyriad": 560
+              },
+              {
+                "grapheme": "h",
+                "weightPermyriad": 370
+              },
+              {
+                "grapheme": "r",
+                "weightPermyriad": 260
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 430
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 680
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 520
+              },
+              {
+                "grapheme": "s",
+                "weightPermyriad": 700
+              },
+              {
+                "grapheme": "h",
+                "weightPermyriad": 530
+              },
+              {
+                "grapheme": "i",
+                "weightPermyriad": 820
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 410
+              },
+              {
+                "grapheme": "l",
+                "weightPermyriad": 300
+              },
+              {
+                "grapheme": "d",
+                "weightPermyriad": 680
+              },
+              {
+                "grapheme": "s",
+                "weightPermyriad": 490
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 740
+              },
+              {
+                "grapheme": "l",
+                "weightPermyriad": 610
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 390
+              },
+              {
+                "grapheme": "f",
+                "weightPermyriad": 560
+              },
+              {
+                "grapheme": "t",
+                "weightPermyriad": 600
+              },
+              {
+                "grapheme": ".",
+                "weightPermyriad": 350
+              }
+            ],
+            "phonemes": [
+              {
+                "sequence": 0,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 0,
+                "endSample": 6000,
+                "startMs": 0,
+                "endMs": 125
+              },
+              {
+                "sequence": 1,
+                "phoneme": "th",
+                "categoryId": "FV",
+                "startSample": 6000,
+                "endSample": 14000,
+                "startMs": 125,
+                "endMs": 292
+              },
+              {
+                "sequence": 2,
+                "phoneme": "r",
+                "categoryId": "L",
+                "startSample": 14000,
+                "endSample": 22000,
+                "startMs": 292,
+                "endMs": 458
+              },
+              {
+                "sequence": 3,
+                "phoneme": "iy",
+                "categoryId": "I",
+                "startSample": 22000,
+                "endSample": 32000,
+                "startMs": 458,
+                "endMs": 667
+              },
+              {
+                "sequence": 4,
+                "phoneme": "sh",
+                "categoryId": "SZ",
+                "startSample": 32000,
+                "endSample": 40000,
+                "startMs": 667,
+                "endMs": 833
+              },
+              {
+                "sequence": 5,
+                "phoneme": "iy",
+                "categoryId": "I",
+                "startSample": 40000,
+                "endSample": 50000,
+                "startMs": 833,
+                "endMs": 1042
+              },
+              {
+                "sequence": 6,
+                "phoneme": "l",
+                "categoryId": "L",
+                "startSample": 50000,
+                "endSample": 58000,
+                "startMs": 1042,
+                "endMs": 1208
+              },
+              {
+                "sequence": 7,
+                "phoneme": "d",
+                "categoryId": "TDN",
+                "startSample": 58000,
+                "endSample": 64000,
+                "startMs": 1208,
+                "endMs": 1333
+              },
+              {
+                "sequence": 8,
+                "phoneme": "z",
+                "categoryId": "SZ",
+                "startSample": 64000,
+                "endSample": 70000,
+                "startMs": 1333,
+                "endMs": 1458
+              },
+              {
+                "sequence": 9,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 70000,
+                "endSample": 74000,
+                "startMs": 1458,
+                "endMs": 1542
+              },
+              {
+                "sequence": 10,
+                "phoneme": "l",
+                "categoryId": "L",
+                "startSample": 74000,
+                "endSample": 80000,
+                "startMs": 1542,
+                "endMs": 1667
+              },
+              {
+                "sequence": 11,
+                "phoneme": "eh",
+                "categoryId": "E",
+                "startSample": 80000,
+                "endSample": 88000,
+                "startMs": 1667,
+                "endMs": 1833
+              },
+              {
+                "sequence": 12,
+                "phoneme": "f",
+                "categoryId": "FV",
+                "startSample": 88000,
+                "endSample": 96000,
+                "startMs": 1833,
+                "endMs": 2000
+              },
+              {
+                "sequence": 13,
+                "phoneme": "t",
+                "categoryId": "TDN",
+                "startSample": 96000,
+                "endSample": 102000,
+                "startMs": 2000,
+                "endMs": 2125
+              },
+              {
+                "sequence": 14,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 102000,
+                "endSample": 114000,
+                "startMs": 2125,
+                "endMs": 2375
+              }
+            ]
+          },
+          {
+            "partitionId": "D2-P1",
+            "spokenText": "Hold the ridge!",
+            "durationMs": 2000,
+            "durationSamples": 96000,
+            "weights": [
+              {
+                "grapheme": "H",
+                "weightPermyriad": 420
+              },
+              {
+                "grapheme": "o",
+                "weightPermyriad": 760
+              },
+              {
+                "grapheme": "l",
+                "weightPermyriad": 420
+              },
+              {
+                "grapheme": "d",
+                "weightPermyriad": 1120
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 430
+              },
+              {
+                "grapheme": "t",
+                "weightPermyriad": 1100
+              },
+              {
+                "grapheme": "h",
+                "weightPermyriad": 500
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 410
+              },
+              {
+                "grapheme": " ",
+                "weightPermyriad": 1030
+              },
+              {
+                "grapheme": "r",
+                "weightPermyriad": 330
+              },
+              {
+                "grapheme": "i",
+                "weightPermyriad": 820
+              },
+              {
+                "grapheme": "d",
+                "weightPermyriad": 450
+              },
+              {
+                "grapheme": "g",
+                "weightPermyriad": 740
+              },
+              {
+                "grapheme": "e",
+                "weightPermyriad": 750
+              },
+              {
+                "grapheme": "!",
+                "weightPermyriad": 720
+              }
+            ],
+            "phonemes": [
+              {
+                "sequence": 0,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 0,
+                "endSample": 6000,
+                "startMs": 0,
+                "endMs": 125
+              },
+              {
+                "sequence": 1,
+                "phoneme": "hh",
+                "categoryId": "O",
+                "startSample": 6000,
+                "endSample": 16000,
+                "startMs": 125,
+                "endMs": 333
+              },
+              {
+                "sequence": 2,
+                "phoneme": "l",
+                "categoryId": "L",
+                "startSample": 16000,
+                "endSample": 24000,
+                "startMs": 333,
+                "endMs": 500
+              },
+              {
+                "sequence": 3,
+                "phoneme": "d",
+                "categoryId": "TDN",
+                "startSample": 24000,
+                "endSample": 30000,
+                "startMs": 500,
+                "endMs": 625
+              },
+              {
+                "sequence": 4,
+                "phoneme": "dh",
+                "categoryId": "TDN",
+                "startSample": 30000,
+                "endSample": 36000,
+                "startMs": 625,
+                "endMs": 750
+              },
+              {
+                "sequence": 5,
+                "phoneme": "ah",
+                "categoryId": "E",
+                "startSample": 36000,
+                "endSample": 42000,
+                "startMs": 750,
+                "endMs": 875
+              },
+              {
+                "sequence": 6,
+                "phoneme": "r",
+                "categoryId": "L",
+                "startSample": 42000,
+                "endSample": 50000,
+                "startMs": 875,
+                "endMs": 1042
+              },
+              {
+                "sequence": 7,
+                "phoneme": "iy",
+                "categoryId": "I",
+                "startSample": 50000,
+                "endSample": 58000,
+                "startMs": 1042,
+                "endMs": 1208
+              },
+              {
+                "sequence": 8,
+                "phoneme": "jh",
+                "categoryId": "SZ",
+                "startSample": 58000,
+                "endSample": 68000,
+                "startMs": 1208,
+                "endMs": 1417
+              },
+              {
+                "sequence": 9,
+                "phoneme": "d",
+                "categoryId": "TDN",
+                "startSample": 68000,
+                "endSample": 76000,
+                "startMs": 1417,
+                "endMs": 1583
+              },
+              {
+                "sequence": 10,
+                "phoneme": "sil",
+                "categoryId": "SIL",
+                "startSample": 76000,
+                "endSample": 96000,
+                "startMs": 1583,
+                "endMs": 2000
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

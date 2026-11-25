@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>无障碍呈现内核诊断台</title>
+  <style>
+    :root { color-scheme: dark; font-family: ui-sans-serif, system-ui, "Noto Sans CJK SC", sans-serif; }
+    body { margin: 0; background: #0b1020; color: #e5eefc; }
+    header { padding: 20px 28px; background: linear-gradient(120deg,#13233d,#171a35); border-bottom: 1px solid #2b3c63; }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    h2 { margin: 24px 0 12px; font-size: 17px; color: #9ec5ff; }
+    main { padding: 0 28px 40px; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #20304f; margin-right: 6px; font-size: 12px; }
+    .ok { color: #86efac; border: 1px solid #2f7d4f; }
+    .bad { color: #fca5a5; border: 1px solid #991b1b; }
+    .warn { color: #fcd34d; }
+    .card { background: #111a2e; border: 1px solid #263653; border-radius: 12px; padding: 14px; margin: 12px 0; }
+    .card.invalid { border-color: #f59e0b; box-shadow: 0 0 0 1px rgba(245,158,11,.35) inset; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th, td { border-bottom: 1px solid #24324d; padding: 7px 8px; text-align: left; vertical-align: top; }
+    th { color: #9fb6da; background: #0e1729; position: sticky; top: 0; }
+    code { color: #b7f7d4; }
+    .track { display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 6px 0; gap: 1px; }
+    .cell { min-width: 18px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 3px; background: #243b63; white-space: nowrap; }
+    .cell.char { background: #1d4ed8; min-width: 20px; }
+    .cell.lip { background: #334155; }
+    .cell.insert { background: #b45309; outline: 1px dashed #fde68a; }
+    .interval { display: flex; align-items: center; justify-content: center; height: 26px; background: #164e63; border: 1px solid #0891b2; font-size: 12px; overflow: hidden; }
+    .muted { color: #8ea3c4; font-size: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(330px,1fr)); gap: 12px; }
+    button { background: #1d4ed8; color: white; border: 0; border-radius: 8px; padding: 7px 10px; margin: 0 6px 8px 0; cursor: pointer; }
+    button.active { background: #f59e0b; color: #111827; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .transition { border-left: 3px solid #f59e0b; padding-left: 8px; margin: 5px 0; font-size: 13px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>游戏对白 / 旁白无障碍呈现内核</h1>
+  <div id="summary" class="muted">正在加载确定性诊断状态…</div>
+</header>
+<main>
+  <section>
+    <h2>三路径与编辑步骤</h2>
+    <div id="steps"></div>
+    <div id="stepButtons"></div>
+  </section>
+
+  <section>
+    <h2>逐帧字幕与口型时间轴</h2>
+    <div id="timelines"></div>
+  </section>
+
+  <section class="grid">
+    <div class="card"><h2>跨 Schema 装载与真值</h2><div id="cross"></div></div>
+    <div class="card"><h2>异常链路定位</h2><div id="faults"></div></div>
+  </section>
+
+  <section class="grid">
+    <div class="card"><h2>SQLite 检查点</h2><div id="checkpoint"></div></div>
+    <div class="card"><h2>预算 / 排队事件</h2><div id="budget"></div></div>
+  </section>
+
+  <section>
+    <h2>依赖图与失效清单</h2>
+    <div id="graph" class="card"></div>
+  </section>
+</main>
+
+<script>
+let STATE = null;
+let selectedStep = 0;
+const $ = (id) => document.getElementById(id);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function pill(text, good) {
+  const cls = good === undefined ? "pill" : "pill " + (good ? "ok" : "bad");
+  return `<span class="${cls}">${esc(text)}</span>`;
+}
+
+function errLine(e) {
+  if (!e) return "";
+  return `<div class="bad mono">${esc(e.code)} ${esc(e.dialogue_id || "")} ${esc(e.partition_id || "")} f=${esc(e.frame)} ${esc(e.field || "")} ${esc(e.message)}</div>`;
+}
+
+function renderSummary() {
+  const v = STATE.verification;
+  $("summary").innerHTML = [
+    pill(STATE.project_id), pill("seed=" + STATE.seed),
+    pill(v && v.ok ? "三路径一致" : "存在差异", v && v.ok),
+    pill("schema 1/2/3"), pill("纯 Go SQLite / CGO-free"),
+    `<span class="pill mono">${esc(v ? v.run_id : "")}</span>`
+  ].join("");
+}
+
+function renderSteps() {
+  const steps = STATE.verification.steps || [];
+  $("stepButtons").innerHTML = steps.map((s, i) =>
+    `<button class="${i === selectedStep ? "active" : ""}" onclick="selectStep(${i})">${i}: ${esc(s.label)}</button>`).join("");
+  $("steps").innerHTML = `<table><thead><tr><th>步骤</th><th>编辑</th><th>结果</th><th>失效分区</th><th>复用分区</th><th>断点快照</th><th>首个差异</th></tr></thead><tbody>` +
+    steps.map(s => {
+      const inv = s.invalidation || {invalid: [], reused: []};
+      return `<tr>
+        <td>${s.step}</td>
+        <td class="mono">${s.edit ? esc(s.edit.kind + " " + (s.edit.dialogue_id || "") + " P" + (s.edit.partition_index ?? "") + " value=" + s.edit.value) : "initial"}</td>
+        <td>${pill(s.ok ? "E_DIFF none" : "E_DIFF", s.ok)}</td>
+        <td>${(inv.invalid || []).map(x => pill(x.partition_id, false)).join("") || "—"}</td>
+        <td>${(inv.reused || []).map(x => pill(x.partition_id, true)).join("") || "—"}</td>
+        <td>${s.resume_invalidated ? pill("旧快照整体作废", false) : pill("连续有效", true)}</td>
+        <td>${s.first_mismatch ? errLine(s.first_mismatch) : '<span class="ok">逐帧一致</span>'}</td>
+      </tr>`;
+    }).join("") + "</tbody></table>";
+}
+
+window.selectStep = (i) => { selectedStep = i; renderSteps(); renderTimelines(); };
+
+function renderTimelines() {
+  const step = STATE.verification.steps[selectedStep];
+  const invalid = new Set(((step.invalidation || {}).invalid || []).map(x => x.partition_id));
+  const results = (step.realtime && step.realtime.results) || [];
+  $("timelines").innerHTML = results.map(r => {
+    const intervals = r.char_intervals.map(x =>
+      `<div class="interval" style="flex:${x.end_frame - x.start_frame} 0 0" title="char=${x.char_index} frames [${x.start_frame},${x.end_frame})">${esc(x.char)}</div>`).join("");
+    const chars = r.char_frames.map(x =>
+      `<div class="cell char" title="frame=${x.frame} char=${x.char_index} rune=[${x.rune_start},${x.rune_end}) interval=[${x.interval_start_frame},${x.interval_end_frame})">${esc(x.char)}</div>`).join("");
+    const lips = r.lip_frames.map(x =>
+      `<div class="cell lip ${x.inserted ? "insert" : ""}" title="seq=${x.sequence_frame} base=${x.base_frame} ${esc(x.category)} / ${esc(x.family)}${x.inserted ? " TRANSITION" : ""}">${esc(x.category)}</div>`).join("");
+    const transitions = (r.transitions || []).map(t =>
+      `<div class="transition mono">${esc(t.id)} boundary=${t.boundary_frame} insert@${t.insert_at_sequence} ${esc(t.from_category)}→${esc(t.bridge_category)}→${esc(t.to_category)} · ${esc(t.rule)}</div>`).join("") || `<div class="muted">无过渡插入</div>`;
+    const compressions = (r.compressions || []).slice(0, 8).map(c =>
+      `<span class="pill warn">f${c.frame} '${esc(c.char)}' ${c.before_length}→${c.after_length}</span>`).join("");
+    return `<div class="card ${invalid.has(r.partition_id) ? "invalid" : ""}">
+      <div><strong>${esc(r.partition_id)}</strong> ${pill(r.dialogue_id)} ${pill(r.frame_count + " base frames")} ${pill(r.lip_sequence_length + " lip cells")} ${invalid.has(r.partition_id) ? pill("失效并重建", false) : pill("缓存有效/复用", true)}</div>
+      <div class="muted mono">content=${esc(r.content_hash.slice(0,16))} cache=${esc(r.cache_key.slice(0,16))} source=${esc(r.source_schema)} q=${esc(r.quant_param_version)} algo=${esc(r.algorithm_version)} digest=${esc(r.digest.slice(0,16))}</div>
+      <h2>字符区间（宽度=帧长，首尾相接）</h2><div class="track">${intervals}</div>
+      <h2>逐帧字符</h2><div class="track">${chars}</div>
+      <h2>逐帧口型 / 过渡帧</h2><div class="track">${lips}</div>
+      <h2>过渡插入位置与依据</h2>${transitions}
+      ${compressions ? `<h2>压缩记录</h2><div>${compressions}</div>` : ""}
+    </div>`;
+  }).join("");
+}
+
+function renderCross() {
+  $("cross").innerHTML = `<table><tbody>` + STATE.cross_version.map(x => `<tr>
+    <td><code>${esc(x.version)}</code></td>
+    <td>${pill(x.ok ? "真值一致" : "不一致", x.ok)}</td>
+    <td class="muted">fields=${x.trace_fields}, fills=${x.default_fills}, lossy=${x.export_lossy}</td>
+    <td>${x.load_error ? errLine(x.load_error) : ""}${x.mismatch ? errLine(x.mismatch) : ""}</td>
+  </tr>`).join("") + `</tbody></table>`;
+}
+
+function renderFaults() {
+  $("faults").innerHTML = STATE.faults.map(f =>
+    `<div class="card" style="margin:8px 0"><strong>${esc(f.name)}</strong> ${pill(f.expected_code, f.ok)}<div class="muted">inject=${esc(f.injection)}</div>${errLine(f.error)}</div>`).join("") +
+    `<h2>单分区 panic 隔离</h2><div>${STATE.isolation && STATE.isolation.errors ? Object.values(STATE.isolation.errors).map(errLine).join("") : pill("无错误", true)} <span class="muted">成功分区：${(STATE.isolation?.results||[]).map(r=>r.partition_id).join(", ")}</span></div>`;
+}
+
+function renderCheckpoint() {
+  const c = STATE.checkpoint_status || {};
+  $("checkpoint").innerHTML = `
+    <div>${pill("run_rows=" + (c.run_rows ?? 0))}${pill("cache=" + (c.cache_entries ?? 0))}${pill("last=" + (c.last_sequence ?? 0))}</div>
+    <div class="muted mono">${esc(c.path)} ${esc(c.invalid_reason || "")}</div>
+    <table><thead><tr><th>#</th><th>Partition</th><th>Digest</th><th>Versions</th><th>At</th></tr></thead><tbody>
+    ${(c.rows||[]).map(r => `<tr><td>${r.sequence_no}</td><td><code>${esc(r.partition_id)}</code></td><td class="mono">${esc(r.frame_digest.slice(0,16))}</td><td class="muted">${esc(r.source_schema)}<br>${esc(r.quant_version)}<br>${esc(r.algorithm_version)}</td><td class="muted">${esc(r.committed_at)}</td></tr>`).join("")}
+    </tbody></table>`;
+}
+
+function renderBudget() {
+  const demo = STATE.queue_budget_demo;
+  const buf = STATE.worker_buffer_demo;
+  const events = [...(demo?.queue_events||[]), ...(buf?.queue_events||[])];
+  $("budget").innerHTML = `
+    <div>${pill("maxParallel=" + (demo?.config?.max_parallel ?? ""))}${pill("queueBudget=" + (demo?.config?.queue_budget ?? ""))}${pill("maxObserved=" + (demo?.max_observed_parallel ?? ""))}</div>
+    <table><thead><tr><th>Partition</th><th>Reason</th><th>Wait ms</th></tr></thead><tbody>
+    ${events.map(e => `<tr><td><code>${esc(e.partition_id)}</code></td><td>${esc(e.reason)}</td><td class="warn">${esc(e.waited_ms)}</td></tr>`).join("")}
+    </tbody></table>`;
+}
+
+function renderGraph() {
+  const g = STATE.graph;
+  if (!g) return;
+  const nodes = Object.values(g.nodes || {});
+  const byKind = {};
+  nodes.forEach(n => byKind[n.kind] = (byKind[n.kind]||0)+1);
+  $("graph").innerHTML = `<div>${pill("nodes=" + nodes.length)}${pill("edges=" + (g.edges||[]).length)}${pill("fps=" + g.fps)}</div>
+    <div class="muted">${Object.entries(byKind).map(([k,v]) => `${k}:${v}`).join(" · ")}</div>
+    <div class="muted">显式依赖包含 segment_duration、char_weights、phoneme_boundaries、frame_rate、quantization_rule，以及 char/lip/transition/result 下游节点。编辑后的可达结果节点即失效清单。</div>`;
+}
+
+fetch("/api/state").then(r => r.json()).then(s => {
+  STATE = s;
+  renderSummary(); renderSteps(); renderTimelines(); renderCross(); renderFaults(); renderCheckpoint(); renderBudget(); renderGraph();
+}).catch(e => { $("summary").textContent = "诊断状态加载失败: " + e; });
+</script>
+</body>
+</html>

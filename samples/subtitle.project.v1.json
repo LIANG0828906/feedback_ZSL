@@ -1,0 +1,1020 @@
+{
+  "schema_name": "a11y.accessibility-plan",
+  "schema_version": "1.0.0",
+  "project_id": "game-adept-dialogue-5eed42",
+  "fixed_seed": 6221122,
+  "audio_format": {
+    "sample_rate_hz": 48000
+  },
+  "render_profile": {
+    "frames_per_second": 24,
+    "minimum_readable_frames": 2,
+    "rounding_direction": "round-half-up"
+  },
+  "default_volume_permille": 720,
+  "viseme_codebook": [
+    {
+      "viseme_id": 0,
+      "standard_code": "SIL",
+      "family": "silence",
+      "label": "silence / neutral rest"
+    },
+    {
+      "viseme_id": 1,
+      "standard_code": "MBP",
+      "family": "closure",
+      "label": "bilabial closure"
+    },
+    {
+      "viseme_id": 2,
+      "standard_code": "FV",
+      "family": "labiodental",
+      "label": "f/v lip bite"
+    },
+    {
+      "viseme_id": 3,
+      "standard_code": "TDN",
+      "family": "alveolar",
+      "label": "tongue alveolar"
+    },
+    {
+      "viseme_id": 4,
+      "standard_code": "SZ",
+      "family": "sibilant",
+      "label": "sibilant teeth"
+    },
+    {
+      "viseme_id": 5,
+      "standard_code": "KG",
+      "family": "velar",
+      "label": "velar stop"
+    },
+    {
+      "viseme_id": 6,
+      "standard_code": "L",
+      "family": "liquid",
+      "label": "l/r liquid"
+    },
+    {
+      "viseme_id": 10,
+      "standard_code": "A",
+      "family": "vowel-open",
+      "label": "open a"
+    },
+    {
+      "viseme_id": 11,
+      "standard_code": "E",
+      "family": "vowel-mid",
+      "label": "mid e"
+    },
+    {
+      "viseme_id": 12,
+      "standard_code": "I",
+      "family": "vowel-front",
+      "label": "front i"
+    },
+    {
+      "viseme_id": 13,
+      "standard_code": "O",
+      "family": "vowel-rounded",
+      "label": "rounded o"
+    },
+    {
+      "viseme_id": 14,
+      "standard_code": "U",
+      "family": "vowel-rounded",
+      "label": "tight u"
+    },
+    {
+      "viseme_id": 99,
+      "standard_code": "TR",
+      "family": "bridge",
+      "label": "deterministic transition bridge"
+    }
+  ],
+  "dialogue_cues": [
+    {
+      "cue_id": "D0",
+      "speaker_name": "Mira",
+      "lines": [
+        {
+          "line_id": "D0-P0",
+          "text_content": "Stay close.",
+          "duration_seconds": "1.500000000",
+          "character_weights": [
+            {
+              "character": "S",
+              "weight_permille": 43
+            },
+            {
+              "character": "t",
+              "weight_permille": 94
+            },
+            {
+              "character": "a",
+              "weight_permille": 130
+            },
+            {
+              "character": "y",
+              "weight_permille": 117
+            },
+            {
+              "character": " ",
+              "weight_permille": 94
+            },
+            {
+              "character": "c",
+              "weight_permille": 136
+            },
+            {
+              "character": "l",
+              "weight_permille": 89
+            },
+            {
+              "character": "o",
+              "weight_permille": 112
+            },
+            {
+              "character": "s",
+              "weight_permille": 62
+            },
+            {
+              "character": "e",
+              "weight_permille": 41
+            },
+            {
+              "character": ".",
+              "weight_permille": 82
+            }
+          ],
+          "phoneme_track": {
+            "encoding": "numeric_viseme",
+            "phonemes": [
+              {
+                "order_index": 0,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.000000000",
+                "end_seconds": "0.083333333"
+              },
+              {
+                "order_index": 1,
+                "symbol": "s",
+                "viseme_id": 4,
+                "start_seconds": "0.083333333",
+                "end_seconds": "0.208333333"
+              },
+              {
+                "order_index": 2,
+                "symbol": "t",
+                "viseme_id": 3,
+                "start_seconds": "0.208333333",
+                "end_seconds": "0.333333333"
+              },
+              {
+                "order_index": 3,
+                "symbol": "ey",
+                "viseme_id": 11,
+                "start_seconds": "0.333333333",
+                "end_seconds": "0.541666666"
+              },
+              {
+                "order_index": 4,
+                "symbol": "iy",
+                "viseme_id": 12,
+                "start_seconds": "0.541666666",
+                "end_seconds": "0.708333333"
+              },
+              {
+                "order_index": 5,
+                "symbol": "k",
+                "viseme_id": 5,
+                "start_seconds": "0.708333333",
+                "end_seconds": "0.833333333"
+              },
+              {
+                "order_index": 6,
+                "symbol": "l",
+                "viseme_id": 6,
+                "start_seconds": "0.833333333",
+                "end_seconds": "1.000000000"
+              },
+              {
+                "order_index": 7,
+                "symbol": "ow",
+                "viseme_id": 13,
+                "start_seconds": "1.000000000",
+                "end_seconds": "1.208333333"
+              },
+              {
+                "order_index": 8,
+                "symbol": "uw",
+                "viseme_id": 14,
+                "start_seconds": "1.208333333",
+                "end_seconds": "1.375000000"
+              },
+              {
+                "order_index": 9,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "1.375000000",
+                "end_seconds": "1.500000000"
+              }
+            ]
+          }
+        },
+        {
+          "line_id": "D0-P1",
+          "text_content": "Signal weak.",
+          "duration_seconds": "1.750000000",
+          "character_weights": [
+            {
+              "character": "S",
+              "weight_permille": 50
+            },
+            {
+              "character": "i",
+              "weight_permille": 123
+            },
+            {
+              "character": "g",
+              "weight_permille": 126
+            },
+            {
+              "character": "n",
+              "weight_permille": 68
+            },
+            {
+              "character": "a",
+              "weight_permille": 40
+            },
+            {
+              "character": "l",
+              "weight_permille": 86
+            },
+            {
+              "character": " ",
+              "weight_permille": 56
+            },
+            {
+              "character": "w",
+              "weight_permille": 106
+            },
+            {
+              "character": "e",
+              "weight_permille": 87
+            },
+            {
+              "character": "a",
+              "weight_permille": 61
+            },
+            {
+              "character": "k",
+              "weight_permille": 97
+            },
+            {
+              "character": ".",
+              "weight_permille": 100
+            }
+          ],
+          "phoneme_track": {
+            "encoding": "numeric_viseme",
+            "phonemes": [
+              {
+                "order_index": 0,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.000000000",
+                "end_seconds": "0.125000000"
+              },
+              {
+                "order_index": 1,
+                "symbol": "s",
+                "viseme_id": 4,
+                "start_seconds": "0.125000000",
+                "end_seconds": "0.250000000"
+              },
+              {
+                "order_index": 2,
+                "symbol": "ih",
+                "viseme_id": 12,
+                "start_seconds": "0.250000000",
+                "end_seconds": "0.416666666"
+              },
+              {
+                "order_index": 3,
+                "symbol": "g",
+                "viseme_id": 5,
+                "start_seconds": "0.416666666",
+                "end_seconds": "0.583333333"
+              },
+              {
+                "order_index": 4,
+                "symbol": "n",
+                "viseme_id": 3,
+                "start_seconds": "0.583333333",
+                "end_seconds": "0.750000000"
+              },
+              {
+                "order_index": 5,
+                "symbol": "l",
+                "viseme_id": 6,
+                "start_seconds": "0.750000000",
+                "end_seconds": "0.916666666"
+              },
+              {
+                "order_index": 6,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.916666666",
+                "end_seconds": "1.000000000"
+              },
+              {
+                "order_index": 7,
+                "symbol": "w",
+                "viseme_id": 14,
+                "start_seconds": "1.000000000",
+                "end_seconds": "1.208333333"
+              },
+              {
+                "order_index": 8,
+                "symbol": "iy",
+                "viseme_id": 12,
+                "start_seconds": "1.208333333",
+                "end_seconds": "1.375000000"
+              },
+              {
+                "order_index": 9,
+                "symbol": "k",
+                "viseme_id": 5,
+                "start_seconds": "1.375000000",
+                "end_seconds": "1.541666666"
+              },
+              {
+                "order_index": 10,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "1.541666666",
+                "end_seconds": "1.750000000"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "cue_id": "D1",
+      "speaker_name": "Narrator",
+      "lines": [
+        {
+          "line_id": "D1-P0",
+          "text_content": "The gate opens.",
+          "duration_seconds": "2.000000000",
+          "character_weights": [
+            {
+              "character": "T",
+              "weight_permille": 77
+            },
+            {
+              "character": "h",
+              "weight_permille": 63
+            },
+            {
+              "character": "e",
+              "weight_permille": 77
+            },
+            {
+              "character": " ",
+              "weight_permille": 97
+            },
+            {
+              "character": "g",
+              "weight_permille": 31
+            },
+            {
+              "character": "a",
+              "weight_permille": 92
+            },
+            {
+              "character": "t",
+              "weight_permille": 38
+            },
+            {
+              "character": "e",
+              "weight_permille": 37
+            },
+            {
+              "character": " ",
+              "weight_permille": 54
+            },
+            {
+              "character": "o",
+              "weight_permille": 68
+            },
+            {
+              "character": "p",
+              "weight_permille": 72
+            },
+            {
+              "character": "e",
+              "weight_permille": 96
+            },
+            {
+              "character": "n",
+              "weight_permille": 88
+            },
+            {
+              "character": "s",
+              "weight_permille": 35
+            },
+            {
+              "character": ".",
+              "weight_permille": 75
+            }
+          ],
+          "phoneme_track": {
+            "encoding": "numeric_viseme",
+            "phonemes": [
+              {
+                "order_index": 0,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.000000000",
+                "end_seconds": "0.125000000"
+              },
+              {
+                "order_index": 1,
+                "symbol": "dh",
+                "viseme_id": 3,
+                "start_seconds": "0.125000000",
+                "end_seconds": "0.250000000"
+              },
+              {
+                "order_index": 2,
+                "symbol": "ah",
+                "viseme_id": 11,
+                "start_seconds": "0.250000000",
+                "end_seconds": "0.416666666"
+              },
+              {
+                "order_index": 3,
+                "symbol": "g",
+                "viseme_id": 5,
+                "start_seconds": "0.416666666",
+                "end_seconds": "0.583333333"
+              },
+              {
+                "order_index": 4,
+                "symbol": "ey",
+                "viseme_id": 11,
+                "start_seconds": "0.583333333",
+                "end_seconds": "0.750000000"
+              },
+              {
+                "order_index": 5,
+                "symbol": "t",
+                "viseme_id": 3,
+                "start_seconds": "0.750000000",
+                "end_seconds": "0.875000000"
+              },
+              {
+                "order_index": 6,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.875000000",
+                "end_seconds": "0.958333333"
+              },
+              {
+                "order_index": 7,
+                "symbol": "ow",
+                "viseme_id": 13,
+                "start_seconds": "0.958333333",
+                "end_seconds": "1.166666666"
+              },
+              {
+                "order_index": 8,
+                "symbol": "p",
+                "viseme_id": 1,
+                "start_seconds": "1.166666666",
+                "end_seconds": "1.333333333"
+              },
+              {
+                "order_index": 9,
+                "symbol": "eh",
+                "viseme_id": 11,
+                "start_seconds": "1.333333333",
+                "end_seconds": "1.500000000"
+              },
+              {
+                "order_index": 10,
+                "symbol": "n",
+                "viseme_id": 3,
+                "start_seconds": "1.500000000",
+                "end_seconds": "1.625000000"
+              },
+              {
+                "order_index": 11,
+                "symbol": "z",
+                "viseme_id": 4,
+                "start_seconds": "1.625000000",
+                "end_seconds": "1.750000000"
+              },
+              {
+                "order_index": 12,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "1.750000000",
+                "end_seconds": "2.000000000"
+              }
+            ]
+          }
+        },
+        {
+          "line_id": "D1-P1",
+          "text_content": "Dawn breaks.",
+          "duration_seconds": "1.750000000",
+          "character_weights": [
+            {
+              "character": "D",
+              "weight_permille": 101
+            },
+            {
+              "character": "a",
+              "weight_permille": 81
+            },
+            {
+              "character": "w",
+              "weight_permille": 85
+            },
+            {
+              "character": "n",
+              "weight_permille": 36
+            },
+            {
+              "character": " ",
+              "weight_permille": 99
+            },
+            {
+              "character": "b",
+              "weight_permille": 47
+            },
+            {
+              "character": "r",
+              "weight_permille": 46
+            },
+            {
+              "character": "e",
+              "weight_permille": 109
+            },
+            {
+              "character": "a",
+              "weight_permille": 96
+            },
+            {
+              "character": "k",
+              "weight_permille": 117
+            },
+            {
+              "character": "s",
+              "weight_permille": 118
+            },
+            {
+              "character": ".",
+              "weight_permille": 65
+            }
+          ],
+          "phoneme_track": {
+            "encoding": "numeric_viseme",
+            "phonemes": [
+              {
+                "order_index": 0,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.000000000",
+                "end_seconds": "0.125000000"
+              },
+              {
+                "order_index": 1,
+                "symbol": "d",
+                "viseme_id": 3,
+                "start_seconds": "0.125000000",
+                "end_seconds": "0.250000000"
+              },
+              {
+                "order_index": 2,
+                "symbol": "ao",
+                "viseme_id": 13,
+                "start_seconds": "0.250000000",
+                "end_seconds": "0.458333333"
+              },
+              {
+                "order_index": 3,
+                "symbol": "n",
+                "viseme_id": 3,
+                "start_seconds": "0.458333333",
+                "end_seconds": "0.583333333"
+              },
+              {
+                "order_index": 4,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.583333333",
+                "end_seconds": "0.666666666"
+              },
+              {
+                "order_index": 5,
+                "symbol": "b",
+                "viseme_id": 1,
+                "start_seconds": "0.666666666",
+                "end_seconds": "0.833333333"
+              },
+              {
+                "order_index": 6,
+                "symbol": "r",
+                "viseme_id": 6,
+                "start_seconds": "0.833333333",
+                "end_seconds": "1.000000000"
+              },
+              {
+                "order_index": 7,
+                "symbol": "ey",
+                "viseme_id": 11,
+                "start_seconds": "1.000000000",
+                "end_seconds": "1.208333333"
+              },
+              {
+                "order_index": 8,
+                "symbol": "k",
+                "viseme_id": 5,
+                "start_seconds": "1.208333333",
+                "end_seconds": "1.375000000"
+              },
+              {
+                "order_index": 9,
+                "symbol": "s",
+                "viseme_id": 4,
+                "start_seconds": "1.375000000",
+                "end_seconds": "1.500000000"
+              },
+              {
+                "order_index": 10,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "1.500000000",
+                "end_seconds": "1.750000000"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "cue_id": "D2",
+      "speaker_name": "Captain",
+      "lines": [
+        {
+          "line_id": "D2-P0",
+          "text_content": "Three shields left.",
+          "duration_seconds": "2.375000000",
+          "character_weights": [
+            {
+              "character": "T",
+              "weight_permille": 56
+            },
+            {
+              "character": "h",
+              "weight_permille": 37
+            },
+            {
+              "character": "r",
+              "weight_permille": 26
+            },
+            {
+              "character": "e",
+              "weight_permille": 43
+            },
+            {
+              "character": "e",
+              "weight_permille": 68
+            },
+            {
+              "character": " ",
+              "weight_permille": 52
+            },
+            {
+              "character": "s",
+              "weight_permille": 70
+            },
+            {
+              "character": "h",
+              "weight_permille": 53
+            },
+            {
+              "character": "i",
+              "weight_permille": 82
+            },
+            {
+              "character": "e",
+              "weight_permille": 41
+            },
+            {
+              "character": "l",
+              "weight_permille": 30
+            },
+            {
+              "character": "d",
+              "weight_permille": 68
+            },
+            {
+              "character": "s",
+              "weight_permille": 49
+            },
+            {
+              "character": " ",
+              "weight_permille": 74
+            },
+            {
+              "character": "l",
+              "weight_permille": 61
+            },
+            {
+              "character": "e",
+              "weight_permille": 39
+            },
+            {
+              "character": "f",
+              "weight_permille": 56
+            },
+            {
+              "character": "t",
+              "weight_permille": 60
+            },
+            {
+              "character": ".",
+              "weight_permille": 35
+            }
+          ],
+          "phoneme_track": {
+            "encoding": "numeric_viseme",
+            "phonemes": [
+              {
+                "order_index": 0,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.000000000",
+                "end_seconds": "0.125000000"
+              },
+              {
+                "order_index": 1,
+                "symbol": "th",
+                "viseme_id": 2,
+                "start_seconds": "0.125000000",
+                "end_seconds": "0.291666666"
+              },
+              {
+                "order_index": 2,
+                "symbol": "r",
+                "viseme_id": 6,
+                "start_seconds": "0.291666666",
+                "end_seconds": "0.458333333"
+              },
+              {
+                "order_index": 3,
+                "symbol": "iy",
+                "viseme_id": 12,
+                "start_seconds": "0.458333333",
+                "end_seconds": "0.666666666"
+              },
+              {
+                "order_index": 4,
+                "symbol": "sh",
+                "viseme_id": 4,
+                "start_seconds": "0.666666666",
+                "end_seconds": "0.833333333"
+              },
+              {
+                "order_index": 5,
+                "symbol": "iy",
+                "viseme_id": 12,
+                "start_seconds": "0.833333333",
+                "end_seconds": "1.041666666"
+              },
+              {
+                "order_index": 6,
+                "symbol": "l",
+                "viseme_id": 6,
+                "start_seconds": "1.041666666",
+                "end_seconds": "1.208333333"
+              },
+              {
+                "order_index": 7,
+                "symbol": "d",
+                "viseme_id": 3,
+                "start_seconds": "1.208333333",
+                "end_seconds": "1.333333333"
+              },
+              {
+                "order_index": 8,
+                "symbol": "z",
+                "viseme_id": 4,
+                "start_seconds": "1.333333333",
+                "end_seconds": "1.458333333"
+              },
+              {
+                "order_index": 9,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "1.458333333",
+                "end_seconds": "1.541666666"
+              },
+              {
+                "order_index": 10,
+                "symbol": "l",
+                "viseme_id": 6,
+                "start_seconds": "1.541666666",
+                "end_seconds": "1.666666666"
+              },
+              {
+                "order_index": 11,
+                "symbol": "eh",
+                "viseme_id": 11,
+                "start_seconds": "1.666666666",
+                "end_seconds": "1.833333333"
+              },
+              {
+                "order_index": 12,
+                "symbol": "f",
+                "viseme_id": 2,
+                "start_seconds": "1.833333333",
+                "end_seconds": "2.000000000"
+              },
+              {
+                "order_index": 13,
+                "symbol": "t",
+                "viseme_id": 3,
+                "start_seconds": "2.000000000",
+                "end_seconds": "2.125000000"
+              },
+              {
+                "order_index": 14,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "2.125000000",
+                "end_seconds": "2.375000000"
+              }
+            ]
+          }
+        },
+        {
+          "line_id": "D2-P1",
+          "text_content": "Hold the ridge!",
+          "duration_seconds": "2.000000000",
+          "character_weights": [
+            {
+              "character": "H",
+              "weight_permille": 42
+            },
+            {
+              "character": "o",
+              "weight_permille": 76
+            },
+            {
+              "character": "l",
+              "weight_permille": 42
+            },
+            {
+              "character": "d",
+              "weight_permille": 112
+            },
+            {
+              "character": " ",
+              "weight_permille": 43
+            },
+            {
+              "character": "t",
+              "weight_permille": 110
+            },
+            {
+              "character": "h",
+              "weight_permille": 50
+            },
+            {
+              "character": "e",
+              "weight_permille": 41
+            },
+            {
+              "character": " ",
+              "weight_permille": 103
+            },
+            {
+              "character": "r",
+              "weight_permille": 33
+            },
+            {
+              "character": "i",
+              "weight_permille": 82
+            },
+            {
+              "character": "d",
+              "weight_permille": 45
+            },
+            {
+              "character": "g",
+              "weight_permille": 74
+            },
+            {
+              "character": "e",
+              "weight_permille": 75
+            },
+            {
+              "character": "!",
+              "weight_permille": 72
+            }
+          ],
+          "phoneme_track": {
+            "encoding": "numeric_viseme",
+            "phonemes": [
+              {
+                "order_index": 0,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "0.000000000",
+                "end_seconds": "0.125000000"
+              },
+              {
+                "order_index": 1,
+                "symbol": "hh",
+                "viseme_id": 13,
+                "start_seconds": "0.125000000",
+                "end_seconds": "0.333333333"
+              },
+              {
+                "order_index": 2,
+                "symbol": "l",
+                "viseme_id": 6,
+                "start_seconds": "0.333333333",
+                "end_seconds": "0.500000000"
+              },
+              {
+                "order_index": 3,
+                "symbol": "d",
+                "viseme_id": 3,
+                "start_seconds": "0.500000000",
+                "end_seconds": "0.625000000"
+              },
+              {
+                "order_index": 4,
+                "symbol": "dh",
+                "viseme_id": 3,
+                "start_seconds": "0.625000000",
+                "end_seconds": "0.750000000"
+              },
+              {
+                "order_index": 5,
+                "symbol": "ah",
+                "viseme_id": 11,
+                "start_seconds": "0.750000000",
+                "end_seconds": "0.875000000"
+              },
+              {
+                "order_index": 6,
+                "symbol": "r",
+                "viseme_id": 6,
+                "start_seconds": "0.875000000",
+                "end_seconds": "1.041666666"
+              },
+              {
+                "order_index": 7,
+                "symbol": "iy",
+                "viseme_id": 12,
+                "start_seconds": "1.041666666",
+                "end_seconds": "1.208333333"
+              },
+              {
+                "order_index": 8,
+                "symbol": "jh",
+                "viseme_id": 4,
+                "start_seconds": "1.208333333",
+                "end_seconds": "1.416666666"
+              },
+              {
+                "order_index": 9,
+                "symbol": "d",
+                "viseme_id": 3,
+                "start_seconds": "1.416666666",
+                "end_seconds": "1.583333333"
+              },
+              {
+                "order_index": 10,
+                "symbol": "sil",
+                "viseme_id": 0,
+                "start_seconds": "1.583333333",
+                "end_seconds": "2.000000000"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

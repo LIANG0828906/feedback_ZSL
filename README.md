@@ -20,3 +20,22 @@
 
 验收：
 使用本地确定性样本验证跨版本装载、逐帧字幕与口型呈现及三路径一致，并检查异常链路与诊断页面。
+
+---
+
+## 实现交付快速入口
+
+本目录已交付独立 Go 模块 `presentkernel`（Go 1.22+），SQLite 使用纯 Go 驱动 `modernc.org/sqlite`，`CGO_ENABLED=0` 可构建静态二进制。
+
+```bash
+go version
+go test ./... -count=1
+go run ./cmd/presentkernel generate --out samples
+go run ./cmd/presentkernel verify \
+  --db artifacts/final-checkpoint.sqlite \
+  --report artifacts/final-state.json
+go run ./cmd/presentkernel serve --port 38080 \
+  --db artifacts/diagnostic.sqlite
+```
+
+浏览器打开启动日志输出的 `http://127.0.0.1:<port>/`；不传 `--port` 时默认监听 `127.0.0.1:8080`，也可用 `--addr` 修改。完整设计、需求映射与实测结果见 `docs/DELIVERY.md` 和 `artifacts/validation-output.txt`。

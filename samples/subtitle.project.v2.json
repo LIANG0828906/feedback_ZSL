@@ -1,0 +1,1052 @@
+{
+  "schemaVersion": "2.0.0",
+  "projectId": "game-adept-dialogue-5eed42",
+  "seed": 6221122,
+  "media": {
+    "sampleRateHz": 48000
+  },
+  "timing": {
+    "frameRate": 24,
+    "minimumReadableFrames": 2,
+    "rounding": "round-half-up",
+    "transitionToleranceFrames": 2
+  },
+  "defaultVolumeBp": 7200,
+  "mouthTable": {
+    "encoding": "grouped-family/v2",
+    "groups": [
+      {
+        "familyName": "silence",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_SIL",
+            "standardCode": "SIL",
+            "label": "silence / neutral rest"
+          }
+        ]
+      },
+      {
+        "familyName": "closure",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_MBP",
+            "standardCode": "MBP",
+            "label": "bilabial closure"
+          }
+        ]
+      },
+      {
+        "familyName": "labiodental",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_FV",
+            "standardCode": "FV",
+            "label": "f/v lip bite"
+          }
+        ]
+      },
+      {
+        "familyName": "alveolar",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_TDN",
+            "standardCode": "TDN",
+            "label": "tongue alveolar"
+          }
+        ]
+      },
+      {
+        "familyName": "sibilant",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_SZ",
+            "standardCode": "SZ",
+            "label": "sibilant teeth"
+          }
+        ]
+      },
+      {
+        "familyName": "velar",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_KG",
+            "standardCode": "KG",
+            "label": "velar stop"
+          }
+        ]
+      },
+      {
+        "familyName": "liquid",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_L",
+            "standardCode": "L",
+            "label": "l/r liquid"
+          }
+        ]
+      },
+      {
+        "familyName": "vowel-open",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_A",
+            "standardCode": "A",
+            "label": "open a"
+          }
+        ]
+      },
+      {
+        "familyName": "vowel-mid",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_E",
+            "standardCode": "E",
+            "label": "mid e"
+          }
+        ]
+      },
+      {
+        "familyName": "vowel-front",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_I",
+            "standardCode": "I",
+            "label": "front i"
+          }
+        ]
+      },
+      {
+        "familyName": "vowel-rounded",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_O",
+            "standardCode": "O",
+            "label": "rounded o"
+          },
+          {
+            "shapeId": "SHAPE_U",
+            "standardCode": "U",
+            "label": "tight u"
+          }
+        ]
+      },
+      {
+        "familyName": "bridge",
+        "shapes": [
+          {
+            "shapeId": "SHAPE_TR",
+            "standardCode": "TR",
+            "label": "deterministic transition bridge"
+          }
+        ]
+      }
+    ]
+  },
+  "dialogues": [
+    {
+      "id": "D0",
+      "speakerName": "Mira",
+      "fragments": [
+        {
+          "fragmentId": "D0-P0",
+          "text": "Stay close.",
+          "durationMs": 1500,
+          "characterWeightsBp": [
+            {
+              "grapheme": "S",
+              "weightBp": 430
+            },
+            {
+              "grapheme": "t",
+              "weightBp": 940
+            },
+            {
+              "grapheme": "a",
+              "weightBp": 1300
+            },
+            {
+              "grapheme": "y",
+              "weightBp": 1170
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 940
+            },
+            {
+              "grapheme": "c",
+              "weightBp": 1360
+            },
+            {
+              "grapheme": "l",
+              "weightBp": 890
+            },
+            {
+              "grapheme": "o",
+              "weightBp": 1120
+            },
+            {
+              "grapheme": "s",
+              "weightBp": 620
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 410
+            },
+            {
+              "grapheme": ".",
+              "weightBp": 820
+            }
+          ],
+          "phonemes": [
+            {
+              "order": 0,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 0,
+              "endMs": 83
+            },
+            {
+              "order": 1,
+              "symbol": "s",
+              "mouthShapeId": "SHAPE_SZ",
+              "startMs": 83,
+              "endMs": 208
+            },
+            {
+              "order": 2,
+              "symbol": "t",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 208,
+              "endMs": 333
+            },
+            {
+              "order": 3,
+              "symbol": "ey",
+              "mouthShapeId": "SHAPE_E",
+              "startMs": 333,
+              "endMs": 542
+            },
+            {
+              "order": 4,
+              "symbol": "iy",
+              "mouthShapeId": "SHAPE_I",
+              "startMs": 542,
+              "endMs": 708
+            },
+            {
+              "order": 5,
+              "symbol": "k",
+              "mouthShapeId": "SHAPE_KG",
+              "startMs": 708,
+              "endMs": 833
+            },
+            {
+              "order": 6,
+              "symbol": "l",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 833,
+              "endMs": 1000
+            },
+            {
+              "order": 7,
+              "symbol": "ow",
+              "mouthShapeId": "SHAPE_O",
+              "startMs": 1000,
+              "endMs": 1208
+            },
+            {
+              "order": 8,
+              "symbol": "uw",
+              "mouthShapeId": "SHAPE_U",
+              "startMs": 1208,
+              "endMs": 1375
+            },
+            {
+              "order": 9,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 1375,
+              "endMs": 1500
+            }
+          ]
+        },
+        {
+          "fragmentId": "D0-P1",
+          "text": "Signal weak.",
+          "durationMs": 1750,
+          "characterWeightsBp": [
+            {
+              "grapheme": "S",
+              "weightBp": 500
+            },
+            {
+              "grapheme": "i",
+              "weightBp": 1230
+            },
+            {
+              "grapheme": "g",
+              "weightBp": 1260
+            },
+            {
+              "grapheme": "n",
+              "weightBp": 680
+            },
+            {
+              "grapheme": "a",
+              "weightBp": 400
+            },
+            {
+              "grapheme": "l",
+              "weightBp": 860
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 560
+            },
+            {
+              "grapheme": "w",
+              "weightBp": 1060
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 870
+            },
+            {
+              "grapheme": "a",
+              "weightBp": 610
+            },
+            {
+              "grapheme": "k",
+              "weightBp": 970
+            },
+            {
+              "grapheme": ".",
+              "weightBp": 1000
+            }
+          ],
+          "phonemes": [
+            {
+              "order": 0,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 0,
+              "endMs": 125
+            },
+            {
+              "order": 1,
+              "symbol": "s",
+              "mouthShapeId": "SHAPE_SZ",
+              "startMs": 125,
+              "endMs": 250
+            },
+            {
+              "order": 2,
+              "symbol": "ih",
+              "mouthShapeId": "SHAPE_I",
+              "startMs": 250,
+              "endMs": 417
+            },
+            {
+              "order": 3,
+              "symbol": "g",
+              "mouthShapeId": "SHAPE_KG",
+              "startMs": 417,
+              "endMs": 583
+            },
+            {
+              "order": 4,
+              "symbol": "n",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 583,
+              "endMs": 750
+            },
+            {
+              "order": 5,
+              "symbol": "l",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 750,
+              "endMs": 917
+            },
+            {
+              "order": 6,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 917,
+              "endMs": 1000
+            },
+            {
+              "order": 7,
+              "symbol": "w",
+              "mouthShapeId": "SHAPE_U",
+              "startMs": 1000,
+              "endMs": 1208
+            },
+            {
+              "order": 8,
+              "symbol": "iy",
+              "mouthShapeId": "SHAPE_I",
+              "startMs": 1208,
+              "endMs": 1375
+            },
+            {
+              "order": 9,
+              "symbol": "k",
+              "mouthShapeId": "SHAPE_KG",
+              "startMs": 1375,
+              "endMs": 1542
+            },
+            {
+              "order": 10,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 1542,
+              "endMs": 1750
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D1",
+      "speakerName": "Narrator",
+      "fragments": [
+        {
+          "fragmentId": "D1-P0",
+          "text": "The gate opens.",
+          "durationMs": 2000,
+          "characterWeightsBp": [
+            {
+              "grapheme": "T",
+              "weightBp": 770
+            },
+            {
+              "grapheme": "h",
+              "weightBp": 630
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 770
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 970
+            },
+            {
+              "grapheme": "g",
+              "weightBp": 310
+            },
+            {
+              "grapheme": "a",
+              "weightBp": 920
+            },
+            {
+              "grapheme": "t",
+              "weightBp": 380
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 370
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 540
+            },
+            {
+              "grapheme": "o",
+              "weightBp": 680
+            },
+            {
+              "grapheme": "p",
+              "weightBp": 720
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 960
+            },
+            {
+              "grapheme": "n",
+              "weightBp": 880
+            },
+            {
+              "grapheme": "s",
+              "weightBp": 350
+            },
+            {
+              "grapheme": ".",
+              "weightBp": 750
+            }
+          ],
+          "phonemes": [
+            {
+              "order": 0,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 0,
+              "endMs": 125
+            },
+            {
+              "order": 1,
+              "symbol": "dh",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 125,
+              "endMs": 250
+            },
+            {
+              "order": 2,
+              "symbol": "ah",
+              "mouthShapeId": "SHAPE_E",
+              "startMs": 250,
+              "endMs": 417
+            },
+            {
+              "order": 3,
+              "symbol": "g",
+              "mouthShapeId": "SHAPE_KG",
+              "startMs": 417,
+              "endMs": 583
+            },
+            {
+              "order": 4,
+              "symbol": "ey",
+              "mouthShapeId": "SHAPE_E",
+              "startMs": 583,
+              "endMs": 750
+            },
+            {
+              "order": 5,
+              "symbol": "t",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 750,
+              "endMs": 875
+            },
+            {
+              "order": 6,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 875,
+              "endMs": 958
+            },
+            {
+              "order": 7,
+              "symbol": "ow",
+              "mouthShapeId": "SHAPE_O",
+              "startMs": 958,
+              "endMs": 1167
+            },
+            {
+              "order": 8,
+              "symbol": "p",
+              "mouthShapeId": "SHAPE_MBP",
+              "startMs": 1167,
+              "endMs": 1333
+            },
+            {
+              "order": 9,
+              "symbol": "eh",
+              "mouthShapeId": "SHAPE_E",
+              "startMs": 1333,
+              "endMs": 1500
+            },
+            {
+              "order": 10,
+              "symbol": "n",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 1500,
+              "endMs": 1625
+            },
+            {
+              "order": 11,
+              "symbol": "z",
+              "mouthShapeId": "SHAPE_SZ",
+              "startMs": 1625,
+              "endMs": 1750
+            },
+            {
+              "order": 12,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 1750,
+              "endMs": 2000
+            }
+          ]
+        },
+        {
+          "fragmentId": "D1-P1",
+          "text": "Dawn breaks.",
+          "durationMs": 1750,
+          "characterWeightsBp": [
+            {
+              "grapheme": "D",
+              "weightBp": 1010
+            },
+            {
+              "grapheme": "a",
+              "weightBp": 810
+            },
+            {
+              "grapheme": "w",
+              "weightBp": 850
+            },
+            {
+              "grapheme": "n",
+              "weightBp": 360
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 990
+            },
+            {
+              "grapheme": "b",
+              "weightBp": 470
+            },
+            {
+              "grapheme": "r",
+              "weightBp": 460
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 1090
+            },
+            {
+              "grapheme": "a",
+              "weightBp": 960
+            },
+            {
+              "grapheme": "k",
+              "weightBp": 1170
+            },
+            {
+              "grapheme": "s",
+              "weightBp": 1180
+            },
+            {
+              "grapheme": ".",
+              "weightBp": 650
+            }
+          ],
+          "phonemes": [
+            {
+              "order": 0,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 0,
+              "endMs": 125
+            },
+            {
+              "order": 1,
+              "symbol": "d",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 125,
+              "endMs": 250
+            },
+            {
+              "order": 2,
+              "symbol": "ao",
+              "mouthShapeId": "SHAPE_O",
+              "startMs": 250,
+              "endMs": 458
+            },
+            {
+              "order": 3,
+              "symbol": "n",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 458,
+              "endMs": 583
+            },
+            {
+              "order": 4,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 583,
+              "endMs": 667
+            },
+            {
+              "order": 5,
+              "symbol": "b",
+              "mouthShapeId": "SHAPE_MBP",
+              "startMs": 667,
+              "endMs": 833
+            },
+            {
+              "order": 6,
+              "symbol": "r",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 833,
+              "endMs": 1000
+            },
+            {
+              "order": 7,
+              "symbol": "ey",
+              "mouthShapeId": "SHAPE_E",
+              "startMs": 1000,
+              "endMs": 1208
+            },
+            {
+              "order": 8,
+              "symbol": "k",
+              "mouthShapeId": "SHAPE_KG",
+              "startMs": 1208,
+              "endMs": 1375
+            },
+            {
+              "order": 9,
+              "symbol": "s",
+              "mouthShapeId": "SHAPE_SZ",
+              "startMs": 1375,
+              "endMs": 1500
+            },
+            {
+              "order": 10,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 1500,
+              "endMs": 1750
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D2",
+      "speakerName": "Captain",
+      "fragments": [
+        {
+          "fragmentId": "D2-P0",
+          "text": "Three shields left.",
+          "durationMs": 2375,
+          "characterWeightsBp": [
+            {
+              "grapheme": "T",
+              "weightBp": 560
+            },
+            {
+              "grapheme": "h",
+              "weightBp": 370
+            },
+            {
+              "grapheme": "r",
+              "weightBp": 260
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 430
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 680
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 520
+            },
+            {
+              "grapheme": "s",
+              "weightBp": 700
+            },
+            {
+              "grapheme": "h",
+              "weightBp": 530
+            },
+            {
+              "grapheme": "i",
+              "weightBp": 820
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 410
+            },
+            {
+              "grapheme": "l",
+              "weightBp": 300
+            },
+            {
+              "grapheme": "d",
+              "weightBp": 680
+            },
+            {
+              "grapheme": "s",
+              "weightBp": 490
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 740
+            },
+            {
+              "grapheme": "l",
+              "weightBp": 610
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 390
+            },
+            {
+              "grapheme": "f",
+              "weightBp": 560
+            },
+            {
+              "grapheme": "t",
+              "weightBp": 600
+            },
+            {
+              "grapheme": ".",
+              "weightBp": 350
+            }
+          ],
+          "phonemes": [
+            {
+              "order": 0,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 0,
+              "endMs": 125
+            },
+            {
+              "order": 1,
+              "symbol": "th",
+              "mouthShapeId": "SHAPE_FV",
+              "startMs": 125,
+              "endMs": 292
+            },
+            {
+              "order": 2,
+              "symbol": "r",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 292,
+              "endMs": 458
+            },
+            {
+              "order": 3,
+              "symbol": "iy",
+              "mouthShapeId": "SHAPE_I",
+              "startMs": 458,
+              "endMs": 667
+            },
+            {
+              "order": 4,
+              "symbol": "sh",
+              "mouthShapeId": "SHAPE_SZ",
+              "startMs": 667,
+              "endMs": 833
+            },
+            {
+              "order": 5,
+              "symbol": "iy",
+              "mouthShapeId": "SHAPE_I",
+              "startMs": 833,
+              "endMs": 1042
+            },
+            {
+              "order": 6,
+              "symbol": "l",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 1042,
+              "endMs": 1208
+            },
+            {
+              "order": 7,
+              "symbol": "d",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 1208,
+              "endMs": 1333
+            },
+            {
+              "order": 8,
+              "symbol": "z",
+              "mouthShapeId": "SHAPE_SZ",
+              "startMs": 1333,
+              "endMs": 1458
+            },
+            {
+              "order": 9,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 1458,
+              "endMs": 1542
+            },
+            {
+              "order": 10,
+              "symbol": "l",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 1542,
+              "endMs": 1667
+            },
+            {
+              "order": 11,
+              "symbol": "eh",
+              "mouthShapeId": "SHAPE_E",
+              "startMs": 1667,
+              "endMs": 1833
+            },
+            {
+              "order": 12,
+              "symbol": "f",
+              "mouthShapeId": "SHAPE_FV",
+              "startMs": 1833,
+              "endMs": 2000
+            },
+            {
+              "order": 13,
+              "symbol": "t",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 2000,
+              "endMs": 2125
+            },
+            {
+              "order": 14,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 2125,
+              "endMs": 2375
+            }
+          ]
+        },
+        {
+          "fragmentId": "D2-P1",
+          "text": "Hold the ridge!",
+          "durationMs": 2000,
+          "characterWeightsBp": [
+            {
+              "grapheme": "H",
+              "weightBp": 420
+            },
+            {
+              "grapheme": "o",
+              "weightBp": 760
+            },
+            {
+              "grapheme": "l",
+              "weightBp": 420
+            },
+            {
+              "grapheme": "d",
+              "weightBp": 1120
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 430
+            },
+            {
+              "grapheme": "t",
+              "weightBp": 1100
+            },
+            {
+              "grapheme": "h",
+              "weightBp": 500
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 410
+            },
+            {
+              "grapheme": " ",
+              "weightBp": 1030
+            },
+            {
+              "grapheme": "r",
+              "weightBp": 330
+            },
+            {
+              "grapheme": "i",
+              "weightBp": 820
+            },
+            {
+              "grapheme": "d",
+              "weightBp": 450
+            },
+            {
+              "grapheme": "g",
+              "weightBp": 740
+            },
+            {
+              "grapheme": "e",
+              "weightBp": 750
+            },
+            {
+              "grapheme": "!",
+              "weightBp": 720
+            }
+          ],
+          "phonemes": [
+            {
+              "order": 0,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 0,
+              "endMs": 125
+            },
+            {
+              "order": 1,
+              "symbol": "hh",
+              "mouthShapeId": "SHAPE_O",
+              "startMs": 125,
+              "endMs": 333
+            },
+            {
+              "order": 2,
+              "symbol": "l",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 333,
+              "endMs": 500
+            },
+            {
+              "order": 3,
+              "symbol": "d",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 500,
+              "endMs": 625
+            },
+            {
+              "order": 4,
+              "symbol": "dh",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 625,
+              "endMs": 750
+            },
+            {
+              "order": 5,
+              "symbol": "ah",
+              "mouthShapeId": "SHAPE_E",
+              "startMs": 750,
+              "endMs": 875
+            },
+            {
+              "order": 6,
+              "symbol": "r",
+              "mouthShapeId": "SHAPE_L",
+              "startMs": 875,
+              "endMs": 1042
+            },
+            {
+              "order": 7,
+              "symbol": "iy",
+              "mouthShapeId": "SHAPE_I",
+              "startMs": 1042,
+              "endMs": 1208
+            },
+            {
+              "order": 8,
+              "symbol": "jh",
+              "mouthShapeId": "SHAPE_SZ",
+              "startMs": 1208,
+              "endMs": 1417
+            },
+            {
+              "order": 9,
+              "symbol": "d",
+              "mouthShapeId": "SHAPE_TDN",
+              "startMs": 1417,
+              "endMs": 1583
+            },
+            {
+              "order": 10,
+              "symbol": "sil",
+              "mouthShapeId": "SHAPE_SIL",
+              "startMs": 1583,
+              "endMs": 2000
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

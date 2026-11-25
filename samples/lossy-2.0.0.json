@@ -1,0 +1,26 @@
+[
+  {
+    "code": "E_LOSSY",
+    "path": "mouthTable",
+    "field": "lip_category_mapping",
+    "reason": "flat/v3 phonemeToCategory mapping is regrouped into family shape IDs",
+    "disposition": "reversible via standardCode in every group shape"
+  },
+  {
+    "code": "E_LOSSY",
+    "path": "dialogues[].fragments[].transitions",
+    "field": "transition_overrides",
+    "value": [
+      {
+        "at_frame": 8,
+        "from_category": "TDN",
+        "to_category": "E",
+        "bridge_category": "TR",
+        "offset_frames": 1,
+        "reason": "non-continuous families alveolar -\u003e vowel-mid"
+      }
+    ],
+    "reason": "schema v2 only carries tolerance, not explicit transition records",
+    "disposition": "omit explicit records; deterministic rule reconstructs identical standard bridges"
+  }
+]
