@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>透明介质体积雾 · 分块积分诊断台</title>
+<style>
+:root{--bg:#071018;--panel:#0d1b27;--panel2:#112536;--line:#21445b;--ink:#dbeaf3;--muted:#87a4b6;--ok:#55d39a;--warn:#f0be62;--bad:#ff7b72;--cyan:#66d9ef}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#103149 0,#071018 42%,#040a0f 100%);color:var(--ink);font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+header{padding:28px clamp(16px,4vw,56px) 14px;border-bottom:1px solid var(--line);display:flex;gap:24px;align-items:end;justify-content:space-between;flex-wrap:wrap}
+h1{font-size:clamp(20px,3vw,34px);margin:0;letter-spacing:.03em}h2{font-size:17px;margin:0 0 12px;color:#b9d8e8}h3{font-size:14px;margin:16px 0 8px;color:#9fc4d8}
+.sub{color:var(--muted)}a{color:var(--cyan);text-decoration:none}a:hover{text-decoration:underline}
+main{padding:22px clamp(16px,4vw,56px) 60px;max-width:1600px;margin:auto}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(12,1fr)}
+.panel{background:linear-gradient(180deg,rgba(17,37,54,.92),rgba(10,23,33,.92));border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 14px 40px rgba(0,0,0,.18)}
+.span4{grid-column:span 4}.span6{grid-column:span 6}.span8{grid-column:span 8}.span12{grid-column:span 12}
+@media(max-width:1020px){.span4,.span6,.span8{grid-column:span 12}}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px}.metric b{display:block;font-size:22px;color:#fff;margin-top:3px}.metric small{color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px 8px;border-bottom:1px solid #1b394d;text-align:left;vertical-align:top}th{color:#8fb5ca;font-weight:500}td.num{text-align:right;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:11px;color:#b9d8e8}.ok{color:var(--ok);border-color:#2b7356}.warn{color:var(--warn);border-color:#80652d}.bad{color:var(--bad);border-color:#823f3b}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:22px}@media(max-width:850px){.frames{grid-template-columns:1fr}}
+.frame-wrap{background:#02070b;border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto}
+.frame{display:grid;gap:1px;width:min(100%,560px);aspect-ratio:4/3;image-rendering:pixelated;margin:auto}
+.px{border-radius:1px;background:#050b10}.v1{background:#0d1c2e}.v2{background:#12304a}.v3{background:#17476b}.v4{background:#1e618b}.v5{background:#2d7ca5}.v6{background:#4b9ab9}.v7{background:#76b9c8}.v8{background:#acd8d3}.v9{background:#e5f4e8}
+.caption{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;margin:8px 2px 0}
+.scroll{max-height:340px;overflow:auto}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.pill-row a{border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:#0b1d2b}
+code,pre{background:#07141e;border:1px solid #173649;border-radius:6px}code{padding:1px 5px}pre{padding:12px;overflow:auto;white-space:pre-wrap}
+.muted{color:var(--muted)}.tiny{font-size:11px}.good{color:var(--ok)}.badtext{color:var(--bad)}.warntext{color:var(--warn)}
+.kv{display:grid;grid-template-columns:minmax(160px,1fr) 2fr;gap:5px 16px}.kv div:nth-child(odd){color:var(--muted)}
+footer{padding:0 clamp(16px,4vw,56px) 28px;color:#608196;font-size:11px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="sub tiny">VFOG / DETERMINISTIC TILE INTEGRATION KERNEL</div>
+    <h1>透明介质体积雾 · 分块积分诊断台</h1>
+  </div>
+  <div class="sub tiny">场景 {{.Report.Scene.Name}} · seed {{.Report.Scene.Seed}} · {{.Report.Scene.Width}}×{{.Report.Scene.Height}}</div>
+</header>
+<main>
+  <div class="metrics">
+    <div class="metric"><small>预览延迟</small><b>{{fmtf .Report.Preview.Decision.ElapsedMS 2}} ms</b><span class="badge {{if .Report.Preview.Decision.LatencyMet}}ok{{else}}bad{{end}}">上限 {{.Report.Preview.Decision.LatencyLimitMS}} ms</span></div>
+    <div class="metric"><small>预览 / 精确步数</small><b>{{.Report.Preview.Decision.StepsActual}} / {{.Report.Exact.Decision.StepsActual}}</b><small>每射线</small></div>
+    <div class="metric"><small>精确缓存命中</small><b>{{.Report.CacheNoEditHits}} / {{len .Report.Exact.Tiles}}</b><small>无编辑复渲</small></div>
+    <div class="metric"><small>编辑后复用</small><b>{{.Report.PostEditHits}} 块</b><small>失效 {{if .Report.EditReport}}{{len .Report.EditReport.Tiles}}{{else}}0{{end}} 块</small></div>
+    <div class="metric"><small>三路径一致</small><b class="{{if and .Report.ThreePath .Report.ThreePath.PixelsEqual .Report.ThreePath.SummariesEqual .Report.ThreePath.CommitEqual}}good{{else}}badtext{{end}}">{{if .Report.ThreePath}}{{yes .Report.ThreePath.PixelsEqual}}{{else}}否{{end}}</b><small>像素 / 摘要 / 提交序列</small></div>
+    <div class="metric"><small>检查点</small><b>{{.Report.Checkpoint.Tiles}} 块</b><small>{{.Report.Checkpoint.Entries}} 事务 · 损坏行 {{.Report.Checkpoint.CorruptLines}}</small></div>
+  </div>
+
+  <section class="panel span12">
+    <h2>双路径帧与一致判定</h2>
+    <div class="frames">
+      <div>
+        <div class="caption"><span>PREVIEW · s{{.Report.Preview.Decision.StepsActual}} / h{{.Report.Preview.Decision.ShadowActual}}</span><span>{{fmtf .Report.Preview.Decision.ElapsedMS 2}} ms</span></div>
+        <div class="frame-wrap"><div class="frame" style="grid-template-columns:repeat({{.Report.Preview.Width}},1fr)">{{range .PreviewCells}}<span class="px {{.Class}}" title="({{.X}},{{.Y}}) L={{fmtf .Radiance 6}}"></span>{{end}}</div></div>
+      </div>
+      <div>
+        <div class="caption"><span>EXACT · s{{.Report.Exact.Decision.StepsActual}} / h{{.Report.Exact.Decision.ShadowActual}}</span><span>{{fmtf .Report.Exact.Decision.ElapsedMS 2}} ms</span></div>
+        <div class="frame-wrap"><div class="frame" style="grid-template-columns:repeat({{.Report.Exact.Width}},1fr)">{{range .ExactCells}}<span class="px {{.Class}}" title="({{.X}},{{.Y}}) L={{fmtf .Radiance 6}}"></span>{{end}}</div></div>
+      </div>
+    </div>
+    <div class="kv" style="margin-top:14px">
+      <div>区域覆盖一致</div><div>{{yes .Report.Comparison.SameCoverage}}</div>
+      <div>介质快照版本</div><div><code>{{.Report.Exact.MediaSnapshotVersion}}</code> · 一致 {{yes .Report.Comparison.SameSnapshotVersion}}</div>
+      <div>相机参数版本</div><div><code>{{.Report.Exact.CameraVersion}}</code> · 一致 {{yes .Report.Comparison.SameCameraVersion}}</div>
+      <div>最大 / 平均差异</div><div>{{fmtf .Report.Comparison.MaxDifference 9}} / {{fmtf .Report.Comparison.MeanDifference 9}} · 容差 {{fmtf .Report.Comparison.Tolerance 4}}</div>
+      <div>判定依据</div><div>{{.Report.Preview.Decision.Reason}}；{{.Report.Exact.Decision.Reason}}</div>
+      {{with .Report.ComparisonFault}}<div>E_DIVERGE</div><div class="badtext">{{.}}</div>{{end}}
+    </div>
+  </section>
+
+  <div class="grid" style="margin-top:16px">
+    <section class="panel span6">
+      <h2>场景与配方</h2>
+      <div class="kv">
+        <div>快照版本</div><div><code>{{.Report.Scene.SnapshotVersion}}</code></div>
+        <div>相机轨迹 / 真值射线</div><div>{{.Report.Scene.CameraSamples}} / {{.Report.Scene.TruthRays}}</div>
+        <div>分块尺寸</div><div>{{.Report.Scene.Recipe.TileWidth}}×{{.Report.Scene.Recipe.TileHeight}}</div>
+        <div>步进 / 阴影上限</div><div>{{.Report.Scene.Recipe.Steps}} / {{.Report.Scene.Recipe.ShadowSamples}}</div>
+        <div>固定点刻度</div><div>{{.Report.Scene.Recipe.FixedScale}}（几何） · {{.Report.Scene.Recipe.CoefficientScale}}（系数）</div>
+        <div>公式口径</div><div>左端点透射率累乘；重叠边界全切分；HG g=介质参数</div>
+      </div>
+      <div class="scroll" style="margin-top:12px">
+      <table><thead><tr><th>介质</th><th>分辨率</th><th>密度范围</th><th>系数 (abs/sca)</th><th>g</th></tr></thead><tbody>
+      {{range .Report.Scene.Media}}<tr><td>{{.ID}}</td><td>{{index .Resolution 0}}×{{index .Resolution 1}}×{{index .Resolution 2}}</td><td>{{.DensityMin}}..{{.DensityMax}}</td><td>{{.AbsorptionFP}} / {{.ScatteringFP}}</td><td>{{fmtf .Anisotropy 2}}</td></tr>{{end}}
+      </tbody></table>
+      </div>
+    </section>
+
+    <section class="panel span6">
+      <h2>分块预算与排队</h2>
+      <div class="kv">
+        <div>最大并行块</div><div>{{.Report.Exact.Stats.MaxParallelObserved}} / {{.Report.Scene.Recipe.MaxParallelTiles}}</div>
+        <div>射线缓冲峰值</div><div>{{.Report.Exact.Stats.RayBufferPeak}} / {{.Report.Scene.Recipe.RayBufferPerWorker}}</div>
+        <div>阴影预算占用峰值</div><div>{{.Report.Exact.Stats.ShadowBudget.PeakOccupancy}} / {{.Report.Exact.Stats.ShadowBudget.Capacity}}</div>
+        <div>阴影采样总数</div><div>{{.Report.Exact.Stats.ShadowSamples}}</div>
+        <div>阻塞等待</div><div>{{.Report.Exact.Stats.ShadowBudget.WaitCount}} 次 · {{fmtf .Report.Exact.Stats.ShadowBudget.WaitTotalMS 3}} ms</div>
+        <div>排队记录</div><div>{{len .QueueEvents}} 条</div>
+      </div>
+      <div class="scroll" style="margin-top:12px">
+      <table><thead><tr><th>块</th><th>原因</th><th>等待 ms</th><th>采样/令牌</th><th>次数</th><th>阻塞</th></tr></thead><tbody>
+      {{range .QueueEvents}}<tr><td>{{.TileID}}</td><td>{{.Reason}}</td><td class="num">{{fmtf .WaitMS 3}}</td><td class="num">{{.Units}}</td><td class="num">{{.Count}}</td><td>{{yes .Blocked}}</td></tr>{{else}}<tr><td colspan="6" class="muted">本轮未发生令牌等待或限幅事件。</td></tr>{{end}}
+      </tbody></table>
+      </div>
+    </section>
+
+    <section class="panel span7">
+      <h2>精确失效传播</h2>
+      {{with .Report.EditReport}}
+      <div class="kv">
+        <div>编辑源</div><div><code>density:{{$.Report.EditMedia}}:{{$.Report.EditVoxel}}</code> {{$.Report.EditFrom}} → {{$.Report.EditTo}}</div>
+        <div>失效分块</div><div>{{len .Tiles}} 块：{{range .Tiles}}<span class="badge bad">{{.}}</span> {{end}}</div>
+        <div>未失效分块</div><div>{{len .Unchanged}} 块：{{range .Unchanged}}<span class="badge ok">{{.}}</span> {{end}}</div>
+        <div>下游像素 / 射线段</div><div>{{len .Pixels}} / {{len .Segments}}</div>
+        <div>编辑后缓存命中</div><div class="good">{{$.Report.PostEditHits}} 块；重算 {{$.Report.PostEdit.Stats.RenderedTiles}} 块</div>
+      </div>
+      <h3>依赖来源清单</h3>
+      <div class="scroll"><table><thead><tr><th>分块</th><th>像素</th><th>依赖来源</th></tr></thead><tbody>
+      {{range .Items}}<tr><td>{{.TileID}}</td><td>({{.Pixel.X}},{{.Pixel.Y}})</td><td class="tiny">{{range .Sources}}<code>{{.}}</code> {{end}}</td></tr>{{end}}
+      </tbody></table></div>
+      {{else}}<p class="muted">未找到可演示的局部失效源。</p>{{end}}
+    </section>
+
+    <section class="panel span5">
+      <h2>三路径比对</h2>
+      <div class="kv">
+        <div>像素一致</div><div class="{{if .Report.ThreePath.PixelsEqual}}good{{else}}badtext{{end}}">{{yes .Report.ThreePath.PixelsEqual}}</div>
+        <div>射线段摘要一致</div><div class="{{if .Report.ThreePath.SummariesEqual}}good{{else}}badtext{{end}}">{{yes .Report.ThreePath.SummariesEqual}}</div>
+        <div>提交序列一致</div><div class="{{if .Report.ThreePath.CommitEqual}}good{{else}}badtext{{end}}">{{yes .Report.ThreePath.CommitEqual}}</div>
+        <div>缓存命中 (实时/恢复/全量)</div><div>{{index .Report.ThreePath.CacheHits 0}} / {{index .Report.ThreePath.CacheHits 1}} / {{index .Report.ThreePath.CacheHits 2}}</div>
+        <div>断点阶段</div><div>先提交 {{.Report.ThreePath.ResumeCommitted}} 块，重启复用 {{.Report.ThreePath.ResumeReloaded}} 块</div>
+        <div>提交序列</div><div class="tiny">{{range .Report.ThreePath.CommitSequence}}<span class="badge">{{.}}</span> {{end}}</div>
+      </div>
+      {{with .Report.ThreePathFault}}<pre class="badtext">{{.}}</pre>{{end}}
+      <h3>检查点</h3>
+      <div class="kv">
+        <div>事务 / 块</div><div>{{.Report.Checkpoint.Entries}} / {{.Report.Checkpoint.Tiles}}</div>
+        <div>损坏行 / 链断裂</div><div>{{.Report.Checkpoint.CorruptLines}} / {{.Report.Checkpoint.ChainBreaks}}</div>
+        <div>截断尾事务</div><div>{{yes .Report.Checkpoint.TruncatedTail}}</div>
+        <div>写事务策略</div><div>单块单行 · 校验和 · fsync · 串行提交</div>
+      </div>
+    </section>
+
+    <section class="panel span12">
+      <h2>异常注入链路</h2>
+      <div class="scroll">
+      <table><thead><tr><th>链路</th><th>错误码</th><th>字段路径</th><th>介质</th><th>分块</th><th>实测值</th><th>存活块</th><th>操作</th></tr></thead><tbody>
+      {{range .Report.Injections}}<tr>
+        <td>{{.Kind}}</td><td><span class="badge {{if eq .Kind "block"}}warn{{else}}bad{{end}}">{{.Code}}</span></td>
+        <td><code>{{with .Fault}}{{.Path}}{{end}}</code></td><td>{{with .Fault}}{{.MediaID}}{{end}}</td><td>{{with .Fault}}{{.TileID}}{{end}}</td>
+        <td class="tiny">{{with .Fault}}{{.Actual}}{{end}}</td><td>{{.Surviving}}</td>
+        <td><a href="/inject?kind={{.Kind}}">参数注入</a></td>
+      </tr>{{end}}
+      </tbody></table>
+      </div>
+      <div class="pill-row">
+        <a href="/inject?kind=decode">注入介质损坏 E_DECODE</a>
+        <a href="/inject?kind=order">注入相机倒序 E_ORDER</a>
+        <a href="/inject?kind=density">注入分辨率越界 E_DENS</a>
+        <a href="/inject?kind=block&amp;tile=tile-r00-c00">注入单块失败 E_BLOCK</a>
+        <a href="/api/diagnostics">JSON 诊断</a>
+        <a href="/api/render?mode=preview">JSON 预览帧</a>
+        <a href="/api/render?mode=exact">JSON 精确帧</a>
+      </div>
+      {{range .Report.Notes}}<p class="warntext tiny">{{.}}</p>{{end}}
+    </section>
+  </div>
+</main>
+<footer>本地确定性场景 · 无网络依赖 · 纯 Go 文件事务检查点 · 生成时间 {{.Report.GeneratedAt}} · 工作目录 {{.Report.WorkDir}}</footer>
+</body>
+</html>
