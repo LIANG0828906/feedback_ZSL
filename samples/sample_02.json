@@ -1,0 +1,1196 @@
+{
+  "schema_version": "1",
+  "id": "char-03",
+  "name": "Deterministic Character 03",
+  "seed": 42,
+  "materials": [
+    {
+      "id": "base",
+      "version": "1"
+    },
+    {
+      "id": "skin",
+      "version": "1"
+    },
+    {
+      "id": "cloth",
+      "version": "1"
+    },
+    {
+      "id": "metal",
+      "version": "1"
+    },
+    {
+      "id": "hair",
+      "version": "1"
+    },
+    {
+      "id": "trim",
+      "version": "1"
+    },
+    {
+      "id": "glow",
+      "version": "1"
+    }
+  ],
+  "mounts": [
+    {
+      "id": "body",
+      "name": "Body"
+    },
+    {
+      "id": "head",
+      "name": "Head"
+    },
+    {
+      "id": "hair",
+      "name": "Hair"
+    },
+    {
+      "id": "torso",
+      "name": "Torso"
+    },
+    {
+      "id": "back",
+      "name": "Back"
+    },
+    {
+      "id": "hand_l",
+      "name": "Left Hand"
+    },
+    {
+      "id": "hand_r",
+      "name": "Right Hand"
+    },
+    {
+      "id": "waist",
+      "name": "Waist"
+    },
+    {
+      "id": "aura",
+      "name": "Aura Anchor"
+    }
+  ],
+  "parts": [
+    {
+      "id": "body",
+      "name": "body",
+      "mount_id": "body",
+      "vertex_count": 1041,
+      "triangle_count": 520,
+      "index_count": 1560,
+      "material_slots": [
+        "base"
+      ],
+      "submeshes": [
+        {
+          "id": "body-main",
+          "material_slot": "base",
+          "vertex_start": 0,
+          "vertex_count": 1041,
+          "index_start": 0,
+          "index_count": 1560
+        }
+      ],
+      "skin": true,
+      "skin_group": "body",
+      "priority": 106
+    },
+    {
+      "id": "head",
+      "name": "head",
+      "mount_id": "head",
+      "vertex_count": 462,
+      "triangle_count": 231,
+      "index_count": 693,
+      "material_slots": [
+        "skin"
+      ],
+      "submeshes": [
+        {
+          "id": "head-main",
+          "material_slot": "skin",
+          "vertex_start": 0,
+          "vertex_count": 462,
+          "index_start": 0,
+          "index_count": 693
+        }
+      ],
+      "skin": true,
+      "skin_group": "body",
+      "priority": 96
+    },
+    {
+      "id": "hair_a",
+      "name": "hair_a",
+      "mount_id": "hair",
+      "vertex_count": 162,
+      "triangle_count": 81,
+      "index_count": 243,
+      "material_slots": [
+        "hair"
+      ],
+      "submeshes": [
+        {
+          "id": "hair_a-main",
+          "material_slot": "hair",
+          "vertex_start": 0,
+          "vertex_count": 162,
+          "index_start": 0,
+          "index_count": 243
+        }
+      ],
+      "skin": true,
+      "skin_group": "body",
+      "priority": 86
+    },
+    {
+      "id": "hair_b",
+      "name": "hair_b",
+      "mount_id": "hair",
+      "vertex_count": 195,
+      "triangle_count": 97,
+      "index_count": 291,
+      "material_slots": [
+        "hair"
+      ],
+      "submeshes": [
+        {
+          "id": "hair_b-main",
+          "material_slot": "hair",
+          "vertex_start": 0,
+          "vertex_count": 195,
+          "index_start": 0,
+          "index_count": 291
+        }
+      ],
+      "skin": true,
+      "skin_group": "body",
+      "priority": 84
+    },
+    {
+      "id": "torso_a",
+      "name": "torso_a",
+      "mount_id": "torso",
+      "vertex_count": 792,
+      "triangle_count": 396,
+      "index_count": 1188,
+      "material_slots": [
+        "cloth",
+        "metal"
+      ],
+      "submeshes": [
+        {
+          "id": "torso_a-primary",
+          "material_slot": "cloth",
+          "vertex_start": 0,
+          "vertex_count": 475,
+          "index_start": 0,
+          "index_count": 594
+        },
+        {
+          "id": "torso_a-secondary",
+          "material_slot": "metal",
+          "vertex_start": 475,
+          "vertex_count": 317,
+          "index_start": 594,
+          "index_count": 594
+        }
+      ],
+      "skin": false,
+      "priority": 76
+    },
+    {
+      "id": "torso_b",
+      "name": "torso_b",
+      "mount_id": "torso",
+      "vertex_count": 850,
+      "triangle_count": 425,
+      "index_count": 1275,
+      "material_slots": [
+        "cloth"
+      ],
+      "submeshes": [
+        {
+          "id": "torso_b-main",
+          "material_slot": "cloth",
+          "vertex_start": 0,
+          "vertex_count": 850,
+          "index_start": 0,
+          "index_count": 1275
+        }
+      ],
+      "skin": false,
+      "priority": 74
+    },
+    {
+      "id": "cape",
+      "name": "cape",
+      "mount_id": "back",
+      "vertex_count": 363,
+      "triangle_count": 181,
+      "index_count": 543,
+      "material_slots": [
+        "cloth",
+        "trim"
+      ],
+      "submeshes": [
+        {
+          "id": "cape-primary",
+          "material_slot": "cloth",
+          "vertex_start": 0,
+          "vertex_count": 217,
+          "index_start": 0,
+          "index_count": 270
+        },
+        {
+          "id": "cape-secondary",
+          "material_slot": "trim",
+          "vertex_start": 217,
+          "vertex_count": 146,
+          "index_start": 270,
+          "index_count": 273
+        }
+      ],
+      "skin": false,
+      "priority": 66
+    },
+    {
+      "id": "pack",
+      "name": "pack",
+      "mount_id": "back",
+      "vertex_count": 381,
+      "triangle_count": 190,
+      "index_count": 570,
+      "material_slots": [
+        "cloth",
+        "metal"
+      ],
+      "submeshes": [
+        {
+          "id": "pack-primary",
+          "material_slot": "cloth",
+          "vertex_start": 0,
+          "vertex_count": 228,
+          "index_start": 0,
+          "index_count": 285
+        },
+        {
+          "id": "pack-secondary",
+          "material_slot": "metal",
+          "vertex_start": 228,
+          "vertex_count": 153,
+          "index_start": 285,
+          "index_count": 285
+        }
+      ],
+      "skin": false,
+      "priority": 64
+    },
+    {
+      "id": "hand_l",
+      "name": "hand_l",
+      "mount_id": "hand_l",
+      "vertex_count": 146,
+      "triangle_count": 73,
+      "index_count": 219,
+      "material_slots": [
+        "metal"
+      ],
+      "submeshes": [
+        {
+          "id": "hand_l-main",
+          "material_slot": "metal",
+          "vertex_start": 0,
+          "vertex_count": 146,
+          "index_start": 0,
+          "index_count": 219
+        }
+      ],
+      "skin": false,
+      "priority": 61
+    },
+    {
+      "id": "hand_r",
+      "name": "hand_r",
+      "mount_id": "hand_r",
+      "vertex_count": 159,
+      "triangle_count": 79,
+      "index_count": 237,
+      "material_slots": [
+        "metal"
+      ],
+      "submeshes": [
+        {
+          "id": "hand_r-main",
+          "material_slot": "metal",
+          "vertex_start": 0,
+          "vertex_count": 159,
+          "index_start": 0,
+          "index_count": 237
+        }
+      ],
+      "skin": false,
+      "priority": 60
+    },
+    {
+      "id": "aura",
+      "name": "aura",
+      "mount_id": "aura",
+      "vertex_count": 117,
+      "triangle_count": 58,
+      "index_count": 174,
+      "material_slots": [
+        "glow"
+      ],
+      "submeshes": [
+        {
+          "id": "aura-main",
+          "material_slot": "glow",
+          "vertex_start": 0,
+          "vertex_count": 117,
+          "index_start": 0,
+          "index_count": 174
+        }
+      ],
+      "skin": true,
+      "skin_group": "fx",
+      "priority": 46
+    },
+    {
+      "id": "tail",
+      "name": "tail",
+      "mount_id": "waist",
+      "vertex_count": 309,
+      "triangle_count": 154,
+      "index_count": 462,
+      "material_slots": [
+        "skin"
+      ],
+      "submeshes": [
+        {
+          "id": "tail-main",
+          "material_slot": "skin",
+          "vertex_start": 0,
+          "vertex_count": 309,
+          "index_start": 0,
+          "index_count": 462
+        }
+      ],
+      "skin": true,
+      "skin_group": "body",
+      "priority": 56
+    }
+  ],
+  "mutual_exclusions": [
+    {
+      "id": "ex_armor_pack",
+      "a": "torso_a",
+      "b": "pack",
+      "reason": "backpack clips through rigid armor"
+    },
+    {
+      "id": "ex_robe_cape",
+      "a": "torso_b",
+      "b": "cape",
+      "reason": "cape and robe share the same cloth binding"
+    }
+  ],
+  "constraints": {
+    "max_material_slots_per_batch": 3,
+    "max_vertices_per_batch": 1675,
+    "max_indices_per_batch": 3748,
+    "allow_cross_skin": false,
+    "policy": "priority-first-fit-v1"
+  },
+  "truth": {
+    "assemblies": [
+      {
+        "id": "idle-legal",
+        "pose": "idle",
+        "candidate_part_ids": [
+          "body",
+          "hair_a",
+          "hand_l",
+          "hand_r",
+          "head",
+          "tail",
+          "torso_a"
+        ],
+        "expected_legal": true,
+        "expected_accepted_part_ids": [
+          "body",
+          "hair_a",
+          "hand_l",
+          "hand_r",
+          "head",
+          "tail",
+          "torso_a"
+        ],
+        "expected_conflicts": [],
+        "expected_batches": [
+          {
+            "batch_id": "b0001",
+            "part_ids": [
+              "body",
+              "head",
+              "hair_a"
+            ],
+            "material_slots": [
+              "base",
+              "hair",
+              "skin"
+            ],
+            "skin": true,
+            "mixed_skin": false,
+            "skin_groups": [
+              "body"
+            ],
+            "vertex_used": 1665,
+            "index_used": 2496,
+            "placements": [
+              {
+                "part_id": "body",
+                "batch_id": "b0001",
+                "vertex_offset": 0,
+                "vertex_start": 0,
+                "vertex_end": 1041,
+                "index_offset": 0,
+                "index_start": 0,
+                "index_end": 1560,
+                "submeshes": [
+                  {
+                    "part_id": "body",
+                    "submesh_id": "body-main",
+                    "material_slot": "base",
+                    "vertex_offset": 0,
+                    "vertex_start": 0,
+                    "vertex_end": 1041,
+                    "index_offset": 0,
+                    "index_start": 0,
+                    "index_end": 1560,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 1041,
+                    "source_index_start": 0,
+                    "source_index_end": 1560
+                  }
+                ]
+              },
+              {
+                "part_id": "head",
+                "batch_id": "b0001",
+                "vertex_offset": 1041,
+                "vertex_start": 1041,
+                "vertex_end": 1503,
+                "index_offset": 1560,
+                "index_start": 1560,
+                "index_end": 2253,
+                "submeshes": [
+                  {
+                    "part_id": "head",
+                    "submesh_id": "head-main",
+                    "material_slot": "skin",
+                    "vertex_offset": 1041,
+                    "vertex_start": 1041,
+                    "vertex_end": 1503,
+                    "index_offset": 1560,
+                    "index_start": 1560,
+                    "index_end": 2253,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 462,
+                    "source_index_start": 0,
+                    "source_index_end": 693
+                  }
+                ]
+              },
+              {
+                "part_id": "hair_a",
+                "batch_id": "b0001",
+                "vertex_offset": 1503,
+                "vertex_start": 1503,
+                "vertex_end": 1665,
+                "index_offset": 2253,
+                "index_start": 2253,
+                "index_end": 2496,
+                "submeshes": [
+                  {
+                    "part_id": "hair_a",
+                    "submesh_id": "hair_a-main",
+                    "material_slot": "hair",
+                    "vertex_offset": 1503,
+                    "vertex_start": 1503,
+                    "vertex_end": 1665,
+                    "index_offset": 2253,
+                    "index_start": 2253,
+                    "index_end": 2496,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 162,
+                    "source_index_start": 0,
+                    "source_index_end": 243
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "batch_id": "b0002",
+            "part_ids": [
+              "torso_a",
+              "hand_l",
+              "hand_r"
+            ],
+            "material_slots": [
+              "cloth",
+              "metal"
+            ],
+            "skin": false,
+            "mixed_skin": false,
+            "skin_groups": [],
+            "vertex_used": 1097,
+            "index_used": 1644,
+            "placements": [
+              {
+                "part_id": "torso_a",
+                "batch_id": "b0002",
+                "vertex_offset": 0,
+                "vertex_start": 0,
+                "vertex_end": 792,
+                "index_offset": 0,
+                "index_start": 0,
+                "index_end": 1188,
+                "submeshes": [
+                  {
+                    "part_id": "torso_a",
+                    "submesh_id": "torso_a-primary",
+                    "material_slot": "cloth",
+                    "vertex_offset": 0,
+                    "vertex_start": 0,
+                    "vertex_end": 475,
+                    "index_offset": 0,
+                    "index_start": 0,
+                    "index_end": 594,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 475,
+                    "source_index_start": 0,
+                    "source_index_end": 594
+                  },
+                  {
+                    "part_id": "torso_a",
+                    "submesh_id": "torso_a-secondary",
+                    "material_slot": "metal",
+                    "vertex_offset": 475,
+                    "vertex_start": 475,
+                    "vertex_end": 792,
+                    "index_offset": 594,
+                    "index_start": 594,
+                    "index_end": 1188,
+                    "source_vertex_start": 475,
+                    "source_vertex_end": 792,
+                    "source_index_start": 594,
+                    "source_index_end": 1188
+                  }
+                ]
+              },
+              {
+                "part_id": "hand_l",
+                "batch_id": "b0002",
+                "vertex_offset": 792,
+                "vertex_start": 792,
+                "vertex_end": 938,
+                "index_offset": 1188,
+                "index_start": 1188,
+                "index_end": 1407,
+                "submeshes": [
+                  {
+                    "part_id": "hand_l",
+                    "submesh_id": "hand_l-main",
+                    "material_slot": "metal",
+                    "vertex_offset": 792,
+                    "vertex_start": 792,
+                    "vertex_end": 938,
+                    "index_offset": 1188,
+                    "index_start": 1188,
+                    "index_end": 1407,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 146,
+                    "source_index_start": 0,
+                    "source_index_end": 219
+                  }
+                ]
+              },
+              {
+                "part_id": "hand_r",
+                "batch_id": "b0002",
+                "vertex_offset": 938,
+                "vertex_start": 938,
+                "vertex_end": 1097,
+                "index_offset": 1407,
+                "index_start": 1407,
+                "index_end": 1644,
+                "submeshes": [
+                  {
+                    "part_id": "hand_r",
+                    "submesh_id": "hand_r-main",
+                    "material_slot": "metal",
+                    "vertex_offset": 938,
+                    "vertex_start": 938,
+                    "vertex_end": 1097,
+                    "index_offset": 1407,
+                    "index_start": 1407,
+                    "index_end": 1644,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 159,
+                    "source_index_start": 0,
+                    "source_index_end": 237
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "batch_id": "b0003",
+            "part_ids": [
+              "tail"
+            ],
+            "material_slots": [
+              "skin"
+            ],
+            "skin": true,
+            "mixed_skin": false,
+            "skin_groups": [
+              "body"
+            ],
+            "vertex_used": 309,
+            "index_used": 462,
+            "placements": [
+              {
+                "part_id": "tail",
+                "batch_id": "b0003",
+                "vertex_offset": 0,
+                "vertex_start": 0,
+                "vertex_end": 309,
+                "index_offset": 0,
+                "index_start": 0,
+                "index_end": 462,
+                "submeshes": [
+                  {
+                    "part_id": "tail",
+                    "submesh_id": "tail-main",
+                    "material_slot": "skin",
+                    "vertex_offset": 0,
+                    "vertex_start": 0,
+                    "vertex_end": 309,
+                    "index_offset": 0,
+                    "index_start": 0,
+                    "index_end": 462,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 309,
+                    "source_index_start": 0,
+                    "source_index_end": 462
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "expected_commit_sequence": [
+          "b0001",
+          "b0002",
+          "b0003"
+        ]
+      },
+      {
+        "id": "run-legal",
+        "pose": "run",
+        "candidate_part_ids": [
+          "body",
+          "cape",
+          "hair_b",
+          "hand_l",
+          "hand_r",
+          "head",
+          "tail",
+          "torso_a"
+        ],
+        "expected_legal": true,
+        "expected_accepted_part_ids": [
+          "body",
+          "cape",
+          "hair_b",
+          "hand_l",
+          "hand_r",
+          "head",
+          "tail",
+          "torso_a"
+        ],
+        "expected_conflicts": [],
+        "expected_batches": [
+          {
+            "batch_id": "b0001",
+            "part_ids": [
+              "body",
+              "head"
+            ],
+            "material_slots": [
+              "base",
+              "skin"
+            ],
+            "skin": true,
+            "mixed_skin": false,
+            "skin_groups": [
+              "body"
+            ],
+            "vertex_used": 1503,
+            "index_used": 2253,
+            "placements": [
+              {
+                "part_id": "body",
+                "batch_id": "b0001",
+                "vertex_offset": 0,
+                "vertex_start": 0,
+                "vertex_end": 1041,
+                "index_offset": 0,
+                "index_start": 0,
+                "index_end": 1560,
+                "submeshes": [
+                  {
+                    "part_id": "body",
+                    "submesh_id": "body-main",
+                    "material_slot": "base",
+                    "vertex_offset": 0,
+                    "vertex_start": 0,
+                    "vertex_end": 1041,
+                    "index_offset": 0,
+                    "index_start": 0,
+                    "index_end": 1560,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 1041,
+                    "source_index_start": 0,
+                    "source_index_end": 1560
+                  }
+                ]
+              },
+              {
+                "part_id": "head",
+                "batch_id": "b0001",
+                "vertex_offset": 1041,
+                "vertex_start": 1041,
+                "vertex_end": 1503,
+                "index_offset": 1560,
+                "index_start": 1560,
+                "index_end": 2253,
+                "submeshes": [
+                  {
+                    "part_id": "head",
+                    "submesh_id": "head-main",
+                    "material_slot": "skin",
+                    "vertex_offset": 1041,
+                    "vertex_start": 1041,
+                    "vertex_end": 1503,
+                    "index_offset": 1560,
+                    "index_start": 1560,
+                    "index_end": 2253,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 462,
+                    "source_index_start": 0,
+                    "source_index_end": 693
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "batch_id": "b0002",
+            "part_ids": [
+              "hair_b",
+              "tail"
+            ],
+            "material_slots": [
+              "hair",
+              "skin"
+            ],
+            "skin": true,
+            "mixed_skin": false,
+            "skin_groups": [
+              "body"
+            ],
+            "vertex_used": 504,
+            "index_used": 753,
+            "placements": [
+              {
+                "part_id": "hair_b",
+                "batch_id": "b0002",
+                "vertex_offset": 0,
+                "vertex_start": 0,
+                "vertex_end": 195,
+                "index_offset": 0,
+                "index_start": 0,
+                "index_end": 291,
+                "submeshes": [
+                  {
+                    "part_id": "hair_b",
+                    "submesh_id": "hair_b-main",
+                    "material_slot": "hair",
+                    "vertex_offset": 0,
+                    "vertex_start": 0,
+                    "vertex_end": 195,
+                    "index_offset": 0,
+                    "index_start": 0,
+                    "index_end": 291,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 195,
+                    "source_index_start": 0,
+                    "source_index_end": 291
+                  }
+                ]
+              },
+              {
+                "part_id": "tail",
+                "batch_id": "b0002",
+                "vertex_offset": 195,
+                "vertex_start": 195,
+                "vertex_end": 504,
+                "index_offset": 291,
+                "index_start": 291,
+                "index_end": 753,
+                "submeshes": [
+                  {
+                    "part_id": "tail",
+                    "submesh_id": "tail-main",
+                    "material_slot": "skin",
+                    "vertex_offset": 195,
+                    "vertex_start": 195,
+                    "vertex_end": 504,
+                    "index_offset": 291,
+                    "index_start": 291,
+                    "index_end": 753,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 309,
+                    "source_index_start": 0,
+                    "source_index_end": 462
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "batch_id": "b0003",
+            "part_ids": [
+              "torso_a",
+              "cape",
+              "hand_l",
+              "hand_r"
+            ],
+            "material_slots": [
+              "cloth",
+              "metal",
+              "trim"
+            ],
+            "skin": false,
+            "mixed_skin": false,
+            "skin_groups": [],
+            "vertex_used": 1460,
+            "index_used": 2187,
+            "placements": [
+              {
+                "part_id": "torso_a",
+                "batch_id": "b0003",
+                "vertex_offset": 0,
+                "vertex_start": 0,
+                "vertex_end": 792,
+                "index_offset": 0,
+                "index_start": 0,
+                "index_end": 1188,
+                "submeshes": [
+                  {
+                    "part_id": "torso_a",
+                    "submesh_id": "torso_a-primary",
+                    "material_slot": "cloth",
+                    "vertex_offset": 0,
+                    "vertex_start": 0,
+                    "vertex_end": 475,
+                    "index_offset": 0,
+                    "index_start": 0,
+                    "index_end": 594,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 475,
+                    "source_index_start": 0,
+                    "source_index_end": 594
+                  },
+                  {
+                    "part_id": "torso_a",
+                    "submesh_id": "torso_a-secondary",
+                    "material_slot": "metal",
+                    "vertex_offset": 475,
+                    "vertex_start": 475,
+                    "vertex_end": 792,
+                    "index_offset": 594,
+                    "index_start": 594,
+                    "index_end": 1188,
+                    "source_vertex_start": 475,
+                    "source_vertex_end": 792,
+                    "source_index_start": 594,
+                    "source_index_end": 1188
+                  }
+                ]
+              },
+              {
+                "part_id": "cape",
+                "batch_id": "b0003",
+                "vertex_offset": 792,
+                "vertex_start": 792,
+                "vertex_end": 1155,
+                "index_offset": 1188,
+                "index_start": 1188,
+                "index_end": 1731,
+                "submeshes": [
+                  {
+                    "part_id": "cape",
+                    "submesh_id": "cape-primary",
+                    "material_slot": "cloth",
+                    "vertex_offset": 792,
+                    "vertex_start": 792,
+                    "vertex_end": 1009,
+                    "index_offset": 1188,
+                    "index_start": 1188,
+                    "index_end": 1458,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 217,
+                    "source_index_start": 0,
+                    "source_index_end": 270
+                  },
+                  {
+                    "part_id": "cape",
+                    "submesh_id": "cape-secondary",
+                    "material_slot": "trim",
+                    "vertex_offset": 1009,
+                    "vertex_start": 1009,
+                    "vertex_end": 1155,
+                    "index_offset": 1458,
+                    "index_start": 1458,
+                    "index_end": 1731,
+                    "source_vertex_start": 217,
+                    "source_vertex_end": 363,
+                    "source_index_start": 270,
+                    "source_index_end": 543
+                  }
+                ]
+              },
+              {
+                "part_id": "hand_l",
+                "batch_id": "b0003",
+                "vertex_offset": 1155,
+                "vertex_start": 1155,
+                "vertex_end": 1301,
+                "index_offset": 1731,
+                "index_start": 1731,
+                "index_end": 1950,
+                "submeshes": [
+                  {
+                    "part_id": "hand_l",
+                    "submesh_id": "hand_l-main",
+                    "material_slot": "metal",
+                    "vertex_offset": 1155,
+                    "vertex_start": 1155,
+                    "vertex_end": 1301,
+                    "index_offset": 1731,
+                    "index_start": 1731,
+                    "index_end": 1950,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 146,
+                    "source_index_start": 0,
+                    "source_index_end": 219
+                  }
+                ]
+              },
+              {
+                "part_id": "hand_r",
+                "batch_id": "b0003",
+                "vertex_offset": 1301,
+                "vertex_start": 1301,
+                "vertex_end": 1460,
+                "index_offset": 1950,
+                "index_start": 1950,
+                "index_end": 2187,
+                "submeshes": [
+                  {
+                    "part_id": "hand_r",
+                    "submesh_id": "hand_r-main",
+                    "material_slot": "metal",
+                    "vertex_offset": 1301,
+                    "vertex_start": 1301,
+                    "vertex_end": 1460,
+                    "index_offset": 1950,
+                    "index_start": 1950,
+                    "index_end": 2187,
+                    "source_vertex_start": 0,
+                    "source_vertex_end": 159,
+                    "source_index_start": 0,
+                    "source_index_end": 237
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "expected_commit_sequence": [
+          "b0001",
+          "b0002",
+          "b0003"
+        ]
+      },
+      {
+        "id": "mount-conflict",
+        "pose": "inspect",
+        "candidate_part_ids": [
+          "hair_a",
+          "hair_b",
+          "hand_l"
+        ],
+        "expected_legal": false,
+        "expected_accepted_part_ids": [
+          "hair_a",
+          "hand_l"
+        ],
+        "expected_conflicts": [
+          {
+            "category": "mount_conflict",
+            "part_ids": [
+              "hair_a",
+              "hair_b"
+            ],
+            "mount_id": "hair",
+            "detail": "parts hair_a and hair_b both occupy mount hair"
+          }
+        ],
+        "expected_batches": [],
+        "expected_commit_sequence": []
+      },
+      {
+        "id": "explicit-exclusion",
+        "pose": "combat",
+        "candidate_part_ids": [
+          "head",
+          "pack",
+          "torso_a"
+        ],
+        "expected_legal": false,
+        "expected_accepted_part_ids": [
+          "head",
+          "torso_a"
+        ],
+        "expected_conflicts": [
+          {
+            "category": "explicit_exclusion",
+            "part_ids": [
+              "pack",
+              "torso_a"
+            ],
+            "rule_id": "ex_armor_pack",
+            "detail": "backpack clips through rigid armor"
+          }
+        ],
+        "expected_batches": [],
+        "expected_commit_sequence": []
+      },
+      {
+        "id": "skin-conflict",
+        "pose": "cast",
+        "candidate_part_ids": [
+          "aura",
+          "body"
+        ],
+        "expected_legal": false,
+        "expected_accepted_part_ids": [
+          "body"
+        ],
+        "expected_conflicts": [
+          {
+            "category": "skin_incompatible",
+            "part_ids": [
+              "aura",
+              "body"
+            ],
+            "detail": "skinned parts use incompatible skin groups \"fx\" and \"body\""
+          }
+        ],
+        "expected_batches": [],
+        "expected_commit_sequence": []
+      },
+      {
+        "id": "combined-conflict",
+        "pose": "combat",
+        "candidate_part_ids": [
+          "aura",
+          "body",
+          "cape",
+          "hair_a",
+          "hair_b",
+          "head",
+          "torso_b"
+        ],
+        "expected_legal": false,
+        "expected_accepted_part_ids": [
+          "body",
+          "hair_a",
+          "head",
+          "torso_b"
+        ],
+        "expected_conflicts": [
+          {
+            "category": "mount_conflict",
+            "part_ids": [
+              "hair_a",
+              "hair_b"
+            ],
+            "mount_id": "hair",
+            "detail": "parts hair_a and hair_b both occupy mount hair"
+          },
+          {
+            "category": "explicit_exclusion",
+            "part_ids": [
+              "cape",
+              "torso_b"
+            ],
+            "rule_id": "ex_robe_cape",
+            "detail": "cape and robe share the same cloth binding"
+          },
+          {
+            "category": "skin_incompatible",
+            "part_ids": [
+              "aura",
+              "body"
+            ],
+            "detail": "skinned parts use incompatible skin groups \"fx\" and \"body\""
+          },
+          {
+            "category": "skin_incompatible",
+            "part_ids": [
+              "aura",
+              "hair_a"
+            ],
+            "detail": "skinned parts use incompatible skin groups \"fx\" and \"body\""
+          },
+          {
+            "category": "skin_incompatible",
+            "part_ids": [
+              "aura",
+              "hair_b"
+            ],
+            "detail": "skinned parts use incompatible skin groups \"fx\" and \"body\""
+          },
+          {
+            "category": "skin_incompatible",
+            "part_ids": [
+              "aura",
+              "head"
+            ],
+            "detail": "skinned parts use incompatible skin groups \"fx\" and \"body\""
+          }
+        ],
+        "expected_batches": [],
+        "expected_commit_sequence": []
+      }
+    ]
+  }
+}
