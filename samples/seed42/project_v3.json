@@ -1,0 +1,252 @@
+{
+  "schema": "credential-project/v3",
+  "project_id": "cred-project-0000002a",
+  "manifest_version": "manifest-42-0000002a",
+  "clock": {
+    "basis": "milliseconds",
+    "tick_ms": 1000
+  },
+  "ttl_unit": "milliseconds",
+  "horizon_ms": 24000,
+  "last_rotation_watermark_ms": 1000,
+  "credentials": [
+    {
+      "id": "cred-sub-api-v1",
+      "generation": 1,
+      "issued_at_ms": 1000,
+      "ttl_ms": 7000,
+      "batch": 0
+    },
+    {
+      "id": "cred-sub-api-v2",
+      "generation": 2,
+      "issued_at_ms": 3000,
+      "ttl_ms": 13000,
+      "batch": 1,
+      "supersedes": "cred-sub-api-v1"
+    },
+    {
+      "id": "cred-sub-archive-v1",
+      "generation": 1,
+      "issued_at_ms": 1000,
+      "ttl_ms": 9000,
+      "batch": 0
+    },
+    {
+      "id": "cred-sub-audit-v1",
+      "generation": 1,
+      "issued_at_ms": 1000,
+      "ttl_ms": 7000,
+      "batch": 0
+    },
+    {
+      "id": "cred-sub-audit-v2",
+      "generation": 2,
+      "issued_at_ms": 4000,
+      "ttl_ms": 18000,
+      "batch": 2,
+      "supersedes": "cred-sub-audit-v1"
+    },
+    {
+      "id": "cred-sub-billing-v1",
+      "generation": 1,
+      "issued_at_ms": 1000,
+      "ttl_ms": 11000,
+      "batch": 0
+    },
+    {
+      "id": "cred-sub-billing-v2",
+      "generation": 2,
+      "issued_at_ms": 3000,
+      "ttl_ms": 14000,
+      "batch": 1,
+      "supersedes": "cred-sub-billing-v1"
+    },
+    {
+      "id": "cred-sub-reports-v1",
+      "generation": 1,
+      "issued_at_ms": 1000,
+      "ttl_ms": 5000,
+      "batch": 0
+    },
+    {
+      "id": "cred-sub-reports-v2",
+      "generation": 2,
+      "issued_at_ms": 4000,
+      "ttl_ms": 18000,
+      "batch": 1,
+      "supersedes": "cred-sub-reports-v1"
+    },
+    {
+      "id": "cred-sub-search-v1",
+      "generation": 1,
+      "issued_at_ms": 1000,
+      "ttl_ms": 10000,
+      "batch": 0
+    },
+    {
+      "id": "cred-sub-search-v2",
+      "generation": 2,
+      "issued_at_ms": 4000,
+      "ttl_ms": 15000,
+      "batch": 1,
+      "supersedes": "cred-sub-search-v1"
+    }
+  ],
+  "subscribers": [
+    {
+      "subscriber_id": "sub-api",
+      "active": true,
+      "depends_on": null,
+      "refs": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "generation": 1,
+          "role": "primary"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "generation": 2,
+          "role": "pending"
+        }
+      ]
+    },
+    {
+      "subscriber_id": "sub-archive",
+      "active": true,
+      "depends_on": [
+        "sub-search"
+      ],
+      "refs": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "generation": 1,
+          "role": "primary"
+        }
+      ]
+    },
+    {
+      "subscriber_id": "sub-audit",
+      "active": true,
+      "depends_on": null,
+      "refs": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "generation": 1,
+          "role": "primary"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "generation": 2,
+          "role": "pending"
+        }
+      ]
+    },
+    {
+      "subscriber_id": "sub-billing",
+      "active": true,
+      "depends_on": [
+        "sub-api"
+      ],
+      "refs": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "generation": 1,
+          "role": "primary"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "generation": 2,
+          "role": "pending"
+        }
+      ]
+    },
+    {
+      "subscriber_id": "sub-reports",
+      "active": true,
+      "depends_on": [
+        "sub-billing"
+      ],
+      "refs": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "generation": 1,
+          "role": "primary"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "generation": 2,
+          "role": "pending"
+        }
+      ]
+    },
+    {
+      "subscriber_id": "sub-search",
+      "active": true,
+      "depends_on": [
+        "sub-api"
+      ],
+      "refs": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "generation": 1,
+          "role": "primary"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "generation": 2,
+          "role": "pending"
+        }
+      ]
+    }
+  ],
+  "rotations": [
+    {
+      "credential_id": "cred-sub-api-v2",
+      "from_version": 1,
+      "to_version": 2
+    },
+    {
+      "credential_id": "cred-sub-audit-v2",
+      "from_version": 1,
+      "to_version": 2
+    },
+    {
+      "credential_id": "cred-sub-billing-v2",
+      "from_version": 1,
+      "to_version": 2
+    },
+    {
+      "credential_id": "cred-sub-reports-v2",
+      "from_version": 1,
+      "to_version": 2
+    },
+    {
+      "credential_id": "cred-sub-search-v2",
+      "from_version": 1,
+      "to_version": 2
+    }
+  ],
+  "reload": {
+    "schedule_start_tick": 0,
+    "max_per_batch": 1,
+    "retry_limit": 3,
+    "retry_step_ms": 1000,
+    "failure_plan": [
+      {
+        "subscription_id": "sub-billing",
+        "attempts": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "subscription_id": "sub-reports",
+        "attempts": [
+          1
+        ]
+      }
+    ]
+  }
+}

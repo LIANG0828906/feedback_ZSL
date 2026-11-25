@@ -1,0 +1,4820 @@
+{
+  "seed": 42,
+  "manifest_version": "manifest-42-0000002a",
+  "validity": [
+    {
+      "tick": 0,
+      "now_ms": 0,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=3000"
+        }
+      ]
+    },
+    {
+      "tick": 0,
+      "now_ms": 0,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=1000"
+        }
+      ]
+    },
+    {
+      "tick": 0,
+      "now_ms": 0,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 0,
+      "now_ms": 0,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=3000"
+        }
+      ]
+    },
+    {
+      "tick": 0,
+      "now_ms": 0,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=1000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 0,
+      "now_ms": 0,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 1,
+      "now_ms": 1000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-api-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=3000"
+        }
+      ]
+    },
+    {
+      "tick": 1,
+      "now_ms": 1000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 1,
+      "now_ms": 1000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-audit-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 1,
+      "now_ms": 1000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 11000,
+          "remaining_ticks": 11,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=3000"
+        }
+      ]
+    },
+    {
+      "tick": 1,
+      "now_ms": 1000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 6000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-reports-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:5000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 1,
+      "now_ms": 1000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 10000,
+          "remaining_ticks": 10,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "now_ms": 2000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-api-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=3000"
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "now_ms": 2000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "now_ms": 2000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-audit-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "now_ms": 2000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 10000,
+          "remaining_ticks": 10,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=3000"
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "now_ms": 2000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 6000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-reports-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:5000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "now_ms": 2000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "now_ms": 3000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 13000,
+          "remaining_ticks": 13,
+          "source": "credential:cred-sub-api-v2"
+        },
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-api-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "now_ms": 3000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "now_ms": 3000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-audit-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "now_ms": 3000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 14000,
+          "remaining_ticks": 14,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "now_ms": 3000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 6000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-reports-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:5000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "now_ms": 3000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "not_yet_valid",
+          "source": "watermark/issued:max=4000"
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "now_ms": 4000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 12000,
+          "remaining_ticks": 12,
+          "source": "credential:cred-sub-api-v2"
+        },
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-api-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "now_ms": 4000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "now_ms": 4000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 18000,
+          "remaining_ticks": 18,
+          "source": "credential:cred-sub-audit-v2"
+        },
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-audit-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "now_ms": 4000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 13000,
+          "remaining_ticks": 13,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "now_ms": 4000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 18000,
+          "remaining_ticks": 18,
+          "source": "credential:cred-sub-reports-v2"
+        },
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 6000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-reports-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:5000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "now_ms": 4000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 15000,
+          "remaining_ticks": 15,
+          "source": "credential:cred-sub-search-v2"
+        },
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "now_ms": 5000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 11000,
+          "remaining_ticks": 11,
+          "source": "credential:cred-sub-api-v2"
+        },
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-api-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "now_ms": 5000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "now_ms": 5000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 17000,
+          "remaining_ticks": 17,
+          "source": "credential:cred-sub-audit-v2"
+        },
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-audit-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "now_ms": 5000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 12000,
+          "remaining_ticks": 12,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "now_ms": 5000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 17000,
+          "remaining_ticks": 17,
+          "source": "credential:cred-sub-reports-v2"
+        },
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 6000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-reports-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:5000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "now_ms": 5000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 14000,
+          "remaining_ticks": 14,
+          "source": "credential:cred-sub-search-v2"
+        },
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "now_ms": 6000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 10000,
+          "remaining_ticks": 10,
+          "source": "credential:cred-sub-api-v2"
+        },
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-api-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "now_ms": 6000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "now_ms": 6000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 16000,
+          "remaining_ticks": 16,
+          "source": "credential:cred-sub-audit-v2"
+        },
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-audit-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "now_ms": 6000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 11000,
+          "remaining_ticks": 11,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "now_ms": 6000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 16000,
+          "remaining_ticks": 16,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "now_ms": 6000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 13000,
+          "remaining_ticks": 13,
+          "source": "credential:cred-sub-search-v2"
+        },
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "now_ms": 7000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-api-v2"
+        },
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-api-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "now_ms": 7000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "now_ms": 7000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 15000,
+          "remaining_ticks": 15,
+          "source": "credential:cred-sub-audit-v2"
+        },
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 8000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-audit-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:7000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "now_ms": 7000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 10000,
+          "remaining_ticks": 10,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "now_ms": 7000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 15000,
+          "remaining_ticks": 15,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "now_ms": 7000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 12000,
+          "remaining_ticks": 12,
+          "source": "credential:cred-sub-search-v2"
+        },
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "now_ms": 8000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "now_ms": 8000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "now_ms": 8000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 14000,
+          "remaining_ticks": 14,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "now_ms": 8000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "now_ms": 8000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 14000,
+          "remaining_ticks": 14,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "now_ms": 8000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 11000,
+          "remaining_ticks": 11,
+          "source": "credential:cred-sub-search-v2"
+        },
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 9,
+      "now_ms": 9000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 9,
+      "now_ms": 9000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 10000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-archive-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:9000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 9,
+      "now_ms": 9000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 13000,
+          "remaining_ticks": 13,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 9,
+      "now_ms": 9000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 9,
+      "now_ms": 9000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 13000,
+          "remaining_ticks": 13,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 9,
+      "now_ms": 9000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 10000,
+          "remaining_ticks": 10,
+          "source": "credential:cred-sub-search-v2"
+        },
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 10,
+      "now_ms": 10000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 10,
+      "now_ms": 10000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 10,
+      "now_ms": 10000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 12000,
+          "remaining_ticks": 12,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 10,
+      "now_ms": 10000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 10,
+      "now_ms": 10000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 12000,
+          "remaining_ticks": 12,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 10,
+      "now_ms": 10000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-search-v2"
+        },
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 11000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-search-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:10000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 11,
+      "now_ms": 11000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 11,
+      "now_ms": 11000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 11,
+      "now_ms": 11000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 11000,
+          "remaining_ticks": 11,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 11,
+      "now_ms": 11000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-billing-v2"
+        },
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "valid_from_ms": 1000,
+          "expires_at_ms": 12000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-billing-v1"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "valid",
+          "source": "issued:1000;ttl:11000;watermark:1000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 11,
+      "now_ms": 11000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 11000,
+          "remaining_ticks": 11,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 11,
+      "now_ms": 11000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 12,
+      "now_ms": 12000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 12,
+      "now_ms": 12000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 12,
+      "now_ms": 12000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 10000,
+          "remaining_ticks": 10,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 12,
+      "now_ms": 12000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-billing-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 12,
+      "now_ms": 12000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 10000,
+          "remaining_ticks": 10,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 12,
+      "now_ms": 12000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 13,
+      "now_ms": 13000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 13,
+      "now_ms": 13000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 13,
+      "now_ms": 13000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 13,
+      "now_ms": 13000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-billing-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 13,
+      "now_ms": 13000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 9000,
+          "remaining_ticks": 9,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 13,
+      "now_ms": 13000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 14,
+      "now_ms": 14000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 14,
+      "now_ms": 14000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 14,
+      "now_ms": 14000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 14,
+      "now_ms": 14000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-billing-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 14,
+      "now_ms": 14000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 8000,
+          "remaining_ticks": 8,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 14,
+      "now_ms": 14000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 15,
+      "now_ms": 15000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 16000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-api-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:13000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 15,
+      "now_ms": 15000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 15,
+      "now_ms": 15000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 15,
+      "now_ms": 15000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-billing-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 15,
+      "now_ms": 15000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 7000,
+          "remaining_ticks": 7,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 15,
+      "now_ms": 15000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "now_ms": 16000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "now_ms": 16000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "now_ms": 16000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "now_ms": 16000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "valid_from_ms": 3000,
+          "expires_at_ms": 17000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-billing-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:3000;ttl:14000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "now_ms": 16000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 6000,
+          "remaining_ticks": 6,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "now_ms": 16000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 17,
+      "now_ms": 17000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 17,
+      "now_ms": 17000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 17,
+      "now_ms": 17000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 17,
+      "now_ms": 17000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 17,
+      "now_ms": 17000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 5000,
+          "remaining_ticks": 5,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 17,
+      "now_ms": 17000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 18,
+      "now_ms": 18000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 18,
+      "now_ms": 18000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 18,
+      "now_ms": 18000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 18,
+      "now_ms": 18000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 18,
+      "now_ms": 18000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 4000,
+          "remaining_ticks": 4,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 18,
+      "now_ms": 18000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 19000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-search-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:15000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 19,
+      "now_ms": 19000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 19,
+      "now_ms": 19000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 19,
+      "now_ms": 19000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 19,
+      "now_ms": 19000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 19,
+      "now_ms": 19000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 3000,
+          "remaining_ticks": 3,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 19,
+      "now_ms": 19000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:19000"
+        }
+      ]
+    },
+    {
+      "tick": 20,
+      "now_ms": 20000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 20,
+      "now_ms": 20000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 20,
+      "now_ms": 20000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 20,
+      "now_ms": 20000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 20,
+      "now_ms": 20000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 2000,
+          "remaining_ticks": 2,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 20,
+      "now_ms": 20000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:19000"
+        }
+      ]
+    },
+    {
+      "tick": 21,
+      "now_ms": 21000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 21,
+      "now_ms": 21000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 21,
+      "now_ms": 21000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-audit-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 21,
+      "now_ms": 21000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 21,
+      "now_ms": 21000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "valid_from_ms": 4000,
+          "expires_at_ms": 22000,
+          "remaining_ms": 1000,
+          "remaining_ticks": 1,
+          "source": "credential:cred-sub-reports-v2"
+        }
+      ],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "valid",
+          "source": "issued:4000;ttl:18000;watermark:1000"
+        }
+      ]
+    },
+    {
+      "tick": 21,
+      "now_ms": 21000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:19000"
+        }
+      ]
+    },
+    {
+      "tick": 22,
+      "now_ms": 22000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 22,
+      "now_ms": 22000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 22,
+      "now_ms": 22000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:22000"
+        }
+      ]
+    },
+    {
+      "tick": 22,
+      "now_ms": 22000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 22,
+      "now_ms": 22000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:22000"
+        }
+      ]
+    },
+    {
+      "tick": 22,
+      "now_ms": 22000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:19000"
+        }
+      ]
+    },
+    {
+      "tick": 23,
+      "now_ms": 23000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 23,
+      "now_ms": 23000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 23,
+      "now_ms": 23000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:22000"
+        }
+      ]
+    },
+    {
+      "tick": 23,
+      "now_ms": 23000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 23,
+      "now_ms": 23000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:22000"
+        }
+      ]
+    },
+    {
+      "tick": 23,
+      "now_ms": 23000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:19000"
+        }
+      ]
+    },
+    {
+      "tick": 24,
+      "now_ms": 24000,
+      "subscription_id": "sub-api",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-api-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-api-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:16000"
+        }
+      ]
+    },
+    {
+      "tick": 24,
+      "now_ms": 24000,
+      "subscription_id": "sub-archive",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-archive-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:10000"
+        }
+      ]
+    },
+    {
+      "tick": 24,
+      "now_ms": 24000,
+      "subscription_id": "sub-audit",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-audit-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:8000"
+        },
+        {
+          "credential_id": "cred-sub-audit-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:22000"
+        }
+      ]
+    },
+    {
+      "tick": 24,
+      "now_ms": 24000,
+      "subscription_id": "sub-billing",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-billing-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:12000"
+        },
+        {
+          "credential_id": "cred-sub-billing-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:17000"
+        }
+      ]
+    },
+    {
+      "tick": 24,
+      "now_ms": 24000,
+      "subscription_id": "sub-reports",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-reports-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:6000"
+        },
+        {
+          "credential_id": "cred-sub-reports-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:22000"
+        }
+      ]
+    },
+    {
+      "tick": 24,
+      "now_ms": 24000,
+      "subscription_id": "sub-search",
+      "active": true,
+      "available": [],
+      "states": [
+        {
+          "credential_id": "cred-sub-search-v1",
+          "version": 1,
+          "status": "expired",
+          "source": "expiry:11000"
+        },
+        {
+          "credential_id": "cred-sub-search-v2",
+          "version": 2,
+          "status": "expired",
+          "source": "expiry:19000"
+        }
+      ]
+    }
+  ],
+  "propagation": {
+    "suspended": [
+      {
+        "credential_id": "cred-sub-api-v2",
+        "status": "suspended",
+        "source_version": 1,
+        "target_version": 2,
+        "base_reload_batch": 1,
+        "arrivals": [
+          {
+            "subscription_id": "sub-api",
+            "depth": 0,
+            "batch": 1,
+            "path": [
+              "sub-api"
+            ]
+          },
+          {
+            "subscription_id": "sub-billing",
+            "depth": 1,
+            "batch": 2,
+            "path": [
+              "sub-api",
+              "sub-billing"
+            ]
+          },
+          {
+            "subscription_id": "sub-search",
+            "depth": 1,
+            "batch": 2,
+            "path": [
+              "sub-api",
+              "sub-search"
+            ]
+          },
+          {
+            "subscription_id": "sub-archive",
+            "depth": 2,
+            "batch": 3,
+            "path": [
+              "sub-api",
+              "sub-search",
+              "sub-archive"
+            ]
+          },
+          {
+            "subscription_id": "sub-reports",
+            "depth": 2,
+            "batch": 3,
+            "path": [
+              "sub-api",
+              "sub-billing",
+              "sub-reports"
+            ]
+          }
+        ],
+        "arrival_set": [
+          "sub-api",
+          "sub-billing",
+          "sub-search",
+          "sub-archive",
+          "sub-reports"
+        ],
+        "source_reason": "rotation:cred-sub-api-v2"
+      },
+      {
+        "credential_id": "cred-sub-audit-v2",
+        "status": "suspended",
+        "source_version": 1,
+        "target_version": 2,
+        "base_reload_batch": 2,
+        "arrivals": [
+          {
+            "subscription_id": "sub-audit",
+            "depth": 0,
+            "batch": 2,
+            "path": [
+              "sub-audit"
+            ]
+          }
+        ],
+        "arrival_set": [
+          "sub-audit"
+        ],
+        "source_reason": "rotation:cred-sub-audit-v2"
+      },
+      {
+        "credential_id": "cred-sub-billing-v2",
+        "status": "suspended",
+        "source_version": 1,
+        "target_version": 2,
+        "base_reload_batch": 1,
+        "arrivals": [
+          {
+            "subscription_id": "sub-billing",
+            "depth": 0,
+            "batch": 1,
+            "path": [
+              "sub-billing"
+            ]
+          },
+          {
+            "subscription_id": "sub-reports",
+            "depth": 1,
+            "batch": 2,
+            "path": [
+              "sub-billing",
+              "sub-reports"
+            ]
+          }
+        ],
+        "arrival_set": [
+          "sub-billing",
+          "sub-reports"
+        ],
+        "source_reason": "rotation:cred-sub-billing-v2"
+      },
+      {
+        "credential_id": "cred-sub-reports-v2",
+        "status": "suspended",
+        "source_version": 1,
+        "target_version": 2,
+        "base_reload_batch": 1,
+        "arrivals": [
+          {
+            "subscription_id": "sub-reports",
+            "depth": 0,
+            "batch": 1,
+            "path": [
+              "sub-reports"
+            ]
+          }
+        ],
+        "arrival_set": [
+          "sub-reports"
+        ],
+        "source_reason": "rotation:cred-sub-reports-v2"
+      },
+      {
+        "credential_id": "cred-sub-search-v2",
+        "status": "suspended",
+        "source_version": 1,
+        "target_version": 2,
+        "base_reload_batch": 1,
+        "arrivals": [
+          {
+            "subscription_id": "sub-search",
+            "depth": 0,
+            "batch": 1,
+            "path": [
+              "sub-search"
+            ]
+          },
+          {
+            "subscription_id": "sub-archive",
+            "depth": 1,
+            "batch": 2,
+            "path": [
+              "sub-search",
+              "sub-archive"
+            ]
+          }
+        ],
+        "arrival_set": [
+          "sub-search",
+          "sub-archive"
+        ],
+        "source_reason": "rotation:cred-sub-search-v2"
+      }
+    ]
+  },
+  "schedule": {
+    "batches": [
+      {
+        "batch": 1,
+        "planned": [
+          "sub-api"
+        ],
+        "actual": [
+          "sub-api"
+        ],
+        "failed": [],
+        "attempts": [
+          {
+            "attempt": 1,
+            "tick": 3,
+            "millis": 3000,
+            "failed": [],
+            "succeeded": [
+              "sub-api"
+            ],
+            "trigger": "scheduled_retry"
+          }
+        ],
+        "start_tick": 3
+      },
+      {
+        "batch": 2,
+        "planned": [
+          "sub-audit"
+        ],
+        "actual": [
+          "sub-audit"
+        ],
+        "failed": [],
+        "attempts": [
+          {
+            "attempt": 1,
+            "tick": 6,
+            "millis": 6000,
+            "failed": [],
+            "succeeded": [
+              "sub-audit"
+            ],
+            "trigger": "scheduled_retry"
+          }
+        ],
+        "start_tick": 6
+      },
+      {
+        "batch": 3,
+        "planned": [
+          "sub-archive"
+        ],
+        "actual": [
+          "sub-archive"
+        ],
+        "failed": [],
+        "attempts": [
+          {
+            "attempt": 1,
+            "tick": 9,
+            "millis": 9000,
+            "failed": [],
+            "succeeded": [
+              "sub-archive"
+            ],
+            "trigger": "scheduled_retry"
+          }
+        ],
+        "start_tick": 9
+      },
+      {
+        "batch": 4,
+        "planned": [
+          "sub-billing"
+        ],
+        "actual": [],
+        "failed": [
+          {
+            "subscription_id": "sub-billing",
+            "attempts": 3,
+            "failure_tick": 14,
+            "failure_ms": 14000,
+            "trigger_source": "retry_exhausted;credential_source=cred-sub-api-v2,cred-sub-billing-v2",
+            "constraint": "REL-RETRY-003"
+          }
+        ],
+        "deferred": [
+          {
+            "subscription_id": "sub-billing",
+            "original_batch": 2,
+            "actual_batch": 3,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          },
+          {
+            "subscription_id": "sub-billing",
+            "original_batch": 2,
+            "actual_batch": 4,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          }
+        ],
+        "attempts": [
+          {
+            "attempt": 1,
+            "tick": 12,
+            "millis": 12000,
+            "failed": [
+              "sub-billing"
+            ],
+            "succeeded": [],
+            "trigger": "scheduled_retry"
+          },
+          {
+            "attempt": 2,
+            "tick": 13,
+            "millis": 13000,
+            "failed": [
+              "sub-billing"
+            ],
+            "succeeded": [],
+            "trigger": "scheduled_retry"
+          },
+          {
+            "attempt": 3,
+            "tick": 14,
+            "millis": 14000,
+            "failed": [
+              "sub-billing"
+            ],
+            "succeeded": [],
+            "trigger": "scheduled_retry"
+          }
+        ],
+        "start_tick": 12
+      },
+      {
+        "batch": 5,
+        "planned": [
+          "sub-reports"
+        ],
+        "actual": [],
+        "failed": [
+          {
+            "subscription_id": "sub-reports",
+            "attempts": 0,
+            "failure_tick": 15,
+            "failure_ms": 15000,
+            "trigger_source": "upstream:sub-billing",
+            "constraint": "REL-TOPO-002"
+          }
+        ],
+        "deferred": [
+          {
+            "subscription_id": "sub-reports",
+            "original_batch": 3,
+            "actual_batch": 4,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          },
+          {
+            "subscription_id": "sub-reports",
+            "original_batch": 3,
+            "actual_batch": 5,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          }
+        ],
+        "attempts": [],
+        "start_tick": 15
+      },
+      {
+        "batch": 6,
+        "planned": [
+          "sub-search"
+        ],
+        "actual": [
+          "sub-search"
+        ],
+        "failed": [],
+        "deferred": [
+          {
+            "subscription_id": "sub-search",
+            "original_batch": 2,
+            "actual_batch": 3,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          },
+          {
+            "subscription_id": "sub-search",
+            "original_batch": 2,
+            "actual_batch": 4,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          },
+          {
+            "subscription_id": "sub-search",
+            "original_batch": 2,
+            "actual_batch": 5,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          },
+          {
+            "subscription_id": "sub-search",
+            "original_batch": 2,
+            "actual_batch": 6,
+            "reason": "batch capacity exceeded; moved to the next reload slice",
+            "constraint": "REL-CAP-001"
+          }
+        ],
+        "attempts": [
+          {
+            "attempt": 1,
+            "tick": 18,
+            "millis": 18000,
+            "failed": [],
+            "succeeded": [
+              "sub-search"
+            ],
+            "trigger": "scheduled_retry"
+          }
+        ],
+        "start_tick": 18
+      }
+    ],
+    "full_set": [
+      "sub-api",
+      "sub-archive",
+      "sub-audit",
+      "sub-billing",
+      "sub-reports",
+      "sub-search"
+    ],
+    "actual_union": [
+      "sub-api",
+      "sub-archive",
+      "sub-audit",
+      "sub-search"
+    ],
+    "failed_union": [
+      "sub-billing",
+      "sub-reports"
+    ],
+    "coverage_match": true,
+    "one_shot_set": [
+      "sub-api",
+      "sub-archive",
+      "sub-audit",
+      "sub-billing",
+      "sub-reports",
+      "sub-search"
+    ],
+    "capacity_constraint": "REL-CAP-001",
+    "arrival_sources": {
+      "sub-api": [
+        "cred-sub-api-v2"
+      ],
+      "sub-archive": [
+        "cred-sub-api-v2",
+        "cred-sub-search-v2"
+      ],
+      "sub-audit": [
+        "cred-sub-audit-v2"
+      ],
+      "sub-billing": [
+        "cred-sub-api-v2",
+        "cred-sub-billing-v2"
+      ],
+      "sub-reports": [
+        "cred-sub-api-v2",
+        "cred-sub-billing-v2",
+        "cred-sub-reports-v2"
+      ],
+      "sub-search": [
+        "cred-sub-api-v2",
+        "cred-sub-search-v2"
+      ]
+    }
+  },
+  "gates": {
+    "at_tick": 6,
+    "decisions": [
+      {
+        "subscription_id": "sub-api",
+        "tick": 6,
+        "decision": "allow_new",
+        "credential_id": "cred-sub-api-v2",
+        "credential_version": 2,
+        "remaining_ms": 10000,
+        "source": "suspended:cred-sub-api-v2;state=arrived_confirmed",
+        "reason": "new credential reload is confirmed and credential is valid",
+        "requested_credential": "cred-sub-api-v2",
+        "committed_credential": "cred-sub-api-v1"
+      },
+      {
+        "subscription_id": "sub-archive",
+        "tick": 6,
+        "decision": "not_applicable",
+        "source": "no_suspended_rotation_reference",
+        "reason": "subscription has no rotation target reference"
+      },
+      {
+        "subscription_id": "sub-audit",
+        "tick": 6,
+        "decision": "fallback_old",
+        "credential_id": "cred-sub-audit-v1",
+        "credential_version": 1,
+        "remaining_ms": 2000,
+        "source": "committed:cred-sub-audit-v1;state=last_valid",
+        "reason": "new credential reload has not been confirmed; committed credential remains valid",
+        "requested_credential": "cred-sub-audit-v2",
+        "committed_credential": "cred-sub-audit-v1"
+      },
+      {
+        "subscription_id": "sub-billing",
+        "tick": 6,
+        "decision": "allow_new",
+        "credential_id": "cred-sub-billing-v2",
+        "credential_version": 2,
+        "remaining_ms": 11000,
+        "source": "suspended:cred-sub-billing-v2;state=arrived_confirmed",
+        "reason": "new credential reload is confirmed and credential is valid",
+        "requested_credential": "cred-sub-billing-v2",
+        "committed_credential": "cred-sub-billing-v1"
+      },
+      {
+        "subscription_id": "sub-reports",
+        "tick": 6,
+        "decision": "reject",
+        "source": "committed:none_valid",
+        "code": "E_GATE_NO_FALLBACK",
+        "reason": "new credential reload has not been confirmed; no committed credential remains valid",
+        "requested_credential": "cred-sub-reports-v2",
+        "committed_credential": "cred-sub-reports-v1"
+      },
+      {
+        "subscription_id": "sub-search",
+        "tick": 6,
+        "decision": "allow_new",
+        "credential_id": "cred-sub-search-v2",
+        "credential_version": 2,
+        "remaining_ms": 13000,
+        "source": "suspended:cred-sub-search-v2;state=arrived_confirmed",
+        "reason": "new credential reload is confirmed and credential is valid",
+        "requested_credential": "cred-sub-search-v2",
+        "committed_credential": "cred-sub-search-v1"
+      }
+    ]
+  },
+  "gate_runtime": {
+    "Confirmed": {
+      "sub-api": true,
+      "sub-audit": false,
+      "sub-billing": true,
+      "sub-reports": false,
+      "sub-search": true
+    },
+    "Arrived": {
+      "sub-api": true,
+      "sub-audit": true,
+      "sub-billing": true,
+      "sub-reports": true,
+      "sub-search": true
+    },
+    "Committed": {
+      "sub-api": "cred-sub-api-v1",
+      "sub-audit": "cred-sub-audit-v1",
+      "sub-billing": "cred-sub-billing-v1",
+      "sub-reports": "cred-sub-reports-v1",
+      "sub-search": "cred-sub-search-v1"
+    },
+    "RequestedBatch": {
+      "sub-api": 1,
+      "sub-audit": 2,
+      "sub-billing": 1,
+      "sub-reports": 1,
+      "sub-search": 1
+    },
+    "LastCommittedBatch": {
+      "sub-api": 0,
+      "sub-audit": 1,
+      "sub-billing": 0,
+      "sub-reports": 0,
+      "sub-search": 0
+    },
+    "CheckBatchGap": false,
+    "WatermarkKnown": true,
+    "RequireWatermark": true
+  },
+  "combined_anomaly_gate": {
+    "subscription_id": "combined-anomaly",
+    "tick": 6,
+    "decision": "reject",
+    "source": "committed:ordered-version",
+    "code": "E_VERSION_REGRESSION",
+    "reason": "credential version regressed from 2 to 1",
+    "requested_credential": "requested-v1",
+    "committed_credential": "committed-v2"
+  }
+}
