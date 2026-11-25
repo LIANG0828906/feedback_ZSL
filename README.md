@@ -1,22 +1,168 @@
-虚拟制片小组眼下分到的只是一个尚未初始化的空工作目录，首个可验收版本要从这里独立成形：为实时合成场景交付一套虚拟制片层栈合成迭代核。本地确定性样本生成器由实现自行编写，按固定种子产出同一份前景合成工程在三个格式版本下的描述，版本差异体现在字段命名、图层可见性与层级关系的表达方式（平坦图层表与按组嵌套的图层树）、颜色通道的预乘约定与时间基准单位（tick 与毫秒）。每份工程声明若干图层（每层带透明度、混合模式与内容摘要）、一批按逻辑时间排列的合成指令、逐帧采样点与解析真值，真值给出若干采样像素的期望合成结果、各层可见性终点与逐帧时间戳，真值仅来自生成器的解析构造。交付物既可作 Go 领域组件集成，也提供本地可重复演示。
+# vpcompose：虚拟制片层栈合成迭代核
 
-任务环境与准备：
-安装 Go 1.21 或以上版本工具链（go version 确认）
-准备本地 SQLite 驱动依赖（如 modernc.org/sqlite），用 go mod 引入，无需外部数据库服务
-在 WSL Ubuntu 的空目录中初始化 go 模块，并自行编写固定种子的本地样本生成器
-无需网络账号、容器或图形设备，演示入口为本地命令与标准输出
+纯 Go 实现的本地确定性虚拟制片合成组件。它把同一份前景工程在三个格式版本下
+统一加载成有序层栈，执行整数时间换算、预乘 alpha 归一、线性化合成、窗口状态
+推进、精确失效、SQLite 原子检查点和三路径一致性校验。
 
-业务要求：
-1. 实现三个格式版本前景合成工程与真值清单的统一加载器：各版本在字段命名、图层可见性与层级关系表达、预乘约定与时间基准单位上互不相同；加载后映射为内部有序层栈模型并保留源版本标识与逐字段转换痕迹，未知版本号或必填字段缺失返回 E_SCHEMA 并指出字段路径，层组层级成环返回 E_CYCLE 并给出参与成环的图层标识
-2. 实现版本升降级的显式转换规则：低版本升级时按声明默认值补齐缺失字段，每次补齐记录字段路径、旧值与来源默认值；内部模型导出到低版本时，对无法表达的嵌套层级或预乘约定生成 E_LOSSY 损失清单并记录降级处置方式；导出产物须能被对应版本加载器读回并恢复相同的图层顺序、可见性终点与预乘状态
-3. 实现预乘约定与时间基准的整型换算及往返一致：tick 与毫秒之间、不同预乘表达的通道值之间用整型运算按声明取舍方向换算并全链路统一为内部单位，禁止浮点累积，换算溢出返回 E_OVF 并给出字段与两个操作数；同一图层透明度与时间戳经高版本到低版本再回高版本的往返后与原始值逐字段相等
-4. 实现逐帧层栈合成核心：按内部层栈有序执行 alpha 合成与色彩线性化，支持预乘与非预乘输入的确定性换算，输出帧尺寸、通道数与帧时间基准严格由内部模型推导；同一帧在相同层栈与参数下重复合成逐像素一致，不受图层遍历顺序、线程标识与墙钟时间影响，合成结果须与真值采样像素逐点吻合，越出声明容差返回 E_PIX 并给出采样点坐标与实测偏差
-5. 实现帧窗口状态机与提交边界：合成按固定帧窗口推进，每窗口经历待合成、合成中、已提交、失败四类状态且只能沿合法迁移推进，进度以已提交窗口数与总窗口数表示；非法迁移返回 E_STATE 并保持原状态，已提交窗口冻结其层参数快照与源版本快照，后续编辑只影响未提交窗口
-6. 实现层参数或可见性编辑后的精确失效传播与增量重算：显式记录层栈节点、帧窗口与导出阶段之间的依赖关系，缓存键由层内容哈希、图层标识、参数版本与上游缓存键共同决定；编辑某层参数、可见性或时间基准时仅将实际受影响帧窗口及其下游导出阶段标记失效，未受影响窗口必须复用持久化结果，并输出含窗口编号与失效图层标识的清单
-7. 实现基于 SQLite 的帧窗口原子检查点与整体版本识别：每提交一个帧窗口把该窗口合成帧摘要、层参数快照、内容哈希、源格式版本、参数版本与算法版本在单一事务中串行写入，写入不得交错且窗口顺序稳定；重启加载时任一内容哈希或版本不匹配须整体作废快照并从首个未提交窗口重建，进程被强制终止后只依据已提交窗口恢复且不承诺生成退出报告
-8. 保证实时合成、断点恢复合成与一次性全量重算三条路径逐像素一致，并实现受限预算下的并发调度与异常隔离：三者对同一工程、同一层编辑序列与同一参数须产出相同的合成帧、逐帧采样点统计与窗口提交序列，自动比对定位首个不一致窗口编号与字段名并返回 E_DIFF；窗口合成在工作线程池并行推进时须限制最大并行度与每线程像素缓冲上限，缓冲耗尽时阻塞排队并记录排队原因与等待时长而非静默丢弃，单窗口内部异常须置该窗口为失败并允许重试且不污染其他窗口，注入样本损坏返回 E_DECODE
+不依赖 Docker、外部数据库、图形设备或网络账号。SQLite 使用纯 Go 驱动
+`modernc.org/sqlite v1.35.0`。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速开始
 
-验收：
-用本地样本验证三版本层栈装载、失效传播与三条路径逐像素一致，并核对 SQLite 断点恢复。
+环境要求：Go 1.21 或以上。当前实测为 `go1.22.12 linux/amd64`。
+
+```bash
+go mod download
+go test ./... -count=1
+
+# 一次跑完加载、真值、往返、失效、恢复和三路径验收
+go run ./cmd/vpcompose verify --seed 42
+
+# 保留确定性样本和 SQLite 检查点
+go run ./cmd/vpcompose demo --seed 42 --work artifacts/demo
+
+# 仅生成三版本工程、真值清单与 sidecar
+go run ./cmd/vpcompose generate --seed 42 --out artifacts/samples
+```
+
+`generate` 产出：
+
+```text
+artifacts/samples/project-v1.json
+artifacts/samples/project-v2.json
+artifacts/samples/project-v3.json
+artifacts/samples/truth.json
+```
+
+三份工程来自同一个固定种子、同一套图层内容与同一批解析真值。实际帧摘要均为
+`55f6085b91f1...`（seed 42，第 0 帧）。
+
+## 代码结构
+
+```text
+.
+├── codec / loader / export     # 三版本加载与升降级
+├── color.go / compose.go       # 16 位线性预乘合成核心
+├── convert.go                  # tick/ms、预乘通道整型换算
+├── window.go                   # 四态窗口、快照、依赖与缓存键
+├── engine.go                   # 调度、失效、提交、恢复、重试
+├── checkpoint.go               # SQLite 原子检查点
+├── compare.go                  # E_DIFF 三路径定位
+├── sample/                     # 固定种子样本器与独立解析真值
+├── cmd/vpcompose/              # generate / verify / demo
+└── docs/formats.md             # 三版本字段与转换规则
+```
+
+领域包可直接导入：
+
+```go
+import "vpcompose"
+
+project, err := vpcompose.LoadProject(data)
+err = vpcompose.VerifyTruth(project)
+frame, err := vpcompose.ComposeFrame(project, 0)
+```
+
+## 版本与内部模型
+
+| 版本 | 字段命名 | 层级 | 可见性终点 | alpha | 时间 |
+| --- | --- | --- | --- | --- | --- |
+| v1 | snake_case | 平坦层表 | `visible_until_ms` | straight | ms |
+| v2 | camelCase | 平坦 nodes + parentId | `visibleUntilTick` | premultiplied | tick |
+| v3 | kebab-case | 嵌套 tree/children | `until-tick` | premultiplied | tick |
+
+内部统一为 4 通道、16 位线性、预乘 RGBA，以及 `90000 tick/s` 的整数时间基。
+图层顺序固定为从底到顶。加载后保留 `SourceVersion`、`SourceFormat` 和逐字段
+`ConversionTraces`。
+
+详细字段样例见 `docs/formats.md`。
+
+## 关键行为
+
+**加载与转换**
+
+- 未知版本、必填字段缺失返回 `E_SCHEMA`，`EngineError.Path` 精确到字段。
+- 组层级成环返回 `E_CYCLE`，`LayerIDs` 给出参与环节点。
+- v1 缺失 alpha 约定或组信息时按声明默认值补齐，并记录旧值、新值和默认来源。
+- v3 -> v2 可无损读回；v3 -> v1 会生成 `E_LOSSY` 损失清单，同时仍返回可加载
+  的产物，处置为 `flatten-preorder` 与 `convert-premultiplied-to-straight`。
+
+**整数换算**
+
+- `MillisecondsToTicks` / `TicksToMilliseconds` 支持六种显式舍入方向。
+- 预乘/反预乘仅使用整数乘除和半入舍入。
+- 复用溢出返回 `E_OVF`，包含路径和两个操作数。
+
+**合成**
+
+- 使用 sRGB 到线性 16 位 LUT、W3C alpha 合成方程和整数舍入。
+- 支持 `normal`、`add`、`multiply`、`screen`。
+- 帧尺寸、通道数、时间基完全来自内部工程模型。
+- 输出为逐像素稳定的线性预乘 RGBA；同输入无随机源、无墙钟依赖。
+- 与样本真值逐采样点精确比对，超差返回 `E_PIX`，带坐标、实测值、期望值和偏差。
+
+**窗口与失效**
+
+- 状态：`pending -> compositing -> committed|failed`，`failed -> compositing` 允许重试；
+  其他迁移返回 `E_STATE`，原状态不变。
+- 提交时冻结层参数和源版本快照；后续编辑只进入未提交窗口。
+- 缓存键按图层顺序串联，每级包含上游键、层 ID、内容哈希和参数版本。
+- 编辑 opacity/visibility/end/content/blend/timebase 时按真实参与帧计算失效范围；
+  报告窗口编号、层 ID、原因与下游阶段。
+
+**SQLite 检查点**
+
+- 每个提交窗口在一个事务内写入摘要、参数快照、内容哈希、源版本、参数版本、
+  算法版本、整体版本和结果像素。
+- 单连接加互斥锁保证提交串行、写入不交错；查询按窗口号稳定排序。
+- 整体版本、行元数据、行摘要或内容哈希任一不匹配，整库快照原子作废。
+- 强制终止后只恢复已提交窗口，再从首个未提交窗口继续。
+
+**三路径与并发**
+
+- `realtime`、`recover`、`full` 产出相同像素、采样统计与提交序列。
+- `CompareRuns` 自动定位首个不一致窗口和字段，返回 `E_DIFF`。
+- 工作线程池限制并行度与单工作线程像素缓冲；排队会阻塞并记录原因与等待时长。
+- 单窗口故障只会把该窗口置为 `failed`，其他窗口照常提交，可单独重试。
+- 样本 JSON 损坏返回 `E_DECODE`。
+
+## 实测结果
+
+执行：
+
+```bash
+go test ./... -count=1
+go run ./cmd/vpcompose verify --seed 42
+```
+
+结果：
+
+```text
+?   	vpcompose/cmd/vpcompose	[no test files]
+?   	vpcompose/sample	[no test files]
+ok  	vpcompose	0.488s
+SAMPLE seed=42 files=4
+LOAD v1 source=v1 layers=4 nodes=4 truth=exact frameDigest=55f6085b91f1
+LOAD v2 source=v2 layers=4 nodes=8 truth=exact frameDigest=55f6085b91f1
+LOAD v3 source=v3 layers=4 nodes=8 truth=exact frameDigest=55f6085b91f1
+ROUNDTRIP v3->v2->v3 layers=4 alpha=premultiplied exact=true
+LOSSY v3->v1 losses=5 dispositions=[convert-premultiplied-to-straight flatten-preorder]
+INVALIDATE windows=[1] layer=beauty-glow committed-before=1/3 committed-after=3/3
+RECOVERY committed-before=[0] total=3/3
+THREE-PATH PASS windows=[0 1 2] sampleStats=exact pixels=exact
+```
+
+测试覆盖三版本装载、独立解析真值、`E_SCHEMA/E_CYCLE/E_DECODE`、整数换算与
+`E_OVF`、无损/有损往返、`E_PIX`、非法状态迁移、精确失效、SQLite 版本失效与
+行内容篡改、强制终止恢复、并发排队、预算失败隔离、重试，以及三路径 `E_DIFF`
+定位。`go vet ./...` 与 `go test -race ./... -count=1` 也均通过。
+
+## 设计说明
+
+- 真值时间戳统一用内部 tick 表达，便于三版本直接比较。
+- v1 无法表达分组和预乘约定；转换会显式报告损失，而不是静默丢弃。
+- 运行中编辑被拒绝并返回 `E_STATE`；编辑应发生在一次窗口推进完成后。
+- 整体版本绑定工程结构、帧表、源版本与算法版本；每行的内容哈希和参数版本对
+  自身冻结快照校验。提交后的窗口即使后续编辑发生，也能在重启时恢复其冻结
+  快照；行内容或结构版本被篡改时则整库作废。
+
