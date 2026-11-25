@@ -1,3 +1,18 @@
+# Terrain Normal Pipeline Prototype
+
+可运行实现、测试与实际验证记录见 [`docs/TECH_NOTE.md`](docs/TECH_NOTE.md)。
+
+```bash
+go run ./cmd/terrainbake generate --out artifacts/sample
+go run ./cmd/terrainbake bake --project artifacts/sample --out artifacts/demo
+go run ./cmd/terrainbake verify --work artifacts/verification
+go run ./cmd/terrainbake serve
+```
+
+Wails 桌面诊断台位于 `desktop/`：`cd desktop && wails dev`。
+
+---
+
 工作区为空，团队以独立原型验证地形材质管线中的高程场到切线空间法线贴图烘焙，并附带接缝法线突变归因诊断。本地确定性样本生成器按固定种子产出多块地形高程网格（分辨率与坡度特征各异）、每块的材质分层权重、块间共享边接缝约束，以及逐块解析真值：若干指定像素的期望切线空间法线向量、坡度角与接缝处相邻法线夹角。烘焙器需在受限工作线程、每线程像素缓冲与法线图内存预算下并行烘焙各块，按高程与材质编辑只重算实际受影响块，并把已提交块写入 SQLite 检查点。核心矛盾在于接缝连续性依赖相邻块高程，局部编辑的失效范围、并行预算与串行快照提交同时约束结果可复现；接缝法线突变还须区分几何真实折角与烘焙参数导致的伪突变，才能给出可信归因。
 
 任务环境与准备：

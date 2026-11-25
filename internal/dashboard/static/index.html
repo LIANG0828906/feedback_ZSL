@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terrain Normal Pipeline Diagnostics</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, "Microsoft YaHei", sans-serif; }
+    body { margin: 0; background: #0b1020; color: #e5eefc; }
+    header { padding: 20px 28px; background: linear-gradient(120deg,#172554,#0f766e); }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    main { padding: 24px 28px; display: grid; gap: 18px; }
+    section { background: #111a2e; border: 1px solid #26344f; border-radius: 14px; padding: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 14px; }
+    .card { background:#0d1526; border:1px solid #24314a; border-radius:12px; padding:12px; }
+    img { width: 100%; image-rendering: pixelated; border-radius: 8px; background:#000; }
+    code { color:#7dd3fc; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th,td { border-bottom:1px solid #24314a; padding:7px 8px; text-align:left; vertical-align:top; }
+    .pass { color:#86efac; font-weight:700; }
+    .fail { color:#fca5a5; font-weight:700; }
+    .pill { display:inline-block; border-radius:999px; padding:2px 8px; background:#1e3a8a; font-size:12px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>高程场 → 切线空间法线烘焙与接缝归因</h1>
+  <div>确定性样本 · 依赖失效 · 预算调度 · SQLite 版本检查点 · 三路径一致</div>
+</header>
+<main>
+  <section><h2>验证状态</h2><pre id="summary">loading...</pre></section>
+  <section><h2>分块法线 / 坡度</h2><div id="blocks" class="grid"></div></section>
+  <section><h2>接缝与归因</h2><table id="seams"></table></section>
+  <section><h2>检查明细</h2><table id="checks"></table></section>
+</main>
+<script>
+async function getJSON(url) { const r = await fetch(url); return r.json(); }
+function esc(s) { return String(s ?? '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function checkRows(checks) {
+  return (checks||[]).map(c => `<tr><td class="${c.passed?'pass':'fail'}">${c.passed?'PASS':'FAIL'}</td><td>${esc(c.name)}</td><td><code>${esc(c.code||'')}</code></td><td>${esc(c.detail||'')}</td></tr>`).join('');
+}
+(async () => {
+  const report = await getJSON('/api/report');
+  document.getElementById('summary').textContent = JSON.stringify({
+    passed: report.passed,
+    seam_attribution: report.seam_attribution,
+    budget: report.budget,
+    commit_sequences: report.commit_sequences
+  }, null, 2);
+  const allChecks = [...(report.checks||[]), ...(report.truth_checks||[]), ...(report.exception_matrix||[])];
+  document.getElementById('checks').innerHTML = '<tr><th>结果</th><th>检查</th><th>码</th><th>说明</th></tr>' + checkRows(allChecks);
+  const seams = await getJSON('/api/seams');
+  const ids = new Set();
+  (seams||[]).forEach(s => { ids.add(s.block_a); ids.add(s.block_b); });
+  document.getElementById('blocks').innerHTML = [...ids].sort().map(id => `
+    <div class="card">
+      <strong>${id}</strong>
+      <div><span class="pill">normal</span></div>
+      <img src="/assets/normal/${id}.png?ts=1" alt="normal ${id}">
+      <div><span class="pill">slope</span></div>
+      <img src="/assets/slope/${id}.png?ts=1" alt="slope ${id}">
+    </div>`).join('');
+  document.getElementById('seams').innerHTML = '<tr><th>接缝</th><th>块</th><th>最大原始角</th><th>最大焊接后角</th><th>违反/未决</th><th>归因计数</th></tr>' +
+    (seams||[]).map(s => `<tr><td>${esc(s.seam_id)}</td><td>${esc(s.block_a)} / ${esc(s.block_b)}</td><td>${s.max_raw_angle_deg}°</td><td>${s.max_welded_angle_deg}°</td><td>${s.violating_count}/${s.unresolved_count}</td><td><code>${esc(JSON.stringify(s.attribution_counts))}</code></td></tr>`).join('');
+})();
+</script>
+</body>
+</html>

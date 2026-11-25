@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terrain Normal Pipeline Studio</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, "Microsoft YaHei", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0b1020; color: #e5eefc; }
+    header { padding: 14px 20px; background: linear-gradient(120deg,#1e3a8a,#0f766e); display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; }
+    h1 { font-size: 19px; margin:0; }
+    main { padding: 16px 20px; display:grid; grid-template-columns: minmax(520px, 1.35fr) minmax(360px,.8fr); gap:14px; }
+    section, .card { background:#111a2e; border:1px solid #26344f; border-radius:12px; padding:12px; }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    button,select,input { background:#17233b; color:#e5eefc; border:1px solid #344667; border-radius:8px; padding:7px 10px; }
+    button { cursor:pointer; }
+    button:hover { border-color:#67e8f9; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+    .block h3 { margin:0 0 8px; font-size:14px; display:flex; justify-content:space-between; }
+    canvas { width:100%; image-rendering:pixelated; border-radius:8px; background:#020617; margin-bottom:6px; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid #24314a; padding:5px 6px; text-align:left; vertical-align:top; }
+    .ok { color:#86efac; } .bad { color:#fca5a5; } .muted { color:#93a4c3; }
+    pre { white-space:pre-wrap; word-break:break-all; background:#0a1122; padding:10px; border-radius:8px; max-height:260px; overflow:auto; }
+    .row { display:grid; gap:10px; margin-bottom:12px; }
+    .pill { border-radius:999px; padding:2px 7px; background:#1e3a8a; font-size:11px; }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>地形高程 → 切线法线烘焙工作台</h1>
+    <div class="muted" id="workdir">starting...</div>
+  </div>
+  <div class="controls">
+    <select id="blockId"></select>
+    <button onclick="applyElevation()">编辑高程</button>
+    <button onclick="simulateFailure()">注入失败</button>
+    <button onclick="retryBlock()">逐块重试</button>
+    <button onclick="exportArtifacts()">导出</button>
+    <button onclick="runVerify()">运行验收</button>
+  </div>
+</header>
+<main>
+  <section>
+    <div class="controls" style="margin-bottom:12px">
+      <label>材质层 <select id="layerId"><option value="rock">rock</option><option value="moss">moss</option></select></label>
+      <label>强度 <input id="strength" type="number" min="0" max="1.5" step="0.02" value="0.82" style="width:90px"></label>
+      <button onclick="applyMaterial()">应用材质参数</button>
+      <label>算子
+        <select id="operator">
+          <option>central</option><option>forward</option><option>sobel</option>
+        </select>
+      </label>
+      <button onclick="setOperator()">应用算子</button>
+    </div>
+    <div id="blocks" class="grid"></div>
+  </section>
+  <aside class="row">
+    <section><h3>状态</h3><pre id="status">loading...</pre></section>
+    <section><h3>失效传播 / 复用</h3><div style="max-height:240px;overflow:auto"><table id="plan"></table></div></section>
+    <section><h3>接缝与归因</h3><div style="max-height:260px;overflow:auto"><table id="seams"></table></div></section>
+    <section><h3>预算排队 / 提交序列</h3><pre id="budget"></pre></section>
+    <section id="verifyPanel" hidden><h3>验收报告</h3><pre id="verify"></pre></section>
+  </aside>
+</main>
+<script>
+let state = null;
+function api() { return window.go.main.App; }
+function esc(v) { return String(v ?? '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function heat(v, max=45) {
+  const t = Math.max(0, Math.min(1, v/max));
+  const r = Math.round(20 + t*220), g = Math.round(60 + (1-Math.abs(t-.5)*2)*160), b = Math.round(180 - t*160);
+  return `rgb(${r},${g},${b})`;
+}
+function drawBlock(block) {
+  const normal = document.getElementById('normal-' + block.block_id);
+  const slope = document.getElementById('slope-' + block.block_id);
+  [normal, slope].forEach(c => { c.width = block.nx; c.height = block.nz; });
+  const nctx = normal.getContext('2d'), sctx = slope.getContext('2d');
+  const nimg = nctx.createImageData(block.nx, block.nz), simg = sctx.createImageData(block.nx, block.nz);
+  block.pixels.forEach(p => {
+    const idx = (p.j * block.nx + p.i) * 4;
+    nimg.data[idx] = p.rgb[0]; nimg.data[idx+1] = p.rgb[1]; nimg.data[idx+2] = p.rgb[2]; nimg.data[idx+3] = 255;
+    const c = heat(p.slope_deg), m = c.match(/\d+/g).map(Number);
+    simg.data[idx] = m[0]; simg.data[idx+1] = m[1]; simg.data[idx+2] = m[2]; simg.data[idx+3] = 255;
+  });
+  nctx.putImageData(nimg,0,0); sctx.putImageData(simg,0,0);
+}
+function render(next) {
+  state = next;
+  document.getElementById('workdir').textContent = 'workdir: ' + state.workdir + ' · ' + (state.message || '');
+  const outcome = state.outcome || {};
+  const ids = Object.keys(state.blocks || {}).sort();
+  const select = document.getElementById('blockId');
+  if (!select.options.length) ids.forEach(id => select.add(new Option(id,id)));
+  document.getElementById('blocks').innerHTML = ids.map(id => {
+    const b = state.blocks[id];
+    const stat = (outcome.stats || {})[id] || {};
+    return `<div class="card block"><h3><span>${id} <span class="muted">${b.nx}×${b.nz}</span></span><span class="pill">${stat.cache_hit?'cache':stat.recovered?'recovered':'rebake'}</span></h3>
+      <canvas id="normal-${id}"></canvas><canvas id="slope-${id}"></canvas>
+      <div class="muted">${stat.milliseconds || 0} ms · ${b.normal_digest.slice(0,10)}</div></div>`;
+  }).join('');
+  ids.forEach(id => drawBlock(state.blocks[id]));
+  const failed = outcome.failed_blocks || {};
+  document.getElementById('status').textContent = JSON.stringify({
+    generation: outcome.generation,
+    passed: Object.keys(failed).length === 0,
+    failed_blocks: failed,
+    seam_errors: outcome.seam_errors || [],
+    commit: (outcome.commit || []).map(x => x.block_id)
+  }, null, 2);
+  const entries = (outcome.plan && outcome.plan.entries) || [];
+  document.getElementById('plan').innerHTML = '<tr><th>块</th><th>失效</th><th>重烘</th><th>复用</th><th>原因</th></tr>' +
+    entries.map(e => `<tr><td>${e.block_id}</td><td class="${e.invalidated?'bad':'ok'}">${e.invalidated}</td><td>${e.will_bake}</td><td class="${e.reused?'ok':'muted'}">${e.reused}</td><td class="muted">${esc((e.reasons||[]).join(', '))}</td></tr>`).join('');
+  const seams = outcome.seams || [];
+  document.getElementById('seams').innerHTML = '<tr><th>接缝</th><th>最大原始/焊接</th><th>违反</th><th>归因</th></tr>' +
+    seams.map(s => `<tr><td>${s.seam_id}<br><span class="muted">${s.block_a}/${s.block_b}</span></td><td>${s.max_raw_angle_deg}°<br>${s.max_welded_angle_deg}°</td><td>${s.violating_count}/${s.unresolved_count}</td><td>${esc(JSON.stringify(s.attribution_counts))}</td></tr>`).join('');
+  document.getElementById('budget').textContent = JSON.stringify({
+    queue_events: outcome.queue_events || [],
+    commit_sequence: outcome.commit || []
+  }, null, 2);
+}
+async function boot() {
+  try { render(await api().Bootstrap()); }
+  catch (e) { document.getElementById('status').textContent = 'Bootstrap failed: ' + e; }
+}
+async function call(fn, ...args) {
+  try { render(await api()[fn](...args)); }
+  catch (e) { alert(fn + ' failed: ' + e); }
+}
+function selected() { return document.getElementById('blockId').value; }
+function applyElevation() { return call('ApplyElevation', selected()); }
+function simulateFailure() { return call('SimulateBlockFailure', selected()); }
+function retryBlock() { return call('RetryBlock', selected()); }
+function applyMaterial() { return call('ApplyMaterial', document.getElementById('layerId').value, parseFloat(document.getElementById('strength').value)); }
+function setOperator() { return call('SetDifferential', document.getElementById('operator').value); }
+async function exportArtifacts() { const p = await api().Export(); alert('exported: ' + p); }
+async function runVerify() {
+  const r = await api().RunVerification();
+  document.getElementById('verifyPanel').hidden = false;
+  document.getElementById('verify').textContent = JSON.stringify({passed:r.passed, checks:[...r.checks,...r.truth_checks,...r.exception_matrix].filter(x=>!x.passed), attribution:r.seam_attribution, budget:r.budget}, null, 2);
+}
+boot();
+</script>
+</body>
+</html>
