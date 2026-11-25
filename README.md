@@ -1,22 +1,189 @@
-项目启动会上确定由一人完成首版，用于替换美术组已停维护的矢量路径合成脚本，工作区中没有任何既有代码。现阶段要交付一套面向游戏 UI 动效与互动媒体装饰图形的矢量路径描边光栅化内核，作为可集成的 Go 领域组件与可运行本地示例。本地确定性样本生成器按固定种子产出多批动画场景：每批含若干带关键帧的填充与描边路径，轮廓由二次与三次贝塞尔段闭合构成，控制点随关键帧在时间轴上插值变化，路径带描边宽度、透明度与合成模式；场景描述以三个 schema 版本存在，版本差异体现在字段命名、控制点坐标表达（绝对坐标与相对基点的增量）、时间单位（帧与毫秒）、描边参数与合成模式的可选字段上。场景另给一组采样时刻，并直接记录逐采样时刻的解析真值：当帧贝塞尔曲线采样点坐标、轮廓闭合面积、包围盒与最终位图参考像素，真值只来源于生成器的解析构造，是结果观测的唯一依据。核心处理链为：多版本场景统一映射、关键帧插值与轮廓求值、描边带生成与逐帧扫描线覆盖光栅化、按透明度与合成模式叠加，逐采样时刻提交分块结果并支持断点续跑。
+# vectorcore
 
-任务环境与准备：
-安装 Go 1.22 或以上版本，确认 go env 可正常读写本地缓存目录。
-准备 SQLite 驱动依赖（如现代纯 Go 驱动），在模块中用 go mod tidy 固定版本，执行全部流程不依赖网络服务与真实账号。
-运行本地确定性样本生成器（随交付提供，按固定种子输出三个 schema 版本的场景描述、采样时刻与真值清单）到工作目录下的样本文件夹。
-确认可在 Windows 命令行执行 go build、go test 与生成的示例程序，示例渲染结果与位图差异报告输出到本地文件。
+`vectorcore` 是面向游戏 UI 动效与互动媒体装饰图形的 Go 矢量路径描边光栅化内核。首版包含可集成的领域包、三版本场景加载、确定性样本生成器、SQLite 断点检查点和本地示例渲染器。
 
-业务要求：
-1. 实现三版本动画场景的统一加载与内部映射：读取三个 schema 版本的场景描述，各版本在字段命名、控制点绝对与增量表达、时间单位、描边参数与合成模式可选字段上互不相同；加载后映射到内部动画模型并保留源版本标识，未知版本号返回 E_VER、必填字段缺失返回 E_SCHEMA 并指出字段路径与源版本。
-2. 实现跨版本逻辑时间单位与控制点表达的整型换算及往返一致：帧与毫秒、绝对坐标与相对增量之间用整型运算按声明取舍方向换算并全链路统一为内部单位，禁止浮点累积；要求同一控制点与关键帧时刻经高版本到低版本再回高版本的往返后逐字段相等，换算溢出返回 E_OVF 并指出字段与关键帧序号。
-3. 实现关键帧插值与采样时刻轮廓求值：按可配置插值方式与时间归一化求控制点位置，再按可配置缩放与扁平化容差把当帧轮廓离散为折线，轮廓须保持闭合；容差收紧时同一路径同一帧的折线段数单调不减且闭合面积偏差单调不增，容差或缩放越界返回 E_PARA 并指出字段名。
-4. 实现描边带生成与逐帧扫描线覆盖光栅化及合成：按描边宽度、连接方式与子采样网格生成描边带，计算每像素覆盖值后按透明度与合成模式叠加多条路径；位图尺寸须由当帧包围盒、缩放与网格推导且与真值包围盒一致，输出像素与真值参考像素的偏差须落在声明容差内，合成模式或透明度非法返回 E_MODE 并指出路径标识。
-5. 实现采样时刻分层状态机与提交边界：每条路径在每个采样时刻的扁平化、覆盖、合成三阶段分别经历待处理、处理中、已提交、失败四类状态，只能沿合法迁移推进，进度以已提交时刻数与总时刻数表示；非法迁移返回 E_STATE 并保持原状态，已提交时刻冻结其折线、覆盖分量与合成结果，后续参数编辑只作用于未提交时刻。
-6. 实现基于内容哈希的阶段缓存键与精确失效传播：缓存键由输入内容哈希、路径标识、时刻序号、阶段标识、参数值与上游缓存键共同决定，并显式记录关键帧、路径、时刻与合成层之间的依赖；编辑某关键帧或描边参数时仅将实际受影响的路径、时刻及其下游阶段标记失效，未失效阶段复用缓存并输出含路径标识、时刻序号与失效原因的清单。
-7. 实现增量重绘调度与全量重绘逐帧逐像素一致比对：对失效阶段按依赖拓扑序重算并原子替换缓存，未失效阶段直接复用；增量路径与从空缓存全量重绘在最终位图、各阶段中间覆盖分量与时刻提交序列上须逐项相等，并提供自动比对定位首个不一致时刻序号、像素坐标与路径标识，不一致返回 E_DIFF。
-8. 实现版本化持久化检查点、三条路径一致与异常并发边界：每提交一个采样时刻把各路径折线或覆盖分量、合成结果、内容哈希、插值精度与容差参数版本、合成模式参数版本与算法版本原子且串行写入 SQLite，写入不得交错；实时预览、断点恢复与一次性全量重算须产出相同位图与相同提交序列，场景损坏返回 E_DECODE，单时刻内部异常须置该时刻为失败并允许重试且不污染已提交结果，并行度与每线程像素缓冲须有硬上限。
+## 交付内容
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+- 三版本 JSON schema 的统一映射，内部模型保留 `SourceVersion`。
+- 全整数时间/坐标换算，支持帧、毫秒、绝对点与基点增量。
+- 线性、smoothstep、hold 关键帧插值，闭合贝塞尔轮廓扁平化。
+- 整数描边带、圆/斜/尖连接、扫描线子采样覆盖与多种合成模式。
+- 每路径、每时刻、三阶段状态机及提交冻结。
+- 内容哈希阶段缓存、依赖图、精确失效清单。
+- 增量重绘与空缓存全量重绘的逐层、逐像素、提交序列比对。
+- 版本化 SQLite 检查点，实时预览/断点恢复/全量重算一致性。
+- 固定种子本地样本生成器，输出三 schema、采样时刻、解析面积/曲线点/包围盒/参考像素。
 
-验收：
-用本地三版本样本验证换算往返、逐帧位图与真值一致、增量与全量逐像素相同及断点续跑一致。
+算法细节见 [docs/DESIGN.md](docs/DESIGN.md)，实际验证记录见 [docs/VERIFICATION.md](docs/VERIFICATION.md)。
+
+## 环境
+
+- Go 1.22 或以上。
+- 纯 Go SQLite 驱动 `modernc.org/sqlite v1.34.5`。
+- 不需要 Docker、网络服务、账号或外部图形运行时。
+- 已验证 Linux 运行与 Windows amd64 交叉构建。
+
+## 快速开始
+
+```bash
+go mod tidy
+go test ./...
+go run ./cmd/samplegen -out samples -seed 20261125 -batches 3
+go run ./cmd/vectorrender \
+  -scene samples/batch-01/scene.v3.json \
+  -truth samples/batch-01/truth.v3.json \
+  -out out/rendered/b01-v3 \
+  -db out/checkpoints/b01-v3.db \
+  -fresh
+```
+
+Windows 命令行：
+
+```bat
+go build ./...
+go test ./...
+go run .\cmd\samplegen -out samples -seed 20261125 -batches 3
+go run .\cmd\vectorrender -scene samples\batch-01\scene.v3.json -truth samples\batch-01\truth.v3.json -out out\rendered\b01-v3 -db out\checkpoints\b01-v3.db -fresh
+```
+
+`vectorrender` 输出：
+
+- `out/rendered/.../time-XX.png`：逐采样时刻渲染结果。
+- `out/rendered/.../diff-report.json`：像素偏差、包围盒、面积、曲线采样和首个差异定位。
+- `out/checkpoints/...db`：SQLite 提交检查点。
+
+不传 `-fresh` 再次运行同一命令会从检查点恢复；当前示例已验证恢复报告与首次渲染逐字节一致。
+
+## 样本目录
+
+```text
+samples/
+  manifest.json
+  batch-01/
+    scene.v1.json
+    scene.v2.json
+    scene.v3.json
+    truth.v1.json
+    truth.v2.json
+    truth.v3.json
+    ref-00.rgba ... ref-12.rgba
+```
+
+固定种子 `20261125` 生成 3 批、每批 3 条路径、7 个关键帧、13 个采样时刻。三个版本共享同一解析构造，但分别经过自身 schema 加载后再生成真值记录。
+
+真值记录包含：
+
+- 每段二次/三次贝塞尔在 `t=0, 1/4, 1/2, 3/4, 1` 的整数坐标。
+- 闭合轮廓解析面积。
+- 路径与整帧包围盒。
+- 位图宽高、RGBA8 参考像素文件及 SHA-256。
+- 扁平化参数、子采样网格与像素格式。
+
+生成器真值装配路径不调用 `Engine.RenderAll`、缓存或状态机；它直接由解析几何和确定性覆盖构造生成。
+
+## Schema 版本
+
+| 版本 | 时间单位 | 控制点 | 字段风格 | 可选样式 |
+|---|---|---|---|---|
+| v1 | 帧 | 绝对坐标 | 扁平 camelCase | 描边宽度/连接、混合模式可省略 |
+| v2 | 毫秒 | 基点 + `dx/dy` 增量 | snake_case、`timeline` | `stroke` 与 `blend` 可省略 |
+| v3 | 帧 | 绝对坐标 | 嵌套 `timeline/render/keys` | 宽度、连接、混合模式可省略 |
+
+未知版本返回 `E_VER`；必填字段缺失返回 `E_SCHEMA`，并携带字段路径和源版本。JSON 结构损坏返回 `E_DECODE`。
+
+## 集成示例
+
+```go
+scene, err := vectorcore.LoadSceneFile("samples/batch-01/scene.v2.json")
+if err != nil {
+    return err
+}
+cfg := vectorcore.DefaultConfig()
+engine, err := vectorcore.NewEngine(scene, cfg)
+if err != nil {
+    return err
+}
+
+store, err := vectorcore.OpenCheckpoint("out/demo.db")
+if err != nil {
+    return err
+}
+defer store.Close()
+if err := engine.LoadCheckpoint(context.Background(), store); err != nil {
+    return err
+}
+timeline, err := engine.RenderAll(context.Background())
+if err != nil {
+    return err
+}
+for _, tr := range timeline.Times {
+    // tr.Bitmap、tr.Paths[i].Coverage、tr.Paths[i].CompositeAfter 均可消费。
+}
+```
+
+实时预览后编辑并增量重绘：
+
+```go
+preview, _ := vectorcore.NewEngine(scene, cfg)
+_ = preview.PrimeCache(ctx)
+
+invalidations, _ := preview.UpdatePaint("pulse-fill", newPaint)
+_ = invalidations // 含 pathId、timeIndex、stage、reason
+
+incremental, _ := preview.RenderAll(ctx)
+
+fullEngine, _ := vectorcore.NewEngine(preview.Scene(), cfg)
+full, _ := fullEngine.RenderAll(ctx)
+diff, err := vectorcore.CompareTimelines(incremental, full)
+if err != nil {
+    // E_DIFF，diff 已定位 timeIndex、x、y、pathId、stage。
+}
+```
+
+## 核心约束
+
+- 内部坐标：`4096` 单位/逻辑像素，`CoordScale`。
+- 内部时间：`36,000,000` tick/秒，可整除 24/25/30/50/60/120 FPS。
+- 换算只使用整数或有理数，禁止浮点累积。
+- 默认扁平化容差 `256`（1/16 像素），子采样网格 `4×4`。
+- 默认并行度不超过 4，硬上限 8。
+- 单个像素缓冲默认上限 64 MiB，硬上限 256 MiB。
+- 覆盖值为 `uint16`，合成像素为 RGBA8。
+
+## 错误码
+
+| 错误码 | 含义 |
+|---|---|
+| `E_VER` | 未知 schema、检查点或管线版本 |
+| `E_SCHEMA` | 必填字段缺失或路径/时刻结构非法 |
+| `E_OVF` | 时间、坐标或面积整数换算溢出 |
+| `E_PARA` | 插值、缩放、容差、并行度、网格等参数越界 |
+| `E_MODE` | 透明度、混合模式或连接模式非法，含路径标识 |
+| `E_STATE` | 非法状态迁移或冻结边界冲突 |
+| `E_DIFF` | 增量与全量结果不一致，含首个差异位置 |
+| `E_DECODE` | JSON、检查点 payload 或哈希校验失败 |
+| `E_LIMIT` | 位图尺寸或像素缓冲超过硬上限 |
+| `E_IO` | 本地文件或 SQLite I/O 失败 |
+
+## 工程结构
+
+```text
+errors.go          稳定错误码与上下文字段
+model.go           内部动画模型、配置和边界
+arithmetic.go      帧/毫秒/坐标整数换算
+schema*.go         v1/v2/v3 加载、映射与导出
+interpolate.go     关键帧插值与曲线采样
+flatten.go         闭合扁平化、多边形面积、解析贝塞尔面积
+stroke.go          描边带与连接环
+raster.go          包围盒视图、扫描线覆盖
+composite.go       透明度与合成模式
+state.go           三阶段状态机
+cache.go           内容哈希缓存键与依赖
+engine.go          并行调度、提交与阶段装配
+edit.go            精确失效与参数编辑
+checkpoint.go      SQLite 版本化检查点
+diff.go            增量/全量逐项比对
+cmd/samplegen      确定性三版本样本生成器
+cmd/vectorrender   本地渲染、PNG、SQLite 与差异报告示例
+internal/samplegen 样本构造与独立参考装配
+```
