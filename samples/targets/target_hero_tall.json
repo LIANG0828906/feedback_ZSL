@@ -1,0 +1,344 @@
+{
+  "id": "target_hero_tall",
+  "name": "Hero Tall 2.10m / extra spine",
+  "ground_y": 0,
+  "joints": [
+    {
+      "name": "hips",
+      "parent": "",
+      "offset": [
+        0,
+        1.08,
+        0
+      ],
+      "limit": {
+        "min_radians": -0.45,
+        "max_radians": 0.45,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "spine",
+      "parent": "hips",
+      "offset": [
+        0,
+        0.14,
+        0
+      ],
+      "limit": {
+        "min_radians": -0.3,
+        "max_radians": 0.4,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "spine2",
+      "parent": "spine",
+      "offset": [
+        0,
+        0.16,
+        0
+      ],
+      "limit": {
+        "min_radians": -0.3,
+        "max_radians": 0.35,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "chest",
+      "parent": "spine2",
+      "offset": [
+        0,
+        0.2,
+        0
+      ],
+      "limit": {
+        "min_radians": -0.3,
+        "max_radians": 0.35,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "neck",
+      "parent": "chest",
+      "offset": [
+        0,
+        0.17,
+        0
+      ],
+      "limit": {
+        "min_radians": -0.55,
+        "max_radians": 0.55,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "head",
+      "parent": "neck",
+      "offset": [
+        0,
+        0.12,
+        0
+      ],
+      "end_effector": true,
+      "limit": {
+        "min_radians": -0.65,
+        "max_radians": 0.65,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "upper_arm_l",
+      "parent": "chest",
+      "offset": [
+        -0.22,
+        0.1,
+        0
+      ],
+      "limit": {
+        "min_radians": -2.5,
+        "max_radians": 2.5,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "lower_arm_l",
+      "parent": "upper_arm_l",
+      "offset": [
+        -0.21,
+        0,
+        0
+      ],
+      "limit": {
+        "min_radians": 0.02,
+        "max_radians": 1.45,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "hand_l",
+      "parent": "lower_arm_l",
+      "offset": [
+        -0.11,
+        0,
+        0
+      ],
+      "end_effector": true,
+      "limit": {
+        "min_radians": -0.75,
+        "max_radians": 0.75,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      },
+      "reach": {
+        "anchor": "chest",
+        "max_distance": 0.5
+      }
+    },
+    {
+      "name": "upper_arm_r",
+      "parent": "chest",
+      "offset": [
+        0.22,
+        0.1,
+        0
+      ],
+      "limit": {
+        "min_radians": -2.5,
+        "max_radians": 2.5,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "lower_arm_r",
+      "parent": "upper_arm_r",
+      "offset": [
+        0.21,
+        0,
+        0
+      ],
+      "limit": {
+        "min_radians": 0.02,
+        "max_radians": 1.45,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "hand_r",
+      "parent": "lower_arm_r",
+      "offset": [
+        0.11,
+        0,
+        0
+      ],
+      "end_effector": true,
+      "limit": {
+        "min_radians": -0.75,
+        "max_radians": 0.75,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      },
+      "reach": {
+        "anchor": "chest",
+        "max_distance": 0.5
+      }
+    },
+    {
+      "name": "upper_leg_l",
+      "parent": "hips",
+      "offset": [
+        -0.13,
+        -0.02,
+        0
+      ],
+      "limit": {
+        "min_radians": -1.35,
+        "max_radians": 1.35,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "lower_leg_l",
+      "parent": "upper_leg_l",
+      "offset": [
+        0,
+        -0.53,
+        0
+      ],
+      "limit": {
+        "min_radians": 0.02,
+        "max_radians": 1.55,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "foot_l",
+      "parent": "lower_leg_l",
+      "offset": [
+        0,
+        -0.53,
+        0
+      ],
+      "foot": true,
+      "limit": {
+        "min_radians": -0.8,
+        "max_radians": 0.8,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "upper_leg_r",
+      "parent": "hips",
+      "offset": [
+        0.13,
+        -0.02,
+        0
+      ],
+      "limit": {
+        "min_radians": -1.35,
+        "max_radians": 1.35,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "lower_leg_r",
+      "parent": "upper_leg_r",
+      "offset": [
+        0,
+        -0.53,
+        0
+      ],
+      "limit": {
+        "min_radians": 0.02,
+        "max_radians": 1.55,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "foot_r",
+      "parent": "lower_leg_r",
+      "offset": [
+        0,
+        -0.53,
+        0
+      ],
+      "foot": true,
+      "limit": {
+        "min_radians": -0.8,
+        "max_radians": 0.8,
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}

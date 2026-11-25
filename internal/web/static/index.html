@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MocapBench · 动捕重定向约束工作台</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#18233b;--line:#2a395c;--text:#e7eefc;--muted:#8fa2c6;--ok:#38d39f;--warn:#ffcc66;--bad:#ff6b7a;--blue:#6aa8ff;--purple:#b58cff;--cyan:#5de1e6}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0a0f1e,#0d1426);color:var(--text);font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(11,16,32,.94);z-index:5;backdrop-filter:blur(8px)}
+h1{font-size:17px;margin:0;letter-spacing:.3px} .sub{color:var(--muted);font-size:12px;margin-top:2px}
+main{padding:16px 20px 40px;max-width:1680px;margin:0 auto}
+.toolbar,.grid{display:grid;gap:12px}.toolbar{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-items:end;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px}
+label.field{display:flex;flex-direction:column;gap:5px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+select,input{width:100%;background:#0e1628;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 9px;font-size:13px;outline:none}
+select:focus,input:focus{border-color:var(--blue)} button{border:0;border-radius:9px;padding:9px 13px;font-weight:700;color:#07101f;background:linear-gradient(135deg,var(--cyan),var(--blue));cursor:pointer;box-shadow:0 6px 18px rgba(70,140,255,.22)}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);box-shadow:none} button:hover{filter:brightness(1.08)} button:disabled{opacity:.55;cursor:wait}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:14px}.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}.kpi .v{font-size:21px;font-weight:800;margin-top:4px}.kpi .l{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}.cyan{color:var(--cyan)}
+.grid-2{display:grid;grid-template-columns:minmax(430px,1.05fr) minmax(430px,1fr);gap:14px;margin-bottom:14px}.grid-3{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}.card h2{font-size:14px;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}.hint{color:var(--muted);font-size:11px;font-weight:400}
+svg{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 70%,rgba(106,168,255,.08),transparent 45%),#0d1528;border:1px solid var(--line);border-radius:10px}
+.slider-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:10px}.frame-num{font-variant-numeric:tabular-nums;color:var(--cyan);min-width:72px;text-align:right}
+.table-wrap{max-height:430px;overflow:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;font-size:12px}th{position:sticky;top:0;background:var(--panel2);color:var(--muted);text-align:left;padding:8px;border-bottom:1px solid var(--line);z-index:1}td{padding:6px 8px;border-bottom:1px solid rgba(42,57,92,.55);vertical-align:middle}tr:hover td{background:rgba(106,168,255,.06)}
+.badge{display:inline-flex;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:800;border:1px solid currentColor}.badge.exact,.badge.committed,.badge.ok{color:var(--ok)}.badge.fanout,.badge.override{color:var(--purple)}.badge.degrade_identity,.badge.unmapped{color:var(--warn)}.badge.E_CONTACT,.badge.E_SOLVE,.badge.E_DIFF,.badge.failed{color:var(--bad)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.muted{color:var(--muted)}.right{text-align:right}.scroll{overflow:auto}.chart{width:100%;height:260px}.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin:6px 0}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+.contact-track{height:24px;background:#0d1528;border:1px solid var(--line);border-radius:6px;position:relative;overflow:hidden;margin:5px 0 12px}.contact-fill{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,rgba(93,225,230,.85),rgba(106,168,255,.65));border-right:1px solid #dff}
+.contact-label{display:flex;justify-content:space-between;font-size:12px}.tree{font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.7;max-height:330px;overflow:auto}.tree-node{padding:1px 5px;border-radius:5px;display:flex;gap:8px;align-items:center}.tree-node:hover{background:var(--panel2)}.bar{height:7px;border-radius:99px;background:linear-gradient(90deg,var(--ok),var(--warn),var(--bad));min-width:38px}
+.path{border:1px solid var(--line);background:#0e1628;border-radius:10px;padding:10px}.path h3{margin:0 0 7px;font-size:13px}.kv{display:grid;grid-template-columns:110px 1fr;gap:3px 8px;font-size:12px}.kv .k{color:var(--muted)}.hash{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.errorbox{border:1px solid rgba(255,107,122,.5);background:rgba(255,107,122,.1);border-radius:10px;padding:10px;margin-top:10px;white-space:pre-wrap}.log{background:#080d1b;border:1px solid var(--line);border-radius:10px;padding:10px;color:#b9c8e8;font:11px/1.65 ui-monospace,Menlo,monospace;white-space:pre-wrap}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--panel2);border:1px solid var(--blue);border-radius:10px;padding:12px 14px;box-shadow:0 12px 30px #0008;max-width:420px;display:none}.toast.show{display:block}.spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--muted);border-top-color:var(--text);border-radius:50%;animation:spin .8s linear infinite;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1100px){.grid-2,.grid-3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div><h1>MocapBench 运动捕捉重定向 · 姿态约束工作台</h1><div class="sub">确定性样本 / 骨架映射 / 投影求解 / 接触校正 / 误差传播 / SQLite 版本化检查点 / 三路径比对</div></div>
+<div><button id="runBtn">运行三路径验证</button> <button class="secondary" id="applyBtn">应用映射并增量重算</button></div></header>
+<main>
+  <section class="toolbar">
+    <label class="field">片段<select id="clipSel"></select></label>
+    <label class="field">目标骨架<select id="targetSel"></select></label>
+    <label class="field">并行度<input id="workers" type="number" min="1" max="8" value="3"></label>
+    <label class="field">每线程缓冲<input id="buffer" type="number" min="1" max="16" value="4"></label>
+    <label class="field">量化步长<input id="quant" type="number" step="0.0001" value="0.0009765625"></label>
+    <label class="field">接触漂移上界<input id="drift" type="number" step="0.001" value="0.025"></label>
+    <label class="field">全局比例乘数<input id="scaleMul" type="number" step="0.01" value="1"></label>
+    <label class="field">查看平面<select id="viewPlane"><option value="front">前视 X-Y</option><option value="side">侧视 Z-Y</option></select></label>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid-2">
+    <div class="card"><h2>目标骨架姿态 <span class="hint" id="poseHint"></span></h2><svg id="poseSvg" viewBox="0 0 640 430" role="img"></svg>
+      <div class="slider-row"><button class="secondary" id="playBtn">播放</button><input id="frameSlider" type="range" min="0" max="0" value="0"><span class="frame-num" id="frameNum">f 0</span></div>
+    </div>
+    <div class="card"><h2>骨架层级 · 映射 · 比例 <span class="hint">直接编辑 Targets，逗号分隔；留空=显式降级</span></h2><datalist id="targetList"></datalist><div class="table-wrap"><table id="mappingTable"><thead><tr><th>源关节</th><th>Target(s)</th><th>策略</th><th>比例</th><th>状态</th></tr></thead><tbody></tbody></table></div></div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card"><h2>逐关节误差上界曲线 <select id="metricSel" style="width:210px"></select></h2><div class="legend"><span><i class="dot" style="background:var(--cyan)"></i>选定关节/最大值</span><span>竖线=当前帧；点击曲线跳转</span></div><canvas id="errorChart" class="chart"></canvas><label class="field" style="max-width:260px;margin-top:8px">关节<select id="jointSel"></select></label></div>
+    <div class="card"><h2>约束违背 / 声明容差倍数</h2><div class="legend"><span><i class="dot" style="background:var(--warn)"></i>角度</span><span><i class="dot" style="background:var(--purple)"></i>可达</span><span><i class="dot" style="background:var(--cyan)"></i>接触</span><span><i class="dot" style="background:var(--bad)"></i>上界 1×</span></div><canvas id="violationChart" class="chart"></canvas></div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card"><h2>足部接触帧标记</h2><div id="contacts"></div><div id="contactSummary" class="hint"></div></div>
+    <div class="card"><h2>失效传播示意 <span class="hint" id="propHint"></span></h2><div class="tree" id="propTree"></div></div>
+  </section>
+
+  <section class="grid-3">
+    <div class="card"><h2>实时 / 恢复 / 全量路径比对</h2><div class="grid" style="grid-template-columns:repeat(3,1fr)" id="paths"></div><div id="compareBox"></div></div>
+    <div class="card"><h2>诊断日志与版本</h2><div class="log" id="logBox">尚未运行验证。</div></div>
+  </section>
+  <div class="toast" id="toast"></div>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+let appState=null, report=null, currentFrame=0, playing=false, playTimer=null;
+const metricOptions=[["total_bound","总误差上界"],["fk_bound","FK 累积上界"],["quant_bound","量化累积上界"],["scale_bound","比例累积上界"],["projection_bound","投影累积上界"],["fk_observed_error","FK 实测量化传播"],["quant_residual","量化残差"],["scale_residual","比例残差"]];
+
+async function init(){
+  const r=await fetch("/api/state"); appState=await r.json();
+  for(const c of appState.manifest.clips){ const o=new Option(c.id+" ("+c.frames+"f, "+c.joints+"j)",c.id); $("clipSel").add(o); }
+  for(const t of appState.manifest.targets){ const o=new Option(t.id+" ("+t.joints+"j)",t.id); $("targetSel").add(o); }
+  $("metricSel").innerHTML=metricOptions.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
+  $("clipSel").onchange=runVerify; $("targetSel").onchange=runVerify;
+  $("runBtn").onclick=()=>runVerify(); $("applyBtn").onclick=()=>runVerify(true);
+  $("frameSlider").oninput=e=>{currentFrame=+e.target.value; renderFrameViews();};
+  $("viewPlane").onchange=renderPose; $("metricSel").onchange=renderErrorChart; $("jointSel").onchange=renderErrorChart;
+  $("playBtn").onclick=togglePlay;
+  await runVerify();
+}
+function togglePlay(){ playing=!playing; $("playBtn").textContent=playing?"暂停":"播放"; if(playing){playTimer=setInterval(()=>{const max=report?report.frames.length-1:0; currentFrame=(currentFrame+1)%(max+1); $("frameSlider").value=currentFrame; renderFrameViews();},180);} else clearInterval(playTimer); }
+function collectOverrides(){
+  const ov={}; document.querySelectorAll("[data-source]").forEach(inp=>{ const src=inp.dataset.source; const original=(inp.dataset.original||"").split(",").map(x=>x.trim()).filter(Boolean).sort().join(","); const now=inp.value.split(",").map(x=>x.trim()).filter(Boolean).sort().join(","); if(original!==now) ov[src]=inp.value.trim(); }); return ov;
+}
+async function runVerify(useOverrides=false){
+  const btn=$("runBtn"); btn.disabled=true; $("applyBtn").disabled=true; showToast('<span class="spinner"></span>正在确定性求解与三路径比对…',true);
+  const body={clip_id:$("clipSel").value,target_id:$("targetSel").value,workers:+$("workers").value,buffer:+$("buffer").value,quant_step:+$("quant").value,contact_drift_limit:+$("drift").value,global_scale_multiplier:+$("scaleMul").value};
+  if(useOverrides) body.mapping_overrides=collectOverrides();
+  try{
+    const resp=await fetch("/api/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const data=await resp.json(); report=data.report;
+    if(report){ currentFrame=Math.min(currentFrame,report.frames.length-1); $("frameSlider").max=report.frames.length-1; $("frameSlider").value=currentFrame; renderAll(data.error); }
+    if(data.error){ showToast((data.ok?"":"⚠ ")+data.error.code+" "+data.error.message,false,6000); } else showToast("验证完成：三路径逐帧一致",false,2200);
+  }catch(err){ showToast("请求失败："+err.message,false,6000); }
+  finally{ btn.disabled=false; $("applyBtn").disabled=false; }
+}
+function renderAll(apiError){ renderKPIs(apiError); renderMapping(); renderJointSelect(); renderFrameViews(); renderCharts(); renderContacts(); renderPaths(apiError); renderLog(apiError); }
+function renderFrameViews(){ renderPose(); renderPropTree(); $("frameNum").textContent="f "+currentFrame; }
+function showToast(html,busy,timeout){ const t=$("toast"); t.innerHTML=html; t.classList.add("show"); if(!busy&&timeout) setTimeout(()=>t.classList.remove("show"),timeout); if(busy) t.classList.add("show"); }
+function pctColor(v,max){ const x=Math.max(0,Math.min(1,v/(max||1))); const r=x<.5?Math.round(56+255*x*2):255; const g=x<.5?211:Math.round(211-145*(x-.5)*2); const b=x<.5?159-Math.round(95*x*2):64; return `rgb(${r},${g},${b})`; }
+init();
+/* __APP_RENDER__ */
+function renderKPIs(apiError){
+  if(!report){ $("kpis").innerHTML=`<div class="kpi"><div class="l">无报告</div><div class="v bad">${apiError?apiError.code:"--"}</div></div>`; return; }
+  const s=report.summary;
+  const cards=[
+    ["总状态",report.ok?"OK":"CHECK",report.ok?"ok":"bad"],
+    ["帧数 / 关节",`${s.frames} / ${s.joints}`,"cyan"],
+    ["最大迭代",s.max_iterations,""],
+    ["最大约束残余",Number(s.max_violation).toExponential(2),s.max_violation>report.parameters.angle_tolerance?"bad":"ok"],
+    ["最大接触漂移",Number(s.max_contact_drift).toExponential(2),s.max_contact_drift>report.parameters.contact_drift_limit?"bad":"ok"],
+    ["最大误差上界",Number(s.max_total_bound).toFixed(3),"warn"],
+    ["未映射/降级",`${s.unmapped_source} / ${s.degraded_source}`,"warn"],
+    ["一致 / 恢复",`${s.consistency_ok?"✓":"✗"} / ${s.recovery_ok?"✓":"✗"}`,s.consistency_ok&&s.recovery_ok?"ok":"bad"]
+  ];
+  $("kpis").innerHTML=cards.map(([l,v,c])=>`<div class="kpi"><div class="l">${l}</div><div class="v ${c}">${v}</div></div>`).join("");
+}
+
+function sourceDepthMap(){
+  const clip=appState.clips[report.clip_id]; const by={}; clip.skeleton.joints.forEach(j=>by[j.name]=j); const depth={};
+  const d=n=>{ if(n in depth) return depth[n]; const j=by[n]; if(!j||!j.parent){depth[n]=0;return 0;} depth[n]=d(j.parent)+1; return depth[n]; };
+  clip.skeleton.joints.forEach(j=>d(j.name)); return depth;
+}
+
+function renderMapping(){
+  if(!report) return;
+  const depth=sourceDepthMap(); const targetNames=appState.targets[report.target_id].joints.map(j=>j.name);
+  const rows=report.mapping.entries.map(e=>{
+    const targets=(e.targets||[]).join(", ");
+    const ratio=e.ratio?e.ratio.toFixed(4):"—";
+    const opts=`<option value="">— 显式降级 —</option>`+targetNames.map(n=>`<option ${ (e.targets||[])[0]===n?"selected":""}>${n}</option>`).join("");
+    return `<tr>
+      <td><span class="muted">${"└ ".repeat(depth[e.source]||0)}</span><b>${e.source}</b><div class="hint">${e.reason||""}</div></td>
+      <td style="min-width:210px"><input list="targetList" data-source="${e.source}" data-original="${targets}" value="${targets}" placeholder="逗号分隔，留空降级"></td>
+      <td><span class="badge ${e.strategy}">${e.strategy}</span></td>
+      <td class="mono">${ratio}<div class="hint">G=${report.mapping.global_scale.toFixed(4)}</div></td>
+      <td>${(e.targets||[]).length?`<span class="badge ok">mapped ×${e.targets.length}</span>`:`<span class="badge degrade_identity">unmapped</span>`}</td>
+    </tr>`;
+  }).join("");
+  $("mappingTable").querySelector("tbody").innerHTML=rows;
+  $("targetList").innerHTML=targetNames.map(n=>`<option value="${n}">`).join("");
+}
+
+function renderJointSelect(){
+  if(!report) return;
+  const names=appState.targets[report.target_id].joints.map(j=>j.name);
+  $("jointSel").innerHTML=`<option value="__max__">全层级最大值</option>`+names.map(n=>`<option value="${n}">${n}</option>`).join("");
+}
+
+function diagMap(frame){ const m={}; (frame.diagnostics||[]).forEach(d=>m[d.joint]=d); return m; }
+
+function renderPose(){
+  const svg=$("poseSvg"); if(!report || !report.frames.length){ svg.innerHTML=""; return; }
+  const frame=report.frames[currentFrame]; const sk=appState.targets[report.target_id]; const dm=diagMap(frame);
+  const plane=$("viewPlane").value; const N=frame.frames?0:report.frames.length;
+  const pos=(frame.world_positions&&frame.world_positions.length===sk.joints.length)?frame.world_positions:sk.joints.map((j,i)=>{ const d=frame.diagnostics[i]; return [0,0,0]; });
+  const maxBound=Math.max(0.05,...frame.diagnostics.map(d=>d.total_bound||0));
+  const groundY=392, cx=320, scale=165;
+  const coord=p=>{ const a=plane==="front"?p[0]:p[2]-frame.root[2]; return [cx+a*scale, groundY-p[1]*scale]; };
+  let html=`<line x1="28" y1="${groundY}" x2="612" y2="${groundY}" stroke="#2a395c" stroke-width="2"/>`;
+  html+=`<text x="34" y="414" fill="#8fa2c6" font-size="11">${plane==="front"?"X / Y":"Z-root.z / Y"} · ground y=${sk.ground_y||0}</text>`;
+  sk.joints.forEach((j,i)=>{ if(!j.parent) return; const pi=sk.joints.findIndex(x=>x.name===j.parent); if(pi<0) return; const [x1,y1]=coord(pos[pi]); const [x2,y2]=coord(pos[i]); const col=pctColor(dm[j.name]?.total_bound||0,maxBound); html+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="7" stroke-linecap="round" opacity=".92"><title>${j.name} total bound=${(dm[j.name]?.total_bound||0).toFixed(4)}</title></line>`; });
+  const active=new Set(frame.contacts.active||[]);
+  sk.joints.forEach((j,i)=>{ const [x,y]=coord(pos[i]); const isFoot=j.foot; const track=(appState.clips[report.clip_id].contact_tracks||[]).find(t=>t.joint===j.name || report.mapping.target_source[j.name]===t.joint); const contact=track&&active.has(track.foot); const r=isFoot?7:4.5; const fill=contact?"#5de1e6":pctColor(dm[j.name]?.total_bound||0,maxBound); html+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="#e7eefc" stroke-width="${contact?2:1}"><title>${j.name}${contact?" · CONTACT":""} · iter=${frame.stats.iterations}</title></circle>`; if(i%1===0 && (j.end_effector||j.foot||["hips","head","chest"].includes(j.name))) html+=`<text x="${x+8}" y="${y-7}" fill="#b9c8e8" font-size="10">${j.name}</text>`; });
+  svg.innerHTML=html;
+  $("poseHint").textContent=`iter=${frame.stats.iterations}, max residual=${frame.stats.max_violation.toExponential(2)}, drift=${frame.stats.max_contact_drift.toExponential(2)}`;
+}
+
+function setupCanvas(id){ const c=$(id); const dpr=window.devicePixelRatio||1; const w=c.clientWidth||700,h=260; c.width=w*dpr;c.height=h*dpr; const ctx=c.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h); return {ctx,w,h}; }
+function drawAxes(ctx,w,h,maxV,label){ const padL=58,padB=28,padT=14,padR=12; ctx.strokeStyle="#2a395c"; ctx.beginPath(); ctx.moveTo(padL,padT);ctx.lineTo(padL,h-padB);ctx.lineTo(w-padR,h-padB);ctx.stroke(); ctx.fillStyle="#8fa2c6";ctx.font="11px ui-monospace,monospace"; ctx.fillText(maxV.toFixed(3),6,padT+8); ctx.fillText("0",34,h-padB+4); ctx.save();ctx.translate(14,h/2);ctx.rotate(-Math.PI/2);ctx.fillText(label||"",-40,0);ctx.restore(); return {padL,padB,padT,padR}; }
+function drawSeries(ctx,w,h,values,color,maxV){ const a=drawAxes(ctx,w,h,maxV,""); const iw=w-a.padL-a.padR, ih=h-a.padT-a.padB; const x=f=>a.padL+(values.length===1?0:f/(values.length-1)*iw), y=v=>h-a.padB-Math.min(1,v/maxV)*ih; ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath(); values.forEach((v,i)=>{ if(i===0)ctx.moveTo(x(i),y(v));else ctx.lineTo(x(i),y(v)); }); ctx.stroke(); ctx.fillStyle=color; values.forEach((v,i)=>{ if(i===currentFrame){ctx.beginPath();ctx.arc(x(i),y(v),4,0,7);ctx.fill();} }); const cx=x(currentFrame); ctx.strokeStyle="rgba(231,238,252,.35)";ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(cx,a.padT);ctx.lineTo(cx,h-a.padB);ctx.stroke();ctx.setLineDash([]); return x; }
+
+function renderErrorChart(){
+  if(!report) return; const metric=$("metricSel").value,joint=$("jointSel").value;
+  const values=report.frames.map(f=> joint==="__max__"?Math.max(0,...f.diagnostics.map(d=>d[metric]||0)):((f.diagnostics.find(d=>d.joint===joint)||{})[metric]||0));
+  const maxV=Math.max(0.001,...values)*1.12; const {ctx,w,h}=setupCanvas("errorChart"); drawSeries(ctx,w,h,values,"#5de1e6",maxV);
+  $("errorChart").onclick=e=>{ const rect=e.target.getBoundingClientRect(); const x=e.clientX-rect.left-58; const iw=rect.width-70; const f=Math.round(x/iw*(report.frames.length-1)); if(f>=0&&f<report.frames.length){currentFrame=f;$("frameSlider").value=f;renderFrameViews();renderErrorChart();} };
+}
+
+function renderViolationChart(){
+  if(!report) return; const p=report.parameters;
+  const angle=report.frames.map(f=>f.stats.max_angle_violation/p.angle_tolerance);
+  const reach=report.frames.map(f=>f.stats.max_reach_violation/p.reach_tolerance);
+  const contact=report.frames.map(f=>f.stats.max_contact_drift/p.contact_drift_limit);
+  const maxV=Math.max(1.2,...angle,...reach,...contact)*1.08; const {ctx,w,h}=setupCanvas("violationChart");
+  [["#ffcc66",angle],["#b58cff",reach],["#5de1e6",contact]].forEach(([c,v])=>drawSeries(ctx,w,h,v,c,maxV));
+  const a=drawAxes(ctx,w,h,maxV,"× tolerance"); ctx.strokeStyle="#ff6b7a";ctx.setLineDash([6,5]);const y=h-a.padB-1/maxV*(h-a.padT-a.padB);ctx.beginPath();ctx.moveTo(a.padL,y);ctx.lineTo(w-a.padR,y);ctx.stroke();ctx.setLineDash([]);
+}
+function renderCharts(){ renderErrorChart(); renderViolationChart(); }
+
+function renderContacts(){
+  if(!report) return; const n=report.frames.length; const check=report.contact_check; const tracks=appState.clips[report.clip_id].contact_tracks||[];
+  let html="";
+  tracks.forEach(t=>{ const intervals=(check.observed_intervals||{})[t.foot]||[]; const fills=intervals.map(inv=>`<div class="contact-fill" style="left:${inv[0]/n*100}%;width:${(inv[1]-inv[0]+1)/n*100}%" title="${t.foot} ${inv[0]}-${inv[1]}"></div>`).join(""); const ticks=(check.drift_violations||[]).filter(d=>d.foot===t.foot).map(d=>`<div style="position:absolute;left:${d.frame/(n-1)*100}%;top:-2px;bottom:-2px;width:2px;background:var(--bad)" title="f${d.frame} drift=${d.drift.toFixed(4)}"></div>`).join(""); html+=`<div class="contact-label"><span>${t.foot} · ${t.joint}</span><span class="muted">${intervals.length} 段</span></div><div class="contact-track">${fills}${ticks}</div>`; });
+  $("contacts").innerHTML=html;
+  $("contactSummary").innerHTML=`max drift=<b class="${check.max_drift<=check.drift_limit?"ok":"bad"}">${check.max_drift.toExponential(3)}</b> / bound ${check.drift_limit}；interval endpoint diffs=${JSON.stringify(check.interval_frame_diffs)}，允许 ${check.frame_tolerance} 帧。`;
+}
+
+function renderPropTree(){
+  if(!report) return; const frame=report.frames[currentFrame]; const dm=diagMap(frame); const sk=appState.targets[report.target_id]; const children={}; sk.joints.forEach(j=>{const p=j.parent||"__root__";(children[p]=children[p]||[]).push(j);});
+  const maxBound=Math.max(0.05,...frame.diagnostics.map(d=>d.total_bound||0)); let html="";
+  const walk=(name,depth)=>{ const d=dm[name]; if(!d)return; const col=pctColor(d.total_bound,maxBound); const width=Math.max(4,Math.round((d.total_bound||0)/maxBound*90)); html+=`<div class="tree-node" style="padding-left:${depth*16+4}px"><span style="color:${col}">●</span><b>${name}</b><span class="bar" style="width:${width}px"></span><span class="muted">D${d.depth} Σ${(d.total_bound||0).toFixed(4)} q${(d.quant_bound||0).toFixed(4)} s${(d.scale_bound||0).toFixed(3)} p${(d.projection_bound||0).toFixed(5)} iter${d.iterations}</span></div>`; (children[name]||[]).forEach(j=>walk(j.name,depth+1)); };
+  (children.__root__||[]).forEach(j=>walk(j.name,0)); $("propTree").innerHTML=html; $("propHint").textContent=`frame ${currentFrame} · 颜色/条长=总上界`;
+}
+
+function renderPaths(apiError){
+  if(!report){ $("paths").innerHTML=""; $("compareBox").innerHTML=apiError?`<div class="errorbox">${apiError.code}: ${apiError.message}</div>`:""; return; }
+  $("paths").innerHTML=report.paths.map(p=>{ const c=p.comparison; const badge=!c?"<span class='badge'>baseline</span>":c.ok?"<span class='badge ok'>逐帧一致</span>":`<span class="badge E_DIFF">${c.mismatch_count} diff</span>`; return `<div class="path"><h3>${p.path} ${badge}</h3><div class="kv"><span class="k">frames</span><span>${p.frames}</span><span class="k">max residual</span><span>${Number(p.max_violation).toExponential(2)}</span><span class="k">max drift</span><span>${Number(p.max_contact_drift).toExponential(2)}</span><span class="k">first hash</span><span class="hash mono" title="${p.first_hash}">${(p.first_hash||"").slice(0,16)}</span><span class="k">last hash</span><span class="hash mono" title="${p.last_hash}">${(p.last_hash||"").slice(0,16)}</span>${p.db_path?`<span class="k">sqlite</span><span class="hash mono" title="${p.db_path}">${p.db_path}</span>`:""}</div></div>`; }).join("");
+  const tm=report.three_way; let box="";
+  if(tm&&tm.ok) box=`<div class="errorbox" style="border-color:rgba(56,211,159,.45);background:rgba(56,211,159,.08);color:var(--ok)">E_DIFF 未触发：realtime、resume、full 在 ${tm.compared_frames} 帧上的旋转、根轨迹、接触集合、统计与误差上界全部一致。</div>`;
+  else if(tm&&tm.first_mismatch){ const m=tm.first_mismatch; box=`<div class="errorbox"><b>E_DIFF 首个不一致</b>\nframe=${m.frame} joint=${m.joint||"—"} field=${m.field}\nA=${JSON.stringify(m.a)}\nB=${JSON.stringify(m.b)}</div>`; }
+  if(apiError&&apiError.code!=="E_DIFF") box+=`<div class="errorbox"><b>${apiError.code}</b> ${apiError.message}\n${apiError.frame>=0?("frame="+apiError.frame+" joint="+(apiError.joint||"")+" field="+(apiError.field||"")):""}</div>`;
+  $("compareBox").innerHTML=box;
+}
+
+function renderLog(apiError){
+  if(!report) return;
+  const lines=[...(report.verification_log||[]),"",`params_version=${report.params_version}`,`algo_version=${report.algo_version}`,`mapping_hash=${report.mapping.hash}`,"误差上界公式输入：quant_step、target/source offset 骨长比值、hierarchy depth、iterations；未读取 truth world positions。"];
+  if(apiError&&apiError.details) lines.push("", "error_details="+JSON.stringify(apiError.details).slice(0,1800));
+  $("logBox").textContent=lines.join("\n");
+}
+</script>
+</body></html>

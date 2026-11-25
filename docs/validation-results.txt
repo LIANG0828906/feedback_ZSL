@@ -1,0 +1,68 @@
+== Go version ==
+go version go1.22.12 linux/amd64
+== Unit/integration tests ==
+?   	mocapbench/cmd/mocapbench	[no test files]
+?   	mocapbench/internal/web	[no test files]
+ok  	mocapbench/internal/core	0.076s
+ok  	mocapbench/internal/service	0.304s
+ok  	mocapbench/internal/store	0.006s
+== Deterministic sample generation ==
+generated 3 clips, 2 targets, 3 truth files in samples (seed=332042289488)
+== Schema/cycle/quaternion/truth validation ==
+clip=walk_cycle joints=21 frames=48 schema=OK cycle=absent quat=OK truth_ok=true world_max=0
+clip=brisk_walk joints=21 frames=60 schema=OK cycle=absent quat=OK truth_ok=true world_max=0
+clip=idle_shift joints=21 frames=36 schema=OK cycle=absent quat=OK truth_ok=true world_max=0
+target=target_hero_tall joints=18 height=1.8700
+target=target_compact joints=16 height=1.1000
+== Three-path verification for every clip/target ==
+VERIFY OK clip=walk_cycle target=target_hero_tall frames=48 max_iterations=9 max_violation=9.66e-05 max_drift=0.000000
+ - truth: world_max=0 bone_max=0 root_max=0 mismatches=0
+ - mapping: 21 entries, unmapped_source=[collar_l collar_r toe_l toe_r], degraded=[collar_l collar_r toe_l toe_r], unmapped_target=[], global_scale=1.280822
+ - solver: frames=48 max_iterations=9 max_violation=9.66e-05
+ - contact: max_drift=0.000000 limit=0.025000 interval_diffs=map[left:0 right:0]
+ - persistence: realtime_rows=48 resume_prefix=24 recovery_ok=true
+ - compare: realtime_ok=true resume_ok=true
+report: reports/walk_cycle_target_hero_tall.json
+VERIFY OK clip=walk_cycle target=target_compact frames=48 max_iterations=6 max_violation=9.48e-05 max_drift=0.000000
+ - truth: world_max=0 bone_max=0 root_max=0 mismatches=0
+ - mapping: 21 entries, unmapped_source=[collar_l collar_r neck toe_l toe_r], degraded=[collar_l collar_r neck toe_l toe_r], unmapped_target=[], global_scale=0.753425
+ - solver: frames=48 max_iterations=6 max_violation=9.48e-05
+ - contact: max_drift=0.000000 limit=0.025000 interval_diffs=map[left:0 right:0]
+ - persistence: realtime_rows=48 resume_prefix=24 recovery_ok=true
+ - compare: realtime_ok=true resume_ok=true
+report: reports/walk_cycle_target_compact.json
+VERIFY OK clip=brisk_walk target=target_hero_tall frames=60 max_iterations=9 max_violation=9.66e-05 max_drift=0.000000
+ - truth: world_max=0 bone_max=0 root_max=0 mismatches=0
+ - mapping: 21 entries, unmapped_source=[collar_l collar_r toe_l toe_r], degraded=[collar_l collar_r toe_l toe_r], unmapped_target=[], global_scale=1.280822
+ - solver: frames=60 max_iterations=9 max_violation=9.66e-05
+ - contact: max_drift=0.000000 limit=0.025000 interval_diffs=map[left:0 right:0]
+ - persistence: realtime_rows=60 resume_prefix=30 recovery_ok=true
+ - compare: realtime_ok=true resume_ok=true
+report: reports/brisk_walk_target_hero_tall.json
+VERIFY OK clip=brisk_walk target=target_compact frames=60 max_iterations=6 max_violation=9.48e-05 max_drift=0.000000
+ - truth: world_max=0 bone_max=0 root_max=0 mismatches=0
+ - mapping: 21 entries, unmapped_source=[collar_l collar_r neck toe_l toe_r], degraded=[collar_l collar_r neck toe_l toe_r], unmapped_target=[], global_scale=0.753425
+ - solver: frames=60 max_iterations=6 max_violation=9.48e-05
+ - contact: max_drift=0.000000 limit=0.025000 interval_diffs=map[left:0 right:0]
+ - persistence: realtime_rows=60 resume_prefix=30 recovery_ok=true
+ - compare: realtime_ok=true resume_ok=true
+report: reports/brisk_walk_target_compact.json
+VERIFY OK clip=idle_shift target=target_hero_tall frames=36 max_iterations=9 max_violation=9.66e-05 max_drift=0.000000
+ - truth: world_max=0 bone_max=0 root_max=0 mismatches=0
+ - mapping: 21 entries, unmapped_source=[collar_l collar_r toe_l toe_r], degraded=[collar_l collar_r toe_l toe_r], unmapped_target=[], global_scale=1.280822
+ - solver: frames=36 max_iterations=9 max_violation=9.66e-05
+ - contact: max_drift=0.000000 limit=0.025000 interval_diffs=map[left:0 right:0]
+ - persistence: realtime_rows=36 resume_prefix=18 recovery_ok=true
+ - compare: realtime_ok=true resume_ok=true
+report: reports/idle_shift_target_hero_tall.json
+VERIFY OK clip=idle_shift target=target_compact frames=36 max_iterations=6 max_violation=9.48e-05 max_drift=0.000000
+ - truth: world_max=0 bone_max=0 root_max=0 mismatches=0
+ - mapping: 21 entries, unmapped_source=[collar_l collar_r neck toe_l toe_r], degraded=[collar_l collar_r neck toe_l toe_r], unmapped_target=[], global_scale=0.753425
+ - solver: frames=36 max_iterations=6 max_violation=9.48e-05
+ - contact: max_drift=0.000000 limit=0.025000 interval_diffs=map[left:0 right:0]
+ - persistence: realtime_rows=36 resume_prefix=18 recovery_ok=true
+ - compare: realtime_ok=true resume_ok=true
+report: reports/idle_shift_target_compact.json
+== Windows pure-Go cross build ==
+-rwxr-xr-x 1 liang liang 14M Nov 25 12:02 /tmp/mocapbench.exe
+ACCEPTANCE OK
