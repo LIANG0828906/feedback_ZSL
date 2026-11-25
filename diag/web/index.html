@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>画质劣化基准内核诊断台</title>
+  <style>
+    :root {
+      --bg: #0b1020; --panel: #121a2e; --panel2: #18233d; --line: #2a395f;
+      --text: #e8efff; --muted: #93a4c7; --ok: #38d39f; --warn: #ffcc66; --bad: #ff6b6b;
+      --s1:#5ab0ff; --s2:#9b7bff; --s3:#ff9f43; --s4:#26d0ce; --s5:#ff6b9d;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:linear-gradient(180deg,#0d1428,#090d1a); color:var(--text); font:14px/1.45 system-ui,"Segoe UI","Microsoft YaHei",sans-serif; }
+    header { padding:18px 24px; border-bottom:1px solid var(--line); display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    h1 { font-size:18px; margin:0; }
+    main { padding:20px 24px; display:grid; grid-template-columns:minmax(360px,1.15fr) minmax(360px,.85fr); gap:18px; }
+    .panel { background:rgba(18,26,46,.92); border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+    .panel h2 { margin:0 0 12px; font-size:15px; letter-spacing:.04em; color:#fff; }
+    .wide { grid-column:1 / -1; }
+    .images { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    figure { margin:0; background:#0a0f1f; border:1px solid var(--line); border-radius:10px; padding:8px; overflow:auto; }
+    img { width:100%; min-width:320px; image-rendering:pixelated; border-radius:6px; display:block; }
+    figcaption { color:var(--muted); font-size:12px; margin-top:6px; }
+    .steps { display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; }
+    .steps figure { min-width:180px; }
+    .steps img { min-width:180px; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid rgba(42,57,95,.7); padding:7px 6px; text-align:left; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; }
+    .badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; border:1px solid var(--line); }
+    .ok { color:var(--ok); border-color:rgba(56,211,159,.45); background:rgba(56,211,159,.1); }
+    .bad { color:var(--bad); border-color:rgba(255,107,107,.45); background:rgba(255,107,107,.1); }
+    .warn { color:var(--warn); border-color:rgba(255,204,102,.45); background:rgba(255,204,102,.1); }
+    .muted { color:var(--muted); }
+    .heatmap { display:grid; gap:2px; overflow:auto; padding-bottom:8px; }
+    .cell { width:30px; height:30px; border-radius:5px; border:1px solid rgba(255,255,255,.16); cursor:help; }
+    .cell.unchanged { background:#26324d; }
+    .cell.ambiguous { background:repeating-linear-gradient(45deg,#ff6b6b,#ff6b6b 5px,#5b2430 5px,#5b2430 10px); }
+    .legend { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; color:var(--muted); font-size:12px; }
+    .dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:4px; }
+    .matrix { overflow:auto; }
+    .matrix-grid { display:grid; gap:2px; }
+    .unit { width:22px; height:22px; border-radius:4px; border:1px solid rgba(255,255,255,.12); }
+    .pending { background:#33415f; } .processing { background:var(--warn); } .committed { background:var(--ok); } .failed { background:var(--bad); }
+    .kv { display:grid; grid-template-columns:130px 1fr; gap:5px 12px; font-size:12px; }
+    code { color:#b9d2ff; }
+    pre { white-space:pre-wrap; word-break:break-all; background:#0a0f1f; border:1px solid var(--line); border-radius:10px; padding:10px; max-height:260px; overflow:auto; }
+    .banner-ok { border-color:rgba(56,211,159,.5); background:rgba(56,211,159,.1); }
+    .banner-bad { border-color:rgba(255,107,107,.55); background:rgba(255,107,107,.12); }
+    button { background:#243b6b; color:white; border:1px solid #3b5ea0; border-radius:8px; padding:7px 12px; cursor:pointer; }
+    button:hover { background:#2d4b87; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>游戏截图画质劣化基准内核</h1>
+    <span id="run" class="badge muted">loading…</span>
+    <button id="reload">刷新状态</button>
+    <span class="muted">全部资源来自本地持久化目录，不访问外部网络</span>
+  </header>
+  <main>
+    <section class="panel wide" id="verifyPanel"><h2>三路径独立比对</h2><div id="verify">等待 /api/state…</div></section>
+
+    <section class="panel">
+      <h2>基准 / 劣化对照</h2>
+      <div class="images">
+        <figure><img id="baseImg" alt="基准截图"><figcaption id="baseCap"></figcaption></figure>
+        <figure><img id="finalImg" alt="劣化结果"><figcaption id="finalCap"></figcaption></figure>
+      </div>
+      <h2 style="margin-top:16px">逐级输出</h2>
+      <div class="steps" id="steps"></div>
+    </section>
+
+    <section class="panel">
+      <h2>算链步骤与缓存命中</h2>
+      <div style="overflow:auto"><table id="chainTable"></table></div>
+      <h2 style="margin-top:16px">运行指纹</h2>
+      <div class="kv" id="kv"></div>
+      <h2 style="margin-top:16px">质量评估失效清单</h2>
+      <pre id="qualityInvalidation" style="max-height:180px"></pre>
+    </section>
+
+    <section class="panel wide">
+      <h2>逐块归因热力图</h2>
+      <div class="heatmap" id="heatmap"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="panel wide">
+      <h2>分段状态矩阵（行=步骤，列=分段；绿=已提交，黄=处理中，红=失败，灰=待处理）</h2>
+      <div class="matrix"><div id="matrix" class="matrix-grid"></div></div>
+    </section>
+
+    <section class="panel">
+      <h2>缓冲排队事件</h2>
+      <table id="queueTable"></table>
+    </section>
+    <section class="panel">
+      <h2>独立校验原始结论</h2>
+      <pre id="rawVerify"></pre>
+    </section>
+  </main>
+<script>
+const stepColors = {'1':'var(--s1)','2':'var(--s2)','3':'var(--s3)','4':'var(--s4)','5':'var(--s5)'};
+async function loadState() {
+  const r = await fetch('/api/state');
+  const s = await r.json();
+  if (s.error) { document.getElementById('run').textContent = s.error; return; }
+  window.__state = s;
+  renderHeader(s); renderImages(s); renderChain(s); renderKV(s); renderQuality(s); renderHeatmap(s); renderMatrix(s); renderQueue(s); renderVerify(s);
+}
+function renderHeader(s) {
+  document.getElementById('run').textContent = `${s.run.run_id} · ${s.run.frame_id} · v${s.run.param_version} · workers=${s.run.workers}`;
+  document.getElementById('baseImg').src = s.images.base + '?t=' + Date.now();
+  document.getElementById('finalImg').src = s.images.final + '?t=' + Date.now();
+  document.getElementById('baseCap').textContent = `${s.truth.frame.width}×${s.truth.frame.height} · ${s.truth.frame.channels} 通道 · truth ${s.truth.fingerprint.slice(0,16)}`;
+  document.getElementById('finalCap').textContent = `最终分段重建图 · chain ${s.run.chain_fingerprint.slice(0,16)}`;
+}
+function renderImages(s) {
+  const box = document.getElementById('steps'); box.innerHTML = '';
+  (s.images.steps||[]).forEach((src,i)=>{
+    const f=document.createElement('figure'); const im=document.createElement('img'); im.src=src;
+    const cap=document.createElement('figcaption'); cap.textContent=`step ${i+1} · ${s.chain.steps[i].type}`;
+    f.append(im,cap); box.append(f);
+  });
+}
+function region(step) {
+  if (step.region.all) return 'whole image';
+  const r=step.region.rect; return `[${r.min_x},${r.min_y},${r.max_x},${r.max_y}]`;
+}
+function renderChain(s) {
+  const reuse = Object.fromEntries((s.reuse||[]).map(x=>[x.step_index,x]));
+  let html='<tr><th>#</th><th>类型</th><th>强度</th><th>区域</th><th>复用状态</th><th>单元</th></tr>';
+  s.chain.steps.forEach((st,i)=>{
+    const n=i+1, ru=reuse[n]||{};
+    const cls = ru.status==='reused'?'ok':(ru.status==='partial'?'warn':'bad');
+    html += `<tr><td>${n}</td><td><code>${st.type}</code></td><td>${st.strength}</td><td>${region(st)}</td>
+      <td><span class="badge ${cls}">${ru.status||'n/a'}</span><div class="muted">${ru.reason||''}</div></td>
+      <td>总${ru.total_units||0} / 恢复${ru.recovered_units||0} / 键命中${ru.cache_hit_units||0} / 区域外复用${ru.dependency_reuse_units||0} / 域哈希复用${ru.domain_reuse_units||0} / 重算${ru.recomputed_units||0} / 透传${ru.propagated_units||0}</td></tr>`;
+  });
+  document.getElementById('chainTable').innerHTML=html;
+}
+function renderKV(s) {
+  const rows = [
+    ['Algo version', s.run.algo_version], ['Chain fp', s.run.chain_fingerprint],
+    ['Segment', s.run.segment_size+'px'], ['Metric block', s.run.metric_block_size+'px'],
+    ['Truth seed', s.truth.seed], ['Objects', s.truth.objects.length], ['Implants', (s.truth.implants||[]).length]
+  ];
+  document.getElementById('kv').innerHTML = rows.map(([k,v])=>`<div class="muted">${k}</div><div><code>${v}</code></div>`).join('');
+}
+function renderQuality(s) {
+  const q = s.invalidation && s.invalidation.quality ? s.invalidation.quality : null;
+  document.getElementById('qualityInvalidation').textContent = q ? JSON.stringify(q, null, 2) : '{}';
+}
+function renderHeatmap(s) {
+  const a=s.attribution, m=s.metrics; const el=document.getElementById('heatmap');
+  if (!a || !m) { el.textContent='归因报告尚未生成'; return; }
+  const cols=m.width/m.block_size;
+  el.style.gridTemplateColumns=`repeat(${cols},30px)`; el.innerHTML='';
+  (a.blocks||[]).forEach(b=>{
+    const d=document.createElement('div');
+    d.className='cell '+(b.status==='attributed'?'':b.status);
+    if (b.status==='attributed') d.style.background=stepColors[String(b.step_index)] || '#888';
+    d.title=`block(${b.block_x},${b.block_y}) ${b.status} step=${b.step_index||'-'}\n`+
+      (b.contributions||[]).map(c=>`#${c.step_index}: share=${c.share.toFixed(3)} N=${c.noise_delta.toFixed(2)} E=${c.edge_delta.toFixed(2)} C=${c.chroma_delta.toFixed(2)}`).join('\n');
+    el.append(d);
+  });
+  document.getElementById('legend').innerHTML = Object.entries(stepColors).map(([k,c])=>`<span><i class="dot" style="background:${c}"></i>步骤 ${k}</span>`).join('') +
+    '<span><i class="dot cell ambiguous" style="position:static;width:14px;height:14px"></i>歧义 E_ATTR</span><span><i class="dot unchanged"></i>无变化</span>';
+}
+function renderMatrix(s) {
+  const cols=Math.ceil(s.truth.frame.width/s.run.segment_size);
+  const byStep={}; (s.unit_states||[]).forEach(u=>{(byStep[u.step_index] ||= [])[u.segment_index]=u;});
+  const maxStep=Math.max(...Object.keys(byStep).map(Number));
+  const root=document.getElementById('matrix'); root.innerHTML='';
+  for (let step=1;step<=maxStep;step++) {
+    const row=document.createElement('div'); row.style.display='grid'; row.style.gridTemplateColumns=`42px repeat(${cols},22px)`; row.style.gap='2px'; row.style.alignItems='center';
+    const label=document.createElement('div'); label.className='muted'; label.textContent='step '+step; row.append(label);
+    for (let i=0;i<cols*Math.ceil(s.truth.frame.height/s.run.segment_size);i++) {
+      const u=(byStep[step]||[])[i]; const d=document.createElement('div');
+      d.className='unit '+(u?u.state:'pending'); d.title=u?`seg ${i} ${u.state} attempts=${u.attempts} ${u.last_error||''}`:`seg ${i} pending`;
+      row.append(d);
+    }
+    root.append(row);
+  }
+}
+function renderQueue(s) {
+  let html='<tr><th>单元</th><th>原因</th><th>等待 ms</th></tr>';
+  (s.queue_events||[]).slice(-30).forEach(q=>{html+=`<tr><td><code>${q.unit_id}</code></td><td>${q.reason}</td><td>${q.waited_ms}</td></tr>`;});
+  if (!(s.queue_events||[]).length) html+='<tr><td colspan=3 class=muted>本次没有发生缓冲/并行排队；压力测试会强制触发。</td></tr>';
+  document.getElementById('queueTable').innerHTML=html;
+}
+function renderVerify(s) {
+  const v=s.verification; const panel=document.getElementById('verifyPanel');
+  if (!v) { document.getElementById('verify').innerHTML='<span class="badge warn">尚未找到 verification.json</span>'; return; }
+  document.getElementById('rawVerify').textContent=JSON.stringify(v,null,2);
+  const ok=v.ok; panel.className='panel wide '+(ok?'banner-ok':'banner-bad');
+  document.getElementById('verify').innerHTML = ok
+    ? '<span class="badge ok">三路径逐像素、指标、归因与提交序列一致；独立分段重算通过</span>'
+    : '<span class="badge bad">发现不一致：</span><pre>'+JSON.stringify(v.first_violation||v,null,2)+'</pre>';
+}
+document.getElementById('reload').onclick=loadState;
+loadState(); setInterval(loadState, 4000);
+</script>
+</body>
+</html>

@@ -20,3 +20,58 @@
 
 验收：
 用本地样本验证算链劣化、步骤失效复用、回滚前后像素一致及断点恢复与全量重算的三路径一致。
+
+---
+
+# QKernel 交付实现
+
+本目录已实现一个纯 Go 的确定性画质劣化基准内核。根 module 保持 `go 1.21`，SQLite 使用纯 Go 驱动 `modernc.org/sqlite`；不需要 Docker、外部样本服务或外网资源。
+
+## 快速验证
+
+```bash
+go mod download
+go build ./...
+go test ./...
+
+# 生成 3 张本地基准截图、完整检查点，并跑实时/全量/断点恢复三路径比对
+go run ./cmd/qkernel demo --out demo-output --frames 3 --workers 4
+
+# 仅从 SQLite 提交、分段 blob、base RGB 与真值指纹独立重算
+go run ./cmd/qkernel verify --root demo-output
+
+# 本地诊断台（零 CDN/零外网脚本）
+go run ./cmd/qkernel serve --root demo-output --addr 127.0.0.1:8787
+```
+
+Windows 交叉构建已用 `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build ./...` 验证。Wails 壳位于 `diagnostic/wails`，是独立 module；在 Windows 上执行 `wails build`，详见 `diagnostic/wails/README.md`。
+
+## 包结构
+
+- `internal/synth`：固定种子合成器、真值指纹、`E_SCHEMA`/`E_META` 加载校验。
+- `internal/chain`：五类算符、`E_PARA` 参数校验、规范链指纹、有效读域。
+- `internal/metrics`：分块噪声方差、Sobel 边缘清晰度、Cb/Cr 色度均值。
+- `internal/attribution`：逐步贡献份额、首个超阈值步骤归因、`E_ATTR` 候选列表。
+- `internal/sched`：固定 worker、像素缓冲预算、排队等待事件、panic/错误隔离。
+- `internal/session`：分段、状态机、内容键缓存、参数版本、SQLite 原子提交和恢复。
+- `internal/verifier`：只读持久化产物，独立拼图、重算指标/归因并比较提交序列。
+- `diag` + `diag/web/index.html`：本地 HTTP/内嵌诊断界面，也供 Wails 壳复用。
+
+## 关键语义
+
+- 分段按行主序切成 `SegmentSize × SegmentSize`；提交顺序固定为 `(step_index - 1) * segment_count + segment_index`。
+- 单元缓存键包含算法版本、帧、步骤序号、分块矩形、规范步骤参数、有效输入域哈希和上游依赖键。
+- SQLite `commits` 行原子保存输入哈希、输出哈希、作用区域、上游键、输出摘要、链指纹、参数版本和算法版本。
+- 恢复时先把遗留 `processing` 单元合法迁移为 `failed`，再重试 `failed -> processing -> committed`。
+- 同一有效输入域哈希与同参数旧单元可跨参数版本复用；不同参数/版本不会共用当前版本提交元数据。
+- 空间隔离的步骤换序后，未受影响步骤可通过输入域哈希复用；重叠算链的顺序仍具有业务语义，不强制不同顺序产生同一像素。
+
+## 已覆盖的验收测试
+
+- 三路径最终像素、指标文件、归因文件和提交序列一致。
+- 强度修改、区域移动、步骤换序后的精确失效/复用。
+- v1 → v2 → 回滚 v1 → 再前进 v2 与直接执行 v2 逐字节一致。
+- 32px/64px 分段与 1/4 并行度最终像素一致。
+- 非法状态迁移返回 `E_STATE` 且不改变状态。
+- 单块注入失败、状态隔离和重试恢复。
+- 缓冲耗尽排队事件、ROI 外逐字节保持、真值 schema/meta 错误。
