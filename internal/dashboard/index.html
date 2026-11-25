@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>语义着色一致性工作台</title>
+  <style>
+    :root {
+      --bg: #0b1220; --panel: #121c2e; --panel-2: #18253b; --line: #263753;
+      --text: #e7eefc; --muted: #8ea3c4; --accent: #5eead4; --blue: #60a5fa;
+      --warn: #fbbf24; --bad: #fb7185; --ok: #34d399; --pending:#64748b;
+      --processing:#38bdf8; --committed:#22c55e; --failed:#ef4444;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; background:linear-gradient(180deg,#0b1220,#0f172a 240px); color:var(--text); }
+    header { padding:24px 32px 16px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:16px; align-items:flex-end; flex-wrap:wrap; }
+    h1 { margin:0 0 6px; font-size:24px; letter-spacing:.02em; }
+    .sub { color:var(--muted); font-size:13px; }
+    main { padding:24px 32px 48px; max-width:1500px; margin:0 auto; }
+    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:16px; }
+    .card { background:rgba(18,28,46,.92); border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.18); }
+    .card h2 { margin:0 0 14px; font-size:15px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+    .badge { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:4px 10px; font-size:12px; border:1px solid var(--line); background:var(--panel-2); }
+    .badge.ok { color:var(--ok); border-color:rgba(52,211,153,.45); }
+    .badge.bad { color:var(--bad); border-color:rgba(251,113,133,.45); }
+    .kv { display:grid; grid-template-columns:130px 1fr; gap:6px 12px; font-size:13px; }
+    .kv .k { color:var(--muted); }
+    code, .mono { font-family: "Cascadia Code", Consolas, monospace; }
+    .matrix { display:grid; gap:6px; margin-top:8px; }
+    .block { aspect-ratio:1.6; min-height:42px; border-radius:8px; border:1px solid rgba(255,255,255,.14); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; background:var(--pending); color:white; }
+    .block.processing{background:var(--processing)}.block.committed{background:var(--committed)}.block.failed{background:var(--failed)}
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { padding:7px 8px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; }
+    th { color:var(--muted); font-weight:600; position:sticky; top:0; background:var(--panel); }
+    .tablewrap { max-height:300px; overflow:auto; border:1px solid var(--line); border-radius:10px; }
+    .bar-row { display:grid; grid-template-columns:110px 1fr 92px; gap:10px; align-items:center; margin:9px 0; font-size:12px; }
+    .bar-track { height:10px; border-radius:999px; background:#0b1424; border:1px solid var(--line); overflow:hidden; position:relative; }
+    .bar { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--blue),var(--accent)); }
+    .bar.bound { background:repeating-linear-gradient(45deg,rgba(251,191,36,.75) 0 6px,rgba(251,191,36,.35) 6px 12px); }
+    .muted{color:var(--muted)} .ok-text{color:var(--ok)} .bad-text{color:var(--bad)} .warn-text{color:var(--warn)}
+    button { border:1px solid var(--line); background:var(--panel-2); color:var(--text); border-radius:9px; padding:7px 10px; cursor:pointer; font-size:12px; margin:3px; }
+    button:hover { border-color:var(--accent); color:var(--accent); }
+    pre { background:#070d18; border:1px solid var(--line); border-radius:10px; padding:12px; overflow:auto; font-size:11px; max-height:360px; }
+    canvas { width:100%; height:260px; display:block; }
+    .legend { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--muted); margin-top:8px; }
+    .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+    .pathgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .path{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel-2)}
+    .path h3{margin:0 0 8px;font-size:13px}
+    .small{font-size:11px}
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>游戏贴图与互动媒体素材 · 语义着色一致性工作台</h1>
+    <div class="sub">确定性样本 / 定点度量 / 分块调度 / SQLite 检查点 / 三路径比对 / 独立验证</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span id="health" class="badge">检查服务中…</span>
+    <span id="runtime" class="badge mono"></span>
+    <button onclick="loadState()">刷新状态</button>
+    <button onclick="runAllInjections()">运行全部注入</button>
+  </div>
+</header>
+<main class="grid">
+  <section class="card span-4">
+    <h2>样本与身份</h2>
+    <div id="manifest" class="kv"></div>
+  </section>
+  <section class="card span-8">
+    <h2>三路径一致性 <span id="compareBadge"></span></h2>
+    <div id="paths" class="pathgrid"></div>
+  </section>
+  <section class="card span-7">
+    <h2>逐区域色差：评估值 vs 解析真值</h2>
+    <canvas id="meanChart" width="900" height="260"></canvas>
+    <div class="legend"><span><i class="dot" style="background:#60a5fa"></i>面积加权均值 Q8</span><span><i class="dot" style="background:#fbbf24"></i>生成器真值</span></div>
+  </section>
+  <section class="card span-5">
+    <h2>真值偏差曲线（绝对值，Q8）</h2>
+    <canvas id="deltaChart" width="600" height="260"></canvas>
+    <div class="legend"><span><i class="dot" style="background:#fb7185"></i>均值偏差</span><span><i class="dot" style="background:#5eead4"></i>边界跃变偏差</span></div>
+  </section>
+  <section class="card span-5">
+    <h2>误差界与实测对比</h2>
+    <div id="bounds"></div>
+  </section>
+  <section class="card span-7">
+    <h2>块状态矩阵与资源预算</h2>
+    <div id="budget" class="kv" style="margin-bottom:12px"></div>
+    <div id="matrix" class="matrix"></div>
+  </section>
+  <section class="card span-12">
+    <h2>排队明细与提交序列</h2>
+    <div class="tablewrap"><table id="queueTable"><thead><tr><th>块</th><th>原因</th><th>等待 ns</th><th>队列预算</th><th>入队前深度</th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section class="card span-12">
+    <h2>量化误差扩散路径（区域 × 块邻接）</h2>
+    <div class="tablewrap"><table id="propTable"><thead><tr><th>区域</th><th>从块</th><th>到块</th><th>邻接方向</th><th>边数</th><th>平均跃变 Q8</th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section class="card span-6">
+    <h2>异常注入链路</h2>
+    <div>
+      <button onclick="inject('decode')">贴图截断 E_DECODE</button>
+      <button onclick="inject('schema')">参数矛盾 E_SCHEMA</button>
+      <button onclick="inject('gear')">档位越界 E_PARA</button>
+      <button onclick="inject('label')">标签越界 E_LABEL</button>
+      <button onclick="inject('state')">非法迁移 E_STATE</button>
+      <button onclick="inject('band')">边带不足 E_BAND</button>
+      <button onclick="inject('stage')">块失败+重试 E_STAGE</button>
+      <button onclick="inject('bound')">误差超界 E_BOUND</button>
+    </div>
+    <div id="injectionCards" style="margin-top:12px"></div>
+  </section>
+  <section class="card span-6">
+    <h2>结构化诊断输出</h2>
+    <pre id="injectionJson">点击左侧注入按钮查看错误码、像素/块坐标与字段名。</pre>
+  </section>
+</main>
+<script>
+let STATE = null;
+function el(id){return document.getElementById(id)}
+function q8(v){ return (Number(v || 0)/256).toFixed(3); }
+function setKV(id, rows){ el(id).innerHTML = rows.map(r => '<div class="k">'+r[0]+'</div><div class="mono">'+r[1]+'</div>').join(''); }
+async function loadHealth(){
+  try { const r=await fetch('/api/health'); const j=await r.json(); el('health').innerHTML='回环面板在线 · '+j.goos; el('health').className='badge ok'; }
+  catch(e){ el('health').innerHTML='面板离线'; el('health').className='badge bad'; }
+}
+async function loadState(){
+  const r=await fetch('/api/state'); STATE=await r.json(); render();
+}
+function render(){
+  if(!STATE || !STATE.pipeline) return;
+  el('runtime').textContent = STATE.go_version+' · '+STATE.goos+'/'+STATE.goarch;
+  const p=STATE.pipeline, m=p.manifest;
+  setKV('manifest', [
+    ['样本', m.name], ['尺寸/通道', m.width+'×'+m.height+' / '+(m.channels===4?'RGBA':'RGB')],
+    ['分块', m.tile_size+'px · '+m.block_count+' blocks'],
+    ['量化', 'gear '+m.quant_gear+' / '+m.quant_bits+' bit'],
+    ['度量', m.metric+' · radius '+m.window_radius+' · band '+m.band_width],
+    ['input', short(p.input_hash)], ['manifest', short(p.manifest_hash)],
+    ['truth', short(p.truth.truth_fingerprint)]
+  ]);
+  renderComparison(p); renderCharts(p); renderBounds(p); renderMatrix(p); renderQueue(p); renderPropagation(p); renderInjections(STATE.injections || []);
+}
+function short(s){ return String(s||'').slice(0,16)+'…'; }
+function renderComparison(p){
+  const ok=p.comparison.ok;
+  el('compareBadge').innerHTML = '<span class="badge '+(ok?'ok':'bad')+'">'+(ok?'完全一致':'存在差异')+'</span>';
+  const names=[['realtime','实时处理'],['resume','断点恢复'],['full','全量重算']];
+  el('paths').innerHTML=names.map(pair=>{
+    const r=p[pair[0]], rr=r.run_report || {};
+    const verify=r.verification || p.verification || {};
+    return '<div class="path"><h3>'+pair[1]+' <span class="badge '+(verify.ok===false?'bad':'ok')+'">'+(verify.ok===false?'验证失败':'验证通过')+'</span></h3>'+
+      '<div class="kv"><div class="k">DB</div><div class="mono small">'+r.db_path+'</div>'+
+      '<div class="k">提交块</div><div>'+rr.committed_count+'/'+rr.total_blocks+'</div>'+
+      (r.initial_run_report ? '<div class="k">断点前缀</div><div>'+r.initial_run_report.committed_count+' 块已持久化</div>' : '')+
+      '<div class="k">序列</div><div class="mono small">['+(rr.commit_sequence||[]).join(',')+']</div>'+
+      '<div class="k">区域数</div><div>'+(r.regions||[]).length+'</div></div></div>';
+  }).join('');
+}
+function truthMap(p){ const o={}; (p.truth.regions||[]).forEach(r=>o[r.label]=r); return o; }
+function propagationMap(path){ const o={}; (path.propagation||[]).forEach(x=>{ o[x.region_label]=Math.max(o[x.region_label]||0,x.jump_avg_q8); }); return o; }
+function renderCharts(p){
+  const path=p.resume || p.full, tm=truthMap(p), pm=propagationMap(path);
+  const labels=path.regions.map(r=>r.label+':'+(r.name||''));
+  drawLine('meanChart', labels, [
+    {values:path.regions.map(r=>r.mean_distance_q8/256), color:'#60a5fa'},
+    {values:path.regions.map(r=>(tm[r.label]||{}).expected_mean_q8/256), color:'#fbbf24'}
+  ]);
+  drawLine('deltaChart', labels, [
+    {values:path.regions.map(r=>Math.abs(r.mean_distance_q8-((tm[r.label]||{}).expected_mean_q8||0))/256), color:'#fb7185'},
+    {values:path.regions.map(r=>Math.abs(r.boundary_jump_q8-((tm[r.label]||{}).expected_boundary_q8||0))/256), color:'#5eead4'}
+  ]);
+}
+function drawLine(id, labels, series){
+  const c=el(id), ctx=c.getContext('2d'), w=c.width, h=c.height, pad=38;
+  ctx.clearRect(0,0,w,h); ctx.fillStyle='#0d1728'; ctx.fillRect(0,0,w,h);
+  let max=0.1; series.forEach(s=>s.values.forEach(v=>max=Math.max(max,v))); max*=1.15;
+  ctx.strokeStyle='#263753'; ctx.lineWidth=1; ctx.fillStyle='#8ea3c4'; ctx.font='11px Consolas';
+  for(let i=0;i<=4;i++){ const y=pad+(h-2*pad)*i/4; ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad/2,y); ctx.stroke(); ctx.fillText((max*(1-i/4)).toFixed(1),4,y+4); }
+  const n=labels.length;
+  series.forEach(s=>{
+    ctx.strokeStyle=s.color; ctx.lineWidth=2.5; ctx.beginPath();
+    s.values.forEach((v,i)=>{ const x=pad+(w-1.5*pad)*(n===1?.5:i/(n-1)); const y=h-pad-(h-2*pad)*(v/max); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.stroke();
+    s.values.forEach((v,i)=>{ const x=pad+(w-1.5*pad)*(n===1?.5:i/(n-1)); const y=h-pad-(h-2*pad)*(v/max); ctx.fillStyle=s.color; ctx.beginPath(); ctx.arc(x,y,4,0,7); ctx.fill(); });
+  });
+  ctx.fillStyle='#8ea3c4'; labels.forEach((lab,i)=>{ const x=pad+(w-1.5*pad)*(n===1?.5:i/(n-1)); ctx.fillText(String(lab).slice(0,10),x-24,h-12); });
+}
+function renderBounds(p){
+  const path=p.resume || p.full, pm=propagationMap(path);
+  el('bounds').innerHTML=path.regions.map((r,i)=>{
+    const b=path.bounds[i] || {};
+    const rows=[['均值',r.mean_distance_q8,b.mean_upper_q8],['标准差',r.std_distance_q8,b.std_upper_q8],['边界',r.boundary_jump_q8,b.boundary_upper_q8],['扩散',pm[r.label]||0,b.propagation_upper_q8]];
+    return '<div style="margin-bottom:12px"><div class="small muted">区域 '+r.label+' · '+r.name+' · area '+r.area+'</div>'+
+      rows.map(x=>bar(x[0],x[1],x[2])).join('')+'</div>';
+  }).join('');
+}
+function bar(name, actual, upper){
+  const pct=Math.min(100,Number(actual)/Math.max(1,upper)*100);
+  return '<div class="bar-row"><div>'+name+'</div><div class="bar-track"><div class="bar" style="width:'+pct+'%"></div><div class="bar bound" style="position:absolute;left:100%;width:2px;top:-2px;height:14px;background:#fbbf24"></div></div><div class="mono small">'+q8(actual)+' / '+q8(upper)+'</div></div>';
+}
+function renderMatrix(p){
+  const r=p.resume.run_report, cols=p.manifest.width/p.manifest.tile_size;
+  setKV('budget', [
+    ['parallelism', r.parallelism+' · peak '+r.peak_parallelism],
+    ['queue', 'budget '+r.queue_budget+' · peak depth '+r.peak_queue_depth],
+    ['thread buffer', r.buffer_pixels+' px'],
+    ['progress', r.committed_count+' / '+r.total_blocks+' committed'],
+    ['resume', p.resume.reset_info && p.resume.reset_info.reset ? '快照作废并重算' : '版本匹配，仅恢复未提交块']
+  ]);
+  const m=el('matrix'); m.style.gridTemplateColumns='repeat('+cols+',minmax(54px,1fr))';
+  m.innerHTML=(r.states||[]).map(s=>'<div class="block '+s.state+'" title="block '+s.block_index+' '+s.state+' attempts='+s.attempts+'"><b>#'+s.block_index+'</b><span>'+s.state+'</span></div>').join('');
+}
+function renderQueue(p){
+  const waits=(p.resume.run_report.queue_waits||[]);
+  el('queueTable').querySelector('tbody').innerHTML=waits.map(q=>'<tr><td>#'+q.block_index+'</td><td>'+q.reason+'</td><td>'+q.wait_nanos+'</td><td>'+q.queue_budget+'</td><td>'+q.queue_depth_before+'</td></tr>').join('');
+}
+function renderPropagation(p){
+  const rows=(p.resume.propagation||[]);
+  el('propTable').querySelector('tbody').innerHTML=rows.slice(0,80).map(x=>'<tr><td>'+x.region_label+'</td><td>#'+x.from_block+'</td><td>#'+x.to_block+'</td><td>'+x.direction+'</td><td>'+x.edge_count+'</td><td class="mono">'+x.jump_avg_q8+'</td></tr>').join('');
+}
+function injectionCard(x){
+  const code=x.error && x.error.code ? x.error.code : x.expected_code;
+  const loc=x.error && x.error.location ? JSON.stringify(x.error.location) : '';
+  return '<div class="path" style="margin:8px 0"><h3>'+x.kind+' <span class="badge '+(x.ok?'ok':'bad')+'">'+(x.ok?'已覆盖':'失败')+' '+code+'</span></h3><div class="small muted">'+(x.detail||'')+' '+loc+'</div></div>';
+}
+function renderInjections(list){ el('injectionCards').innerHTML=list.map(injectionCard).join(''); }
+async function inject(kind){
+  const r=await fetch('/api/inject?kind='+encodeURIComponent(kind)); const j=await r.json();
+  el('injectionJson').textContent=JSON.stringify(j,null,2);
+  const current=STATE.injections || []; const idx=current.findIndex(x=>x.kind===j.kind); if(idx>=0) current[idx]=j; else current.push(j); STATE.injections=current; renderInjections(current);
+}
+async function runAllInjections(){
+  const r=await fetch('/api/inject-all'); const j=await r.json(); STATE.injections=j; renderInjections(j); el('injectionJson').textContent=JSON.stringify(j,null,2);
+}
+loadHealth(); setInterval(loadHealth,5000); loadState().catch(e=>{el('health').textContent='状态加载失败';el('health').className='badge bad';el('injectionJson').textContent=String(e)});
+</script>
+</body>
+</html>
