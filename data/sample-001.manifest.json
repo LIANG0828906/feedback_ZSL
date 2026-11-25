@@ -1,0 +1,120 @@
+{
+  "schema_version": "audiofp.manifest.v1",
+  "material_id": "sample-001",
+  "seed": 2026112501,
+  "categories": [
+    {
+      "name": "voice",
+      "description": "steady low fundamental speech-like event",
+      "tone": {
+        "frequency_hz": 196,
+        "decay": 0.25,
+        "amplitude": 0.74
+      }
+    },
+    {
+      "name": "music",
+      "description": "A4 harmonic musical phrase",
+      "tone": {
+        "frequency_hz": 440,
+        "decay": 0.35,
+        "amplitude": 0.7
+      }
+    },
+    {
+      "name": "sfx",
+      "description": "E5 game effect tone",
+      "tone": {
+        "frequency_hz": 659.25,
+        "decay": 0.9,
+        "amplitude": 0.72
+      }
+    },
+    {
+      "name": "ui",
+      "description": "high B5 interface chirp",
+      "tone": {
+        "frequency_hz": 987.77,
+        "decay": 1.35,
+        "amplitude": 0.68
+      }
+    }
+  ],
+  "events": [
+    {
+      "index": 1,
+      "id": "evt-001",
+      "category": "voice",
+      "start_sample": 2048,
+      "end_sample": 8192,
+      "tone": {
+        "frequency_hz": 196,
+        "decay": 0.25,
+        "amplitude": 0.7408859893331535
+      }
+    },
+    {
+      "index": 2,
+      "id": "evt-002",
+      "category": "ui",
+      "start_sample": 9344,
+      "end_sample": 13440,
+      "tone": {
+        "frequency_hz": 987.77,
+        "decay": 1.35,
+        "amplitude": 0.6984385411939849
+      }
+    },
+    {
+      "index": 3,
+      "id": "evt-003",
+      "category": "music",
+      "start_sample": 15360,
+      "end_sample": 22528,
+      "tone": {
+        "frequency_hz": 440,
+        "decay": 0.35,
+        "amplitude": 0.7006001436947856
+      }
+    },
+    {
+      "index": 4,
+      "id": "evt-004",
+      "category": "sfx",
+      "start_sample": 24576,
+      "end_sample": 30720,
+      "tone": {
+        "frequency_hz": 659.25,
+        "decay": 0.9,
+        "amplitude": 0.7521726472868446
+      }
+    },
+    {
+      "index": 5,
+      "id": "evt-005",
+      "category": "voice",
+      "start_sample": 32768,
+      "end_sample": 38912,
+      "tone": {
+        "frequency_hz": 196,
+        "decay": 0.25,
+        "amplitude": 0.745852338861233
+      }
+    },
+    {
+      "index": 6,
+      "id": "evt-006",
+      "category": "music",
+      "start_sample": 40960,
+      "end_sample": 48128,
+      "tone": {
+        "frequency_hz": 440,
+        "decay": 0.35,
+        "amplitude": 0.7129124882474356
+      }
+    }
+  ],
+  "quality": {
+    "tolerance_samples": 512
+  }
+}

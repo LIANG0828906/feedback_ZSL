@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>游戏音效逐帧指纹标注台</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a31;
+      --panel-2: #18223f;
+      --line: #2a3760;
+      --text: #e8efff;
+      --muted: #9db0d8;
+      --accent: #5cc8ff;
+      --good: #39d98a;
+      --warn: #ffcc66;
+      --bad: #ff6b7a;
+      --pending: #52618a;
+      --extracting: #5cc8ff;
+      --committed: #39d98a;
+      --failed: #ff6b7a;
+      --truth: #ffcc66;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: radial-gradient(circle at top left, #17224a 0, var(--bg) 42%);
+      color: var(--text); font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", sans-serif;
+    }
+    header { padding: 22px 28px 12px; border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 6px; font-size: 24px; letter-spacing: .02em; }
+    h2 { margin: 0 0 12px; font-size: 16px; }
+    main { padding: 18px 28px 40px; max-width: 1500px; margin: 0 auto; }
+    .sub { color: var(--muted); font-size: 13px; }
+    .grid { display: grid; gap: 16px; }
+    .cards { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin: 16px 0; }
+    .two-col { grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr); }
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0)), var(--panel);
+      border: 1px solid var(--line); border-radius: 14px; padding: 16px;
+      box-shadow: 0 14px 34px rgba(0,0,0,.22);
+    }
+    .stat .label { color: var(--muted); font-size: 12px; }
+    .stat .value { font-size: 24px; font-weight: 750; margin-top: 3px; }
+    .stat .small { font-size: 12px; color: var(--muted); }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; align-items: end; }
+    label.field { display: grid; gap: 5px; color: var(--muted); font-size: 12px; }
+    input, select {
+      width: 100%; background: #0d1428; color: var(--text); border: 1px solid var(--line);
+      border-radius: 9px; padding: 8px 9px; outline: none;
+    }
+    input:focus { border-color: var(--accent); }
+    .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    button, .button {
+      appearance: none; border: 1px solid #34507f; background: #1b2c52; color: var(--text);
+      border-radius: 9px; padding: 8px 12px; cursor: pointer; text-decoration: none; display: inline-flex;
+      align-items: center; gap: 6px; font-size: 13px;
+    }
+    button:hover, .button:hover { border-color: var(--accent); background: #213966; }
+    button.primary { background: #145c86; border-color: #2b9bd1; }
+    button.good { border-color: #237a52; background: #123d2e; }
+    button.danger { border-color: #8d3440; background: #451b23; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .notice { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: #10283d; border: 1px solid #245a7d; color: #c9efff; }
+    .error { background: #3a1720; border-color: #8d3440; color: #ffd7dc; }
+    .ok { color: var(--good); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+    canvas { width: 100%; display: block; }
+    #waveCanvas { height: 260px; }
+    #bandCanvas { height: 150px; }
+    .table-wrap { overflow: auto; max-height: 430px; border: 1px solid var(--line); border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    th, td { padding: 8px 9px; border-bottom: 1px solid rgba(42,55,96,.75); white-space: nowrap; text-align: left; }
+    th { position: sticky; top: 0; background: var(--panel-2); color: var(--muted); z-index: 1; }
+    tr:hover td { background: rgba(92,200,255,.06); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .matrix { display: flex; flex-wrap: wrap; gap: 4px; max-height: 230px; overflow: auto; padding: 4px; }
+    .cell {
+      width: 18px; height: 18px; border-radius: 4px; border: 1px solid rgba(255,255,255,.16);
+      cursor: pointer; padding: 0; font-size: 9px; color: #06101f; display: grid; place-items: center;
+    }
+    .cell.pending { background: var(--pending); }
+    .cell.extracting { background: var(--extracting); }
+    .cell.committed { background: var(--committed); }
+    .cell.failed { background: var(--failed); }
+    .cell.selected { outline: 2px solid white; outline-offset: 1px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; color: var(--muted); font-size: 12px; margin: 10px 0; }
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    pre { background: #0a1124; border: 1px solid var(--line); border-radius: 10px; padding: 10px; overflow: auto; max-height: 260px; font-size: 11.5px; }
+    .bar-row { display: grid; grid-template-columns: 130px 1fr 48px; gap: 8px; align-items: center; margin: 4px 0; font-size: 12px; }
+    .bar { height: 9px; background: #0d1428; border-radius: 999px; overflow: hidden; }
+    .bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), #8be9fd); }
+    .mismatch { border-left: 3px solid var(--bad); padding-left: 10px; margin: 8px 0; }
+    .boundary { border-left: 3px solid var(--warn); padding-left: 10px; margin: 8px 0; }
+    .pill { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; color: var(--muted); font-size: 11px; margin-right: 4px; }
+    @media (max-width: 1050px) { .two-col { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>游戏音效团队 · 逐帧指纹标注台</h1>
+  <div class="sub">确定性 PCM 样本 / 频谱量化指纹 / 模板聚合 / SQLite 断点恢复 / 三路径自动比对</div>
+</header>
+<main>
+  <section class="panel">
+    <h2>参数与并发边界</h2>
+    <div class="controls">
+      <label class="field">帧长 frame_length<input id="frame_length" type="number" min="256" max="16384" step="128"></label>
+      <label class="field">帧移 frame_shift<input id="frame_shift" type="number" min="32" max="8192" step="32"></label>
+      <label class="field">频带数 band_count<input id="band_count" type="number" min="4" max="128" step="1"></label>
+      <label class="field">间隙容忍(采样点)<input id="gap_tolerance_samples" type="number" min="0" max="60000" step="64"></label>
+      <label class="field">相似度阈值<input id="match_threshold" type="number" min="0" max="1" step="0.01"></label>
+      <label class="field">最小命中帧<input id="min_hits" type="number" min="1" step="1"></label>
+      <label class="field">最大并行度<input id="max_workers" type="number" min="1" max="64" step="1"></label>
+      <label class="field">每线程缓冲上限<input id="per_worker_buffer_samples" type="number" min="256" step="256"></label>
+    </div>
+    <div class="buttons">
+      <button class="primary" onclick="applyParams()">应用参数</button>
+      <button class="good" onclick="annotate('incremental')">增量标注</button>
+      <button onclick="annotate('full')">全量重算</button>
+      <button onclick="resume()">断点恢复标注</button>
+      <button class="primary" onclick="comparePaths()">运行三路径比对</button>
+      <button onclick="resetAll()">重置窗口</button>
+      <label class="field" style="min-width:130px">部分提交窗数
+        <input id="prefixCount" type="number" value="40" min="1" style="padding:6px">
+      </label>
+      <button onclick="resetPrefix()">构造部分提交</button>
+      <a class="button" href="/api/export?format=json">导出 JSON</a>
+      <a class="button" href="/api/export?format=csv">导出 CSV</a>
+    </div>
+    <div id="notice" class="notice" style="display:none"></div>
+  </section>
+
+  <section class="grid cards" id="statCards"></section>
+
+  <section class="panel" style="margin-top:16px">
+    <h2>波形、真值区间与标注区间叠加</h2>
+    <div class="legend">
+      <span><i class="dot" style="background:rgba(255,204,102,.8)"></i>清单真值（上轨）</span>
+      <span><i class="dot" style="background:rgba(92,200,255,.55)"></i>自动标注（下轨）</span>
+      <span><i class="dot" style="background:#7186bd"></i>PCM 峰值包络</span>
+      <span class="mono" id="hashLine"></span>
+    </div>
+    <canvas id="waveCanvas"></canvas>
+  </section>
+
+  <section class="grid two-col" style="margin-top:16px">
+    <div class="panel">
+      <h2>事件清单 vs 标注结果</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>真值类别</th><th>真值区间</th><th>标注类别</th><th>标注区间</th>
+            <th>偏差</th><th>置信度</th><th>状态</th>
+          </tr></thead>
+          <tbody id="eventBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>质量统计与三路径比对</h2>
+      <div id="qualityStats"></div>
+      <div id="compareBox" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:16px">
+    <h2>逐窗口状态矩阵</h2>
+    <div class="legend">
+      <span><i class="dot pending"></i>待提取</span>
+      <span><i class="dot extracting"></i>提取中</span>
+      <span><i class="dot committed"></i>已提交</span>
+      <span><i class="dot failed"></i>失败</span>
+      <span id="progressText" class="mono"></span>
+    </div>
+    <div id="matrix" class="matrix"></div>
+    <div class="buttons">
+      <button class="primary" id="retryBtn" onclick="retrySelected()">重试选中窗口</button>
+      <button class="danger" onclick="failSelected()">模拟选中窗口失败</button>
+      <span class="sub">点击矩阵中的窗口查看指纹；非法状态迁移由领域层返回 E_STATE 并保持原状态。</span>
+    </div>
+  </section>
+
+  <section class="grid two-col" style="margin-top:16px">
+    <div class="panel">
+      <h2>窗口指纹详情 <span id="selectedTitle" class="pill"></span></h2>
+      <canvas id="bandCanvas"></canvas>
+      <div id="fingerprintMeta" class="sub" style="margin-top:10px"></div>
+    </div>
+    <div class="panel">
+      <h2>边界偏差与错配</h2>
+      <div id="boundaryList"></div>
+      <div id="mismatchList"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+let state = null;
+let selectedWindow = 0;
+
+async function api(path, body) {
+  const opts = { headers: { 'Content-Type': 'application/json' } };
+  if (body !== undefined) { opts.method = 'POST'; opts.body = JSON.stringify(body); }
+  const res = await fetch(path, body === undefined ? undefined : opts);
+  const text = await res.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch (_) { data = { raw: text }; }
+  if (!res.ok) {
+    const err = data && data.error ? data.error : { code: 'E_HTTP', message: res.statusText, details: data };
+    showNotice((err.code || 'ERROR') + ': ' + (err.message || '请求失败'), true);
+    throw err;
+  }
+  return data;
+}
+
+function showNotice(message, bad) {
+  const el = document.getElementById('notice');
+  if (!message) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.className = 'notice' + (bad ? ' error' : '');
+  el.textContent = message;
+}
+
+async function refresh() {
+  state = await api('/api/state');
+  fillForm();
+  render();
+}
+
+function fillForm() {
+  const p = state.params, l = state.limits;
+  for (const key of ['frame_length','frame_shift','band_count','gap_tolerance_samples','match_threshold','min_hits']) {
+    document.getElementById(key).value = p[key];
+  }
+  document.getElementById('max_workers').value = l.max_workers;
+  document.getElementById('per_worker_buffer_samples').value = l.per_worker_buffer_samples;
+}
+
+function readParams() {
+  const num = id => Number(document.getElementById(id).value);
+  return {
+    frame_length: num('frame_length'), frame_shift: num('frame_shift'),
+    band_count: num('band_count'), gap_tolerance_samples: num('gap_tolerance_samples'),
+    match_threshold: num('match_threshold'), min_hits: num('min_hits')
+  };
+}
+
+async function applyParams() {
+  try {
+    const body = Object.assign(readParams(), {
+      max_workers: Number(document.getElementById('max_workers').value),
+      per_worker_buffer_samples: Number(document.getElementById('per_worker_buffer_samples').value)
+    });
+    state = await api('/api/params', body);
+    render();
+  } catch (_) { /* api() already showed the structured error */ }
+}
+
+async function annotate(mode) {
+  try {
+    await applyParamsSilent();
+    state = await api('/api/annotate', { mode });
+    render();
+  } catch (_) { /* keep the visible E_PARA/E_QUAL message */ }
+}
+
+async function applyParamsSilent() {
+  const body = Object.assign(readParams(), {
+    max_workers: Number(document.getElementById('max_workers').value),
+    per_worker_buffer_samples: Number(document.getElementById('per_worker_buffer_samples').value)
+  });
+  state = await api('/api/params', body);
+}
+
+async function resume() {
+  try { await applyParamsSilent(); state = await api('/api/resume', {}); render(); }
+  catch (_) { /* api() showed the error */ }
+}
+
+async function comparePaths() {
+  try {
+    await applyParamsSilent();
+    state = await api('/api/compare', {});
+    render();
+  } catch (err) {
+    if (err && err.code === 'E_DIFF') { showNotice('E_DIFF: ' + err.message, true); await refresh(); }
+  }
+}
+
+async function resetAll() {
+  state = await api('/api/reset', { committed_prefix: 0 });
+  selectedWindow = 0;
+  render();
+}
+
+async function resetPrefix() {
+  const n = Number(document.getElementById('prefixCount').value || 40);
+  state = await api('/api/reset', { committed_prefix: n });
+  selectedWindow = 0;
+  render();
+}
+
+async function retrySelected() {
+  try { state = await api('/api/windows/' + selectedWindow + '/retry', {}); render(); }
+  catch (_) { /* E_STATE is shown and server state is unchanged */ }
+}
+
+async function failSelected() {
+  try { state = await api('/api/windows/' + selectedWindow + '/simulate-failure', {}); render(); }
+  catch (_) { /* illegal committed->failed stays on the server */ }
+}
+
+function render() {
+  if (!state) return;
+  showNotice(state.notice || (state.compare_error ? state.compare_error.code + ': ' + state.compare_error.message : ''), !!state.compare_error);
+  document.getElementById('hashLine').textContent = state.material_id + ' · ' + state.sample_rate + 'Hz · hash ' + short(state.content_hash);
+  renderStats();
+  renderWave();
+  renderEvents();
+  renderQuality();
+  renderCompare();
+  renderMatrix();
+  renderFingerprint();
+  renderLists();
+}
+
+function short(v) { return v ? v.slice(0, 16) : ''; }
+function pct(v) { return (v * 100).toFixed(1) + '%'; }
+
+function renderStats() {
+  const q = state.result && state.result.quality;
+  const cards = [
+    ['采样点', state.sample_count, state.sample_rate + ' Hz 单声道'],
+    ['窗口进度', state.committed_windows + ' / ' + state.total_windows, '已提交 / 总窗口'],
+    ['事件区间', state.result ? state.result.intervals.length : '-', state.manifest.events.length + ' 个清单事件'],
+    ['类别正确率', q ? pct(q.category_accuracy) : '-', q ? q.category_correct_count + '/' + q.matched_count : ''],
+    ['质量事件通过', q ? q.passed_count + '/' + q.truth_count : '-', q && q.passed ? 'E_QUAL 未触发' : '存在偏差/错配'],
+    ['平均绝对偏差', q ? q.mean_abs_start_error.toFixed(1) + ' / ' + q.mean_abs_end_error.toFixed(1) : '-', '起点 / 终点采样点'],
+    ['边界专列', q ? q.boundary_deviations.length : '-', '个帧边界传播偏差'],
+    ['并行度', state.limits.max_workers, '缓冲 ' + state.limits.per_worker_buffer_samples + ' 采样/线程']
+  ];
+  document.getElementById('statCards').innerHTML = cards.map(c =>
+    `<div class="panel stat"><div class="label">${c[0]}</div><div class="value">${c[1]}</div><div class="small">${c[2]}</div></div>`
+  ).join('');
+}
+
+function renderWave() {
+  const canvas = document.getElementById('waveCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 1200, h = 260;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const N = state.sample_count;
+  const x = s => Math.round(s / N * w);
+  const mid = h * .52, amp = h * .34;
+
+  ctx.strokeStyle = '#7186bd'; ctx.lineWidth = 1; ctx.beginPath();
+  const wave = state.waveform;
+  const bw = w / wave.max.length;
+  for (let i = 0; i < wave.max.length; i++) {
+    const x0 = i * bw;
+    const y1 = mid - wave.max[i] * amp;
+    const y2 = mid - wave.min[i] * amp;
+    ctx.moveTo(x0, y1); ctx.lineTo(x0, y2);
+  }
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,255,255,.12)';
+  ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid); ctx.stroke();
+
+  state.manifest.events.forEach((e, i) => {
+    const x1 = x(e.start_sample), x2 = x(e.end_sample);
+    ctx.fillStyle = 'rgba(255,204,102,.16)';
+    ctx.strokeStyle = 'rgba(255,204,102,.9)';
+    ctx.lineWidth = 1.5;
+    roundRect(ctx, x1 + .5, 10, Math.max(3, x2 - x1), 22, 5, true, true);
+    ctx.fillStyle = '#ffdf99'; ctx.font = '11px ui-monospace, monospace';
+    ctx.fillText('#' + (e.index || i + 1) + ' ' + e.category, x1 + 6, 25);
+  });
+  (state.result ? state.result.intervals : []).forEach((e) => {
+    const x1 = x(e.start_sample), x2 = x(e.end_sample);
+    ctx.fillStyle = 'rgba(92,200,255,.20)';
+    ctx.strokeStyle = 'rgba(92,200,255,.95)';
+    roundRect(ctx, x1 + .5, h - 34, Math.max(3, x2 - x1), 22, 5, true, true);
+    ctx.fillStyle = '#c9efff'; ctx.font = '11px ui-monospace, monospace';
+    ctx.fillText(e.category + ' ' + e.confidence.toFixed(2), x1 + 6, h - 19);
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+  ctx.beginPath();
+  ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h);
+  if (fill) ctx.fill();
+  if (stroke) ctx.stroke();
+}
+
+function renderEvents() {
+  const q = state.result && state.result.quality;
+  const byNo = new Map((q ? q.comparisons : []).map(c => [c.event_no, c]));
+  const annByID = new Map((state.result ? state.result.intervals : []).map(a => [a.id, a]));
+  let html = '';
+  state.manifest.events.forEach((e, i) => {
+    const no = e.index || i + 1;
+    const c = byNo.get(no);
+    const a = c && c.annotation_id ? annByID.get(c.annotation_id) : null;
+    const ok = c && c.passed;
+    html += `<tr>
+      <td>${no}</td>
+      <td>${escapeHTML(e.category)}</td>
+      <td class="mono">${e.start_sample}<br>${e.end_sample}</td>
+      <td>${c && c.category_actual ? escapeHTML(c.category_actual) : '<span class="bad">未匹配</span>'}</td>
+      <td class="mono">${a ? a.start_sample + '<br>' + a.end_sample : '-'}</td>
+      <td class="mono">${c ? (c.start_delta >= 0 ? '+' : '') + c.start_delta + ' / ' + (c.end_delta >= 0 ? '+' : '') + c.end_delta : '-'}</td>
+      <td>${a ? a.confidence.toFixed(3) : '-'}</td>
+      <td class="${ok ? 'ok' : 'warn'}">${ok ? '通过' : (c ? '超容差/错配' : '缺失')}</td>
+    </tr>`;
+  });
+  (q ? q.extra_annotations || [] : []).forEach(e => {
+    html += `<tr class="bad"><td>额外</td><td>${escapeHTML(e.category_actual)}</td><td>-</td><td>${escapeHTML(e.category_actual)}</td>
+      <td class="mono">${e.start_actual}<br>${e.end_actual}</td><td>-</td><td>${e.confidence.toFixed(3)}</td><td class="bad">extra</td></tr>`;
+  });
+  document.getElementById('eventBody').innerHTML = html;
+}
+
+function renderQuality() {
+  const q = state.result && state.result.quality;
+  if (!q) { document.getElementById('qualityStats').innerHTML = '<span class="sub">尚无结果，点击增量标注或全量重算。</span>'; return; }
+  const d = q.confidence_distribution;
+  const maxBucket = Math.max(1, ...d.buckets);
+  let bars = d.buckets.map((n, i) =>
+    `<div class="bar-row"><span>${i / 10}-${(i + 1) / 10}</span><div class="bar"><i style="width:${n / maxBucket * 100}%"></i></div><b>${n}</b></div>`
+  ).join('');
+  document.getElementById('qualityStats').innerHTML = `
+    <p><span class="pill">容差 ${q.tolerance_samples}</span><span class="pill">量化步长 ${q.quantum_step}</span>
+       <span class="pill">匹配 ${q.matched_count}/${q.truth_count}</span></p>
+    <p>类别正确率：<b class="ok">${pct(q.category_accuracy)}</b>；事件通过：<b class="${q.passed ? 'ok' : 'bad'}">${q.passed_count}/${q.truth_count}</b></p>
+    <p class="sub">最大起点偏差 ${q.max_abs_start_error}，最大终点偏差 ${q.max_abs_end_error}；置信度均值 ${d.mean.toFixed(3)}，中位 ${d.median.toFixed(3)}，区间 [${d.min.toFixed(3)}, ${d.max.toFixed(3)}]</p>
+    <h2 style="font-size:14px;margin-top:14px">置信度分布</h2>${bars}`;
+}
+
+function renderCompare() {
+  const box = document.getElementById('compareBox');
+  if (state.compare_error) {
+    const d = state.compare_error.details && state.compare_error.details.first_diff;
+    box.innerHTML = `<div class="mismatch"><b class="bad">${state.compare_error.code}: 三路径不一致</b>
+      <p>${escapeHTML(state.compare_error.message)}</p>
+      ${d ? `<p class="mono">首个差异：${escapeHTML(d.field)}<br>expected=${JSON.stringify(d.expected)}<br>actual=${JSON.stringify(d.actual)}</p>` : ''}</div>`;
+    return;
+  }
+  if (!state.compare) { box.innerHTML = '<span class="sub">尚未运行三路径比对。</span>'; return; }
+  box.innerHTML = `<div class="boundary" style="border-color:var(--good)">
+    <b class="ok">E_DIFF 未触发：实时 / 恢复 / 全量完全一致</b>
+    <p class="sub">路径：${state.compare.result_paths.join(' , ')}</p>
+    <p class="sub">核对帧 ${state.compare.checked_frames}，事件 ${state.compare.checked_events}</p></div>`;
+}
+
+function renderMatrix() {
+  document.getElementById('progressText').textContent = `committed=${state.committed_windows}/${state.total_windows}`;
+  const matrix = document.getElementById('matrix');
+  matrix.innerHTML = state.windows.map((w, i) =>
+    `<button class="cell ${w.state} ${i === selectedWindow ? 'selected' : ''}" title="#${i} start=${w.start_sample} state=${w.state} attempts=${w.attempts}" onclick="selectWindow(${i})"></button>`
+  ).join('');
+}
+
+function selectWindow(i) { selectedWindow = i; renderMatrix(); renderFingerprint(); }
+
+function renderFingerprint() {
+  const w = state.windows[selectedWindow];
+  document.getElementById('selectedTitle').textContent = w ? 'window #' + w.index + ' · ' + w.state : '';
+  const fp = w && w.fingerprint;
+  const meta = document.getElementById('fingerprintMeta');
+  if (!fp) {
+    meta.innerHTML = w ? `start=${w.start_sample}, attempts=${w.attempts}, param=${short(w.param_version)}<br>${escapeHTML(w.last_error || '暂无冻结指纹')}` : '';
+    const c = document.getElementById('bandCanvas').getContext('2d'); c.clearRect(0,0,9999,9999);
+    return;
+  }
+  meta.innerHTML = `start_sample=<b>${fp.start_sample}</b> · frame=${fp.frame_length}/${fp.frame_shift} · bands=${fp.band_count}
+    · energy=${fp.energy} · peak=${fp.peak_band}<br>
+    feature=${fp.feature_version} · param=${fp.param_version}<br>digest=<span class="mono">${w.digest || ''}</span>`;
+  drawBands(fp.bands);
+}
+
+function drawBands(bands) {
+  const canvas = document.getElementById('bandCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 700, h = 150;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+  ctx.clearRect(0,0,w,h);
+  const n = bands.length, bw = w / n;
+  bands.forEach((v, i) => {
+    const bh = v / 255 * (h - 18);
+    const hue = 195 + i / n * 55;
+    ctx.fillStyle = `hsl(${hue} 80% 65%)`;
+    ctx.fillRect(i * bw + 1, h - 14 - bh, Math.max(1, bw - 2), bh);
+  });
+  ctx.fillStyle = '#9db0d8'; ctx.font = '11px monospace';
+  ctx.fillText('0', 2, h - 2); ctx.fillText(String(n - 1), w - 28, h - 2);
+}
+
+function renderLists() {
+  const q = state.result && state.result.quality;
+  const b = document.getElementById('boundaryList');
+  const m = document.getElementById('mismatchList');
+  if (!q) { b.innerHTML = '<span class="sub">暂无质量报告</span>'; m.innerHTML = ''; return; }
+  b.innerHTML = (q.boundary_deviations || []).length ? q.boundary_deviations.map(c =>
+    `<div class="boundary"><b>事件 #${c.event_no}</b>：起点 ${c.start_expected} → ${c.start_actual} (${signed(c.start_delta)})，终点 ${c.end_expected} → ${c.end_actual} (${signed(c.end_delta)})<br><span class="sub">${escapeHTML(c.boundary_reason || '')}</span></div>`
+  ).join('') : '<p class="sub">没有帧边界偏差。</p>';
+  m.innerHTML = (q.mismatches || []).length ? q.mismatches.map(x =>
+    `<div class="mismatch"><b>${x.code || 'E_QUAL'} ${x.kind}</b> · event=${x.event_no || '-'} field=${x.field}<br><span class="mono">expected=${JSON.stringify(x.expected)} actual=${JSON.stringify(x.actual)}</span></div>`
+  ).join('') : '<p class="ok">没有超容差、类别错配、缺失或额外区间。</p>';
+}
+
+function signed(v) { return (v >= 0 ? '+' : '') + v; }
+function escapeHTML(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+window.addEventListener('resize', () => { if (state) { renderWave(); if (state.windows[selectedWindow] && state.windows[selectedWindow].fingerprint) drawBands(state.windows[selectedWindow].fingerprint.bands); } });
+refresh().catch(err => showNotice('加载状态失败: ' + err, true));
+</script>
+</body>
+</html>
