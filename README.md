@@ -21,3 +21,29 @@
 
 验收：
 用本地样本核验三版本装载一致、逐请求采样与预算扣减、片段归并及编辑后增量重算与真值吻合。
+
+---
+
+## 交付运行入口
+
+实现说明见 `docs/IMPLEMENTATION.md`，实际验证记录见 `docs/VERIFICATION.md`。
+
+```bash
+go version
+go mod tidy
+go test -count=1 ./...
+go run . verify
+go run . demo
+go run . inject
+```
+
+常用诊断命令：
+
+```bash
+go run . demo --out artifacts/demo --db artifacts/demo/checkpoint.db
+go run . load artifacts/demo/project-v1.json
+go run . load artifacts/demo/project-v2.json
+go run . load artifacts/demo/project-v3.json
+```
+
+默认演示会生成三版 schema 样本与真值 JSON，逐事件打印首部采样、尾采裁决、预算余量和归并序列，演示增量失效闭包、seq=20 崩溃后的 SQLite 恢复对照以及九类稳定 `E_*` 异常码。SQLite 使用纯 Go 驱动 `modernc.org/sqlite`，已验证 `CGO_ENABLED=0 go build ./...` 通过。
