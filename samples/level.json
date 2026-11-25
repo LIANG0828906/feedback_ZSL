@@ -1,0 +1,606 @@
+{
+  "schema_version": "level-v1",
+  "seed": 250250,
+  "units": "m",
+  "params": {
+    "param_version": "acoustic-params-v1",
+    "algorithm_version": "fixed-mirror-v1",
+    "coord_tolerance_m": 0.0001,
+    "length_tolerance_m": 0.002,
+    "spl_tolerance_db": 0.05
+  },
+  "rooms": [
+    {
+      "id": "R1",
+      "rect": {
+        "x1": 0,
+        "y1": 0,
+        "x2": 10,
+        "y2": 8
+      }
+    },
+    {
+      "id": "R2",
+      "rect": {
+        "x1": 10,
+        "y1": 0,
+        "x2": 22,
+        "y2": 8
+      }
+    },
+    {
+      "id": "R3",
+      "rect": {
+        "x1": 22,
+        "y1": 0,
+        "x2": 32,
+        "y2": 8
+      }
+    },
+    {
+      "id": "R4",
+      "rect": {
+        "x1": 11,
+        "y1": 8,
+        "x2": 21,
+        "y2": 14
+      }
+    }
+  ],
+  "walls": [
+    {
+      "id": "W12",
+      "room_a": "R1",
+      "room_b": "R2",
+      "a": {
+        "x": 10,
+        "y": 0
+      },
+      "b": {
+        "x": 10,
+        "y": 8
+      }
+    },
+    {
+      "id": "W23",
+      "room_a": "R2",
+      "room_b": "R3",
+      "a": {
+        "x": 22,
+        "y": 0
+      },
+      "b": {
+        "x": 22,
+        "y": 8
+      }
+    },
+    {
+      "id": "W24",
+      "room_a": "R2",
+      "room_b": "R4",
+      "a": {
+        "x": 11,
+        "y": 8
+      },
+      "b": {
+        "x": 21,
+        "y": 8
+      }
+    }
+  ],
+  "doors": [
+    {
+      "id": "D12",
+      "wall_id": "W12",
+      "center": {
+        "x": 10,
+        "y": 4
+      },
+      "width_m": 1.6
+    },
+    {
+      "id": "D23",
+      "wall_id": "W23",
+      "center": {
+        "x": 22,
+        "y": 4
+      },
+      "width_m": 1.6
+    },
+    {
+      "id": "D24",
+      "wall_id": "W24",
+      "center": {
+        "x": 16,
+        "y": 8
+      },
+      "width_m": 1.8
+    }
+  ],
+  "reflectors": [
+    {
+      "id": "RF-R1-B",
+      "room_id": "R1",
+      "a": {
+        "x": 1,
+        "y": 0
+      },
+      "b": {
+        "x": 9,
+        "y": 0
+      },
+      "normal": {
+        "x": 0,
+        "y": 1
+      },
+      "absorption": 0.279,
+      "description": "deterministic reflector A"
+    },
+    {
+      "id": "RF-R1-T",
+      "room_id": "R1",
+      "a": {
+        "x": 1,
+        "y": 8
+      },
+      "b": {
+        "x": 9,
+        "y": 8
+      },
+      "normal": {
+        "x": 0,
+        "y": -1
+      },
+      "absorption": 0.419,
+      "description": "deterministic reflector B"
+    },
+    {
+      "id": "RF-R1-L",
+      "room_id": "R1",
+      "a": {
+        "x": 0,
+        "y": 1
+      },
+      "b": {
+        "x": 0,
+        "y": 7
+      },
+      "normal": {
+        "x": 1,
+        "y": 0
+      },
+      "absorption": 0.255,
+      "description": "deterministic reflector C"
+    },
+    {
+      "id": "RF-R1-RL",
+      "room_id": "R1",
+      "a": {
+        "x": 10,
+        "y": 0.5
+      },
+      "b": {
+        "x": 10,
+        "y": 2.7
+      },
+      "normal": {
+        "x": -1,
+        "y": 0
+      },
+      "absorption": 0.236,
+      "description": "deterministic reflector D"
+    },
+    {
+      "id": "RF-R1-RH",
+      "room_id": "R1",
+      "a": {
+        "x": 10,
+        "y": 5.3
+      },
+      "b": {
+        "x": 10,
+        "y": 7.5
+      },
+      "normal": {
+        "x": -1,
+        "y": 0
+      },
+      "absorption": 0.169,
+      "description": "deterministic reflector E"
+    },
+    {
+      "id": "RF-R2-B",
+      "room_id": "R2",
+      "a": {
+        "x": 11,
+        "y": 0
+      },
+      "b": {
+        "x": 21,
+        "y": 0
+      },
+      "normal": {
+        "x": 0,
+        "y": 1
+      },
+      "absorption": 0.226,
+      "description": "deterministic reflector F"
+    },
+    {
+      "id": "RF-R2-TL",
+      "room_id": "R2",
+      "a": {
+        "x": 11.2,
+        "y": 8
+      },
+      "b": {
+        "x": 14.6,
+        "y": 8
+      },
+      "normal": {
+        "x": 0,
+        "y": -1
+      },
+      "absorption": 0.437,
+      "description": "deterministic reflector G"
+    },
+    {
+      "id": "RF-R2-TR",
+      "room_id": "R2",
+      "a": {
+        "x": 17.4,
+        "y": 8
+      },
+      "b": {
+        "x": 20.8,
+        "y": 8
+      },
+      "normal": {
+        "x": 0,
+        "y": -1
+      },
+      "absorption": 0.306,
+      "description": "deterministic reflector H"
+    },
+    {
+      "id": "RF-R2-LL",
+      "room_id": "R2",
+      "a": {
+        "x": 10,
+        "y": 0.5
+      },
+      "b": {
+        "x": 10,
+        "y": 2.7
+      },
+      "normal": {
+        "x": 1,
+        "y": 0
+      },
+      "absorption": 0.191,
+      "description": "deterministic reflector I"
+    },
+    {
+      "id": "RF-R2-LH",
+      "room_id": "R2",
+      "a": {
+        "x": 10,
+        "y": 5.3
+      },
+      "b": {
+        "x": 10,
+        "y": 7.5
+      },
+      "normal": {
+        "x": 1,
+        "y": 0
+      },
+      "absorption": 0.285,
+      "description": "deterministic reflector J"
+    },
+    {
+      "id": "RF-R2-RL",
+      "room_id": "R2",
+      "a": {
+        "x": 22,
+        "y": 0.5
+      },
+      "b": {
+        "x": 22,
+        "y": 2.7
+      },
+      "normal": {
+        "x": -1,
+        "y": 0
+      },
+      "absorption": 0.243,
+      "description": "deterministic reflector K"
+    },
+    {
+      "id": "RF-R2-RH",
+      "room_id": "R2",
+      "a": {
+        "x": 22,
+        "y": 5.3
+      },
+      "b": {
+        "x": 22,
+        "y": 7.5
+      },
+      "normal": {
+        "x": -1,
+        "y": 0
+      },
+      "absorption": 0.349,
+      "description": "deterministic reflector L"
+    },
+    {
+      "id": "RF-R3-B",
+      "room_id": "R3",
+      "a": {
+        "x": 23,
+        "y": 0
+      },
+      "b": {
+        "x": 31,
+        "y": 0
+      },
+      "normal": {
+        "x": 0,
+        "y": 1
+      },
+      "absorption": 0.405,
+      "description": "deterministic reflector M"
+    },
+    {
+      "id": "RF-R3-T",
+      "room_id": "R3",
+      "a": {
+        "x": 23,
+        "y": 8
+      },
+      "b": {
+        "x": 31,
+        "y": 8
+      },
+      "normal": {
+        "x": 0,
+        "y": -1
+      },
+      "absorption": 0.489,
+      "description": "deterministic reflector N"
+    },
+    {
+      "id": "RF-R3-R",
+      "room_id": "R3",
+      "a": {
+        "x": 32,
+        "y": 1
+      },
+      "b": {
+        "x": 32,
+        "y": 7
+      },
+      "normal": {
+        "x": -1,
+        "y": 0
+      },
+      "absorption": 0.478,
+      "description": "deterministic reflector O"
+    },
+    {
+      "id": "RF-R3-LL",
+      "room_id": "R3",
+      "a": {
+        "x": 22,
+        "y": 0.5
+      },
+      "b": {
+        "x": 22,
+        "y": 2.7
+      },
+      "normal": {
+        "x": 1,
+        "y": 0
+      },
+      "absorption": 0.436,
+      "description": "deterministic reflector P"
+    },
+    {
+      "id": "RF-R3-LH",
+      "room_id": "R3",
+      "a": {
+        "x": 22,
+        "y": 5.3
+      },
+      "b": {
+        "x": 22,
+        "y": 7.5
+      },
+      "normal": {
+        "x": 1,
+        "y": 0
+      },
+      "absorption": 0.224,
+      "description": "deterministic reflector Q"
+    },
+    {
+      "id": "RF-R4-BL",
+      "room_id": "R4",
+      "a": {
+        "x": 11.3,
+        "y": 8
+      },
+      "b": {
+        "x": 14.7,
+        "y": 8
+      },
+      "normal": {
+        "x": 0,
+        "y": 1
+      },
+      "absorption": 0.191,
+      "description": "deterministic reflector R"
+    },
+    {
+      "id": "RF-R4-BR",
+      "room_id": "R4",
+      "a": {
+        "x": 17.3,
+        "y": 8
+      },
+      "b": {
+        "x": 20.7,
+        "y": 8
+      },
+      "normal": {
+        "x": 0,
+        "y": 1
+      },
+      "absorption": 0.201,
+      "description": "deterministic reflector S"
+    },
+    {
+      "id": "RF-R4-T",
+      "room_id": "R4",
+      "a": {
+        "x": 12,
+        "y": 14
+      },
+      "b": {
+        "x": 20,
+        "y": 14
+      },
+      "normal": {
+        "x": 0,
+        "y": -1
+      },
+      "absorption": 0.268,
+      "description": "deterministic reflector T"
+    },
+    {
+      "id": "RF-R4-L",
+      "room_id": "R4",
+      "a": {
+        "x": 11,
+        "y": 9
+      },
+      "b": {
+        "x": 11,
+        "y": 13
+      },
+      "normal": {
+        "x": 1,
+        "y": 0
+      },
+      "absorption": 0.24,
+      "description": "deterministic reflector U"
+    },
+    {
+      "id": "RF-R4-R",
+      "room_id": "R4",
+      "a": {
+        "x": 21,
+        "y": 9
+      },
+      "b": {
+        "x": 21,
+        "y": 13
+      },
+      "normal": {
+        "x": -1,
+        "y": 0
+      },
+      "absorption": 0.248,
+      "description": "deterministic reflector V"
+    }
+  ],
+  "sources": [
+    {
+      "id": "SRC-R1",
+      "room_id": "R1",
+      "position": {
+        "x": 3,
+        "y": 2
+      },
+      "power_db": 98
+    },
+    {
+      "id": "SRC-R2",
+      "room_id": "R2",
+      "position": {
+        "x": 15,
+        "y": 2.2
+      },
+      "power_db": 98
+    },
+    {
+      "id": "SRC-R3",
+      "room_id": "R3",
+      "position": {
+        "x": 27,
+        "y": 2
+      },
+      "power_db": 98
+    },
+    {
+      "id": "SRC-R4",
+      "room_id": "R4",
+      "position": {
+        "x": 16,
+        "y": 10
+      },
+      "power_db": 96
+    }
+  ],
+  "listeners": [
+    {
+      "id": "LIS-R1-A",
+      "room_id": "R1",
+      "position": {
+        "x": 7,
+        "y": 6
+      }
+    },
+    {
+      "id": "LIS-R1-B",
+      "room_id": "R1",
+      "position": {
+        "x": 5.4,
+        "y": 5.1
+      }
+    },
+    {
+      "id": "LIS-R2-A",
+      "room_id": "R2",
+      "position": {
+        "x": 18,
+        "y": 6
+      }
+    },
+    {
+      "id": "LIS-R2-B",
+      "room_id": "R2",
+      "position": {
+        "x": 14.2,
+        "y": 5.4
+      }
+    },
+    {
+      "id": "LIS-R3-A",
+      "room_id": "R3",
+      "position": {
+        "x": 29,
+        "y": 6
+      }
+    },
+    {
+      "id": "LIS-R4-A",
+      "room_id": "R4",
+      "position": {
+        "x": 16,
+        "y": 12.6
+      }
+    }
+  ]
+}

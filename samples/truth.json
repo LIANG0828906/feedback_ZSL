@@ -1,0 +1,1233 @@
+{
+  "schema_version": "truth-v1",
+  "seed": 250250,
+  "param_version": "acoustic-params-v1",
+  "algorithm_version": "fixed-mirror-v1",
+  "tolerances": {
+    "param_version": "acoustic-params-v1",
+    "algorithm_version": "fixed-mirror-v1",
+    "coord_tolerance_m": 0.0001,
+    "length_tolerance_m": 0.002,
+    "spl_tolerance_db": 0.05
+  },
+  "listener_truths": [
+    {
+      "listener_id": "LIS-R1-A",
+      "room_id": "R1",
+      "sources": [
+        {
+          "source_id": "SRC-R1",
+          "source_room_id": "R1",
+          "connected": true,
+          "room_chain": [
+            "R1"
+          ],
+          "door_chain": [],
+          "path_length_m": 5.656854,
+          "reachable_rooms": [
+            "R1",
+            "R2"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 4,
+                "y": 0
+              },
+              "path_length_m": 8.944272,
+              "incidence_angle_deg": 26.565051,
+              "spl_db": 77.548453
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": 0,
+                "y": 3.2
+              },
+              "path_length_m": 10.77033,
+              "incidence_angle_deg": 21.801409,
+              "spl_db": 76.076983
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 6,
+                "y": 8
+              },
+              "path_length_m": 8.944272,
+              "incidence_angle_deg": 26.565051,
+              "spl_db": 76.610861
+            }
+          ],
+          "expected_spl_db": 81.55976374262924
+        },
+        {
+          "source_id": "SRC-R2",
+          "source_room_id": "R2",
+          "connected": true,
+          "room_chain": [
+            "R2",
+            "R1"
+          ],
+          "door_chain": [
+            "D12"
+          ],
+          "path_length_m": 8.919683,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 8.8,
+                "y": 0
+              },
+              "path_length_m": 15.754439,
+              "incidence_angle_deg": 16.699244,
+              "spl_db": 72.631294
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": 0,
+                "y": 5.176471
+              },
+              "path_length_m": 22.431375,
+              "incidence_angle_deg": 6.709837,
+              "spl_db": 69.704445
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 8,
+                "y": 8
+              },
+              "path_length_m": 12.022336,
+              "incidence_angle_deg": 26.565051,
+              "spl_db": 74.041984
+            }
+          ],
+          "expected_spl_db": 77.2455089985239
+        },
+        {
+          "source_id": "SRC-R3",
+          "source_room_id": "R3",
+          "connected": true,
+          "room_chain": [
+            "R3",
+            "R2",
+            "R1"
+          ],
+          "door_chain": [
+            "D23",
+            "D12"
+          ],
+          "path_length_m": 20.990716,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 8.8,
+                "y": 0
+              },
+              "path_length_m": 27.825471,
+              "incidence_angle_deg": 16.699244,
+              "spl_db": 67.690502
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": 0,
+                "y": 5.176471
+              },
+              "path_length_m": 34.502408,
+              "incidence_angle_deg": 6.709837,
+              "spl_db": 65.964575
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 8,
+                "y": 8
+              },
+              "path_length_m": 24.093369,
+              "incidence_angle_deg": 26.565051,
+              "spl_db": 68.003811
+            }
+          ],
+          "expected_spl_db": 72.07887810895062
+        },
+        {
+          "source_id": "SRC-R4",
+          "source_room_id": "R4",
+          "connected": true,
+          "room_chain": [
+            "R4",
+            "R2",
+            "R1"
+          ],
+          "door_chain": [
+            "D24",
+            "D12"
+          ],
+          "path_length_m": 12.816654,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 8.8,
+                "y": 0
+              },
+              "path_length_m": 19.651409,
+              "incidence_angle_deg": 16.699244,
+              "spl_db": 68.711479
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": 0,
+                "y": 5.176471
+              },
+              "path_length_m": 26.328345,
+              "incidence_angle_deg": 6.709837,
+              "spl_db": 66.313091
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 8,
+                "y": 8
+              },
+              "path_length_m": 15.919306,
+              "incidence_angle_deg": 26.565051,
+              "spl_db": 69.603278
+            }
+          ],
+          "expected_spl_db": 73.18864160702792
+        }
+      ]
+    },
+    {
+      "listener_id": "LIS-R1-B",
+      "room_id": "R1",
+      "sources": [
+        {
+          "source_id": "SRC-R1",
+          "source_room_id": "R1",
+          "connected": true,
+          "room_chain": [
+            "R1"
+          ],
+          "door_chain": [],
+          "path_length_m": 3.920459,
+          "reachable_rooms": [
+            "R1",
+            "R2"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 3.676056,
+                "y": 0
+              },
+              "path_length_m": 7.494665,
+              "incidence_angle_deg": 18.676702,
+              "spl_db": 79.084308
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": -0,
+                "y": 3.107143
+              },
+              "path_length_m": 8.95377,
+              "incidence_angle_deg": 20.256462,
+              "spl_db": 77.681444
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 4.617978,
+                "y": 8
+              },
+              "path_length_m": 9.217917,
+              "incidence_angle_deg": 15.091573,
+              "spl_db": 76.349105
+            }
+          ],
+          "expected_spl_db": 82.61895911932984
+        },
+        {
+          "source_id": "SRC-R2",
+          "source_room_id": "R2",
+          "connected": true,
+          "room_chain": [
+            "R2",
+            "R1"
+          ],
+          "door_chain": [
+            "D12"
+          ],
+          "path_length_m": 10.043826,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 7.978022,
+                "y": -0
+              },
+              "path_length_m": 15.5107,
+              "incidence_angle_deg": 26.816347,
+              "spl_db": 72.766725
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": 0,
+                "y": 4.714286
+              },
+              "path_length_m": 20.753368,
+              "incidence_angle_deg": 4.085617,
+              "spl_db": 70.379791
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 7.333333,
+                "y": 8
+              },
+              "path_length_m": 13.6069,
+              "incidence_angle_deg": 33.690068,
+              "spl_db": 72.966577
+            }
+          ],
+          "expected_spl_db": 76.95680461786004
+        },
+        {
+          "source_id": "SRC-R3",
+          "source_room_id": "R3",
+          "connected": true,
+          "room_chain": [
+            "R3",
+            "R2",
+            "R1"
+          ],
+          "door_chain": [
+            "D23",
+            "D12"
+          ],
+          "path_length_m": 22.114858,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 7.978022,
+                "y": -0
+              },
+              "path_length_m": 27.581733,
+              "incidence_angle_deg": 26.816347,
+              "spl_db": 67.766922
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": 0,
+                "y": 4.714286
+              },
+              "path_length_m": 32.824401,
+              "incidence_angle_deg": 4.085617,
+              "spl_db": 66.397627
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 7.333333,
+                "y": 8
+              },
+              "path_length_m": 25.677933,
+              "incidence_angle_deg": 33.690068,
+              "spl_db": 67.45056
+            }
+          ],
+          "expected_spl_db": 72.01462934377966
+        },
+        {
+          "source_id": "SRC-R4",
+          "source_room_id": "R4",
+          "connected": true,
+          "room_chain": [
+            "R4",
+            "R2",
+            "R1"
+          ],
+          "door_chain": [
+            "D24",
+            "D12"
+          ],
+          "path_length_m": 13.940796,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R1-B",
+              "reflection_point": {
+                "x": 7.978022,
+                "y": -0
+              },
+              "path_length_m": 19.407671,
+              "incidence_angle_deg": 26.816347,
+              "spl_db": 68.819884
+            },
+            {
+              "reflector_id": "RF-R1-L",
+              "reflection_point": {
+                "x": 0,
+                "y": 4.714286
+              },
+              "path_length_m": 24.650338,
+              "incidence_angle_deg": 4.085617,
+              "spl_db": 66.885105
+            },
+            {
+              "reflector_id": "RF-R1-T",
+              "reflection_point": {
+                "x": 7.333333,
+                "y": 8
+              },
+              "path_length_m": 17.50387,
+              "incidence_angle_deg": 33.690068,
+              "spl_db": 68.779079
+            }
+          ],
+          "expected_spl_db": 73.02134449533607
+        }
+      ]
+    },
+    {
+      "listener_id": "LIS-R2-A",
+      "room_id": "R2",
+      "sources": [
+        {
+          "source_id": "SRC-R1",
+          "source_room_id": "R1",
+          "connected": true,
+          "room_chain": [
+            "R1",
+            "R2"
+          ],
+          "door_chain": [
+            "D12"
+          ],
+          "path_length_m": 15.526321,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 2,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 13.2,
+                "y": 0
+              },
+              "path_length_m": 20.086358,
+              "incidence_angle_deg": 38.659808,
+              "spl_db": 70.829385
+            },
+            {
+              "reflector_id": "RF-R2-RH",
+              "reflection_point": {
+                "x": 22,
+                "y": 5.5
+              },
+              "path_length_m": 23.404625,
+              "incidence_angle_deg": 7.125016,
+              "spl_db": 68.749776
+            }
+          ],
+          "expected_spl_db": 72.92318606693844
+        },
+        {
+          "source_id": "SRC-R2",
+          "source_room_id": "R2",
+          "connected": true,
+          "room_chain": [
+            "R2"
+          ],
+          "door_chain": [],
+          "path_length_m": 4.841487,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 1,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 15.804878,
+                "y": -0
+              },
+              "path_length_m": 8.731552,
+              "incidence_angle_deg": 20.095231,
+              "spl_db": 78.065581
+            }
+          ],
+          "expected_spl_db": 78.065581
+        },
+        {
+          "source_id": "SRC-R3",
+          "source_room_id": "R3",
+          "connected": true,
+          "room_chain": [
+            "R3",
+            "R2"
+          ],
+          "door_chain": [
+            "D23"
+          ],
+          "path_length_m": 9.857301,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 2,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 20.4,
+                "y": 0
+              },
+              "path_length_m": 16.155494,
+              "incidence_angle_deg": 21.801409,
+              "spl_db": 72.721005
+            },
+            {
+              "reflector_id": "RF-R2-TR",
+              "reflection_point": {
+                "x": 19.333333,
+                "y": 8
+              },
+              "path_length_m": 12.596267,
+              "incidence_angle_deg": 33.690068,
+              "spl_db": 74.408757
+            }
+          ],
+          "expected_spl_db": 76.65665679120376
+        },
+        {
+          "source_id": "SRC-R4",
+          "source_room_id": "R4",
+          "connected": true,
+          "room_chain": [
+            "R4",
+            "R2"
+          ],
+          "door_chain": [
+            "D24"
+          ],
+          "path_length_m": 4.828427,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 17.142857,
+                "y": 0
+              },
+              "path_length_m": 16.142136,
+              "incidence_angle_deg": 8.130102,
+              "spl_db": 70.72819
+            },
+            {
+              "reflector_id": "RF-R2-LH",
+              "reflection_point": {
+                "x": 10,
+                "y": 7.142857
+              },
+              "path_length_m": 16.142136,
+              "incidence_angle_deg": 8.130102,
+              "spl_db": 70.383841
+            },
+            {
+              "reflector_id": "RF-R2-RH",
+              "reflection_point": {
+                "x": 22,
+                "y": 6.8
+              },
+              "path_length_m": 12.198039,
+              "incidence_angle_deg": 11.309932,
+              "spl_db": 72.41001
+            }
+          ],
+          "expected_spl_db": 76.03876483315807
+        }
+      ]
+    },
+    {
+      "listener_id": "LIS-R2-B",
+      "room_id": "R2",
+      "sources": [
+        {
+          "source_id": "SRC-R1",
+          "source_room_id": "R1",
+          "connected": true,
+          "room_chain": [
+            "R1",
+            "R2"
+          ],
+          "door_chain": [
+            "D12"
+          ],
+          "path_length_m": 11.707299,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 2,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 11.787234,
+                "y": 0
+              },
+              "path_length_m": 17.57574,
+              "incidence_angle_deg": 24.075498,
+              "spl_db": 71.989137
+            },
+            {
+              "reflector_id": "RF-R2-TL",
+              "reflection_point": {
+                "x": 12.545455,
+                "y": 8
+              },
+              "path_length_m": 15.103153,
+              "incidence_angle_deg": 32.471192,
+              "spl_db": 71.923732
+            }
+          ],
+          "expected_spl_db": 74.96685758086133
+        },
+        {
+          "source_id": "SRC-R2",
+          "source_room_id": "R2",
+          "connected": true,
+          "room_chain": [
+            "R2"
+          ],
+          "door_chain": [],
+          "path_length_m": 3.298485,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 2,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 14.768421,
+                "y": 0
+              },
+              "path_length_m": 7.641989,
+              "incidence_angle_deg": 6.009006,
+              "spl_db": 79.223281
+            },
+            {
+              "reflector_id": "RF-R2-TL",
+              "reflection_point": {
+                "x": 14.447619,
+                "y": 8
+              },
+              "path_length_m": 8.438009,
+              "incidence_angle_deg": 5.440332,
+              "spl_db": 76.980284
+            }
+          ],
+          "expected_spl_db": 81.25530596434555
+        },
+        {
+          "source_id": "SRC-R3",
+          "source_room_id": "R3",
+          "connected": true,
+          "room_chain": [
+            "R3",
+            "R2"
+          ],
+          "door_chain": [
+            "D23"
+          ],
+          "path_length_m": 13.30981,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 1,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 18.680851,
+                "y": 0
+              },
+              "path_length_m": 17.59991,
+              "incidence_angle_deg": 39.685454,
+              "spl_db": 71.977201
+            }
+          ],
+          "expected_spl_db": 71.977201
+        },
+        {
+          "source_id": "SRC-R4",
+          "source_room_id": "R4",
+          "connected": true,
+          "room_chain": [
+            "R4",
+            "R2"
+          ],
+          "door_chain": [
+            "D24"
+          ],
+          "path_length_m": 5.162278,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R2-B",
+              "reflection_point": {
+                "x": 14.925373,
+                "y": -0
+              },
+              "path_length_m": 15.520355,
+              "incidence_angle_deg": 7.650651,
+              "spl_db": 71.069377
+            },
+            {
+              "reflector_id": "RF-R2-LH",
+              "reflection_point": {
+                "x": 10,
+                "y": 6.470588
+              },
+              "path_length_m": 12.526158,
+              "incidence_angle_deg": 14.300277,
+              "spl_db": 72.586703
+            },
+            {
+              "reflector_id": "RF-R2-RH",
+              "reflection_point": {
+                "x": 22,
+                "y": 6.869565
+              },
+              "path_length_m": 16.042792,
+              "incidence_angle_deg": 10.669783,
+              "spl_db": 70.030211
+            }
+          ],
+          "expected_spl_db": 76.12817359110882
+        }
+      ]
+    },
+    {
+      "listener_id": "LIS-R3-A",
+      "room_id": "R3",
+      "sources": [
+        {
+          "source_id": "SRC-R1",
+          "source_room_id": "R1",
+          "connected": true,
+          "room_chain": [
+            "R1",
+            "R2",
+            "R3"
+          ],
+          "door_chain": [
+            "D12",
+            "D23"
+          ],
+          "path_length_m": 26.56022,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R3-B",
+              "reflection_point": {
+                "x": 24.8,
+                "y": 0
+              },
+              "path_length_m": 31.486666,
+              "incidence_angle_deg": 34.99202,
+              "spl_db": 65.782636
+            },
+            {
+              "reflector_id": "RF-R3-R",
+              "reflection_point": {
+                "x": 32,
+                "y": 5.538462
+              },
+              "path_length_m": 32.433056,
+              "incidence_angle_deg": 8.746162,
+              "spl_db": 64.956948
+            },
+            {
+              "reflector_id": "RF-R3-T",
+              "reflection_point": {
+                "x": 26.666667,
+                "y": 8
+              },
+              "path_length_m": 28.499654,
+              "incidence_angle_deg": 49.398705,
+              "spl_db": 65.987417
+            }
+          ],
+          "expected_spl_db": 70.36922663223662
+        },
+        {
+          "source_id": "SRC-R2",
+          "source_room_id": "R2",
+          "connected": true,
+          "room_chain": [
+            "R2",
+            "R3"
+          ],
+          "door_chain": [
+            "D23"
+          ],
+          "path_length_m": 14.507834,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R3-B",
+              "reflection_point": {
+                "x": 24.8,
+                "y": 0
+              },
+              "path_length_m": 19.43428,
+              "incidence_angle_deg": 34.99202,
+              "spl_db": 69.973801
+            },
+            {
+              "reflector_id": "RF-R3-R",
+              "reflection_point": {
+                "x": 32,
+                "y": 5.538462
+              },
+              "path_length_m": 20.380671,
+              "incidence_angle_deg": 8.746162,
+              "spl_db": 68.992336
+            },
+            {
+              "reflector_id": "RF-R3-T",
+              "reflection_point": {
+                "x": 26.666667,
+                "y": 8
+              },
+              "path_length_m": 16.447269,
+              "incidence_angle_deg": 49.398705,
+              "spl_db": 70.762333
+            }
+          ],
+          "expected_spl_db": 74.74040680684723
+        },
+        {
+          "source_id": "SRC-R3",
+          "source_room_id": "R3",
+          "connected": true,
+          "room_chain": [
+            "R3"
+          ],
+          "door_chain": [],
+          "path_length_m": 4.472136,
+          "reachable_rooms": [
+            "R2",
+            "R3"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R3-B",
+              "reflection_point": {
+                "x": 27.5,
+                "y": 0
+              },
+              "path_length_m": 8.246211,
+              "incidence_angle_deg": 14.036243,
+              "spl_db": 77.420081
+            },
+            {
+              "reflector_id": "RF-R3-R",
+              "reflection_point": {
+                "x": 32,
+                "y": 4.5
+              },
+              "path_length_m": 8.944272,
+              "incidence_angle_deg": 26.565051,
+              "spl_db": 76.145805
+            },
+            {
+              "reflector_id": "RF-R3-T",
+              "reflection_point": {
+                "x": 28.5,
+                "y": 8
+              },
+              "path_length_m": 8.246211,
+              "incidence_angle_deg": 14.036243,
+              "spl_db": 76.75912
+            }
+          ],
+          "expected_spl_db": 81.57738737930201
+        },
+        {
+          "source_id": "SRC-R4",
+          "source_room_id": "R4",
+          "connected": true,
+          "room_chain": [
+            "R4",
+            "R2",
+            "R3"
+          ],
+          "door_chain": [
+            "D24",
+            "D23"
+          ],
+          "path_length_m": 16.491212,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R3-B",
+              "reflection_point": {
+                "x": 24.8,
+                "y": 0
+              },
+              "path_length_m": 21.417658,
+              "incidence_angle_deg": 34.99202,
+              "spl_db": 67.12973
+            },
+            {
+              "reflector_id": "RF-R3-R",
+              "reflection_point": {
+                "x": 32,
+                "y": 5.538462
+              },
+              "path_length_m": 22.364049,
+              "incidence_angle_deg": 8.746162,
+              "spl_db": 66.185696
+            },
+            {
+              "reflector_id": "RF-R3-T",
+              "reflection_point": {
+                "x": 26.666667,
+                "y": 8
+              },
+              "path_length_m": 18.430647,
+              "incidence_angle_deg": 49.398705,
+              "spl_db": 67.773397
+            }
+          ],
+          "expected_spl_db": 71.84907884612876
+        }
+      ]
+    },
+    {
+      "listener_id": "LIS-R4-A",
+      "room_id": "R4",
+      "sources": [
+        {
+          "source_id": "SRC-R1",
+          "source_room_id": "R1",
+          "connected": true,
+          "room_chain": [
+            "R1",
+            "R2",
+            "R4"
+          ],
+          "door_chain": [
+            "D12",
+            "D24"
+          ],
+          "path_length_m": 19.091212,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R4-L",
+              "reflection_point": {
+                "x": 11,
+                "y": 10.3
+              },
+              "path_length_m": 25.498483,
+              "incidence_angle_deg": 24.70243,
+              "spl_db": 68.677849
+            },
+            {
+              "reflector_id": "RF-R4-R",
+              "reflection_point": {
+                "x": 21,
+                "y": 10.3
+              },
+              "path_length_m": 25.498483,
+              "incidence_angle_deg": 24.70243,
+              "spl_db": 68.631892
+            },
+            {
+              "reflector_id": "RF-R4-T",
+              "reflection_point": {
+                "x": 16,
+                "y": 14
+              },
+              "path_length_m": 21.891212,
+              "incidence_angle_deg": 0,
+              "spl_db": 69.839714
+            }
+          ],
+          "expected_spl_db": 73.85799208992812
+        },
+        {
+          "source_id": "SRC-R2",
+          "source_room_id": "R2",
+          "connected": true,
+          "room_chain": [
+            "R2",
+            "R4"
+          ],
+          "door_chain": [
+            "D24"
+          ],
+          "path_length_m": 10.485576,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R4-L",
+              "reflection_point": {
+                "x": 11,
+                "y": 10.3
+              },
+              "path_length_m": 16.892846,
+              "incidence_angle_deg": 24.70243,
+              "spl_db": 72.25408
+            },
+            {
+              "reflector_id": "RF-R4-R",
+              "reflection_point": {
+                "x": 21,
+                "y": 10.3
+              },
+              "path_length_m": 16.892846,
+              "incidence_angle_deg": 24.70243,
+              "spl_db": 72.208122
+            },
+            {
+              "reflector_id": "RF-R4-T",
+              "reflection_point": {
+                "x": 16,
+                "y": 14
+              },
+              "path_length_m": 13.285576,
+              "incidence_angle_deg": 0,
+              "spl_db": 74.177503
+            }
+          ],
+          "expected_spl_db": 77.7522829922065
+        },
+        {
+          "source_id": "SRC-R3",
+          "source_room_id": "R3",
+          "connected": true,
+          "room_chain": [
+            "R3",
+            "R2",
+            "R4"
+          ],
+          "door_chain": [
+            "D23",
+            "D24"
+          ],
+          "path_length_m": 17.196267,
+          "reachable_rooms": [
+            "R1",
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R4-L",
+              "reflection_point": {
+                "x": 11,
+                "y": 10.3
+              },
+              "path_length_m": 23.603538,
+              "incidence_angle_deg": 24.70243,
+              "spl_db": 69.348594
+            },
+            {
+              "reflector_id": "RF-R4-R",
+              "reflection_point": {
+                "x": 21,
+                "y": 10.3
+              },
+              "path_length_m": 23.603538,
+              "incidence_angle_deg": 24.70243,
+              "spl_db": 69.302636
+            },
+            {
+              "reflector_id": "RF-R4-T",
+              "reflection_point": {
+                "x": 16,
+                "y": 14
+              },
+              "path_length_m": 19.996267,
+              "incidence_angle_deg": 0,
+              "spl_db": 70.626132
+            }
+          ],
+          "expected_spl_db": 74.57496290009185
+        },
+        {
+          "source_id": "SRC-R4",
+          "source_room_id": "R4",
+          "connected": true,
+          "room_chain": [
+            "R4"
+          ],
+          "door_chain": [],
+          "path_length_m": 2.6,
+          "reachable_rooms": [
+            "R2",
+            "R4"
+          ],
+          "valid_path_count": 3,
+          "reflections": [
+            {
+              "reflector_id": "RF-R4-L",
+              "reflection_point": {
+                "x": 11,
+                "y": 11.3
+              },
+              "path_length_m": 10.332473,
+              "incidence_angle_deg": 14.574216,
+              "spl_db": 74.52405
+            },
+            {
+              "reflector_id": "RF-R4-R",
+              "reflection_point": {
+                "x": 21,
+                "y": 11.3
+              },
+              "path_length_m": 10.332473,
+              "incidence_angle_deg": 14.574216,
+              "spl_db": 74.478093
+            },
+            {
+              "reflector_id": "RF-R4-T",
+              "reflection_point": {
+                "x": 16,
+                "y": 14
+              },
+              "path_length_m": 5.4,
+              "incidence_angle_deg": 0,
+              "spl_db": 79.997236
+            }
+          ],
+          "expected_spl_db": 81.94011027637936
+        }
+      ]
+    }
+  ]
+}

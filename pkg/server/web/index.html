@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>关卡声学反射点诊断台</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    body { margin: 0; background: #f6f8fb; color: #172033; }
+    header { padding: 14px 20px; background: #102033; color: white; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    header h1 { font-size: 18px; margin: 0 16px 0 0; }
+    button { border: 1px solid #cbd5e1; background: white; border-radius: 8px; padding: 7px 10px; cursor: pointer; font-size: 13px; }
+    button:hover { border-color: #2563eb; color: #1d4ed8; }
+    button.primary { background: #2563eb; border-color: #2563eb; color: white; }
+    main { padding: 16px 20px; display: grid; grid-template-columns: minmax(720px, 1.5fr) minmax(360px, .8fr); gap: 16px; }
+    .card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; box-shadow: 0 8px 24px rgba(15,23,42,.05); }
+    .card h2 { font-size: 15px; margin: 0 0 10px; }
+    svg { width: 100%; height: auto; background: #fbfdff; border: 1px solid #e6edf5; border-radius: 10px; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+    select { padding: 6px 8px; border-radius: 8px; border: 1px solid #cbd5e1; }
+    .muted { color: #64748b; font-size: 12px; }
+    .ok { color: #047857; font-weight: 700; }
+    .bad { color: #b91c1c; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+    .room { border: 1px solid #dbe4ef; border-radius: 10px; padding: 9px; background: #f8fafc; }
+    .room .id { font-weight: 800; }
+    .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 12px; margin-top: 5px; }
+    .pill.committed { background: #dcfce7; color: #166534; }
+    .pill.failed { background: #fee2e2; color: #991b1b; }
+    .pill.connecting,.pill.reflecting,.pill.pending { background: #fef9c3; color: #854d0e; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid #edf2f7; padding: 6px 4px; text-align: left; vertical-align: top; }
+    code { background: #f1f5f9; padding: 1px 4px; border-radius: 4px; }
+    pre { background: #0f172a; color: #dbeafe; padding: 12px; border-radius: 10px; overflow: auto; max-height: 360px; font-size: 12px; }
+    .legend { display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:#475569; margin-top:8px; }
+    .swatch { display:inline-block; width:12px; height:4px; vertical-align:middle; margin-right:4px; }
+    .full { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>矩形关卡声学 · 反射点可见性诊断</h1>
+  <button onclick="doEdit({type:'set_absorption',object_id:'RF-R1-B',absorption:0.42})">改 R1 吸收系数</button>
+  <button onclick="doEdit({type:'drag_room_boundary',room_id:'R3',side:'right',coordinate:34})">外拖 R3 边界</button>
+  <button onclick="doEdit({type:'move_wall',wall_id:'W23',coordinate:22.7})">移动 W23 共墙</button>
+  <button onclick="deleteDoor()">删除 D23</button>
+  <button onclick="addDoor()">恢复 D23</button>
+  <button onclick="reset()">重置样本</button>
+  <button class="primary" onclick="runAcceptance()">运行三路径验收</button>
+</header>
+<main>
+  <section class="card">
+    <div class="row">
+      <h2>关卡俯视 / 门洞链 / 反射点叠加</h2>
+      <label class="muted">听者 <select id="listenerSelect" onchange="render()"></select></label>
+      <label class="muted">声源 <select id="sourceSelect" onchange="render()"></select></label>
+      <span id="truthStatus" class="muted"></span>
+    </div>
+    <svg id="map" viewBox="0 0 1040 470" role="img" aria-label="level map"></svg>
+    <div class="legend">
+      <span><i class="swatch" style="background:#334155"></i>墙段</span>
+      <span><i class="swatch" style="background:#2563eb"></i>门洞房间链</span>
+      <span><i class="swatch" style="background:#db2777"></i>一次反射路径/反射点</span>
+      <span><i style="color:#16a34a">●</i> 声源</span>
+      <span style="color:#ea580c">▲ 听者</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>逐听者期望声压级曲线</h2>
+    <svg id="splChart" viewBox="0 0 430 230"></svg>
+    <div id="pairDetail" class="muted" style="margin-top:8px"></div>
+  </section>
+
+  <section class="card">
+    <h2>房间分块状态矩阵</h2>
+    <div id="rooms" class="grid"></div>
+    <p id="progress" class="muted" style="margin-top:10px"></p>
+    <h2 style="margin-top:16px">并发背压事件</h2>
+    <div id="queueEvents" class="muted"></div>
+  </section>
+
+  <section class="card">
+    <h2>精确失效传播清单</h2>
+    <div id="invalidationSummary" class="muted"></div>
+    <div style="max-height:260px; overflow:auto; margin-top:8px">
+      <table><thead><tr><th>房间</th><th>对象</th><th>类型</th><th>原因</th></tr></thead>
+      <tbody id="invalidationRows"></tbody></table>
+    </div>
+    <h2 style="margin-top:16px">依赖边概览</h2>
+    <div id="deps" class="muted"></div>
+  </section>
+
+  <section class="card full">
+    <h2>自动比对与验收结果</h2>
+    <p class="muted">验收会在本地 SQLite 中分别运行增量预览、两次提交后中断恢复、一次性全量重算，并校验固定种子解析真值。</p>
+    <pre id="acceptance">尚未运行。点击右上角“运行三路径验收”。</pre>
+  </section>
+</main>
+<script>
+let state = null;
+const SX = 28, OX = 42, OY = 432;
+function X(x){ return OX + x * SX; }
+function Y(y){ return OY - y * SX; }
+function el(tag, attrs={}, parent){
+  const n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k,v] of Object.entries(attrs)) n.setAttribute(k,v);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+async function fetchState(){
+  const r = await fetch('/api/state'); state = await r.json();
+  fillSelects(); render();
+}
+function fillSelects(){
+  const ls = document.getElementById('listenerSelect'), ss = document.getElementById('sourceSelect');
+  const lval = ls.value, sval = ss.value;
+  ls.innerHTML = state.level.listeners.map(x=>`<option value="${x.id}">${x.id} (${x.room_id})</option>`).join('');
+  ss.innerHTML = state.level.sources.map(x=>`<option value="${x.id}">${x.id} (${x.room_id})</option>`).join('');
+  if ([...ls.options].some(o=>o.value===lval)) ls.value=lval;
+  if ([...ss.options].some(o=>o.value===sval)) ss.value=sval;
+}
+async function doEdit(edit){
+  const r = await fetch('/api/edit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(edit)});
+  const data = await r.json();
+  if(!r.ok || data.error){ document.getElementById('acceptance').textContent = JSON.stringify(data.error,null,2); return; }
+  state = data; fillSelects(); render();
+}
+function deleteDoor(){ doEdit({type:'delete_door',object_id:'D23'}); }
+function addDoor(){
+  const w = state.level.walls.find(x => x.id === 'W23');
+  const x = w ? w.a.x : 22;
+  doEdit({type:'add_door',door:{id:'D23',wall_id:'W23',center:{x:x,y:4},width_m:1.6}});
+}
+async function reset(){ await fetch('/api/reset',{method:'POST'}); fetchState(); }
+async function runAcceptance(){
+  document.getElementById('acceptance').textContent = '运行中...';
+  const r = await fetch('/api/acceptance'); const data = await r.json();
+  document.getElementById('acceptance').textContent = JSON.stringify(data,null,2);
+}
+function pairKey(s,l){ return s+'\u0000'+l; }
+function selectedPair(){
+  const lid=document.getElementById('listenerSelect').value, sid=document.getElementById('sourceSelect').value;
+  return (state.report.pairs||[]).find(p=>p.listener_id===lid && p.source_id===sid);
+}
+function render(){
+  if(!state) return;
+  renderMap(); renderChart(); renderRooms(); renderInvalidation(); renderQueue();
+  const tv = state.report.verification;
+  document.getElementById('truthStatus').innerHTML = tv ? (tv.ok ? `<span class="ok">真值校验通过 ${tv.checked_pairs} 对</span>` : `<span class="bad">真值差异: ${tv.first_mismatch?.field}</span>`) : '编辑后以三路径一致性为准';
+}
+function renderMap(){
+  const svg=document.getElementById('map'); svg.innerHTML='';
+  const L=state.level;
+  for(const r of L.rooms){
+    el('rect',{x:X(r.rect.x1),y:Y(r.rect.y2),width:(r.rect.x2-r.rect.x1)*SX,height:(r.rect.y2-r.rect.y1)*SX,rx:10,fill:'#eef6ff',stroke:'#93c5fd','stroke-width':1.5},svg);
+    const t=el('text',{x:X((r.rect.x1+r.rect.x2)/2),y:Y(r.rect.y2)+18,'text-anchor':'middle','font-size':15,'font-weight':800,fill:'#1e3a8a'},svg); t.textContent=r.id;
+  }
+  for(const w of L.walls){
+    el('line',{x1:X(w.a.x),y1:Y(w.a.y),x2:X(w.b.x),y2:Y(w.b.y),stroke:'#334155','stroke-width':7,'stroke-linecap':'round'},svg);
+  }
+  for(const d of L.doors){
+    const w=L.walls.find(x=>x.id===d.wall_id); if(!w) continue;
+    const vertical=Math.abs(w.a.x-w.b.x)<1e-6; const h=d.width_m/2;
+    if(vertical){ const x=d.center.x; el('line',{x1:X(x),y1:Y(d.center.y+h),x2:X(x),y2:Y(d.center.y-h),stroke:'#fbfdff','stroke-width':9},svg); }
+    else { const y=d.center.y; el('line',{x1:X(d.center.x-h),y1:Y(y),x2:X(d.center.x+h),y2:Y(y),stroke:'#fbfdff','stroke-width':9},svg); }
+    const t=el('text',{x:X(d.center.x)+5,y:Y(d.center.y)-6,'font-size':10,fill:'#0369a1'},svg); t.textContent=d.id;
+  }
+  for(const rf of L.reflectors){
+    const alpha=rf.absorption;
+    el('line',{x1:X(rf.a.x),y1:Y(rf.a.y),x2:X(rf.b.x),y2:Y(rf.b.y),stroke:`rgb(${Math.round(220*alpha+35)},${Math.round(80*(1-alpha)+40)},217)`,'stroke-width':4,'stroke-linecap':'round',opacity:.85},svg);
+  }
+  const pair=selectedPair();
+  if(pair?.chain){
+    const src=L.sources.find(s=>s.id===pair.source_id), lis=L.listeners.find(l=>l.id===pair.listener_id);
+    const pts=[src.position,...pair.chain.door_ids.map(id=>L.doors.find(d=>d.id===id).center),lis.position];
+    el('polyline',{points:pts.map(p=>`${X(p.x)},${Y(p.y)}`).join(' '),fill:'none',stroke:'#2563eb','stroke-width':2.5,'stroke-dasharray':'7 5'},svg);
+  }
+  if(pair){
+    const lis=L.listeners.find(l=>l.id===pair.listener_id);
+    for(const h of pair.reflections||[]){
+      el('line',{x1:X(h.input_point.x),y1:Y(h.input_point.y),x2:X(h.reflection_point.x),y2:Y(h.reflection_point.y),stroke:'#db2777','stroke-width':1.6,opacity:.75},svg);
+      el('line',{x1:X(h.reflection_point.x),y1:Y(h.reflection_point.y),x2:X(lis.position.x),y2:Y(lis.position.y),stroke:'#db2777','stroke-width':1.6,opacity:.75},svg);
+      el('circle',{cx:X(h.reflection_point.x),cy:Y(h.reflection_point.y),r:5,fill:'#db2777',stroke:'white','stroke-width':2},svg);
+      const t=el('text',{x:X(h.reflection_point.x)+7,y:Y(h.reflection_point.y)-7,'font-size':10,fill:'#9d174d'},svg); t.textContent=`${h.reflector_id} ${h.spl_db.toFixed(1)}dB`;
+    }
+  }
+  for(const s of L.sources){ el('circle',{cx:X(s.position.x),cy:Y(s.position.y),r:7,fill:'#16a34a',stroke:'white','stroke-width':2},svg); const t=el('text',{x:X(s.position.x)+9,y:Y(s.position.y)-9,'font-size':11},svg); t.textContent=s.id; }
+  for(const l of L.listeners){
+    const x=X(l.position.x), y=Y(l.position.y);
+    el('polygon',{points:`${x},${y-8} ${x-8},${y+7} ${x+8},${y+7}`,fill:'#ea580c',stroke:'white','stroke-width':2},svg);
+    const t=el('text',{x:x+9,y:y+14,'font-size':11,'font-weight':700},svg); t.textContent=l.id;
+  }
+}
+function renderChart(){
+  const svg=document.getElementById('splChart'); svg.innerHTML='';
+  const sources=state.level.sources;
+  const listeners=state.level.listeners;
+  const vals=[];
+  for(const l of listeners) for(const s of sources){ const p=(state.report.pairs||[]).find(x=>x.listener_id===l.id&&x.source_id===s.id); if(p?.expected_spl_db!=null) vals.push(p.expected_spl_db); }
+  const min=Math.floor(Math.min(45,...vals)-5), max=Math.ceil(Math.max(90,...vals)+5);
+  const px=55, py=18, w=340, h=160;
+  el('line',{x1:px,y1:py,x2:px,y2:py+h,stroke:'#94a3b8'},svg); el('line',{x1:px,y1:py+h,x2:px+w,y2:py+h,stroke:'#94a3b8'},svg);
+  for(let i=0;i<=4;i++){ const v=min+(max-min)*i/4, y=py+h-(v-min)/(max-min)*h; el('line',{x1:px,y1:y,x2:px+w,y2:y,stroke:'#eef2f7'},svg); const t=el('text',{x:8,y:y+4,'font-size':10,fill:'#64748b'},svg); t.textContent=v.toFixed(0); }
+  const colors=['#2563eb','#db2777','#16a34a','#f59e0b','#7c3aed','#0891b2','#dc2626'];
+  listeners.forEach((l,li)=>{
+    const pts=sources.map((s,si)=>{ const p=(state.report.pairs||[]).find(x=>x.listener_id===l.id&&x.source_id===s.id); const v=p?.expected_spl_db; if(v==null) return null; const x=px+(sources.length===1?w/2:si*w/(sources.length-1)); const y=py+h-(v-min)/(max-min)*h; return [x,y,v,s.id]; }).filter(Boolean);
+    if(pts.length>1) el('polyline',{points:pts.map(p=>`${p[0]},${p[1]}`).join(' '),fill:'none',stroke:colors[li%colors.length],'stroke-width':2},svg);
+    pts.forEach((p)=>{ el('circle',{cx:p[0],cy:p[1],r:3.5,fill:colors[li%colors.length]},svg); const t=el('text',{x:p[0]-14,y:py+h+16,'font-size':10,fill:'#475569'},svg); if(li===0) t.textContent=String(p[3]||'').replace('SRC-',''); });
+  });
+  const legend=listeners.map((l,i)=>`<span style="color:${colors[i%colors.length]}">● ${l.id}</span>`).join(' ');
+  const old=document.getElementById('chartLegend'); if(old) old.remove();
+  const div=document.createElement('div'); div.id='chartLegend'; div.className='legend'; div.innerHTML=legend; svg.after(div);
+  const pair=selectedPair();
+  document.getElementById('pairDetail').innerHTML = pair ? `当前对 <code>${pair.source_id} → ${pair.listener_id}</code>：链 <code>${(pair.chain?.room_ids||[]).join('→') || '不可达'}</code>，有效反射 <b>${pair.valid_path_count}</b> 条，总声压级 <b>${pair.expected_spl_db==null?'—':pair.expected_spl_db.toFixed(2)+' dB'}</b>` : '';
+}
+function renderRooms(){
+  document.getElementById('rooms').innerHTML = state.report.rooms.map(r=>`<div class="room"><div class="id">${r.room_id}</div><span class="pill ${r.state}">${r.state}</span><div class="muted" style="margin-top:6px">commit #${r.commit_index}${r.reused?' · 缓存复用':''}</div><div class="muted">${(r.content_hash||'').slice(0,12)}</div></div>`).join('');
+  const p=state.report.progress;
+  document.getElementById('progress').textContent=`进度：已提交 ${p.committed_rooms}/${p.total}，失败 ${p.failed_rooms}；提交序列 ${(state.report.commit_sequence||[]).join(' → ')}`;
+}
+function renderQueue(){
+  const ev=state.report.queue_events||[];
+  document.getElementById('queueEvents').innerHTML = ev.length ? `<table><tbody>${ev.slice(-8).map(e=>`<tr><td>#${e.seq}</td><td>${e.task_id}</td><td class="bad">${e.reason}</td><td>${e.message}</td></tr>`).join('')}</tbody></table>` : '本轮没有发生缓冲耗尽；服务池配置为 max_workers=2, buffer_per_worker=1。';
+}
+function renderInvalidation(){
+  const inv=state.invalidation || state.report.invalidation;
+  if(!inv){ document.getElementById('invalidationSummary').innerHTML='初始全量求解，无失效清单。'; document.getElementById('invalidationRows').innerHTML=''; return; }
+  document.getElementById('invalidationSummary').innerHTML=`<div>${inv.reason||''}</div><div style="margin-top:6px" class="ok">复用房间：${(inv.reused_rooms||[]).join(', ')||'无'}</div><div class="bad" style="margin-top:4px">重算房间：${(inv.recomputed_rooms||[]).join(', ')||'无'}</div>`;
+  document.getElementById('invalidationRows').innerHTML=(inv.items||[]).map(i=>`<tr><td>${i.room_id}</td><td><code>${i.object_id}</code></td><td>${i.kind}</td><td>${i.reason}</td></tr>`).join('');
+  const d=state.report.dependencies;
+  document.getElementById('deps').innerHTML = d ? `${d.nodes.length} 个依赖节点，${d.edges.length} 条依赖边；传播方向：<code>surface/door → chain → listener → room checkpoint</code>。` : '';
+}
+fetchState();
+</script>
+</body>
+</html>
