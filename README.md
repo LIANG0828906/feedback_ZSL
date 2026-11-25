@@ -19,3 +19,15 @@
 
 验收：
 用本地样本验证三版本统一装载、笔画次序与方向核验、编辑后增量重算及三路径逐像素一致，并附运行结果。
+
+---
+
+## 交付实现
+
+可运行实现位于 `maskqa/`、`cmd/workbench/` 与 `cmd/verify/`；实际测试和运行结果见 `VALIDATION.md`、`artifacts/go-test-results.txt`、`artifacts/verify-output.txt`。
+
+```bash
+go test ./... -count=1
+go run ./cmd/verify
+go run ./cmd/workbench -addr 127.0.0.1:18090
+```

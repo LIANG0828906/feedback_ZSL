@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>掩码笔画工作台</title>
+  <style>
+    :root {
+      --bg: #0f172a; --panel: #111c33; --panel2: #17233f; --line: #2b3b5f;
+      --text: #e5edff; --muted: #9db0d0; --blue: #60a5fa; --green: #34d399;
+      --red: #fb7185; --amber: #fbbf24; --purple: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header { padding:18px 24px; border-bottom:1px solid var(--line); background:linear-gradient(120deg,#101d3d,#172554); }
+    h1 { margin:0 0 4px; font-size:20px; }
+    h2 { font-size:15px; margin:0 0 10px; color:#dbeafe; }
+    main { padding:18px 24px; display:grid; grid-template-columns: 360px 1fr; gap:16px; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:16px; }
+    label { display:block; color:var(--muted); margin:8px 0 4px; }
+    select,input,button { width:100%; border-radius:8px; border:1px solid var(--line); background:#0b1428; color:var(--text); padding:8px 10px; }
+    button { cursor:pointer; background:#1d4ed8; border-color:#2563eb; font-weight:650; margin-top:8px; }
+    button.secondary { background:#1e293b; border-color:#334155; }
+    button:hover { filter:brightness(1.12); }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    .badge { border:1px solid var(--line); border-radius:999px; padding:2px 8px; color:var(--muted); background:var(--panel2); font-size:12px; }
+    .badge.ok { color:#052e1b; background:var(--green); border-color:var(--green); font-weight:700; }
+    .badge.bad { color:#3f0a14; background:var(--red); border-color:var(--red); font-weight:700; }
+    .canvas-wrap { overflow:auto; background:#0b1428; border:1px solid var(--line); border-radius:10px; padding:10px; }
+    canvas { image-rendering:pixelated; background:#f8fafc; border-radius:6px; max-width:100%; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid var(--line); padding:5px 6px; text-align:left; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; }
+    pre { max-height:320px; overflow:auto; background:#07101f; border:1px solid var(--line); border-radius:8px; padding:10px; color:#bfdbfe; font-size:11px; }
+    .tiles { display:flex; flex-wrap:wrap; gap:6px; }
+    .tile { width:58px; border-radius:8px; padding:6px; text-align:center; border:1px solid var(--line); background:var(--panel2); font-size:12px; }
+    .tile.affected { background:rgba(251,113,133,.18); border-color:var(--red); }
+    .tile.reused { background:rgba(52,211,153,.14); border-color:var(--green); }
+    .arrow-flow { color:var(--muted); margin:8px 0; }
+    .muted { color:var(--muted); }
+    .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    img.sample-image { width:100%; max-width:360px; border-radius:10px; border:1px solid var(--line); background:white; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>笔画方向与连通拓扑一致性工作台</h1>
+  <div class="muted">确定性种子样本 · 三 schema 装载 · 整型换算 · 分块调度 · SQLite 原子检查点 · 三路径比对</div>
+</header>
+<main>
+  <section>
+    <div class="panel">
+      <h2>样本与编辑</h2>
+      <label for="sample">本地确定性样本</label>
+      <select id="sample"></select>
+      <div class="badges" id="sampleBadges"></div>
+      <img id="sourceImage" class="sample-image" alt="generated source image" style="margin-top:12px" />
+
+      <label for="stroke">编辑笔序号</label>
+      <select id="stroke"></select>
+      <div class="row">
+        <div><label for="dx">起点 DX</label><input id="dx" type="number" value="3" /></div>
+        <div><label for="dy">起点 DY</label><input id="dy" type="number" value="0" /></div>
+      </div>
+      <label for="dw">权重增量（万分比）</label>
+      <input id="dw" type="number" value="0" step="10" />
+      <button id="applyEdit">应用编辑并增量重算</button>
+      <button id="baseline" class="secondary">重新运行基线</button>
+      <button id="threePaths" class="secondary">运行三路径比对</button>
+      <div class="badges" id="globalStatus"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Schema 版本</h2>
+      <div class="row">
+        <button class="secondary" data-version="v1">v1</button>
+        <button class="secondary" data-version="v2">v2</button>
+      </div>
+      <button class="secondary" data-version="v3">v3 JSON</button>
+      <pre id="schemaJson">选择版本查看实际线协议。</pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel">
+      <h2>分块掩码与方向标注</h2>
+      <div class="canvas-wrap"><canvas id="canvas" width="640" height="384"></canvas></div>
+      <div class="badges" id="canvasLegend"></div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h2>合成次序裁决</h2>
+        <div id="orderInfo" class="muted">尚未运行。</div>
+      </div>
+      <div class="panel">
+        <h2>失效传播</h2>
+        <div id="invalidation" class="muted">基线运行无失效清单。</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>拓扑与方向核验</h2>
+      <div id="reportSummary" class="badges"></div>
+      <div style="overflow:auto;margin-top:10px">
+        <table id="domainTable"></table>
+      </div>
+      <div style="overflow:auto;margin-top:10px">
+        <table id="segmentTable"></table>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h2>SQLite 提交序列</h2>
+        <div style="overflow:auto;max-height:300px"><table id="commitTable"></table></div>
+      </div>
+      <div class="panel">
+        <h2>三路径结果</h2>
+        <pre id="threePathResult">点击“运行三路径比对”。</pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let fixtures = [];
+let current = null;
+
+async function getJSON(url) {
+  const res = await fetch(url);
+  return res.json();
+}
+
+function bytesFromMask(mask) {
+  if (!mask || !mask.pix) return new Uint8Array();
+  const bin = atob(mask.pix);
+  const out = new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+async function loadFixtures() {
+  const data = await getJSON('/api/fixtures');
+  fixtures = data.fixtures;
+  $('sample').innerHTML = fixtures.map(f => `<option value="${f.index}">${f.name} · ${f.width}×${f.height}</option>`).join('');
+  $('sample').value = '0';
+  $('sample').onchange = loadSample;
+  $('stroke').innerHTML = Array.from({length:5},(_,i)=>`<option value="${i+1}">stroke ${i+1}</option>`).join('');
+  $('applyEdit').onclick = runEdit;
+  $('baseline').onclick = () => diagnose(0);
+  $('threePaths').onclick = runThreePaths;
+  document.querySelectorAll('[data-version]').forEach(btn => btn.onclick = () => loadSchema(btn.dataset.version));
+  await loadSample();
+}
+
+async function loadSample() {
+  const idx = $('sample').value;
+  const f = fixtures[idx];
+  $('sourceImage').src = `/api/image?sample=${idx}&t=${Date.now()}`;
+  $('sampleBadges').innerHTML = [
+    `<span class="badge">${f.stroke_count} 笔</span>`,
+    `<span class="badge">${f.tile_count} 块</span>`,
+    `<span class="badge ok">${f.truth_domains.length} 真值域</span>`,
+    `<span class="badge">${f.segment_count} 方向段</span>`,
+    ...f.defects.map(d => `<span class="badge bad">候选${d.kind}</span>`)
+  ].join('');
+  await diagnose(0);
+}
+
+async function diagnose(editStroke, params={}) {
+  const idx = $('sample').value;
+  const q = new URLSearchParams({sample: idx});
+  if (editStroke) {
+    q.set('edit_stroke', editStroke);
+    Object.entries(params).forEach(([k,v]) => q.set(k,v));
+  }
+  current = await getJSON('/api/diagnose?' + q.toString());
+  renderAll();
+}
+
+async function runEdit() {
+  await diagnose(parseInt($('stroke').value,10), {
+    dx: $('dx').value, dy: $('dy').value, dw: $('dw').value, point: 'start'
+  });
+}
+
+function renderAll() {
+  renderCanvas();
+  renderOrder();
+  renderInvalidation();
+  renderReport();
+  renderCommits();
+  renderStatus();
+}
+
+function renderStatus() {
+  const r = current;
+  const badges = [];
+  if (r.report && r.report.ok) badges.push('<span class="badge ok">核验通过</span>');
+  else badges.push('<span class="badge bad">核验有差异</span>');
+  if (r.pixel_match_full) badges.push('<span class="badge ok">增量=全量</span>');
+  else badges.push(`<span class="badge bad">首块 ${r.first_diff_tile}</span>`);
+  badges.push(`<span class="badge">${r.commit_sequence.length} 条逻辑提交</span>`);
+  if (r.edit_error) badges.push(`<span class="badge bad">${r.edit_error.code}</span>`);
+  $('globalStatus').innerHTML = badges.join('');
+}
+
+function renderCanvas() {
+  const canvas = $('canvas');
+  const scale = Math.min(8, Math.floor(canvas.parentElement.clientWidth / current.width) || 6);
+  canvas.width = current.width * scale;
+  canvas.height = current.height * scale;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = '#f8fafc'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const mask = bytesFromMask(current.mask);
+  const cand = bytesFromMask(current.candidate);
+  for (let y=0;y<current.height;y++) {
+    for (let x=0;x<current.width;x++) {
+      const i=y*current.width+x;
+      if (cand[i] && !mask[i]) {
+        ctx.fillStyle = 'rgba(251,191,36,.55)';
+        ctx.fillRect(x*scale,y*scale,scale,scale);
+      }
+      if (mask[i]) {
+        ctx.fillStyle = 'rgba(37,99,235,.72)';
+        ctx.fillRect(x*scale,y*scale,scale,scale);
+      }
+    }
+  }
+
+  ctx.strokeStyle = 'rgba(220,38,38,.75)'; ctx.lineWidth = 1;
+  current.tiles.forEach(t => {
+    ctx.strokeRect(t.rect.x0*scale+.5,t.rect.y0*scale+.5,(t.rect.x1-t.rect.x0)*scale-1,(t.rect.y1-t.rect.y0)*scale-1);
+  });
+
+  const segs = current.report?.direction?.segments || [];
+  segs.forEach(seg => {
+    const x=seg.probe.x*scale, y=seg.probe.y*scale;
+    const a=(seg.measured_angle_deg||0)*Math.PI/180;
+    const len=Math.max(12,scale*3);
+    ctx.strokeStyle = seg.ok ? '#059669' : '#e11d48';
+    ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x,y);
+    ctx.lineTo(x+Math.cos(a)*len,y+Math.sin(a)*len); ctx.stroke();
+  });
+  $('canvasLegend').innerHTML = `
+    <span class="badge" style="background:rgba(37,99,235,.18);color:#bfdbfe">积算前景</span>
+    <span class="badge" style="background:rgba(251,191,36,.18);color:#fde68a">候选残留差异</span>
+    <span class="badge ok">绿色方向一致</span>
+    <span class="badge bad">红色方向错配</span>`;
+}
+
+function renderOrder() {
+  const o = current.order;
+  if (!o) return;
+  const rows = o.tiles.map(t => `<tr><td>#${t.tile_id}</td><td class="mono">${(t.order||[]).join(' → ')}</td><td class="muted">${t.basis}</td></tr>`).join('');
+  $('orderInfo').innerHTML = `
+    <div>策略：<span class="mono">${o.policy}</span></div>
+    <div>全局次序：<b class="mono">${o.ordered_strokes.join(' → ')}</b></div>
+    <div>版本：<span class="mono">${o.order_version}</span></div>
+    <table><thead><tr><th>分块</th><th>参与笔次序</th><th>裁决依据</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderInvalidation() {
+  const inv = current.invalidation;
+  const allTiles = current.tiles.map(t=>t.id);
+  const affected = new Set(current.recomputed_tiles || []);
+  const reused = new Set(current.reused_tiles || []);
+  const boxes = allTiles.map(id => {
+    const cls = affected.has(id) ? 'affected' : (reused.has(id) ? 'reused' : '');
+    const label = affected.has(id) ? '重算' : (reused.has(id) ? '复用' : '—');
+    return `<div class="tile ${cls}"><b>T${id}</b><br><span class="muted">${label}</span></div>`;
+  }).join('');
+  if (!inv) {
+    $('invalidation').innerHTML = `<div class="tiles">${boxes}</div><p class="muted">完整基线计算所有分块；编辑后此处展示精确失效传播。</p>`;
+    return;
+  }
+  const items = inv.items.map(i => `<tr><td>stroke ${i.stroke_index}</td><td>T${i.tile_id}</td><td>${i.reason}</td><td class="mono">${(i.old_hash||'').slice(0,10)}→${(i.new_hash||'').slice(0,10)}</td></tr>`).join('');
+  $('invalidation').innerHTML = `
+    <div>编辑笔：<b>${inv.edited_stroke}</b> · 字段：${inv.changed_fields.join(', ') || '无'}</div>
+    <div class="arrow-flow">stroke:${inv.edited_stroke} → component → accum:${(inv.affected_tiles||[]).join(',accum:')} → topology/direction → report</div>
+    <div class="tiles">${boxes}</div>
+    <table><thead><tr><th>笔</th><th>分块</th><th>原因</th><th>内容哈希</th></tr></thead><tbody>${items}</tbody></table>`;
+}
+
+function renderReport() {
+  const top = current.report?.topology;
+  const dir = current.report?.direction;
+  $('reportSummary').innerHTML = [
+    `<span class="badge ${top?.ok?'ok':'bad'}">拓扑 ${top?.ok?'OK':'FAIL'}</span>`,
+    `<span class="badge ${dir?.ok?'ok':'bad'}">方向 ${dir?.ok?'OK':'FAIL'}</span>`,
+    `<span class="badge">mask ${(current.report?.mask_hash||'').slice(0,16)}</span>`
+  ].join('');
+  if (top) {
+    $('domainTable').innerHTML = `<thead><tr><th>域</th><th>面积</th><th>重心</th><th>外接框</th><th>孔洞</th><th>环带宽</th></tr></thead><tbody>` +
+      top.domains.map(d=>`<tr><td>D${d.domain_id}</td><td>${d.area}</td><td>${d.centroid_x.toFixed(2)},${d.centroid_y.toFixed(2)}</td><td>${d.min_x},${d.min_y}–${d.max_x},${d.max_y}</td><td>${d.holes}</td><td>${d.ring_width_px.toFixed(2)}px</td></tr>`).join('') + `</tbody>`;
+  }
+  if (dir) {
+    $('segmentTable').innerHTML = `<thead><tr><th>段</th><th>期望</th><th>实测</th><th>角度</th><th>法向</th><th>状态</th></tr></thead><tbody>` +
+      dir.segments.map(s=>`<tr><td>${s.segment_id}</td><td>${s.expected_category}</td><td>${s.actual_category}</td><td>${s.measured_angle_deg?.toFixed(1)}° / err ${s.angle_error_deg?.toFixed(1)}°</td><td>${s.normal_angle_deg?.toFixed(1)}°</td><td>${s.ok?'✅':'❌'}</td></tr>`).join('') + `</tbody>`;
+  }
+}
+
+function renderCommits() {
+  const seq = current.commit_sequence || [];
+  $('commitTable').innerHTML = `<thead><tr><th>seq</th><th>stroke</th><th>tile</th><th>cache key</th><th>content</th><th>order</th></tr></thead><tbody>` +
+    seq.slice(-80).map(c=>`<tr><td>${c.seq}</td><td>${c.stroke_index}</td><td>${c.tile_id}</td><td class="mono">${c.cache_key.slice(0,18)}</td><td class="mono">${c.content_hash.slice(0,12)}</td><td class="mono">${c.order_version.slice(-8)}</td></tr>`).join('') + `</tbody>`;
+}
+
+async function loadSchema(version) {
+  const idx = $('sample').value;
+  const res = await fetch(`/api/project?sample=${idx}&version=${version}`);
+  const obj = await res.json();
+  $('schemaJson').textContent = JSON.stringify(obj,null,2).slice(0,12000);
+}
+
+async function runThreePaths() {
+  const idx = $('sample').value;
+  $('threePathResult').textContent = '运行中：实时 → 断点恢复 → 全量...';
+  const data = await getJSON(`/api/three-paths?sample=${idx}`);
+  $('threePathResult').textContent = JSON.stringify(data.report || data.error,null,2);
+}
+
+loadFixtures().catch(err => {
+  document.body.insertAdjacentHTML('beforeend', `<pre style="color:#fecdd3">${err.stack || err}</pre>`);
+});
+</script>
+</body>
+</html>
