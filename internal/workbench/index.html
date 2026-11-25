@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>隧道与 VPN 转发诊断工作台</title>
+  <style>
+    :root { color-scheme: dark; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #dbe7ff; }
+    header { padding: 16px 22px; background: linear-gradient(120deg,#10243f,#173b5f); border-bottom: 1px solid #28527d; }
+    h1 { margin: 0; font-size: 20px; }
+    main { display: grid; grid-template-columns: 360px 1fr; min-height: calc(100vh - 57px); }
+    aside { padding: 16px; border-right: 1px solid #24364f; background: #0e1829; overflow: auto; }
+    section.panel { background: #111f35; border: 1px solid #243b5c; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+    section.panel h2 { font-size: 14px; margin: 0 0 10px; color: #8ec5ff; }
+    button, select, input { width: 100%; box-sizing: border-box; margin: 4px 0; border-radius: 7px; border: 1px solid #315075; background: #0b1729; color: #e7f0ff; padding: 8px; }
+    button { cursor: pointer; background: #1d4ed8; border-color: #3b82f6; font-weight: 650; }
+    button.secondary { background: #173454; border-color: #2d5d8f; }
+    button.danger { background: #7f1d1d; border-color: #dc2626; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    #content { padding: 16px; overflow: auto; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; margin-bottom: 12px; }
+    .card { border: 1px solid #294465; background: #0f1d31; border-radius: 10px; padding: 12px; }
+    .ok { color: #6ee7b7; } .bad { color: #fca5a5; } .muted { color: #8ea4c3; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #07111f; border: 1px solid #203653; border-radius: 10px; padding: 12px; max-height: 520px; overflow: auto; font-size: 12px; }
+    .event { border-left: 3px solid #3b82f6; padding: 8px 10px; margin: 8px 0; background: #0d1a2d; border-radius: 0 8px 8px 0; }
+    .event.packet { border-left-color: #14b8a6; }
+    .event.error { border-left-color: #ef4444; }
+    .tag { display: inline-block; font-size: 11px; padding: 2px 6px; border-radius: 999px; background: #1e3a5f; margin-right: 5px; }
+    .tag.hit { background: #14532d; } .tag.rebuilt { background: #78350f; } .tag.reject { background: #7f1d1d; }
+    a { color: #93c5fd; }
+  </style>
+</head>
+<body>
+<header><h1>隧道与 VPN 转发诊断工作台 <span class="muted">固定种子 · 三 Schema · 离线 SQLite</span></h1></header>
+<main>
+  <aside>
+    <section class="panel">
+      <h2>工程与模拟</h2>
+      <select id="schema">
+        <option value="v1">Schema v1 · 扁平/点分掩码/秒/字节</option>
+        <option value="v2" selected>Schema v2 · 扁平/CIDR/毫秒/KiB</option>
+        <option value="v3">Schema v3 · 对端嵌套树/整型前缀</option>
+      </select>
+      <button onclick="loadDoc()">装载并查看 JSON</button>
+      <button class="secondary" onclick="equivalence()">三版本一致性检查</button>
+      <div class="row">
+        <input id="workers" type="number" min="1" max="64" value="4" title="工作线程" />
+        <input id="buffer" type="number" min="1" max="4096" value="8" title="每隧道缓冲" />
+      </div>
+      <button onclick="simulate(false)">顺序推进事件</button>
+      <button onclick="simulate(true)">有界并行推进</button>
+      <button class="secondary" onclick="checkpoint()">检查点恢复对照（前 7 个事件）</button>
+    </section>
+
+    <section class="panel">
+      <h2>编辑与增量失效</h2>
+      <select id="editKind">
+        <option value="tunnel_mtu">修改隧道 MTU</option>
+        <option value="tunnel_cipher">修改加密套件</option>
+        <option value="tunnel_peer">修改对端归属</option>
+        <option value="rule_action_tunnel">修改规则动作隧道</option>
+        <option value="rule_cidr">修改规则网段</option>
+        <option value="rule_priority">修改规则优先级</option>
+      </select>
+      <div class="row">
+        <input id="targetId" value="T2" placeholder="隧道/规则 ID" />
+        <input id="editValue" value="1360" placeholder="新值" />
+      </div>
+      <input id="effectiveSeq" type="number" value="9" placeholder="生效事件序号" />
+      <button onclick="applyEdit()">施加编辑并对照全量重算</button>
+      <button class="secondary" onclick="resetIncremental()">重置增量缓存</button>
+    </section>
+
+    <section class="panel">
+      <h2>异常注入</h2>
+      <div id="anomalyButtons"></div>
+    </section>
+  </aside>
+
+  <div id="content">
+    <div id="summary" class="grid"></div>
+    <section class="card">
+      <h2>时间线 / 裁决路径 / 分片 / 失效来源</h2>
+      <div id="timeline"><span class="muted">选择左侧操作开始诊断。所有样本由固定种子生成，不访问网络。</span></div>
+    </section>
+    <section class="card" style="margin-top:12px">
+      <h2>原始 JSON 结果</h2>
+      <pre id="out">等待请求…</pre>
+    </section>
+  </div>
+</main>
+
+<script>
+const anomalyKinds = [
+  ["overlap_rule","重叠网段冲突"], ["missing_peer","缺失对端引用"], ["mtu_too_small","MTU 小于开销"],
+  ["negative_keepalive","负保活周期"], ["field_conflict","单位字段冲突"], ["unknown_schema","未知版本"],
+  ["budget_workers","越界线程预算"], ["budget_buffer","越界缓冲预算"], ["backpressure_workers","线程耗尽背压"],
+  ["backpressure_buffer","缓冲耗尽背压"], ["checkpoint_truncated","截断检查点"], ["checkpoint_version_mismatch","检查点版本不符"]
+];
+document.getElementById('anomalyButtons').innerHTML = anomalyKinds.map(([k,label]) =>
+  `<button class="danger" style="margin:3px 0" onclick="inject('${k}')">${label} · ${k}</button>`).join('');
+
+async function api(path, opts) {
+  const res = await fetch(path, opts);
+  const data = await res.json();
+  document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+  return {status: res.status, data};
+}
+function card(title, value, ok) {
+  const cls = ok === undefined ? '' : (ok ? 'ok' : 'bad');
+  return `<div class="card"><div class="muted">${title}</div><div class="${cls}" style="font-size:22px;font-weight:800;margin-top:6px">${value}</div></div>`;
+}
+async function loadDoc() {
+  const schema = document.getElementById('schema').value;
+  const r = await api('/api/document?schema=' + schema);
+  document.getElementById('summary').innerHTML = card('Schema', schema) + card('字段字节', new Blob([JSON.stringify(r.data)]).size);
+  document.getElementById('timeline').textContent = '已装载 ' + schema + ' 原始文档，可在下方 JSON 查看版本差异。';
+}
+async function equivalence() {
+  const {data} = await api('/api/equivalence');
+  document.getElementById('summary').innerHTML =
+    card('一致性', data.consistent ? 'PASS' : 'FAIL', data.consistent) +
+    card('隧道次序', (data.tunnel_ids||[]).join(', ')) +
+    card('规则优先序', (data.rule_priority_ids||[]).join(', '));
+  document.getElementById('timeline').innerHTML = (data.checks||[]).map(c =>
+    `<div class="event ${c.ok?'':'error'}"><b class="${c.ok?'ok':'bad'}">${c.ok?'✓':'✗'} ${c.name}</b><div class="muted">${c.detail||''}</div></div>`).join('');
+}
+function budgetQS() {
+  return `workers=${encodeURIComponent(workers.value)}&buffer=${encodeURIComponent(buffer.value)}`;
+}
+async function simulate(parallel) {
+  const schema = document.getElementById('schema').value;
+  const {data} = await api(`/api/simulate?schema=${schema}&parallel=${parallel?1:0}&${budgetQS()}`);
+  renderReport(data);
+}
+function renderReport(data) {
+  const rejects = (data.reject_set||[]).length;
+  document.getElementById('summary').innerHTML =
+    card('事件数', data.event_count) + card('拒绝/异常', rejects, rejects===0) +
+    card('Schema', data.schema_version) + card('Hash', (data.content_hash||'').slice(0,12));
+  document.getElementById('timeline').innerHTML = (data.events||[]).map(ev => {
+    let body = `<div><span class="tag">${ev.kind}</span><span class="muted">seq ${ev.seq} · ${ev.normalized_time_ms}ms · ${ev.event_id}</span></div>`;
+    (ev.transitions||[]).forEach(t => {
+      body += `<div>${t.tunnel_id}: ${t.from_state} → <b>${t.to_state}</b> @${t.effective_at_ms}ms <span class="muted">source=${t.source_event_id}</span></div>`;
+      if ((t.degradations||[]).length) body += `<div class="tag rebuilt">watermark disabled</div>`;
+    });
+    (ev.packets||[]).forEach(p => {
+      const v = p.verdict || {}, f = p.fragment || {};
+      body += `<div class="event packet"><b>${p.packet.id}</b> · ${v.basis || v.fallback_source}<br>`;
+      body += `命中: ${(v.matching_rule_ids||[]).join(', ') || '无'} · 动作: ${v.action.type}${v.action.tunnel_id?':'+v.action.tunnel_id:''}<br>`;
+      body += `分片: code=${f.reject_code||'E_OK'} · needed=${f.needed} · count=${f.piece_count} · sizes=[${(f.pieces||[]).map(x=>x.payload_bytes).join(',')}] · total=${f.total_outer_bytes}<br>`;
+      body += `<span class="muted">路径: ${(v.path||[]).filter(x=>x.evaluated).map(x=>x.rule_id+(x.selected?'★':'')).join(' > ')}</span></div>`;
+    });
+    if (ev.error) body += `<div class="bad">${ev.error.code}: ${ev.error.message} <span class="muted">${ev.error.path||''}</span></div>`;
+    return `<div class="event ${ev.error?'error':''}">${body}</div>`;
+  }).join('');
+}
+async function applyEdit() {
+  const kind = document.getElementById('editKind').value;
+  const target = document.getElementById('targetId').value.trim();
+  let value = document.getElementById('editValue').value;
+  if (kind === 'tunnel_mtu' || kind === 'rule_priority') value = Number(value);
+  if (kind === 'tunnel_peer' && !value) value = 'P2';
+  const body = {schema: document.getElementById('schema').value, kind, value, effective_from_seq: Number(document.getElementById('effectiveSeq').value)};
+  if (kind.startsWith('tunnel_')) body.tunnel_id = target; else body.rule_id = target;
+  const {data} = await api('/api/edit', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+  document.getElementById('summary').innerHTML =
+    card('全量一致', data.consistent ? 'PASS' : 'FAIL', data.consistent) +
+    card('重建键', (data.rebuilt_keys||[]).length) + card('复用键', (data.reused_keys||[]).length) +
+    card('重建区间', (data.rebuilt_intervals||[]).join(',') || '无');
+  document.getElementById('timeline').innerHTML =
+    `<div class="event"><b>${data.edit_id}</b> · ${data.description}<br><span class="muted">${data.path}</span><br>闭包: ${(data.closure||[]).join(', ')}</div>` +
+    (data.traces||[]).map(t => `<div class="event packet"><span class="tag ${t.status}">${t.status}</span><b>${t.key}</b> seq=${t.seq}<br><span class="muted">${(t.invalidation_sources||[]).join(', ')||'dependency closure excluded'}</span></div>`).join('');
+}
+async function resetIncremental() {
+  await api('/api/reset-incremental?schema=' + schema.value, {method:'POST'});
+}
+async function checkpoint() {
+  const schema = document.getElementById('schema').value;
+  const {data} = await api(`/api/checkpoint?schema=${schema}&stop_after=7`);
+  document.getElementById('summary').innerHTML =
+    card('首段提交', data.first_committed_seq) + card('恢复序号', data.recovery?.meta?.last_event_seq || 0) +
+    card('整段重放', data.full_replay ? 'YES' : 'NO', !data.full_replay) +
+    card('终态一致', data.matching_final_state ? 'PASS' : 'FAIL', data.matching_final_state);
+  document.getElementById('timeline').innerHTML = `<div class="event">${data.note}<br><span class="muted">${data.database_path}</span></div>`;
+}
+async function inject(kind) {
+  const r = await api('/api/inject', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({kind})});
+  const d = r.data;
+  document.getElementById('summary').innerHTML = card('异常码', d.code || 'E_OK', !!d.code) + card('位置', d.error?.path || '-');
+  document.getElementById('timeline').innerHTML = `<div class="event error"><b class="bad">${d.code}</b><div>${d.error?.message||d.note}</div><pre>${JSON.stringify(d.context||{},null,2)}</pre></div>`;
+}
+</script>
+</body>
+</html>
