@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>口型包调度链路验收台</title>
+  <style>
+    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0f172a; color: #e2e8f0; }
+    header { padding: 20px 28px; background: linear-gradient(120deg,#1e3a8a,#0f766e); box-shadow: 0 8px 30px #0004; }
+    h1 { margin: 0 0 6px; font-size: 24px; }
+    main { padding: 20px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .card { grid-column: span 6; background: #111827; border: 1px solid #334155; border-radius: 14px; padding: 16px; box-shadow: 0 10px 24px #0003; }
+    .card.wide { grid-column: span 12; }
+    .card.third { grid-column: span 4; }
+    h2 { margin: 0 0 12px; font-size: 17px; color: #93c5fd; }
+    label { display: block; font-size: 13px; color: #cbd5e1; margin: 8px 0 4px; }
+    select, input, button { border-radius: 8px; border: 1px solid #475569; background: #020617; color: #e2e8f0; padding: 7px 9px; }
+    button { cursor: pointer; background: #1d4ed8; border-color: #3b82f6; margin: 4px 6px 4px 0; }
+    button.secondary { background: #0f766e; border-color: #14b8a6; }
+    button.danger { background: #991b1b; border-color: #ef4444; }
+    button:hover { filter: brightness(1.15); }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid #1e293b; padding: 5px 6px; text-align: left; vertical-align: top; }
+    th { color: #7dd3fc; position: sticky; top: 0; background: #111827; }
+    pre { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px; overflow: auto; max-height: 420px; font-size: 12px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+    .row > div { min-width: 130px; }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .ok { background: #064e3b; color: #6ee7b7; }
+    .bad { background: #7f1d1d; color: #fca5a5; }
+    .muted { color: #94a3b8; font-size: 12px; }
+    .frames { display: flex; flex-wrap: wrap; gap: 2px; max-height: 150px; overflow: auto; padding: 6px; background: #020617; border-radius: 8px; }
+    .frame { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 5px; font-size: 12px; background: #1e293b; }
+    .frame.T { background: #b45309; color: white; }
+    .frame.V { background: #1d4ed8; }
+    .frame.C { background: #047857; }
+    .frame.X { background: #475569; }
+    .scroll { max-height: 360px; overflow: auto; }
+    .kv { font-size: 13px; line-height: 1.7; }
+    code { color: #fde68a; }
+    @media (max-width: 1000px) { .card, .card.third { grid-column: span 12; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>音素边界 → 口型包 → 逐帧下发：确定性验收台</h1>
+  <div class="muted">仅使用固定种子样本；SQLite 检查点、预算调度、预览分歧、精确失效与异常链路均可在此诊断。</div>
+</header>
+<main>
+  <section class="card wide">
+    <h2>工程总览与三版本装载</h2>
+    <div id="overview" class="kv">加载中…</div>
+  </section>
+
+  <section class="card">
+    <h2>分片诊断</h2>
+    <label for="shardSelect">录音分片</label>
+    <select id="shardSelect" style="width:100%"></select>
+    <div style="margin-top:10px"><button id="loadShard">加载音素/包/帧/图</button></div>
+    <div id="shardSummary" class="kv"></div>
+    <div id="frameStrip" class="frames" style="margin:10px 0"></div>
+    <div class="scroll"><table id="phonemeTable"></table></div>
+    <h2 style="margin-top:14px">包划分</h2>
+    <div class="scroll"><table id="packTable"></table></div>
+  </section>
+
+  <section class="card">
+    <h2>交互预览与精确一致判定</h2>
+    <div class="row">
+      <div><label>每包最大音素 <span id="maxPackVal"></span></label><input id="maxPack" type="range" min="1" max="6" value="3"></div>
+      <div><label>过渡容差 <span id="tolVal"></span></label><input id="tol" type="range" min="-1" max="4" value="2"></div>
+      <div><label>采样步长 <span id="strideVal"></span></label><input id="stride" type="range" min="1" max="4" value="2"></div>
+    </div>
+    <div style="margin-top:10px">
+      <button class="secondary" id="previewBtn">拖动后采样预览并核对</button>
+      <button id="exactBtn">停止交互：全精度重算</button>
+    </div>
+    <div id="previewSummary" class="kv"></div>
+    <div id="previewFrames" class="frames" style="margin-top:10px"></div>
+  </section>
+
+  <section class="card">
+    <h2>编辑与精确失效</h2>
+    <div class="row">
+      <div style="min-width:220px"><label>音素</label><select id="phonemeSelect"></select></div>
+      <div><label>字段</label><select id="editField">
+        <option value="end_sample">end_sample</option>
+        <option value="start_sample">start_sample</option>
+        <option value="weight_permyriad">weight_permyriad</option>
+        <option value="affinity_to_next">affinity_to_next</option>
+      </select></div>
+      <div><label>整型值</label><input id="editValue" type="number" value="19200"></div>
+    </div>
+    <button id="editBtn">提交编辑并传播失效</button>
+    <div class="row" style="margin-top:8px">
+      <div><label>全局 FPS</label><input id="fpsValue" type="number" min="1" max="120" value="30"></div>
+      <div><button id="fpsBtn">切换 FPS</button></div>
+    </div>
+    <div id="editSummary" class="kv"></div>
+  </section>
+
+  <section class="card">
+    <h2>并行预算、三条下发路径与断点</h2>
+    <div class="row">
+      <div><label>最大并行度</label><input id="parallel" type="number" value="2" min="1" max="8"></div>
+      <div><label>每线程候选缓冲</label><input id="buffer" type="number" value="2" min="1" max="20"></div>
+      <div><label>待处理帧预算</label><input id="frameBudget" type="number" value="64" min="1" max="1000"></div>
+      <div style="min-width:180px"><label>注入分片失败</label><select id="faultShard"><option value="">不注入</option></select></div>
+    </div>
+    <div style="margin-top:10px">
+      <button id="realtimeBtn">受限并行实时下发</button>
+      <button class="secondary" id="resumeBtn">重启/恢复下发</button>
+      <button class="secondary" id="fullBtn">一次性全量重算</button>
+      <button class="danger" id="corruptBtn">破坏哈希后恢复</button>
+    </div>
+    <div id="runSummary" class="kv"></div>
+  </section>
+
+  <section class="card">
+    <h2>四类异常与额外诊断链路</h2>
+    <button class="danger" data-fault="order">E_ORDER 重叠</button>
+    <button class="danger" data-fault="decode">E_DECODE 总数不符</button>
+    <button class="danger" data-fault="val">E_VAL 负容差</button>
+    <button class="danger" data-fault="stage">E_STAGE 分片失败</button>
+    <button data-fault="lip">E_LIP 超跨度</button>
+    <button data-fault="ovf">E_OVF 溢出</button>
+    <button data-fault="schema">E_SCHEMA 版本</button>
+    <button data-fault="state">E_STATE 迁移</button>
+    <button data-fault="diverge">E_DIVERGE 分歧</button>
+    <div id="faultSummary" class="kv" style="margin-top:10px"></div>
+  </section>
+
+  <section class="card wide">
+    <h2>Schema 文档与原始诊断 JSON</h2>
+    <button data-schema-report="1">补齐/换算/E_LOSSY 台账</button>
+    <button data-schema="v1">查看 v1（ms/千分比/平坦表）</button>
+    <button data-schema="v2">查看 v2（采样点/万分比/分组）</button>
+    <button data-schema="v3">查看 v3（嵌套/亲和度）</button>
+    <pre id="jsonOutput">等待操作…</pre>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let overviewData = null;
+let shardDetail = null;
+
+async function api(path, options = {}) {
+  const opts = { headers: { 'Content-Type': 'application/json' }, ...options };
+  if (opts.body && typeof opts.body !== 'string') opts.body = JSON.stringify(opts.body);
+  const res = await fetch(path, opts);
+  const body = await res.json();
+  $('jsonOutput').textContent = JSON.stringify(body, null, 2);
+  if (!res.ok || body.ok === false) {
+    const err = body.error || body;
+    const e = new Error(err.message || 'request failed');
+    e.payload = err;
+    throw e;
+  }
+  return body.data;
+}
+
+function badge(ok, yes = '一致', no = '不一致') {
+  return `<span class="badge ${ok ? 'ok' : 'bad'}">${ok ? yes : no}</span>`;
+}
+
+function frameStrip(frames, sampledOnly = false) {
+  return (frames || []).map(f => {
+    const cls = f.kind === 'transition' ? 'T' : (f.mouth || 'X');
+    const title = `frame=${f.index} pack=${f.pack_index} ${f.mouth}/${f.kind}`;
+    return `<div class="frame ${cls}" title="${title}">${f.sampled ? '•' : (f.mouth || '?')}</div>`;
+  }).join('');
+}
+
+function currentShard() { return $('shardSelect').value; }
+
+async function loadOverview() {
+  overviewData = await api('/api/overview');
+  const p = overviewData.project;
+  const shards = p.dialogues.flatMap(d => d.shards.map(s => ({...s, dialogue: d.id})));
+  $('shardSelect').innerHTML = shards.map(s => `<option value="${s.id}">${s.dialogue} / ${s.id}</option>`).join('');
+  $('faultShard').innerHTML = '<option value="">不注入</option>' + shards.map(s => `<option value="${s.id}">${s.id}</option>`).join('');
+  $('overview').innerHTML = `
+    <div class="row">
+      <div><b>工程</b><br><code>${p.id}</code><br>seed=${p.seed}</div>
+      <div><b>参数</b><br>FPS=${p.params.fps}, SR=${p.params.sample_rate}<br>maxPack=${p.params.max_phonemes_per_pack}, tol=${p.params.transition_tolerance}</div>
+      <div><b>真值</b><br>shards=${overviewData.truth_shards}, packs=${overviewData.truth_packs}, frames=${overviewData.truth_frames}</div>
+      <div><b>SQLite</b><br>cache=${overviewData.cache_entries}, commits=${(overviewData.commit_order||[]).length}<br><span class="muted">${(overviewData.commit_order||[]).join(' → ')}</span></div>
+    </div>
+    <table style="margin-top:12px"><thead><tr><th>版本</th><th>状态</th><th>补齐</th><th>换算台账</th><th>降级损失</th></tr></thead><tbody>
+      ${overviewData.versions.map(v => `<tr><td><code>${v.version}</code></td><td>${badge(v.load_ok,'可回载','失败')}</td><td>${v.fills}</td><td>${v.conversions}</td><td>${v.losses}</td></tr>`).join('')}
+    </tbody></table>`;
+  await loadShard();
+}
+
+async function loadShard() {
+  const id = currentShard();
+  if (!id) return;
+  shardDetail = await api('/api/shards/' + encodeURIComponent(id));
+  const r = shardDetail.result, s = shardDetail.shard;
+  $('shardSummary').innerHTML = `
+    <p>PCM samples=<code>${s.total_samples}</code>, frames=<code>${r.total_frames}</code>, packs=<code>${r.packs.length}</code>, transitions=<code>${r.transitions.length}</code></p>
+    <p>content=<code>${r.content_hash.slice(0,16)}</code> param=<code>${r.param_version}</code> algo=<code>${r.algorithm_version}</code></p>
+    <p>state=<code>${shardDetail.machine ? shardDetail.machine.state + ' / ' + shardDetail.machine.progress : 'not persisted'}</code></p>`;
+  $('frameStrip').innerHTML = frameStrip(r.frames);
+  $('phonemeSelect').innerHTML = s.phonemes.map(p => `<option value="${p.id}">${p.id} ${p.category} [${p.start_sample},${p.end_sample}) aff=${p.affinity_to_next}</option>`).join('');
+  $('phonemeTable').innerHTML = `<thead><tr><th>ID</th><th>#</th><th>区间</th><th>类别</th><th>权重</th><th>亲和</th></tr></thead><tbody>` +
+    s.phonemes.map(p => `<tr><td>${p.id}</td><td>${p.index}</td><td>${p.start_sample}-${p.end_sample}</td><td>${p.category}<br><span class="muted">${p.category_code}/${p.encoding_group||''}</span></td><td>${p.weight_permyriad}</td><td>${p.affinity_to_next}</td></tr>`).join('') + '</tbody>';
+  $('packTable').innerHTML = `<thead><tr><th>#</th><th>音素</th><th>帧区间</th><th>cache key</th></tr></thead><tbody>` +
+    r.packs.map(p => `<tr><td>${p.index}</td><td>${p.phoneme_ids.join('<br>')}</td><td>${p.start_frame}-${p.end_frame}</td><td><code>${(p.cache_key||'').slice(0,18)}</code></td></tr>`).join('') + '</tbody>';
+}
+
+function previewRequestBody() {
+  return {
+    shard_id: currentShard(),
+    max_phonemes_per_pack: Number($('maxPack').value),
+    transition_tolerance: Number($('tol').value),
+    frame_stride: Number($('stride').value)
+  };
+}
+
+async function runPreview() {
+  try {
+    const d = await api('/api/preview', { method: 'POST', body: previewRequestBody() });
+    const st = d.preview.stats;
+    $('previewSummary').innerHTML = `
+      <p>${badge(d.consistent)} 采样帧=${st.evaluated_frames}/${st.total_frames}，previewFPS=${st.preview_fps}，stride=${st.frame_stride}</p>
+      <p>过渡判定帧=${st.actual_transition_scan}/${st.max_transition_scan}，耗时=${st.elapsed_micros}µs，预算=${st.budget_millis}ms，占用=${st.budget_occupancy_permyriad/100}% ${badge(st.within_budget,'预算内','超预算')}</p>
+      ${d.divergence ? `<pre>${JSON.stringify(d.divergence,null,2)}</pre>` : ''}`;
+    $('previewFrames').innerHTML = frameStrip(d.preview.sampled_frames, true);
+  } catch (e) {
+    $('previewSummary').innerHTML = `<span class="badge bad">${e.payload?.code || 'ERROR'}</span> <code>${e.payload?.path || ''}</code> ${e.message}`;
+  }
+}
+
+async function submitEdit(fpsOnly = false) {
+  try {
+    const body = fpsOnly ? { fps: Number($('fpsValue').value) } : {
+      phoneme_id: $('phonemeSelect').value, field: $('editField').value, value: Number($('editValue').value)
+    };
+    const d = await api('/api/edit', { method: 'POST', body });
+    $('editSummary').innerHTML = d.reports.map(r => `
+      <p><b>${r.shard_id}</b> old=<code>${r.old_content_hash.slice(0,12)}</code> new=<code>${r.new_content_hash.slice(0,12)}</code><br>
+      invalidated=${r.invalidated.length}, reused=${r.reused.length}, persistentHits=${r.reused.filter(x=>x.persistent_hit).length}</p>
+      <div class="scroll"><table><thead><tr><th>集合</th><th>节点</th><th>key</th><th>原因</th><th>持久命中</th></tr></thead><tbody>
+      ${[...r.invalidated.map(x=>['失效',x]), ...r.reused.map(x=>['复用',x])].map(([kind,x]) => `<tr><td>${kind}</td><td>${x.node_id}</td><td><code>${(x.cache_key||'').slice(0,20)}</code></td><td>${x.reason}</td><td>${x.persistent_hit ? 'yes' : ''}</td></tr>`).join('')}
+      </tbody></table></div>`).join('');
+    await loadOverview();
+  } catch (e) {
+    $('editSummary').innerHTML = `<span class="badge bad">${e.payload?.code || 'ERROR'}</span> ${e.message}`;
+  }
+}
+
+function runBody() {
+  return {
+    max_parallelism: Number($('parallel').value),
+    candidate_buffer_per_worker: Number($('buffer').value),
+    frame_queue_budget: Number($('frameBudget').value),
+    fault_shard_id: $('faultShard').value
+  };
+}
+
+function runSummary(title, d) {
+  const waits = d.scheduler?.waits || [];
+  const outcomes = d.scheduler?.outcomes || [];
+  const failed = d.failed_shards || {};
+  $('runSummary').innerHTML = `<p><b>${title}</b></p>
+    <p>records=${(d.records || d.scheduler?.records || []).length}, receipts=${(d.receipts||[]).length}, outcomes=${outcomes.length}, failures=${Object.keys(failed).length}, waits=${waits.length}</p>
+    <p>commit order: <code>${(d.commit_order||[]).join(' → ')}</code></p>
+    ${d.recovered ? `<p>recovered=${d.recovered.join(', ')}<br>recomputed=${d.recomputed.join(', ')}<br>invalidated=${d.invalidated.join(', ')}</p>` : ''}
+    ${waits.length ? `<pre>${JSON.stringify(waits,null,2)}</pre>` : '<p class="muted">本次未发生缓冲阻塞；极限缓冲测试见 go test。</p>'}`;
+}
+
+async function runAction(path, title) {
+  try {
+    const d = await api(path, { method: 'POST', body: runBody() });
+    runSummary(title, d);
+    await loadOverview();
+  } catch (e) {
+    $('runSummary').innerHTML = `<span class="badge bad">${e.payload?.code || 'ERROR'}</span> ${e.message}`;
+  }
+}
+
+document.querySelectorAll('[data-fault]').forEach(btn => btn.addEventListener('click', async () => {
+  const kind = btn.dataset.fault;
+  try {
+    await api('/api/faults/' + kind);
+    $('faultSummary').innerHTML = `<span class="badge ok">未返回错误（异常）</span>`;
+  } catch (e) {
+    const x = e.payload || {};
+    $('faultSummary').innerHTML = `<p><span class="badge bad">${x.code || 'ERROR'}</span> <code>${x.path || ''}</code> ${e.message}</p>
+      <div class="muted">dialogue=${x.dialogue_id||''} shard=${x.shard_id||''} frame=${x.frame??''} pack=${x.pack_index??''} operands=${x.operand_a??''}, ${x.operand_b??''}</div>`;
+  }
+}));
+
+document.querySelectorAll('[data-schema]').forEach(btn => btn.addEventListener('click', () => api('/api/schema/' + btn.dataset.schema)));
+document.querySelectorAll('[data-schema-report]').forEach(btn => btn.addEventListener('click', () => api('/api/schema-reports')));
+$('loadShard').addEventListener('click', loadShard);
+$('previewBtn').addEventListener('click', runPreview);
+$('exactBtn').addEventListener('click', runPreview);
+$('editBtn').addEventListener('click', () => submitEdit(false));
+$('fpsBtn').addEventListener('click', () => submitEdit(true));
+$('realtimeBtn').addEventListener('click', () => runAction('/api/run/realtime', '受限并行实时下发'));
+$('resumeBtn').addEventListener('click', () => runAction('/api/run/resume', '断点恢复下发'));
+$('fullBtn').addEventListener('click', async () => {
+  const d = await api('/api/run/full', { method: 'POST', body: {} });
+  $('runSummary').innerHTML = `<p><b>一次性全量重算</b></p><p>records=${d.record_count}</p>`;
+});
+$('corruptBtn').addEventListener('click', async () => {
+  try {
+    await api('/api/checkpoint/corrupt', { method: 'POST', body: { shard_id: currentShard() } });
+    $('runSummary').innerHTML = '<span class="badge ok">已破坏当前分片哈希/版本；点击“重启/恢复下发”将整体失效并重算。</span>';
+  } catch (e) { $('runSummary').textContent = e.message; }
+});
+let previewTimer = null;
+['maxPack','tol','stride'].forEach(id => $(id).addEventListener('input', () => {
+  $('maxPackVal').textContent = $('maxPack').value;
+  $('tolVal').textContent = $('tol').value;
+  $('strideVal').textContent = $('stride').value;
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(runPreview, 120);
+}));
+['maxPack','tol','stride'].forEach(id => $(id).addEventListener('change', () => {
+  clearTimeout(previewTimer);
+  runPreview();
+}));
+$('maxPackVal').textContent = $('maxPack').value;
+$('tolVal').textContent = $('tol').value;
+$('strideVal').textContent = $('stride').value;
+loadOverview().catch(e => $('overview').textContent = '初始化失败: ' + e.message);
+</script>
+</body>
+</html>

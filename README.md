@@ -19,3 +19,18 @@
 
 验收：
 用固定种子样本核对三版本装载、逐帧口型与包划分、预览与精确一致及断点续演；并验证并行预算与四类异常链路。
+
+---
+
+## 交付实现快速入口
+
+本仓库已交付上述原型。详细架构见 `docs/ARCHITECTURE.md`，实际测试与 HTTP 冒烟结果见 `docs/VERIFICATION.md`。
+
+```bash
+go test -count=1 ./...
+go run ./cmd/lipctl serve --addr 127.0.0.1:8080 --db artifacts/lip-pipeline.db
+```
+
+打开 `http://127.0.0.1:8080` 即可查看三版本工程、音素、口型包、逐帧诊断、预览一致性、缓存失效、SQLite 断点、并行预算和异常注入。
+
+除 Go 标准库外，仅使用 `github.com/mattn/go-sqlite3` 作为 `database/sql` 的 SQLite 驱动；构建需要可用的 C 编译器。固定种子为 `420420`，样本规模为 3 条对白、6 个分片、40 个口型包、444 帧。
