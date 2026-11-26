@@ -1,0 +1,3662 @@
+{
+  "budgets": {
+    "global-concurrency": 4,
+    "instance-buffer": 2,
+    "max-delay-ms": 300,
+    "node-concurrency": 2,
+    "rack-concurrency": 2
+  },
+  "events": [
+    {
+      "at-tick": 0,
+      "instance-id": "api-a",
+      "kind": "register",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 0,
+      "instance-id": "api-b",
+      "kind": "register",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 0,
+      "instance-id": "api-c",
+      "kind": "register",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 0,
+      "instance-id": "batch-a",
+      "kind": "register",
+      "service-id": "svc-batch"
+    },
+    {
+      "at-tick": 0,
+      "instance-id": "batch-b",
+      "kind": "register",
+      "service-id": "svc-batch"
+    },
+    {
+      "at-tick": 1,
+      "instance-id": "api-a",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 1,
+      "instance-id": "api-b",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 1,
+      "instance-id": "api-c",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 1,
+      "instance-id": "batch-a",
+      "kind": "probe_result",
+      "service-id": "svc-batch",
+      "success": false
+    },
+    {
+      "at-tick": 2,
+      "instance-id": "batch-b",
+      "kind": "probe_result",
+      "service-id": "svc-batch",
+      "success": true
+    },
+    {
+      "at-tick": 2,
+      "kind": "query",
+      "query-id": "q-2-api-10k",
+      "service-id": "svc-api",
+      "weight-scale": "per_10k"
+    },
+    {
+      "at-tick": 4,
+      "instance-id": "api-a",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": false
+    },
+    {
+      "at-tick": 4,
+      "instance-id": "api-c",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": false
+    },
+    {
+      "at-tick": 4,
+      "instance-id": "api-a",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 4,
+      "instance-id": "api-b",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 5,
+      "instance-id": "api-b",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": false
+    },
+    {
+      "at-tick": 5,
+      "instance-id": "batch-b",
+      "kind": "probe_result",
+      "service-id": "svc-batch",
+      "success": false
+    },
+    {
+      "at-tick": 6,
+      "kind": "query",
+      "query-id": "q-6-api",
+      "service-id": "svc-api",
+      "weight-scale": "per_mille"
+    },
+    {
+      "at-tick": 7,
+      "instance-id": "api-a",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 7,
+      "instance-id": "api-c",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 9,
+      "instance-id": "api-a",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 9,
+      "instance-id": "api-b",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 9,
+      "instance-id": "api-c",
+      "kind": "register",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 9,
+      "kind": "query",
+      "query-id": "q-9-api",
+      "service-id": "svc-api",
+      "weight-scale": "per_10k"
+    },
+    {
+      "at-tick": 10,
+      "instance-id": "api-a",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 10,
+      "instance-id": "api-c",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 11,
+      "kind": "query",
+      "query-id": "q-11-batch",
+      "service-id": "svc-batch",
+      "weight-scale": "per_mille"
+    },
+    {
+      "at-tick": 12,
+      "instance-id": "api-a",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 12,
+      "instance-id": "api-b",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 12,
+      "instance-id": "batch-a",
+      "kind": "deregister",
+      "service-id": "svc-batch"
+    },
+    {
+      "at-tick": 12,
+      "kind": "query",
+      "query-id": "q-12-batch",
+      "service-id": "svc-batch",
+      "weight-scale": "per_10k"
+    },
+    {
+      "at-tick": 13,
+      "instance-id": "api-a",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 13,
+      "instance-id": "api-c",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 14,
+      "instance-id": "api-a",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 14,
+      "instance-id": "api-b",
+      "kind": "heartbeat",
+      "service-id": "svc-api"
+    },
+    {
+      "at-tick": 15,
+      "kind": "query",
+      "query-id": "q-15-api",
+      "service-id": "svc-api",
+      "weight-scale": "per_mille"
+    },
+    {
+      "at-tick": 15,
+      "kind": "query",
+      "query-id": "q-15-batch",
+      "service-id": "svc-batch",
+      "weight-scale": "per_mille"
+    },
+    {
+      "at-tick": 16,
+      "instance-id": "api-a",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 16,
+      "instance-id": "api-c",
+      "kind": "probe_result",
+      "service-id": "svc-api",
+      "success": true
+    },
+    {
+      "at-tick": 18,
+      "kind": "query",
+      "query-id": "q-18-api",
+      "service-id": "svc-api",
+      "weight-scale": "per_10k"
+    },
+    {
+      "at-tick": 19,
+      "instance-id": "batch-a",
+      "kind": "register",
+      "service-id": "svc-batch"
+    },
+    {
+      "at-tick": 20,
+      "kind": "query",
+      "query-id": "q-20-api",
+      "service-id": "svc-api",
+      "weight-scale": "per_mille"
+    },
+    {
+      "at-tick": 20,
+      "kind": "query",
+      "query-id": "q-20-batch",
+      "service-id": "svc-batch",
+      "weight-scale": "per_10k"
+    }
+  ],
+  "project-version": "regproj-seed-42",
+  "schema-version": "v3",
+  "seed": 42,
+  "services": [
+    {
+      "admit-initial": true,
+      "default-weight-scale": "per_mille",
+      "half-open-factor-per-mille": 500,
+      "half-open-policy": "demote",
+      "id": "svc-api",
+      "instances": [
+        {
+          "address": "10.20.0.11:8080",
+          "failure-threshold-remaining": 1,
+          "heartbeat-every-millis": 500,
+          "heartbeat-every-seconds": 0,
+          "id": "api-a",
+          "initial-health": "healthy",
+          "lease-ttl-millis": 500,
+          "lease-ttl-seconds": 1,
+          "lease-watermark-ms": 1500,
+          "node-id": "node-1",
+          "probe-every-millis": 300,
+          "probe-every-seconds": 0,
+          "probe-timeout-millis": 200,
+          "probe-timeout-seconds": 0,
+          "rack-id": "rack-1",
+          "success-threshold-remaining": 1,
+          "weight": 400,
+          "weight-scale": "per_mille"
+        },
+        {
+          "address": "10.20.0.12:8080",
+          "failure-threshold-remaining": 1,
+          "heartbeat-every-millis": 500,
+          "heartbeat-every-seconds": 0,
+          "id": "api-b",
+          "initial-health": "initial",
+          "lease-ttl-millis": 200,
+          "lease-ttl-seconds": 1,
+          "lease-watermark-ms": 1200,
+          "node-id": "node-1",
+          "probe-every-millis": 400,
+          "probe-every-seconds": 0,
+          "probe-timeout-millis": 300,
+          "probe-timeout-seconds": 0,
+          "rack-id": "rack-2",
+          "success-threshold-remaining": 1,
+          "weight": 300,
+          "weight-scale": "per_mille"
+        },
+        {
+          "address": "10.20.0.13:8080",
+          "failure-threshold-remaining": 0,
+          "heartbeat-every-millis": 400,
+          "heartbeat-every-seconds": 0,
+          "id": "api-c",
+          "initial-health": "healthy",
+          "lease-ttl-millis": 800,
+          "lease-ttl-seconds": 0,
+          "lease-watermark-ms": 800,
+          "node-id": "node-2",
+          "probe-every-millis": 300,
+          "probe-every-seconds": 0,
+          "probe-timeout-millis": 200,
+          "probe-timeout-seconds": 0,
+          "rack-id": "rack-1",
+          "success-threshold-remaining": 0,
+          "weight": 800,
+          "weight-scale": "per_mille"
+        }
+      ],
+      "name": "public-api"
+    },
+    {
+      "admit-initial": false,
+      "default-weight-scale": "per_10k",
+      "half-open-factor-per-mille": 500,
+      "half-open-policy": "exclude",
+      "id": "svc-batch",
+      "instances": [
+        {
+          "address": "10.20.0.21:9090",
+          "failure-threshold-remaining": 1,
+          "heartbeat-every-millis": 500,
+          "heartbeat-every-seconds": 0,
+          "id": "batch-a",
+          "initial-health": "healthy",
+          "lease-ttl-millis": 0,
+          "lease-ttl-seconds": 2,
+          "lease-watermark-ms": 2000,
+          "node-id": "node-2",
+          "probe-every-millis": 500,
+          "probe-every-seconds": 0,
+          "probe-timeout-millis": 300,
+          "probe-timeout-seconds": 0,
+          "rack-id": "rack-2",
+          "success-threshold-remaining": 1,
+          "weight": 6000,
+          "weight-scale": "per_10k"
+        },
+        {
+          "address": "10.20.0.22:9090",
+          "failure-threshold-remaining": 1,
+          "heartbeat-every-millis": 500,
+          "heartbeat-every-seconds": 0,
+          "id": "batch-b",
+          "initial-health": "healthy",
+          "lease-ttl-millis": 500,
+          "lease-ttl-seconds": 2,
+          "lease-watermark-ms": 2500,
+          "node-id": "node-3",
+          "probe-every-millis": 400,
+          "probe-every-seconds": 0,
+          "probe-timeout-millis": 300,
+          "probe-timeout-seconds": 0,
+          "rack-id": "rack-3",
+          "success-threshold-remaining": 1,
+          "weight": 4000,
+          "weight-scale": "per_10k"
+        }
+      ],
+      "name": "batch-worker"
+    }
+  ],
+  "tick-ms": 100,
+  "truth": {
+    "project_version": "regproj-seed-42",
+    "model_hash": "b7dfa9436d2d73ef72571015811f73f2818a02d2ee2c78132d9d36ce88d3f5d3",
+    "steps": [
+      {
+        "seq": 0,
+        "tick": 0,
+        "at_ms": 0,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1500,
+            "lease_remaining_ms": 1500,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1200,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 800,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 2000,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 2500,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-a@0",
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "due_at_ms": 0,
+            "deadline_ms": 200,
+            "queue_seq": 1
+          },
+          {
+            "probe_id": "api-b@0",
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "due_at_ms": 0,
+            "deadline_ms": 300,
+            "queue_seq": 2
+          },
+          {
+            "probe_id": "api-c@0",
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "due_at_ms": 0,
+            "deadline_ms": 200,
+            "queue_seq": 3
+          },
+          {
+            "probe_id": "batch-a@0",
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "due_at_ms": 0,
+            "deadline_ms": 300,
+            "queue_seq": 4
+          },
+          {
+            "probe_id": "batch-b@0",
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "due_at_ms": 0,
+            "queue_seq": 5,
+            "violations": [
+              "C_GLOBAL_CONCURRENCY"
+            ]
+          }
+        ],
+        "deferred_probes": [
+          {
+            "probe_id": "batch-b@0",
+            "instance_id": "batch-b",
+            "queued_at_ms": 0,
+            "queue_seq": 5,
+            "violations": [
+              "C_GLOBAL_CONCURRENCY"
+            ]
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 0,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 0,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ]
+      },
+      {
+        "seq": 1,
+        "tick": 1,
+        "at_ms": 100,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1500,
+            "lease_remaining_ms": 1400,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1200,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 700,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1900,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 2400,
+            "renewal_count": 0
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 100,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 100,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ]
+      },
+      {
+        "seq": 2,
+        "tick": 2,
+        "at_ms": 200,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1500,
+            "lease_remaining_ms": 1300,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1200,
+            "lease_remaining_ms": 1000,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 600,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1800,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 2300,
+            "renewal_count": 0
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 200,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 200,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-2-api-10k",
+            "service_id": "svc-api",
+            "at_ms": 200,
+            "catalog": {
+              "service_id": "svc-api",
+              "at_ms": 200,
+              "candidates": [
+                {
+                  "instance_id": "api-c",
+                  "address": "10.20.0.13:8080",
+                  "health": "healthy",
+                  "weight_ppm": 800000,
+                  "effective_weight_ppm": 800000,
+                  "display_weight": 8000,
+                  "display_scale": "per_10k",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                },
+                {
+                  "instance_id": "api-a",
+                  "address": "10.20.0.11:8080",
+                  "health": "healthy",
+                  "weight_ppm": 400000,
+                  "effective_weight_ppm": 400000,
+                  "display_weight": 4000,
+                  "display_scale": "per_10k",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                },
+                {
+                  "instance_id": "api-b",
+                  "address": "10.20.0.12:8080",
+                  "health": "initial",
+                  "weight_ppm": 300000,
+                  "effective_weight_ppm": 300000,
+                  "display_weight": 3000,
+                  "display_scale": "per_10k",
+                  "tier": 1,
+                  "basis": [
+                    "W_INITIAL_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": []
+            }
+          }
+        ]
+      },
+      {
+        "seq": 3,
+        "tick": 3,
+        "at_ms": 300,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1500,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1200,
+            "lease_remaining_ms": 900,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 500,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1700,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 2200,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-a@300",
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "due_at_ms": 300,
+            "dispatched_at_ms": 300,
+            "deadline_ms": 500,
+            "queue_seq": 6
+          },
+          {
+            "probe_id": "api-c@300",
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "due_at_ms": 300,
+            "dispatched_at_ms": 300,
+            "deadline_ms": 500,
+            "queue_seq": 7
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 300,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 300,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ]
+      },
+      {
+        "seq": 4,
+        "tick": 4,
+        "at_ms": 400,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1900,
+            "lease_remaining_ms": 1500,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1600,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 400,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1600,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 2100,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-b@400",
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "due_at_ms": 400,
+            "dispatched_at_ms": 400,
+            "deadline_ms": 700,
+            "queue_seq": 8
+          },
+          {
+            "probe_id": "batch-b@400",
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "due_at_ms": 400,
+            "dispatched_at_ms": 400,
+            "deadline_ms": 700,
+            "queue_seq": 9
+          }
+        ],
+        "transitions": [
+          {
+            "instance_id": "api-c",
+            "from": "healthy",
+            "to": "unhealthy",
+            "at_ms": 400,
+            "cause": "probe_result",
+            "consecutive_success": 0,
+            "consecutive_failure": 1
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 400,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-c",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 400,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ]
+      },
+      {
+        "seq": 5,
+        "tick": 5,
+        "at_ms": 500,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1900,
+            "lease_remaining_ms": 1400,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1600,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 300,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1500,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 2000,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "batch-a@500",
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "due_at_ms": 500,
+            "dispatched_at_ms": 500,
+            "deadline_ms": 800,
+            "queue_seq": 10
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 500,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-c",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 500,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ]
+      },
+      {
+        "seq": 6,
+        "tick": 6,
+        "at_ms": 600,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1900,
+            "lease_remaining_ms": 1300,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1600,
+            "lease_remaining_ms": 1000,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 200,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1400,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1900,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-a@600",
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "due_at_ms": 600,
+            "dispatched_at_ms": 600,
+            "deadline_ms": 800,
+            "queue_seq": 11
+          },
+          {
+            "probe_id": "api-c@600",
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "due_at_ms": 600,
+            "dispatched_at_ms": 600,
+            "deadline_ms": 800,
+            "queue_seq": 12
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 600,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-c",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 600,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-6-api",
+            "service_id": "svc-api",
+            "at_ms": 600,
+            "catalog": {
+              "service_id": "svc-api",
+              "at_ms": 600,
+              "candidates": [
+                {
+                  "instance_id": "api-a",
+                  "address": "10.20.0.11:8080",
+                  "health": "healthy",
+                  "weight_ppm": 400000,
+                  "effective_weight_ppm": 400000,
+                  "display_weight": 400,
+                  "display_scale": "per_mille",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                },
+                {
+                  "instance_id": "api-b",
+                  "address": "10.20.0.12:8080",
+                  "health": "initial",
+                  "weight_ppm": 300000,
+                  "effective_weight_ppm": 300000,
+                  "display_weight": 300,
+                  "display_scale": "per_mille",
+                  "tier": 1,
+                  "basis": [
+                    "W_INITIAL_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": [
+                {
+                  "instance_id": "api-c",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "seq": 7,
+        "tick": 7,
+        "at_ms": 700,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1900,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1600,
+            "lease_remaining_ms": 900,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "half_open",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 100,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1300,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1800,
+            "renewal_count": 0
+          }
+        ],
+        "transitions": [
+          {
+            "instance_id": "api-c",
+            "from": "unhealthy",
+            "to": "half_open",
+            "at_ms": 700,
+            "cause": "probe_result",
+            "consecutive_success": 1,
+            "consecutive_failure": 0
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 700,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "half_open",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 2,
+                "basis": [
+                  "W_HALF_OPEN_DEMOTED"
+                ]
+              }
+            ],
+            "excluded": []
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 700,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          }
+        ]
+      },
+      {
+        "seq": 8,
+        "tick": 8,
+        "at_ms": 800,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1900,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 1600,
+            "lease_remaining_ms": 800,
+            "renewal_count": 1
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "removal_pending",
+            "health": "half_open",
+            "lease_expires_at_ms": 800,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1700,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-b@800",
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "due_at_ms": 800,
+            "dispatched_at_ms": 800,
+            "deadline_ms": 1100,
+            "queue_seq": 13
+          },
+          {
+            "probe_id": "batch-b@800",
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "due_at_ms": 800,
+            "dispatched_at_ms": 800,
+            "deadline_ms": 1100,
+            "queue_seq": 14
+          }
+        ],
+        "transitions": [
+          {
+            "instance_id": "batch-a",
+            "from": "healthy",
+            "to": "unhealthy",
+            "at_ms": 800,
+            "cause": "probe_timeout",
+            "consecutive_success": 0,
+            "consecutive_failure": 2
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 800,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-c",
+                "health": "half_open",
+                "reason": "E_EXCL_LEASE_EXPIRED"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 800,
+            "candidates": [
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "seq": 9,
+        "tick": 9,
+        "at_ms": 900,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2400,
+            "lease_remaining_ms": 1500,
+            "renewal_count": 2
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 2100,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 2
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 800,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1600,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-a@900",
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "due_at_ms": 900,
+            "dispatched_at_ms": 900,
+            "deadline_ms": 1100,
+            "queue_seq": 15
+          },
+          {
+            "probe_id": "api-c@900",
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "due_at_ms": 900,
+            "dispatched_at_ms": 900,
+            "deadline_ms": 1100,
+            "queue_seq": 16
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 900,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 900,
+            "candidates": [
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-9-api",
+            "service_id": "svc-api",
+            "at_ms": 900,
+            "catalog": {
+              "service_id": "svc-api",
+              "at_ms": 900,
+              "candidates": [
+                {
+                  "instance_id": "api-c",
+                  "address": "10.20.0.13:8080",
+                  "health": "healthy",
+                  "weight_ppm": 800000,
+                  "effective_weight_ppm": 800000,
+                  "display_weight": 8000,
+                  "display_scale": "per_10k",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                },
+                {
+                  "instance_id": "api-a",
+                  "address": "10.20.0.11:8080",
+                  "health": "healthy",
+                  "weight_ppm": 400000,
+                  "effective_weight_ppm": 400000,
+                  "display_weight": 4000,
+                  "display_scale": "per_10k",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                },
+                {
+                  "instance_id": "api-b",
+                  "address": "10.20.0.12:8080",
+                  "health": "initial",
+                  "weight_ppm": 300000,
+                  "effective_weight_ppm": 300000,
+                  "display_weight": 3000,
+                  "display_scale": "per_10k",
+                  "tier": 1,
+                  "basis": [
+                    "W_INITIAL_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": []
+            }
+          }
+        ]
+      },
+      {
+        "seq": 10,
+        "tick": 10,
+        "at_ms": 1000,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2400,
+            "lease_remaining_ms": 1400,
+            "renewal_count": 2
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "initial",
+            "lease_expires_at_ms": 2100,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 2
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 700,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 1000,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1500,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "batch-a@1000",
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "due_at_ms": 1000,
+            "dispatched_at_ms": 1000,
+            "deadline_ms": 1300,
+            "queue_seq": 17
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1000,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-b",
+                "address": "10.20.0.12:8080",
+                "health": "initial",
+                "weight_ppm": 300000,
+                "effective_weight_ppm": 300000,
+                "display_weight": 300,
+                "display_scale": "per_mille",
+                "tier": 1,
+                "basis": [
+                  "W_INITIAL_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": []
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1000,
+            "candidates": [
+              {
+                "instance_id": "batch-b",
+                "address": "10.20.0.22:9090",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 4000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "seq": 11,
+        "tick": 11,
+        "at_ms": 1100,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2400,
+            "lease_remaining_ms": 1300,
+            "renewal_count": 2
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2100,
+            "lease_remaining_ms": 1000,
+            "renewal_count": 2
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 600,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 900,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1400,
+            "renewal_count": 0
+          }
+        ],
+        "transitions": [
+          {
+            "instance_id": "api-b",
+            "from": "initial",
+            "to": "unhealthy",
+            "at_ms": 1100,
+            "cause": "probe_timeout",
+            "consecutive_success": 0,
+            "consecutive_failure": 2
+          },
+          {
+            "instance_id": "batch-b",
+            "from": "healthy",
+            "to": "unhealthy",
+            "at_ms": 1100,
+            "cause": "probe_timeout",
+            "consecutive_success": 0,
+            "consecutive_failure": 2
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1100,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1100,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-11-batch",
+            "service_id": "svc-batch",
+            "at_ms": 1100,
+            "catalog": {
+              "service_id": "svc-batch",
+              "at_ms": 1100,
+              "candidates": [
+                {
+                  "instance_id": "batch-b",
+                  "address": "10.20.0.22:9090",
+                  "health": "healthy",
+                  "weight_ppm": 400000,
+                  "effective_weight_ppm": 400000,
+                  "display_weight": 400,
+                  "display_scale": "per_mille",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": [
+                {
+                  "instance_id": "batch-a",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "seq": 12,
+        "tick": 12,
+        "at_ms": 1200,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2700,
+            "lease_remaining_ms": 1500,
+            "renewal_count": 3
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2400,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 3
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 500,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "removal_pending",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1300,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-a@1200",
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "due_at_ms": 1200,
+            "dispatched_at_ms": 1200,
+            "deadline_ms": 1400,
+            "queue_seq": 18
+          },
+          {
+            "probe_id": "api-b@1200",
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "due_at_ms": 1200,
+            "dispatched_at_ms": 1200,
+            "deadline_ms": 1500,
+            "queue_seq": 19
+          },
+          {
+            "probe_id": "api-c@1200",
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "due_at_ms": 1200,
+            "dispatched_at_ms": 1200,
+            "deadline_ms": 1400,
+            "queue_seq": 20
+          },
+          {
+            "probe_id": "batch-b@1200",
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "due_at_ms": 1200,
+            "dispatched_at_ms": 1200,
+            "deadline_ms": 1500,
+            "queue_seq": 21
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1200,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1200,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_DEREGISTERED"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-12-batch",
+            "service_id": "svc-batch",
+            "at_ms": 1200,
+            "catalog": {
+              "service_id": "svc-batch",
+              "at_ms": 1200,
+              "candidates": [],
+              "excluded": [
+                {
+                  "instance_id": "batch-a",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_DEREGISTERED"
+                },
+                {
+                  "instance_id": "batch-b",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "seq": 13,
+        "tick": 13,
+        "at_ms": 1300,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2700,
+            "lease_remaining_ms": 1400,
+            "renewal_count": 3
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2400,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 3
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 400,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "removal_pending",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 0
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1300,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1300,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_DEREGISTERED"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "seq": 14,
+        "tick": 14,
+        "at_ms": 1400,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2900,
+            "lease_remaining_ms": 1500,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2600,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 300,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "removal_pending",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 0
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1400,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1400,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_DEREGISTERED"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "seq": 15,
+        "tick": 15,
+        "at_ms": 1500,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2900,
+            "lease_remaining_ms": 1400,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2600,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 200,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "removal_pending",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 1000,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-a@1500",
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "due_at_ms": 1500,
+            "dispatched_at_ms": 1500,
+            "deadline_ms": 1700,
+            "queue_seq": 22
+          },
+          {
+            "probe_id": "api-c@1500",
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "due_at_ms": 1500,
+            "dispatched_at_ms": 1500,
+            "deadline_ms": 1700,
+            "queue_seq": 23
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1500,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1500,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_DEREGISTERED"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-15-api",
+            "service_id": "svc-api",
+            "at_ms": 1500,
+            "catalog": {
+              "service_id": "svc-api",
+              "at_ms": 1500,
+              "candidates": [
+                {
+                  "instance_id": "api-c",
+                  "address": "10.20.0.13:8080",
+                  "health": "healthy",
+                  "weight_ppm": 800000,
+                  "effective_weight_ppm": 800000,
+                  "display_weight": 800,
+                  "display_scale": "per_mille",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                },
+                {
+                  "instance_id": "api-a",
+                  "address": "10.20.0.11:8080",
+                  "health": "healthy",
+                  "weight_ppm": 400000,
+                  "effective_weight_ppm": 400000,
+                  "display_weight": 400,
+                  "display_scale": "per_mille",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": [
+                {
+                  "instance_id": "api-b",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                }
+              ]
+            }
+          },
+          {
+            "query_id": "q-15-batch",
+            "service_id": "svc-batch",
+            "at_ms": 1500,
+            "catalog": {
+              "service_id": "svc-batch",
+              "at_ms": 1500,
+              "candidates": [],
+              "excluded": [
+                {
+                  "instance_id": "batch-a",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_DEREGISTERED"
+                },
+                {
+                  "instance_id": "batch-b",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "seq": 16,
+        "tick": 16,
+        "at_ms": 1600,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2900,
+            "lease_remaining_ms": 1300,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2600,
+            "lease_remaining_ms": 1000,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 100,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "removal_pending",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 900,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-b@1600",
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "due_at_ms": 1600,
+            "dispatched_at_ms": 1600,
+            "deadline_ms": 1900,
+            "queue_seq": 24
+          },
+          {
+            "probe_id": "batch-b@1600",
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "due_at_ms": 1600,
+            "dispatched_at_ms": 1600,
+            "deadline_ms": 1900,
+            "queue_seq": 25
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1600,
+            "candidates": [
+              {
+                "instance_id": "api-c",
+                "address": "10.20.0.13:8080",
+                "health": "healthy",
+                "weight_ppm": 800000,
+                "effective_weight_ppm": 800000,
+                "display_weight": 800,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              },
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1600,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_DEREGISTERED"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "seq": 17,
+        "tick": 17,
+        "at_ms": 1700,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2900,
+            "lease_remaining_ms": 1200,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2600,
+            "lease_remaining_ms": 900,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "removal_pending",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "removal_pending",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 800,
+            "renewal_count": 0
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1700,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              },
+              {
+                "instance_id": "api-c",
+                "health": "healthy",
+                "reason": "E_EXCL_LEASE_EXPIRED"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1700,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_DEREGISTERED"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "seq": 18,
+        "tick": 18,
+        "at_ms": 1800,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2900,
+            "lease_remaining_ms": 1100,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2600,
+            "lease_remaining_ms": 800,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "removal_pending",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "removal_pending",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2000,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 700,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-a@1800",
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "due_at_ms": 1800,
+            "dispatched_at_ms": 1800,
+            "deadline_ms": 2000,
+            "queue_seq": 26
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1800,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              },
+              {
+                "instance_id": "api-c",
+                "health": "healthy",
+                "reason": "E_EXCL_LEASE_EXPIRED"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1800,
+            "candidates": [],
+            "excluded": [
+              {
+                "instance_id": "batch-a",
+                "health": "unhealthy",
+                "reason": "E_EXCL_DEREGISTERED"
+              },
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-18-api",
+            "service_id": "svc-api",
+            "at_ms": 1800,
+            "catalog": {
+              "service_id": "svc-api",
+              "at_ms": 1800,
+              "candidates": [
+                {
+                  "instance_id": "api-a",
+                  "address": "10.20.0.11:8080",
+                  "health": "healthy",
+                  "weight_ppm": 400000,
+                  "effective_weight_ppm": 400000,
+                  "display_weight": 4000,
+                  "display_scale": "per_10k",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": [
+                {
+                  "instance_id": "api-b",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                },
+                {
+                  "instance_id": "api-c",
+                  "health": "healthy",
+                  "reason": "E_EXCL_LEASE_EXPIRED"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "seq": 19,
+        "tick": 19,
+        "at_ms": 1900,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2900,
+            "lease_remaining_ms": 1000,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2600,
+            "lease_remaining_ms": 700,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "removal_pending",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 3900,
+            "lease_remaining_ms": 2000,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 600,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "batch-a@1900",
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "due_at_ms": 1900,
+            "dispatched_at_ms": 1900,
+            "deadline_ms": 2200,
+            "queue_seq": 27
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 1900,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              },
+              {
+                "instance_id": "api-c",
+                "health": "healthy",
+                "reason": "E_EXCL_LEASE_EXPIRED"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 1900,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "seq": 20,
+        "tick": 20,
+        "at_ms": 2000,
+        "instances": [
+          {
+            "instance_id": "api-a",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 2900,
+            "lease_remaining_ms": 900,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2600,
+            "lease_remaining_ms": 600,
+            "renewal_count": 4
+          },
+          {
+            "instance_id": "api-c",
+            "service_id": "svc-api",
+            "phase": "removal_pending",
+            "health": "healthy",
+            "lease_expires_at_ms": 1700,
+            "lease_remaining_ms": 0,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-a",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "healthy",
+            "lease_expires_at_ms": 3900,
+            "lease_remaining_ms": 1900,
+            "renewal_count": 0
+          },
+          {
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "phase": "registered",
+            "health": "unhealthy",
+            "lease_expires_at_ms": 2500,
+            "lease_remaining_ms": 500,
+            "renewal_count": 0
+          }
+        ],
+        "due_probes": [
+          {
+            "probe_id": "api-b@2000",
+            "instance_id": "api-b",
+            "service_id": "svc-api",
+            "due_at_ms": 2000,
+            "dispatched_at_ms": 2000,
+            "deadline_ms": 2300,
+            "queue_seq": 28
+          },
+          {
+            "probe_id": "batch-b@2000",
+            "instance_id": "batch-b",
+            "service_id": "svc-batch",
+            "due_at_ms": 2000,
+            "dispatched_at_ms": 2000,
+            "deadline_ms": 2300,
+            "queue_seq": 29
+          }
+        ],
+        "catalogs": [
+          {
+            "service_id": "svc-api",
+            "at_ms": 2000,
+            "candidates": [
+              {
+                "instance_id": "api-a",
+                "address": "10.20.0.11:8080",
+                "health": "healthy",
+                "weight_ppm": 400000,
+                "effective_weight_ppm": 400000,
+                "display_weight": 400,
+                "display_scale": "per_mille",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "api-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              },
+              {
+                "instance_id": "api-c",
+                "health": "healthy",
+                "reason": "E_EXCL_LEASE_EXPIRED"
+              }
+            ]
+          },
+          {
+            "service_id": "svc-batch",
+            "at_ms": 2000,
+            "candidates": [
+              {
+                "instance_id": "batch-a",
+                "address": "10.20.0.21:9090",
+                "health": "healthy",
+                "weight_ppm": 600000,
+                "effective_weight_ppm": 600000,
+                "display_weight": 6000,
+                "display_scale": "per_10k",
+                "tier": 0,
+                "basis": [
+                  "W_HEALTHY_ADMITTED"
+                ]
+              }
+            ],
+            "excluded": [
+              {
+                "instance_id": "batch-b",
+                "health": "unhealthy",
+                "reason": "E_EXCL_UNHEALTHY"
+              }
+            ]
+          }
+        ],
+        "queries": [
+          {
+            "query_id": "q-20-api",
+            "service_id": "svc-api",
+            "at_ms": 2000,
+            "catalog": {
+              "service_id": "svc-api",
+              "at_ms": 2000,
+              "candidates": [
+                {
+                  "instance_id": "api-a",
+                  "address": "10.20.0.11:8080",
+                  "health": "healthy",
+                  "weight_ppm": 400000,
+                  "effective_weight_ppm": 400000,
+                  "display_weight": 400,
+                  "display_scale": "per_mille",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": [
+                {
+                  "instance_id": "api-b",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                },
+                {
+                  "instance_id": "api-c",
+                  "health": "healthy",
+                  "reason": "E_EXCL_LEASE_EXPIRED"
+                }
+              ]
+            }
+          },
+          {
+            "query_id": "q-20-batch",
+            "service_id": "svc-batch",
+            "at_ms": 2000,
+            "catalog": {
+              "service_id": "svc-batch",
+              "at_ms": 2000,
+              "candidates": [
+                {
+                  "instance_id": "batch-a",
+                  "address": "10.20.0.21:9090",
+                  "health": "healthy",
+                  "weight_ppm": 600000,
+                  "effective_weight_ppm": 600000,
+                  "display_weight": 6000,
+                  "display_scale": "per_10k",
+                  "tier": 0,
+                  "basis": [
+                    "W_HEALTHY_ADMITTED"
+                  ]
+                }
+              ],
+              "excluded": [
+                {
+                  "instance_id": "batch-b",
+                  "health": "unhealthy",
+                  "reason": "E_EXCL_UNHEALTHY"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,22 +1,144 @@
-启动会上一人认领了服务注册与健康探测这条链路的首版，而落到手上的开发环境只有 Linux（WSL Ubuntu）里一个尚未初始化的空目录，除 Go 工具链外没有源码、样本或历史约定可继承。交付物既作为可集成的 Go 领域组件，也提供本地可重复运行的诊断入口。本地确定性样本生成器由实现自行编写，按固定种子产出同一份注册工程在三个 schema 版本下的描述：版本差异体现在字段命名、实例清单的扁平表与按服务分组嵌套树、心跳与租约时长的 tick 与毫秒及秒与毫秒单位、健康阈值表达为绝对连续失败次数与剩余待判定次数两种语义，以及可选租约水位字段的有无上。工程声明若干服务与其实例（所属节点、可达地址、权重刻度、初始健康状态与租约续约周期），一批按逻辑时刻排列的注册、注销、心跳续约、探测结果注入与消费者查询事件，并直接给出逐时刻的解析真值：各实例健康状态迁移、租约到期余量、服务目录中的可服务实例集合及被剔除实例与剔除原因。
+# Service Registry and Health Probe Component
 
-任务环境与准备：
-在 Linux（WSL Ubuntu）上准备 Go 1.22 或以上版本的工具链，确认 go、go vet 与 go test 可用。
-工作区为空目录，无需预先创建 go.mod、样本或配置文件，模块与目录结构由实现自行建立。
-仅使用 Go 标准库（含 database/sql 与 sqlite3 相关的本地文件使用方式按实现选择）与仓库内生成样本，不引入任何第三方包、外部服务或系统组件。
-本地运行演示与测试时保证可写目录用于 SQLite 检查点文件，进程退出码使用整数，业务错误码以 E_xxx 形式输出。
+A dependency-free Go 1.22 domain component for service registration, lease
+settlement, health probing, catalog selection, incremental recomputation and
+crash-safe SQLite checkpoints. It also ships a deterministic sample generator
+and a local diagnostic CLI.
 
-业务要求：
-1. 实现覆盖三个 schema 版本的注册工程装载器，把字段命名、实例清单的扁平表与按服务分组嵌套树、tick 与毫秒及秒与毫秒的心跳与租约时长单位、绝对连续失败次数与剩余待判定次数两种阈值语义、可选租约水位字段统一映射为内部服务与实例模型；同一工程经三个版本装载后的服务集合、实例顺序、租约时长换算值与阈值语义必须完全一致，版本无法识别的字段组合须返回稳定业务码并指明位置。
-2. 实现逐逻辑时刻的实例注册、心跳续约与租约到期结算：心跳到达须按归一后的整数毫秒平移租约到期时刻并保留已累积失败计数，租约余量按声明周期递减且不得为负，到期实例须转入待剔除并记录到期来源；逐时刻输出的各实例租约余量、到期判定与续约次数须与生成器真值一致，租约余量在 tick 与毫秒两种表达下换算后须得到同一到期判定。
-3. 实现健康探测结果的并行调度与状态演进：按实例探测周期与超时决定本轮应发探测集合，同一实例在超时未结束前不得重发探测，探测结果按连续成功与连续失败阈值推进初始态、健康、不健康与半开四种状态迁移，阈值在绝对次数与剩余待判定次数两种语义下换算后须得到同一迁移结论，逐时刻输出的应发探测集合、被抑制探测与状态迁移须与真值逐实例一致。
-4. 实现服务目录视图与可服务实例集合求解：消费者查询须按服务、权重刻度与健康状态给出当前可服务实例集合及有序候选序列，不健康与半开实例须按声明规则被排除或降权并输出排除依据编号；权重在千分比与万分比刻度下换算后须得到同一候选序列，同一查询在三个版本下换算后候选序列与排除依据完全一致。
-5. 实现探测并发预算与每实例待处理事件缓冲上限的双约束调度：同一节点或同一机架的并发探测数与整批并发探测数同时约束本轮调度，超出预算的探测须进入延后队列并记录被违反的约束编号与排队序号，延后超过声明最大延后时长的探测须被丢弃并记录丢弃时刻与原因；任何并发度、实例调度顺序与提交批次都不改变探测集合、状态迁移与候选序列。
-6. 实现工程参数与事件流编辑后的增量失效重算：按逻辑顺序改动某实例的探测周期、续约周期、健康阈值、权重刻度或追加减删事件时，只重算依赖链经过该实例的后续时刻区间、状态迁移与目录视图，未受影响区间必须复用缓存结果，并输出每处结果所依据的失效来源与传播闭包；增量结果须与一次性全量重算逐时刻逐实例一致，编辑不得改变已提交历史时刻的判定。
-7. 把已提交的时刻序号、各实例健康状态与租约状态、延后队列与工程版本按先落实例与队列状态再更新全局时刻序号的顺序写入 SQLite 检查点，使进程在任一提交点被强制终止后重启都不会读到未完成的时刻或半写入的实例状态；恢复只接受版本匹配的检查点，版本不匹配须从起点整体重算，区分可处理的退出信号落盘到最后完整提交点，强制终止后的恢复只能依据已持久化状态而不能承诺一定产出退出报告。
-8. 实现异常注入链路：通过输入或参数注入负值或越界的租约时长与心跳周期、跨版本含义冲突且无租约水位可消歧的实例、阈值语义无法判定的实例标识、重复实例标识、越界线程与缓冲预算、截断的检查点与版本不匹配的工程快照，每种异常返回稳定的 E_xxx 业务码与可定位上下文（服务标识、实例标识与时刻序号），处理过程不得修改源工程数据，已提交目录不得因异常变为不可用。
+## Quick start
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+```sh
+go test ./...
+go vet ./...
 
-验收：
-用本地确定性样本验证三个版本装载归一的目录与健康状态轨迹一致，并核对编辑后增量重算、检查点恢复与异常注入结果。
+go run ./cmd/registryctl gen --out samples --seed 42
+go run ./cmd/registryctl compare --samples samples --seed 42
+go run ./cmd/registryctl verify --seed 42
+
+go run ./cmd/registryctl run \
+  --project samples/v1.json \
+  --checkpoint tmp/checkpoint.db \
+  --report tmp/run.json
+```
+
+`samples/v1.json`, `samples/v2.json` and `samples/v3.json` describe the same
+project in three schemas. Each contains the same per-tick truth report.
+
+## What is implemented
+
+- Three strict schema loaders:
+  - v1: flat instance rows, ticks, absolute thresholds;
+  - v2: nested service instances, milliseconds, remaining thresholds;
+  - v3: composite seconds+millis, optional lease watermark.
+- Canonical normalization of field names, instance order, duration units,
+  threshold semantics and optional watermark validation.
+- Lease registration, heartbeat renewal, remaining-time settlement, expiry and
+  removal-pending state.
+- Deterministic probe scheduling with per-instance in-flight suppression,
+  timeout failure, absolute/remaining threshold equivalence and the
+  `initial`/`healthy`/`unhealthy`/`half_open` state machine.
+- Global, node, rack and per-instance queue budget enforcement; deferred queue
+  sequence and max-delay drop.
+- Catalog candidates, exclusions and stable ordering independent of display
+  weight scale.
+- Incremental edit/recompute with committed-history protection, cached prefix
+  reuse, invalidation source and propagation closure.
+- Real SQLite 3 checkpoints implemented with only the Go standard library.
+- Stable `E_xxx` errors and a repeatable anomaly injection suite.
+
+## Package map
+
+| Path | Purpose |
+| --- | --- |
+| `registry/` | Integrable domain API: loader, engine, catalog, incremental edits. |
+| `samplegen/` | Fixed-seed deterministic v1/v2/v3 sample and truth generator. |
+| `checkpoint/` | SQLite snapshot persistence and resume compatibility. |
+| `internal/sqlitefile/` | Minimal pure-Go SQLite 3 file writer/reader. |
+| `anomaly/` | Eleven-case anomaly injection suite. |
+| `cmd/registryctl/` | CLI diagnostics. |
+| `samples/` | Checked-in deterministic samples with embedded truth. |
+
+## Domain API
+
+```go
+document, err := registry.LoadDocumentFile("samples/v1.json")
+run, err := registry.RunProject(document.Project, registry.RunOptions{})
+truth := run.Truth()
+```
+
+Incremental edit:
+
+```go
+previous, snapshots, err := registry.ComputeProject(project, nil, true)
+edited, err := registry.IncrementalRecompute(
+    previous,
+    snapshots,
+    project,
+    registry.Edit{
+        Kind: registry.EditProbePeriod,
+        InstanceID: "api-a",
+        EffectiveTick: 10,
+        Value: 200,
+    },
+    9, // committed through tick 9
+)
+```
+
+Checkpoint:
+
+```go
+store := &checkpoint.Store{Path: "tmp/checkpoint.db"}
+err = store.Save(&checkpoint.Checkpoint{Snapshot: snapshot, Steps: committedSteps})
+```
+
+## CLI
+
+```text
+registryctl gen        --out samples [--seed 42]
+registryctl run        --project FILE [--checkpoint FILE] [--until TICK]
+                       [--no-resume] [--report FILE] [--step-delay-ms N]
+                       [--crash-after-commit TICK]
+registryctl compare    [--samples DIR] [--seed 42]
+registryctl incremental --project FILE --instance ID --field FIELD ...
+registryctl anomaly    [--seed 42] [--checkpoint FILE]
+registryctl checkpoint dump --path FILE
+registryctl verify     [--seed 42]
+```
+
+Business errors are JSON envelopes with stable `E_xxx` codes. Exit codes are
+`0` success, `1` internal, `2` business error, `64` usage, and `130`/`143` for
+graceful SIGINT/SIGTERM after committing the last completed tick.
+
+## Error codes
+
+Representative stable codes:
+
+| Code | Meaning |
+| --- | --- |
+| `E_SCHEMA_UNKNOWN` | Missing/unknown schema version. |
+| `E_SCHEMA_FIELD` | Unknown or incompatible field combination. |
+| `E_SCHEMA_LOCATION` | Malformed/truncated JSON. |
+| `E_DUPLICATE_SERVICE` / `E_DUPLICATE_INSTANCE` | Duplicate identifiers. |
+| `E_INVALID_DURATION` | Invalid lease/probe/tick duration. |
+| `E_INVALID_HEARTBEAT` | Invalid heartbeat interval. |
+| `E_INVALID_THRESHOLD` | Invalid health threshold. |
+| `E_THRESHOLD_AMBIGUOUS` | Threshold mode cannot be determined. |
+| `E_LEASE_UNIT_AMBIGUOUS` | Legacy lease value needs a watermark. |
+| `E_LEASE_WATERMARK_CONFLICT` | Watermark conflicts with normalized TTL. |
+| `E_INVALID_BUDGET` | Invalid concurrency/buffer/delay budget. |
+| `E_EDIT_COMMITTED_HISTORY` | Edit would change committed history. |
+| `E_PROBE_MAX_DELAY` | Deferred probe exceeded max delay. |
+| `E_PROBE_BUFFER_FULL` | Per-instance event buffer is full. |
+| `E_CHECKPOINT_TRUNCATED` | Checkpoint file is incomplete. |
+| `E_CHECKPOINT_CORRUPT` | SQLite or checksum validation failed. |
+| `E_CHECKPOINT_VERSION_MISMATCH` | Checkpoint requires full recompute. |
+| `E_VERIFY_FAILED` | A diagnostic comparison found a mismatch. |
+
+Every error carries `service_id`, `instance_id`, tick/time, JSON path,
+constraint or checkpoint path as applicable.
+
+## More detail
+
+- [Schema versions and normalization](docs/SCHEMA.md)
+- [Engine, checkpoint and failure design](docs/DESIGN.md)
+- [Actual verification results](VERIFICATION.md)
