@@ -19,3 +19,24 @@ Linux（WSL Ubuntu）环境，安装 Go 1.21 或以上版本并确保 go 命令�
 
 验收：
 用本地样本验证三版本装载、动态阈值分割与失效清单，并核对断点恢复与全量重算逐块一致。
+
+---
+
+## 实现交付快速入口
+
+本目录已交付纯 Go 领域组件、确定性样本生成器、CLI 和本地诊断工作台。详见：
+
+- `docs/IMPLEMENTATION.md`：包结构、版本口径、整型换算、分割、检查点与依赖图设计。
+- `VALIDATION.md`：实际测试命令、CLI 输出、SQLite 外部核验和工作台 API 结果。
+
+常用命令：
+
+```bash
+go test ./...
+go test -race ./...
+go run ./cmd/iconflow generate
+go run ./cmd/iconflow verify
+go run ./cmd/iconflow serve -addr 127.0.0.1:8088 -sqlite artifacts/iconflow.sqlite
+```
+
+`verify` 会重新生成固定种子样本、装载三个 schema 版本、运行 realtime/resume/full 一致性核对、生成失效清单，并写入真实 SQLite 检查点与 `artifacts/verification-report.json`。
