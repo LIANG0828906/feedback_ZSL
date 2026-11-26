@@ -1,0 +1,481 @@
+{
+  "answers": [
+    {
+      "qname": "stale.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "stale.example.test.",
+          "type": "A",
+          "validForMs": 45000,
+          "value": "198.51.100.10"
+        },
+        {
+          "name": "stale.example.test.",
+          "type": "A",
+          "validForMs": 45000,
+          "value": "198.51.100.11"
+        }
+      ],
+      "regionId": "rg-example"
+    },
+    {
+      "qname": "dual.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "dual.example.test.",
+          "type": "A",
+          "validForMs": 20000,
+          "value": "203.0.113.40"
+        }
+      ],
+      "regionId": "rg-dual-high"
+    },
+    {
+      "qname": "tie.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "tie.example.test.",
+          "type": "A",
+          "validForMs": 25000,
+          "value": "203.0.113.50"
+        }
+      ],
+      "regionId": "rg-tie-first"
+    },
+    {
+      "qname": "chain.lab.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "chain.lab.test.",
+          "type": "A",
+          "validForMs": 30000,
+          "value": "192.0.2.60"
+        }
+      ],
+      "regionId": "rg-chain"
+    },
+    {
+      "qname": "node.lab.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "node.lab.test.",
+          "type": "A",
+          "validForMs": 50000,
+          "value": "192.0.2.61"
+        },
+        {
+          "name": "node.lab.test.",
+          "type": "A",
+          "validForMs": 50000,
+          "value": "192.0.2.62"
+        }
+      ],
+      "regionId": "rg-lab"
+    }
+  ],
+  "apiVersion": "dns-project/v3-tree-absolute-negative",
+  "cache": {
+    "segments": [
+      {
+        "entries": [
+          {
+            "negative": false,
+            "qname": "fresh.example.test",
+            "qtype": "A",
+            "records": [
+              {
+                "expiresAtMs": 1764000100000,
+                "name": "fresh.example.test.",
+                "type": "A",
+                "value": "192.0.2.11"
+              },
+              {
+                "expiresAtMs": 1764000100000,
+                "name": "fresh.example.test.",
+                "type": "A",
+                "value": "192.0.2.10"
+              }
+            ]
+          }
+        ],
+        "regionId": "rg-example"
+      },
+      {
+        "entries": [
+          {
+            "negative": true,
+            "negativeExpiresAtMs": 1764000030000,
+            "qname": "blank.example.test",
+            "qtype": "A"
+          }
+        ],
+        "regionId": "rg-example"
+      },
+      {
+        "entries": [
+          {
+            "negative": false,
+            "qname": "advance.example.test",
+            "qtype": "A",
+            "records": [
+              {
+                "expiresAtMs": 1764000100000,
+                "name": "advance.example.test.",
+                "type": "A",
+                "value": "192.0.2.20"
+              }
+            ]
+          }
+        ],
+        "regionId": "rg-example"
+      },
+      {
+        "entries": [
+          {
+            "negative": false,
+            "qname": "stale.example.test",
+            "qtype": "A",
+            "records": [
+              {
+                "expiresAtMs": 1764000060000,
+                "name": "stale.example.test.",
+                "type": "A",
+                "value": "198.51.100.9"
+              }
+            ]
+          }
+        ],
+        "regionId": "rg-example"
+      },
+      {
+        "entries": [
+          {
+            "negative": false,
+            "qname": "api.example.test",
+            "qtype": "A",
+            "records": [
+              {
+                "expiresAtMs": 1764000045000,
+                "name": "api.example.test.",
+                "type": "A",
+                "value": "203.0.113.20"
+              },
+              {
+                "expiresAtMs": 1764000045000,
+                "name": "api.example.test.",
+                "type": "TXT",
+                "value": "seed-42-nonce-2305"
+              }
+            ]
+          }
+        ],
+        "regionId": "rg-api"
+      }
+    ]
+  },
+  "metadata": {
+    "logicalClock": {
+      "referenceEpochMs": 1764000000000
+    },
+    "projectId": "dns-project-42",
+    "seed": "42",
+    "snapshotVersion": "det-cf924a83b4cc"
+  },
+  "regionTree": [
+    {
+      "children": [
+        {
+          "children": [],
+          "domain": "api.example.test",
+          "regionId": "rg-api",
+          "rules": [
+            {
+              "match": "api.example.test",
+              "precedence": 20,
+              "ruleId": "R-002",
+              "upstreamRef": 2
+            }
+          ]
+        },
+        {
+          "children": [],
+          "domain": "dual-low.example.test",
+          "regionId": "rg-dual-low",
+          "rules": [
+            {
+              "match": "dual.example.test",
+              "precedence": 10,
+              "ruleId": "R-003",
+              "upstreamRef": 1
+            }
+          ]
+        },
+        {
+          "children": [],
+          "domain": "dual-high.example.test",
+          "regionId": "rg-dual-high",
+          "rules": [
+            {
+              "match": "dual.example.test",
+              "precedence": 20,
+              "ruleId": "R-004",
+              "upstreamRef": 3
+            }
+          ]
+        },
+        {
+          "children": [],
+          "domain": "tie-first.example.test",
+          "regionId": "rg-tie-first",
+          "rules": [
+            {
+              "match": "tie.example.test",
+              "precedence": 10,
+              "ruleId": "R-005",
+              "upstreamRef": 2
+            }
+          ]
+        },
+        {
+          "children": [],
+          "domain": "tie-second.example.test",
+          "regionId": "rg-tie-second",
+          "rules": [
+            {
+              "match": "tie.example.test",
+              "precedence": 10,
+              "ruleId": "R-006",
+              "upstreamRef": 3
+            }
+          ]
+        },
+        {
+          "children": [],
+          "domain": "slow.example.test",
+          "regionId": "rg-slow",
+          "rules": [
+            {
+              "match": "slow.example.test",
+              "precedence": 30,
+              "ruleId": "R-007",
+              "upstreamRef": 4
+            }
+          ]
+        }
+      ],
+      "domain": "example.test",
+      "regionId": "rg-example",
+      "rules": [
+        {
+          "match": "example.test",
+          "precedence": 10,
+          "ruleId": "R-001",
+          "upstreamRef": 1
+        }
+      ]
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "domain": "chain.lab.test",
+          "regionId": "rg-chain",
+          "rules": [
+            {
+              "match": "chain.lab.test",
+              "precedence": 10,
+              "ruleId": "R-009",
+              "upstreamRef": 6
+            }
+          ]
+        },
+        {
+          "children": [],
+          "domain": "cycle.lab.test",
+          "regionId": "rg-cycle",
+          "rules": [
+            {
+              "match": "cycle.lab.test",
+              "precedence": 10,
+              "ruleId": "R-010",
+              "upstreamRef": 8
+            }
+          ]
+        },
+        {
+          "children": [],
+          "domain": "long.lab.test",
+          "regionId": "rg-longhop",
+          "rules": [
+            {
+              "match": "long.lab.test",
+              "precedence": 10,
+              "ruleId": "R-011",
+              "upstreamRef": 10
+            }
+          ]
+        }
+      ],
+      "domain": "lab.test",
+      "regionId": "rg-lab",
+      "rules": [
+        {
+          "match": "lab.test",
+          "precedence": 5,
+          "ruleId": "R-008",
+          "upstreamRef": 5
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "defaultTimeoutMs": 2000,
+    "maxForwardHops": 4,
+    "negativeCache": {
+      "defaultTtlMs": 30000,
+      "enabled": true
+    },
+    "workerThreads": 4
+  },
+  "upstreamPool": [
+    {
+      "latencyMilliseconds": 1,
+      "literal": "10.42.0.1:53",
+      "name": "u-edge-1",
+      "number": 1,
+      "timeout": {
+        "milliseconds": 2000
+      }
+    },
+    {
+      "latencyMilliseconds": 2,
+      "literal": "10.42.0.2:53",
+      "name": "u-edge-2",
+      "number": 2,
+      "timeout": {
+        "milliseconds": 2000
+      }
+    },
+    {
+      "latencyMilliseconds": 1,
+      "literal": "10.42.0.3:53",
+      "name": "u-edge-3",
+      "number": 3,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "latencyMilliseconds": 2500,
+      "literal": "10.42.9.14:53",
+      "name": "u-slow",
+      "number": 4,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "latencyMilliseconds": 2,
+      "literal": "10.42.1.6:53",
+      "name": "u-chain-3",
+      "number": 5,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 7,
+      "latencyMilliseconds": 2,
+      "literal": "10.42.1.4:53",
+      "name": "u-chain-1",
+      "number": 6,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 5,
+      "latencyMilliseconds": 2,
+      "literal": "10.42.1.5:53",
+      "name": "u-chain-2",
+      "number": 7,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 9,
+      "latencyMilliseconds": 1,
+      "literal": "10.42.2.7:53",
+      "name": "u-cycle-a",
+      "number": 8,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 8,
+      "latencyMilliseconds": 1,
+      "literal": "10.42.2.8:53",
+      "name": "u-cycle-b",
+      "number": 9,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 11,
+      "latencyMilliseconds": 1,
+      "literal": "10.42.3.9:53",
+      "name": "u-long-1",
+      "number": 10,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 12,
+      "latencyMilliseconds": 1,
+      "literal": "10.42.3.10:53",
+      "name": "u-long-2",
+      "number": 11,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 13,
+      "latencyMilliseconds": 1,
+      "literal": "10.42.3.11:53",
+      "name": "u-long-3",
+      "number": 12,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "forwardToNumber": 14,
+      "latencyMilliseconds": 1,
+      "literal": "10.42.3.12:53",
+      "name": "u-long-4",
+      "number": 13,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    },
+    {
+      "latencyMilliseconds": 1,
+      "literal": "10.42.3.13:53",
+      "name": "u-long-5",
+      "number": 14,
+      "timeout": {
+        "milliseconds": 1000
+      }
+    }
+  ]
+}

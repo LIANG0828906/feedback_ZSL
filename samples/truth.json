@@ -1,0 +1,334 @@
+[
+  {
+    "sequence": 1,
+    "query_id": "Q-01-positive-fresh",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-001",
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-001"
+    ],
+    "upstream_index": 1,
+    "source": "positive_cache_hit",
+    "records": [
+      {
+        "name": "fresh.example.test.",
+        "type": "A",
+        "value": "192.0.2.10",
+        "ttl_ms": 100000,
+        "expires_at_ms": 1764000100000
+      },
+      {
+        "name": "fresh.example.test.",
+        "type": "A",
+        "value": "192.0.2.11",
+        "ttl_ms": 100000,
+        "expires_at_ms": 1764000100000
+      }
+    ],
+    "remaining_ttl_ms": [
+      100000,
+      100000
+    ],
+    "expiry_basis": "expires_at_ms=reference_now_ms+ttl_ms; expires_at_ms\u003elogical_now_ms"
+  },
+  {
+    "sequence": 2,
+    "query_id": "Q-02-negative-fresh",
+    "code": "OK_NEGATIVE",
+    "matched": true,
+    "rule_number": "R-001",
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-001"
+    ],
+    "upstream_index": 1,
+    "source": "negative_cache_hit",
+    "negative": true,
+    "entry_remaining_ms": 30000,
+    "expiry_basis": "negative_expires_at_ms\u003elogical_now_ms"
+  },
+  {
+    "sequence": 3,
+    "query_id": "Q-03-ttl-advance",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-001",
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-001"
+    ],
+    "upstream_index": 1,
+    "source": "positive_cache_hit",
+    "records": [
+      {
+        "name": "advance.example.test.",
+        "type": "A",
+        "value": "192.0.2.20",
+        "ttl_ms": 100000,
+        "expires_at_ms": 1764000100000
+      }
+    ],
+    "remaining_ttl_ms": [
+      80000
+    ],
+    "entry_remaining_ms": 80000,
+    "expiry_basis": "remaining_ms=expires_at_ms-logical_now_ms"
+  },
+  {
+    "sequence": 4,
+    "query_id": "Q-04-expired-refresh",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-001",
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-001"
+    ],
+    "upstream_index": 1,
+    "hop_count": 1,
+    "source": "positive_cache_expired_refresh",
+    "records": [
+      {
+        "name": "stale.example.test.",
+        "type": "A",
+        "value": "198.51.100.10",
+        "ttl_ms": 45000,
+        "expires_at_ms": 0
+      },
+      {
+        "name": "stale.example.test.",
+        "type": "A",
+        "value": "198.51.100.11",
+        "ttl_ms": 45000,
+        "expires_at_ms": 0
+      }
+    ],
+    "remaining_ttl_ms": [
+      45000,
+      45000
+    ],
+    "expiry_basis": "seed expires_at_ms\u003c=logical_now_ms; refresh ttl_ms starts at logical_now_ms",
+    "virtual_elapsed_ms": 1
+  },
+  {
+    "sequence": 5,
+    "query_id": "Q-05-api-longest",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-002",
+    "rule_ordinal": 1,
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-002",
+      "R-001"
+    ],
+    "upstream_index": 2,
+    "source": "positive_cache_hit",
+    "records": [
+      {
+        "name": "api.example.test.",
+        "type": "A",
+        "value": "203.0.113.20",
+        "ttl_ms": 45000,
+        "expires_at_ms": 1764000045000
+      },
+      {
+        "name": "api.example.test.",
+        "type": "TXT",
+        "value": "seed-42-nonce-2305",
+        "ttl_ms": 45000,
+        "expires_at_ms": 1764000045000
+      }
+    ],
+    "remaining_ttl_ms": [
+      45000,
+      45000
+    ],
+    "entry_remaining_ms": 45000
+  },
+  {
+    "sequence": 6,
+    "query_id": "Q-06-priority",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-004",
+    "rule_ordinal": 3,
+    "decision_basis": "priority_desc",
+    "candidate_rules": [
+      "R-004",
+      "R-003",
+      "R-001"
+    ],
+    "upstream_index": 3,
+    "hop_count": 1,
+    "source": "upstream_response",
+    "records": [
+      {
+        "name": "dual.example.test.",
+        "type": "A",
+        "value": "203.0.113.40",
+        "ttl_ms": 20000,
+        "expires_at_ms": 0
+      }
+    ],
+    "remaining_ttl_ms": [
+      20000
+    ],
+    "virtual_elapsed_ms": 1
+  },
+  {
+    "sequence": 7,
+    "query_id": "Q-07-declared-order",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-005",
+    "rule_ordinal": 4,
+    "decision_basis": "declared_order_asc",
+    "candidate_rules": [
+      "R-005",
+      "R-006",
+      "R-001"
+    ],
+    "upstream_index": 2,
+    "hop_count": 1,
+    "source": "upstream_response",
+    "records": [
+      {
+        "name": "tie.example.test.",
+        "type": "A",
+        "value": "203.0.113.50",
+        "ttl_ms": 25000,
+        "expires_at_ms": 0
+      }
+    ],
+    "remaining_ttl_ms": [
+      25000
+    ],
+    "virtual_elapsed_ms": 2
+  },
+  {
+    "sequence": 8,
+    "query_id": "Q-08-forward-chain",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-009",
+    "rule_ordinal": 8,
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-009",
+      "R-008"
+    ],
+    "upstream_index": 6,
+    "hop_count": 3,
+    "source": "upstream_response",
+    "records": [
+      {
+        "name": "chain.lab.test.",
+        "type": "A",
+        "value": "192.0.2.60",
+        "ttl_ms": 30000,
+        "expires_at_ms": 0
+      }
+    ],
+    "remaining_ttl_ms": [
+      30000
+    ],
+    "virtual_elapsed_ms": 6
+  },
+  {
+    "sequence": 9,
+    "query_id": "Q-09-forward-cycle",
+    "code": "E_UPSTREAM_FORWARD_CYCLE",
+    "matched": true,
+    "rule_number": "R-010",
+    "rule_ordinal": 9,
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-010",
+      "R-008"
+    ],
+    "upstream_index": 8,
+    "hop_count": 2,
+    "source": "error",
+    "virtual_elapsed_ms": 2
+  },
+  {
+    "sequence": 10,
+    "query_id": "Q-10-hop-limit",
+    "code": "E_UPSTREAM_HOPS_EXCEEDED",
+    "matched": true,
+    "rule_number": "R-011",
+    "rule_ordinal": 10,
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-011",
+      "R-008"
+    ],
+    "upstream_index": 10,
+    "hop_count": 4,
+    "source": "error",
+    "virtual_elapsed_ms": 4
+  },
+  {
+    "sequence": 11,
+    "query_id": "Q-11-timeout",
+    "code": "E_UPSTREAM_TIMEOUT",
+    "matched": true,
+    "rule_number": "R-007",
+    "rule_ordinal": 6,
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-007",
+      "R-001"
+    ],
+    "upstream_index": 4,
+    "hop_count": 1,
+    "source": "error",
+    "virtual_elapsed_ms": 2500
+  },
+  {
+    "sequence": 12,
+    "query_id": "Q-12-no-match",
+    "code": "E_ROUTE_NO_MATCH",
+    "matched": false,
+    "source": "error"
+  },
+  {
+    "sequence": 13,
+    "query_id": "Q-13-lab-terminal",
+    "code": "OK",
+    "matched": true,
+    "rule_number": "R-008",
+    "rule_ordinal": 7,
+    "decision_basis": "longest_suffix",
+    "candidate_rules": [
+      "R-008"
+    ],
+    "upstream_index": 5,
+    "hop_count": 1,
+    "source": "upstream_response",
+    "records": [
+      {
+        "name": "node.lab.test.",
+        "type": "A",
+        "value": "192.0.2.61",
+        "ttl_ms": 50000,
+        "expires_at_ms": 0
+      },
+      {
+        "name": "node.lab.test.",
+        "type": "A",
+        "value": "192.0.2.62",
+        "ttl_ms": 50000,
+        "expires_at_ms": 0
+      }
+    ],
+    "remaining_ttl_ms": [
+      50000,
+      50000
+    ],
+    "virtual_elapsed_ms": 2
+  }
+]

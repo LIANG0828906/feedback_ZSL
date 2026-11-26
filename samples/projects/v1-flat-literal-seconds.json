@@ -1,0 +1,393 @@
+{
+  "answer_sets": [
+    {
+      "qname": "stale.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "198.51.100.10",
+          "rr_name": "stale.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 45
+        },
+        {
+          "rdata": "198.51.100.11",
+          "rr_name": "stale.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 45
+        }
+      ],
+      "zone_id": "rg-example"
+    },
+    {
+      "qname": "dual.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "203.0.113.40",
+          "rr_name": "dual.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 20
+        }
+      ],
+      "zone_id": "rg-dual-high"
+    },
+    {
+      "qname": "tie.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "203.0.113.50",
+          "rr_name": "tie.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 25
+        }
+      ],
+      "zone_id": "rg-tie-first"
+    },
+    {
+      "qname": "chain.lab.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "192.0.2.60",
+          "rr_name": "chain.lab.test.",
+          "rr_type": "A",
+          "ttl_seconds": 30
+        }
+      ],
+      "zone_id": "rg-chain"
+    },
+    {
+      "qname": "node.lab.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "192.0.2.61",
+          "rr_name": "node.lab.test.",
+          "rr_type": "A",
+          "ttl_seconds": 50
+        },
+        {
+          "rdata": "192.0.2.62",
+          "rr_name": "node.lab.test.",
+          "rr_type": "A",
+          "ttl_seconds": 50
+        }
+      ],
+      "zone_id": "rg-lab"
+    }
+  ],
+  "authority_profiles": {
+    "10.42.0.1:53": {
+      "authority_id": "u-edge-1",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 2
+    },
+    "10.42.0.2:53": {
+      "authority_id": "u-edge-2",
+      "simulated_latency_ms": 2,
+      "timeout_seconds": 2
+    },
+    "10.42.0.3:53": {
+      "authority_id": "u-edge-3",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.1.4:53": {
+      "authority_id": "u-chain-1",
+      "next_authority": "10.42.1.5:53",
+      "simulated_latency_ms": 2,
+      "timeout_seconds": 1
+    },
+    "10.42.1.5:53": {
+      "authority_id": "u-chain-2",
+      "next_authority": "10.42.1.6:53",
+      "simulated_latency_ms": 2,
+      "timeout_seconds": 1
+    },
+    "10.42.1.6:53": {
+      "authority_id": "u-chain-3",
+      "simulated_latency_ms": 2,
+      "timeout_seconds": 1
+    },
+    "10.42.2.7:53": {
+      "authority_id": "u-cycle-a",
+      "next_authority": "10.42.2.8:53",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.2.8:53": {
+      "authority_id": "u-cycle-b",
+      "next_authority": "10.42.2.7:53",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.3.10:53": {
+      "authority_id": "u-long-2",
+      "next_authority": "10.42.3.11:53",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.3.11:53": {
+      "authority_id": "u-long-3",
+      "next_authority": "10.42.3.12:53",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.3.12:53": {
+      "authority_id": "u-long-4",
+      "next_authority": "10.42.3.13:53",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.3.13:53": {
+      "authority_id": "u-long-5",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.3.9:53": {
+      "authority_id": "u-long-1",
+      "next_authority": "10.42.3.10:53",
+      "simulated_latency_ms": 1,
+      "timeout_seconds": 1
+    },
+    "10.42.9.14:53": {
+      "authority_id": "u-slow",
+      "simulated_latency_ms": 2500,
+      "timeout_seconds": 1
+    }
+  },
+  "cache_entries": [
+    {
+      "qname": "fresh.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "192.0.2.11",
+          "rr_name": "fresh.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 100
+        },
+        {
+          "rdata": "192.0.2.10",
+          "rr_name": "fresh.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 100
+        }
+      ],
+      "zone_id": "rg-example"
+    },
+    {
+      "negative_ttl_seconds": 30,
+      "qname": "blank.example.test",
+      "qtype": "A",
+      "rcode": "NXDOMAIN",
+      "zone_id": "rg-example"
+    },
+    {
+      "qname": "advance.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "192.0.2.20",
+          "rr_name": "advance.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 100
+        }
+      ],
+      "zone_id": "rg-example"
+    },
+    {
+      "qname": "stale.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "198.51.100.9",
+          "rr_name": "stale.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 60
+        }
+      ],
+      "zone_id": "rg-example"
+    },
+    {
+      "qname": "api.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "rdata": "203.0.113.20",
+          "rr_name": "api.example.test.",
+          "rr_type": "A",
+          "ttl_seconds": 45
+        },
+        {
+          "rdata": "seed-42-nonce-2305",
+          "rr_name": "api.example.test.",
+          "rr_type": "TXT",
+          "ttl_seconds": 45
+        }
+      ],
+      "zone_id": "rg-api"
+    }
+  ],
+  "default_timeout_seconds": 2,
+  "flat_rules": [
+    {
+      "authority": "10.42.0.1:53",
+      "declared_line": 1,
+      "match_suffix": "example.test",
+      "priority": 10,
+      "rule_id": "R-001",
+      "zone_id": "rg-example"
+    },
+    {
+      "authority": "10.42.0.2:53",
+      "declared_line": 2,
+      "match_suffix": "api.example.test",
+      "priority": 20,
+      "rule_id": "R-002",
+      "zone_id": "rg-api"
+    },
+    {
+      "authority": "10.42.0.1:53",
+      "declared_line": 3,
+      "match_suffix": "dual.example.test",
+      "priority": 10,
+      "rule_id": "R-003",
+      "zone_id": "rg-dual-low"
+    },
+    {
+      "authority": "10.42.0.3:53",
+      "declared_line": 4,
+      "match_suffix": "dual.example.test",
+      "priority": 20,
+      "rule_id": "R-004",
+      "zone_id": "rg-dual-high"
+    },
+    {
+      "authority": "10.42.0.2:53",
+      "declared_line": 5,
+      "match_suffix": "tie.example.test",
+      "priority": 10,
+      "rule_id": "R-005",
+      "zone_id": "rg-tie-first"
+    },
+    {
+      "authority": "10.42.0.3:53",
+      "declared_line": 6,
+      "match_suffix": "tie.example.test",
+      "priority": 10,
+      "rule_id": "R-006",
+      "zone_id": "rg-tie-second"
+    },
+    {
+      "authority": "10.42.9.14:53",
+      "declared_line": 7,
+      "match_suffix": "slow.example.test",
+      "priority": 30,
+      "rule_id": "R-007",
+      "zone_id": "rg-slow"
+    },
+    {
+      "authority": "10.42.1.6:53",
+      "declared_line": 8,
+      "match_suffix": "lab.test",
+      "priority": 5,
+      "rule_id": "R-008",
+      "zone_id": "rg-lab"
+    },
+    {
+      "authority": "10.42.1.4:53",
+      "declared_line": 9,
+      "match_suffix": "chain.lab.test",
+      "priority": 10,
+      "rule_id": "R-009",
+      "zone_id": "rg-chain"
+    },
+    {
+      "authority": "10.42.2.7:53",
+      "declared_line": 10,
+      "match_suffix": "cycle.lab.test",
+      "priority": 10,
+      "rule_id": "R-010",
+      "zone_id": "rg-cycle"
+    },
+    {
+      "authority": "10.42.3.9:53",
+      "declared_line": 11,
+      "match_suffix": "long.lab.test",
+      "priority": 10,
+      "rule_id": "R-011",
+      "zone_id": "rg-longhop"
+    }
+  ],
+  "max_hops": 4,
+  "negative_cache": {
+    "default_ttl_seconds": 30,
+    "enabled": true
+  },
+  "project_id": "dns-project-42",
+  "reference_now_seconds": 1764000000,
+  "schema": "dns-project/v1-flat-literal-seconds",
+  "seed": 42,
+  "version": "det-cf924a83b4cc",
+  "worker_budget": 4,
+  "zones": [
+    {
+      "domain_name": "example.test",
+      "parent_zone": "",
+      "zone_id": "rg-example"
+    },
+    {
+      "domain_name": "api.example.test",
+      "parent_zone": "rg-example",
+      "zone_id": "rg-api"
+    },
+    {
+      "domain_name": "dual-low.example.test",
+      "parent_zone": "rg-example",
+      "zone_id": "rg-dual-low"
+    },
+    {
+      "domain_name": "dual-high.example.test",
+      "parent_zone": "rg-example",
+      "zone_id": "rg-dual-high"
+    },
+    {
+      "domain_name": "tie-first.example.test",
+      "parent_zone": "rg-example",
+      "zone_id": "rg-tie-first"
+    },
+    {
+      "domain_name": "tie-second.example.test",
+      "parent_zone": "rg-example",
+      "zone_id": "rg-tie-second"
+    },
+    {
+      "domain_name": "slow.example.test",
+      "parent_zone": "rg-example",
+      "zone_id": "rg-slow"
+    },
+    {
+      "domain_name": "lab.test",
+      "parent_zone": "",
+      "zone_id": "rg-lab"
+    },
+    {
+      "domain_name": "chain.lab.test",
+      "parent_zone": "rg-lab",
+      "zone_id": "rg-chain"
+    },
+    {
+      "domain_name": "cycle.lab.test",
+      "parent_zone": "rg-lab",
+      "zone_id": "rg-cycle"
+    },
+    {
+      "domain_name": "long.lab.test",
+      "parent_zone": "rg-lab",
+      "zone_id": "rg-longhop"
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DNS 缓存与转发逐查询工作台</title>
+  <style>
+    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0b1220; color: #e5eefc; }
+    header { padding: 18px 24px; background: linear-gradient(120deg,#123b63,#172554); border-bottom: 1px solid #28435f; }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    main { padding: 18px 24px; display: grid; grid-template-columns: 360px 1fr; gap: 16px; }
+    .card { background: #111c2e; border: 1px solid #24364f; border-radius: 12px; padding: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+    .card h2 { font-size: 15px; margin: 0 0 12px; color: #9cc8ff; }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+    button, select, input, textarea { background: #0f1a2b; color: #e5eefc; border: 1px solid #314967; border-radius: 8px; padding: 7px 9px; font-size: 13px; }
+    button { cursor: pointer; background: #1d4ed8; border-color: #2f6df6; }
+    button.secondary { background: #26364f; border-color: #3b5170; }
+    button.danger { background: #7f1d1d; border-color: #b91c1c; }
+    button:hover { filter: brightness(1.12); }
+    input { width: 86px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid #24364f; padding: 7px 6px; text-align: left; vertical-align: top; }
+    th { color: #9cc8ff; position: sticky; top: 0; background: #111c2e; }
+    tr.clickable { cursor: pointer; }
+    tr.clickable:hover { background: #17263d; }
+    .ok { color: #86efac; font-weight: 700; }
+    .err { color: #fca5a5; font-weight: 700; }
+    .warn { color: #fcd34d; font-weight: 700; }
+    .muted { color: #8ea3bd; font-size: 12px; }
+    pre { background: #08111f; border: 1px solid #24364f; border-radius: 10px; padding: 12px; overflow: auto; max-height: 430px; font-size: 12px; white-space: pre-wrap; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .wide { grid-column: 1 / -1; }
+    .pill { display: inline-block; border: 1px solid #314967; border-radius: 999px; padding: 2px 8px; margin: 2px; font-size: 12px; }
+    label { font-size: 12px; color: #b8c8de; }
+    #toast { position: fixed; right: 18px; bottom: 18px; max-width: 520px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>DNS 解析缓存与转发 · 逐查询核对工作台</h1>
+  <div class="muted">固定种子本地生成 · 三版 schema 等价装载 · 虚拟时钟 TTL/超时 · SQLite 检查点 · 无真实 DNS/外网依赖</div>
+</header>
+<main>
+  <section class="card">
+    <h2>1. 工程装载与并行执行</h2>
+    <div id="schemaButtons" class="row"></div>
+    <div class="row"><button class="secondary" onclick="replaceOther()">整份快照替换为另一 schema（先识别版本）</button></div>
+    <div class="row">
+      <label>线程预算 <input id="workers" type="number" min="1" max="64" value="4"></label>
+      <button onclick="runSamples()">重新生成缓存并运行</button>
+    </div>
+    <div id="meta" class="muted"></div>
+
+    <h2 style="margin-top:18px">2. 编辑与增量失效</h2>
+    <div class="row">
+      <select id="editKind">
+        <option value="rule_upstream">规则改上游</option>
+        <option value="rule_priority">规则改优先级</option>
+        <option value="upstream_timeout">上游超时(ms)</option>
+        <option value="negative_enabled">负缓存开关</option>
+      </select>
+    </div>
+    <div class="row"><label>规则 <input id="editRule" value="R-002"></label><label>上游 <input id="editUp" type="number" value="1"></label></div>
+    <div class="row"><label>优先级 <input id="editPriority" type="number" value="25"></label><label>超时 <input id="editTimeout" type="number" value="5000"></label></div>
+    <div class="row"><label><input id="editEnabled" type="checkbox" checked style="width:auto"> 负缓存启用</label></div>
+    <button onclick="applyFormEdit()">应用编辑并对照全量重算</button>
+    <div class="muted" style="margin-top:8px">也可直接提交 JSON：</div>
+    <textarea id="editJson" rows="5" style="width:100%;margin-top:6px">{
+  "kind": "rule_upstream",
+  "rule_number": "R-002",
+  "upstream_index": 1
+}</textarea>
+    <div class="row"><button class="secondary" onclick="applyJsonEdit()">提交 JSON 编辑</button></div>
+
+    <h2 style="margin-top:18px">3. 检查点</h2>
+    <div class="row">
+      <button onclick="saveCheckpoint()">保存检查点</button>
+      <button class="secondary" onclick="restoreCheckpoint()">恢复匹配检查点</button>
+      <button class="secondary" onclick="recoverCheckpoint()">恢复对照/不符重算</button>
+    </div>
+
+    <h2 style="margin-top:18px">4. 异常注入</h2>
+    <div class="row">
+      <button class="danger" onclick="inject('overlap')">重叠规则</button>
+      <button class="danger" onclick="inject('invalid_upstream_ref')">失效上游</button>
+      <button class="danger" onclick="inject('ttl_out_of_range')">越界 TTL</button>
+      <button class="danger" onclick="inject('timeout_out_of_range')">越界超时</button>
+      <button class="danger" onclick="inject('worker_budget_out_of_range')">越界线程</button>
+      <button class="danger" onclick="inject('hop_budget_out_of_range')">越界跳数</button>
+      <button class="danger" onclick="inject('backpressure',{workers:1})">背压耗尽</button>
+      <button class="danger" onclick="inject('truncated_checkpoint')">截断检查点</button>
+      <button class="danger" onclick="inject('version_mismatch_checkpoint')">版本不匹配</button>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:16px;min-width:0">
+    <div class="card">
+      <h2>逐查询真值与实际结果 <span id="runSummary" class="muted"></span></h2>
+      <div style="max-height:430px;overflow:auto">
+        <table>
+          <thead><tr><th>#</th><th>查询</th><th>状态</th><th>规则/依据</th><th>上游/跳数</th><th>来源</th><th>剩余 TTL</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>选中查询 / 接口响应</h2><pre id="detail">点击表格行查看完整 Result 与 Truth。</pre></div>
+      <div class="card"><h2>失效闭包 / 检查点 / 注入结果</h2><pre id="report">尚未执行操作。</pre></div>
+    </div>
+    <div class="card">
+      <h2>当前工程 JSON（只读）与三版源码</h2>
+      <div class="row">
+        <button class="secondary" onclick="showProject()">规范化工程</button>
+        <button class="secondary" onclick="showSource()">当前 schema 原始文档</button>
+      </div>
+      <pre id="sourcePanel">使用按钮查看。</pre>
+    </div>
+  </section>
+</main>
+<div id="toast"></div>
+<script>
+let state = null, run = null;
+const $ = (id) => document.getElementById(id);
+function fmt(x) { return JSON.stringify(x, null, 2); }
+async function api(path, body) {
+  const opt = body === undefined ? {} : {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)};
+  const res = await fetch(path, opt);
+  const data = await res.json().catch(() => ({ok:false, error:{code:'E_BAD_JSON', message:'response was not JSON'}}));
+  return {status: res.status, data};
+}
+function showReport(x) { $('report').textContent = typeof x === 'string' ? x : fmt(x); }
+function codeClass(code) { return code === 'OK' || code === 'OK_NEGATIVE' ? 'ok' : (code.startsWith('E_') ? 'err' : 'warn'); }
+function ttls(r) {
+  if (!r) return '';
+  if (r.negative) return '负缓存 ' + (r.entry_remaining_ms ?? 0) + 'ms';
+  return (r.remaining_ttl_ms || []).join(', ') + ' ms';
+}
+async function loadState() {
+  const {data} = await api('/api/state');
+  state = data.state;
+  $('meta').innerHTML = `<span class="pill">seed=${state.seed}</span><span class="pill">${state.schema}</span><span class="pill">version=${state.project.version}</span><span class="pill">worker=${state.project.worker_budget}</span><span class="pill">hops=${state.project.max_hops}</span>`;
+  const labels = {'dns-project/v1-flat-literal-seconds':'V1 扁平/字面量/秒','dns-project/v2-flat-list-millis':'V2 列表/毫秒','dns-project/v3-tree-absolute-negative':'V3 区域树/绝对时刻'};
+  $('schemaButtons').innerHTML = state.schemas.map(s => `<button class="${s===state.schema?'':'secondary'}" onclick="loadSchema('${s}')">${labels[s]||s}</button>`).join('');
+}
+async function loadSchema(schema) {
+  const {data} = await api('/api/load', {schema});
+  if (!data.ok) return showReport(data);
+  await loadState();
+  await runSamples();
+}
+async function runSamples() {
+  const workers = parseInt($('workers').value || '0', 10);
+  const {data} = await api('/api/run', {workers});
+  if (!data.ok) { showReport(data); return; }
+  run = data.run;
+  $('runSummary').innerHTML = `匹配 ${run.matches}/${run.truth.length} · 实际墙钟 ${run.report.wall_elapsed_ms.toFixed(3)}ms · 线程 ${run.report.worker_budget}`;
+  renderRows();
+  showReport({all_match: run.all_match, mismatches: run.mismatches, wall_observation: run.report.wall_elapsed_ms + 'ms'});
+}
+function renderRows() {
+  const truth = Object.fromEntries(run.truth.map(t => [t.sequence, t]));
+  $('rows').innerHTML = run.report.results.map(r => {
+    const t = truth[r.sequence] || {};
+    return `<tr class="clickable" onclick='showDetail(${r.sequence})'>
+      <td>${r.sequence}</td><td>${r.query_id}</td>
+      <td class="${codeClass(r.code)}">${r.code}<div class="muted">真值 ${t.code||''}</div></td>
+      <td>${r.rule_number||'-'}<div class="muted">${r.decision_basis||''}</div></td>
+      <td>U${r.upstream_index||'-'} / ${r.hop_count}</td>
+      <td>${r.source||'-'}</td><td>${ttls(r)}</td>
+    </tr>`;
+  }).join('');
+}
+function showDetail(seq) {
+  const r = run.report.results.find(x => x.sequence === seq);
+  const t = run.truth.find(x => x.sequence === seq);
+  $('detail').textContent = fmt({actual:r, truth:t});
+}
+function formEdit() {
+  const kind = $('editKind').value;
+  const body = {kind};
+  if (kind === 'rule_upstream') { body.rule_number=$('editRule').value; body.upstream_index=parseInt($('editUp').value,10); }
+  if (kind === 'rule_priority') { body.rule_number=$('editRule').value; body.priority=parseInt($('editPriority').value,10); }
+  if (kind === 'upstream_timeout') { body.upstream_index=parseInt($('editUp').value,10); body.timeout_ms=parseInt($('editTimeout').value,10); }
+  if (kind === 'negative_enabled') { body.enabled=$('editEnabled').checked; }
+  return body;
+}
+async function applyFormEdit() {
+  const body = formEdit();
+  $('editJson').value = fmt(body);
+  await applyEdit(body);
+}
+async function applyJsonEdit() {
+  try { await applyEdit(JSON.parse($('editJson').value)); }
+  catch (e) { showReport({code:'E_FIELD_INVALID', message:String(e)}); }
+}
+async function applyEdit(body) {
+  const {data} = await api('/api/edit', body);
+  if (!data.ok) { showReport(data); return; }
+  state.project = data.edit.project;
+  showReport({
+    all_match: data.edit.all_match,
+    mismatches: data.edit.mismatches,
+    sources: data.edit.invalidation.sources,
+    direct_regions: data.edit.invalidation.direct_regions,
+    propagation_closure: data.edit.invalidation.propagation_closure,
+    rebuilt_regions: data.edit.invalidation.rebuilt_regions,
+    reused_regions: data.edit.invalidation.reused_regions,
+    query_impacts: data.edit.invalidation.queries
+  });
+  run = {report:data.edit.incremental_run, truth: (await api('/api/state')).data.state.truth, matches:0, all_match:data.edit.all_match};
+  run.truth = (await api('/api/state')).data.state.truth;
+  renderRows();
+  $('runSummary').textContent = '增量结果：' + (data.edit.all_match ? '与全量重算逐查询一致' : '存在差异');
+}
+async function replaceOther() {
+  const other = state.schema === state.schemas[0] ? state.schemas[2] : state.schemas[0];
+  const {data} = await api('/api/replace', {schema: other});
+  if (!data.ok) { showReport(data); return; }
+  state.schema = other;
+  state.project = data.edit.project;
+  showReport({
+    replacement: true,
+    schema_before: data.edit.invalidation.schema_before,
+    schema_after: data.edit.invalidation.schema_after,
+    schema_only: data.edit.invalidation.schema_only,
+    all_match: data.edit.all_match,
+    sources: data.edit.invalidation.sources,
+    propagation_closure: data.edit.invalidation.propagation_closure,
+    rebuilt_regions: data.edit.invalidation.rebuilt_regions,
+    reused_regions: data.edit.invalidation.reused_regions
+  });
+  run = {report:data.edit.incremental_run, truth:(await api('/api/state')).data.state.truth, all_match:data.edit.all_match};
+  renderRows();
+  $('runSummary').textContent = '快照替换增量结果：' + (data.edit.all_match ? '与全量重算一致' : '存在差异');
+}
+async function saveCheckpoint() {
+  const {data} = await api('/api/checkpoint/save', {});
+  showReport(data);
+}
+async function restoreCheckpoint() {
+  const {data} = await api('/api/checkpoint/restore', {});
+  showReport(data);
+  if (data.ok) alert('检查点已恢复到内存引擎，区域数：' + Object.keys(data.checkpoint.segments||{}).length);
+}
+async function recoverCheckpoint() {
+  const workers = parseInt($('workers').value || '0', 10);
+  const {data} = await api('/api/checkpoint/recover', {workers});
+  showReport(data);
+  if (data.ok && data.recovery.recompute) {
+    run = data.recovery.recompute;
+    renderRows();
+    $('runSummary').innerHTML = `版本不符已整体重算 · 匹配 ${run.matches}/${run.truth.length}`;
+  }
+}
+async function inject(kind, extra={}) {
+  const {data} = await api('/api/inject', {kind, ...extra});
+  showReport(data);
+}
+async function showProject() { $('sourcePanel').textContent = fmt(state.project); }
+async function showSource() {
+  const res = await fetch('/api/source?schema=' + encodeURIComponent(state.schema));
+  $('sourcePanel').textContent = await res.text();
+}
+loadState().then(runSamples).catch(e => showReport(String(e)));
+</script>
+</body>
+</html>

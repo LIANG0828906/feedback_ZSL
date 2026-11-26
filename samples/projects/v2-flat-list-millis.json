@@ -1,0 +1,433 @@
+{
+  "answerSets": [
+    {
+      "cacheKey": "A:stale.example.test.",
+      "qname": "stale.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "stale.example.test.",
+          "ttlMs": 45000,
+          "type": "A",
+          "value": "198.51.100.10"
+        },
+        {
+          "name": "stale.example.test.",
+          "ttlMs": 45000,
+          "type": "A",
+          "value": "198.51.100.11"
+        }
+      ],
+      "regionId": "rg-example"
+    },
+    {
+      "cacheKey": "A:dual.example.test.",
+      "qname": "dual.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "dual.example.test.",
+          "ttlMs": 20000,
+          "type": "A",
+          "value": "203.0.113.40"
+        }
+      ],
+      "regionId": "rg-dual-high"
+    },
+    {
+      "cacheKey": "A:tie.example.test.",
+      "qname": "tie.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "tie.example.test.",
+          "ttlMs": 25000,
+          "type": "A",
+          "value": "203.0.113.50"
+        }
+      ],
+      "regionId": "rg-tie-first"
+    },
+    {
+      "cacheKey": "A:chain.lab.test.",
+      "qname": "chain.lab.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "chain.lab.test.",
+          "ttlMs": 30000,
+          "type": "A",
+          "value": "192.0.2.60"
+        }
+      ],
+      "regionId": "rg-chain"
+    },
+    {
+      "cacheKey": "A:node.lab.test.",
+      "qname": "node.lab.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "node.lab.test.",
+          "ttlMs": 50000,
+          "type": "A",
+          "value": "192.0.2.61"
+        },
+        {
+          "name": "node.lab.test.",
+          "ttlMs": 50000,
+          "type": "A",
+          "value": "192.0.2.62"
+        }
+      ],
+      "regionId": "rg-lab"
+    }
+  ],
+  "cacheSeeds": [
+    {
+      "cacheKey": "A:fresh.example.test.",
+      "negative": false,
+      "qname": "fresh.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "fresh.example.test.",
+          "ttlMs": 100000,
+          "type": "A",
+          "value": "192.0.2.11"
+        },
+        {
+          "name": "fresh.example.test.",
+          "ttlMs": 100000,
+          "type": "A",
+          "value": "192.0.2.10"
+        }
+      ],
+      "regionId": "rg-example"
+    },
+    {
+      "cacheKey": "A:blank.example.test.",
+      "negative": true,
+      "negativeTtlMs": 30000,
+      "qname": "blank.example.test",
+      "qtype": "A",
+      "regionId": "rg-example"
+    },
+    {
+      "cacheKey": "A:advance.example.test.",
+      "negative": false,
+      "qname": "advance.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "advance.example.test.",
+          "ttlMs": 100000,
+          "type": "A",
+          "value": "192.0.2.20"
+        }
+      ],
+      "regionId": "rg-example"
+    },
+    {
+      "cacheKey": "A:stale.example.test.",
+      "negative": false,
+      "qname": "stale.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "stale.example.test.",
+          "ttlMs": 60000,
+          "type": "A",
+          "value": "198.51.100.9"
+        }
+      ],
+      "regionId": "rg-example"
+    },
+    {
+      "cacheKey": "A:api.example.test.",
+      "negative": false,
+      "qname": "api.example.test",
+      "qtype": "A",
+      "records": [
+        {
+          "name": "api.example.test.",
+          "ttlMs": 45000,
+          "type": "A",
+          "value": "203.0.113.20"
+        },
+        {
+          "name": "api.example.test.",
+          "ttlMs": 45000,
+          "type": "TXT",
+          "value": "seed-42-nonce-2305"
+        }
+      ],
+      "regionId": "rg-api"
+    }
+  ],
+  "defaultTimeoutMs": 2000,
+  "maxHops": 4,
+  "negativeCacheEnabled": true,
+  "negativeDefaultTtlMs": 30000,
+  "projectId": "dns-project-42",
+  "referenceNowMs": 1764000000000,
+  "rules": [
+    {
+      "matchSuffix": "example.test",
+      "ordinal": 0,
+      "priority": 10,
+      "ruleNumber": "R-001",
+      "upstreamIndex": 1,
+      "zoneId": "rg-example"
+    },
+    {
+      "matchSuffix": "api.example.test",
+      "ordinal": 1,
+      "priority": 20,
+      "ruleNumber": "R-002",
+      "upstreamIndex": 2,
+      "zoneId": "rg-api"
+    },
+    {
+      "matchSuffix": "dual.example.test",
+      "ordinal": 2,
+      "priority": 10,
+      "ruleNumber": "R-003",
+      "upstreamIndex": 1,
+      "zoneId": "rg-dual-low"
+    },
+    {
+      "matchSuffix": "dual.example.test",
+      "ordinal": 3,
+      "priority": 20,
+      "ruleNumber": "R-004",
+      "upstreamIndex": 3,
+      "zoneId": "rg-dual-high"
+    },
+    {
+      "matchSuffix": "tie.example.test",
+      "ordinal": 4,
+      "priority": 10,
+      "ruleNumber": "R-005",
+      "upstreamIndex": 2,
+      "zoneId": "rg-tie-first"
+    },
+    {
+      "matchSuffix": "tie.example.test",
+      "ordinal": 5,
+      "priority": 10,
+      "ruleNumber": "R-006",
+      "upstreamIndex": 3,
+      "zoneId": "rg-tie-second"
+    },
+    {
+      "matchSuffix": "slow.example.test",
+      "ordinal": 6,
+      "priority": 30,
+      "ruleNumber": "R-007",
+      "upstreamIndex": 4,
+      "zoneId": "rg-slow"
+    },
+    {
+      "matchSuffix": "lab.test",
+      "ordinal": 7,
+      "priority": 5,
+      "ruleNumber": "R-008",
+      "upstreamIndex": 5,
+      "zoneId": "rg-lab"
+    },
+    {
+      "matchSuffix": "chain.lab.test",
+      "ordinal": 8,
+      "priority": 10,
+      "ruleNumber": "R-009",
+      "upstreamIndex": 6,
+      "zoneId": "rg-chain"
+    },
+    {
+      "matchSuffix": "cycle.lab.test",
+      "ordinal": 9,
+      "priority": 10,
+      "ruleNumber": "R-010",
+      "upstreamIndex": 8,
+      "zoneId": "rg-cycle"
+    },
+    {
+      "matchSuffix": "long.lab.test",
+      "ordinal": 10,
+      "priority": 10,
+      "ruleNumber": "R-011",
+      "upstreamIndex": 10,
+      "zoneId": "rg-longhop"
+    }
+  ],
+  "schemaVersion": "dns-project/v2-flat-list-millis",
+  "seed": 42,
+  "upstreams": [
+    {
+      "address": "10.42.0.1:53",
+      "latencyMs": 1,
+      "timeoutMs": 2000,
+      "upstreamId": "u-edge-1",
+      "upstreamIndex": 1
+    },
+    {
+      "address": "10.42.0.2:53",
+      "latencyMs": 2,
+      "timeoutMs": 2000,
+      "upstreamId": "u-edge-2",
+      "upstreamIndex": 2
+    },
+    {
+      "address": "10.42.0.3:53",
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-edge-3",
+      "upstreamIndex": 3
+    },
+    {
+      "address": "10.42.9.14:53",
+      "latencyMs": 2500,
+      "timeoutMs": 1000,
+      "upstreamId": "u-slow",
+      "upstreamIndex": 4
+    },
+    {
+      "address": "10.42.1.6:53",
+      "latencyMs": 2,
+      "timeoutMs": 1000,
+      "upstreamId": "u-chain-3",
+      "upstreamIndex": 5
+    },
+    {
+      "address": "10.42.1.4:53",
+      "forwardToIndex": 7,
+      "latencyMs": 2,
+      "timeoutMs": 1000,
+      "upstreamId": "u-chain-1",
+      "upstreamIndex": 6
+    },
+    {
+      "address": "10.42.1.5:53",
+      "forwardToIndex": 5,
+      "latencyMs": 2,
+      "timeoutMs": 1000,
+      "upstreamId": "u-chain-2",
+      "upstreamIndex": 7
+    },
+    {
+      "address": "10.42.2.7:53",
+      "forwardToIndex": 9,
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-cycle-a",
+      "upstreamIndex": 8
+    },
+    {
+      "address": "10.42.2.8:53",
+      "forwardToIndex": 8,
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-cycle-b",
+      "upstreamIndex": 9
+    },
+    {
+      "address": "10.42.3.9:53",
+      "forwardToIndex": 11,
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-long-1",
+      "upstreamIndex": 10
+    },
+    {
+      "address": "10.42.3.10:53",
+      "forwardToIndex": 12,
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-long-2",
+      "upstreamIndex": 11
+    },
+    {
+      "address": "10.42.3.11:53",
+      "forwardToIndex": 13,
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-long-3",
+      "upstreamIndex": 12
+    },
+    {
+      "address": "10.42.3.12:53",
+      "forwardToIndex": 14,
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-long-4",
+      "upstreamIndex": 13
+    },
+    {
+      "address": "10.42.3.13:53",
+      "latencyMs": 1,
+      "timeoutMs": 1000,
+      "upstreamId": "u-long-5",
+      "upstreamIndex": 14
+    }
+  ],
+  "version": "det-cf924a83b4cc",
+  "workerBudget": 4,
+  "zones": [
+    {
+      "id": "rg-example",
+      "name": "example.test",
+      "parentId": ""
+    },
+    {
+      "id": "rg-api",
+      "name": "api.example.test",
+      "parentId": "rg-example"
+    },
+    {
+      "id": "rg-dual-low",
+      "name": "dual-low.example.test",
+      "parentId": "rg-example"
+    },
+    {
+      "id": "rg-dual-high",
+      "name": "dual-high.example.test",
+      "parentId": "rg-example"
+    },
+    {
+      "id": "rg-tie-first",
+      "name": "tie-first.example.test",
+      "parentId": "rg-example"
+    },
+    {
+      "id": "rg-tie-second",
+      "name": "tie-second.example.test",
+      "parentId": "rg-example"
+    },
+    {
+      "id": "rg-slow",
+      "name": "slow.example.test",
+      "parentId": "rg-example"
+    },
+    {
+      "id": "rg-lab",
+      "name": "lab.test",
+      "parentId": ""
+    },
+    {
+      "id": "rg-chain",
+      "name": "chain.lab.test",
+      "parentId": "rg-lab"
+    },
+    {
+      "id": "rg-cycle",
+      "name": "cycle.lab.test",
+      "parentId": "rg-lab"
+    },
+    {
+      "id": "rg-longhop",
+      "name": "long.lab.test",
+      "parentId": "rg-lab"
+    }
+  ]
+}

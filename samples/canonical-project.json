@@ -1,0 +1,446 @@
+{
+  "project_id": "dns-project-42",
+  "seed": 42,
+  "version": "det-cf924a83b4cc",
+  "fingerprint": "cf924a83b4ccbd329f0a0f82c4c407b0",
+  "reference_now_ms": 1764000000000,
+  "default_timeout_ms": 2000,
+  "worker_budget": 4,
+  "max_hops": 4,
+  "strict_overlap": false,
+  "negative_cache_enabled": true,
+  "negative_default_ttl_ms": 30000,
+  "regions": [
+    {
+      "id": "rg-example",
+      "name": "example.test"
+    },
+    {
+      "id": "rg-api",
+      "name": "api.example.test",
+      "parent_id": "rg-example"
+    },
+    {
+      "id": "rg-dual-low",
+      "name": "dual-low.example.test",
+      "parent_id": "rg-example"
+    },
+    {
+      "id": "rg-dual-high",
+      "name": "dual-high.example.test",
+      "parent_id": "rg-example"
+    },
+    {
+      "id": "rg-tie-first",
+      "name": "tie-first.example.test",
+      "parent_id": "rg-example"
+    },
+    {
+      "id": "rg-tie-second",
+      "name": "tie-second.example.test",
+      "parent_id": "rg-example"
+    },
+    {
+      "id": "rg-slow",
+      "name": "slow.example.test",
+      "parent_id": "rg-example"
+    },
+    {
+      "id": "rg-lab",
+      "name": "lab.test"
+    },
+    {
+      "id": "rg-chain",
+      "name": "chain.lab.test",
+      "parent_id": "rg-lab"
+    },
+    {
+      "id": "rg-cycle",
+      "name": "cycle.lab.test",
+      "parent_id": "rg-lab"
+    },
+    {
+      "id": "rg-longhop",
+      "name": "long.lab.test",
+      "parent_id": "rg-lab"
+    }
+  ],
+  "upstreams": [
+    {
+      "index": 1,
+      "id": "u-edge-1",
+      "literal": "10.42.0.1:53",
+      "timeout_ms": 2000,
+      "latency_ms": 1
+    },
+    {
+      "index": 2,
+      "id": "u-edge-2",
+      "literal": "10.42.0.2:53",
+      "timeout_ms": 2000,
+      "latency_ms": 2
+    },
+    {
+      "index": 3,
+      "id": "u-edge-3",
+      "literal": "10.42.0.3:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1
+    },
+    {
+      "index": 4,
+      "id": "u-slow",
+      "literal": "10.42.9.14:53",
+      "timeout_ms": 1000,
+      "latency_ms": 2500
+    },
+    {
+      "index": 5,
+      "id": "u-chain-3",
+      "literal": "10.42.1.6:53",
+      "timeout_ms": 1000,
+      "latency_ms": 2
+    },
+    {
+      "index": 6,
+      "id": "u-chain-1",
+      "literal": "10.42.1.4:53",
+      "timeout_ms": 1000,
+      "latency_ms": 2,
+      "forward_to": 7
+    },
+    {
+      "index": 7,
+      "id": "u-chain-2",
+      "literal": "10.42.1.5:53",
+      "timeout_ms": 1000,
+      "latency_ms": 2,
+      "forward_to": 5
+    },
+    {
+      "index": 8,
+      "id": "u-cycle-a",
+      "literal": "10.42.2.7:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1,
+      "forward_to": 9
+    },
+    {
+      "index": 9,
+      "id": "u-cycle-b",
+      "literal": "10.42.2.8:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1,
+      "forward_to": 8
+    },
+    {
+      "index": 10,
+      "id": "u-long-1",
+      "literal": "10.42.3.9:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1,
+      "forward_to": 11
+    },
+    {
+      "index": 11,
+      "id": "u-long-2",
+      "literal": "10.42.3.10:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1,
+      "forward_to": 12
+    },
+    {
+      "index": 12,
+      "id": "u-long-3",
+      "literal": "10.42.3.11:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1,
+      "forward_to": 13
+    },
+    {
+      "index": 13,
+      "id": "u-long-4",
+      "literal": "10.42.3.12:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1,
+      "forward_to": 14
+    },
+    {
+      "index": 14,
+      "id": "u-long-5",
+      "literal": "10.42.3.13:53",
+      "timeout_ms": 1000,
+      "latency_ms": 1
+    }
+  ],
+  "rules": [
+    {
+      "ordinal": 0,
+      "number": "R-001",
+      "region_id": "rg-example",
+      "suffix": "example.test",
+      "priority": 10,
+      "upstream_index": 1
+    },
+    {
+      "ordinal": 1,
+      "number": "R-002",
+      "region_id": "rg-api",
+      "suffix": "api.example.test",
+      "priority": 20,
+      "upstream_index": 2
+    },
+    {
+      "ordinal": 2,
+      "number": "R-003",
+      "region_id": "rg-dual-low",
+      "suffix": "dual.example.test",
+      "priority": 10,
+      "upstream_index": 1
+    },
+    {
+      "ordinal": 3,
+      "number": "R-004",
+      "region_id": "rg-dual-high",
+      "suffix": "dual.example.test",
+      "priority": 20,
+      "upstream_index": 3
+    },
+    {
+      "ordinal": 4,
+      "number": "R-005",
+      "region_id": "rg-tie-first",
+      "suffix": "tie.example.test",
+      "priority": 10,
+      "upstream_index": 2
+    },
+    {
+      "ordinal": 5,
+      "number": "R-006",
+      "region_id": "rg-tie-second",
+      "suffix": "tie.example.test",
+      "priority": 10,
+      "upstream_index": 3
+    },
+    {
+      "ordinal": 6,
+      "number": "R-007",
+      "region_id": "rg-slow",
+      "suffix": "slow.example.test",
+      "priority": 30,
+      "upstream_index": 4
+    },
+    {
+      "ordinal": 7,
+      "number": "R-008",
+      "region_id": "rg-lab",
+      "suffix": "lab.test",
+      "priority": 5,
+      "upstream_index": 5
+    },
+    {
+      "ordinal": 8,
+      "number": "R-009",
+      "region_id": "rg-chain",
+      "suffix": "chain.lab.test",
+      "priority": 10,
+      "upstream_index": 6
+    },
+    {
+      "ordinal": 9,
+      "number": "R-010",
+      "region_id": "rg-cycle",
+      "suffix": "cycle.lab.test",
+      "priority": 10,
+      "upstream_index": 8
+    },
+    {
+      "ordinal": 10,
+      "number": "R-011",
+      "region_id": "rg-longhop",
+      "suffix": "long.lab.test",
+      "priority": 10,
+      "upstream_index": 10
+    }
+  ],
+  "cache_seeds": [
+    {
+      "cache_key": "A:fresh.example.test.",
+      "qname": "fresh.example.test",
+      "qtype": "A",
+      "region_id": "rg-example",
+      "negative": false,
+      "records": [
+        {
+          "name": "fresh.example.test.",
+          "type": "A",
+          "value": "192.0.2.11",
+          "ttl_ms": 100000,
+          "expires_at_ms": 1764000100000
+        },
+        {
+          "name": "fresh.example.test.",
+          "type": "A",
+          "value": "192.0.2.10",
+          "ttl_ms": 100000,
+          "expires_at_ms": 1764000100000
+        }
+      ]
+    },
+    {
+      "cache_key": "A:blank.example.test.",
+      "qname": "blank.example.test",
+      "qtype": "A",
+      "region_id": "rg-example",
+      "negative": true,
+      "negative_ttl_ms": 30000,
+      "negative_expires_at_ms": 1764000030000
+    },
+    {
+      "cache_key": "A:advance.example.test.",
+      "qname": "advance.example.test",
+      "qtype": "A",
+      "region_id": "rg-example",
+      "negative": false,
+      "records": [
+        {
+          "name": "advance.example.test.",
+          "type": "A",
+          "value": "192.0.2.20",
+          "ttl_ms": 100000,
+          "expires_at_ms": 1764000100000
+        }
+      ]
+    },
+    {
+      "cache_key": "A:stale.example.test.",
+      "qname": "stale.example.test",
+      "qtype": "A",
+      "region_id": "rg-example",
+      "negative": false,
+      "records": [
+        {
+          "name": "stale.example.test.",
+          "type": "A",
+          "value": "198.51.100.9",
+          "ttl_ms": 60000,
+          "expires_at_ms": 1764000060000
+        }
+      ]
+    },
+    {
+      "cache_key": "A:api.example.test.",
+      "qname": "api.example.test",
+      "qtype": "A",
+      "region_id": "rg-api",
+      "negative": false,
+      "records": [
+        {
+          "name": "api.example.test.",
+          "type": "A",
+          "value": "203.0.113.20",
+          "ttl_ms": 45000,
+          "expires_at_ms": 1764000045000
+        },
+        {
+          "name": "api.example.test.",
+          "type": "TXT",
+          "value": "seed-42-nonce-2305",
+          "ttl_ms": 45000,
+          "expires_at_ms": 1764000045000
+        }
+      ]
+    }
+  ],
+  "answer_sets": [
+    {
+      "cache_key": "A:stale.example.test.",
+      "qname": "stale.example.test",
+      "qtype": "A",
+      "region_id": "rg-example",
+      "records": [
+        {
+          "name": "stale.example.test.",
+          "type": "A",
+          "value": "198.51.100.10",
+          "ttl_ms": 45000,
+          "expires_at_ms": 0
+        },
+        {
+          "name": "stale.example.test.",
+          "type": "A",
+          "value": "198.51.100.11",
+          "ttl_ms": 45000,
+          "expires_at_ms": 0
+        }
+      ]
+    },
+    {
+      "cache_key": "A:dual.example.test.",
+      "qname": "dual.example.test",
+      "qtype": "A",
+      "region_id": "rg-dual-high",
+      "records": [
+        {
+          "name": "dual.example.test.",
+          "type": "A",
+          "value": "203.0.113.40",
+          "ttl_ms": 20000,
+          "expires_at_ms": 0
+        }
+      ]
+    },
+    {
+      "cache_key": "A:tie.example.test.",
+      "qname": "tie.example.test",
+      "qtype": "A",
+      "region_id": "rg-tie-first",
+      "records": [
+        {
+          "name": "tie.example.test.",
+          "type": "A",
+          "value": "203.0.113.50",
+          "ttl_ms": 25000,
+          "expires_at_ms": 0
+        }
+      ]
+    },
+    {
+      "cache_key": "A:chain.lab.test.",
+      "qname": "chain.lab.test",
+      "qtype": "A",
+      "region_id": "rg-chain",
+      "records": [
+        {
+          "name": "chain.lab.test.",
+          "type": "A",
+          "value": "192.0.2.60",
+          "ttl_ms": 30000,
+          "expires_at_ms": 0
+        }
+      ]
+    },
+    {
+      "cache_key": "A:node.lab.test.",
+      "qname": "node.lab.test",
+      "qtype": "A",
+      "region_id": "rg-lab",
+      "records": [
+        {
+          "name": "node.lab.test.",
+          "type": "A",
+          "value": "192.0.2.61",
+          "ttl_ms": 50000,
+          "expires_at_ms": 0
+        },
+        {
+          "name": "node.lab.test.",
+          "type": "A",
+          "value": "192.0.2.62",
+          "ttl_ms": 50000,
+          "expires_at_ms": 0
+        }
+      ]
+    }
+  ]
+}
