@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mesh Policy Orchestration Workbench</title>
+  <style>
+    :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #0f172a; color: #e2e8f0; }
+    header { padding: 18px 24px; background: #111827; border-bottom: 1px solid #334155; }
+    h1 { margin: 0 0 6px; font-size: 20px; }
+    main { display: grid; grid-template-columns: 360px 1fr; gap: 16px; padding: 16px; }
+    section.card { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+    h2 { font-size: 14px; margin: 0 0 10px; color: #93c5fd; text-transform: uppercase; letter-spacing: .08em; }
+    button { border: 1px solid #475569; background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 7px 10px; margin: 3px; cursor: pointer; font-size: 13px; }
+    button:hover { background: #334155; border-color: #60a5fa; }
+    button.danger { border-color: #7f1d1d; background: #450a0a; }
+    button.good { border-color: #14532d; background: #052e16; }
+    input, select { background: #020617; color: #e2e8f0; border: 1px solid #475569; border-radius: 7px; padding: 6px; margin: 3px; width: 90px; }
+    .wide { width: 180px; }
+    #timeline { display: grid; gap: 10px; }
+    .moment { border: 1px solid #334155; border-radius: 10px; overflow: hidden; }
+    .moment-title { padding: 8px 10px; background: #1e293b; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 6px 8px; border-top: 1px solid #243044; text-align: left; vertical-align: top; }
+    th { color: #94a3b8; background: #0b1220; }
+    .allow { color: #86efac; font-weight: 800; }
+    .deny { color: #fca5a5; font-weight: 800; }
+    .pill { display: inline-block; border-radius: 999px; padding: 2px 7px; font-size: 11px; border: 1px solid #475569; }
+    .fallback { color: #fde68a; border-color: #92400e; }
+    .applied { color: #86efac; border-color: #166534; }
+    .arrival { color: #c4b5fd; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #020617; border: 1px solid #243044; border-radius: 10px; padding: 12px; max-height: 520px; overflow: auto; font-size: 12px; }
+    .ok { color: #86efac; } .err { color: #fca5a5; } .muted { color: #94a3b8; font-size: 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 1100px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>服务网格策略编排诊断工作台</h1>
+  <div class="muted">固定种子 <code>42042</code> · 三版 schema · 逻辑时刻传播/门控 · SQLite 检查点 · 本地回环 net/http</div>
+</header>
+<main>
+  <aside>
+    <section class="card">
+      <h2>工程装载与等价核对</h2>
+      <button onclick="loadVersion('v1')">装载 V1</button>
+      <button onclick="loadVersion('v2')">装载 V2</button>
+      <button onclick="loadVersion('v3')">装载 V3</button>
+      <button class="good" onclick="equivalence()">三版等价核对</button>
+      <div id="summary" class="muted" style="margin-top:8px;"></div>
+    </section>
+
+    <section class="card">
+      <h2>并行判定预算</h2>
+      <label>workers <input id="workers" type="number" value="4" min="1" max="64"></label>
+      <label>buffer/ns <input id="buffer" type="number" value="64" min="1" max="4096"></label>
+      <button onclick="runReport()">按预算重跑</button>
+      <div class="muted">改成 999 / 0 / 99999 可观察稳定预算错误。</div>
+    </section>
+
+    <section class="card">
+      <h2>增量编辑</h2>
+      <button onclick="editPriority()">优先级 100→30</button>
+      <button onclick="editAction()">网关放行改拒绝</button>
+      <button onclick="editSelector()">选择器改写</button>
+      <button onclick="editWorkload()">工作负载标签编辑</button>
+      <button onclick="loadVersion(currentVersion)">重置运行时工程</button>
+    </section>
+
+    <section class="card">
+      <h2>准入替换</h2>
+      <button class="good" onclick="replaceScenario(0)">替换 pay 过期条目</button>
+      <button class="good" onclick="replaceScenario(1)">替换 order 已失效条目</button>
+      <button class="danger" onclick="inject('replace_active')">替换活跃条目</button>
+    </section>
+
+    <section class="card">
+      <h2>SQLite 检查点</h2>
+      <label>seq <input id="checkpointSeq" type="number" value="4" min="1"></label>
+      <button onclick="saveCheckpoint()">保存检查点</button>
+      <button class="good" onclick="restoreCheckpoint()">恢复并对照</button>
+    </section>
+
+    <section class="card">
+      <h2>异常注入</h2>
+      <div id="injectionButtons"></div>
+    </section>
+  </aside>
+
+  <section>
+    <div class="card">
+      <h2>逐时刻连接判定与重算到达</h2>
+      <div id="timeline"><span class="muted">正在装载默认 V1 样本…</span></div>
+    </div>
+    <div class="card">
+      <h2>增量失效来源与差异</h2>
+      <div id="diffs" class="muted">尚未施加编辑。</div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>结构化输出</h2><pre id="out">等待操作。</pre></div>
+      <div class="card"><h2>错误/业务码</h2><pre id="errors">无异常。</pre></div>
+    </div>
+  </section>
+</main>
+
+<script>
+let current = null;
+let currentVersion = 'v1';
+const injections = [
+  ['overlapping_selector','重叠选择器'], ['missing_workload','缺失工作负载'],
+  ['exited_workload','已退出负载'], ['selector_cycle','选择器/依赖成环'],
+  ['invalid_port_range','越界端口区间'], ['action_conflict','动作语义冲突'],
+  ['policy_limit_zero','条目上限为 0'], ['policy_limit_invalid','上限越界'],
+  ['policy_limit_exceeded','超命名空间上限'], ['priority_out_of_range','优先级越界'],
+  ['invalid_worker_budget','线程预算越界'], ['invalid_buffer_budget','缓冲预算越界'],
+  ['worker_exhausted','worker 耗尽'], ['buffer_full','缓冲背压'],
+  ['truncated_checkpoint','截断检查点'], ['version_mismatch','版本不匹配快照']
+];
+document.getElementById('injectionButtons').innerHTML =
+  injections.map(([k,v]) => `<button class="danger" onclick="inject('${k}')">${v}</button>`).join('');
+
+async function api(path, body) {
+  const opt = body === undefined ? {} : {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)};
+  const res = await fetch(path, opt);
+  const json = await res.json();
+  if (!json.ok) throw json.error;
+  return json.data;
+}
+function show(data) { document.getElementById('out').textContent = JSON.stringify(data, null, 2); }
+function showError(err) {
+  document.getElementById('errors').innerHTML =
+    `<span class="err">${JSON.stringify(err, null, 2)}</span>`;
+}
+function clearError() { document.getElementById('errors').textContent = '无异常。'; }
+function budget() {
+  return {workers: Number(document.getElementById('workers').value), buffer_per_ns: Number(document.getElementById('buffer').value)};
+}
+function summary(data) {
+  current = data;
+  document.getElementById('summary').innerHTML =
+    `<div>version=<b>${data.version}</b> · pv=<code>${data.canonical_version}</code></div>
+     <div>workloads=${data.workload_count} policies=${data.policy_count} events=${data.event_count} attempts=${data.attempt_count}</div>
+     <div>overlaps=${data.overlaps.length}（重叠不报错，按优先级裁决）</div>`;
+  renderReport(data.report);
+}
+function verdict(d) {
+  const cls = d.allow ? 'allow' : 'deny';
+  return `<span class="${cls}">${d.allow ? 'ALLOW' : 'DENY'}</span>`;
+}
+function gate(d) {
+  const g = d.gate || {};
+  if (g.state === 'fallback_committed') return `<span class="pill fallback">回退旧判定 ${g.marker_id} G${g.generation} arrived=${g.arrival_generation}</span>`;
+  if (g.state === 'denied_no_baseline') return `<span class="pill fallback">无基线拒绝 ${g.marker_id} G${g.generation}</span>`;
+  if (g.state === 'applied_new') return `<span class="pill applied">标记已确认并应用重算</span>`;
+  return `<span class="pill">已提交</span>`;
+}
+function renderReport(report) {
+  if (!report) return;
+  const html = report.moments.map(m => {
+    const rows = m.decisions.map(d => `<tr>
+      <td>${d.attempt_id}</td><td>${verdict(d)}</td>
+      <td>candidate=${d.candidate_allow ? 'allow':'deny'}<br><span class="muted">hit=${d.hit_policy_id || '-'}</span></td>
+      <td>${gate(d)}<br><span class="muted">applied=${d.applied_policy_id || '-'} stale=${d.stale}</span></td>
+      <td class="muted">${d.reason_code}</td>
+    </tr>`).join('');
+    const arrivals = (m.arrivals||[]).map(a =>
+      `<div class="arrival">${a.marker_id} · ${a.kind} · 新到达 ${a.new_arrivals.join(', ') || '∅'} · 累计 ${a.arrival_set.join(', ') || '∅'}</div>`).join('');
+    return `<div class="moment"><div class="moment-title">logical seq ${m.seq}</div>
+      ${arrivals ? `<div style="padding:6px 10px;background:#171326;">${arrivals}</div>`:''}
+      <table><thead><tr><th>连接</th><th>结论</th><th>裁决策略</th><th>门控/传播</th><th>依据</th></tr></thead><tbody>${rows || '<tr><td colspan=5 class=muted>仅传播事件</td></tr>'}</tbody></table>
+    </div>`;
+  }).join('');
+  document.getElementById('timeline').innerHTML = html;
+}
+async function loadVersion(v) {
+  try { clearError(); currentVersion=v; const d = await api('/api/load', {version:v, ...budget()}); summary(d); show(d); }
+  catch(e) { showError(e); }
+}
+async function equivalence() {
+  try { clearError(); const d = await api('/api/equivalence'); show(d); } catch(e) { showError(e); }
+}
+async function runReport() {
+  try { clearError(); const d = await api('/api/run', budget()); if(current){current.report=d; renderReport(d);} show(d); }
+  catch(e) { showError(e); }
+}
+async function edit(req) {
+  try {
+    clearError();
+    const d = await api('/api/edit', req);
+    show(d);
+    renderDiffs(d);
+    renderReport({moments: d.merged_decisions ? groupMoments(d.merged_decisions, d.closure_layers) : []});
+  }
+  catch(e) { showError(e); }
+}
+function renderDiffs(d) {
+  const sources = (d.sources||[]).map(s => `<span class="pill">${s.kind}:${s.id} · ${s.field}</span>`).join(' ');
+  const rows = (d.diffs||[]).filter(x => x.changed).map(x => `<tr>
+    <td>${x.attempt_id}</td><td>${(x.changes||[]).join(', ')}</td>
+    <td class="muted">${x.before.allow ? 'ALLOW':'DENY'} / ${x.before.applied_policy_id || '-'} / ${x.before.gate.state}</td>
+    <td>${x.after.allow ? 'ALLOW':'DENY'} / ${x.after.applied_policy_id || '-'} / ${x.after.gate.state} ${x.after.gate.marker_id || ''}</td>
+  </tr>`).join('');
+  document.getElementById('diffs').innerHTML =
+    `<div style="margin-bottom:8px;">来源 ${sources} · 重算 ${d.recomputed_ids.length} · 缓存复用 ${d.reused_ids.length} · 一致性=${d.consistent} · 边界 seq≤${d.boundary.boundary_seq}/G${d.boundary.max_generation}</div>
+     <table><thead><tr><th>连接</th><th>变化字段</th><th>前</th><th>后</th></tr></thead><tbody>${rows || '<tr><td colspan=4 class=muted>闭包内无输出字段变化（保守失效）。</td></tr>'}</tbody></table>`;
+}
+function groupMoments(decisions, layers) {
+  const bySeq = new Map();
+  for (const d of decisions) { if(!bySeq.has(d.seq)) bySeq.set(d.seq, []); bySeq.get(d.seq).push(d); }
+  return [...bySeq.entries()].sort((a,b)=>a[0]-b[0]).map(([seq, ds]) => ({seq, decisions:ds, arrivals:(layers||[]).filter(l=>l.arrival_seq===seq)}));
+}
+function editPriority(){ edit({kind:'priority', seq:2, policy_id:'pol-pay-order-allow', priority:30}); }
+function editAction(){ edit({kind:'action', seq:2, policy_id:'pol-edge-gateway-allow', action:'deny'}); }
+function editSelector(){ edit({kind:'selector_label', seq:2, policy_id:'pol-pay-order-allow', label_key:'app', label_value:''}); }
+function editWorkload(){ edit({kind:'workload_label', seq:2, workload_id:'order', label_key:'tier', label_value:'critical'}); }
+async function replaceScenario(i) {
+  try {
+    clearError();
+    if (!current) current = await api('/api/current');
+    const s = current.truth.replacements[i];
+    const d = await api('/api/replace', {namespace:s.namespace, target_id:s.target_id, at_seq:s.at_seq, new_policy:s.new_policy});
+    show(d); summary({...current, report:d.report});
+  } catch(e) { showError(e); }
+}
+async function saveCheckpoint() {
+  try { clearError(); const seq=Number(document.getElementById('checkpointSeq').value); show(await api('/api/checkpoint/save',{seq})); }
+  catch(e){ showError(e); }
+}
+async function restoreCheckpoint() {
+  try { clearError(); const d=await api('/api/checkpoint/restore',{}); show(d); if(d.replayed_report) renderReport(d.replayed_report); if(d.full_report) renderReport(d.full_report); }
+  catch(e){ showError(e); }
+}
+async function inject(type) {
+  try { clearError(); const d=await api('/api/inject',{type}); show(d); document.getElementById('errors').textContent='注入未返回错误：'+type; }
+  catch(e) { showError(e); show({injection:type, error:e}); }
+}
+loadVersion('v1');
+</script>
+</body>
+</html>

@@ -1,20 +1,147 @@
-服务网格控制面一直靠人工核对东西向流量策略的下发口径，这次要在 Linux（WSL Ubuntu）开发机上的一份新建空目录里，把策略编排这条链路独立做成可验收的首版内。工作区除已就绪的 Go 工具链外没有源码、样本与既有约定，一切从零建立；交付物既是可集成的 Go 领域组件，也是一个用 net/http 提供本地页面、按逻辑时刻逐场景演示与诊断的工作台。全部策略工程与解析真值由实现自带的确定性生成器按固定种子产出，不依赖真实网格、线上服务或外部账号：每份工程声明若干工作负载（命名空间、所属服务账户、标签集合、东西向可达性声明）与一组策略条目（源工作负载选择器、目标端口、动作放行或拒绝、优先级与生效窗口），并给出一批按逻辑时刻到达的连接尝试与策略变更事件。同一份工程以三个 schema 版本描述同一内容，版本差异体现在字段命名、动作取值的整型编码互换、时刻基准（逻辑序号与毫秒时间戳）、端口与窗口的 tick 与毫秒及单一端口与端口区间表达、选择器的扁平表与按命名空间嵌套树，以及可选默认拒绝标记的有无上。核心问题不是把工程读进来，而是策略变更后哪些连接判定必须重算、变更如何沿选择器匹配与优先级裁决传播、传播未完成期间连接能否被放行，以及重算在提交点被打断后如何只依据已提交状态继续。
+# Mesh Policy Orchestration Workbench
 
-任务环境与准备：
-准备 Linux（WSL Ubuntu）开发机与已就绪的 Go 工具链，工作区为新建的空目录；除 Go 标准库中的 net/http 与 database/sql 外，需另行准备纯 Go 实现的 SQLite 驱动作为第三方包并以本地文件方式使用，无需独立数据库服务，无容器启动方案。
-演示页面由 net/http 在本机监听回环地址提供，全部策略工程与真值由题内确定性生成器在本地生成，不依赖真实网格或线上资源。
+一个零外部服务的首版可验收链路：确定性生成服务网格策略工程，经三个 schema 版本装载为统一领域模型，完成逐逻辑时刻裁决、变更传播、未完成传播门控、增量复用、准入替换、有界并行调度、纯 Go SQLite 检查点恢复，并通过 `net/http` 本地工作台展示和注入异常。
 
-业务要求：
-1. 实现三个 schema 版本的策略工程装载器，把字段命名、动作取值语义互换、逻辑序号与毫秒时间戳、tick 与毫秒及单一端口与端口区间、扁平选择器表与按命名空间嵌套树、可选默认拒绝标记统一映射为内部工作负载与策略模型；同一工程经三版装载后的策略优先级次序、选择器匹配集合与连接尝试次序必须完全一致，动作语义若无法由字段判明须报告可定位冲突。
-2. 实现逐逻辑时刻的连接判定：按源工作负载标签、服务账户与目标端口在策略集合中选出生效策略，按声明优先级与声明次序固定裁决并输出放行或拒绝结论、命中策略编号与裁决依据；未命中任何策略时按默认拒绝标记口径处理，链接口区间在两种表达下换算后须得到同一命中集合。
-3. 实现策略变更触发的判定重算集合生成与传播求解：由策略条目增删、优先级调整与选择器改写推导出须重判的连接集合，按传播代数沿工作负载依赖关系扩散到所有受影响判定，输出每个重算标记的来源策略、传播代数与到达连接集合；传播代数在三版下换算后必须得到同一到达集合，选择器成环或指向已退出工作负载时须给出可定位报告。
-4. 实现重算未完成期间的连接门控：重算标记尚未到达或尚未确认的判定不得以新策略宣称放行，须按已提交状态回退到上一已提交判定或明确拒绝，并输出每个回退或拒绝所依据的重算标记编号与传播代数；回退后其旧判定不得被误判为已应用新策略。
-5. 实现每命名空间策略条目上限与声明优先级的双约束准入：写入只可替换已确认失效或已过生效窗口的策略条目，被替换条目不得再参与连接判定，逐命名空间替换结果须与真值一致并输出被替换条目所依据的规则编号；条目上限为零或优先级越界须给出稳定业务码而不是静默丢弃，替换不得破坏重算标记的传播轨迹。
-6. 实现策略条目、选择器与工作负载编辑后的增量失效传播：只重算依赖链经过被编辑对象的时刻区间与判定，未受影响区间必须复用缓存结果，并输出每处结果所依据的失效来源与传播闭包；因重算标记存在跨时刻传导，须输出闭包边界，使增量结果与一次性全量重算在声明定点容差内一致。
-7. 在声明的工作线程预算与每命名空间待判定连接缓冲上限下并行推进多命名空间的连接判定与传播，预算耗尽时须产生确定的可观测背压业务码而非越界分配或静默丢弃，任何并发度、命名空间调度顺序与提交批次都不改变放行结论、重算到达集合与替换结果；把已提交时刻序号、各工作负载已应用判定、待传播重算队列与工程版本按先落工作负载与队列再更新全局时刻序号的顺序写入 SQLite，使进程在任一提交点被强制终止后重启都不会读到未完成时刻，恢复只接受版本匹配的检查点，版本不匹配须从起点整份重算。
-8. 交付可交互的本地诊断工作台并实现异常注入链路：工作台须能装载三版工程、逐时刻展示各连接的放行结论与重算到达情况、施加编辑并展示失效来源与增量差异、提供从检查点恢复的对照；通过输入或参数注入重叠选择器、指向缺失工作负载的策略引用、越界端口区间与条目上限、动作语义冲突字段、越界线程与缓冲预算、截断的检查点与版本不匹配快照，每种异常返回稳定的 E_xxx 业务码与可定位上下文，处理过程不得修改源工程数据。
+- Go：`go1.22+`
+- SQLite 驱动：`modernc.org/sqlite`（纯 Go，`database/sql`，数据库为本地文件）
+- 监听：默认 `http://127.0.0.1:18080`
+- 固定种子：`42042`
+- 不使用 Docker、Kubernetes、真实网格或外部账号
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速运行
 
-验收：
-用本地固定种子样本装载三版工程，核对逐时刻连接放行结论、重算传播到达集合与增量重算一致，并验证异常码与检查点恢复。
+```bash
+go test ./... -count=1
+go run ./cmd/meshbench -addr 127.0.0.1:18080 -db data/checkpoint.db -seed 42042
+```
+
+浏览器打开 <http://127.0.0.1:18080/>。
+
+常用参数：
+
+```bash
+go run ./cmd/meshbench -addr 127.0.0.1:18081 -db /tmp/mesh-policy.db
+```
+
+## 验收入口
+
+```bash
+# 三版等价、门控锚点、增量一致性
+go test . -run 'TestThreeSchema|TestIncremental' -v
+
+# 准入真值、SQLite 崩溃/截断/版本、背压、HTTP 异常码、无基线拒绝
+go test . -run 'TestAdmission|TestCheckpoint|TestScheduler|TestHTTP|TestGate' -v
+
+# 全量与竞态
+go test ./... -count=1
+go test -race ./... -count=1
+```
+
+最近一次实际结果见 `docs/VERIFICATION.md`。
+
+## 三版 Schema
+
+| 版本 | 风格 | 时刻 | 端口 | 选择器 | 默认拒绝 |
+| --- | --- | --- | --- | --- | --- |
+| `mesh.policy/v1` | snake_case | `at_seq` / `start_tick` | `target_port` 或 `[from,to]` | 内联扁平标签 | 显式 `default_deny` |
+| `mesh.policy/v2` | camelCase | `atMs` / `startMs`，按 `tickMs=100` 换算 | `portRange` | 按命名空间嵌套的 `namespaceTree` | 可省略，版本口径为默认拒绝；也接受显式 `defaultDeny` |
+| `mesh.policy/v3` | `apiVersion` + 扁平 `selectorTable` | `atTick` / `tickWindow` | `"8080"` 或 `"7000-7010"` | `selectorRef` 引用扁平选择器表 | 显式指针字段 |
+
+动作编码：
+
+- V1：`action_code=0` 放行，`1` 拒绝。
+- V2：编码互换，`actionCode=1` 放行，`0` 拒绝。
+- V3：使用 `allow` / `deny` 语义字段，也保留 `effectCode` 扩展位。
+
+当文本动作与整型编码矛盾、编码越界或两者都缺失时，返回 `E_ACTION_CONFLICT`，上下文带 JSON 字段路径、策略编号和实际值。
+
+## 核心语义
+
+- 策略归属目标工作负载命名空间；空选择器命名空间按策略所在命名空间处理，`*` 表示跨命名空间。
+- 裁决候选必须同时满足命名空间、标签、服务账户和端口区间。
+- 优先级数值越大越先裁决；同优先级按 `declared_order` 升序，最后以稳定 ID 兜底。
+- 无命中时使用工程的默认拒绝口径，依据码为 `R-DEFAULT-DENY-MARKER` 或 `R-DEFAULT-ALLOW-NO-MATCH`。
+- 变更生成 `MRK-<change>-G<generation>` 标记：G1 为旧/新策略并集可能命中的连接，G2+ 沿工作负载 `depends_on` 闭包扩散。
+- 每代一个逻辑时刻到达；到达当时尚未确认，时刻结束确认。连接在标记未到达或未确认时不能应用新策略：有流程基线则回退旧判定，无基线则稳定拒绝。
+- 增量编辑只把传播闭包内的连接标记为重算，其余直接复用缓存；报告闭包边界、失效来源、每个结果的 marker 和前后差异。离散判定容差为 `0`。
+
+## 准入规则
+
+替换请求只接受：
+
+- `state=revoked`：规则号 `R-REPLACE-CONFIRMED-DEAD`
+- `end_seq < at_seq`：规则号 `R-REPLACE-EXPIRED-WINDOW`
+
+活跃、未过窗口条目返回 `E_REPLACE_TARGET_ACTIVE`。命名空间上限和优先级边界：
+
+- 上限负数或超过声明最大值：`E_POLICY_LIMIT_INVALID`
+- 上限为 `0`：`E_POLICY_LIMIT_ZERO`
+- 当前条目数超过上限：`E_NAMESPACE_POLICY_LIMIT`
+- 优先级不在 `[0,1000]`：`E_PRIORITY_RANGE`
+
+## 并发与检查点
+
+`internal/sched` 提供：
+
+- 全局 worker 预算，范围 `1..64`
+- 每命名空间缓冲，范围 `1..4096`
+- `Pipeline.Submit` 的非阻塞满队列错误 `E_BACKPRESSURE`，上下文内含 `E_NAMESPACE_BUFFER_FULL`
+- `Admission.TryAdmit` 在 worker 槽耗尽时返回 `E_WORKER_BUDGET_EXHAUSTED`
+
+不同 worker 数、调度顺序只影响 goroutine 执行顺序；输出按逻辑时刻、声明次序和 ID 稳定排序。工作负载编辑通过逻辑时刻快照读取，避免跨命名空间共享可变状态。
+
+SQLite 表：
+
+- `checkpoint_meta`：工程版本与全局已提交序号
+- `workload_state`：每个工作负载最新已应用判定 JSON
+- `propagation_queue`：待传播 marker 和载荷
+
+保存事务先写 `workload_state`，再写 `propagation_queue`，最后更新 `checkpoint_meta.committed_seq` 并提交。事务提交前模拟 kill 会回滚，重开仍读到上一完整序号。版本不匹配返回 `E_CHECKPOINT_VERSION_MISMATCH`，工作台随即从起点全量重算。
+
+## HTTP API
+
+| 方法/路径 | 作用 |
+| --- | --- |
+| `GET /` | 本地诊断工作台 |
+| `GET /api/health` | 健康检查 |
+| `GET /api/current` | 当前运行时工程、真值和最近报告 |
+| `GET /api/equivalence` | 三版优先级、选择器、传播集合和判定等价核对 |
+| `POST /api/load` | 装载 `v1` / `v2` / `v3` |
+| `POST /api/run` | 按 worker/buffer 预算重跑 |
+| `POST /api/edit` | 增量编辑并返回闭包、缓存复用和 diff |
+| `POST /api/replace` | 准入替换 |
+| `POST /api/checkpoint/save` | 保存指定逻辑序号检查点 |
+| `POST /api/checkpoint/restore` | 恢复；版本不匹配时返回全量重算报告 |
+| `POST /api/inject` | 注入 17 类异常/背压/检查点故障 |
+
+统一响应：
+
+```json
+{ "ok": false, "error": { "code": "E_ACTION_CONFLICT", "message": "...", "context": { "path": "$.policies[0].action_code" } } }
+```
+
+## 稳定业务码
+
+完整常量见 `internal/xerr/xerr.go`。常用码：
+
+- 装载/引用：`E_SCHEMA_UNSUPPORTED`、`E_DOCUMENT_INVALID`、`E_FIELD_CONFLICT`、`E_ACTION_CONFLICT`、`E_PORT_RANGE_INVALID`、`E_SELECTOR_TREE_INVALID`、`E_SELECTOR_CYCLE`、`E_WORKLOAD_MISSING`、`E_WORKLOAD_EXITED`、`E_POLICY_NOT_FOUND`
+- 选择器诊断：`E_SELECTOR_OVERLAP`（普通重叠仍按优先级裁决；严格注入时作为异常码）
+- 准入：`E_REPLACE_TARGET_ACTIVE`、`E_POLICY_LIMIT_INVALID`、`E_POLICY_LIMIT_ZERO`、`E_NAMESPACE_POLICY_LIMIT`、`E_PRIORITY_RANGE`
+- 调度：`E_WORKER_BUDGET_INVALID`、`E_BUFFER_BUDGET_INVALID`、`E_WORKER_BUDGET_EXHAUSTED`、`E_BACKPRESSURE`、`E_NAMESPACE_BUFFER_FULL`
+- 检查点：`E_CHECKPOINT_OPEN`、`E_CHECKPOINT_CORRUPT`、`E_CHECKPOINT_TRUNCATED`、`E_CHECKPOINT_VERSION_MISMATCH`
+- 门控结果码：`E_GATE_DENIED_NO_BASELINE`
+
+## 代码地图
+
+- `internal/model`：规范领域模型
+- `internal/gen`：固定种子工程与验收锚点
+- `internal/schema`：V1/V2/V3 DTO、编码器、装载器、换算和引用/环校验
+- `internal/engine`：匹配裁决、传播、门控、准入、增量闭包
+- `internal/sched`：worker/缓冲预算与有界管道
+- `internal/store`：SQLite 检查点和规范工程版本
+- `internal/workbench`：HTTP API、嵌入式页面和异常注入
+- `cmd/meshbench`：可执行入口
+
+## 说明
+
+生成器刻意保留重叠选择器，因为重叠本身不是装载错误：高优先级策略胜出，其余候选进入 `basis` 作为裁决链依据。异常注入中的 `overlapping_selector` 会在严格诊断口径下返回 `E_SELECTOR_OVERLAP` 和胜出策略。

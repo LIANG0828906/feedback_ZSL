@@ -11,3 +11,12 @@ node_modules/
 .venv/
 venv/
 __pycache__/
+
+# Local SQLite/checkpoint files
+*.db
+*.db-shm
+*.db-wal
+/data/*
+!/data/.gitkeep
+/meshbench
+/vendor/
