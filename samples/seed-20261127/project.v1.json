@@ -1,0 +1,167 @@
+{
+  "alpha_encoding": "premultiplied_8",
+  "commands": [
+    {
+      "at_tick": 0,
+      "layer": "ripple_mask",
+      "op": "set_ripple_radius",
+      "radius_px": 18,
+      "seq": 1,
+      "source": "r_left",
+      "strength_bp": 0
+    },
+    {
+      "at_tick": 40,
+      "layer": "ripple_mask",
+      "op": "set_ripple_radius",
+      "radius_px": 22,
+      "seq": 2,
+      "source": "r_left",
+      "strength_bp": 0
+    },
+    {
+      "at_tick": 80,
+      "layer": "ripple_mask",
+      "op": "set_ripple_radius",
+      "radius_px": 26,
+      "seq": 3,
+      "source": "r_left",
+      "strength_bp": 0
+    }
+  ],
+  "format": "VPF-FG",
+  "frame_height": 64,
+  "frame_width": 96,
+  "frames": [
+    {
+      "at_tick": 0,
+      "cue": "cue-a",
+      "frame_no": 0
+    },
+    {
+      "at_tick": 40,
+      "cue": "cue-b",
+      "frame_no": 1
+    },
+    {
+      "at_tick": 80,
+      "cue": "cue-c",
+      "frame_no": 2
+    }
+  ],
+  "layers": [
+    {
+      "blend_code": "alpha",
+      "bounds": [
+        0,
+        0,
+        96,
+        64
+      ],
+      "color_rgba": [
+        38,
+        72,
+        56,
+        255
+      ],
+      "display_name": "Ground / stage floor",
+      "kind": "ground",
+      "layer_id": "ground_base",
+      "opacity_pct": 100,
+      "ripple_sources": [],
+      "summary": "integer-grid-ground-variant-0",
+      "visible_flag": true
+    },
+    {
+      "blend_code": "plus",
+      "bounds": [
+        0,
+        0,
+        96,
+        64
+      ],
+      "color_rgba": [
+        64,
+        160,
+        204,
+        204
+      ],
+      "display_name": "Ripple influence mask",
+      "kind": "ripple_mask",
+      "layer_id": "ripple_mask",
+      "opacity_pct": 80,
+      "ripple_sources": [
+        {
+          "center_px": [
+            28,
+            28
+          ],
+          "decay_bp": 10000,
+          "radius_px": 18,
+          "source_id": "r_left",
+          "strength_bp": 9000
+        },
+        {
+          "center_px": [
+            74,
+            36
+          ],
+          "decay_bp": 11000,
+          "radius_px": 16,
+          "source_id": "r_right",
+          "strength_bp": 8200
+        }
+      ],
+      "summary": "two-source-linear-decay-ripple-mask",
+      "visible_flag": true
+    },
+    {
+      "blend_code": "alpha",
+      "bounds": [
+        10,
+        10,
+        18,
+        10
+      ],
+      "color_rgba": [
+        192,
+        156,
+        52,
+        204
+      ],
+      "display_name": "Slate badge",
+      "kind": "solid",
+      "layer_id": "slate_badge",
+      "opacity_pct": 90,
+      "ripple_sources": [],
+      "summary": "solid-slate-badge-with-border",
+      "visible_flag": true
+    },
+    {
+      "blend_code": "product",
+      "bounds": [
+        0,
+        0,
+        96,
+        64
+      ],
+      "color_rgba": [
+        220,
+        70,
+        220,
+        255
+      ],
+      "display_name": "Hidden composition guides",
+      "kind": "guide",
+      "layer_id": "guide_overlay",
+      "opacity_pct": 50,
+      "ripple_sources": [],
+      "summary": "rule-of-thirds-guide-lines",
+      "visible_flag": false
+    }
+  ],
+  "project_id": "vpf-deterministic-20261127",
+  "seed": 20261127,
+  "time_unit": "tick_half_ms",
+  "version": 1
+}

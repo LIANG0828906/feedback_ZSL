@@ -1,0 +1,220 @@
+{
+  "alpha_mode": "straight",
+  "canvas": {
+    "channels": 4,
+    "height": 64,
+    "tile_height": 32,
+    "tile_width": 32,
+    "width": 96
+  },
+  "directives": [
+    {
+      "at_ms": 0,
+      "order": 1,
+      "radius": 18,
+      "source": "r_left",
+      "strength_bp": 0,
+      "target_layer": "ripple_mask",
+      "verb": "set_ripple_radius"
+    },
+    {
+      "at_ms": 20,
+      "order": 2,
+      "radius": 22,
+      "source": "r_left",
+      "strength_bp": 0,
+      "target_layer": "ripple_mask",
+      "verb": "set_ripple_radius"
+    },
+    {
+      "at_ms": 40,
+      "order": 3,
+      "radius": 26,
+      "source": "r_left",
+      "strength_bp": 0,
+      "target_layer": "ripple_mask",
+      "verb": "set_ripple_radius"
+    }
+  ],
+  "format_version": 2,
+  "frame_records": [
+    {
+      "frame_index": 0,
+      "marker": "cue-a",
+      "time_ms": 0
+    },
+    {
+      "frame_index": 1,
+      "marker": "cue-b",
+      "time_ms": 20
+    },
+    {
+      "frame_index": 2,
+      "marker": "cue-c",
+      "time_ms": 40
+    }
+  ],
+  "meta": {
+    "project_id": "vpf-deterministic-20261127",
+    "seed": 20261127
+  },
+  "nodes": [
+    {
+      "disabled": false,
+      "label": "Virtual production foreground stack",
+      "node_id": "production_root",
+      "node_kind": "group",
+      "parent_id": ""
+    },
+    {
+      "disabled": false,
+      "label": "Scene",
+      "node_id": "scene_group",
+      "node_kind": "group",
+      "parent_id": "production_root"
+    },
+    {
+      "disabled": false,
+      "label": "Ground / stage floor",
+      "layer": {
+        "content": "integer-grid-ground-variant-0",
+        "mode": "src-over",
+        "opacity_bp": 10000,
+        "rect": {
+          "height": 64,
+          "width": 96,
+          "x": 0,
+          "y": 0
+        },
+        "rgba": {
+          "a": 255,
+          "b": 56,
+          "g": 72,
+          "r": 38
+        },
+        "ripples": [],
+        "type": "ground"
+      },
+      "node_id": "ground_base",
+      "node_kind": "layer",
+      "parent_id": "scene_group"
+    },
+    {
+      "disabled": false,
+      "label": "Effects",
+      "node_id": "fx_group",
+      "node_kind": "group",
+      "parent_id": "scene_group"
+    },
+    {
+      "disabled": false,
+      "label": "Ripple influence mask",
+      "layer": {
+        "content": "two-source-linear-decay-ripple-mask",
+        "mode": "add",
+        "opacity_bp": 8000,
+        "rect": {
+          "height": 64,
+          "width": 96,
+          "x": 0,
+          "y": 0
+        },
+        "rgba": {
+          "a": 204,
+          "b": 255,
+          "g": 200,
+          "r": 80
+        },
+        "ripples": [
+          {
+            "decay_bp": 10000,
+            "id": "r_left",
+            "radius": 18,
+            "strength_bp": 9000,
+            "x": 28,
+            "y": 28
+          },
+          {
+            "decay_bp": 11000,
+            "id": "r_right",
+            "radius": 16,
+            "strength_bp": 8200,
+            "x": 74,
+            "y": 36
+          }
+        ],
+        "type": "ripple_mask"
+      },
+      "node_id": "ripple_mask",
+      "node_kind": "layer",
+      "parent_id": "fx_group"
+    },
+    {
+      "disabled": false,
+      "label": "Overlay",
+      "node_id": "overlay_group",
+      "node_kind": "group",
+      "parent_id": "production_root"
+    },
+    {
+      "disabled": false,
+      "label": "Slate badge",
+      "layer": {
+        "content": "solid-slate-badge-with-border",
+        "mode": "src-over",
+        "opacity_bp": 9000,
+        "rect": {
+          "height": 10,
+          "width": 18,
+          "x": 10,
+          "y": 10
+        },
+        "rgba": {
+          "a": 204,
+          "b": 65,
+          "g": 195,
+          "r": 240
+        },
+        "ripples": [],
+        "type": "solid"
+      },
+      "node_id": "slate_badge",
+      "node_kind": "layer",
+      "parent_id": "overlay_group"
+    },
+    {
+      "disabled": true,
+      "label": "Guides",
+      "node_id": "guides_group",
+      "node_kind": "group",
+      "parent_id": "production_root"
+    },
+    {
+      "disabled": false,
+      "label": "Hidden composition guides",
+      "layer": {
+        "content": "rule-of-thirds-guide-lines",
+        "mode": "multiply",
+        "opacity_bp": 5000,
+        "rect": {
+          "height": 64,
+          "width": 96,
+          "x": 0,
+          "y": 0
+        },
+        "rgba": {
+          "a": 255,
+          "b": 220,
+          "g": 70,
+          "r": 220
+        },
+        "ripples": [],
+        "type": "guide"
+      },
+      "node_id": "guide_overlay",
+      "node_kind": "layer",
+      "parent_id": "guides_group"
+    }
+  ],
+  "time_base": "millisecond"
+}

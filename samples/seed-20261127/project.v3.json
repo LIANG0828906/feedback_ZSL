@@ -1,0 +1,228 @@
+{
+  "alphaConvention": "ASSOCIATED",
+  "canvas": {
+    "channels": 4,
+    "height": 64,
+    "tileHeight": 32,
+    "tileWidth": 32,
+    "width": 96
+  },
+  "compositeInstructions": [
+    {
+      "atUs": 0,
+      "layerId": "ripple_mask",
+      "operation": "set_ripple_radius",
+      "order": 1,
+      "radius": 18,
+      "sourceId": "r_left",
+      "strengthBasisPoints": 0
+    },
+    {
+      "atUs": 20000,
+      "layerId": "ripple_mask",
+      "operation": "set_ripple_radius",
+      "order": 2,
+      "radius": 22,
+      "sourceId": "r_left",
+      "strengthBasisPoints": 0
+    },
+    {
+      "atUs": 40000,
+      "layerId": "ripple_mask",
+      "operation": "set_ripple_radius",
+      "order": 3,
+      "radius": 26,
+      "sourceId": "r_left",
+      "strengthBasisPoints": 0
+    }
+  ],
+  "frameList": [
+    {
+      "frameIndex": 0,
+      "label": "cue-a",
+      "timeUs": 0
+    },
+    {
+      "frameIndex": 1,
+      "label": "cue-b",
+      "timeUs": 20000
+    },
+    {
+      "frameIndex": 2,
+      "label": "cue-c",
+      "timeUs": 40000
+    }
+  ],
+  "layerTree": {
+    "children": [
+      {
+        "children": [
+          {
+            "label": "Ground / stage floor",
+            "layer": {
+              "blendMode": "NORMAL",
+              "bounds": {
+                "height": 64,
+                "width": 96,
+                "x": 0,
+                "y": 0
+              },
+              "color": {
+                "alpha": 255,
+                "b": 56,
+                "g": 72,
+                "r": 38
+              },
+              "contentSummary": "integer-grid-ground-variant-0",
+              "displayName": "Ground / stage floor",
+              "layerId": "ground_base",
+              "layerType": "ground",
+              "opacityPermille": 1000,
+              "rippleSources": []
+            },
+            "nodeId": "ground_base",
+            "nodeType": "LAYER",
+            "visible": true
+          },
+          {
+            "children": [
+              {
+                "label": "Ripple influence mask",
+                "layer": {
+                  "blendMode": "ADD",
+                  "bounds": {
+                    "height": 64,
+                    "width": 96,
+                    "x": 0,
+                    "y": 0
+                  },
+                  "color": {
+                    "alpha": 204,
+                    "b": 204,
+                    "g": 160,
+                    "r": 64
+                  },
+                  "contentSummary": "two-source-linear-decay-ripple-mask",
+                  "displayName": "Ripple influence mask",
+                  "layerId": "ripple_mask",
+                  "layerType": "ripple_mask",
+                  "opacityPermille": 800,
+                  "rippleSources": [
+                    {
+                      "centerX": 28,
+                      "centerY": 28,
+                      "decayBasisPoints": 10000,
+                      "radius": 18,
+                      "sourceId": "r_left",
+                      "strengthBasisPoints": 9000
+                    },
+                    {
+                      "centerX": 74,
+                      "centerY": 36,
+                      "decayBasisPoints": 11000,
+                      "radius": 16,
+                      "sourceId": "r_right",
+                      "strengthBasisPoints": 8200
+                    }
+                  ]
+                },
+                "nodeId": "ripple_mask",
+                "nodeType": "LAYER",
+                "visible": true
+              }
+            ],
+            "label": "Effects",
+            "nodeId": "fx_group",
+            "nodeType": "GROUP",
+            "visible": true
+          }
+        ],
+        "label": "Scene",
+        "nodeId": "scene_group",
+        "nodeType": "GROUP",
+        "visible": true
+      },
+      {
+        "children": [
+          {
+            "label": "Slate badge",
+            "layer": {
+              "blendMode": "NORMAL",
+              "bounds": {
+                "height": 10,
+                "width": 18,
+                "x": 10,
+                "y": 10
+              },
+              "color": {
+                "alpha": 204,
+                "b": 52,
+                "g": 156,
+                "r": 192
+              },
+              "contentSummary": "solid-slate-badge-with-border",
+              "displayName": "Slate badge",
+              "layerId": "slate_badge",
+              "layerType": "solid",
+              "opacityPermille": 900,
+              "rippleSources": []
+            },
+            "nodeId": "slate_badge",
+            "nodeType": "LAYER",
+            "visible": true
+          }
+        ],
+        "label": "Overlay",
+        "nodeId": "overlay_group",
+        "nodeType": "GROUP",
+        "visible": true
+      },
+      {
+        "children": [
+          {
+            "label": "Hidden composition guides",
+            "layer": {
+              "blendMode": "MULTIPLY",
+              "bounds": {
+                "height": 64,
+                "width": 96,
+                "x": 0,
+                "y": 0
+              },
+              "color": {
+                "alpha": 255,
+                "b": 220,
+                "g": 70,
+                "r": 220
+              },
+              "contentSummary": "rule-of-thirds-guide-lines",
+              "displayName": "Hidden composition guides",
+              "layerId": "guide_overlay",
+              "layerType": "guide",
+              "opacityPermille": 500,
+              "rippleSources": []
+            },
+            "nodeId": "guide_overlay",
+            "nodeType": "LAYER",
+            "visible": true
+          }
+        ],
+        "label": "Guides",
+        "nodeId": "guides_group",
+        "nodeType": "GROUP",
+        "visible": false
+      }
+    ],
+    "label": "Virtual production foreground stack",
+    "nodeId": "production_root",
+    "nodeType": "GROUP",
+    "visible": true
+  },
+  "projectId": "vpf-deterministic-20261127",
+  "schema": "VPF/3.0",
+  "seed": 20261127,
+  "timebase": {
+    "unit": "microsecond"
+  },
+  "version": 3
+}

@@ -1,0 +1,82 @@
+{
+  "code": "E_LOSSY",
+  "items": [
+    {
+      "code": "E_LOSSY",
+      "kind": "group_hierarchy",
+      "field_path": "$.layerTree",
+      "source_id": "production_root",
+      "disposition": "flatten_depth_first_and_bake_ancestor_visibility",
+      "precision_loss": false,
+      "detail": "v1 has only a flat ordered layer table"
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "group_hierarchy",
+      "field_path": "$.layerTree.children[0]",
+      "source_id": "scene_group",
+      "disposition": "flatten_depth_first_and_bake_ancestor_visibility",
+      "precision_loss": false,
+      "detail": "v1 has only a flat ordered layer table"
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "group_hierarchy",
+      "field_path": "$.layerTree.children[0].children[1]",
+      "source_id": "fx_group",
+      "disposition": "flatten_depth_first_and_bake_ancestor_visibility",
+      "precision_loss": false,
+      "detail": "v1 has only a flat ordered layer table"
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "group_hierarchy",
+      "field_path": "$.layerTree.children[1]",
+      "source_id": "overlay_group",
+      "disposition": "flatten_depth_first_and_bake_ancestor_visibility",
+      "precision_loss": false,
+      "detail": "v1 has only a flat ordered layer table"
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "group_hierarchy",
+      "field_path": "$.layerTree.children[2]",
+      "source_id": "guides_group",
+      "disposition": "flatten_depth_first_and_bake_ancestor_visibility",
+      "precision_loss": false,
+      "detail": "v1 has only a flat ordered layer table"
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "alpha_convention",
+      "field_path": "$.layers[0].color_rgba",
+      "source_id": "ground_base",
+      "disposition": "canonical_straight_to_v1_premultiplied_floor",
+      "precision_loss": false
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "alpha_convention",
+      "field_path": "$.layers[1].color_rgba",
+      "source_id": "ripple_mask",
+      "disposition": "canonical_straight_to_v1_premultiplied_floor",
+      "precision_loss": false
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "alpha_convention",
+      "field_path": "$.layers[2].color_rgba",
+      "source_id": "slate_badge",
+      "disposition": "canonical_straight_to_v1_premultiplied_floor",
+      "precision_loss": false
+    },
+    {
+      "code": "E_LOSSY",
+      "kind": "alpha_convention",
+      "field_path": "$.layers[3].color_rgba",
+      "source_id": "guide_overlay",
+      "disposition": "canonical_straight_to_v1_premultiplied_floor",
+      "precision_loss": false
+    }
+  ]
+}
