@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MaskQA 笔画方向与拓扑工作台</title>
+  <style>
+    :root {
+      --bg: #0b1220; --panel: #111c2f; --panel-2: #17243a; --line: #263653;
+      --text: #e5edf8; --muted: #93a4bd; --cyan: #39d5ff; --red: #ff6b6b;
+      --green: #46d39a; --yellow: #ffd166; --purple: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    header { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 14px; align-items: center; flex-wrap: wrap; background: #0d1728; }
+    header h1 { font-size: 18px; margin: 0 18px 0 0; letter-spacing: .02em; }
+    main { display: grid; grid-template-columns: minmax(520px, 1.25fr) 390px; gap: 14px; padding: 14px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+    .panel h2 { font-size: 14px; margin: 0 0 10px; color: #c9d8ef; display: flex; justify-content: space-between; align-items: center; }
+    label { color: var(--muted); font-size: 12px; display: block; margin: 8px 0 4px; }
+    select, input { width: 100%; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; }
+    button, .button { background: #1d4ed8; color: white; border: 0; border-radius: 8px; padding: 8px 12px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 13px; }
+    button.secondary, .button.secondary { background: #263653; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .canvas-wrap { background: #07101f; border: 1px solid var(--line); border-radius: 10px; padding: 8px; overflow: auto; }
+    canvas { width: 100%; min-width: 420px; image-rendering: pixelated; border-radius: 6px; display: block; }
+    .thumbs { display: grid; grid-template-columns: 120px 1fr 1fr; gap: 10px; align-items: start; }
+    .thumb { background: #07101f; border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
+    .thumb img, .thumb canvas { width: 100%; min-width: 0; }
+    .thumb .cap { color: var(--muted); font-size: 11px; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 6px 4px; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    .ok { color: var(--green); } .bad { color: var(--red); } .warn { color: var(--yellow); }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { border: 1px solid var(--line); background: var(--panel-2); border-radius: 999px; padding: 3px 8px; font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; color: #cfe0f7; }
+    .chip.invalid { border-color: #7f1d1d; background: #3b1218; color: #fecaca; }
+    .chip.reused { border-color: #14532d; background: #0f2e1f; color: #bbf7d0; }
+    .chip.verify { border-color: #4c1d95; background: #241642; color: #ddd6fe; }
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .metric { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+    .metric b { display: block; font-size: 16px; margin-top: 2px; }
+    .error { background: #3b1218; border: 1px solid #7f1d1d; color: #fecaca; padding: 10px; border-radius: 8px; white-space: pre-wrap; }
+    .muted { color: var(--muted); }
+    .flow { display: grid; gap: 6px; }
+    .flow-line { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .arrow { color: var(--muted); }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 12px; margin: 8px 0; }
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+    .dev-list { margin: 4px 0 0; padding-left: 16px; }
+    .dev-list li { color: #fecaca; }
+    @media (max-width: 1100px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>MaskQA 笔画方向 / 拓扑工作台</h1>
+  <label style="margin:0; min-width:220px;">固定种子样本
+    <select id="sampleSelect"></select>
+  </label>
+  <a class="button secondary" id="exportV1" href="#">导出 V1</a>
+  <a class="button secondary" id="exportV2" href="#">导出 V2</a>
+  <a class="button secondary" id="exportV3" href="#">导出 V3</a>
+  <button class="secondary" id="resetBtn">重置并重建检查点</button>
+  <span class="muted" id="recovery"></span>
+</header>
+
+<main>
+  <section>
+    <div class="panel">
+      <h2>候选掩码 × 积算掩码叠加</h2>
+      <div class="legend">
+        <span><i class="dot" style="background:#ff5a5a"></i>候选掩码</span>
+        <span><i class="dot" style="background:#27d7ff"></i>积算掩码</span>
+        <span><i class="dot" style="background:#e8fbff"></i>两者重叠</span>
+        <span><i class="dot" style="background:#46d39a"></i>参考真值轮廓/像素</span>
+      </div>
+      <div class="canvas-wrap"><canvas id="overlay"></canvas></div>
+    </div>
+    <div class="panel">
+      <h2>图标与单层掩码</h2>
+      <div class="thumbs">
+        <div class="thumb"><img id="icon" alt="icon"><div class="cap">确定性图标</div></div>
+        <div class="thumb"><canvas id="candidate"></canvas><div class="cap">候选掩码</div></div>
+        <div class="thumb"><canvas id="accumulated"></canvas><div class="cap">积算掩码</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>逐域偏差与方向核验</h2>
+      <div id="domains"></div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="panel">
+      <h2>笔画编辑</h2>
+      <label>笔画 ID</label>
+      <select id="strokeSelect"></select>
+      <div class="row">
+        <div><label>起点 X</label><input id="startX" type="number"></div>
+        <div><label>起点 Y</label><input id="startY" type="number"></div>
+      </div>
+      <div class="row">
+        <div><label>终点 X</label><input id="endX" type="number"></div>
+        <div><label>终点 Y</label><input id="endY" type="number"></div>
+      </div>
+      <div class="row">
+        <div><label>权重 /10000</label><input id="weight" type="number" min="0" max="10000"></div>
+        <div><label>工序优先级</label><input id="priority" type="number"></div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button id="applyBtn">提交增量编辑</button>
+        <button class="secondary" id="reloadBtn">刷新状态</button>
+      </div>
+      <div id="businessError" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="panel">
+      <h2>精确失效传播</h2>
+      <div id="invalidation" class="flow"><span class="muted">尚未编辑。</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>分块与缓存</h2>
+      <div id="tiles" class="chips"></div>
+      <div id="tileDetail" class="muted" style="margin-top:10px;">点击分块查看参与笔画与裁决依据。</div>
+    </div>
+
+    <div class="panel">
+      <h2>受限预算占用</h2>
+      <div id="budget" class="metric-grid"></div>
+    </div>
+
+    <div class="panel">
+      <h2>依赖图摘要</h2>
+      <div id="graph" class="flow"></div>
+    </div>
+  </aside>
+</main>
+
+<script>
+let state = null;
+
+const $ = (id) => document.getElementById(id);
+
+async function fetchState(sample) {
+  const res = await fetch('/api/state?sample=' + encodeURIComponent(sample ?? $('sampleSelect').value));
+  if (!res.ok) throw new Error(await res.text());
+  state = await res.json();
+  render();
+}
+
+function postJSON(url, body) {
+  return fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+}
+
+function sampleBase() {
+  return '/api/state?sample=' + state.sample_index;
+}
+
+function render() {
+  renderSampleSelect();
+  renderStrokeSelect();
+  renderCanvases();
+  renderDomains();
+  renderInvalidation();
+  renderTiles();
+  renderBudget();
+  renderGraph();
+  renderError();
+  renderRecoveryAndLinks();
+}
+
+function renderSampleSelect() {
+  const select = $('sampleSelect');
+  if (!select.options.length) {
+    for (const s of state.samples) {
+      const opt = document.createElement('option');
+      opt.value = s.index;
+      opt.textContent = `${s.id} (${s.width}×${s.height})`;
+      select.appendChild(opt);
+    }
+    select.onchange = () => fetchState(select.value);
+  }
+  select.value = state.sample_index;
+}
+
+function renderStrokeSelect() {
+  const select = $('strokeSelect');
+  const current = select.value;
+  select.innerHTML = '';
+  for (const s of state.project.strokes) {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = `${s.id} #${s.seq} p${s.priority} ${s.direction}`;
+    select.appendChild(opt);
+  }
+  if (current) select.value = current;
+  fillStrokeForm();
+  select.onchange = fillStrokeForm;
+}
+
+function selectedStroke() {
+  const id = $('strokeSelect').value;
+  return state.project.strokes.find(s => s.id === id);
+}
+
+function fillStrokeForm() {
+  const s = selectedStroke();
+  if (!s) return;
+  $('startX').value = s.start.x;
+  $('startY').value = s.start.y;
+  $('endX').value = s.end.x;
+  $('endY').value = s.end.y;
+  $('weight').value = s.weight_permyriad;
+  $('priority').value = s.priority;
+}
+
+function makeImageData(canvas, pixels, w, h, painter) {
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  const img = ctx.createImageData(w, h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = y * w + x;
+      const o = i * 4;
+      painter(img.data, o, pixels ? pixels[i] : 0, x, y);
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+function paintGray(data, o, v) {
+  data[o] = v; data[o+1] = v; data[o+2] = v; data[o+3] = 255;
+}
+
+function renderCanvases() {
+  const p = state.project, w = p.width, h = p.height;
+  $('icon').src = 'data:image/png;base64,' + state.icon_png_base64;
+  makeImageData($('candidate'), state.candidate_pix, w, h, (d,o,v) => paintGray(d,o,v));
+  makeImageData($('accumulated'), state.accumulated_pix, w, h, (d,o,v) => paintGray(d,o,v));
+  makeImageData($('overlay'), null, w, h, (d,o) => {
+    const i = o / 4;
+    const c = state.candidate_pix[i] / 255;
+    const a = state.accumulated_pix[i] / 255;
+    const r = state.reference_pix[i] / 255;
+    let red = 15, green = 23, blue = 42;
+    const blend = (rr, gg, bb, alpha) => {
+      red = red * (1-alpha) + rr * alpha;
+      green = green * (1-alpha) + gg * alpha;
+      blue = blue * (1-alpha) + bb * alpha;
+    };
+    if (r > 127/255) blend(70, 211, 154, 0.28);
+    if (c > 0) blend(255, 90, 90, 0.48 * c);
+    if (a > 0) blend(39, 215, 255, 0.58 * a);
+    d[o] = red; d[o+1] = green; d[o+2] = blue; d[o+3] = 255;
+  });
+}
+
+function renderDomains() {
+  const domains = state.result?.report?.domains || [];
+  if (!domains.length) { $('domains').innerHTML = '<span class="bad">没有提取到连通域。</span>'; return; }
+  let html = `<table><thead><tr><th>域</th><th>面积 实/真</th><th>孔洞 实/真</th><th>环宽‰px</th><th>方向</th><th>偏差</th></tr></thead><tbody>`;
+  for (const d of domains) {
+    const c = d.component, t = d.truth, dir = d.direction || {};
+    const devs = (d.deviations || []).map(x => `<li>${x.field}: ${x.message}</li>`).join('');
+    html += `<tr>
+      <td>#${d.domain_no}<div class="muted">truth ${d.truth_no}</div></td>
+      <td>${c.area}/${t.area}</td>
+      <td class="${c.holes === t.holes ? 'ok' : 'bad'}">${c.holes}/${t.holes}</td>
+      <td class="${Math.abs(c.band_width_milli-t.band_width_milli) <= (state.project.tolerances.band_width_milli_px||3000) ? 'ok' : 'bad'}">${(c.band_width_milli/1000).toFixed(1)}/${(t.band_width_milli/1000).toFixed(1)}</td>
+      <td class="${dir.consistent ? 'ok' : 'bad'}">${dir.observed || '—'}<div class="muted">${dir.score_permyriad/100}% / 期望 ${dir.expected}</div></td>
+      <td>${devs ? `<ul class="dev-list">${devs}</ul>` : '<span class="ok">在容差内</span>'}</td>
+    </tr>`;
+  }
+  $('domains').innerHTML = html + '</tbody></table>';
+}
+
+function renderInvalidation() {
+  const inv = state.result?.invalidation;
+  if (!inv) {
+    $('invalidation').innerHTML = '<span class="muted">当前为完整计算结果；提交编辑后这里显示精确传播。</span>';
+    return;
+  }
+  const invalid = (inv.invalid_tiles || []).map(t => `<span class="chip invalid">tile ${t.tx},${t.ty}</span>`).join('');
+  const reused = (inv.reusable_tiles || []).slice(0, 18).map(t => `<span class="chip reused">${t.tx},${t.ty}</span>`).join('');
+  $('invalidation').innerHTML = `
+    <div class="flow-line"><span class="chip">${inv.stroke_id}</span><span class="arrow">→</span><span class="chip invalid">order:composition</span><span class="arrow">→</span>${invalid}</div>
+    <div class="flow-line"><span class="arrow">→</span><span class="chip verify">verify:topology</span><span class="chip verify">verify:direction</span></div>
+    <div class="muted">变更字段：${(inv.changed_fields||[]).join(', ')}；失效 ${inv.invalid_tiles.length} 块，复用 ${inv.reusable_tiles.length} 块。</div>
+    <div class="chips">${reused}${inv.reusable_tiles.length > 18 ? '<span class="chip reused">…</span>' : ''}</div>`;
+}
+
+function renderTiles() {
+  const tiles = state.result?.tiles || [];
+  $('tiles').innerHTML = tiles.map(t => {
+    const cls = t.reused ? 'chip reused' : 'chip';
+    const title = `${t.coord.tx},${t.coord.ty} key=${t.cache_key} strokes=${(t.stroke_ids||[]).join(',')}`;
+    return `<span class="${cls}" style="cursor:pointer" title="${title}" onclick="showTile('${t.coord.tx},${t.coord.ty}')">${t.coord.tx},${t.coord.ty}${t.reused ? ' ↺' : ''}</span>`;
+  }).join('');
+}
+
+function showTile(coord) {
+  const [tx, ty] = coord.split(',').map(Number);
+  const t = (state.result?.tiles || []).find(x => x.coord.tx === tx && x.coord.ty === ty);
+  if (!t) return;
+  const strokes = (t.stroke_ids || []).map((id, i) => `<li><code>${id}</code> — ${(t.order_basis || [])[i] || ''}</li>`).join('');
+  $('tileDetail').innerHTML = `<b>tile ${coord}</b> · commits=${t.stroke_commits} · reused=${t.reused}<br><code>${t.cache_key}</code><ol style="padding-left:18px;margin:8px 0 0;">${strokes || '<li>无笔画，仅候选底图</li>'}</ol>`;
+}
+
+function renderBudget() {
+  const b = state.result?.budget || {};
+  const rows = [
+    ['最大并行度', b.parallelism_limit], ['峰值 Worker', b.peak_active_workers],
+    ['像素缓冲上限', b.buffer_pixel_cap], ['队列预算', b.queue_tile_budget],
+    ['峰值队列', b.peak_queue_depth], ['排队次数', b.queue_wait_count],
+    ['排队等待 ms', b.queue_wait_millis], ['缓冲等待 ms', b.buffer_wait_millis]
+  ];
+  $('budget').innerHTML = rows.map(([k,v]) => `<div class="metric"><span class="muted">${k}</span><b>${v ?? 0}</b></div>`).join('');
+}
+
+function renderGraph() {
+  const g = state.graph;
+  if (!g) return;
+  const tileCount = g.nodes.filter(n => n.kind === 'tile').length;
+  const strokeCount = g.nodes.filter(n => n.kind === 'stroke').length;
+  $('graph').innerHTML = `
+    <div class="flow-line"><span class="chip">${strokeCount} strokes</span><span class="arrow">→</span><span class="chip">order:composition</span></div>
+    <div class="flow-line"><span class="arrow">→</span><span class="chip">${tileCount} tile nodes</span><span class="arrow">→</span><span class="chip verify">topology</span><span class="chip verify">direction</span></div>
+    <div class="muted">边数 ${g.edges.length}；缓存键含输入哈希、笔画 ID、次序版本、换算版本和上游键。</div>`;
+}
+
+function renderError() {
+  const e = state.business_error;
+  $('businessError').innerHTML = e ? `<div class="error">${e.code} ${e.field || ''}\n${e.message}</div>` : '<span class="ok">核验在声明容差内通过。</span>';
+}
+
+function renderRecoveryAndLinks() {
+  const r = state.recovery || {};
+  $('recovery').textContent = r.action ? `检查点：${r.action}，最后序号 ${r.last_sequence}，恢复分块 ${r.recovered_tiles}` : '';
+  const sample = state.sample_index;
+  for (const v of ['v1','v2','v3']) $(`export${v.toUpperCase()}`).href = `/api/export?sample=${sample}&schema=${v}`;
+}
+
+$('sampleSelect').onchange = () => fetchState();
+$('reloadBtn').onclick = () => fetchState();
+$('resetBtn').onclick = async () => {
+  await postJSON('/api/reset?sample=' + $('sampleSelect').value);
+  await fetchState();
+};
+$('applyBtn').onclick = async () => {
+  const s = selectedStroke();
+  const body = {
+    sample_index: state.sample_index,
+    stroke_id: s.id,
+    start_x: Number($('startX').value), start_y: Number($('startY').value),
+    end_x: Number($('endX').value), end_y: Number($('endY').value),
+    weight_permyriad: Number($('weight').value), priority: Number($('priority').value)
+  };
+  const res = await postJSON('/api/edit', body);
+  state = await res.json();
+  render();
+};
+
+fetchState(0).catch(err => { document.body.insertAdjacentHTML('beforeend', '<pre class="error">'+err+'</pre>'); });
+</script>
+</body>
+</html>
