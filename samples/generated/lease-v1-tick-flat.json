@@ -1,0 +1,341 @@
+{
+  "boundary_policy": "lower_inclusive_upper_exclusive",
+  "failure_policy": "retain_original_deadline",
+  "holders": [
+    {
+      "holder_uid": "holder-order-a",
+      "lock_id": "lock-order",
+      "priority": 10
+    },
+    {
+      "holder_uid": "holder-order-wait",
+      "lock_id": "lock-order",
+      "priority": 1
+    },
+    {
+      "holder_uid": "holder-prio-high",
+      "lock_id": "lock-priority",
+      "priority": 10
+    },
+    {
+      "holder_uid": "holder-prio-low",
+      "lock_id": "lock-priority",
+      "priority": 5
+    },
+    {
+      "holder_uid": "holder-tie-a",
+      "lock_id": "lock-tie",
+      "priority": 7
+    },
+    {
+      "holder_uid": "holder-tie-b",
+      "lock_id": "lock-tie",
+      "priority": 7
+    },
+    {
+      "holder_uid": "holder-abandon",
+      "lock_id": "lock-abandon",
+      "priority": 1
+    },
+    {
+      "holder_uid": "holder-after-abandon",
+      "lock_id": "lock-abandon",
+      "priority": 1
+    },
+    {
+      "holder_uid": "holder-late",
+      "lock_id": "lock-late",
+      "priority": 1
+    },
+    {
+      "holder_uid": "holder-late-next",
+      "lock_id": "lock-late",
+      "priority": 1
+    }
+  ],
+  "locks": [
+    {
+      "lease_ticks": 30,
+      "lock_id": "lock-order",
+      "lock_mode": "exclusive",
+      "max_renew_duration_ticks": 30,
+      "max_renewals": 2,
+      "renew_attempt_budget": 8,
+      "renew_window_ticks": 10
+    },
+    {
+      "lease_ticks": 30,
+      "lock_id": "lock-priority",
+      "lock_mode": "shared",
+      "max_renew_duration_ticks": 30,
+      "max_renewals": 2,
+      "renew_attempt_budget": 8,
+      "renew_window_ticks": 10
+    },
+    {
+      "lease_ticks": 30,
+      "lock_id": "lock-tie",
+      "lock_mode": "shared",
+      "max_renew_duration_ticks": 30,
+      "max_renewals": 2,
+      "renew_attempt_budget": 8,
+      "renew_window_ticks": 10
+    },
+    {
+      "lease_ticks": 20,
+      "lock_id": "lock-abandon",
+      "lock_mode": "exclusive",
+      "max_renew_duration_ticks": 20,
+      "max_renewals": 1,
+      "renew_attempt_budget": 8,
+      "renew_window_ticks": 5
+    },
+    {
+      "lease_ticks": 20,
+      "lock_id": "lock-late",
+      "lock_mode": "exclusive",
+      "max_renew_duration_ticks": 20,
+      "max_renewals": 1,
+      "renew_attempt_budget": 8,
+      "renew_window_ticks": 5
+    }
+  ],
+  "ms_per_tick": 100,
+  "ops": [
+    {
+      "action": "acquire",
+      "at_tick": 0,
+      "contest_ref": "",
+      "holder_uid": "holder-order-a",
+      "op_no": 1,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 0,
+      "contest_ref": "",
+      "holder_uid": "holder-prio-high",
+      "op_no": 2,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 0,
+      "contest_ref": "",
+      "holder_uid": "holder-prio-low",
+      "op_no": 3,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 0,
+      "contest_ref": "",
+      "holder_uid": "holder-tie-a",
+      "op_no": 4,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 0,
+      "contest_ref": "",
+      "holder_uid": "holder-tie-b",
+      "op_no": 5,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 0,
+      "contest_ref": "",
+      "holder_uid": "holder-abandon",
+      "op_no": 6,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 0,
+      "contest_ref": "",
+      "holder_uid": "holder-late",
+      "op_no": 7,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "abandon",
+      "at_tick": 8,
+      "contest_ref": "",
+      "holder_uid": "holder-abandon",
+      "op_no": 8,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 10,
+      "contest_ref": "",
+      "holder_uid": "holder-order-wait",
+      "op_no": 9,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "renew",
+      "at_tick": 15,
+      "contest_ref": "",
+      "holder_uid": "holder-order-a",
+      "op_no": 10,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "acquire",
+      "at_tick": 19,
+      "contest_ref": "",
+      "holder_uid": "holder-after-abandon",
+      "op_no": 11,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "renew",
+      "at_tick": 20,
+      "contest_ref": "",
+      "holder_uid": "holder-order-a",
+      "op_no": 12,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "renew",
+      "at_tick": 20,
+      "contest_ref": "cohort-tie",
+      "holder_uid": "holder-tie-a",
+      "op_no": 13,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "renew",
+      "at_tick": 20,
+      "contest_ref": "cohort-priority",
+      "holder_uid": "holder-prio-low",
+      "op_no": 14,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "acquire",
+      "at_tick": 20,
+      "contest_ref": "",
+      "holder_uid": "holder-after-abandon",
+      "op_no": 15,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "renew",
+      "at_tick": 21,
+      "contest_ref": "cohort-tie",
+      "holder_uid": "holder-tie-b",
+      "op_no": 16,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "renew",
+      "at_tick": 21,
+      "contest_ref": "cohort-priority",
+      "holder_uid": "holder-prio-high",
+      "op_no": 17,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "renew",
+      "at_tick": 21,
+      "contest_ref": "",
+      "holder_uid": "holder-late",
+      "op_no": 18,
+      "renew_duration_ticks": 20
+    },
+    {
+      "action": "acquire",
+      "at_tick": 21,
+      "contest_ref": "",
+      "holder_uid": "holder-late-next",
+      "op_no": 19,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "release",
+      "at_tick": 22,
+      "contest_ref": "",
+      "holder_uid": "holder-late-next",
+      "op_no": 20,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "release",
+      "at_tick": 25,
+      "contest_ref": "",
+      "holder_uid": "holder-tie-a",
+      "op_no": 21,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 35,
+      "contest_ref": "",
+      "holder_uid": "holder-order-wait",
+      "op_no": 22,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "release",
+      "at_tick": 35,
+      "contest_ref": "",
+      "holder_uid": "holder-prio-high",
+      "op_no": 23,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "release",
+      "at_tick": 36,
+      "contest_ref": "",
+      "holder_uid": "holder-after-abandon",
+      "op_no": 24,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "renew",
+      "at_tick": 40,
+      "contest_ref": "",
+      "holder_uid": "holder-order-a",
+      "op_no": 25,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "renew",
+      "at_tick": 65,
+      "contest_ref": "",
+      "holder_uid": "holder-order-a",
+      "op_no": 26,
+      "renew_duration_ticks": 30
+    },
+    {
+      "action": "acquire",
+      "at_tick": 66,
+      "contest_ref": "",
+      "holder_uid": "holder-order-wait",
+      "op_no": 27,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "acquire",
+      "at_tick": 71,
+      "contest_ref": "",
+      "holder_uid": "holder-order-wait",
+      "op_no": 28,
+      "renew_duration_ticks": 0
+    },
+    {
+      "action": "release",
+      "at_tick": 75,
+      "contest_ref": "",
+      "holder_uid": "holder-order-wait",
+      "op_no": 29,
+      "renew_duration_ticks": 0
+    }
+  ],
+  "project_id": "lease-project-seed-20261127",
+  "schema": "lease.project/v1",
+  "seed": 20261127
+}

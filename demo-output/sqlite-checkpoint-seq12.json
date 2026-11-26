@@ -1,0 +1,79 @@
+{
+  "version": "lease-checkpoint/v1",
+  "schemaVersion": "lease-project/canonical-v1",
+  "projectId": "lease-project-seed-20261127",
+  "committedSeq": 12,
+  "holders": [
+    {
+      "holderId": "holder-abandon",
+      "resourceId": "lock-abandon",
+      "renewCount": 0,
+      "expiresAtMs": 2000,
+      "lastSeq": 6
+    },
+    {
+      "holderId": "holder-after-abandon",
+      "resourceId": "lock-abandon",
+      "renewCount": 0,
+      "expiresAtMs": 0,
+      "lastSeq": 0
+    },
+    {
+      "holderId": "holder-late",
+      "resourceId": "lock-late",
+      "renewCount": 0,
+      "expiresAtMs": 2000,
+      "lastSeq": 7
+    },
+    {
+      "holderId": "holder-late-next",
+      "resourceId": "lock-late",
+      "renewCount": 0,
+      "expiresAtMs": 0,
+      "lastSeq": 0
+    },
+    {
+      "holderId": "holder-order-a",
+      "resourceId": "lock-order",
+      "renewCount": 1,
+      "expiresAtMs": 5000,
+      "lastSeq": 12
+    },
+    {
+      "holderId": "holder-order-wait",
+      "resourceId": "lock-order",
+      "renewCount": 0,
+      "expiresAtMs": 0,
+      "lastSeq": 0
+    },
+    {
+      "holderId": "holder-prio-high",
+      "resourceId": "lock-priority",
+      "renewCount": 0,
+      "expiresAtMs": 3000,
+      "lastSeq": 2
+    },
+    {
+      "holderId": "holder-prio-low",
+      "resourceId": "lock-priority",
+      "renewCount": 0,
+      "expiresAtMs": 3000,
+      "lastSeq": 3
+    },
+    {
+      "holderId": "holder-tie-a",
+      "resourceId": "lock-tie",
+      "renewCount": 0,
+      "expiresAtMs": 3000,
+      "lastSeq": 4
+    },
+    {
+      "holderId": "holder-tie-b",
+      "resourceId": "lock-tie",
+      "renewCount": 0,
+      "expiresAtMs": 3000,
+      "lastSeq": 5
+    }
+  ],
+  "checksum": "a59db5ed4e9d0a3ef605261f0de4a552df4e00eafbdd70ed713ea6664baba035"
+}

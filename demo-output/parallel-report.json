@@ -1,0 +1,914 @@
+{
+  "report": {
+    "schemaVersion": "lease-project/canonical-v1",
+    "projectId": "lease-project-seed-20261127",
+    "seed": 20261127,
+    "toleranceMs": 0,
+    "results": [
+      {
+        "seq": 1,
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "kind": "acquire",
+        "atMs": 0,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 3000,
+        "remainingMs": 3000,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 1,
+          "event": "acquire_granted",
+          "reason": "exclusive lock lease TTL=3000ms"
+        }
+      },
+      {
+        "seq": 2,
+        "holderId": "holder-prio-high",
+        "resourceId": "lock-priority",
+        "kind": "acquire",
+        "atMs": 0,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 3000,
+        "remainingMs": 3000,
+        "source": {
+          "holderId": "holder-prio-high",
+          "seq": 2,
+          "event": "acquire_granted",
+          "reason": "shared lock lease TTL=3000ms"
+        }
+      },
+      {
+        "seq": 3,
+        "holderId": "holder-prio-low",
+        "resourceId": "lock-priority",
+        "kind": "acquire",
+        "atMs": 0,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 3000,
+        "remainingMs": 3000,
+        "source": {
+          "holderId": "holder-prio-low",
+          "seq": 3,
+          "event": "acquire_granted",
+          "reason": "shared lock lease TTL=3000ms"
+        }
+      },
+      {
+        "seq": 4,
+        "holderId": "holder-tie-a",
+        "resourceId": "lock-tie",
+        "kind": "acquire",
+        "atMs": 0,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 3000,
+        "remainingMs": 3000,
+        "source": {
+          "holderId": "holder-tie-a",
+          "seq": 4,
+          "event": "acquire_granted",
+          "reason": "shared lock lease TTL=3000ms"
+        }
+      },
+      {
+        "seq": 5,
+        "holderId": "holder-tie-b",
+        "resourceId": "lock-tie",
+        "kind": "acquire",
+        "atMs": 0,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 3000,
+        "remainingMs": 3000,
+        "source": {
+          "holderId": "holder-tie-b",
+          "seq": 5,
+          "event": "acquire_granted",
+          "reason": "shared lock lease TTL=3000ms"
+        }
+      },
+      {
+        "seq": 6,
+        "holderId": "holder-abandon",
+        "resourceId": "lock-abandon",
+        "kind": "acquire",
+        "atMs": 0,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 2000,
+        "remainingMs": 2000,
+        "source": {
+          "holderId": "holder-abandon",
+          "seq": 6,
+          "event": "acquire_granted",
+          "reason": "exclusive lock lease TTL=2000ms"
+        }
+      },
+      {
+        "seq": 7,
+        "holderId": "holder-late",
+        "resourceId": "lock-late",
+        "kind": "acquire",
+        "atMs": 0,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 2000,
+        "remainingMs": 2000,
+        "source": {
+          "holderId": "holder-late",
+          "seq": 7,
+          "event": "acquire_granted",
+          "reason": "exclusive lock lease TTL=2000ms"
+        }
+      },
+      {
+        "seq": 8,
+        "holderId": "holder-abandon",
+        "resourceId": "lock-abandon",
+        "kind": "abandon",
+        "atMs": 800,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 2000,
+        "remainingMs": 1200,
+        "source": {
+          "holderId": "holder-abandon",
+          "seq": 8,
+          "event": "abandon_observed",
+          "atMs": 800,
+          "reason": "holder abandoned operation flow; lease remains until deadline"
+        }
+      },
+      {
+        "seq": 9,
+        "holderId": "holder-order-wait",
+        "resourceId": "lock-order",
+        "kind": "acquire",
+        "atMs": 1000,
+        "code": "E_RESOURCE_HELD",
+        "granted": false,
+        "expiresAtMs": 3000,
+        "remainingMs": 2000,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 1,
+          "event": "active_lease_expiry",
+          "atMs": 3000,
+          "reason": "exclusive resource blocked by holder holder-order-a until its declared expiry"
+        }
+      },
+      {
+        "seq": 10,
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "kind": "renew",
+        "atMs": 1500,
+        "code": "E_RENEW_TOO_EARLY",
+        "granted": false,
+        "windowOpenMs": 2000,
+        "windowCloseMs": 3000,
+        "expiresAtMs": 3000,
+        "remainingMs": 1500,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 1,
+          "event": "original_lease_deadline",
+          "atMs": 3000,
+          "reason": "renewal arrived before inclusive window opening"
+        }
+      },
+      {
+        "seq": 11,
+        "holderId": "holder-after-abandon",
+        "resourceId": "lock-abandon",
+        "kind": "acquire",
+        "atMs": 1900,
+        "code": "E_RESOURCE_HELD",
+        "granted": false,
+        "expiresAtMs": 2000,
+        "remainingMs": 100,
+        "source": {
+          "holderId": "holder-abandon",
+          "seq": 6,
+          "event": "active_lease_expiry",
+          "atMs": 2000,
+          "reason": "exclusive resource blocked by holder holder-abandon until its declared expiry"
+        }
+      },
+      {
+        "seq": 12,
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "kind": "renew",
+        "atMs": 2000,
+        "code": "OK",
+        "granted": true,
+        "windowOpenMs": 2000,
+        "windowCloseMs": 3000,
+        "expiresAtMs": 5000,
+        "remainingMs": 1000,
+        "renewCount": 1,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 12,
+          "event": "renewal_granted",
+          "atMs": 2000,
+          "reason": "renewal accepted in [2000,3000); new expiry=5000ms"
+        }
+      },
+      {
+        "seq": 13,
+        "holderId": "holder-tie-a",
+        "resourceId": "lock-tie",
+        "kind": "renew",
+        "atMs": 2000,
+        "code": "OK",
+        "granted": true,
+        "windowOpenMs": 2000,
+        "windowCloseMs": 3000,
+        "expiresAtMs": 5000,
+        "remainingMs": 1000,
+        "renewCount": 1,
+        "arbitration": {
+          "cohort": "cohort-tie",
+          "candidateSeqs": [
+            13,
+            16
+          ],
+          "winnerSeq": 13,
+          "winnerHolderId": "holder-tie-a",
+          "rule": "priority_desc_then_seq_asc",
+          "temporalOverlap": true,
+          "basis": "priority tie at 7; fixed sequence order selects seq=13 over seq=16"
+        },
+        "source": {
+          "holderId": "holder-tie-a",
+          "seq": 13,
+          "event": "renewal_granted",
+          "atMs": 2000,
+          "reason": "renewal accepted in [2000,3000); new expiry=5000ms"
+        }
+      },
+      {
+        "seq": 14,
+        "holderId": "holder-prio-low",
+        "resourceId": "lock-priority",
+        "kind": "renew",
+        "atMs": 2000,
+        "code": "E_COMPETITION_LOST",
+        "granted": false,
+        "windowOpenMs": 2000,
+        "windowCloseMs": 3000,
+        "expiresAtMs": 3000,
+        "remainingMs": 1000,
+        "arbitration": {
+          "cohort": "cohort-priority",
+          "candidateSeqs": [
+            14,
+            17
+          ],
+          "winnerSeq": 17,
+          "winnerHolderId": "holder-prio-high",
+          "rule": "priority_desc_then_seq_asc",
+          "temporalOverlap": true,
+          "basis": "priority decides: holder-prio-high(priority=10,seq=17) \u003e holder-prio-low(priority=5,seq=14)"
+        },
+        "source": {
+          "holderId": "holder-prio-low",
+          "seq": 3,
+          "event": "original_lease_deadline",
+          "atMs": 3000,
+          "reason": "same-window arbitration selected another holder; original deadline retained"
+        }
+      },
+      {
+        "seq": 15,
+        "holderId": "holder-after-abandon",
+        "resourceId": "lock-abandon",
+        "kind": "acquire",
+        "atMs": 2000,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 4000,
+        "remainingMs": 2000,
+        "source": {
+          "holderId": "holder-after-abandon",
+          "seq": 15,
+          "event": "acquire_granted",
+          "atMs": 2000,
+          "reason": "exclusive lock lease TTL=2000ms"
+        }
+      },
+      {
+        "seq": 16,
+        "holderId": "holder-tie-b",
+        "resourceId": "lock-tie",
+        "kind": "renew",
+        "atMs": 2100,
+        "code": "E_COMPETITION_LOST",
+        "granted": false,
+        "windowOpenMs": 2000,
+        "windowCloseMs": 3000,
+        "expiresAtMs": 3000,
+        "remainingMs": 900,
+        "arbitration": {
+          "cohort": "cohort-tie",
+          "candidateSeqs": [
+            13,
+            16
+          ],
+          "winnerSeq": 13,
+          "winnerHolderId": "holder-tie-a",
+          "rule": "priority_desc_then_seq_asc",
+          "temporalOverlap": true,
+          "basis": "priority tie at 7; fixed sequence order selects seq=13 over seq=16"
+        },
+        "source": {
+          "holderId": "holder-tie-b",
+          "seq": 5,
+          "event": "original_lease_deadline",
+          "atMs": 3000,
+          "reason": "same-window arbitration selected another holder; original deadline retained"
+        }
+      },
+      {
+        "seq": 17,
+        "holderId": "holder-prio-high",
+        "resourceId": "lock-priority",
+        "kind": "renew",
+        "atMs": 2100,
+        "code": "OK",
+        "granted": true,
+        "windowOpenMs": 2000,
+        "windowCloseMs": 3000,
+        "expiresAtMs": 5100,
+        "remainingMs": 900,
+        "renewCount": 1,
+        "arbitration": {
+          "cohort": "cohort-priority",
+          "candidateSeqs": [
+            14,
+            17
+          ],
+          "winnerSeq": 17,
+          "winnerHolderId": "holder-prio-high",
+          "rule": "priority_desc_then_seq_asc",
+          "temporalOverlap": true,
+          "basis": "priority decides: holder-prio-high(priority=10,seq=17) \u003e holder-prio-low(priority=5,seq=14)"
+        },
+        "source": {
+          "holderId": "holder-prio-high",
+          "seq": 17,
+          "event": "renewal_granted",
+          "atMs": 2100,
+          "reason": "renewal accepted in [2000,3000); new expiry=5100ms"
+        }
+      },
+      {
+        "seq": 18,
+        "holderId": "holder-late",
+        "resourceId": "lock-late",
+        "kind": "renew",
+        "atMs": 2100,
+        "code": "E_RENEW_EXPIRED",
+        "granted": false,
+        "windowOpenMs": 1500,
+        "windowCloseMs": 2000,
+        "expiresAtMs": 2000,
+        "remainingMs": -100,
+        "source": {
+          "holderId": "holder-late",
+          "seq": 7,
+          "event": "original_lease_deadline",
+          "atMs": 2000,
+          "reason": "renewal arrived after declared expiry"
+        }
+      },
+      {
+        "seq": 19,
+        "holderId": "holder-late-next",
+        "resourceId": "lock-late",
+        "kind": "acquire",
+        "atMs": 2100,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 4100,
+        "remainingMs": 2000,
+        "source": {
+          "holderId": "holder-late-next",
+          "seq": 19,
+          "event": "acquire_granted",
+          "atMs": 2100,
+          "reason": "exclusive lock lease TTL=2000ms"
+        }
+      },
+      {
+        "seq": 20,
+        "holderId": "holder-late-next",
+        "resourceId": "lock-late",
+        "kind": "release",
+        "atMs": 2200,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 4100,
+        "source": {
+          "holderId": "holder-late-next",
+          "seq": 20,
+          "event": "manual_release",
+          "atMs": 2200,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "seq": 21,
+        "holderId": "holder-tie-a",
+        "resourceId": "lock-tie",
+        "kind": "release",
+        "atMs": 2500,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 5000,
+        "source": {
+          "holderId": "holder-tie-a",
+          "seq": 21,
+          "event": "manual_release",
+          "atMs": 2500,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "seq": 22,
+        "holderId": "holder-order-wait",
+        "resourceId": "lock-order",
+        "kind": "acquire",
+        "atMs": 3500,
+        "code": "E_RESOURCE_HELD",
+        "granted": false,
+        "expiresAtMs": 5000,
+        "remainingMs": 1500,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 12,
+          "event": "active_lease_expiry",
+          "atMs": 5000,
+          "reason": "exclusive resource blocked by holder holder-order-a until its declared expiry"
+        }
+      },
+      {
+        "seq": 23,
+        "holderId": "holder-prio-high",
+        "resourceId": "lock-priority",
+        "kind": "release",
+        "atMs": 3500,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 5100,
+        "source": {
+          "holderId": "holder-prio-high",
+          "seq": 23,
+          "event": "manual_release",
+          "atMs": 3500,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "seq": 24,
+        "holderId": "holder-after-abandon",
+        "resourceId": "lock-abandon",
+        "kind": "release",
+        "atMs": 3600,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 4000,
+        "source": {
+          "holderId": "holder-after-abandon",
+          "seq": 24,
+          "event": "manual_release",
+          "atMs": 3600,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "seq": 25,
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "kind": "renew",
+        "atMs": 4000,
+        "code": "OK",
+        "granted": true,
+        "windowOpenMs": 4000,
+        "windowCloseMs": 5000,
+        "expiresAtMs": 7000,
+        "remainingMs": 1000,
+        "renewCount": 2,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 25,
+          "event": "renewal_granted",
+          "atMs": 4000,
+          "reason": "renewal accepted in [4000,5000); new expiry=7000ms"
+        }
+      },
+      {
+        "seq": 26,
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "kind": "renew",
+        "atMs": 6500,
+        "code": "E_RENEW_LIMIT_REACHED",
+        "granted": false,
+        "windowOpenMs": 6000,
+        "windowCloseMs": 7000,
+        "expiresAtMs": 7000,
+        "remainingMs": 500,
+        "renewCount": 2,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 25,
+          "event": "original_lease_deadline",
+          "atMs": 7000,
+          "reason": "maximum successful renewal count reached; original deadline retained"
+        }
+      },
+      {
+        "seq": 27,
+        "holderId": "holder-order-wait",
+        "resourceId": "lock-order",
+        "kind": "acquire",
+        "atMs": 6600,
+        "code": "E_RESOURCE_HELD",
+        "granted": false,
+        "expiresAtMs": 7000,
+        "remainingMs": 400,
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 25,
+          "event": "active_lease_expiry",
+          "atMs": 7000,
+          "reason": "exclusive resource blocked by holder holder-order-a until its declared expiry"
+        }
+      },
+      {
+        "seq": 28,
+        "holderId": "holder-order-wait",
+        "resourceId": "lock-order",
+        "kind": "acquire",
+        "atMs": 7100,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 10100,
+        "remainingMs": 3000,
+        "source": {
+          "holderId": "holder-order-wait",
+          "seq": 28,
+          "event": "acquire_granted",
+          "atMs": 7100,
+          "reason": "exclusive lock lease TTL=3000ms"
+        }
+      },
+      {
+        "seq": 29,
+        "holderId": "holder-order-wait",
+        "resourceId": "lock-order",
+        "kind": "release",
+        "atMs": 7500,
+        "code": "OK",
+        "granted": true,
+        "expiresAtMs": 10100,
+        "source": {
+          "holderId": "holder-order-wait",
+          "seq": 29,
+          "event": "manual_release",
+          "atMs": 7500,
+          "reason": "holder released lock explicitly"
+        }
+      }
+    ],
+    "events": [
+      {
+        "order": 1,
+        "atMs": 2000,
+        "type": "lease_invalidated",
+        "holderId": "holder-abandon",
+        "resourceId": "lock-abandon",
+        "reason": "E_RENEW_EXPIRED",
+        "source": {
+          "holderId": "holder-abandon",
+          "seq": 6,
+          "event": "lease_expired",
+          "atMs": 2000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 2,
+        "atMs": 2000,
+        "type": "resource_released",
+        "holderId": "holder-abandon",
+        "resourceId": "lock-abandon",
+        "reason": "lease_expired",
+        "source": {
+          "holderId": "holder-abandon",
+          "seq": 6,
+          "event": "lease_expired",
+          "atMs": 2000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 3,
+        "atMs": 2000,
+        "type": "lease_invalidated",
+        "holderId": "holder-late",
+        "resourceId": "lock-late",
+        "reason": "E_RENEW_EXPIRED",
+        "source": {
+          "holderId": "holder-late",
+          "seq": 7,
+          "event": "lease_expired",
+          "atMs": 2000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 4,
+        "atMs": 2000,
+        "type": "resource_released",
+        "holderId": "holder-late",
+        "resourceId": "lock-late",
+        "reason": "lease_expired",
+        "source": {
+          "holderId": "holder-late",
+          "seq": 7,
+          "event": "lease_expired",
+          "atMs": 2000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 5,
+        "atMs": 2200,
+        "type": "resource_released",
+        "holderId": "holder-late-next",
+        "resourceId": "lock-late",
+        "reason": "manual_release",
+        "source": {
+          "holderId": "holder-late-next",
+          "seq": 20,
+          "event": "manual_release",
+          "atMs": 2200,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "order": 6,
+        "atMs": 2500,
+        "type": "resource_released",
+        "holderId": "holder-tie-a",
+        "resourceId": "lock-tie",
+        "reason": "manual_release",
+        "source": {
+          "holderId": "holder-tie-a",
+          "seq": 21,
+          "event": "manual_release",
+          "atMs": 2500,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "order": 7,
+        "atMs": 3000,
+        "type": "lease_invalidated",
+        "holderId": "holder-prio-low",
+        "resourceId": "lock-priority",
+        "reason": "E_RENEW_EXPIRED",
+        "source": {
+          "holderId": "holder-prio-low",
+          "seq": 3,
+          "event": "lease_expired",
+          "atMs": 3000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 8,
+        "atMs": 3000,
+        "type": "resource_released",
+        "holderId": "holder-prio-low",
+        "resourceId": "lock-priority",
+        "reason": "lease_expired",
+        "source": {
+          "holderId": "holder-prio-low",
+          "seq": 3,
+          "event": "lease_expired",
+          "atMs": 3000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 9,
+        "atMs": 3500,
+        "type": "resource_released",
+        "holderId": "holder-prio-high",
+        "resourceId": "lock-priority",
+        "reason": "manual_release",
+        "source": {
+          "holderId": "holder-prio-high",
+          "seq": 23,
+          "event": "manual_release",
+          "atMs": 3500,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "order": 10,
+        "atMs": 3600,
+        "type": "resource_released",
+        "holderId": "holder-after-abandon",
+        "resourceId": "lock-abandon",
+        "reason": "manual_release",
+        "source": {
+          "holderId": "holder-after-abandon",
+          "seq": 24,
+          "event": "manual_release",
+          "atMs": 3600,
+          "reason": "holder released lock explicitly"
+        }
+      },
+      {
+        "order": 11,
+        "atMs": 7000,
+        "type": "lease_invalidated",
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "reason": "E_RENEW_EXPIRED",
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 25,
+          "event": "lease_expired",
+          "atMs": 7000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 12,
+        "atMs": 7000,
+        "type": "resource_released",
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "reason": "lease_expired",
+        "source": {
+          "holderId": "holder-order-a",
+          "seq": 25,
+          "event": "lease_expired",
+          "atMs": 7000,
+          "reason": "integer-millisecond deadline reached; invalidation precedes release"
+        }
+      },
+      {
+        "order": 13,
+        "atMs": 7500,
+        "type": "resource_released",
+        "holderId": "holder-order-wait",
+        "resourceId": "lock-order",
+        "reason": "manual_release",
+        "source": {
+          "holderId": "holder-order-wait",
+          "seq": 29,
+          "event": "manual_release",
+          "atMs": 7500,
+          "reason": "holder released lock explicitly"
+        }
+      }
+    ],
+    "holderStates": [
+      {
+        "holderId": "holder-order-a",
+        "resourceId": "lock-order",
+        "active": false,
+        "renewCount": 2,
+        "expiresAtMs": 7000,
+        "lastSeq": 25
+      },
+      {
+        "holderId": "holder-order-wait",
+        "resourceId": "lock-order",
+        "active": false,
+        "renewCount": 0,
+        "expiresAtMs": 10100,
+        "lastSeq": 29
+      },
+      {
+        "holderId": "holder-prio-high",
+        "resourceId": "lock-priority",
+        "active": false,
+        "renewCount": 1,
+        "expiresAtMs": 5100,
+        "lastSeq": 23
+      },
+      {
+        "holderId": "holder-prio-low",
+        "resourceId": "lock-priority",
+        "active": false,
+        "renewCount": 0,
+        "expiresAtMs": 3000,
+        "lastSeq": 3
+      },
+      {
+        "holderId": "holder-tie-a",
+        "resourceId": "lock-tie",
+        "active": false,
+        "renewCount": 1,
+        "expiresAtMs": 5000,
+        "lastSeq": 21
+      },
+      {
+        "holderId": "holder-tie-b",
+        "resourceId": "lock-tie",
+        "active": true,
+        "renewCount": 0,
+        "expiresAtMs": 3000,
+        "lastSeq": 5
+      },
+      {
+        "holderId": "holder-abandon",
+        "resourceId": "lock-abandon",
+        "active": false,
+        "renewCount": 0,
+        "expiresAtMs": 2000,
+        "lastSeq": 6
+      },
+      {
+        "holderId": "holder-after-abandon",
+        "resourceId": "lock-abandon",
+        "active": false,
+        "renewCount": 0,
+        "expiresAtMs": 4000,
+        "lastSeq": 24
+      },
+      {
+        "holderId": "holder-late",
+        "resourceId": "lock-late",
+        "active": false,
+        "renewCount": 0,
+        "expiresAtMs": 2000,
+        "lastSeq": 7
+      },
+      {
+        "holderId": "holder-late-next",
+        "resourceId": "lock-late",
+        "active": false,
+        "renewCount": 0,
+        "expiresAtMs": 4100,
+        "lastSeq": 20
+      }
+    ]
+  },
+  "observations": [
+    {
+      "resourceId": "lock-tie",
+      "holderCount": 2,
+      "operationCount": 5,
+      "renewalCount": 2,
+      "attemptBudget": 8,
+      "elapsedNanoseconds": 94061
+    },
+    {
+      "resourceId": "lock-priority",
+      "holderCount": 2,
+      "operationCount": 5,
+      "renewalCount": 2,
+      "attemptBudget": 8,
+      "elapsedNanoseconds": 243638
+    },
+    {
+      "resourceId": "lock-order",
+      "holderCount": 2,
+      "operationCount": 10,
+      "renewalCount": 4,
+      "attemptBudget": 8,
+      "elapsedNanoseconds": 89528
+    },
+    {
+      "resourceId": "lock-late",
+      "holderCount": 2,
+      "operationCount": 4,
+      "renewalCount": 1,
+      "attemptBudget": 8,
+      "elapsedNanoseconds": 180975
+    },
+    {
+      "resourceId": "lock-abandon",
+      "holderCount": 2,
+      "operationCount": 5,
+      "renewalCount": 0,
+      "attemptBudget": 8,
+      "elapsedNanoseconds": 77120
+    }
+  ],
+  "workers": 4,
+  "batchSize": 2
+}

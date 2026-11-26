@@ -1,0 +1,56 @@
+[
+  {
+    "case": "duplicate_holder_id",
+    "code": "E_DUPLICATE_HOLDER",
+    "context": "E_DUPLICATE_HOLDER (holders[10].id): duplicate holder identifier \"holder-order-a\"",
+    "stable": true
+  },
+  {
+    "case": "negative_renewal_duration",
+    "code": "E_INVALID_DURATION",
+    "context": "E_INVALID_DURATION (operations[9].renewForMs; holder=holder-order-a; seq=10): renew duration must be positive, got -50",
+    "stable": true
+  },
+  {
+    "case": "out_of_bounds_renewal_duration",
+    "code": "E_INVALID_DURATION",
+    "context": "E_INVALID_DURATION (operations[9].renewForMs; holder=holder-order-a; seq=10): renew duration 1000000000 exceeds declared bound 3000",
+    "stable": true
+  },
+  {
+    "case": "renewal_request_beyond_max",
+    "code": "E_RENEW_LIMIT_REACHED",
+    "context": "maximum successful renewal count reached; original deadline retained",
+    "stable": true
+  },
+  {
+    "case": "worker_budget_out_of_range",
+    "code": "E_WORKER_BUDGET_OOR",
+    "context": "E_WORKER_BUDGET_OOR (options.workers): worker budget must be in [1,64], got 128",
+    "stable": true
+  },
+  {
+    "case": "attempt_budget_out_of_range",
+    "code": "E_ATTEMPT_BUDGET_OOR",
+    "context": "E_ATTEMPT_BUDGET_OOR (options.attemptBudgetPerResource): attempt budget must be in [1,100000], got -1",
+    "stable": true
+  },
+  {
+    "case": "truncated_checkpoint",
+    "code": "E_CHECKPOINT_TRUNCATED",
+    "context": "E_CHECKPOINT_TRUNCATED (demo-output/exceptions/truncated-file/commit-seq.json): malformed/truncated JSON at byte 19: unexpected end of JSON input",
+    "stable": true
+  },
+  {
+    "case": "version_mismatch_snapshot",
+    "code": "E_SCHEMA_VERSION_MISMATCH",
+    "context": "E_SCHEMA_VERSION_MISMATCH (demo-output/exceptions/version-mismatch-file/commit-seq.json): checkpoint=lease-checkpoint/v1/lease-project/v0-snapshot want=lease-checkpoint/v1/lease-project/canonical-v1",
+    "stable": true
+  },
+  {
+    "case": "sqlite_version_mismatch_snapshot",
+    "code": "E_SCHEMA_VERSION_MISMATCH",
+    "context": "E_SCHEMA_VERSION_MISMATCH (demo-output/exceptions/version-mismatch.db): checkpoint=lease-checkpoint/v0/lease-project/canonical-v1 want=lease-checkpoint/v1/lease-project/canonical-v1",
+    "stable": true
+  }
+]

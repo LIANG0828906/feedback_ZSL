@@ -1,0 +1,353 @@
+{
+  "boundaryPolicy": "lower_inclusive_upper_exclusive",
+  "failurePolicy": "retain_original_deadline",
+  "lockTree": [
+    {
+      "holders": [
+        {
+          "holderId": "holder-order-a",
+          "priority": 10
+        },
+        {
+          "holderId": "holder-order-wait",
+          "priority": 1
+        }
+      ],
+      "leaseDurationMs": 3000,
+      "lockId": "lock-order",
+      "lockMode": "exclusive",
+      "maxRenewDurationMs": 3000,
+      "maxRenewals": 2,
+      "renewAttemptBudget": 8,
+      "renewWindow": {
+        "kind": "remaining_ttl",
+        "remainingTtlMs": 1000
+      }
+    },
+    {
+      "holders": [
+        {
+          "holderId": "holder-prio-high",
+          "priority": 10
+        },
+        {
+          "holderId": "holder-prio-low",
+          "priority": 5
+        }
+      ],
+      "leaseDurationMs": 3000,
+      "lockId": "lock-priority",
+      "lockMode": "shared",
+      "maxRenewDurationMs": 3000,
+      "maxRenewals": 2,
+      "renewAttemptBudget": 8,
+      "renewWindow": {
+        "kind": "remaining_ttl",
+        "remainingTtlMs": 1000
+      }
+    },
+    {
+      "holders": [
+        {
+          "holderId": "holder-tie-a",
+          "priority": 7
+        },
+        {
+          "holderId": "holder-tie-b",
+          "priority": 7
+        }
+      ],
+      "leaseDurationMs": 3000,
+      "lockId": "lock-tie",
+      "lockMode": "shared",
+      "maxRenewDurationMs": 3000,
+      "maxRenewals": 2,
+      "renewAttemptBudget": 8,
+      "renewWindow": {
+        "kind": "remaining_ttl",
+        "remainingTtlMs": 1000
+      }
+    },
+    {
+      "holders": [
+        {
+          "holderId": "holder-abandon",
+          "priority": 1
+        },
+        {
+          "holderId": "holder-after-abandon",
+          "priority": 1
+        }
+      ],
+      "leaseDurationMs": 2000,
+      "lockId": "lock-abandon",
+      "lockMode": "exclusive",
+      "maxRenewDurationMs": 2000,
+      "maxRenewals": 1,
+      "renewAttemptBudget": 8,
+      "renewWindow": {
+        "kind": "remaining_ttl",
+        "remainingTtlMs": 500
+      }
+    },
+    {
+      "holders": [
+        {
+          "holderId": "holder-late",
+          "priority": 1
+        },
+        {
+          "holderId": "holder-late-next",
+          "priority": 1
+        }
+      ],
+      "leaseDurationMs": 2000,
+      "lockId": "lock-late",
+      "lockMode": "exclusive",
+      "maxRenewDurationMs": 2000,
+      "maxRenewals": 1,
+      "renewAttemptBudget": 8,
+      "renewWindow": {
+        "kind": "remaining_ttl",
+        "remainingTtlMs": 500
+      }
+    }
+  ],
+  "operations": [
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 0,
+      "holderId": "holder-order-a",
+      "renewDurationMs": 0,
+      "seq": 1
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 0,
+      "holderId": "holder-prio-high",
+      "renewDurationMs": 0,
+      "seq": 2
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 0,
+      "holderId": "holder-prio-low",
+      "renewDurationMs": 0,
+      "seq": 3
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 0,
+      "holderId": "holder-tie-a",
+      "renewDurationMs": 0,
+      "seq": 4
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 0,
+      "holderId": "holder-tie-b",
+      "renewDurationMs": 0,
+      "seq": 5
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 0,
+      "holderId": "holder-abandon",
+      "renewDurationMs": 0,
+      "seq": 6
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 0,
+      "holderId": "holder-late",
+      "renewDurationMs": 0,
+      "seq": 7
+    },
+    {
+      "action": "abandon",
+      "arbitrationGroup": "",
+      "atMs": 800,
+      "holderId": "holder-abandon",
+      "renewDurationMs": 0,
+      "seq": 8
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 1000,
+      "holderId": "holder-order-wait",
+      "renewDurationMs": 0,
+      "seq": 9
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "",
+      "atMs": 1500,
+      "holderId": "holder-order-a",
+      "renewDurationMs": 3000,
+      "seq": 10
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 1900,
+      "holderId": "holder-after-abandon",
+      "renewDurationMs": 0,
+      "seq": 11
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "",
+      "atMs": 2000,
+      "holderId": "holder-order-a",
+      "renewDurationMs": 3000,
+      "seq": 12
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "cohort-tie",
+      "atMs": 2000,
+      "holderId": "holder-tie-a",
+      "renewDurationMs": 3000,
+      "seq": 13
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "cohort-priority",
+      "atMs": 2000,
+      "holderId": "holder-prio-low",
+      "renewDurationMs": 3000,
+      "seq": 14
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 2000,
+      "holderId": "holder-after-abandon",
+      "renewDurationMs": 0,
+      "seq": 15
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "cohort-tie",
+      "atMs": 2100,
+      "holderId": "holder-tie-b",
+      "renewDurationMs": 3000,
+      "seq": 16
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "cohort-priority",
+      "atMs": 2100,
+      "holderId": "holder-prio-high",
+      "renewDurationMs": 3000,
+      "seq": 17
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "",
+      "atMs": 2100,
+      "holderId": "holder-late",
+      "renewDurationMs": 2000,
+      "seq": 18
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 2100,
+      "holderId": "holder-late-next",
+      "renewDurationMs": 0,
+      "seq": 19
+    },
+    {
+      "action": "release",
+      "arbitrationGroup": "",
+      "atMs": 2200,
+      "holderId": "holder-late-next",
+      "renewDurationMs": 0,
+      "seq": 20
+    },
+    {
+      "action": "release",
+      "arbitrationGroup": "",
+      "atMs": 2500,
+      "holderId": "holder-tie-a",
+      "renewDurationMs": 0,
+      "seq": 21
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 3500,
+      "holderId": "holder-order-wait",
+      "renewDurationMs": 0,
+      "seq": 22
+    },
+    {
+      "action": "release",
+      "arbitrationGroup": "",
+      "atMs": 3500,
+      "holderId": "holder-prio-high",
+      "renewDurationMs": 0,
+      "seq": 23
+    },
+    {
+      "action": "release",
+      "arbitrationGroup": "",
+      "atMs": 3600,
+      "holderId": "holder-after-abandon",
+      "renewDurationMs": 0,
+      "seq": 24
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "",
+      "atMs": 4000,
+      "holderId": "holder-order-a",
+      "renewDurationMs": 3000,
+      "seq": 25
+    },
+    {
+      "action": "renew",
+      "arbitrationGroup": "",
+      "atMs": 6500,
+      "holderId": "holder-order-a",
+      "renewDurationMs": 3000,
+      "seq": 26
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 6600,
+      "holderId": "holder-order-wait",
+      "renewDurationMs": 0,
+      "seq": 27
+    },
+    {
+      "action": "acquire",
+      "arbitrationGroup": "",
+      "atMs": 7100,
+      "holderId": "holder-order-wait",
+      "renewDurationMs": 0,
+      "seq": 28
+    },
+    {
+      "action": "release",
+      "arbitrationGroup": "",
+      "atMs": 7500,
+      "holderId": "holder-order-wait",
+      "renewDurationMs": 0,
+      "seq": 29
+    }
+  ],
+  "projectId": "lease-project-seed-20261127",
+  "schemaVersion": "lease.project/v2",
+  "seed": 20261127
+}

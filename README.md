@@ -19,3 +19,32 @@
 
 验收：
 使用本地生成的租约工程验证三版本装载、续约竞争裁决、连锁失效与检查点恢复结果一致。
+
+---
+
+## 交付入口
+
+实现与详细设计见 `docs/DESIGN.md`。最快验证方式：
+
+```bash
+./scripts/demo.sh
+```
+
+也可分步运行：
+
+```bash
+GOPROXY=off go test ./...
+go run ./cmd/leasegen -out samples/generated
+go run ./cmd/leasedemo demo-output
+```
+
+关键产物：
+
+- `samples/generated/lease-v1-tick-flat.json`：snake_case、tick、扁平持有者表。
+- `samples/generated/lease-v2-ms-nested.json`：camelCase、毫秒、剩余 TTL 窗口、嵌套树。
+- `samples/generated/lease-v3-seconds-absolute.json`：PascalCase、精确十进制秒、绝对初始窗口、可选失败原因。
+- `samples/generated/truth.json`：逐操作判定、仲裁依据、失效/释放事件真值。
+- `demo-output/summary.json`：三版本一致性、增量、并行、SQLite 恢复和异常码摘要。
+
+当前环境已验证 `go test ./...`、`go test -race ./...`、`go vet ./...`、
+`CGO_ENABLED=0 go build ./...` 和一键演示全部通过。

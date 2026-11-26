@@ -1,0 +1,304 @@
+{
+  "schemaVersion": "lease-project/canonical-v1",
+  "projectId": "lease-project-seed-20261127",
+  "seed": 20261127,
+  "boundaryPolicy": "lower_inclusive_upper_exclusive",
+  "failurePolicy": "retain_original_deadline",
+  "resources": [
+    {
+      "id": "lock-order",
+      "mode": "exclusive",
+      "leaseTtlMs": 3000,
+      "renewWindowMs": 1000,
+      "maxRenewals": 2,
+      "maxRenewDurationMs": 3000,
+      "renewAttemptBudget": 8
+    },
+    {
+      "id": "lock-priority",
+      "mode": "shared",
+      "leaseTtlMs": 3000,
+      "renewWindowMs": 1000,
+      "maxRenewals": 2,
+      "maxRenewDurationMs": 3000,
+      "renewAttemptBudget": 8
+    },
+    {
+      "id": "lock-tie",
+      "mode": "shared",
+      "leaseTtlMs": 3000,
+      "renewWindowMs": 1000,
+      "maxRenewals": 2,
+      "maxRenewDurationMs": 3000,
+      "renewAttemptBudget": 8
+    },
+    {
+      "id": "lock-abandon",
+      "mode": "exclusive",
+      "leaseTtlMs": 2000,
+      "renewWindowMs": 500,
+      "maxRenewals": 1,
+      "maxRenewDurationMs": 2000,
+      "renewAttemptBudget": 8
+    },
+    {
+      "id": "lock-late",
+      "mode": "exclusive",
+      "leaseTtlMs": 2000,
+      "renewWindowMs": 500,
+      "maxRenewals": 1,
+      "maxRenewDurationMs": 2000,
+      "renewAttemptBudget": 8
+    }
+  ],
+  "holders": [
+    {
+      "id": "holder-order-a",
+      "resourceId": "lock-order",
+      "priority": 10
+    },
+    {
+      "id": "holder-order-wait",
+      "resourceId": "lock-order",
+      "priority": 1
+    },
+    {
+      "id": "holder-prio-high",
+      "resourceId": "lock-priority",
+      "priority": 10
+    },
+    {
+      "id": "holder-prio-low",
+      "resourceId": "lock-priority",
+      "priority": 5
+    },
+    {
+      "id": "holder-tie-a",
+      "resourceId": "lock-tie",
+      "priority": 7
+    },
+    {
+      "id": "holder-tie-b",
+      "resourceId": "lock-tie",
+      "priority": 7
+    },
+    {
+      "id": "holder-abandon",
+      "resourceId": "lock-abandon",
+      "priority": 1
+    },
+    {
+      "id": "holder-after-abandon",
+      "resourceId": "lock-abandon",
+      "priority": 1
+    },
+    {
+      "id": "holder-late",
+      "resourceId": "lock-late",
+      "priority": 1
+    },
+    {
+      "id": "holder-late-next",
+      "resourceId": "lock-late",
+      "priority": 1
+    }
+  ],
+  "operations": [
+    {
+      "seq": 1,
+      "holderId": "holder-order-a",
+      "kind": "acquire",
+      "atMs": 0
+    },
+    {
+      "seq": 2,
+      "holderId": "holder-prio-high",
+      "kind": "acquire",
+      "atMs": 0
+    },
+    {
+      "seq": 3,
+      "holderId": "holder-prio-low",
+      "kind": "acquire",
+      "atMs": 0
+    },
+    {
+      "seq": 4,
+      "holderId": "holder-tie-a",
+      "kind": "acquire",
+      "atMs": 0
+    },
+    {
+      "seq": 5,
+      "holderId": "holder-tie-b",
+      "kind": "acquire",
+      "atMs": 0
+    },
+    {
+      "seq": 6,
+      "holderId": "holder-abandon",
+      "kind": "acquire",
+      "atMs": 0
+    },
+    {
+      "seq": 7,
+      "holderId": "holder-late",
+      "kind": "acquire",
+      "atMs": 0
+    },
+    {
+      "seq": 8,
+      "holderId": "holder-abandon",
+      "kind": "abandon",
+      "atMs": 800
+    },
+    {
+      "seq": 9,
+      "holderId": "holder-order-wait",
+      "kind": "acquire",
+      "atMs": 1000,
+      "expectedReason": "E_RESOURCE_HELD"
+    },
+    {
+      "seq": 10,
+      "holderId": "holder-order-a",
+      "kind": "renew",
+      "atMs": 1500,
+      "renewForMs": 3000,
+      "expectedReason": "E_RENEW_TOO_EARLY"
+    },
+    {
+      "seq": 11,
+      "holderId": "holder-after-abandon",
+      "kind": "acquire",
+      "atMs": 1900,
+      "expectedReason": "E_RESOURCE_HELD"
+    },
+    {
+      "seq": 12,
+      "holderId": "holder-order-a",
+      "kind": "renew",
+      "atMs": 2000,
+      "renewForMs": 3000
+    },
+    {
+      "seq": 13,
+      "holderId": "holder-tie-a",
+      "kind": "renew",
+      "atMs": 2000,
+      "renewForMs": 3000,
+      "cohort": "cohort-tie"
+    },
+    {
+      "seq": 14,
+      "holderId": "holder-prio-low",
+      "kind": "renew",
+      "atMs": 2000,
+      "renewForMs": 3000,
+      "cohort": "cohort-priority",
+      "expectedReason": "E_COMPETITION_LOST"
+    },
+    {
+      "seq": 15,
+      "holderId": "holder-after-abandon",
+      "kind": "acquire",
+      "atMs": 2000
+    },
+    {
+      "seq": 16,
+      "holderId": "holder-tie-b",
+      "kind": "renew",
+      "atMs": 2100,
+      "renewForMs": 3000,
+      "cohort": "cohort-tie",
+      "expectedReason": "E_COMPETITION_LOST"
+    },
+    {
+      "seq": 17,
+      "holderId": "holder-prio-high",
+      "kind": "renew",
+      "atMs": 2100,
+      "renewForMs": 3000,
+      "cohort": "cohort-priority"
+    },
+    {
+      "seq": 18,
+      "holderId": "holder-late",
+      "kind": "renew",
+      "atMs": 2100,
+      "renewForMs": 2000,
+      "expectedReason": "E_RENEW_EXPIRED"
+    },
+    {
+      "seq": 19,
+      "holderId": "holder-late-next",
+      "kind": "acquire",
+      "atMs": 2100
+    },
+    {
+      "seq": 20,
+      "holderId": "holder-late-next",
+      "kind": "release",
+      "atMs": 2200
+    },
+    {
+      "seq": 21,
+      "holderId": "holder-tie-a",
+      "kind": "release",
+      "atMs": 2500
+    },
+    {
+      "seq": 22,
+      "holderId": "holder-order-wait",
+      "kind": "acquire",
+      "atMs": 3500,
+      "expectedReason": "E_RESOURCE_HELD"
+    },
+    {
+      "seq": 23,
+      "holderId": "holder-prio-high",
+      "kind": "release",
+      "atMs": 3500
+    },
+    {
+      "seq": 24,
+      "holderId": "holder-after-abandon",
+      "kind": "release",
+      "atMs": 3600
+    },
+    {
+      "seq": 25,
+      "holderId": "holder-order-a",
+      "kind": "renew",
+      "atMs": 4000,
+      "renewForMs": 3000
+    },
+    {
+      "seq": 26,
+      "holderId": "holder-order-a",
+      "kind": "renew",
+      "atMs": 6500,
+      "renewForMs": 3000,
+      "expectedReason": "E_RENEW_LIMIT_REACHED"
+    },
+    {
+      "seq": 27,
+      "holderId": "holder-order-wait",
+      "kind": "acquire",
+      "atMs": 6600,
+      "expectedReason": "E_RESOURCE_HELD"
+    },
+    {
+      "seq": 28,
+      "holderId": "holder-order-wait",
+      "kind": "acquire",
+      "atMs": 7100
+    },
+    {
+      "seq": 29,
+      "holderId": "holder-order-wait",
+      "kind": "release",
+      "atMs": 7500
+    }
+  ]
+}

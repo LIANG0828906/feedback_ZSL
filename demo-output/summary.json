@@ -1,0 +1,20 @@
+{
+  "outputDir": "demo-output",
+  "seed": 20261127,
+  "schemaParity": true,
+  "truthParity": true,
+  "incrementalParity": true,
+  "parallelParity": true,
+  "sqliteHeader": true,
+  "crashDetectionCode": "E_CHECKPOINT_INCOMPLETE",
+  "recoveryCode": "E_CHECKPOINT_INCOMPLETE",
+  "exceptionObservations": 9,
+  "allExceptionCodes": true,
+  "sourceUnmodified": true,
+  "keyDecisions": [
+    "seq=12 lower boundary at 2000ms accepted",
+    "seq=14 priority loses to seq=17 despite earlier operation sequence",
+    "seq=16 tie loses to seq=13 by fixed sequence order",
+    "holder-order-a deadline 7000ms releases; seq=28 at 7100ms acquires"
+  ]
+}
