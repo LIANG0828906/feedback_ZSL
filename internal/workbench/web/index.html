@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>日志与崩溃恢复工作台</title>
+  <style>
+    :root { color-scheme: light; --bg:#f6f7fb; --card:#fff; --line:#d9deea; --ink:#172033; --muted:#667085; --blue:#2457d6; --red:#b42318; --amber:#b54708; --green:#067647; --mono: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+    header { padding:20px 28px; background:#101828; color:#fff; }
+    header h1 { margin:0 0 4px; font-size:22px; }
+    header p { margin:0; color:#cbd5e1; }
+    main { padding:20px 28px 60px; max-width:1500px; margin:0 auto; }
+    .grid { display:grid; grid-template-columns: 340px 1fr; gap:16px; align-items:start; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; box-shadow:0 1px 2px rgba(16,24,40,.04); margin-bottom:16px; }
+    .card h2 { font-size:15px; margin:0 0 12px; display:flex; align-items:center; gap:8px; }
+    .card h3 { font-size:13px; margin:14px 0 8px; color:#344054; }
+    button { border:1px solid #b9c4df; background:#fff; color:#1d3f9f; border-radius:8px; padding:7px 10px; margin:3px 4px 3px 0; cursor:pointer; font-weight:600; }
+    button:hover { background:#eef4ff; }
+    button.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    button.danger { color:var(--red); border-color:#f0a9a2; }
+    button.active { background:#172b68; color:#fff; border-color:#172b68; }
+    input,select { padding:6px 8px; border:1px solid var(--line); border-radius:7px; margin:3px 6px 3px 0; width:92px; }
+    input.wide { width:180px; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid #e8ecf4; padding:7px 8px; text-align:left; vertical-align:top; }
+    th { background:#f8fafc; color:#475467; position:sticky; top:0; }
+    code,.mono { font-family:var(--mono); font-size:11px; }
+    pre { background:#0b1020; color:#d7e3ff; padding:12px; border-radius:10px; overflow:auto; max-height:360px; font-size:11px; }
+    .pill { display:inline-block; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; background:#eef2f6; color:#344054; margin:1px 2px; }
+    .pill.ok { background:#dcfae6; color:var(--green); }
+    .pill.bad { background:#fee4e2; color:var(--red); }
+    .pill.warn { background:#fef0c7; color:var(--amber); }
+    .pill.info { background:#dbeafe; color:#1e40af; }
+    .muted { color:var(--muted); }
+    .status { padding:10px 12px; border-radius:10px; margin:8px 0; border:1px solid; white-space:pre-wrap; }
+    .status.ok { background:#ecfdf3; border-color:#abefc6; color:#05603a; }
+    .status.err { background:#fef3f2; border-color:#fda29b; color:#912018; }
+    .status.info { background:#eff8ff; border-color:#b2ddff; color:#1849a9; }
+    .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .kv { display:grid; grid-template-columns:150px 1fr; gap:4px 10px; font-size:12px; }
+    .scroll { overflow:auto; max-height:430px; border:1px solid #edf0f6; border-radius:10px; }
+    .small { font-size:11px; }
+    @media (max-width: 980px) { .grid { grid-template-columns:1fr; } main { padding:12px; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>日志与崩溃恢复验证工作台</h1>
+  <p>固定种子 <code>20261127</code> · 三 schema 归一 · 增量失效闭包 · 损坏降级 · SQLite 检查点 · 并行预算诊断</p>
+</header>
+<main>
+  <div class="grid">
+    <aside>
+      <section class="card">
+        <h2>装载与样本</h2>
+        <button class="primary" id="loadVersions">装载三版工程</button>
+        <button id="loadSample">查看样本 JSON</button>
+        <div id="versionSummary" class="small muted" style="margin-top:10px">尚未装载。</div>
+      </section>
+
+      <section class="card">
+        <h2>逻辑时刻</h2>
+        <div id="momentButtons"></div>
+        <p class="small muted">顺序：基线 → 截断 seg-004 → 覆盖 seg-003 → 新增 cp-2 → 改写 seg-005 依赖。</p>
+      </section>
+
+      <section class="card">
+        <h2>检查点对照</h2>
+        <button id="saveCp">保存时刻 0 到 SQLite</button>
+        <button class="primary" id="restoreCp">从检查点恢复对照</button>
+        <button id="resumeCp">重启续算/版本回退</button>
+        <div id="cpStatus" class="small"></div>
+      </section>
+
+      <section class="card">
+        <h2>并行预算实验</h2>
+        <div class="row">
+          <label>线程<input id="workers" type="number" value="4"></label>
+          <label>队列<input id="queue" type="number" value="16"></label>
+          <label>内存<input id="memory" type="number" value="16777216"></label>
+          <label>批次<input id="batch" type="number" value="2"></label>
+        </div>
+        <div class="row"><label><input id="reverse" type="checkbox" style="width:auto"> 反向调度</label>
+          <label><input id="fullStart" type="checkbox" style="width:auto"> 忽略检查点全起点</label></div>
+        <button class="primary" id="runParallel">运行并行重放</button>
+      </section>
+
+      <section class="card">
+        <h2>异常注入</h2>
+        <label>段 ID <input id="injSegment" class="wide" value="seg-003"></label>
+        <label>线程越界值<input id="injWorkers" type="number" value="999"></label>
+        <label>内存越界值<input id="injMemory" type="number" value="999999999"></label>
+        <div id="injectionButtons"></div>
+      </section>
+    </aside>
+
+    <section>
+      <div id="globalStatus"></div>
+      <div class="card">
+        <h2>当前诊断视图</h2>
+        <div id="detail"><p class="muted">点击左侧按钮开始。所有样本、真值和异常响应均来自本进程确定性生成器。</p></div>
+      </div>
+      <div class="card">
+        <h2>原始 Schema / 响应</h2>
+        <div class="row" id="rawTabs"></div>
+        <pre id="rawPanel">// JSON 将显示在这里</pre>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let timeline = [];
+
+function esc(v) {
+  if (v === null || v === undefined) return '';
+  return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function pretty(v) { return JSON.stringify(v, null, 2); }
+function setRaw(v) { $('rawPanel').textContent = typeof v === 'string' ? v : pretty(v); }
+function statusBox(kind, text) { return `<div class="status ${kind}">${esc(text)}</div>`; }
+async function fetchJSON(url, options) {
+  const resp = await fetch(url, options);
+  const text = await resp.text();
+  let data = {};
+  try { data = text ? JSON.parse(text) : {}; } catch (e) { data = {ok:false, parse_error:String(e), text}; }
+  data.__status = resp.status;
+  return data;
+}
+function codePill(code) {
+  if (!code || code === 'E_OK') return '<span class="pill ok">E_OK</span>';
+  const warnCodes = ['E_SEGMENT_TRUNCATED','E_RECORD_INCOMPLETE'];
+  return `<span class="pill ${warnCodes.includes(code) ? 'warn' : 'bad'}">${esc(code)}</span>`;
+}
+function point(p) {
+  if (!p || !p.lsn) return '<span class="muted">—</span>';
+  return `<span class="mono">LSN ${p.lsn}<br>#${p.index} off ${p.offset}<br>${esc(p.record_id || '')}</span>`;
+}
+function renderResult(result, comparison) {
+  if (!result) return '<p class="muted">无结果</p>';
+  const cmp = comparison ? `<div class="status ${comparison.equal ? 'ok' : 'err'}">增量 vs 全量：${comparison.equal ? '逐项一致' : '不一致'}${(comparison.differences||[]).map(esc).join('\n')}</div>` : '';
+  const cache = `<div class="row"><span class="pill ok">重算 ${(result.cache_recomputed||[]).length}</span>${(result.cache_recomputed||[]).map(x=>`<span class="pill warn">${esc(x)}</span>`).join('')}<span class="pill info">复用 ${(result.cache_reused||[]).length}</span>${(result.cache_reused||[]).map(x=>`<span class="pill">${esc(x)}</span>`).join('')}</div>`;
+  const rows = (result.segments||[]).map(s => {
+    const inv = (s.invalidation_sources||[]).map(x=>`<div class="small">${codePill(x.code)} ${esc(x.kind)} ${esc((x.path||[]).join('→'))}</div>`).join('');
+    const diag = (s.diagnostics||[]).map(d=>`<div class="small">${codePill(d.code)} ${esc(d.locator)} ${esc(d.message)}</div>`).join('');
+    return `<tr>
+      <td><b>${esc(s.segment_id)}</b><br><span class="pill ${s.cache_status==='recomputed'?'warn':'ok'}">${esc(s.cache_status||'')}</span></td>
+      <td><span class="pill ${s.state==='degraded'?'warn':(s.state==='rejected'?'bad':'info')}">${esc(s.state)}</span><br><span class="muted small">${esc(s.integrity)}</span></td>
+      <td>${s.range && s.range.replay ? '<span class="pill ok">replay</span>' : '<span class="pill">skip</span>'}<div class="small muted">${esc(s.range && s.range.reason)}</div></td>
+      <td>${point(s.range ? s.range.start : null)}</td>
+      <td>${point(s.range ? s.range.end : null)}</td>
+      <td>${esc(s.applied_records)} / range ${esc(s.range ? s.range.record_count : 0)}</td>
+      <td class="mono">${(s.elapsed_nanoseconds/1e6).toFixed(3)} ms<br><span class="muted">${esc(s.cache_key||'')}</span></td>
+      <td>${inv}${diag}</td>
+    </tr>`;
+  }).join('');
+  const items = (result.items||[]).map(i=>`<tr><td><code>${esc(i.key)}</code></td><td>${esc(i.value)}</td><td>${esc(i.version)}</td><td class="mono">${esc(i.lsn)}</td><td class="small">${esc(i.tx_id)}<br>${esc(i.segment_id)}</td></tr>`).join('');
+  return `${cmp}${cache}
+    <h3>段状态与重放区间</h3><div class="scroll"><table><thead><tr><th>段</th><th>状态</th><th>策略</th><th>起点</th><th>终点</th><th>记录</th><th>耗时</th><th>失效/诊断</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <h3>恢复后数据项（${(result.items||[]).length}）</h3><div class="scroll"><table><thead><tr><th>Key</th><th>Value</th><th>Ver</th><th>LSN</th><th>Tx/Segment</th></tr></thead><tbody>${items}</tbody></table></div>`;
+}
+function renderMoment(m) {
+  $('globalStatus').innerHTML = statusBox('info', `逻辑时刻 ${m.index}：${m.title}`);
+  $('detail').innerHTML = `<h2>${esc(m.key)} · ${esc(m.title)}</h2><p class="muted">${esc(m.description||'')}</p>${renderResult(m.result, m.comparison)}`;
+  setRaw(m);
+  document.querySelectorAll('.momentBtn').forEach(b=>b.classList.toggle('active', Number(b.dataset.i)===m.index));
+}
+
+const injectionKinds = [
+  ['duplicate_segment_ref','重复段引用'], ['cross_version_base_conflict','跨版本基准冲突'],
+  ['duplicate_record','重复记录'], ['sequence_order','序号倒序'],
+  ['dependency_cycle','依赖环'], ['dependency_missing','缺失前驱'],
+  ['truncated_segment_file','截断段文件'], ['incomplete_record','末条不完整'],
+  ['truncated_checkpoint','截断检查点'], ['budget_threads','越界线程预算'],
+  ['budget_memory','越界内存预算'], ['backpressure','预算耗尽背压'],
+  ['schema_version_mismatch','工程 Schema 错配'], ['version_mismatch','检查点版本不匹配']
+];
+$('injectionButtons').innerHTML = injectionKinds.map(([k,label])=>`<button data-kind="${k}">${label}</button>`).join('');
+document.querySelectorAll('[data-kind]').forEach(btn => btn.addEventListener('click', async () => {
+  const kind = btn.dataset.kind;
+  const body = {kind, segment_id:$('injSegment').value, workers:Number($('injWorkers').value), memory_bytes:Number($('injMemory').value)};
+  if (kind === 'incomplete_record') body.incomplete = true;
+  const data = await fetchJSON('/api/inject', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  const e = data.error || {};
+  $('globalStatus').innerHTML = statusBox(data.ok ? 'ok' : 'err', `${kind} → ${data.code || e.code}\n定位：${e.locator || (data.diagnostics&&data.diagnostics[0]&&data.diagnostics[0].locator) || ''}\n${e.message || data.message || ''}`);
+  let html = `<div class="row">${codePill(data.code || e.code)}<b>${esc(data.message || e.message || '')}</b></div>`;
+  if (e.locator) html += `<div class="kv" style="margin:10px 0"><span>locator</span><code>${esc(e.locator)}</code></div>`;
+  if (e.details) html += `<pre>${esc(pretty(e.details))}</pre>`;
+  if (data.result) html += renderResult(data.result);
+  $('detail').innerHTML = html;
+  setRaw(data);
+}));
+
+$('loadVersions').addEventListener('click', async () => {
+  const data = await fetchJSON('/api/versions');
+  if (!data.ok) { $('globalStatus').innerHTML = statusBox('err', pretty(data.error)); setRaw(data); return; }
+  const counts = Object.entries(data.loaded).map(([v,p])=>`<span class="pill ok">${esc(v)} · ${p.segments.length} 段 · CP ${p.latest_checkpoint ? p.latest_checkpoint.lsn : '无'}</span>`).join('');
+  $('versionSummary').innerHTML = `<div class="status ok">三版归一一致</div><div>${counts}</div>`;
+  $('rawTabs').innerHTML = Object.keys(data.loaded).map(v=>`<button data-v="${esc(v)}">${esc(v)}</button>`).join('');
+  document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>setRaw(data.loaded[b.dataset.v]));
+  $('detail').innerHTML = `<h2>三版工程归一结果</h2><p>字段命名、LSN/offset、tick/ms、byte/KiB、扁平/嵌套表达均已映射。</p>`;
+  setRaw(data);
+});
+$('loadSample').addEventListener('click', async () => {
+  const data = await fetchJSON('/api/sample');
+  $('detail').innerHTML = '<h2>固定种子样本与真值</h2><p class="muted">完整 JSON 显示在下方；可用标签切换三版原始 schema。</p>';
+  $('rawTabs').innerHTML = Object.keys(data.bundle.docs).map(v=>`<button data-doc="${esc(v)}">${esc(v)}</button>`).join('') + '<button data-doc="truth">truth</button>';
+  document.querySelectorAll('[data-doc]').forEach(b=>b.onclick=()=>setRaw(b.dataset.doc==='truth'?data.bundle.truth:data.bundle.docs[b.dataset.doc]));
+  setRaw(data.bundle.truth);
+});
+
+async function loadTimeline() {
+  const data = await fetchJSON('/api/timeline');
+  timeline = data.moments || [];
+  $('momentButtons').innerHTML = timeline.map(m=>`<button class="momentBtn" data-i="${m.index}">${m.index}. ${esc(m.key)}</button>`).join('');
+  document.querySelectorAll('.momentBtn').forEach(b=>b.addEventListener('click', ()=>renderMoment(timeline[Number(b.dataset.i)])));
+  if (timeline[0]) renderMoment(timeline[0]);
+}
+$('saveCp').addEventListener('click', async () => {
+  const data = await fetchJSON('/api/checkpoint/save/0', {method:'POST'});
+  $('cpStatus').innerHTML = data.ok ? statusBox('ok', `已保存 ${data.checkpoint_id}\n${data.db_path}`) : statusBox('err', pretty(data.error));
+});
+$('restoreCp').addEventListener('click', async () => {
+  const data = await fetchJSON('/api/checkpoint/restore');
+  if (!data.ok) { $('cpStatus').innerHTML = statusBox('err', pretty(data.error)); setRaw(data); return; }
+  const r = data.restore;
+  $('cpStatus').innerHTML = statusBox(r.parity ? 'ok' : 'err', `恢复对照：${r.parity ? '进度一致' : '不一致'}\nCP=${r.checkpoint.checkpoint_id} LSN=${r.checkpoint.global_committed_lsn}`);
+  $('detail').innerHTML = `<h2>SQLite 已提交检查点</h2>${r.parity ? statusBox('ok','段状态与记录进度和当前时刻 0 匹配；全局提交序号最后更新。') : statusBox('err', (r.differences||[]).join('\n'))}<pre>${esc(pretty(r.checkpoint))}</pre>`;
+  setRaw(data);
+});
+$('resumeCp').addEventListener('click', async () => {
+  const data = await fetchJSON('/api/checkpoint/resume', {method:'POST'});
+  const r = data.resume || {};
+  $('cpStatus').innerHTML = statusBox(data.ok ? 'ok' : 'err', `续算模式：${r.mode || ''}`);
+  if (r.restore) {
+    $('detail').innerHTML = `<h2>检查点续算</h2>${statusBox('ok','版本匹配，已读取全局提交指针之后的一致检查点。')}<pre>${esc(pretty(r.restore.checkpoint))}</pre>`;
+  } else if (r.full) {
+    $('detail').innerHTML = `<h2>版本不匹配/无检查点：整份重放</h2>${r.version_error ? statusBox('err', `${r.version_error.code} ${r.version_error.message}`) : statusBox('info','no committed checkpoint')}${renderResult(r.full)}`;
+  }
+  setRaw(data);
+});
+$('runParallel').addEventListener('click', async () => {
+  const body = {workers:Number($('workers').value), queue_depth:Number($('queue').value), memory_bytes:Number($('memory').value), batch_size:Number($('batch').value), reverse:$('reverse').checked, full_start:$('fullStart').checked};
+  const data = await fetchJSON('/api/recover', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  $('globalStatus').innerHTML = statusBox(data.ok ? 'ok' : 'err', data.ok ? '并行重放完成；耗时仅作诊断，不参与正确性。' : `${data.error.code}: ${data.error.message}`);
+  $('detail').innerHTML = `<h2>并行重放诊断</h2>${renderResult(data.result)}`;
+  setRaw(data);
+});
+loadTimeline();
+</script>
+</body>
+</html>

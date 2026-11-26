@@ -1,3 +1,45 @@
+# 日志与崩溃恢复领域组件 / 本地诊断工作台
+
+这是一个可集成的 Go 领域组件，也是一个仅使用标准库 `net/http` 的本地工作台。固定种子 `20261127` 的生成器产出三版 schema 工程、段文件、检查点和解析真值；SQLite 检查点由 vendored `github.com/mattn/go-sqlite3` 驱动访问。
+
+**快速运行**
+
+```bash
+make test       # go test -mod=vendor -count=1 ./...
+make verify     # 生成 artifacts/verification-report.json 等验收产物
+make serve      # http://127.0.0.1:8088
+```
+
+也可以直接运行：
+
+```bash
+go run -mod=vendor ./cmd/enginelab verify -out artifacts
+go run -mod=vendor ./cmd/enginelab serve -addr 127.0.0.1:8088
+```
+
+环境为 `go1.22.12 linux/amd64`、CGO 可用、gcc 可用；`vendor/` 已包含 SQLite 驱动，验证不需要联网或 Docker。
+
+**已验证结果**
+
+- 三版 schema 装载后的段、记录顺序、LSN、检查点和依赖完全一致。
+- 12 个提交事务可见，6 个回滚事务和 6 个未提交事务不可见；4 个最终数据项与生成器真值逐项一致。
+- 5 个逻辑时刻的增量结果均与一次性全量重算一致；测试强制校验失效闭包为 `[seg-004 seg-005]`、`[seg-003]`、`[seg-004 seg-005]`、`[seg-005]`。
+- 末条记录损坏和段截断均降级处理，最终可见数据仍与真值一致。
+- `SIGKILL` 子进程在全局提交指针前终止后，重启读不到未完成批次；续算后检查点一致。
+- worker=1/2/4/8、正反向调度、batch=1/2/64 结果一致；`go test -race ./...` 通过。
+- `verify` 命令报告 `verification ok=true checks=19`；14 类异常均有稳定 `E_*` 码和 locator。
+
+完整语义、错误码、SQLite 提交顺序和 HTTP API 见 `docs/DESIGN.md`。实际输出保存在：
+
+- `artifacts/verification-report.json`
+- `artifacts/go-test-output.txt`
+- `artifacts/go-test-race-output.txt`
+- `artifacts/verify-output.txt`
+- `artifacts/sample_truth.json`
+- `artifacts/demo_summary.json`
+
+---
+
 存储引擎团队在新一轮排期里决定先把日志与崩溃恢复链路独立验证，而交给实现者的仅是 Linux（WSL Ubuntu）开发机上一个尚未初始化的空目录，Go 工具链就绪但源码、样本与既有约定一概没有。交付物既是可集成的 Go 领域组件，也提供一个用 net/http 本地页面按逻辑时刻逐场景演示与诊断的工作台。全部日志工程与解析真值由实现自带的确定性生成器按固定种子产出，不依赖真实存储服务：同一份内容以三个 schema 版本描述，版本差异体现在字段命名、日志记录序号基准（绝对 LSN 与相对段内偏移）、时间与大小单位（tick 与毫秒、字节与 KiB）、日志段元数据表达（扁平段表与嵌套段树）、检查点记录与可选段依赖字段的有无上。每份工程含若干日志段、每段内的日志记录、检查点记录与段间共享前驱关系。真值仅来自生成器的解析构造，是恢复结果与重放区间的唯一观测来源。
 
 任务环境与准备：
