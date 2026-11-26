@@ -1,21 +1,219 @@
-语音小组要为游戏内对白搭建一版独立的响度校准与声学特征内核，但工作区里只有一个尚未初始化的空目录和就绪的 Go 工具链，既没有可继承的源码，也没有样本与既有口径可以沿用。首个可验收版本要从零交付一套可集成的 Go 领域组件与本地可重复演示，把多条对白在三个 schema 版本下装载为统一内部模型，再按逻辑帧在受限并行预算下推进分段声学特征提取、响度校准与增益截断，并在设计师修改片段增益、目标响度或帧率之后只重建真正受影响的帧区间。全部素材与解析真值由题内确定性生成器按固定种子产出，真值只来自生成器的解析构造，是精度观测的唯一来源，不从处理输出反推；样本为单声道 PCM 描述，逐音素标注起止采样点、类别与响度权重，工程另声明片段增益、目标响度、帧率、每帧能量上限与可用的并行预算。
+# dialoguecal
 
-任务环境与准备：
-准备 Linux（WSL Ubuntu）环境并安装 Go 1.21 或以上版本（如 go1.21.13），仅使用 Go 标准库与仓库内文件。
-工作区从空目录开始，执行 go mod init 初始化模块后再实现；SQLite 通过 Go 标准库 database/sql 与仓库内本地文件持久化方案落地，不引入第三方包、系统组件或外部服务。
-本地演示与验证命令均为 go test ./... 与 go run ./cmd/...，样本由仓库内确定性生成器按固定种子产出。
+游戏对白响度校准与逐帧声学特征内核。仓库从空目录实现，仅使用 Go 标准库；
+固定种子生成器同时产出单声道 PCM、音素标注、工程参数和逐帧解析真值。演示与测试
+不依赖外部样本、数据库服务、CGO 或第三方包。
 
-业务要求：
-1. 实现本地确定性样本生成器与三版本对白工程的统一加载器：按固定种子产出多条单声道 PCM 描述、逐音素标注、工程参数与逐帧真值清单；校验音素区间互不重叠且严格递增、采样点总数与清单一致、片段增益与目标响度落在声明定点范围、帧率与每帧能量上限相容；把三个版本在字段命名、时间基准、增益与响度刻度、片段表组织上的差异统一映射为内部模型并保留源版本标识与逐字段转换痕迹，未知版本号或必填字段缺失返回 E_SCHEMA 并指出字段路径。
-2. 实现版本升降级的显式转换规则与可追溯痕迹：低版本升级时按声明默认值补齐缺失字段，每次补齐记录字段路径、旧值与来源默认值；内部模型导出到低版本时，对无法表达的嵌套片段组织或校准标记生成 E_LOSSY 清单并记录字段路径、原值与降级处置方式，导出产物必须能被对应版本加载器读回并还原出与内部模型一致的语义指纹。
-3. 实现采样点与毫秒基准、片��增益与目标响度的千分比与万分比刻度、线性幅度与分贝表达之间的整型换算及往返一致：三类换算均使用整型运算并按声明取舍方向处理余数，逐处记录截断位置与截断残差，全链路统一为内部采样点与内部刻度并禁止浮点累积；同一片段参数经高版本到低版本再回到高版本的往返后逐字段还原残差为零，换算溢出返回 E_OVF 并给出字段与两个操作数。
-4. 实现逐帧声学特征提取与受限并行预算调度核心：按帧率与量化规则把音素边界量化为帧号后，在多条对白之间按声明的最大并行度与每线程采样缓冲上限把帧任务分发到工作线程池，并限制待处理任务队列预算；预算耗尽时任务阻塞排队并记录排队原因与等待时长，不得静默丢弃帧；同一对白在相同参数下逐帧能量、过零率与瞬态峰值位置须逐帧相同，不随分块完成顺序、线程数或缓存状态变化。
-5. 实现分段响度测量与增益校准求解，并在目标不可达时显式降级：按片段能量与会话增益推导逐帧响度并与目标响度比对，解出增益调整量并按声明增益上界截断，重算校准后逐帧响度；当目标响度在全部片段的增益上界内不可达时须返回 E_LOUD 并给出目标值、可达上界与首个受阻片段标识，不得以静默截断替代报错；校准后逐帧响度与真值的偏差须落在声明容差内，容差收紧时实测偏差不得减小。
-6. 实现片段与帧区间之间的依赖图及精确失效传播：缓存键由片段内容哈希、帧区间标识、量化参数版本、并行预算参数版本与上游缓存键共同决定，显式记录片段边界、响度权重、增益刻度与下游逐帧特征、校准结果之间的依赖；编辑某片段增益、目标响度或切换帧率时仅将实际受影响的帧区间及其下游校准标记失效，未受影响区间必须复用持久化结果并输出含帧号区间的失效清单。
-7. 实现片段与帧区间双层状态机及基于 SQLite 的原子检查点：每片段在待装载、特征提取中、响度校准中、已提交、失败五态间只能沿合法迁移推进，每帧区间在待处理、处理中、已提交、失败四态间迁移，非法迁移返回 E_STATE 并保持原状态与进度；每提交一个帧区间把该区间逐帧特征摘要、校准结果、已消费采样偏移、内容哈希、源版本标识、换算参数版本与算法版本在单一事务中串行写入，写入不得交错且提交顺序稳定。
-8. 保证实时处理、断点恢复处理与一次性全量重算三条路径逐帧一致，并实现异常注入链路与取消及强制终止的恢复边界：三者对同一工程、同一编辑序列与同一参数须产出相同逐帧特征、相同校准响度、相同失效清单与相同区间提交序列，自动比对定位首个不一致的片段标识与帧号并返回 E_DIFF；主动取消后重启只能依据已持久化且版本匹配的帧区间恢复，进程被强制终止后同样恢复至最后已提交区间，不承诺生成退出报告；通过输入或参数注入工程损坏、音素时序倒置、刻度矛盾与单区间内部失败，分别走 E_DECODE、E_ORDER、E_CAL、E_STAGE 链路并定位片段与帧号。
+## 快速开始
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+要求 Go 1.21 或以上版本。
 
-验收：
-用本地固定种子样本验证三版本装载、受限并行下的逐帧特征与校准结果，并确认断点续算与全量重算逐帧一致。
+```bash
+go test ./...
+go vet ./...
+go run ./cmd/...
+# 或指定种子/输出目录
+go run ./cmd/... -seed 42 -out /tmp/dialoguecal-demo
+```
+
+默认演示种子为 `20261127`，产物写入 `artifacts/demo/`：
+
+```text
+dialogue-v1.json            扁平片段表、毫秒、千分比刻度
+dialogue-v2.json            对白嵌套片段、采样点、万分比刻度
+dialogue-v3.json            场次分组嵌套、校准标记、内部同刻度
+lossy-v1.json / lossy-v2.json  E_LOSSY 明细（组织展平、标记降级）
+truth.json                  生成器构造的逐帧解析真值
+checkpoints.db              主运行与增量编辑的原子检查点
+crash-checkpoints.db        强制终止/恢复演示的检查点
+report.json                 实际验收结果
+```
+
+当前默认样本的实跑输出：
+
+```text
+status=ok seed=20261127 fingerprint=84896f5467ebe2614643fc4f1272e6fa5b4032924352664adbb27aaa62af8720
+schemas=v1/v2/v3 frames=66 deviation=0 full=9 resumeReused=9 crashResumeReused=4
+gainInvalidation=1 reusedAfterEdit=8 queueEvents>0 artifacts=artifacts/demo
+```
+
+## 目录
+
+```text
+errors.go            稳定错误码与错误定位字段
+model.go             统一内部模型、深拷贝、哈希
+generator.go         固定种子样本与独立逐帧真值
+schema.go            v1/v2/v3 解析、默认补齐、字段路径诊断
+export.go            显式降级、E_LOSSY、语义指纹、往返比较
+units.go             整型时间/刻度/线性幅度与 dB 换算
+frame.go             音素边界帧量化与逐帧能量/ZCR/瞬态峰值
+scheduler.go         受限并行工作池、采样缓冲与队列预算
+loudness.go          分段响度测量、增益求解与 E_LOUD
+deps.go              缓存键、依赖图、精确失效计划与编辑入口
+state.go             片段/帧区间双层状态机
+engine.go            full/realtime/resume 统一执行器与 E_DIFF
+store.go             database/sql 检查点事务与恢复读取
+localsql.go          仓库内本地文件 SQL 驱动（原子替换提交）
+compare.go           真值逐帧比对
+cmd/dialogue-kernel  本地可重复演示命令
+```
+
+## 内部口径
+
+- 时间统一为采样点；v1 的毫秒仅在装载/导出边界转换，半值远离零取舍。
+- 增益、目标响度、容差统一为 `1/10000 dB`；v1 千分比乘 10 进入内部，
+  v2/v3 万分比恒等映射。
+- PCM 固定为单声道 `pcm_s16le`。生成器使用自有 xorshift 序列，不依赖运行时随机源。
+- 核心处理链路只使用整数；没有浮点累加。每次有余数的换算都记录
+  `ConversionTrace`，包含来源路径、单位、操作数、结果、余数、取舍方向和截断点。
+- 版本字段命名/结构差异记录在 `FieldMapping`；低版本默认值记录在
+  `DefaultTrace`，两者都保留源 schema 版本。
+- 线性幅度换算使用 Q16 线性值与 `1/10000 dB`，以整数 log2/exp2 实现；规范值
+  与常见 Q16 值可零残差往返，其余值显式返回截断残差。溢出统一返回 `E_OVF`，
+  并带字段和两个操作数。
+
+三个 schema 的差异被集中映射到 `Project`：
+
+| 维度 | v1 | v2 | v3 |
+|---|---|---|---|
+| 命名 | snake_case | camelCase | 嵌套 camelCase |
+| 时间 | 毫秒 | 采样点 | 采样点 |
+| 增益/响度 | 千分比 | 万分比 | 万分比 |
+| 片段组织 | 全局扁平片段表 | 对白内嵌套 | 场次分组内嵌套 |
+| 校准标记 | 无 | 无 | 支持 |
+
+低版本升级的每次默认补齐都会写入 `DefaultTrace`；降级时无法直接表达的场次组织
+和设计标记写入 `ExportResult.Lossy`，但片段/对白身份会被等价展平。语义指纹覆盖
+可听内容、边界、权重、增益和校准参数，不包含仅表现层的分组与标记，因此生成样本
+在 v3→v1→v3 后逐字段残差为 0。
+
+## 处理管线
+
+1. `BuildIntervals` 将片段边界按半值远离零量化为帧区间；`QuantizePhonemeBoundaries`
+   为每个音素给出相同的帧号口径。
+2. `ExtractFrames` 把帧任务按每线程采样缓冲上限切块，最多使用声明的并行度。
+   待处理 channel 容量等于队列预算；满队列时生产者阻塞，并记录
+   `queue_budget_exhausted` 原因和等待微秒数，不丢弃帧。
+3. 帧结果先写回输入索引，再按对白 ID/帧号排序，因此线程数、完成顺序和缓存状态
+   不影响能量、过零率和瞬态峰值位置。
+4. `CalibrateFeatures` 用逐帧能量、响度权重、会话增益和片段增益求加权响度；
+   目标与增益上界比较后才接受结果。不可达时返回 `E_LOUD`，包含目标值、可达上界
+   和首个受阻片段/帧。
+5. 检查点按稳定逻辑顺序提交。`full` 重算全部，`realtime` 同样从帧函数重算，
+   `resume` 仅采用源版本、换算版本、算法版本、内容哈希和两类缓存键都匹配的区间。
+
+缓存依赖拆成两类键：
+
+```text
+featureKey     = interval contentHash + interval ID + 帧率/采样率
+                 + quantizationVersion + parallelVersion + 并行预算值 + upstreamKey
+calibrationKey = featureKey + 片段增益 + 会话增益 + 目标响度
+                 + 增益上界 + 容差 + conversionVersion
+```
+
+因此修改片段增益或目标响度时，原始逐帧特征可复用，只重算对应校准；切换帧率会
+改变区间身份和均匀性，所有帧区间都重新提取。`BuildDependencyGraph` 显式输出
+音频、片段、帧特征、校准和下游标记节点及依赖边。
+
+## 集成入口
+
+```go
+generated, _ := dialoguecal.Generate(dialoguecal.DefaultGenerateOptions(42))
+project, _ := dialoguecal.LoadProject(v3JSON) // 或使用 generated.Project
+ctx := context.Background()
+
+store, _ := dialoguecal.OpenStore("checkpoints.db")
+defer store.Close()
+engine := dialoguecal.NewEngine(store)
+
+full, _ := engine.Run(ctx, project, dialoguecal.RunOptions{Mode: dialoguecal.ModeFull})
+resumed, _ := engine.Run(ctx, project, dialoguecal.RunOptions{Mode: dialoguecal.ModeResume})
+_ = dialoguecal.CompareRunResults(full, resumed)
+
+edited, _ := dialoguecal.ApplyEdit(project, dialoguecal.ProjectEdit{
+    Kind: dialoguecal.EditSegmentGain, SegmentID: "seg-01-01", IntValue: 2500,
+})
+incremental, _ := engine.Run(ctx, edited, dialoguecal.RunOptions{
+    Mode: dialoguecal.ModeResume, PreviousProject: project,
+})
+// incremental.Invalidation 仅含实际受影响区间及其下游校准标记。
+```
+
+## 状态与持久化
+
+片段状态：
+
+```text
+pending_load -> extracting -> calibrating -> committed
+       \             \             \
+        +-------------+-------------+-> failed -> pending_load
+```
+
+帧区间状态：
+
+```text
+pending -> processing -> committed
+   \           \
+    +-----------+-> failed -> pending
+```
+
+非法迁移返回 `E_STATE`，不修改状态、进度或序号。每个区间提交时，在单一
+`database/sql` 事务中写入逐帧特征摘要、校准摘要、采样消费偏移、内容哈希、
+源版本、换算版本、算法版本、缓存键和完整 payload；提交使用临时文件写入、
+同步和原子 rename，并由存储层互斥锁串行化，序号严格递增。
+
+仓库内没有引入第三方 SQLite 驱动。`localsql.go` 注册名为
+`dialoguecal-sqlite` 的本地文件驱动，实现本组件所需的最小 SQL 子集
+（建表、插入、等值删除/查询）和 `driver.Tx` 原子提交；它承载 SQLite 风格的
+事务检查点语义，同时保持零外部依赖。这样满足“标准库 `database/sql` + 仓库内
+本地文件持久化”的约束；若后续允许第三方驱动，可替换 `OpenStore` 的驱动名而
+不改变 `Store` API。
+
+## 异常与恢复
+
+稳定错误码：
+
+| 错误码 | 场景 |
+|---|---|
+| `E_SCHEMA` | 未知 schema、必填字段缺失，带 JSON 字段路径 |
+| `E_LOSSY` | 低版本无法直接表达的组织/标记清单 |
+| `E_OVF` | 整型换算溢出，带字段和操作数 |
+| `E_LOUD` | 目标响度超过可达上界 |
+| `E_STATE` | 非法片段/帧区间状态迁移 |
+| `E_DIFF` | 两条运行结果首个逐帧不一致 |
+| `E_DECODE` | PCM/JSON/样本计数损坏 |
+| `E_ORDER` | 音素时序倒置、重叠或非严格递增 |
+| `E_CAL` | 刻度、能量上限或帧率约束矛盾 |
+| `E_STAGE` | 单区间内部处理失败 |
+| `E_CANCEL` | 主动取消或模拟强制终止的提交边界 |
+
+`RunOptions.StopAfterCommits` 可在指定个区间提交后停止，模拟强制终止；
+重启时只读取此前已原子提交、且版本匹配的区间。主动取消不会提交未完整处理的区间。
+`CompareRunResults` 对 full/realtime/resume 的逐帧特征、校准响度、失效清单和
+逻辑提交序列做自动比对，并在 `E_DIFF` 中给出首个片段和帧号。
+
+## 已验证结果
+
+本仓库实际执行结果：
+
+```text
+go test ./...        ok dialoguecal
+go test -cover ./... 核心包 77.9% statements
+go test -race ./...  ok dialoguecal
+go vet ./...         无输出
+go run ./cmd/...     status=ok，三 schema 指纹一致
+```
+
+默认种子固定为 3 条对白、9 个片段、66 帧：
+
+- 三版本装载后的语义指纹均为
+  `84896f5467ebe2614643fc4f1272e6fa5b4032924352664adbb27aaa62af8720`。
+- 逐帧特征与真值完全一致，校准响度最大偏差为 `0`。
+- full/realtime/resume 三路径 `CompareRunResults` 均无差异。
+- 模拟第 4 个区间提交后终止，恢复时复用 4 个已提交区间并补齐其余区间。
+- 修改 `seg-01-01` 增益只失效 `0-7` 帧区间，其余 8 个区间复用持久化结果。
+- 受限于队列预算记录了真实阻塞排队事件（次数随线程调度时机变化），未丢帧。
+
+测试覆盖还包括：未知版本/缺字段路径、v1 往返零残差、`E_OVF`、非法状态保持、
+目标不可达、音素倒置、刻度矛盾、单区间失败、版本不匹配拒绝恢复，以及
+线程数变化下的逐帧确定性。
