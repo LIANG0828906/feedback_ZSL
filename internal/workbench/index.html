@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volume Kernel Diagnostics</title>
+<style>
+:root {
+  --bg: #101419;
+  --panel: #171d24;
+  --panel-2: #1e2630;
+  --ink: #e8edf2;
+  --muted: #8fa0b2;
+  --line: #2e3946;
+  --accent: #65d6b3;
+  --accent-2: #f0b35a;
+  --danger: #ed6a72;
+  --ok: #77d49b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: radial-gradient(circle at 10% 0%, #1b2a31 0, var(--bg) 42%);
+  font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+header {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 20px;
+  padding: 18px 22px; border-bottom: 1px solid var(--line);
+  background: rgba(16,20,25,.86); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 3;
+}
+h1 { margin: 0; font-size: 18px; letter-spacing: .08em; font-weight: 650; }
+h2 { margin: 0 0 10px; font-size: 13px; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.sub { color: var(--muted); white-space: nowrap; }
+.layout { display: grid; grid-template-columns: 310px minmax(0,1fr); gap: 16px; padding: 16px; }
+.sidebar { display: flex; flex-direction: column; gap: 14px; }
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,.025), transparent), var(--panel);
+  border: 1px solid var(--line); border-radius: 10px; padding: 14px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.18);
+}
+.main { display: grid; gap: 14px; grid-template-columns: repeat(12, minmax(0,1fr)); align-content: start; }
+.span-3 { grid-column: span 3; } .span-4 { grid-column: span 4; }
+.span-5 { grid-column: span 5; } .span-6 { grid-column: span 6; }
+.span-7 { grid-column: span 7; } .span-8 { grid-column: span 8; }
+.span-12 { grid-column: span 12; }
+.metric { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px dashed rgba(143,160,178,.16); }
+.metric:last-child { border-bottom: 0; }
+.metric span:first-child { color: var(--muted); }
+.metric strong { font-weight: 600; text-align: right; }
+.ok { color: var(--ok); } .warn { color: var(--accent-2); } .bad { color: var(--danger); }
+button {
+  border: 1px solid #3a4959; color: var(--ink); background: var(--panel-2);
+  border-radius: 7px; padding: 8px 10px; cursor: pointer; font: inherit;
+}
+button:hover { border-color: var(--accent); color: var(--accent); }
+button.primary { background: #24443e; border-color: #3e7d6e; color: #d9fff3; }
+button.danger { border-color: #704148; color: #ffb4b9; }
+.button-row { display: flex; gap: 8px; flex-wrap: wrap; }
+label { display: block; color: var(--muted); margin: 12px 0 5px; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.value { float: right; color: var(--ink); }
+canvas { width: 100%; height: 300px; display: block; background: #0d1217; border-radius: 8px; border: 1px solid var(--line); }
+.images { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.images figure { margin: 0; }
+.images img { image-rendering: pixelated; width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #0d1217; }
+figcaption { color: var(--muted); margin-top: 5px; text-align: center; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { text-align: right; padding: 5px 6px; border-bottom: 1px solid rgba(143,160,178,.12); }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 500; }
+.scroll { max-height: 280px; overflow: auto; }
+.inv-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.inv-cell { border: 1px solid var(--line); border-radius: 5px; padding: 6px; min-height: 46px; background: #18212a; }
+.inv-cell.hit { border-color: var(--danger); background: #321d22; }
+.inv-cell small { color: var(--muted); display: block; }
+.log { display: flex; flex-direction: column; gap: 7px; max-height: 240px; overflow: auto; }
+.log-entry { border-left: 3px solid var(--danger); background: #23191d; padding: 7px 9px; border-radius: 4px; }
+.log-entry code { color: #ffc0c4; }
+.pill { border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; color: var(--muted); }
+.status { display: inline-flex; align-items: center; gap: 7px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.hint { color: var(--muted); font-size: 11px; margin-top: 7px; }
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .span-3,.span-4,.span-5,.span-6,.span-7,.span-8 { grid-column: span 12; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>VOLUME KERNEL / DIAGNOSTICS</h1>
+    <div class="sub" id="sceneLine">loading deterministic scene…</div>
+  </div>
+  <div class="status"><span class="dot"></span><span id="statusLine">ready</span></div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <section class="card">
+      <h2>Interaction Budget</h2>
+      <label>preview steps <span class="value" id="stepsVal">24</span></label>
+      <input id="steps" type="range" min="1" max="192" value="24">
+      <label>preview shadow samples <span class="value" id="shadowVal">4</span></label>
+      <input id="shadow" type="range" min="1" max="16" value="4">
+      <div class="button-row" style="margin-top:12px">
+        <button class="primary" id="previewBtn">Preview</button>
+        <button id="exactBtn">Exact + compare</button>
+      </div>
+      <div class="hint">拖动时降预算预览；松开滑杆后自动执行全精度渲染与 E_DIVERGE 判定。</div>
+    </section>
+    <section class="card">
+      <h2>Scene Operations</h2>
+      <div class="button-row">
+        <button id="editBtn">编辑体素并失效</button>
+        <button id="resetBtn">重置生成器</button>
+      </div>
+      <div class="hint">编辑 media-beta[2,2,2]，仅标记实际依赖该体素的分块。</div>
+    </section>
+    <section class="card">
+      <h2>Exception Injection</h2>
+      <div class="button-row">
+        <button class="danger" data-inject="decode">E_DECODE</button>
+        <button class="danger" data-inject="order">E_ORDER</button>
+        <button class="danger" data-inject="dens">E_DENS</button>
+        <button class="danger" data-inject="block">E_BLOCK</button>
+      </div>
+      <div class="hint">异常链路会定位介质、射线或分块坐标，并写入下方诊断日志。</div>
+    </section>
+    <section class="card">
+      <h2>Versions</h2>
+      <div class="metric"><span>snapshot</span><strong id="vSnap">—</strong></div>
+      <div class="metric"><span>camera</span><strong id="vCam">—</strong></div>
+      <div class="metric"><span>recipe</span><strong id="vRecipe">—</strong></div>
+      <div class="metric"><span>algorithm</span><strong id="vAlgo">—</strong></div>
+      <div class="metric"><span>cache rows</span><strong id="vCache">—</strong></div>
+    </section>
+  </aside>
+  <main class="main">
+    <section class="card span-4">
+      <h2>Preview Frame</h2>
+      <div class="metric"><span>elapsed</span><strong id="previewElapsed">—</strong></div>
+      <div class="metric"><span>deadline</span><strong id="previewDeadline">—</strong></div>
+      <div class="metric"><span>actual steps</span><strong id="previewSteps">—</strong></div>
+      <div class="metric"><span>actual shadows</span><strong id="previewShadows">—</strong></div>
+      <div class="metric"><span>queue events</span><strong id="previewQueue">—</strong></div>
+    </section>
+    <section class="card span-4">
+      <h2>Exact Frame</h2>
+      <div class="metric"><span>elapsed</span><strong id="exactElapsed">—</strong></div>
+      <div class="metric"><span>actual steps</span><strong id="exactSteps">—</strong></div>
+      <div class="metric"><span>actual shadows</span><strong id="exactShadows">—</strong></div>
+      <div class="metric"><span>step budget</span><strong id="exactBudget">—</strong></div>
+      <div class="metric"><span>blocks</span><strong id="exactBlocks">—</strong></div>
+    </section>
+    <section class="card span-4">
+      <h2>Consistency Gate</h2>
+      <div class="metric"><span>max |Δ|</span><strong id="cmpMax">—</strong></div>
+      <div class="metric"><span>mean |Δ|</span><strong id="cmpMean">—</strong></div>
+      <div class="metric"><span>over tolerance</span><strong id="cmpOver">—</strong></div>
+      <div class="metric"><span>tolerance</span><strong id="cmpTol">—</strong></div>
+      <div class="metric"><span>verdict</span><strong id="cmpVerdict">—</strong></div>
+    </section>
+    <section class="card span-7">
+      <h2>Media AABB Preview</h2>
+      <canvas id="sceneCanvas" width="900" height="420"></canvas>
+    </section>
+    <section class="card span-5">
+      <h2>Rendered Media</h2>
+      <div class="images">
+        <figure><img id="previewImg" alt="preview render"><figcaption>preview</figcaption></figure>
+        <figure><img id="exactImg" alt="exact render"><figcaption>exact</figcaption></figure>
+      </div>
+      <div class="hint" id="mediaLegend">AABB extents and medium IDs are drawn above.</div>
+    </section>
+    <section class="card span-7">
+      <h2>Per-block Statistics</h2>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>block</th><th>pixels</th><th>avg T</th><th>avg scatter</th><th>steps</th><th>shadows</th></tr></thead>
+          <tbody id="blockRows"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card span-5">
+      <h2>Budget Queue</h2>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>block</th><th>wait ms</th><th>reason</th></tr></thead>
+          <tbody id="queueRows"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card span-7">
+      <h2>Invalidation Propagation</h2>
+      <div id="invSummary" class="hint">尚未执行编辑。密度体素 → 射线段 → 分块 → 像素。</div>
+      <div class="inv-grid" id="invGrid" style="margin-top:12px"></div>
+    </section>
+    <section class="card span-5">
+      <h2>Dependency / Cache Facts</h2>
+      <div class="metric"><span>affected blocks</span><strong id="invAffected">—</strong></div>
+      <div class="metric"><span>unaffected blocks</span><strong id="invUnaffected">—</strong></div>
+      <div class="metric"><span>affected pixels</span><strong id="invPixels">—</strong></div>
+      <div class="metric"><span>cache rows deleted</span><strong id="invDeleted">—</strong></div>
+      <div class="metric"><span>hits / misses after edit</span><strong id="invCache">—</strong></div>
+    </section>
+    <section class="card span-12">
+      <h2>Exception Chain Log</h2>
+      <div class="log" id="errorLog"><div class="hint">No injected errors yet.</div></div>
+    </section>
+  </main>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let state = null;
+let previewTimer = null;
+let exactTimer = null;
+let requestSerial = 0;
+
+function fmt(v, digits = 6) {
+  if (v === null || v === undefined || Number.isNaN(v)) return "—";
+  if (typeof v === "number") {
+    if (Math.abs(v) >= 1000 || (Math.abs(v) > 0 && Math.abs(v) < 1e-4)) return v.toExponential(3);
+    return v.toFixed(digits).replace(/0+$/,"").replace(/\.$/,"");
+  }
+  return String(v);
+}
+
+function setStatus(text, cls = "") {
+  $("statusLine").textContent = text;
+  $("statusLine").className = cls;
+}
+
+async function request(path) {
+  const serial = ++requestSerial;
+  setStatus("working…", "warn");
+  const r = await fetch(path, {cache: "no-store"});
+  const body = await r.json();
+  if (serial !== requestSerial) return null;
+  if (body.error) addError(body.error);
+  if (!body.ok) {
+    setStatus(body.error ? body.error.code : "request failed", "bad");
+  } else {
+    setStatus("ready");
+  }
+  return body;
+}
+
+async function refresh() {
+  try {
+    const r = await fetch("/api/state", {cache: "no-store"});
+    const body = await r.json();
+    if (!body.ok) throw new Error(body.error?.message || "state failed");
+    state = body.state;
+    render(state);
+    setStatus("ready");
+  } catch (e) {
+    setStatus(String(e), "bad");
+  }
+}
+
+function render(s) {
+  $("sceneLine").textContent = `${s.scene_id} · seed ${s.seed} · ${s.viewport.width}×${s.viewport.height} · camera ${s.camera.id}`;
+  $("vSnap").textContent = s.snapshot_version;
+  $("vCam").textContent = s.camera_version;
+  $("vRecipe").textContent = s.recipe_version;
+  $("vAlgo").textContent = s.algorithm_version;
+  $("vCache").textContent = s.cache_entries;
+  $("steps").value = s.recipe.preview_steps;
+  $("steps").max = s.recipe.steps;
+  $("stepsVal").textContent = s.recipe.preview_steps;
+  $("shadow").value = s.recipe.preview_shadow_samples;
+  $("shadow").max = s.recipe.shadow_samples;
+  $("shadowVal").textContent = s.recipe.preview_shadow_samples;
+
+  renderFrame("preview", s.preview);
+  renderFrame("exact", s.exact);
+  renderCompare(s.compare, s.compare_error, s.recipe.pixel_tolerance);
+  renderBlocks(s.exact.blocks);
+  renderQueue([...(s.preview.queue || []), ...(s.exact.queue || [])]);
+  renderInvalidation(s);
+  renderErrors(s.injections || []);
+  drawScene(s.media);
+  $("previewImg").src = `/preview.png?mode=preview&t=${Date.now()}`;
+  $("exactImg").src = `/preview.png?mode=exact&t=${Date.now()}`;
+}
+
+function renderFrame(which, f) {
+  $(which + "Elapsed").textContent = `${fmt(f.elapsed_ms, 3)} ms`;
+  $(which + "Steps").textContent = `${f.actual_steps} / ${f.step_budget}`;
+  $(which + "Shadows").textContent = `${f.actual_shadows} / ${f.shadow_budget}`;
+  if (which === "preview") {
+    $("previewDeadline").textContent = f.deadline_met ? "met" : "missed";
+    $("previewDeadline").className = f.deadline_met ? "ok" : "bad";
+    $("previewQueue").textContent = (f.queue || []).length;
+  } else {
+    $("exactBudget").textContent = f.step_budget;
+    $("exactBlocks").textContent = (f.blocks || []).length;
+  }
+}
+
+function renderCompare(c, err, tol) {
+  $("cmpMax").textContent = fmt(c.max_abs_error, 9);
+  $("cmpMean").textContent = fmt(c.mean_abs_error, 9);
+  $("cmpOver").textContent = fmt(c.over_tolerance_rate, 6);
+  $("cmpTol").textContent = fmt(tol, 6);
+  if (err) {
+    $("cmpVerdict").textContent = err.code;
+    $("cmpVerdict").className = "bad";
+  } else {
+    $("cmpVerdict").textContent = "consistent";
+    $("cmpVerdict").className = "ok";
+  }
+}
+
+function renderBlocks(blocks) {
+  const body = $("blockRows");
+  body.innerHTML = "";
+  for (const b of blocks || []) {
+    const tr = document.createElement("tr");
+    const vals = [`(${b.x},${b.y})`, b.pixels, fmt(b.transmittance_avg, 6), fmt(b.scatter_avg, 6), b.steps, b.shadow_samples];
+    for (const v of vals) {
+      const td = document.createElement("td");
+      td.textContent = v;
+      tr.appendChild(td);
+    }
+    body.appendChild(tr);
+  }
+}
+
+function renderQueue(events) {
+  const body = $("queueRows");
+  body.innerHTML = "";
+  if (!events.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 3; td.textContent = "no queued blocks"; td.className = "hint";
+    tr.appendChild(td); body.appendChild(tr);
+    return;
+  }
+  for (const q of events) {
+    const tr = document.createElement("tr");
+    for (const v of [q.block_index, fmt(q.wait_ms, 3), q.reason]) {
+      const td = document.createElement("td");
+      td.textContent = v;
+      tr.appendChild(td);
+    }
+    body.appendChild(tr);
+  }
+}
+
+function renderInvalidation(s) {
+  const inv = s.invalidation;
+  const grid = $("invGrid");
+  grid.innerHTML = "";
+  const affected = new Set((inv?.affected_blocks || []));
+  for (const b of s.exact.blocks || []) {
+    const id = `block:${b.x},${b.y}`;
+    const div = document.createElement("div");
+    div.className = "inv-cell" + (affected.has(id) ? " hit" : "");
+    div.innerHTML = `<strong>(${b.x},${b.y})</strong><small>T ${fmt(b.transmittance_avg, 4)}</small><small>L ${fmt(b.scatter_avg, 4)}</small>`;
+    grid.appendChild(div);
+  }
+  $("invAffected").textContent = inv ? inv.affected_blocks.length : "—";
+  $("invUnaffected").textContent = inv ? inv.unaffected_blocks : "—";
+  $("invPixels").textContent = inv ? inv.affected_pixels : "—";
+  $("invDeleted").textContent = inv ? inv.cache_rows_deleted : "—";
+  $("invCache").textContent = inv ? `${inv.cache_hits_after_edit} / ${inv.cache_misses_after_edit}` : "—";
+  if (inv) {
+    $("invSummary").textContent = `${inv.edit.kind} ${inv.edit.medium_id}[${inv.edit.ix},${inv.edit.iy},${inv.edit.iz}] → ${inv.affected_blocks.length} blocks / ${inv.affected_pixels} downstream pixels; ${inv.unaffected_blocks} blocks reused persistent cache.`;
+  }
+}
+
+function addError(err) {
+  const log = $("errorLog");
+  if (log.querySelector(".hint")) log.innerHTML = "";
+  const div = document.createElement("div");
+  div.className = "log-entry";
+  const loc = [
+    err.medium_id ? `medium=${err.medium_id}` : "",
+    err.camera_id ? `camera=${err.camera_id}` : "",
+    err.field ? `field=${err.field}` : "",
+    err.ray_id ? `ray=${err.ray_id}` : "",
+    `block=(${err.block_x},${err.block_y})`,
+    err.first_pixel_x >= 0 ? `pixel=(${err.first_pixel_x},${err.first_pixel_y})` : ""
+  ].filter(Boolean).join(" · ");
+  div.innerHTML = `<code>${escapeHTML(err.code || "ERROR")}</code> ${escapeHTML(err.message || "")}<br><span class="hint">${escapeHTML(loc)}</span>`;
+  log.prepend(div);
+}
+
+function renderErrors(errors) {
+  const log = $("errorLog");
+  log.innerHTML = "";
+  if (!errors.length) {
+    log.innerHTML = '<div class="hint">No injected errors yet.</div>';
+    return;
+  }
+  for (let i = errors.length - 1; i >= 0; i--) addError(errors[i]);
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+const palette = ["#65d6b3", "#f0b35a", "#86a8ff"];
+function drawScene(media) {
+  const canvas = $("sceneCanvas");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = "#0d1217"; ctx.fillRect(0, 0, W, H);
+  const cx = W * 0.5, cy = H * 0.53, scale = 64;
+  const yaw = -0.62, pitch = 0.43;
+  const project = (p) => {
+    let x = p.x, y = p.y, z = p.z;
+    let rx = x * Math.cos(yaw) - z * Math.sin(yaw);
+    let rz = x * Math.sin(yaw) + z * Math.cos(yaw);
+    let ry = y * Math.cos(pitch) - rz * Math.sin(pitch);
+    rz = y * Math.sin(pitch) + rz * Math.cos(pitch);
+    return [cx + rx * scale, cy - ry * scale + rz * 0.22 * scale];
+  };
+  // ground grid
+  ctx.strokeStyle = "rgba(101,214,179,.08)"; ctx.lineWidth = 1;
+  for (let i = -3; i <= 3; i++) {
+    let a = project({x:i,y:-1.8,z:-3}), b = project({x:i,y:-1.8,z:3});
+    ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+    a = project({x:-3,y:-1.8,z:i}); b = project({x:3,y:-1.8,z:i});
+    ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  }
+  media.forEach((m, idx) => {
+    const c = palette[idx % palette.length];
+    const {min, max} = m.bounds;
+    const v = [
+      {x:min.x,y:min.y,z:min.z},{x:max.x,y:min.y,z:min.z},{x:max.x,y:min.y,z:max.z},{x:min.x,y:min.y,z:max.z},
+      {x:min.x,y:max.y,z:min.z},{x:max.x,y:max.y,z:min.z},{x:max.x,y:max.y,z:max.z},{x:min.x,y:max.y,z:max.z}
+    ].map(project);
+    const faces = [[0,1,2,3],[4,5,6,7],[0,1,5,4],[3,2,6,7],[1,2,6,5],[0,3,7,4]];
+    ctx.fillStyle = c + "18";
+    ctx.strokeStyle = c;
+    ctx.lineWidth = 1.6;
+    faces.forEach(f => {
+      ctx.beginPath(); ctx.moveTo(v[f[0]][0],v[f[0]][1]);
+      f.slice(1).forEach(k => ctx.lineTo(v[k][0],v[k][1]));
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    });
+    const center = project({x:(min.x+max.x)/2,y:max.y+.12,z:(min.z+max.z)/2});
+    ctx.fillStyle = c; ctx.font = "13px ui-monospace, monospace";
+    ctx.fillText(`${m.id}  μa=${m.absorption} μs=${m.scattering}`, center[0] - 60, center[1]);
+  });
+  const cam = state?.camera;
+  if (cam) {
+    const p = project(cam.position);
+    const t = project(cam.target);
+    ctx.strokeStyle = "#e8edf2"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(t[0],t[1]); ctx.stroke();
+    ctx.fillStyle = "#e8edf2"; ctx.beginPath(); ctx.arc(p[0],p[1],3,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = "rgba(232,237,242,.75)"; ctx.fillText(cam.id, p[0]+6, p[1]-6);
+  }
+}
+
+async function runRender(mode) {
+  const q = new URLSearchParams({mode});
+  if (mode === "preview") {
+    q.set("steps", $("steps").value);
+    q.set("shadow", $("shadow").value);
+  }
+  const body = await request(`/api/render?${q}`);
+  if (body?.state) { state = body.state; render(state); }
+}
+
+$("previewBtn").addEventListener("click", () => runRender("preview"));
+$("exactBtn").addEventListener("click", () => runRender("exact"));
+$("steps").addEventListener("input", () => {
+  $("stepsVal").textContent = $("steps").value;
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => runRender("preview"), 100);
+});
+$("shadow").addEventListener("input", () => {
+  $("shadowVal").textContent = $("shadow").value;
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => runRender("preview"), 100);
+});
+$("steps").addEventListener("change", () => {
+  clearTimeout(exactTimer);
+  exactTimer = setTimeout(() => runRender("exact"), 180);
+});
+$("shadow").addEventListener("change", () => {
+  clearTimeout(exactTimer);
+  exactTimer = setTimeout(() => runRender("exact"), 180);
+});
+$("editBtn").addEventListener("click", async () => {
+  const body = await request("/api/edit?medium=media-beta&x=2&y=2&z=2");
+  if (body?.state) { state = body.state; render(state); }
+});
+$("resetBtn").addEventListener("click", async () => {
+  const body = await request("/api/reset");
+  if (body?.state) { state = body.state; render(state); }
+});
+document.querySelectorAll("[data-inject]").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    await request(`/api/inject?kind=${btn.dataset.inject}`);
+  });
+});
+refresh();
+</script>
+</body>
+</html>
