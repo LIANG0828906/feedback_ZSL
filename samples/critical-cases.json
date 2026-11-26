@@ -1,0 +1,287 @@
+[
+  {
+    "name": "v1_permille_to_v2_basis_points_alpha_quota",
+    "input": {
+      "permille": 250
+    },
+    "conversion": {
+      "value": 2500,
+      "exact": true,
+      "overflow": false,
+      "saturated": false
+    },
+    "expected_bytes": 2621440000,
+    "available_quota_bytes": 2621440000,
+    "guarantee_remaining_bytes": 314572800,
+    "burst_amount_bytes": 1310720000,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "exact"
+  },
+  {
+    "name": "bytes_to_kib_non_divisible_boundary",
+    "input": {
+      "bytes": 1025,
+      "fixed_scale": 1000000000
+    },
+    "conversion": {
+      "value": 1000976563,
+      "exact": false,
+      "overflow": false,
+      "saturated": false,
+      "remainder": 1,
+      "denominator": 1024
+    },
+    "expected_bytes": 1025,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "rounded_within_tolerance"
+  },
+  {
+    "name": "tick_millis_fractional_alignment",
+    "input": {
+      "fixed_scale": 1000000000,
+      "millis": 15,
+      "tick_millis": 10
+    },
+    "conversion": {
+      "value": 1500000000,
+      "exact": false,
+      "overflow": false,
+      "saturated": false,
+      "remainder": 5,
+      "denominator": 10
+    },
+    "declared_tolerance_bytes": 0,
+    "exceeds_tolerance": false,
+    "status": "fractional_tick_diagnostic_only"
+  },
+  {
+    "name": "quota_ratio_last_basis_point",
+    "input": {
+      "basis_bytes": 10485760000,
+      "numerator": 9999,
+      "scale": 10000
+    },
+    "conversion": {
+      "value": 10484711424,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 10484711424,
+    "available_quota_bytes": 10484711424,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "exact"
+  },
+  {
+    "name": "permille_overflow_saturates",
+    "input": {
+      "permille": 9223372036854775807
+    },
+    "conversion": {
+      "value": 9223372036854775807,
+      "exact": false,
+      "overflow": true,
+      "saturated": true,
+      "code": "E_FIXED_SCALE_OVERFLOW"
+    },
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": true,
+    "status": "overflow_saturated_rejected_by_loader"
+  },
+  {
+    "name": "kib_to_bytes_overflow_saturates",
+    "input": {
+      "kib": 9223372036854775807
+    },
+    "conversion": {
+      "value": 9223372036854775807,
+      "exact": false,
+      "overflow": true,
+      "saturated": true,
+      "code": "E_FIXED_SCALE_OVERFLOW"
+    },
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": true,
+    "status": "overflow_saturated_rejected_by_loader"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-alpha",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 300,
+      "quota_basis_points": 2500
+    },
+    "conversion": {
+      "value": 2621440000,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 2621440000,
+    "available_quota_bytes": 2621440000,
+    "guarantee_remaining_bytes": 314572800,
+    "burst_amount_bytes": 1310720000,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-beta",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 200,
+      "quota_basis_points": 2000
+    },
+    "conversion": {
+      "value": 2097152000,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 2097152000,
+    "available_quota_bytes": 2097152000,
+    "guarantee_remaining_bytes": 209715200,
+    "burst_amount_bytes": 1048576000,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-gamma",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 150,
+      "quota_basis_points": 1800
+    },
+    "conversion": {
+      "value": 1887436800,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 1887436800,
+    "available_quota_bytes": 1887436800,
+    "guarantee_remaining_bytes": 157286400,
+    "burst_amount_bytes": 943718400,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-delta",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 100,
+      "quota_basis_points": 1500
+    },
+    "conversion": {
+      "value": 1572864000,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 1572864000,
+    "available_quota_bytes": 1572864000,
+    "guarantee_remaining_bytes": 104857600,
+    "burst_amount_bytes": 786432000,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-epsilon",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 100,
+      "quota_basis_points": 3000
+    },
+    "conversion": {
+      "value": 3145728000,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 3145728000,
+    "available_quota_bytes": 3145728000,
+    "guarantee_remaining_bytes": 104857600,
+    "burst_amount_bytes": 1572864000,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-zeta",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 100,
+      "quota_basis_points": 1000
+    },
+    "conversion": {
+      "value": 1048576000,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 1048576000,
+    "available_quota_bytes": 1048576000,
+    "guarantee_remaining_bytes": 104857600,
+    "burst_amount_bytes": 524288000,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-eta",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 80,
+      "quota_basis_points": 800
+    },
+    "conversion": {
+      "value": 838860800,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 838860800,
+    "available_quota_bytes": 838860800,
+    "guarantee_remaining_bytes": 83886080,
+    "burst_amount_bytes": 419430400,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  },
+  {
+    "name": "tenant_fixed_point_values_tenant-theta",
+    "input": {
+      "burst_permille_of_quota": 500,
+      "guarantee_basis_points": 100,
+      "quota_basis_points": 1000
+    },
+    "conversion": {
+      "value": 1048576000,
+      "exact": true,
+      "overflow": false,
+      "saturated": false,
+      "denominator": 10000
+    },
+    "expected_bytes": 1048576000,
+    "available_quota_bytes": 1048576000,
+    "guarantee_remaining_bytes": 104857600,
+    "burst_amount_bytes": 524288000,
+    "declared_tolerance_bytes": 1,
+    "exceeds_tolerance": false,
+    "status": "tenant_values_within_declared_tolerance"
+  }
+]

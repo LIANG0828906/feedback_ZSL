@@ -1,0 +1,363 @@
+{
+  "apiVersion": "quota.project.v2",
+  "projectName": "quota-diagnostic-seed-42",
+  "deterministicSeed": 42,
+  "logicalTickCount": 8,
+  "timing": {
+    "tickDurationMillis": 10
+  },
+  "scale": {
+    "ratioBasisBytes": 10485760000,
+    "toleranceBytes": 1
+  },
+  "runtime": {
+    "defaultBudgetMillis": 5,
+    "workerBudget": 4,
+    "taskQueueCapacity": 16,
+    "tenantQueueLimit": 2,
+    "retryBackoffTicks": 2
+  },
+  "topology": {
+    "racks": [
+      {
+        "rackId": "rack-r1",
+        "nodes": [
+          {
+            "nodeId": "node-a",
+            "capacityKiB": 1048576,
+            "tenantAllowlist": [
+              "tenant-alpha",
+              "tenant-beta",
+              "tenant-gamma",
+              "tenant-delta",
+              "tenant-epsilon"
+            ]
+          },
+          {
+            "nodeId": "node-b",
+            "capacityKiB": 786432,
+            "tenantAllowlist": [
+              "tenant-zeta"
+            ]
+          }
+        ]
+      },
+      {
+        "rackId": "rack-r2",
+        "nodes": [
+          {
+            "nodeId": "node-c",
+            "capacityKiB": 524288,
+            "tenantAllowlist": [
+              "tenant-eta"
+            ]
+          }
+        ]
+      },
+      {
+        "rackId": "rack-r3",
+        "nodes": [
+          {
+            "nodeId": "node-q",
+            "capacityKiB": 131072,
+            "tenantAllowlist": [
+              "tenant-theta"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "tenantProfiles": [
+    {
+      "tenantId": "tenant-alpha",
+      "priorityClass": 3,
+      "weight": 100,
+      "quotaBasisPoints": 2500,
+      "guaranteeBasisPoints": 300,
+      "burstLimitKiB": 1280000,
+      "homeNodeId": "node-a"
+    },
+    {
+      "tenantId": "tenant-beta",
+      "priorityClass": 4,
+      "weight": 100,
+      "quotaBasisPoints": 2000,
+      "guaranteeBasisPoints": 200,
+      "burstLimitKiB": 1024000,
+      "homeNodeId": "node-a"
+    },
+    {
+      "tenantId": "tenant-gamma",
+      "priorityClass": 2,
+      "weight": 100,
+      "quotaBasisPoints": 1800,
+      "guaranteeBasisPoints": 150,
+      "burstLimitKiB": 921600,
+      "homeNodeId": "node-a"
+    },
+    {
+      "tenantId": "tenant-delta",
+      "priorityClass": 1,
+      "weight": 100,
+      "quotaBasisPoints": 1500,
+      "guaranteeBasisPoints": 100,
+      "burstLimitKiB": 768000,
+      "homeNodeId": "node-a"
+    },
+    {
+      "tenantId": "tenant-epsilon",
+      "priorityClass": 9,
+      "weight": 100,
+      "quotaBasisPoints": 3000,
+      "guaranteeBasisPoints": 100,
+      "burstLimitKiB": 1536000,
+      "homeNodeId": "node-a"
+    },
+    {
+      "tenantId": "tenant-zeta",
+      "priorityClass": 2,
+      "weight": 100,
+      "quotaBasisPoints": 1000,
+      "guaranteeBasisPoints": 100,
+      "burstLimitKiB": 512000,
+      "homeNodeId": "node-b"
+    },
+    {
+      "tenantId": "tenant-eta",
+      "priorityClass": 1,
+      "weight": 100,
+      "quotaBasisPoints": 800,
+      "guaranteeBasisPoints": 80,
+      "burstLimitKiB": 409600,
+      "homeNodeId": "node-c"
+    },
+    {
+      "tenantId": "tenant-theta",
+      "priorityClass": 0,
+      "weight": 100,
+      "quotaBasisPoints": 1000,
+      "guaranteeBasisPoints": 100,
+      "burstLimitKiB": 512000,
+      "homeNodeId": "node-q"
+    }
+  ],
+  "eventLog": [
+    {
+      "sequenceNumber": 1,
+      "atMillis": 10,
+      "eventType": "APPLY",
+      "requestId": "req-epsilon-pre",
+      "nodeId": "node-a",
+      "tenantId": "tenant-epsilon",
+      "amountKiB": 204800,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 2,
+      "atMillis": 10,
+      "eventType": "APPLY",
+      "requestId": "req-zeta-background",
+      "nodeId": "node-b",
+      "tenantId": "tenant-zeta",
+      "amountKiB": 93184,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 3,
+      "atMillis": 10,
+      "eventType": "APPLY",
+      "requestId": "req-eta-background",
+      "nodeId": "node-c",
+      "tenantId": "tenant-eta",
+      "amountKiB": 102400,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 4,
+      "atMillis": 20,
+      "eventType": "WEIGHT_ADJUST",
+      "requestId": "",
+      "nodeId": "",
+      "tenantId": "tenant-alpha",
+      "amountKiB": 0,
+      "newWeight": 120,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 5,
+      "atMillis": 20,
+      "eventType": "WEIGHT_ADJUST",
+      "requestId": "",
+      "nodeId": "",
+      "tenantId": "tenant-zeta",
+      "amountKiB": 0,
+      "newWeight": 128,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 6,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-beta",
+      "nodeId": "node-a",
+      "tenantId": "tenant-beta",
+      "amountKiB": 307200,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 7,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-alpha",
+      "nodeId": "node-a",
+      "tenantId": "tenant-alpha",
+      "amountKiB": 409600,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 8,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-gamma",
+      "nodeId": "node-a",
+      "tenantId": "tenant-gamma",
+      "amountKiB": 204800,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 9,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-delta",
+      "nodeId": "node-a",
+      "tenantId": "tenant-delta",
+      "amountKiB": 307200,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 10,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-epsilon",
+      "nodeId": "node-a",
+      "tenantId": "tenant-epsilon",
+      "amountKiB": 409600,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 11,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-theta-1",
+      "nodeId": "node-q",
+      "tenantId": "tenant-theta",
+      "amountKiB": 204800,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 12,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-theta-2",
+      "nodeId": "node-q",
+      "tenantId": "tenant-theta",
+      "amountKiB": 204800,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 13,
+      "atMillis": 30,
+      "eventType": "APPLY",
+      "requestId": "req-theta-3",
+      "nodeId": "node-q",
+      "tenantId": "tenant-theta",
+      "amountKiB": 204800,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": ""
+    },
+    {
+      "sequenceNumber": 14,
+      "atMillis": 40,
+      "eventType": "RELEASE",
+      "requestId": "",
+      "nodeId": "",
+      "tenantId": "",
+      "amountKiB": 204800,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": "req-epsilon-pre"
+    },
+    {
+      "sequenceNumber": 15,
+      "atMillis": 40,
+      "eventType": "RELEASE",
+      "requestId": "",
+      "nodeId": "",
+      "tenantId": "",
+      "amountKiB": 93184,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": "req-zeta-background"
+    },
+    {
+      "sequenceNumber": 16,
+      "atMillis": 50,
+      "eventType": "RELEASE",
+      "requestId": "",
+      "nodeId": "",
+      "tenantId": "",
+      "amountKiB": 280576,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": "req-beta"
+    },
+    {
+      "sequenceNumber": 17,
+      "atMillis": 60,
+      "eventType": "RELEASE",
+      "requestId": "",
+      "nodeId": "",
+      "tenantId": "",
+      "amountKiB": 307200,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": "req-alpha"
+    },
+    {
+      "sequenceNumber": 18,
+      "atMillis": 70,
+      "eventType": "RELEASE",
+      "requestId": "",
+      "nodeId": "",
+      "tenantId": "",
+      "amountKiB": 153600,
+      "newWeight": 0,
+      "decisionBudgetMillis": 5,
+      "releaseRequestId": "req-gamma"
+    }
+  ]
+}

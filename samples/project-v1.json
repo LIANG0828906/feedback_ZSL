@@ -1,0 +1,338 @@
+{
+  "schema_version": "quota.project.v1",
+  "project_id": "quota-diagnostic-seed-42",
+  "seed": 42,
+  "logical_ticks": 8,
+  "policy": {
+    "tick_millis": 10,
+    "ratio_basis_bytes": 10485760000,
+    "tolerance_bytes": 1,
+    "default_budget_ms": 5,
+    "worker_budget": 4,
+    "task_queue_capacity": 16,
+    "tenant_queue_limit": 2,
+    "retry_backoff_ticks": 2
+  },
+  "nodes": [
+    {
+      "id": "node-a",
+      "rack": "rack-r1",
+      "capacity_bytes": 1073741824,
+      "allowed_tenants": [
+        "tenant-alpha",
+        "tenant-beta",
+        "tenant-gamma",
+        "tenant-delta",
+        "tenant-epsilon"
+      ]
+    },
+    {
+      "id": "node-b",
+      "rack": "rack-r1",
+      "capacity_bytes": 805306368,
+      "allowed_tenants": [
+        "tenant-zeta"
+      ]
+    },
+    {
+      "id": "node-c",
+      "rack": "rack-r2",
+      "capacity_bytes": 536870912,
+      "allowed_tenants": [
+        "tenant-eta"
+      ]
+    },
+    {
+      "id": "node-q",
+      "rack": "rack-r3",
+      "capacity_bytes": 134217728,
+      "allowed_tenants": [
+        "tenant-theta"
+      ]
+    }
+  ],
+  "tenants": [
+    {
+      "id": "tenant-alpha",
+      "priority": 3,
+      "initial_weight": 100,
+      "quota_permille": 250,
+      "guarantee_permille": 30,
+      "home_node_id": "node-a"
+    },
+    {
+      "id": "tenant-beta",
+      "priority": 4,
+      "initial_weight": 100,
+      "quota_permille": 200,
+      "guarantee_permille": 20,
+      "home_node_id": "node-a"
+    },
+    {
+      "id": "tenant-gamma",
+      "priority": 2,
+      "initial_weight": 100,
+      "quota_permille": 180,
+      "guarantee_permille": 15,
+      "home_node_id": "node-a"
+    },
+    {
+      "id": "tenant-delta",
+      "priority": 1,
+      "initial_weight": 100,
+      "quota_permille": 150,
+      "guarantee_permille": 10,
+      "home_node_id": "node-a"
+    },
+    {
+      "id": "tenant-epsilon",
+      "priority": 9,
+      "initial_weight": 100,
+      "quota_permille": 300,
+      "guarantee_permille": 10,
+      "home_node_id": "node-a"
+    },
+    {
+      "id": "tenant-zeta",
+      "priority": 2,
+      "initial_weight": 100,
+      "quota_permille": 100,
+      "guarantee_permille": 10,
+      "home_node_id": "node-b"
+    },
+    {
+      "id": "tenant-eta",
+      "priority": 1,
+      "initial_weight": 100,
+      "quota_permille": 80,
+      "guarantee_permille": 8,
+      "home_node_id": "node-c"
+    },
+    {
+      "id": "tenant-theta",
+      "priority": 0,
+      "initial_weight": 100,
+      "quota_permille": 100,
+      "guarantee_permille": 10,
+      "home_node_id": "node-q"
+    }
+  ],
+  "events": [
+    {
+      "sequence": 1,
+      "at_tick": 1,
+      "type": "APPLY",
+      "request_id": "req-epsilon-pre",
+      "node_id": "node-a",
+      "tenant_id": "tenant-epsilon",
+      "amount_bytes": 209715200,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 2,
+      "at_tick": 1,
+      "type": "APPLY",
+      "request_id": "req-zeta-background",
+      "node_id": "node-b",
+      "tenant_id": "tenant-zeta",
+      "amount_bytes": 95420416,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 3,
+      "at_tick": 1,
+      "type": "APPLY",
+      "request_id": "req-eta-background",
+      "node_id": "node-c",
+      "tenant_id": "tenant-eta",
+      "amount_bytes": 104857600,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 4,
+      "at_tick": 2,
+      "type": "WEIGHT_ADJUST",
+      "request_id": "",
+      "node_id": "",
+      "tenant_id": "tenant-alpha",
+      "amount_bytes": 0,
+      "new_weight": 120,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 5,
+      "at_tick": 2,
+      "type": "WEIGHT_ADJUST",
+      "request_id": "",
+      "node_id": "",
+      "tenant_id": "tenant-zeta",
+      "amount_bytes": 0,
+      "new_weight": 128,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 6,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-beta",
+      "node_id": "node-a",
+      "tenant_id": "tenant-beta",
+      "amount_bytes": 314572800,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 7,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-alpha",
+      "node_id": "node-a",
+      "tenant_id": "tenant-alpha",
+      "amount_bytes": 419430400,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 8,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-gamma",
+      "node_id": "node-a",
+      "tenant_id": "tenant-gamma",
+      "amount_bytes": 209715200,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 9,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-delta",
+      "node_id": "node-a",
+      "tenant_id": "tenant-delta",
+      "amount_bytes": 314572800,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 10,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-epsilon",
+      "node_id": "node-a",
+      "tenant_id": "tenant-epsilon",
+      "amount_bytes": 419430400,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 11,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-theta-1",
+      "node_id": "node-q",
+      "tenant_id": "tenant-theta",
+      "amount_bytes": 209715200,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 12,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-theta-2",
+      "node_id": "node-q",
+      "tenant_id": "tenant-theta",
+      "amount_bytes": 209715200,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 13,
+      "at_tick": 3,
+      "type": "APPLY",
+      "request_id": "req-theta-3",
+      "node_id": "node-q",
+      "tenant_id": "tenant-theta",
+      "amount_bytes": 209715200,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": ""
+    },
+    {
+      "sequence": 14,
+      "at_tick": 4,
+      "type": "RELEASE",
+      "request_id": "",
+      "node_id": "",
+      "tenant_id": "",
+      "amount_bytes": 209715200,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": "req-epsilon-pre"
+    },
+    {
+      "sequence": 15,
+      "at_tick": 4,
+      "type": "RELEASE",
+      "request_id": "",
+      "node_id": "",
+      "tenant_id": "",
+      "amount_bytes": 95420416,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": "req-zeta-background"
+    },
+    {
+      "sequence": 16,
+      "at_tick": 5,
+      "type": "RELEASE",
+      "request_id": "",
+      "node_id": "",
+      "tenant_id": "",
+      "amount_bytes": 287309824,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": "req-beta"
+    },
+    {
+      "sequence": 17,
+      "at_tick": 6,
+      "type": "RELEASE",
+      "request_id": "",
+      "node_id": "",
+      "tenant_id": "",
+      "amount_bytes": 314572800,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": "req-alpha"
+    },
+    {
+      "sequence": 18,
+      "at_tick": 7,
+      "type": "RELEASE",
+      "request_id": "",
+      "node_id": "",
+      "tenant_id": "",
+      "amount_bytes": 157286400,
+      "new_weight": 0,
+      "decision_budget_ms": 5,
+      "release_request_id": "req-gamma"
+    }
+  ]
+}
