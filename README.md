@@ -19,3 +19,22 @@ SQLite 持久化使用 Go 标准库以外的驱动时需自行提前安装并锁
 
 验收：
 使用本地确定性样本验证三版本装载一致、可行性与打分、增量重算与强制终止后续算结果。
+
+---
+
+## 交付物与快速上手
+
+本仓库已实现可集成的 Go 领域组件与本地诊断工作台，仅依赖 Go 标准库。
+
+```bash
+go vet ./...
+go test ./...
+go test -race ./internal/runtime/... ./internal/engine/...
+go run ./cmd/schedlab all artifacts/demo
+```
+
+- 设计与口径：`docs/DESIGN.md`
+- 实测记录：`docs/VERIFICATION.md`
+- 演示报告：`artifacts/demo/`
+- 稳定业务码：`internal/faults/faults.go`
+- 工作台命令：`load | feasibility | score | scale | incremental | checkpoint | faults | all`
