@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DialogueFit 韵律拨配诊断</title>
+<style>
+:root{--bg:#0f172a;--panel:#111c33;--line:#263653;--text:#e5edf8;--muted:#93a4bf;--accent:#38bdf8;--ok:#34d399;--warn:#fbbf24;--bad:#fb7185;--vowel:#38bdf8;--consonant:#a78bfa;--silence:#64748b}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+h1{font-size:20px;margin:0} .sub{color:var(--muted)} main{padding:20px 24px;display:grid;grid-template-columns:320px 1fr;gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.panel h2{font-size:15px;margin:0 0 12px} .cards{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}.card .k{color:var(--muted);font-size:12px}.card .v{font-size:22px;font-weight:700;margin-top:4px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+select,input,button{background:#0b1426;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit}
+button{cursor:pointer;background:#164e63;border-color:#0891b2}button.secondary{background:#312e81;border-color:#6366f1}button.danger{background:#7f1d1d;border-color:#ef4444}
+.row{display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center;margin:8px 0}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600}
+svg{width:100%;height:auto;display:block}.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:8px}.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.muted{color:var(--muted)}.pill{border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1100px){main{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>DialogueFit</h1><span class="sub">韵律包络对齐 · 时长拨配 · 精确失效 · SQLite 检查点</span><span id="health" class="pill">loading…</span></header>
+<main>
+<section>
+  <div class="panel">
+    <h2>对白与编辑</h2>
+    <label class="row"><span>对白</span><select id="dialogue"></select></label>
+    <div class="row"><span>目标采样</span><input id="target" type="number" step="1"></div>
+    <div class="row"><span>拉伸上界</span><input id="cap" type="number" step="0.05" min="1"></div>
+    <div class="row"><span>静音保底</span><input id="silence" type="number" step="16"></div>
+    <div class="row"><span>重音容差</span><input id="tolerance" type="number" step="1"></div>
+    <div class="controls"><button id="apply">应用编辑</button><button id="retry" class="secondary">重试对白</button><button id="inject" class="danger">注入失败</button></div>
+    <p id="editMessage" class="muted"></p>
+  </div>
+  <div class="panel"><h2>三路径一致性</h2><div id="paths"></div></div>
+  <div class="panel"><h2>独立复核</h2><div id="recheck"></div></div>
+  <div class="panel"><h2>调度预算</h2><div id="scheduler" class="muted"></div></div>
+</section>
+<section>
+  <div class="cards" id="cards"></div>
+  <div class="panel"><h2>对白时间轴与拉伸</h2><div id="timeline"></div>
+    <div class="legend"><span><i class="dot" style="background:var(--vowel)"></i>元音</span><span><i class="dot" style="background:var(--consonant)"></i>辅音</span><span><i class="dot" style="background:var(--silence)"></i>静音</span><span><i class="dot" style="background:var(--warn)"></i>上界触发</span><span><i class="dot" style="background:var(--bad)"></i>重音</span></div>
+  </div>
+  <div class="panel"><h2>逐帧归一化包络与重音落点</h2><div id="envelope"></div></div>
+  <div class="grid2">
+    <div class="panel"><h2>拉伸分段 / 上界依据</h2><div style="max-height:360px;overflow:auto"><table id="segments"></table></div></div>
+    <div class="panel"><h2>失效清单</h2><div style="max-height:360px;overflow:auto"><table id="invalidations"></table></div></div>
+  </div>
+  <div class="panel"><h2>排队事件</h2><table id="queue"></table></div>
+</section>
+</main>
+<script>
+let STATE=null, EDIT_REPORT=null;
+const $=id=>document.getElementById(id);
+function catColor(c){return c==='vowel'?'var(--vowel)':c==='consonant'?'var(--consonant)':'var(--silence)'}
+function result(){const id=$('dialogue').value; return (STATE.results||[]).find(r=>r.dialogue_id===id)}
+function projectDialogue(id){return (STATE.report?[]:[])}
+async function load(){const r=await fetch('/api/state'); STATE=await r.json(); render()}
+function render(){
+  $('health').textContent='local deterministic'; $('health').className='pill ok';
+  const reps=STATE.results||[]; const sel=$('dialogue'); const current=sel.value;
+  sel.innerHTML=reps.map(r=>`<option value="${r.dialogue_id}">${r.dialogue_id} · ${r.frames.length} 帧</option>`).join('');
+  if(current) sel.value=current;
+  renderCards(); renderPaths(); renderRecheck(); renderScheduler(); renderDialogue(); renderInvalidations(); renderQueue();
+}
+function renderCards(){
+ const sc=STATE.report?.scenario||{}, cr=sc.consistency||{}, ir=STATE.report?.independent_recheck||{};
+ const r=result(); $('cards').innerHTML=[
+  ['总帧数',cr.compared_frames??0,''],['重音数',cr.compared_stress_marks??0,''],['分段数',cr.compared_segments??0,''],
+  ['复核',ir.ok?'通过':'违规',ir.ok?'ok':'bad']
+ ].map(x=>`<div class="card"><div class="k">${x[0]}</div><div class="v ${x[2]}">${x[1]}</div></div>`).join('');
+ if(r){$('target').placeholder=r.params.target_samples;$('cap').placeholder=r.params.max_stretch;$('silence').placeholder=r.params.min_silence_samples;$('tolerance').placeholder=r.params.stress_tolerance_samples}
+}
+function renderPaths(){const c=STATE.report?.scenario?.consistency||{}; $('paths').innerHTML=`<p class="${c.ok?'ok':'bad'}">${c.ok?'增量、断点恢复、全量逐项一致':'存在不一致'}</p>`+ (c.paths||[]).map(p=>`<div class="pill" style="margin:3px">${p.name}: ${p.frames} 帧 / ${p.stress_marks} 重音 / ${p.segments} 段 / 提交 ${p.commit_sequence}</div>`).join('') + mismatch(c.incremental_mismatch)+mismatch(c.resume_mismatch)}
+function mismatch(m){return m&&m.ok===false?`<p class="bad mono">${m.dialogue_id} #${m.phoneme_index} ${m.field}: ${m.message}</p>`:''}
+function renderRecheck(){const x=STATE.report?.independent_recheck||{}; const v=x.first_violation; $('recheck').innerHTML=`<p class="${x.ok?'ok':'bad'}">${x.ok?'独立指纹与持久化分段复核通过':'首个违规：'+(v?.dialogue_id+' '+v?.field)}</p><div class="muted">对白 ${x.checked_dialogues} · 帧 ${x.checked_frames} · 重音 ${x.checked_stress_marks} · 段 ${x.checked_segments} · 指纹 ${x.fingerprints_recomputed}</div>`}
+function renderScheduler(){const ev=STATE.report?.scenario?.queue_events||[]; $('scheduler').innerHTML=`最大并行 2 · 单线程缓冲 16384 samples · 总缓冲 24000 · 队列预算 2<br>记录到 ${ev.length} 个阻塞事件`}
+function renderDialogue(){
+ const r=result(); if(!r){$('timeline').innerHTML='无结果';return}
+ const maxEnd=Math.max(...r.segments.map(s=>s.end_sample)); const W=920,H=110,P=8; const x=v=>P+(v/maxEnd)*(W-P*2);
+ let blocks=r.segments.map(s=>{const ph=r.phoneme_results[s.index]; const cat=guessCategory(r,s.index); const fill=s.hit_cap?'var(--warn)':catColor(cat); return `<rect x="${x(s.start_sample)}" y="24" width="${Math.max(1,x(s.end_sample)-x(s.start_sample)-1)}" height="34" rx="5" fill="${fill}" opacity=".92"><title>${s.phoneme_id} ${s.start_sample}-${s.end_sample} ×${s.stretch_factor.toFixed(5)} ${s.basis}</title></rect><text x="${(x(s.start_sample)+x(s.end_sample))/2}" y="78" text-anchor="middle" font-size="10" fill="#93a4bf">${s.index}</text>`}).join('');
+ let stresses=r.stress.map(m=>`<line x1="${x(m.aligned_sample)}" x2="${x(m.aligned_sample)}" y1="16" y2="66" stroke="var(--bad)" stroke-width="2"/><circle cx="${x(m.aligned_sample)}" cy="20" r="4" fill="var(--bad)"><title>${m.phoneme_id} source=${m.sample} aligned=${m.aligned_sample}</title></circle>`).join('');
+ $('timeline').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${blocks}${stresses}</svg>`;
+ renderEnvelope(r); renderSegments(r);
+}
+function guessCategory(r,i){const pr=r.phoneme_results[i]; if(pr?.category)return pr.category; if(pr?.stress)return 'vowel'; const basis=r.segments[i]?.basis||''; if(basis.includes('silence'))return 'silence'; return i%3===0?'consonant':'vowel'}
+function renderEnvelope(r){const vals=r.frames.map(f=>f.value); const W=920,H=220,P=28; const max=1; const px=i=>P+i*((W-P*2)/Math.max(1,vals.length-1)); const py=v=>H-P-v*(H-P*2)/max;
+ const path=vals.map((v,i)=>(i?'L':'M')+px(i).toFixed(1)+' '+py(v).toFixed(1)).join(' '); const area=path+` L ${px(vals.length-1)} ${H-P} L ${P} ${H-P} Z`;
+ const marks=r.stress.map(m=>{const fi=Math.round((m.sample-80)/160); return `<line x1="${px(fi)}" x2="${px(fi)}" y1="${P}" y2="${H-P}" stroke="var(--bad)" stroke-dasharray="4 4"/><circle cx="${px(fi)}" cy="${py(vals[fi]||0)}" r="5" fill="var(--bad)"><title>${m.phoneme_id}</title></circle>`}).join('');
+ $('envelope').innerHTML=`<svg viewBox="0 0 ${W} ${H}"><line x1="${P}" y1="${H-P}" x2="${W-P}" y2="${H-P}" stroke="#263653"/><path d="${area}" fill="#0ea5e9" opacity=".16"/><path d="${path}" fill="none" stroke="#38bdf8" stroke-width="2"/>${marks}<text x="${P}" y="18" fill="#93a4bf" font-size="12">normalized RMS + centered smoothing</text></svg>`}
+function renderSegments(r){$('segments').innerHTML='<tr><th>#</th><th>区间</th><th>系数</th><th>上界</th><th>依据</th></tr>'+r.segments.map(s=>`<tr><td>${s.index}</td><td class="mono">${s.start_sample}:${s.end_sample}</td><td class="mono">${s.stretch_factor.toFixed(6)}</td><td>${s.hit_cap?'<span class="warn">是</span>':'否'}</td><td class="muted">${s.basis}</td></tr>`).join('')}
+function renderInvalidations(){let entries=EDIT_REPORT?.entries?.length?EDIT_REPORT.entries:[]; if(!entries.length){(STATE.report?.scenario?.edit_steps||[]).forEach(st=>{(st.report?.entries||[]).forEach(e=>entries.push(e))})}
+ $('invalidations').innerHTML='<tr><th>对白</th><th>#</th><th>节点</th><th>原因</th></tr>'+entries.slice().reverse().map(e=>`<tr><td class="mono">${e.dialogue_id}</td><td>${e.phoneme_index}</td><td>${e.node}</td><td>${e.reason}</td></tr>`).join('')}
+function renderQueue(){const ev=STATE.report?.scenario?.queue_events||[]; $('queue').innerHTML='<tr><th>任务</th><th>原因</th><th>等待 µs</th><th>时间</th></tr>'+ev.map(e=>`<tr><td class="mono">${e.task_id}</td><td>${e.reason}</td><td>${e.wait_us}</td><td class="muted">${new Date(e.at_unix_ms).toLocaleTimeString()}</td></tr>`).join('')}
+function num(id){const v=$(id).value; return v===''?null:Number(v)}
+$('apply').onclick=async()=>{const id=$('dialogue').value; const body={DialogueID:id}; const t=num('target'),c=num('cap'),s=num('silence'),tol=num('tolerance'); if(t!=null)body.TargetSamples=t;if(c!=null)body.MaxStretch=c;if(s!=null)body.MinSilenceSamples=s;if(tol!=null)body.StressToleranceSamples=tol;
+ const resp=await fetch('/api/edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); const data=await resp.json(); $('editMessage').textContent=resp.ok?`重算 ${data.recomputed_phonemes} 个音素，复用 ${data.reused_phonemes} 个`:(data.error||'编辑失败'); $('editMessage').className=resp.ok?'ok':'bad'; if(resp.ok){EDIT_REPORT=data; await load()}};
+$('retry').onclick=async()=>{const id=$('dialogue').value; const resp=await fetch('/api/retry',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dialogue_id:id})}); const data=await resp.json(); $('editMessage').textContent=resp.ok?`重试完成：重算 ${data.recomputed_phonemes}`:(data.error||'重试失败'); await load()};
+$('inject').onclick=async()=>{await fetch('/api/inject-failure',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dialogue_id:$('dialogue').value})}); $('editMessage').textContent='已置失败注入；再次应用编辑或重试验证隔离。';$('editMessage').className='warn'};
+$('dialogue').onchange=renderDialogue;
+load(); setInterval(load,4000);
+</script>
+</body></html>
