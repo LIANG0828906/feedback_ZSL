@@ -20,3 +20,15 @@
 
 验收：
 用本地生成的三版样本验证窗口聚合、权重定点换算、降采样失效传播与检查点恢复结果一致。
+
+## 交付运行入口
+
+实现与详细设计见 `DELIVERY.md`，实际验证记录见 `VALIDATION.md`。
+
+```bash
+go test ./...
+go run ./cmd/demo --out artifacts/demo --verify
+go run ./cmd/demo --inject list
+```
+
+核心包为根目录 `downsample`；本地演示 CLI 位于 `cmd/demo`，生成的三版工程、窗口结果、权重换算、失效对照、检查点恢复和异常注入报告位于 `artifacts/demo/report.md`。
