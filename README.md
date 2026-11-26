@@ -17,3 +17,17 @@
 
 验收：
 本地样本验证三版本装载、压测调度、熔断判定、增量失效及检查点恢复一致，异常返回稳定业务码。
+
+## 交付快速入口
+
+实现说明、设计口径与实际验证结果见 `IMPLEMENTATION.md`。
+
+```bash
+go test -count=1 ./...
+go test -race -count=1 ./...
+go run ./cmd/cachebench --out artifacts/validation
+```
+
+本交付仅使用 Go 标准库，并在仓库内提供标准库 `database/sql/driver` 的 `sqlite3`
+兼容驱动与真实 SQLite 文件读写器；最终检查点已用系统 Python `sqlite3` 验证
+`PRAGMA integrity_check = ok`。
