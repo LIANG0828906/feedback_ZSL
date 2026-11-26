@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LightProbe 采样重建工作台</title>
+  <style>
+    :root {
+      --bg: #0b1020; --panel: #121a31; --panel2: #182342; --line: #2a3963;
+      --text: #e8efff; --muted: #9db0d8; --accent: #67e8f9; --good: #34d399;
+      --warn: #fbbf24; --bad: #fb7185; --purple: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font:14px/1.45 ui-sans-serif, system-ui, "Segoe UI", "Microsoft YaHei", sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:16px 22px; border-bottom:1px solid var(--line); background:linear-gradient(90deg,#101a36,#172554); display:flex; gap:16px; align-items:center; justify-content:space-between; }
+    header h1 { font-size:18px; margin:0; letter-spacing:.04em; }
+    header .sub { color:var(--muted); font-size:12px; margin-top:3px; }
+    .layout { display:grid; grid-template-columns: 190px 1fr; min-height:calc(100vh - 67px); }
+    nav { border-right:1px solid var(--line); padding:14px 10px; background:#0e162e; }
+    nav button { width:100%; text-align:left; border:0; background:transparent; color:var(--muted); padding:10px 12px; border-radius:9px; cursor:pointer; margin-bottom:4px; font-size:14px; }
+    nav button.active, nav button:hover { background:var(--panel2); color:var(--text); }
+    main { padding:20px; overflow:hidden; }
+    .tab { display:none; } .tab.active { display:block; }
+    .grid { display:grid; gap:14px; }
+    .cards { grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); margin-bottom:16px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:0 10px 30px rgba(0,0,0,.16); }
+    .metric .k { color:var(--muted); font-size:12px; }
+    .metric .v { font-size:24px; font-weight:750; margin-top:5px; font-variant-numeric:tabular-nums; }
+    .metric .hint { color:var(--muted); font-size:12px; margin-top:4px; }
+    .good { color:var(--good); } .warn { color:var(--warn); } .bad { color:var(--bad); } .accent { color:var(--accent); } .purple{color:var(--purple)}
+    h2 { font-size:16px; margin:0 0 12px; } h3 { font-size:14px; margin:18px 0 9px; color:#d7e4ff; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th,td { border-bottom:1px solid rgba(42,57,99,.75); padding:7px 8px; text-align:left; white-space:nowrap; }
+    th { position:sticky; top:0; background:var(--panel2); color:#c8d7ff; z-index:1; }
+    .tablewrap { max-height:520px; overflow:auto; border:1px solid var(--line); border-radius:12px; background:var(--panel); }
+    .two { grid-template-columns: 1.25fr .75fr; align-items:start; }
+    .three { grid-template-columns:repeat(3,1fr); align-items:start; }
+    .pill { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 8px; color:var(--muted); font-size:11px; margin:2px 4px 2px 0; }
+    .pill.good { border-color:rgba(52,211,153,.4); color:var(--good); }
+    .pill.bad { border-color:rgba(251,113,133,.45); color:var(--bad); }
+    .pill.warn { border-color:rgba(251,191,36,.45); color:var(--warn); }
+    svg { width:100%; height:auto; background:#0a1126; border:1px solid var(--line); border-radius:12px; }
+    canvas { image-rendering:pixelated; width:320px; max-width:100%; border:1px solid var(--line); border-radius:10px; background:#000; }
+    code,.mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    .invlist { max-height:430px; overflow:auto; }
+    .inv { border-left:3px solid var(--accent); background:var(--panel2); border-radius:8px; padding:8px 10px; margin:8px 0; }
+    .inv .id { font-family:ui-monospace,monospace; font-size:12px; color:#eaf6ff; word-break:break-all; }
+    .inv .reason { color:var(--muted); font-size:12px; margin-top:3px; }
+    .room { cursor:pointer; }
+    .room:hover { border-color:var(--accent); }
+    .muted { color:var(--muted); }
+    .right { text-align:right; }
+    .bar { height:8px; background:#0b1330; border-radius:99px; overflow:hidden; border:1px solid var(--line); }
+    .bar > i { display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--good)); }
+    @media (max-width: 1100px) { .layout{grid-template-columns:1fr} nav{display:flex;overflow:auto}.two,.three{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>光照探针场 · 采样重建与误差传播工作台</h1>
+    <div class="sub">纯 Go 标准库 / 固定种子 <span id="seed" class="mono"></span> / 算法版本 <span id="algo" class="mono"></span></div>
+  </div>
+  <div id="globalStatus"></div>
+</header>
+<div class="layout">
+  <nav>
+    <button data-tab="overview" class="active">总览验收</button>
+    <button data-tab="rooms">房间 / 探针</button>
+    <button data-tab="queries">查询 / 像素</button>
+    <button data-tab="errors">误差传播</button>
+    <button data-tab="graph">依赖失效</button>
+    <button data-tab="budget">预算 / 检查点</button>
+  </nav>
+  <main>
+    <section id="overview" class="tab active"></section>
+    <section id="rooms" class="tab"></section>
+    <section id="queries" class="tab"></section>
+    <section id="errors" class="tab"></section>
+    <section id="graph" class="tab"></section>
+    <section id="budget" class="tab"></section>
+  </main>
+</div>
+<script>
+let DATA = null;
+const $ = (sel, root=document) => root.querySelector(sel);
+const el = (tag, cls, html) => { const n=document.createElement(tag); if(cls) n.className=cls; if(html!==undefined) n.innerHTML=html; return n; };
+const fmt = (v, n=3) => Number(v).toFixed(n);
+const exp = v => Number(v).toExponential(3);
+
+fetch('/api/state').then(r=>r.json()).then(d => { DATA=d; render(); }).catch(e=>{
+  document.querySelector('main').innerHTML = '<div class="card bad">工作台状态加载失败: '+e+'</div>';
+});
+
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active');
+});
+
+function render() {
+  const a = DATA.acceptance, s = a.scene, f = a.full;
+  $('#seed').textContent = s.seed;
+  $('#algo').textContent = f.graph ? 'lp-recon-v1.0.0' : '';
+  $('#globalStatus').innerHTML = a.all_consistent
+    ? '<span class="pill good">E_DIFF: 无首差</span><span class="pill good">上界全部成立</span>'
+    : '<span class="pill bad">验收不一致</span>';
+  renderOverview(); renderRooms(); renderQueries(); renderErrors(); renderGraph(); renderBudget();
+}
+
+function metric(k,v,hint,cls='') {
+  return `<div class="card metric"><div class="k">${k}</div><div class="v ${cls}">${v}</div><div class="hint">${hint||''}</div></div>`;
+}
+
+function renderOverview() {
+  const a=DATA.acceptance, s=a.scene, f=a.full;
+  const uncertain=f.query_results.filter(q=>q.uncertain).length;
+  const outside=f.query_results.filter(q=>!q.report.within_tolerance).length;
+  const root=$('#overview'); root.innerHTML='';
+  const cards=el('div','grid cards');
+  cards.innerHTML = [
+    metric('房间 / 探针', s.rooms.length+' / '+s.probes.length, '确定性包围盒与格点'),
+    metric('查询 / 像素', s.queries.length+' / '+s.pixels.length, '相机轨迹与屏幕缓冲'),
+    metric('最大实测偏差', exp(a.bound_max_actual), '解析真值逐通道比较','accent'),
+    metric('最松累积上界', exp(a.bound_max_upper), '四项误差传播','purple'),
+    metric('不确定查询', uncertain, outside+' 个超出声明容差', uncertain?'warn':'good'),
+    metric('预算排队', f.queue.wait_count, '累计等待 '+fmt(f.queue.total_wait_ms,2)+' ms','warn'),
+  ].join('');
+  root.appendChild(cards);
+
+  const grid=el('div','grid two');
+  const left=el('div','card');
+  left.innerHTML = `<h2>三路径一致性</h2>
+    <p><span class="pill good">一次性全量</span><span class="pill good">实时预算池</span><span class="pill good">强制终止后续算</span></p>
+    <div class="tablewrap"><table><thead><tr><th>路径</th><th>提交顺序</th><th>恢复房间</th><th>查询</th><th>像素</th><th>排队</th></tr></thead><tbody>
+      ${pathRow(a.full,'one-shot-full')}${pathRow(a.realtime,'realtime-budgeted')}${pathRow(a.resume,'checkpoint-resume')}
+    </tbody></table></div>
+    <h3>编辑序列</h3><div>${a.edit_sequence.map(x=>`<span class="pill">${x}</span>`).join('')}</div>`;
+  const right=el('div','card');
+  right.innerHTML = `<h2>探针场俯视</h2>${floorSVG()}<p class="muted" style="margin-top:10px">X 轴为房间纵深，Y 轴为横向；青色点为探针，黄线为相机查询轨迹。</p>`;
+  grid.append(left,right); root.appendChild(grid);
+}
+
+function pathRow(p,label) {
+  return `<tr><td class="mono">${label}</td><td>${p.commit_order.join(' → ')}</td><td>${(p.restored_rooms||[]).join(', ')||'—'}</td><td>${p.query_results.length}</td><td>${p.pixels.length}</td><td>${p.queue.wait_count}</td></tr>`;
+}
+
+function xyMap() {
+  return {
+    mx: x => 40 + (x+9)/18*820,
+    my: y => 30 + (2-y)/4*220
+  };
+}
+
+function floorSVG() {
+  const s=DATA.acceptance.scene, m=xyMap();
+  let rooms='';
+  for (const r of s.rooms) {
+    rooms += `<rect x="${m.mx(r.bounds.min.x)}" y="${m.my(r.bounds.max.y)}" width="${m.mx(r.bounds.max.x)-m.mx(r.bounds.min.x)}" height="${m.my(r.bounds.min.y)-m.my(r.bounds.max.y)}" rx="10" fill="rgba(103,232,249,.055)" stroke="#2a3963"/>`;
+    rooms += `<text x="${m.mx((r.bounds.min.x+r.bounds.max.x)/2)}" y="${m.my(1.75)}" text-anchor="middle" fill="#c8d7ff" font-size="13">${r.id}</text>`;
+  }
+  let probes=s.probes.map(p=>`<circle cx="${m.mx(p.position.x)}" cy="${m.my(p.position.y)}" r="2.7" fill="#67e8f9" opacity=".78"><title>${p.id} R=${fmt(p.radiance[0])} N=${p.sample_count}</title></circle>`).join('');
+  const q=s.queries.filter(q=>q.id.startsWith('q-path'));
+  let path = q.map((p,i)=>(i?'L':'M')+m.mx(p.position.x)+' '+m.my(p.position.y)).join(' ');
+  let queryDots=s.queries.filter(q=>q.id.startsWith('q-path')).map(p=>`<circle cx="${m.mx(p.position.x)}" cy="${m.my(p.position.y)}" r="3.5" fill="#fbbf24"/>`).join('');
+  return `<svg viewBox="0 0 900 280" role="img">${rooms}<path d="${path}" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-dasharray="6 5"/>${probes}${queryDots}</svg>`;
+}
+
+function renderRooms() {
+  const s=DATA.acceptance.scene, root=$('#rooms'); root.innerHTML='';
+  const cards=el('div','grid cards');
+  cards.innerHTML=s.rooms.map(r=>metric(r.id, r.probe_ids.length+' probes', r.bounds.min.x+'..'+r.bounds.max.x+' / '+r.bounds.min.y+'..'+r.bounds.max.y, 'accent')).join('');
+  root.appendChild(cards);
+  const wrap=el('div','card');
+  wrap.innerHTML='<h2>房间与探针格点</h2><div class="tablewrap"><table><thead><tr><th>探针</th><th>房间</th><th>IJK</th><th>坐标</th><th>辐亮度 RGB</th><th>N</th><th>定点 SH 范围</th><th>内容哈希</th></tr></thead><tbody>'+
+    s.probes.map(p=>`<tr><td class="mono">${p.id}</td><td>${p.room_id}</td><td>${p.ijk.join(',')}</td><td>${fmt(p.position.x,2)},${fmt(p.position.y,2)},${fmt(p.position.z,2)}</td><td>${p.radiance.map(x=>fmt(x,3)).join(' / ')}</td><td>${p.sample_count}</td><td class="muted">${p.sh_scale}</td><td class="mono muted">${p.content_hash.slice(0,24)}</td></tr>`).join('')+
+    '</tbody></table></div>';
+  root.appendChild(wrap);
+}
+
+function renderQueries() {
+  const f=DATA.acceptance.full, root=$('#queries'); root.innerHTML='';
+  const grid=el('div','grid two');
+  const canvasCard=el('div','card');
+  canvasCard.innerHTML='<h2>屏幕像素着色缓冲</h2><canvas id="screen" width="320" height="160"></canvas><p class="muted">16×8 查询逐像素着色；黄色描边表示不确定标记。</p>';
+  const qCard=el('div','card');
+  qCard.innerHTML='<h2>相机查询轨迹</h2><div class="tablewrap"><table><thead><tr><th>Query</th><th>位置</th><th>主/邻房间</th><th>β</th><th>辐亮度</th><th>状态</th></tr></thead><tbody>'+
+    f.query_results.map(q=>`<tr><td class="mono">${q.query.id}</td><td>${fmt(q.query.position.x,2)},${fmt(q.query.position.y,2)},${fmt(q.query.position.z,2)}</td><td>${q.query.primary_room_id}${q.query.neighbor_room_id?' / '+q.query.neighbor_room_id:''}</td><td>${fmt(q.blend_ratio_quantized,4)}</td><td>${q.radiance.map(x=>fmt(x,4)).join(' / ')}</td><td>${q.uncertain?'<span class="pill warn">不确定</span>':'<span class="pill good">确定</span>'}</td></tr>`).join('')+
+    '</tbody></table></div>';
+  grid.append(canvasCard,qCard); root.appendChild(grid);
+  requestAnimationFrame(drawScreen);
+}
+
+function drawScreen() {
+  const canvas=$('#screen'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'); const ps=DATA.acceptance.full.pixels;
+  const w=DATA.acceptance.scene.screen.width, h=DATA.acceptance.scene.screen.height;
+  const cw=canvas.width/w, ch=canvas.height/h;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for (const p of ps) {
+    ctx.fillStyle=`rgb(${p.rgb[0]},${p.rgb[1]},${p.rgb[2]})`;
+    ctx.fillRect(p.x*cw,p.y*ch,cw+0.5,ch+0.5);
+    if(p.uncertain){ ctx.strokeStyle='#fbbf24'; ctx.lineWidth=1; ctx.strokeRect(p.x*cw+.5,p.y*ch+.5,cw-1,ch-1); }
+  }
+}
+
+function renderErrors() {
+  const qs=DATA.acceptance.full.query_results, root=$('#errors'); root.innerHTML='';
+  const summary=el('div','grid cards');
+  const vals=key => qs.map(q=>q.report[key]);
+  const max=k=>Math.max(...vals(k));
+  summary.innerHTML=[
+    metric('SH 量化上界', exp(max('sh_upper')), '刻度收紧单调下降','accent'),
+    metric('计数取整上界', exp(max('count_upper')), '由观测 N 推导','purple'),
+    metric('权重归一化上界', exp(max('weight_upper')), '定点截断权重','warn'),
+    metric('跨域混合上界', exp(max('blend_upper')), 'β 截断与定点除法','good'),
+  ].join('');
+  root.appendChild(summary);
+  const card=el('div','card');
+  card.innerHTML='<h2>逐查询误差传播报表</h2><div class="tablewrap"><table><thead><tr><th>Query</th><th>实测 max</th><th>累积上界</th><th>SH 残差</th><th>N 取整差</th><th>权重归一化误差</th><th>β 截断误差</th><th>容差</th><th>状态</th><th>真值区间</th></tr></thead><tbody>'+
+    qs.map(q=>{const r=q.report; return `<tr>
+      <td class="mono">${r.query_id}</td><td class="accent">${exp(r.actual_error_max)}</td><td class="purple">${exp(r.accumulated_upper)}</td>
+      <td>${exp(r.sh_quant_residual_max)}</td><td>${fmt(r.count_rounding_error_max,3)}</td><td>${exp(r.weight_normalization_error)}</td><td>${exp(r.blend_truncation_error)}</td>
+      <td>${exp(r.tolerance)}</td><td>${r.uncertain?'<span class="pill warn">不确定</span>':'<span class="pill good">已认证</span>'}</td>
+      <td class="muted">[${q.lower.map(x=>fmt(x,4)).join(', ')}] …</td></tr>`}).join('')+
+    '</tbody></table></div>';
+  root.appendChild(card);
+}
+
+function renderGraph() {
+  const inv=DATA.invalidations, root=$('#graph'); root.innerHTML='';
+  const cards=el('div','grid three');
+  cards.appendChild(invCard('编辑格点辐亮度', DATA.demo_probe_id, inv.radiance));
+  cards.appendChild(invCard('调整 room-c 分辨率', DATA.demo_resolution, inv.resolution));
+  cards.appendChild(invCard('修改查询轨迹', DATA.query_diff.changed.join(', '), inv.query));
+  root.appendChild(cards);
+  const note=el('div','card');
+  note.innerHTML=`<h2>缓存键规则</h2><p class="muted mono">sha256(JSON({self_content, room_id, resolution_version, param_version, sorted(upstream_cache_keys)}))</p>
+  <p>编辑辐亮度只传播到该格点重建值、使用它的 blend/query 与对应 pixel；查询轨迹修改不会反向失效探针；分辨率调整只影响所属房间及其跨域下游。</p>`;
+  root.appendChild(note);
+}
+
+function invCard(title, demo, items) {
+  const c=el('div','card');
+  c.innerHTML=`<h2>${title}</h2><p class="muted">触发对象：<span class="mono">${demo}</span></p><p><span class="pill bad">${items.length} 个失效节点</span></p><div class="invlist">`+
+    items.slice(0,120).map(x=>`<div class="inv"><div class="id">${x.node_id}</div><div class="reason">${x.node_type} · ${x.reason}</div></div>`).join('')+
+    (items.length>120?'<p class="muted">仅预览前 120 条，完整清单见 /api/state</p>':'')+'</div>';
+  return c;
+}
+
+function renderBudget() {
+  const f=DATA.acceptance.realtime, root=$('#budget'); root.innerHTML='';
+  const q=f.queue;
+  const cards=el('div','grid cards');
+  cards.innerHTML=[
+    metric('最大并行度', q.peak_active_workers+' / '+q.workers, 'worker pool'),
+    metric('峰值队列', q.peak_queued+' / '+q.queue_budget, '待处理格点预算'),
+    metric('峰值线程缓冲', q.peak_buffer_observed+' / '+q.buffer_limit, '每线程探针上限'),
+    metric('阻塞排队', q.wait_count, '总等待 '+fmt(q.total_wait_ms,3)+' ms','warn'),
+  ].join('');
+  root.appendChild(cards);
+  const grid=el('div','grid two');
+  const waits=el('div','card');
+  waits.innerHTML='<h2>预算排队明细</h2><div class="tablewrap"><table><thead><tr><th>探针</th><th>原因</th><th>等待 ms</th></tr></thead><tbody>'+
+    (q.waits||[]).slice(0,200).map(w=>`<tr><td class="mono">${w.probe_id}</td><td>${w.reason}</td><td class="right">${fmt(w.wait_ms,4)}</td></tr>`).join('')+
+    '</tbody></table></div>';
+  const cp=el('div','card');
+  cp.innerHTML=`<h2>原子检查点 / 恢复边界</h2>
+    <p>恢复路径：<span class="mono">${DATA.acceptance.resume.checkpoint_path}</span></p>
+    <p>恢复房间：${(DATA.acceptance.resume.restored_rooms||[]).map(x=>`<span class="pill good">${x}</span>`).join('')}</p>
+    <p>哈希/版本失效：${(DATA.acceptance.resume.stale_rooms||[]).length ? DATA.acceptance.resume.stale_rooms.map(x=>`<span class="pill warn">${x.room_id}:${x.reason}</span>`).join('') : '<span class="pill good">无</span>'}</p>
+    <h3>房间提交顺序</h3><div class="bar"><i style="width:100%"></i></div>
+    <p style="margin-top:10px">${DATA.acceptance.resume.commit_order.join(' → ')}</p>
+    <h3>状态机</h3><p class="muted">pending → collecting → reconstructed → committed；collecting/reconstructed 可进入 failed；failed → collecting 重试。非法迁移返回 E_STATE 并保持原状态与进度。</p>`;
+  grid.append(waits,cp); root.appendChild(grid);
+}
+</script>
+</body>
+</html>

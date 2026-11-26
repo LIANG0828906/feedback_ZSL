@@ -1,3 +1,17 @@
+# LightProbe 探针采样重建与诊断工作台
+
+本目录已初始化为 Go 1.22 标准库模块 `lightprobe`。快速验收：
+
+```bash
+go test ./...
+./scripts/verify.sh
+go run ./cmd/probebench serve --addr 127.0.0.1:8088 --dir .probebench/workbench
+```
+
+实现追溯见 `docs/IMPLEMENTATION.md`，实际测试与强杀恢复记录见 `docs/VERIFICATION.md` 和 `artifacts/verification-run.log`。
+
+---
+
 图形组在接入正式渲染管线的排期之前，需要先把光照探针场的采样与插值重建这条链路单独做成可验收的首版；落到手上的开发环境是 Linux（WSL Ubuntu）机器上的一个尚未初始化的空目录，Go 工具链已就绪，仓库、样本与既有口径都要当场立起。交付物既是可集成的 Go 领域组件，也是本地可重复演示与诊断的桌面工作台。全部房间、探针格点、球谐系数、重采样指令与相机查询轨迹由题内确定性生成器按固定种子产出，真值只来自生成器的解析构造，是精度观测的唯一来源，不从任何重建或插值输出反推。
 
 任务环境与准备：
