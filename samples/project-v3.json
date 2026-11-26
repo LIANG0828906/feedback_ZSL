@@ -1,0 +1,583 @@
+{
+  "SchemaVersion": 3,
+  "ProjectID": "locklab-20261127",
+  "Seed": 20261127,
+  "DeadlockDetection": true,
+  "WorkerBudget": 4,
+  "MemoryBudgetBytes": 1048576,
+  "ClockOriginMs": 1700000000000,
+  "LockCompatibility": {
+    "Group": "compatibility",
+    "Children": [
+      {
+        "Mode": "IS",
+        "Children": [
+          {
+            "Mode": "IS",
+            "Compatible": true
+          },
+          {
+            "Mode": "IX",
+            "Compatible": true
+          },
+          {
+            "Mode": "S",
+            "Compatible": true
+          },
+          {
+            "Mode": "SIX",
+            "Compatible": true
+          },
+          {
+            "Mode": "X",
+            "Compatible": false
+          }
+        ]
+      },
+      {
+        "Mode": "IX",
+        "Children": [
+          {
+            "Mode": "IS",
+            "Compatible": true
+          },
+          {
+            "Mode": "IX",
+            "Compatible": true
+          },
+          {
+            "Mode": "S",
+            "Compatible": false
+          },
+          {
+            "Mode": "SIX",
+            "Compatible": false
+          },
+          {
+            "Mode": "X",
+            "Compatible": false
+          }
+        ]
+      },
+      {
+        "Mode": "S",
+        "Children": [
+          {
+            "Mode": "IS",
+            "Compatible": true
+          },
+          {
+            "Mode": "IX",
+            "Compatible": false
+          },
+          {
+            "Mode": "S",
+            "Compatible": true
+          },
+          {
+            "Mode": "SIX",
+            "Compatible": false
+          },
+          {
+            "Mode": "X",
+            "Compatible": false
+          }
+        ]
+      },
+      {
+        "Mode": "SIX",
+        "Children": [
+          {
+            "Mode": "IS",
+            "Compatible": true
+          },
+          {
+            "Mode": "IX",
+            "Compatible": false
+          },
+          {
+            "Mode": "S",
+            "Compatible": false
+          },
+          {
+            "Mode": "SIX",
+            "Compatible": false
+          },
+          {
+            "Mode": "X",
+            "Compatible": false
+          }
+        ]
+      },
+      {
+        "Mode": "X",
+        "Children": [
+          {
+            "Mode": "IS",
+            "Compatible": false
+          },
+          {
+            "Mode": "IX",
+            "Compatible": false
+          },
+          {
+            "Mode": "S",
+            "Compatible": false
+          },
+          {
+            "Mode": "SIX",
+            "Compatible": false
+          },
+          {
+            "Mode": "X",
+            "Compatible": false
+          }
+        ]
+      }
+    ]
+  },
+  "Items": [
+    {
+      "ID": "accounts/A",
+      "Table": "accounts",
+      "InitialValue": "A0-01352907"
+    },
+    {
+      "ID": "accounts/B",
+      "Table": "accounts",
+      "InitialValue": "B0-01352907"
+    },
+    {
+      "ID": "accounts/C",
+      "Table": "accounts",
+      "InitialValue": "C0-01352907"
+    },
+    {
+      "ID": "orders/O1",
+      "Table": "orders",
+      "InitialValue": "O10-01352907"
+    },
+    {
+      "ID": "inventory/I1",
+      "Table": "inventory",
+      "InitialValue": "I10-01352907"
+    },
+    {
+      "ID": "inventory/I2",
+      "Table": "inventory",
+      "InitialValue": "I20-01352907"
+    }
+  ],
+  "Transactions": [
+    {
+      "ID": "T1",
+      "Priority": 10,
+      "Isolation": "SERIALIZABLE",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 0,
+          "Kind": "LOCK",
+          "Table": "accounts",
+          "Granularity": "TABLE",
+          "LockMode": "IX",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 35,
+          "Kind": "LOCK",
+          "ItemID": "accounts/A",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 3,
+          "AtMs": 36,
+          "Kind": "WRITE",
+          "ItemID": "accounts/A",
+          "Granularity": "ROW",
+          "Value": "A1-01352907"
+        },
+        {
+          "LocalSeq": 4,
+          "AtMs": 50,
+          "Kind": "LOCK",
+          "Table": "orders",
+          "Granularity": "TABLE",
+          "LockMode": "IS",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 5,
+          "AtMs": 50,
+          "Kind": "LOCK",
+          "ItemID": "orders/O1",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 6,
+          "AtMs": 55,
+          "Kind": "READ",
+          "ItemID": "orders/O1",
+          "Granularity": "ROW"
+        },
+        {
+          "LocalSeq": 7,
+          "AtMs": 60,
+          "Kind": "COMMIT"
+        }
+      ]
+    },
+    {
+      "ID": "T2",
+      "Priority": 30,
+      "Isolation": "READ_COMMITTED",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 5,
+          "Kind": "READ",
+          "ItemID": "accounts/A",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 80,
+          "Kind": "READ",
+          "ItemID": "accounts/A",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 3,
+          "AtMs": 90,
+          "Kind": "COMMIT"
+        }
+      ]
+    },
+    {
+      "ID": "T3",
+      "Priority": 25,
+      "Isolation": "REPEATABLE_READ",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 10,
+          "Kind": "LOCK",
+          "Table": "accounts",
+          "Granularity": "TABLE",
+          "LockMode": "IX",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 11,
+          "Kind": "READ",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 3,
+          "AtMs": 40,
+          "Kind": "LOCK",
+          "ItemID": "accounts/C",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 4,
+          "AtMs": 41,
+          "Kind": "WRITE",
+          "ItemID": "accounts/C",
+          "Granularity": "ROW",
+          "Value": "C3-01352907"
+        },
+        {
+          "LocalSeq": 5,
+          "AtMs": 70,
+          "Kind": "READ",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW"
+        },
+        {
+          "LocalSeq": 6,
+          "AtMs": 75,
+          "Kind": "COMMIT"
+        }
+      ]
+    },
+    {
+      "ID": "T4",
+      "Priority": 20,
+      "Isolation": "READ_COMMITTED",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 110,
+          "Kind": "LOCK",
+          "Table": "accounts",
+          "Granularity": "TABLE",
+          "LockMode": "IX",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 111,
+          "Kind": "LOCK",
+          "ItemID": "accounts/C",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 3,
+          "AtMs": 112,
+          "Kind": "WRITE",
+          "ItemID": "accounts/C",
+          "Granularity": "ROW",
+          "Value": "C4-01352907"
+        },
+        {
+          "LocalSeq": 4,
+          "AtMs": 151,
+          "Kind": "LOCK",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 499
+        },
+        {
+          "LocalSeq": 5,
+          "AtMs": 160,
+          "Kind": "WRITE",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW",
+          "Value": "B4-01352907"
+        },
+        {
+          "LocalSeq": 6,
+          "AtMs": 290,
+          "Kind": "COMMIT"
+        }
+      ]
+    },
+    {
+      "ID": "T5",
+      "Priority": 40,
+      "Isolation": "READ_COMMITTED",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 100,
+          "Kind": "LOCK",
+          "Table": "accounts",
+          "Granularity": "TABLE",
+          "LockMode": "IX",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 101,
+          "Kind": "LOCK",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 3,
+          "AtMs": 102,
+          "Kind": "WRITE",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW",
+          "Value": "B5-01352907"
+        },
+        {
+          "LocalSeq": 4,
+          "AtMs": 150,
+          "Kind": "LOCK",
+          "ItemID": "accounts/C",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 500
+        },
+        {
+          "LocalSeq": 5,
+          "AtMs": 160,
+          "Kind": "WRITE",
+          "ItemID": "accounts/C",
+          "Granularity": "ROW",
+          "Value": "C5-01352907"
+        },
+        {
+          "LocalSeq": 6,
+          "AtMs": 300,
+          "Kind": "COMMIT"
+        }
+      ]
+    },
+    {
+      "ID": "T6",
+      "Priority": 5,
+      "Isolation": "READ_UNCOMMITTED",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 120,
+          "Kind": "READ",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW"
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 130,
+          "Kind": "COMMIT"
+        }
+      ]
+    },
+    {
+      "ID": "T7",
+      "Priority": 15,
+      "Isolation": "READ_COMMITTED",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 121,
+          "Kind": "LOCK",
+          "ItemID": "accounts/B",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 0,
+          "NoWait": true
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 122,
+          "Kind": "ROLLBACK"
+        }
+      ]
+    },
+    {
+      "ID": "T8",
+      "Priority": 50,
+      "Isolation": "READ_COMMITTED",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 205,
+          "Kind": "LOCK",
+          "Table": "inventory",
+          "Granularity": "TABLE",
+          "LockMode": "IX",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 210,
+          "Kind": "READ",
+          "ItemID": "inventory/I1",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 3,
+          "AtMs": 212,
+          "Kind": "READ",
+          "ItemID": "inventory/I2",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 4,
+          "AtMs": 220,
+          "Kind": "LOCK",
+          "ItemID": "inventory/I1",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 5,
+          "AtMs": 221,
+          "Kind": "WRITE",
+          "ItemID": "inventory/I1",
+          "Granularity": "ROW",
+          "Value": "I1-8-01352907"
+        },
+        {
+          "LocalSeq": 6,
+          "AtMs": 240,
+          "Kind": "COMMIT"
+        }
+      ]
+    },
+    {
+      "ID": "T9",
+      "Priority": 55,
+      "Isolation": "READ_COMMITTED",
+      "Operations": [
+        {
+          "LocalSeq": 1,
+          "AtMs": 206,
+          "Kind": "LOCK",
+          "Table": "inventory",
+          "Granularity": "TABLE",
+          "LockMode": "IX",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 2,
+          "AtMs": 214,
+          "Kind": "READ",
+          "ItemID": "inventory/I1",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 3,
+          "AtMs": 215,
+          "Kind": "READ",
+          "ItemID": "inventory/I2",
+          "Granularity": "ROW",
+          "LockMode": "S",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 4,
+          "AtMs": 221,
+          "Kind": "LOCK",
+          "ItemID": "inventory/I2",
+          "Granularity": "ROW",
+          "LockMode": "X",
+          "WaitTimeoutMs": 1000
+        },
+        {
+          "LocalSeq": 5,
+          "AtMs": 222,
+          "Kind": "WRITE",
+          "ItemID": "inventory/I2",
+          "Granularity": "ROW",
+          "Value": "I2-9-01352907"
+        },
+        {
+          "LocalSeq": 6,
+          "AtMs": 245,
+          "Kind": "COMMIT"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,455 @@
+{
+  "schema": "lock-project/v2",
+  "projectId": "locklab-20261127",
+  "seed": 20261127,
+  "features": {
+    "deadlockDetection": true
+  },
+  "workerBudget": 4,
+  "memoryBudgetKib": 1024,
+  "clockOriginSeconds": 1700000000,
+  "items": [
+    {
+      "id": "accounts/A",
+      "table": "accounts",
+      "initialValue": "A0-01352907"
+    },
+    {
+      "id": "accounts/B",
+      "table": "accounts",
+      "initialValue": "B0-01352907"
+    },
+    {
+      "id": "accounts/C",
+      "table": "accounts",
+      "initialValue": "C0-01352907"
+    },
+    {
+      "id": "orders/O1",
+      "table": "orders",
+      "initialValue": "O10-01352907"
+    },
+    {
+      "id": "inventory/I1",
+      "table": "inventory",
+      "initialValue": "I10-01352907"
+    },
+    {
+      "id": "inventory/I2",
+      "table": "inventory",
+      "initialValue": "I20-01352907"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "T1",
+      "priority": 10,
+      "isolation": "SERIALIZABLE",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0,
+          "type": "LOCK",
+          "tableName": "accounts",
+          "granularity": "TABLE",
+          "lockMode": "IX",
+          "waitDeadlineSeconds": 1
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.035,
+          "type": "LOCK",
+          "itemId": "accounts/A",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 1.035
+        },
+        {
+          "localSeq": 3,
+          "atSeconds": 0.036,
+          "type": "WRITE",
+          "itemId": "accounts/A",
+          "granularity": "ROW",
+          "value": "A1-01352907"
+        },
+        {
+          "localSeq": 4,
+          "atSeconds": 0.05,
+          "type": "LOCK",
+          "tableName": "orders",
+          "granularity": "TABLE",
+          "lockMode": "IS",
+          "waitDeadlineSeconds": 1.05
+        },
+        {
+          "localSeq": 5,
+          "atSeconds": 0.05,
+          "type": "LOCK",
+          "itemId": "orders/O1",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.05
+        },
+        {
+          "localSeq": 6,
+          "atSeconds": 0.055,
+          "type": "READ",
+          "itemId": "orders/O1",
+          "granularity": "ROW"
+        },
+        {
+          "localSeq": 7,
+          "atSeconds": 0.06,
+          "type": "COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "T2",
+      "priority": 30,
+      "isolation": "READ_COMMITTED",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.005,
+          "type": "READ",
+          "itemId": "accounts/A",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.005
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.08,
+          "type": "READ",
+          "itemId": "accounts/A",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.08
+        },
+        {
+          "localSeq": 3,
+          "atSeconds": 0.09,
+          "type": "COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "T3",
+      "priority": 25,
+      "isolation": "REPEATABLE_READ",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.01,
+          "type": "LOCK",
+          "tableName": "accounts",
+          "granularity": "TABLE",
+          "lockMode": "IX",
+          "waitDeadlineSeconds": 1.01
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.011,
+          "type": "READ",
+          "itemId": "accounts/B",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.011
+        },
+        {
+          "localSeq": 3,
+          "atSeconds": 0.04,
+          "type": "LOCK",
+          "itemId": "accounts/C",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 1.04
+        },
+        {
+          "localSeq": 4,
+          "atSeconds": 0.041,
+          "type": "WRITE",
+          "itemId": "accounts/C",
+          "granularity": "ROW",
+          "value": "C3-01352907"
+        },
+        {
+          "localSeq": 5,
+          "atSeconds": 0.07,
+          "type": "READ",
+          "itemId": "accounts/B",
+          "granularity": "ROW"
+        },
+        {
+          "localSeq": 6,
+          "atSeconds": 0.075,
+          "type": "COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "T4",
+      "priority": 20,
+      "isolation": "READ_COMMITTED",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.11,
+          "type": "LOCK",
+          "tableName": "accounts",
+          "granularity": "TABLE",
+          "lockMode": "IX",
+          "waitDeadlineSeconds": 1.11
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.111,
+          "type": "LOCK",
+          "itemId": "accounts/C",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 1.111
+        },
+        {
+          "localSeq": 3,
+          "atSeconds": 0.112,
+          "type": "WRITE",
+          "itemId": "accounts/C",
+          "granularity": "ROW",
+          "value": "C4-01352907"
+        },
+        {
+          "localSeq": 4,
+          "atSeconds": 0.151,
+          "type": "LOCK",
+          "itemId": "accounts/B",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 0.65
+        },
+        {
+          "localSeq": 5,
+          "atSeconds": 0.16,
+          "type": "WRITE",
+          "itemId": "accounts/B",
+          "granularity": "ROW",
+          "value": "B4-01352907"
+        },
+        {
+          "localSeq": 6,
+          "atSeconds": 0.29,
+          "type": "COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "T5",
+      "priority": 40,
+      "isolation": "READ_COMMITTED",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.1,
+          "type": "LOCK",
+          "tableName": "accounts",
+          "granularity": "TABLE",
+          "lockMode": "IX",
+          "waitDeadlineSeconds": 1.1
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.101,
+          "type": "LOCK",
+          "itemId": "accounts/B",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 1.101
+        },
+        {
+          "localSeq": 3,
+          "atSeconds": 0.102,
+          "type": "WRITE",
+          "itemId": "accounts/B",
+          "granularity": "ROW",
+          "value": "B5-01352907"
+        },
+        {
+          "localSeq": 4,
+          "atSeconds": 0.15,
+          "type": "LOCK",
+          "itemId": "accounts/C",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 0.65
+        },
+        {
+          "localSeq": 5,
+          "atSeconds": 0.16,
+          "type": "WRITE",
+          "itemId": "accounts/C",
+          "granularity": "ROW",
+          "value": "C5-01352907"
+        },
+        {
+          "localSeq": 6,
+          "atSeconds": 0.3,
+          "type": "COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "T6",
+      "priority": 5,
+      "isolation": "READ_UNCOMMITTED",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.12,
+          "type": "READ",
+          "itemId": "accounts/B",
+          "granularity": "ROW"
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.13,
+          "type": "COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "T7",
+      "priority": 15,
+      "isolation": "READ_COMMITTED",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.121,
+          "type": "LOCK",
+          "itemId": "accounts/B",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 0.121,
+          "noWait": true
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.122,
+          "type": "ROLLBACK"
+        }
+      ]
+    },
+    {
+      "id": "T8",
+      "priority": 50,
+      "isolation": "READ_COMMITTED",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.205,
+          "type": "LOCK",
+          "tableName": "inventory",
+          "granularity": "TABLE",
+          "lockMode": "IX",
+          "waitDeadlineSeconds": 1.205
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.21,
+          "type": "READ",
+          "itemId": "inventory/I1",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.21
+        },
+        {
+          "localSeq": 3,
+          "atSeconds": 0.212,
+          "type": "READ",
+          "itemId": "inventory/I2",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.212
+        },
+        {
+          "localSeq": 4,
+          "atSeconds": 0.22,
+          "type": "LOCK",
+          "itemId": "inventory/I1",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 1.22
+        },
+        {
+          "localSeq": 5,
+          "atSeconds": 0.221,
+          "type": "WRITE",
+          "itemId": "inventory/I1",
+          "granularity": "ROW",
+          "value": "I1-8-01352907"
+        },
+        {
+          "localSeq": 6,
+          "atSeconds": 0.24,
+          "type": "COMMIT"
+        }
+      ]
+    },
+    {
+      "id": "T9",
+      "priority": 55,
+      "isolation": "READ_COMMITTED",
+      "operations": [
+        {
+          "localSeq": 1,
+          "atSeconds": 0.206,
+          "type": "LOCK",
+          "tableName": "inventory",
+          "granularity": "TABLE",
+          "lockMode": "IX",
+          "waitDeadlineSeconds": 1.206
+        },
+        {
+          "localSeq": 2,
+          "atSeconds": 0.214,
+          "type": "READ",
+          "itemId": "inventory/I1",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.214
+        },
+        {
+          "localSeq": 3,
+          "atSeconds": 0.215,
+          "type": "READ",
+          "itemId": "inventory/I2",
+          "granularity": "ROW",
+          "lockMode": "S",
+          "waitDeadlineSeconds": 1.215
+        },
+        {
+          "localSeq": 4,
+          "atSeconds": 0.221,
+          "type": "LOCK",
+          "itemId": "inventory/I2",
+          "granularity": "ROW",
+          "lockMode": "X",
+          "waitDeadlineSeconds": 1.221
+        },
+        {
+          "localSeq": 5,
+          "atSeconds": 0.222,
+          "type": "WRITE",
+          "itemId": "inventory/I2",
+          "granularity": "ROW",
+          "value": "I2-9-01352907"
+        },
+        {
+          "localSeq": 6,
+          "atSeconds": 0.245,
+          "type": "COMMIT"
+        }
+      ]
+    }
+  ]
+}

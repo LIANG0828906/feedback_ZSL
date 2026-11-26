@@ -1,0 +1,1372 @@
+{
+  "format": "locklab-truth/v1",
+  "project_id": "locklab-20261127",
+  "project_digest": "8523a0fe2b3ac20f07b5d5e7b2da037beb38d61bbaa5c7bd288c07220878654d",
+  "seed": 20261127,
+  "lock_compatibility": {
+    "IS": {
+      "IS": true,
+      "IX": true,
+      "S": true,
+      "SIX": true,
+      "X": false
+    },
+    "IX": {
+      "IS": true,
+      "IX": true,
+      "S": false,
+      "SIX": false,
+      "X": false
+    },
+    "S": {
+      "IS": true,
+      "IX": false,
+      "S": true,
+      "SIX": false,
+      "X": false
+    },
+    "SIX": {
+      "IS": true,
+      "IX": false,
+      "S": false,
+      "SIX": false,
+      "X": false
+    },
+    "X": {
+      "IS": false,
+      "IX": false,
+      "S": false,
+      "SIX": false,
+      "X": false
+    }
+  },
+  "steps": [
+    {
+      "global_step": 1,
+      "executed_step": 1,
+      "tx_id": "T1",
+      "local_seq": 1,
+      "kind": "LOCK",
+      "scheduled_at_ms": 0,
+      "executed_at_ms": 0,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "table:accounts",
+      "granularity": "TABLE",
+      "mode": "IX"
+    },
+    {
+      "global_step": 2,
+      "executed_step": 2,
+      "tx_id": "T2",
+      "local_seq": 1,
+      "kind": "READ",
+      "scheduled_at_ms": 5,
+      "executed_at_ms": 5,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/A",
+      "granularity": "ROW",
+      "mode": "S",
+      "read": {
+        "tx_id": "T2",
+        "item_id": "accounts/A",
+        "global_step": 2,
+        "executed_step": 2,
+        "at_ms": 5,
+        "isolation": "READ_COMMITTED",
+        "snapshot_seq": 0,
+        "version_number": 0,
+        "value": "A0-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 3,
+      "executed_step": 3,
+      "tx_id": "T3",
+      "local_seq": 1,
+      "kind": "LOCK",
+      "scheduled_at_ms": 10,
+      "executed_at_ms": 10,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "table:accounts",
+      "granularity": "TABLE",
+      "mode": "IX"
+    },
+    {
+      "global_step": 4,
+      "executed_step": 4,
+      "tx_id": "T3",
+      "local_seq": 2,
+      "kind": "READ",
+      "scheduled_at_ms": 11,
+      "executed_at_ms": 11,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/B",
+      "granularity": "ROW",
+      "mode": "S",
+      "read": {
+        "tx_id": "T3",
+        "item_id": "accounts/B",
+        "global_step": 4,
+        "executed_step": 4,
+        "at_ms": 11,
+        "isolation": "REPEATABLE_READ",
+        "snapshot_seq": 0,
+        "version_number": 0,
+        "value": "B0-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 5,
+      "executed_step": 5,
+      "tx_id": "T1",
+      "local_seq": 2,
+      "kind": "LOCK",
+      "scheduled_at_ms": 35,
+      "executed_at_ms": 35,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/A",
+      "granularity": "ROW",
+      "mode": "X"
+    },
+    {
+      "global_step": 6,
+      "executed_step": 6,
+      "tx_id": "T1",
+      "local_seq": 3,
+      "kind": "WRITE",
+      "scheduled_at_ms": 36,
+      "executed_at_ms": 36,
+      "outcome": "executed",
+      "write": {
+        "tx_id": "T1",
+        "item_id": "accounts/A",
+        "global_step": 6,
+        "executed_step": 6,
+        "at_ms": 36,
+        "value": "A1-01352907",
+        "write_seq": 1
+      }
+    },
+    {
+      "global_step": 7,
+      "executed_step": 7,
+      "tx_id": "T3",
+      "local_seq": 3,
+      "kind": "LOCK",
+      "scheduled_at_ms": 40,
+      "executed_at_ms": 40,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/C",
+      "granularity": "ROW",
+      "mode": "X"
+    },
+    {
+      "global_step": 8,
+      "executed_step": 8,
+      "tx_id": "T3",
+      "local_seq": 4,
+      "kind": "WRITE",
+      "scheduled_at_ms": 41,
+      "executed_at_ms": 41,
+      "outcome": "executed",
+      "write": {
+        "tx_id": "T3",
+        "item_id": "accounts/C",
+        "global_step": 8,
+        "executed_step": 8,
+        "at_ms": 41,
+        "value": "C3-01352907",
+        "write_seq": 2
+      }
+    },
+    {
+      "global_step": 9,
+      "executed_step": 9,
+      "tx_id": "T1",
+      "local_seq": 4,
+      "kind": "LOCK",
+      "scheduled_at_ms": 50,
+      "executed_at_ms": 50,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "table:orders",
+      "granularity": "TABLE",
+      "mode": "IS"
+    },
+    {
+      "global_step": 10,
+      "executed_step": 10,
+      "tx_id": "T1",
+      "local_seq": 5,
+      "kind": "LOCK",
+      "scheduled_at_ms": 50,
+      "executed_at_ms": 50,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:orders/O1",
+      "granularity": "ROW",
+      "mode": "S"
+    },
+    {
+      "global_step": 11,
+      "executed_step": 11,
+      "tx_id": "T1",
+      "local_seq": 6,
+      "kind": "READ",
+      "scheduled_at_ms": 55,
+      "executed_at_ms": 55,
+      "outcome": "executed",
+      "read": {
+        "tx_id": "T1",
+        "item_id": "orders/O1",
+        "global_step": 11,
+        "executed_step": 11,
+        "at_ms": 55,
+        "isolation": "SERIALIZABLE",
+        "snapshot_seq": 0,
+        "version_number": 0,
+        "value": "O10-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 12,
+      "executed_step": 12,
+      "tx_id": "T1",
+      "local_seq": 7,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 60,
+      "executed_at_ms": 60,
+      "outcome": "committed",
+      "commit_seq": 1,
+      "released_locks": [
+        "row:accounts/A",
+        "row:orders/O1",
+        "table:accounts",
+        "table:orders"
+      ]
+    },
+    {
+      "global_step": 13,
+      "executed_step": 13,
+      "tx_id": "T3",
+      "local_seq": 5,
+      "kind": "READ",
+      "scheduled_at_ms": 70,
+      "executed_at_ms": 70,
+      "outcome": "executed",
+      "read": {
+        "tx_id": "T3",
+        "item_id": "accounts/B",
+        "global_step": 13,
+        "executed_step": 13,
+        "at_ms": 70,
+        "isolation": "REPEATABLE_READ",
+        "snapshot_seq": 0,
+        "version_number": 0,
+        "value": "B0-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 14,
+      "executed_step": 14,
+      "tx_id": "T3",
+      "local_seq": 6,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 75,
+      "executed_at_ms": 75,
+      "outcome": "committed",
+      "commit_seq": 2,
+      "released_locks": [
+        "row:accounts/B",
+        "row:accounts/C",
+        "table:accounts"
+      ]
+    },
+    {
+      "global_step": 15,
+      "executed_step": 15,
+      "tx_id": "T2",
+      "local_seq": 2,
+      "kind": "READ",
+      "scheduled_at_ms": 80,
+      "executed_at_ms": 80,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/A",
+      "granularity": "ROW",
+      "mode": "S",
+      "read": {
+        "tx_id": "T2",
+        "item_id": "accounts/A",
+        "global_step": 15,
+        "executed_step": 15,
+        "at_ms": 80,
+        "isolation": "READ_COMMITTED",
+        "snapshot_seq": 2,
+        "version_number": 1,
+        "value": "A1-01352907",
+        "writer_tx": "T1",
+        "commit_seq": 1,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 16,
+      "executed_step": 16,
+      "tx_id": "T2",
+      "local_seq": 3,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 90,
+      "executed_at_ms": 90,
+      "outcome": "committed",
+      "commit_seq": 3
+    },
+    {
+      "global_step": 17,
+      "executed_step": 17,
+      "tx_id": "T5",
+      "local_seq": 1,
+      "kind": "LOCK",
+      "scheduled_at_ms": 100,
+      "executed_at_ms": 100,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "table:accounts",
+      "granularity": "TABLE",
+      "mode": "IX"
+    },
+    {
+      "global_step": 18,
+      "executed_step": 18,
+      "tx_id": "T5",
+      "local_seq": 2,
+      "kind": "LOCK",
+      "scheduled_at_ms": 101,
+      "executed_at_ms": 101,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/B",
+      "granularity": "ROW",
+      "mode": "X"
+    },
+    {
+      "global_step": 19,
+      "executed_step": 19,
+      "tx_id": "T5",
+      "local_seq": 3,
+      "kind": "WRITE",
+      "scheduled_at_ms": 102,
+      "executed_at_ms": 102,
+      "outcome": "executed",
+      "write": {
+        "tx_id": "T5",
+        "item_id": "accounts/B",
+        "global_step": 19,
+        "executed_step": 19,
+        "at_ms": 102,
+        "value": "B5-01352907",
+        "write_seq": 3
+      }
+    },
+    {
+      "global_step": 20,
+      "executed_step": 20,
+      "tx_id": "T4",
+      "local_seq": 1,
+      "kind": "LOCK",
+      "scheduled_at_ms": 110,
+      "executed_at_ms": 110,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "table:accounts",
+      "granularity": "TABLE",
+      "mode": "IX"
+    },
+    {
+      "global_step": 21,
+      "executed_step": 21,
+      "tx_id": "T4",
+      "local_seq": 2,
+      "kind": "LOCK",
+      "scheduled_at_ms": 111,
+      "executed_at_ms": 111,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/C",
+      "granularity": "ROW",
+      "mode": "X"
+    },
+    {
+      "global_step": 22,
+      "executed_step": 22,
+      "tx_id": "T4",
+      "local_seq": 3,
+      "kind": "WRITE",
+      "scheduled_at_ms": 112,
+      "executed_at_ms": 112,
+      "outcome": "executed",
+      "write": {
+        "tx_id": "T4",
+        "item_id": "accounts/C",
+        "global_step": 22,
+        "executed_step": 22,
+        "at_ms": 112,
+        "value": "C4-01352907",
+        "write_seq": 4
+      }
+    },
+    {
+      "global_step": 23,
+      "executed_step": 23,
+      "tx_id": "T6",
+      "local_seq": 1,
+      "kind": "READ",
+      "scheduled_at_ms": 120,
+      "executed_at_ms": 120,
+      "outcome": "executed",
+      "read": {
+        "tx_id": "T6",
+        "item_id": "accounts/B",
+        "global_step": 23,
+        "executed_step": 23,
+        "at_ms": 120,
+        "isolation": "READ_UNCOMMITTED",
+        "snapshot_seq": 3,
+        "version_number": 1,
+        "value": "B5-01352907",
+        "writer_tx": "T5",
+        "commit_seq": 0,
+        "dirty": true
+      }
+    },
+    {
+      "global_step": 24,
+      "executed_step": 24,
+      "tx_id": "T7",
+      "local_seq": 1,
+      "kind": "LOCK",
+      "scheduled_at_ms": 121,
+      "executed_at_ms": 121,
+      "outcome": "conflict_rejected",
+      "lock_decision": "rejected",
+      "resource": "row:accounts/B",
+      "granularity": "ROW",
+      "mode": "X",
+      "conflict_with": [
+        "T5"
+      ],
+      "wait_outcome": "conflict_rejected"
+    },
+    {
+      "global_step": 25,
+      "executed_step": 25,
+      "tx_id": "T7",
+      "local_seq": 2,
+      "kind": "ROLLBACK",
+      "scheduled_at_ms": 122,
+      "executed_at_ms": 122,
+      "outcome": "rolled_back",
+      "rollback_reason": "explicit_rollback"
+    },
+    {
+      "global_step": 26,
+      "executed_step": 26,
+      "tx_id": "T6",
+      "local_seq": 2,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 130,
+      "executed_at_ms": 130,
+      "outcome": "committed",
+      "commit_seq": 4
+    },
+    {
+      "global_step": 27,
+      "executed_step": 28,
+      "tx_id": "T5",
+      "local_seq": 4,
+      "kind": "LOCK",
+      "scheduled_at_ms": 150,
+      "executed_at_ms": 151,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:accounts/C",
+      "granularity": "ROW",
+      "mode": "X",
+      "conflict_with": [
+        "T4"
+      ],
+      "wait_id": "W000001",
+      "wait_seat": 1,
+      "wait_deadline_ms": 650,
+      "eventually_granted": true,
+      "wait_outcome": "granted"
+    },
+    {
+      "global_step": 28,
+      "executed_step": 28,
+      "tx_id": "T4",
+      "local_seq": 4,
+      "kind": "LOCK",
+      "scheduled_at_ms": 151,
+      "executed_at_ms": 151,
+      "outcome": "blocked",
+      "lock_decision": "blocked",
+      "resource": "row:accounts/B",
+      "granularity": "ROW",
+      "mode": "X",
+      "conflict_with": [
+        "T5"
+      ],
+      "wait_id": "W000002",
+      "wait_seat": 1,
+      "wait_deadline_ms": 650,
+      "wait_outcome": "deadlocked"
+    },
+    {
+      "global_step": 29,
+      "executed_step": 29,
+      "tx_id": "T4",
+      "local_seq": 5,
+      "kind": "WRITE",
+      "scheduled_at_ms": 160,
+      "executed_at_ms": 160,
+      "outcome": "skipped"
+    },
+    {
+      "global_step": 30,
+      "executed_step": 30,
+      "tx_id": "T5",
+      "local_seq": 5,
+      "kind": "WRITE",
+      "scheduled_at_ms": 160,
+      "executed_at_ms": 160,
+      "outcome": "executed",
+      "write": {
+        "tx_id": "T5",
+        "item_id": "accounts/C",
+        "global_step": 30,
+        "executed_step": 30,
+        "at_ms": 160,
+        "value": "C5-01352907",
+        "write_seq": 5
+      }
+    },
+    {
+      "global_step": 31,
+      "executed_step": 31,
+      "tx_id": "T8",
+      "local_seq": 1,
+      "kind": "LOCK",
+      "scheduled_at_ms": 205,
+      "executed_at_ms": 205,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "table:inventory",
+      "granularity": "TABLE",
+      "mode": "IX"
+    },
+    {
+      "global_step": 32,
+      "executed_step": 32,
+      "tx_id": "T9",
+      "local_seq": 1,
+      "kind": "LOCK",
+      "scheduled_at_ms": 206,
+      "executed_at_ms": 206,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "table:inventory",
+      "granularity": "TABLE",
+      "mode": "IX"
+    },
+    {
+      "global_step": 33,
+      "executed_step": 33,
+      "tx_id": "T8",
+      "local_seq": 2,
+      "kind": "READ",
+      "scheduled_at_ms": 210,
+      "executed_at_ms": 210,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:inventory/I1",
+      "granularity": "ROW",
+      "mode": "S",
+      "read": {
+        "tx_id": "T8",
+        "item_id": "inventory/I1",
+        "global_step": 33,
+        "executed_step": 33,
+        "at_ms": 210,
+        "isolation": "READ_COMMITTED",
+        "snapshot_seq": 4,
+        "version_number": 0,
+        "value": "I10-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 34,
+      "executed_step": 34,
+      "tx_id": "T8",
+      "local_seq": 3,
+      "kind": "READ",
+      "scheduled_at_ms": 212,
+      "executed_at_ms": 212,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:inventory/I2",
+      "granularity": "ROW",
+      "mode": "S",
+      "read": {
+        "tx_id": "T8",
+        "item_id": "inventory/I2",
+        "global_step": 34,
+        "executed_step": 34,
+        "at_ms": 212,
+        "isolation": "READ_COMMITTED",
+        "snapshot_seq": 4,
+        "version_number": 0,
+        "value": "I20-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 35,
+      "executed_step": 35,
+      "tx_id": "T9",
+      "local_seq": 2,
+      "kind": "READ",
+      "scheduled_at_ms": 214,
+      "executed_at_ms": 214,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:inventory/I1",
+      "granularity": "ROW",
+      "mode": "S",
+      "read": {
+        "tx_id": "T9",
+        "item_id": "inventory/I1",
+        "global_step": 35,
+        "executed_step": 35,
+        "at_ms": 214,
+        "isolation": "READ_COMMITTED",
+        "snapshot_seq": 4,
+        "version_number": 0,
+        "value": "I10-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 36,
+      "executed_step": 36,
+      "tx_id": "T9",
+      "local_seq": 3,
+      "kind": "READ",
+      "scheduled_at_ms": 215,
+      "executed_at_ms": 215,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:inventory/I2",
+      "granularity": "ROW",
+      "mode": "S",
+      "read": {
+        "tx_id": "T9",
+        "item_id": "inventory/I2",
+        "global_step": 36,
+        "executed_step": 36,
+        "at_ms": 215,
+        "isolation": "READ_COMMITTED",
+        "snapshot_seq": 4,
+        "version_number": 0,
+        "value": "I20-01352907",
+        "writer_tx": "__initial__",
+        "commit_seq": 0,
+        "dirty": false
+      }
+    },
+    {
+      "global_step": 37,
+      "executed_step": 37,
+      "tx_id": "T8",
+      "local_seq": 4,
+      "kind": "LOCK",
+      "scheduled_at_ms": 220,
+      "executed_at_ms": 220,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:inventory/I1",
+      "granularity": "ROW",
+      "mode": "X"
+    },
+    {
+      "global_step": 38,
+      "executed_step": 38,
+      "tx_id": "T8",
+      "local_seq": 5,
+      "kind": "WRITE",
+      "scheduled_at_ms": 221,
+      "executed_at_ms": 221,
+      "outcome": "executed",
+      "write": {
+        "tx_id": "T8",
+        "item_id": "inventory/I1",
+        "global_step": 38,
+        "executed_step": 38,
+        "at_ms": 221,
+        "value": "I1-8-01352907",
+        "write_seq": 6
+      }
+    },
+    {
+      "global_step": 39,
+      "executed_step": 39,
+      "tx_id": "T9",
+      "local_seq": 4,
+      "kind": "LOCK",
+      "scheduled_at_ms": 221,
+      "executed_at_ms": 221,
+      "outcome": "executed",
+      "lock_decision": "granted",
+      "resource": "row:inventory/I2",
+      "granularity": "ROW",
+      "mode": "X"
+    },
+    {
+      "global_step": 40,
+      "executed_step": 40,
+      "tx_id": "T9",
+      "local_seq": 5,
+      "kind": "WRITE",
+      "scheduled_at_ms": 222,
+      "executed_at_ms": 222,
+      "outcome": "executed",
+      "write": {
+        "tx_id": "T9",
+        "item_id": "inventory/I2",
+        "global_step": 40,
+        "executed_step": 40,
+        "at_ms": 222,
+        "value": "I2-9-01352907",
+        "write_seq": 7
+      }
+    },
+    {
+      "global_step": 41,
+      "executed_step": 41,
+      "tx_id": "T8",
+      "local_seq": 6,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 240,
+      "executed_at_ms": 240,
+      "outcome": "committed",
+      "commit_seq": 5,
+      "released_locks": [
+        "row:inventory/I1",
+        "table:inventory"
+      ]
+    },
+    {
+      "global_step": 42,
+      "executed_step": 42,
+      "tx_id": "T9",
+      "local_seq": 6,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 245,
+      "executed_at_ms": 245,
+      "outcome": "committed",
+      "commit_seq": 6,
+      "released_locks": [
+        "row:inventory/I2",
+        "table:inventory"
+      ]
+    },
+    {
+      "global_step": 43,
+      "executed_step": 43,
+      "tx_id": "T4",
+      "local_seq": 6,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 290,
+      "executed_at_ms": 290,
+      "outcome": "skipped"
+    },
+    {
+      "global_step": 44,
+      "executed_step": 44,
+      "tx_id": "T5",
+      "local_seq": 6,
+      "kind": "COMMIT",
+      "scheduled_at_ms": 300,
+      "executed_at_ms": 300,
+      "outcome": "committed",
+      "commit_seq": 7,
+      "released_locks": [
+        "row:accounts/B",
+        "row:accounts/C",
+        "table:accounts"
+      ]
+    }
+  ],
+  "queue_events": [
+    {
+      "after_step": 27,
+      "at_ms": 150,
+      "event": "enqueue",
+      "tx_id": "T5",
+      "resource": "row:accounts/C",
+      "seat": 1,
+      "queues": [
+        {
+          "resource": "row:accounts/C",
+          "members": [
+            {
+              "seat": 1,
+              "wait_id": "W000001",
+              "tx_id": "T5",
+              "step": 27,
+              "mode": "X",
+              "deadline_ms": 650
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "after_step": 28,
+      "at_ms": 151,
+      "event": "enqueue",
+      "tx_id": "T4",
+      "resource": "row:accounts/B",
+      "seat": 1,
+      "queues": [
+        {
+          "resource": "row:accounts/B",
+          "members": [
+            {
+              "seat": 1,
+              "wait_id": "W000002",
+              "tx_id": "T4",
+              "step": 28,
+              "mode": "X",
+              "deadline_ms": 650
+            }
+          ]
+        },
+        {
+          "resource": "row:accounts/C",
+          "members": [
+            {
+              "seat": 1,
+              "wait_id": "W000001",
+              "tx_id": "T5",
+              "step": 27,
+              "mode": "X",
+              "deadline_ms": 650
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "after_step": 28,
+      "at_ms": 151,
+      "event": "grant",
+      "tx_id": "T5",
+      "resource": "row:accounts/C",
+      "queues": []
+    }
+  ],
+  "reads": [
+    {
+      "tx_id": "T2",
+      "item_id": "accounts/A",
+      "global_step": 2,
+      "executed_step": 2,
+      "at_ms": 5,
+      "isolation": "READ_COMMITTED",
+      "snapshot_seq": 0,
+      "version_number": 0,
+      "value": "A0-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    },
+    {
+      "tx_id": "T3",
+      "item_id": "accounts/B",
+      "global_step": 4,
+      "executed_step": 4,
+      "at_ms": 11,
+      "isolation": "REPEATABLE_READ",
+      "snapshot_seq": 0,
+      "version_number": 0,
+      "value": "B0-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    },
+    {
+      "tx_id": "T1",
+      "item_id": "orders/O1",
+      "global_step": 11,
+      "executed_step": 11,
+      "at_ms": 55,
+      "isolation": "SERIALIZABLE",
+      "snapshot_seq": 0,
+      "version_number": 0,
+      "value": "O10-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    },
+    {
+      "tx_id": "T3",
+      "item_id": "accounts/B",
+      "global_step": 13,
+      "executed_step": 13,
+      "at_ms": 70,
+      "isolation": "REPEATABLE_READ",
+      "snapshot_seq": 0,
+      "version_number": 0,
+      "value": "B0-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    },
+    {
+      "tx_id": "T2",
+      "item_id": "accounts/A",
+      "global_step": 15,
+      "executed_step": 15,
+      "at_ms": 80,
+      "isolation": "READ_COMMITTED",
+      "snapshot_seq": 2,
+      "version_number": 1,
+      "value": "A1-01352907",
+      "writer_tx": "T1",
+      "commit_seq": 1,
+      "dirty": false
+    },
+    {
+      "tx_id": "T6",
+      "item_id": "accounts/B",
+      "global_step": 23,
+      "executed_step": 23,
+      "at_ms": 120,
+      "isolation": "READ_UNCOMMITTED",
+      "snapshot_seq": 3,
+      "version_number": 1,
+      "value": "B5-01352907",
+      "writer_tx": "T5",
+      "commit_seq": 0,
+      "dirty": true
+    },
+    {
+      "tx_id": "T8",
+      "item_id": "inventory/I1",
+      "global_step": 33,
+      "executed_step": 33,
+      "at_ms": 210,
+      "isolation": "READ_COMMITTED",
+      "snapshot_seq": 4,
+      "version_number": 0,
+      "value": "I10-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    },
+    {
+      "tx_id": "T8",
+      "item_id": "inventory/I2",
+      "global_step": 34,
+      "executed_step": 34,
+      "at_ms": 212,
+      "isolation": "READ_COMMITTED",
+      "snapshot_seq": 4,
+      "version_number": 0,
+      "value": "I20-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    },
+    {
+      "tx_id": "T9",
+      "item_id": "inventory/I1",
+      "global_step": 35,
+      "executed_step": 35,
+      "at_ms": 214,
+      "isolation": "READ_COMMITTED",
+      "snapshot_seq": 4,
+      "version_number": 0,
+      "value": "I10-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    },
+    {
+      "tx_id": "T9",
+      "item_id": "inventory/I2",
+      "global_step": 36,
+      "executed_step": 36,
+      "at_ms": 215,
+      "isolation": "READ_COMMITTED",
+      "snapshot_seq": 4,
+      "version_number": 0,
+      "value": "I20-01352907",
+      "writer_tx": "__initial__",
+      "commit_seq": 0,
+      "dirty": false
+    }
+  ],
+  "writes": [
+    {
+      "tx_id": "T1",
+      "item_id": "accounts/A",
+      "global_step": 6,
+      "executed_step": 6,
+      "at_ms": 36,
+      "value": "A1-01352907",
+      "write_seq": 1
+    },
+    {
+      "tx_id": "T3",
+      "item_id": "accounts/C",
+      "global_step": 8,
+      "executed_step": 8,
+      "at_ms": 41,
+      "value": "C3-01352907",
+      "write_seq": 2
+    },
+    {
+      "tx_id": "T5",
+      "item_id": "accounts/B",
+      "global_step": 19,
+      "executed_step": 19,
+      "at_ms": 102,
+      "value": "B5-01352907",
+      "write_seq": 3
+    },
+    {
+      "tx_id": "T4",
+      "item_id": "accounts/C",
+      "global_step": 22,
+      "executed_step": 22,
+      "at_ms": 112,
+      "value": "C4-01352907",
+      "write_seq": 4
+    },
+    {
+      "tx_id": "T5",
+      "item_id": "accounts/C",
+      "global_step": 30,
+      "executed_step": 30,
+      "at_ms": 160,
+      "value": "C5-01352907",
+      "write_seq": 5
+    },
+    {
+      "tx_id": "T8",
+      "item_id": "inventory/I1",
+      "global_step": 38,
+      "executed_step": 38,
+      "at_ms": 221,
+      "value": "I1-8-01352907",
+      "write_seq": 6
+    },
+    {
+      "tx_id": "T9",
+      "item_id": "inventory/I2",
+      "global_step": 40,
+      "executed_step": 40,
+      "at_ms": 222,
+      "value": "I2-9-01352907",
+      "write_seq": 7
+    }
+  ],
+  "commits": [
+    {
+      "tx_id": "T1",
+      "global_step": 12,
+      "executed_step": 12,
+      "at_ms": 60,
+      "commit_seq": 1,
+      "writes": [
+        {
+          "item_id": "accounts/A",
+          "value": "A1-01352907",
+          "writer_tx": "T1",
+          "global_step": 6,
+          "executed_step": 6,
+          "at_ms": 36,
+          "write_seq": 1
+        }
+      ],
+      "released_locks": [
+        "row:accounts/A",
+        "row:orders/O1",
+        "table:accounts",
+        "table:orders"
+      ]
+    },
+    {
+      "tx_id": "T3",
+      "global_step": 14,
+      "executed_step": 14,
+      "at_ms": 75,
+      "commit_seq": 2,
+      "writes": [
+        {
+          "item_id": "accounts/C",
+          "value": "C3-01352907",
+          "writer_tx": "T3",
+          "global_step": 8,
+          "executed_step": 8,
+          "at_ms": 41,
+          "write_seq": 2
+        }
+      ],
+      "released_locks": [
+        "row:accounts/B",
+        "row:accounts/C",
+        "table:accounts"
+      ]
+    },
+    {
+      "tx_id": "T2",
+      "global_step": 16,
+      "executed_step": 16,
+      "at_ms": 90,
+      "commit_seq": 3,
+      "writes": null,
+      "released_locks": []
+    },
+    {
+      "tx_id": "T6",
+      "global_step": 26,
+      "executed_step": 26,
+      "at_ms": 130,
+      "commit_seq": 4,
+      "writes": null,
+      "released_locks": []
+    },
+    {
+      "tx_id": "T8",
+      "global_step": 41,
+      "executed_step": 41,
+      "at_ms": 240,
+      "commit_seq": 5,
+      "writes": [
+        {
+          "item_id": "inventory/I1",
+          "value": "I1-8-01352907",
+          "writer_tx": "T8",
+          "global_step": 38,
+          "executed_step": 38,
+          "at_ms": 221,
+          "write_seq": 6
+        }
+      ],
+      "released_locks": [
+        "row:inventory/I1",
+        "table:inventory"
+      ]
+    },
+    {
+      "tx_id": "T9",
+      "global_step": 42,
+      "executed_step": 42,
+      "at_ms": 245,
+      "commit_seq": 6,
+      "writes": [
+        {
+          "item_id": "inventory/I2",
+          "value": "I2-9-01352907",
+          "writer_tx": "T9",
+          "global_step": 40,
+          "executed_step": 40,
+          "at_ms": 222,
+          "write_seq": 7
+        }
+      ],
+      "released_locks": [
+        "row:inventory/I2",
+        "table:inventory"
+      ]
+    },
+    {
+      "tx_id": "T5",
+      "global_step": 44,
+      "executed_step": 44,
+      "at_ms": 300,
+      "commit_seq": 7,
+      "writes": [
+        {
+          "item_id": "accounts/B",
+          "value": "B5-01352907",
+          "writer_tx": "T5",
+          "global_step": 19,
+          "executed_step": 19,
+          "at_ms": 102,
+          "write_seq": 3
+        },
+        {
+          "item_id": "accounts/C",
+          "value": "C5-01352907",
+          "writer_tx": "T5",
+          "global_step": 30,
+          "executed_step": 30,
+          "at_ms": 160,
+          "write_seq": 5
+        }
+      ],
+      "released_locks": [
+        "row:accounts/B",
+        "row:accounts/C",
+        "table:accounts"
+      ]
+    }
+  ],
+  "rollbacks": [
+    {
+      "tx_id": "T7",
+      "global_step": 25,
+      "executed_step": 25,
+      "at_ms": 122,
+      "reason": "explicit_rollback",
+      "released_locks": []
+    },
+    {
+      "tx_id": "T4",
+      "global_step": 28,
+      "executed_step": 28,
+      "at_ms": 151,
+      "reason": "deadlock",
+      "released_locks": [
+        "row:accounts/C",
+        "table:accounts"
+      ],
+      "cycle": [
+        "T4",
+        "T5"
+      ]
+    }
+  ],
+  "final_writes": {
+    "accounts/A": {
+      "item_id": "accounts/A",
+      "number": 1,
+      "value": "A1-01352907",
+      "writer_tx": "T1",
+      "commit_seq": 1,
+      "write_step": 6,
+      "created_at_ms": 60
+    },
+    "accounts/B": {
+      "item_id": "accounts/B",
+      "number": 1,
+      "value": "B5-01352907",
+      "writer_tx": "T5",
+      "commit_seq": 7,
+      "write_step": 19,
+      "created_at_ms": 300
+    },
+    "accounts/C": {
+      "item_id": "accounts/C",
+      "number": 2,
+      "value": "C5-01352907",
+      "writer_tx": "T5",
+      "commit_seq": 7,
+      "write_step": 30,
+      "created_at_ms": 300
+    },
+    "inventory/I1": {
+      "item_id": "inventory/I1",
+      "number": 1,
+      "value": "I1-8-01352907",
+      "writer_tx": "T8",
+      "commit_seq": 5,
+      "write_step": 38,
+      "created_at_ms": 240
+    },
+    "inventory/I2": {
+      "item_id": "inventory/I2",
+      "number": 1,
+      "value": "I2-9-01352907",
+      "writer_tx": "T9",
+      "commit_seq": 6,
+      "write_step": 40,
+      "created_at_ms": 245
+    }
+  },
+  "anomalies": [
+    {
+      "kind": "dirty_read",
+      "tx_ids": [
+        "T5",
+        "T6"
+      ],
+      "item_id": "accounts/B",
+      "steps": [
+        23
+      ],
+      "detail": "T6 read uncommitted version of accounts/B from T5"
+    },
+    {
+      "kind": "non_repeatable_read",
+      "tx_ids": [
+        "T2"
+      ],
+      "item_id": "accounts/A",
+      "steps": [
+        2,
+        15
+      ],
+      "detail": "T2 observed changing versions of accounts/A"
+    },
+    {
+      "kind": "nonserializable",
+      "tx_ids": [
+        "T1",
+        "T2"
+      ],
+      "detail": "commit/read/write dependency cycle: T1,T2"
+    },
+    {
+      "kind": "nonserializable",
+      "tx_ids": [
+        "T8",
+        "T9"
+      ],
+      "detail": "commit/read/write dependency cycle: T8,T9"
+    }
+  ],
+  "deadlock_victims": [
+    "T4"
+  ],
+  "semantic_digest": "8eed97a6362851676d5fdcaaa823f3fab83363874831b3c6da0e967d9da89c2e"
+}
