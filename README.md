@@ -18,3 +18,19 @@
 
 验收：
 用本地样本验证三版本装载、映射裁剪、整型误差上界、端集合演进与三路径逐窗口一致，并复现异常链路。
+
+## 交付导航
+
+- 技术设计与规则：`docs/TECHNICAL_NOTES.md`
+- 实际验证记录：`docs/VALIDATION.md`
+- 验收测试：`acceptance_test.go`
+- 可执行验收器：`cmd/screenrelay/main.go`
+- 生成样本：`artifacts/samples/`
+- JSON 验收报告：`artifacts/reports/verification-report.json`
+
+快速运行：
+
+```bash
+go test ./...
+go run ./cmd/screenrelay verify
+```
