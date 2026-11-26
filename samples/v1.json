@@ -1,0 +1,136 @@
+{
+  "bandwidth": {
+    "total": 200,
+    "unit": "permille"
+  },
+  "clock": {
+    "lease_ticks": 6,
+    "preheat_ticks": 4,
+    "tick_ms": 250
+  },
+  "nodes": [
+    {
+      "buffer_limit": 2,
+      "claim_interval_ticks": 2,
+      "join_tick": 1,
+      "lease_ticks": 6,
+      "max_concurrent": 2,
+      "node_id": "edge-a",
+      "replica_group": "g1"
+    },
+    {
+      "buffer_limit": 2,
+      "claim_interval_ticks": 3,
+      "join_tick": 1,
+      "lease_ticks": 6,
+      "max_concurrent": 2,
+      "node_id": "edge-b",
+      "replica_group": "g1"
+    },
+    {
+      "buffer_limit": 3,
+      "claim_interval_ticks": 2,
+      "join_tick": 2,
+      "lease_ticks": 6,
+      "max_concurrent": 2,
+      "node_id": "edge-c",
+      "replica_group": "g2"
+    }
+  ],
+  "project_id": "cache-warm-seed-4242",
+  "schema": "cache-warm.v1",
+  "seed": 4242,
+  "shards": [
+    {
+      "bandwidth_permille": 80,
+      "digest": "0x0000612d98de731d",
+      "node_id": "edge-a",
+      "preheat_ticks": 4,
+      "previous_version": 3,
+      "replica_group": "g1",
+      "shard_id": "shard-01",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 80,
+      "digest": "0x00005e2d98de6e04",
+      "node_id": "edge-b",
+      "preheat_ticks": 5,
+      "previous_version": 3,
+      "replica_group": "g1",
+      "shard_id": "shard-02",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 80,
+      "digest": "0x00005f2d98de6fb7",
+      "node_id": "edge-c",
+      "preheat_ticks": 4,
+      "previous_version": 3,
+      "replica_group": "g2",
+      "shard_id": "shard-03",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 70,
+      "digest": "0x00005c2d98de6a9e",
+      "node_id": "edge-a",
+      "preheat_ticks": 3,
+      "previous_version": 3,
+      "replica_group": "g1",
+      "shard_id": "shard-04",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 90,
+      "digest": "0x00005d2d98de6c51",
+      "node_id": "edge-b",
+      "preheat_ticks": 4,
+      "previous_version": 3,
+      "replica_group": "g1",
+      "shard_id": "shard-05",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 60,
+      "digest": "0x00005a2d98de6738",
+      "node_id": "edge-c",
+      "preheat_ticks": 5,
+      "previous_version": 3,
+      "replica_group": "g2",
+      "shard_id": "shard-06",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 100,
+      "digest": "0x00005b2d98de68eb",
+      "node_id": "edge-a",
+      "preheat_ticks": 4,
+      "previous_version": 3,
+      "replica_group": "g1",
+      "shard_id": "shard-07",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 70,
+      "digest": "0x0000582d98de63d2",
+      "node_id": "edge-b",
+      "preheat_ticks": 3,
+      "previous_version": 3,
+      "replica_group": "g1",
+      "shard_id": "shard-08",
+      "source_version": 4
+    },
+    {
+      "bandwidth_permille": 90,
+      "digest": "0x0000592d98de6585",
+      "node_id": "edge-c",
+      "preheat_ticks": 4,
+      "previous_version": 3,
+      "replica_group": "g2",
+      "shard_id": "shard-09",
+      "source_version": 4
+    }
+  ],
+  "source_version": 4
+}

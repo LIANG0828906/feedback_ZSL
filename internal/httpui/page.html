@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warmcache Control Surface</title>
+<style>
+:root {
+  --bg: #f4f1ea;
+  --panel: #fffdf8;
+  --ink: #1d2526;
+  --muted: #687173;
+  --line: #d8d3c8;
+  --accent: #0e7c66;
+  --accent-2: #cc5a2f;
+  --blue: #2e5c8a;
+  --ok: #17633b;
+  --warn: #a75d08;
+  --danger: #a12b28;
+  --shadow: 0 10px 26px rgba(38, 43, 39, .08);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(14,124,102,.10), transparent 26rem),
+    radial-gradient(circle at 95% 4%, rgba(204,90,47,.10), transparent 24rem),
+    var(--bg);
+  color: var(--ink);
+  font: 14px/1.5 "IBM Plex Sans", "Noto Sans CJK SC", "Segoe UI", sans-serif;
+}
+header.top {
+  padding: 26px clamp(16px, 4vw, 52px) 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-end;
+  border-bottom: 1px solid rgba(29,37,38,.12);
+}
+h1 { margin: 0; font: 650 28px/1.15 "IBM Plex Mono", "SFMono-Regular", monospace; letter-spacing: -.04em; }
+.subtitle { color: var(--muted); max-width: 78ch; margin-top: 8px; }
+.status { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--line); background: rgba(255,253,248,.75);
+  border-radius: 999px; padding: 5px 10px; color: var(--muted);
+  font-size: 12px; white-space: nowrap;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+main { padding: 18px clamp(16px, 4vw, 52px) 60px; }
+.panel {
+  background: rgba(255,253,248,.9);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(110px, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+label.field { display: flex; flex-direction: column; gap: 5px; color: var(--muted); font-size: 12px; }
+input, select, button, textarea {
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffefb;
+  color: var(--ink);
+  padding: 8px 10px;
+  min-width: 0;
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid rgba(14,124,102,.22); border-color: var(--accent); }
+button {
+  cursor: pointer;
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+  font-weight: 600;
+  transition: transform .12s ease, background .12s ease;
+}
+button:hover { transform: translateY(-1px); background: var(--accent); border-color: var(--accent); }
+button.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+button.secondary:hover { background: #f4eee3; border-color: var(--ink); color: var(--ink); }
+button.small { padding: 5px 8px; font-size: 12px; }
+button:disabled { opacity: .45; cursor: wait; transform: none; }
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(100px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.metric { padding: 14px 15px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); }
+.metric .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.metric .value { font: 650 21px/1.3 "IBM Plex Mono", monospace; margin-top: 4px; overflow-wrap: anywhere; }
+.subtle { color: var(--muted); font-size: 12px; }
+.tabs { display: flex; gap: 6px; margin: 8px 0 12px; overflow-x: auto; padding-bottom: 2px; }
+.tab {
+  border: 1px solid transparent; border-radius: 9px 9px 0 0;
+  padding: 8px 12px; background: transparent; color: var(--muted); cursor: pointer;
+}
+.tab.active { background: var(--panel); border-color: var(--line); border-bottom-color: var(--panel); color: var(--ink); }
+.tabpane { display: none; padding: 18px; }
+.tabpane.active { display: block; }
+.timeline-layout { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 16px; }
+.tick-list { max-height: 640px; overflow: auto; border-right: 1px solid var(--line); padding-right: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { text-align: left; padding: 8px 9px; border-bottom: 1px solid #e8e2d7; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; background: #fbf7ee; position: sticky; top: 0; z-index: 1; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: #f8f3e8; }
+tr.selected td { background: #e8f3ee; }
+.node-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin: 12px 0 18px; }
+.node-card { border: 1px solid var(--line); border-radius: 11px; padding: 13px; background: #fffefb; }
+.node-title { display: flex; justify-content: space-between; gap: 8px; font-weight: 650; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.chip { border: 1px solid #ccd8d2; background: #edf5f0; color: #165a43; border-radius: 999px; padding: 2px 7px; font-size: 11px; }
+.chip.queue { background: #fff3dd; border-color: #edd4a7; color: #80520d; }
+.chip.bad { background: #fbe9e6; border-color: #e6bcb7; color: var(--danger); }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.card-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.model-card { border: 1px solid var(--line); border-radius: 12px; background: #fffefb; padding: 14px; }
+.model-card h3 { margin: 0 0 8px; font: 650 17px/1.2 "IBM Plex Mono", monospace; }
+.hash { font: 12px/1.5 "IBM Plex Mono", monospace; overflow-wrap: anywhere; color: var(--muted); }
+h2.section { margin: 6px 0 10px; font-size: 15px; letter-spacing: .01em; }
+h3.section { margin: 18px 0 8px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+pre {
+  margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: #1f2727; color: #e8eee9; overflow: auto; max-height: 360px;
+  font: 12px/1.55 "IBM Plex Mono", monospace;
+}
+.badge { display: inline-block; border-radius: 999px; padding: 2px 7px; font-size: 11px; font-weight: 650; }
+.badge.ok { background: #dff1e5; color: var(--ok); }
+.badge.warn { background: #fff0d2; color: var(--warn); }
+.badge.bad { background: #f9dfdb; color: var(--danger); }
+.badge.neutral { background: #e8eaec; color: #475257; }
+.toast {
+  display: none; position: fixed; right: 22px; bottom: 22px; z-index: 20;
+  max-width: min(620px, calc(100vw - 44px)); border: 1px solid #e4beb9;
+  background: #fff8f5; border-radius: 12px; box-shadow: var(--shadow); padding: 13px 15px;
+  white-space: pre-wrap; font: 12px/1.5 "IBM Plex Mono", monospace; color: var(--danger);
+}
+.toast.visible { display: block; }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; margin-bottom: 14px; }
+.toolbar label.field { min-width: 110px; }
+.scroll { overflow: auto; max-height: 620px; }
+.rule { height: 1px; background: var(--line); margin: 16px 0; }
+.notice { border-left: 3px solid var(--accent); padding: 8px 11px; background: #eff7f3; color: #28584b; border-radius: 0 8px 8px 0; }
+.notice.bad { border-color: var(--danger); background: #fff1ef; color: #72211f; }
+.mini { font-size: 11px; color: var(--muted); }
+.mono { font-family: "IBM Plex Mono", "SFMono-Regular", monospace; }
+.right { text-align: right; }
+@media (max-width: 1050px) {
+  .controls { grid-template-columns: repeat(3, 1fr); }
+  .summary-grid { grid-template-columns: repeat(3, 1fr); }
+  .timeline-layout { grid-template-columns: 1fr; }
+  .tick-list { max-height: 260px; border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 8px; }
+}
+@media (max-width: 680px) {
+  header.top { align-items: flex-start; flex-direction: column; }
+  .controls, .summary-grid, .grid-2, .grid-3 { grid-template-columns: 1fr 1fr; }
+  .controls button { grid-column: span 2; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>warmcache / control surface</h1>
+    <div class="subtitle">分片副本、租约、共享源站带宽、写回闸门与断点续算的本地确定性诊断台。所有样本由固定种子生成，不访问外部服务。</div>
+  </div>
+  <div class="status" id="status">
+    <span class="pill"><span class="dot"></span>本地内核</span>
+    <span class="pill" id="hash-pill">hash: --</span>
+  </div>
+</header>
+<main>
+  <section class="panel controls">
+    <label class="field">Schema 版本
+      <select id="version">
+        <option value="v1">v1 · tick / 千分比 / 扁平</option>
+        <option value="v2">v2 · ms / 万分比 / 扁平</option>
+        <option value="v3">v3 · s+ms / 万分比 / 嵌套</option>
+      </select>
+    </label>
+    <label class="field">逻辑 tick 数
+      <input id="ticks" type="number" min="1" max="10000" value="30">
+    </label>
+    <label class="field">工作线程预算
+      <input id="workers" type="number" min="1" max="256" value="3">
+    </label>
+    <label class="field">每节点缓冲上限
+      <input id="maxBuffer" type="number" min="0" max="64" value="0" title="0 表示使用工程声明值">
+    </label>
+    <label class="field">中断 tick（可选）
+      <input id="interruptTick" type="number" min="1" value="" placeholder="例如 6">
+    </label>
+    <label class="field">中断分片
+      <select id="interruptShard"><option value="shard-03">shard-03</option></select>
+    </label>
+    <button id="runBtn">运行场景</button>
+  </section>
+
+  <section class="card-list" id="projects"></section>
+  <section class="summary-grid" id="summary"></section>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="timeline">时间线</button>
+    <button class="tab" data-tab="gate">写回闸门</button>
+    <button class="tab" data-tab="leases">租约</button>
+    <button class="tab" data-tab="shards">分片终态</button>
+    <button class="tab" data-tab="incremental">增量失效</button>
+    <button class="tab" data-tab="checkpoint">检查点</button>
+    <button class="tab" data-tab="inject">异常注入</button>
+  </nav>
+
+  <section class="panel">
+    <div class="tabpane active" id="pane-timeline">
+      <div class="toolbar">
+        <label class="field" style="flex:1">逻辑时刻
+          <input id="tickRange" type="range" min="1" max="30" value="1">
+        </label>
+        <div class="pill" id="tickLabel">tick 1</div>
+      </div>
+      <div class="timeline-layout">
+        <div class="tick-list scroll" id="tickList"></div>
+        <div>
+          <div id="tickDetail"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-gate">
+      <div class="notice">预热提交前，普通读回退到上一已提交版本；强制新读会被拒绝。写请求进入待回放队列且不在边缘可见，提交后统一切换。</div>
+      <div class="scroll" id="gateTable" style="margin-top:12px"></div>
+    </div>
+
+    <div class="tabpane" id="pane-leases">
+      <div class="scroll" id="leaseTable"></div>
+    </div>
+
+    <div class="tabpane" id="pane-shards">
+      <div class="scroll" id="shardTable"></div>
+    </div>
+
+    <div class="tabpane" id="pane-incremental">
+      <div class="grid-2">
+        <div>
+          <h2 class="section">施加编辑</h2>
+          <div class="toolbar">
+            <label class="field">编辑类型
+              <select id="editKind">
+                <option value="bump_shard">推进分片源站版本</option>
+                <option value="retire_node">节点退出</option>
+                <option value="set_budget">修改带宽预算</option>
+              </select>
+            </label>
+            <label class="field">发生 tick
+              <input id="editTick" type="number" min="1" value="7">
+            </label>
+            <label class="field">分片
+              <input id="editShard" value="shard-03">
+            </label>
+            <label class="field">节点
+              <input id="editNode" value="edge-b">
+            </label>
+            <label class="field">新预算（milli）
+              <input id="editBudget" type="number" value="150">
+            </label>
+            <button id="editBtn">增量重算并对照全量</button>
+          </div>
+          <div class="notice">增量只复用编辑 tick 之前的基线快照；编辑 tick 起的租约序列、预算结算、错峰队列与写回闸门统一重算，并由后端逐项对照全量结果。</div>
+        </div>
+        <div>
+          <h2 class="section">失效与对照</h2>
+          <div id="editResult"><div class="subtle">尚未施加编辑。</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-checkpoint">
+      <div class="toolbar">
+        <label class="field">检查点 tick
+          <input id="checkpointTick" type="number" min="1" placeholder="默认最后 tick">
+        </label>
+        <button id="checkpointBtn">落盘、重开并对照</button>
+      </div>
+      <div class="notice">SQLite 事务顺序固定为：分片状态 → 节点状态 → 待回放/租约 → 全局 tick 水位。重开只读取已提交水位。</div>
+      <div id="checkpointResult" style="margin-top:14px"><div class="subtle">尚未执行检查点对照。</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-inject">
+      <div class="toolbar">
+        <label class="field">异常类别
+          <select id="injectKind">
+            <option value="duplicate_shard">重复分片编号</option>
+            <option value="zero_lease">租约时长为零</option>
+            <option value="bad_bandwidth_scale">带宽刻度越界</option>
+            <option value="retired_node_lease">租约指向已退役节点</option>
+            <option value="thread_budget">越界工作线程预算</option>
+            <option value="buffer_budget">越界缓冲预算</option>
+            <option value="truncated_checkpoint">截断的检查点</option>
+            <option value="snapshot_version">版本不匹配快照</option>
+            <option value="schema_conflict">无水位字段的语义冲突</option>
+          </select>
+        </label>
+        <button id="injectBtn">注入并验证业务码</button>
+      </div>
+      <div id="injectResult"><div class="subtle">源样本只读；注入只在内存副本或临时目录中进行。</div></div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const state = {
+  projects: [],
+  result: null,
+  selectedTick: 0,
+  editResult: null,
+  checkpointResult: null,
+  injection: null
+};
+
+const $ = (id) => document.getElementById(id);
+const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+}[ch]));
+const fmt = (value) => value === undefined || value === null || value === "" ? "—" : esc(value);
+const pretty = (value) => esc(JSON.stringify(value, null, 2));
+const badge = (text, cls) => `<span class="badge ${cls || "neutral"}">${esc(text)}</span>`;
+const chipList = (values, cls) => (values && values.length)
+  ? `<div class="chips">${values.map((v) => `<span class="chip ${cls || ""}">${esc(v)}</span>`).join("")}</div>`
+  : '<span class="subtle">无</span>';
+
+function showToast(message) {
+  const toast = $("toast");
+  toast.textContent = message;
+  toast.classList.add("visible");
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(() => toast.classList.remove("visible"), 9000);
+}
+
+function showBiz(error) {
+  const biz = error.biz || { code: "E_CLIENT", op: "", message: error.message };
+  showToast(`${biz.code}${biz.op ? " · " + biz.op : ""}\n${biz.message}\n${biz.context ? JSON.stringify(biz.context) : ""}`);
+  return biz;
+}
+
+async function api(path, options = {}) {
+  const opts = { ...options, headers: { "Content-Type": "application/json", ...(options.headers || {}) } };
+  const response = await fetch(path, opts);
+  let payload;
+  try {
+    payload = await response.json();
+  } catch (error) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+  if (!response.ok || !payload.ok) {
+    const err = new Error(payload.error ? payload.error.message : `HTTP ${response.status}`);
+    err.biz = payload.error;
+    err.status = response.status;
+    throw err;
+  }
+  return payload.data;
+}
+
+function baseRunBody() {
+  return {
+    version: $("version").value,
+    ticks: Number($("ticks").value || 30),
+    workers: Number($("workers").value || 3),
+    max_workers: 32,
+    max_buffer_per_node: Number($("maxBuffer").value || 0)
+  };
+}
+
+async function init() {
+  try {
+    const data = await api("/api/projects");
+    state.projects = data.projects;
+    renderProjects(data);
+    populateShards();
+    await runScenario();
+  } catch (error) {
+    showBiz(error);
+  }
+}
+
+function renderProjects(data) {
+  $("projects").innerHTML = data.projects.map((view) => `
+    <article class="model-card">
+      <h3>${fmt(view.version)} <span class="subtle">${fmt(view.schema)}</span></h3>
+      <div class="hash">semantic ${fmt(view.semantic_hash)}</div>
+      <div class="chips">${view.traits.map((trait) => `<span class="chip">${esc(trait)}</span>`).join("")}</div>
+      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+        <button class="small secondary" data-load-sample="${fmt(view.version)}">查看原始 JSON</button>
+        <span class="badge ${data.all_semantically_equal ? "ok" : "bad"}">${data.all_semantically_equal ? "三版语义一致" : "语义不一致"}</span>
+      </div>
+    </article>
+  `).join("");
+  document.querySelectorAll("[data-load-sample]").forEach((button) => {
+    button.addEventListener("click", () => loadSample(button.dataset.loadSample));
+  });
+  $("hash-pill").textContent = `hash: ${data.baseline_hash.slice(0, 16)}…`;
+}
+
+function populateShards() {
+  const select = $("interruptShard");
+  const project = state.projects.find((item) => item.version === $("version").value) || state.projects[0];
+  if (!project) return;
+  select.innerHTML = project.project.shards.map((shard) => `<option value="${fmt(shard.id)}">${fmt(shard.id)}</option>`).join("");
+  select.value = project.project.shards[2] ? project.project.shards[2].id : "shard-01";
+}
+
+async function loadSample(version) {
+  try {
+    const response = await fetch(`/api/sample?version=${encodeURIComponent(version)}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const text = await response.text();
+    showToast(`源样本 ${version} · ${text.length} bytes\n${text.slice(0, 1100)}${text.length > 1100 ? "\n…" : ""}`);
+  } catch (error) {
+    showBiz(error);
+  }
+}
+
+async function runScenario(extra = {}) {
+  const body = { ...baseRunBody(), ...extra };
+  const interruptTick = Number($("interruptTick").value || 0);
+  if (interruptTick > 0) {
+    body.interrupts = [{
+      id: "ui-interrupt",
+      tick: interruptTick,
+      shard_id: $("interruptShard").value,
+      reason: "operator_requested",
+      exit_signal: false
+    }];
+  }
+  setBusy(true);
+  try {
+    const data = await api("/api/run", { method: "POST", body: JSON.stringify(body) });
+    state.result = data.result;
+    state.selectedTick = state.result.timeline.length;
+    renderRun();
+  } catch (error) {
+    showBiz(error);
+  } finally {
+    setBusy(false);
+  }
+}
+
+function setBusy(busy) {
+  document.querySelectorAll("button").forEach((button) => button.disabled = busy);
+  const runButton = $("runBtn");
+  if (runButton) runButton.textContent = busy ? "运行中…" : "运行场景";
+}
+
+function renderRun() {
+  if (!state.result) return;
+  const result = state.result;
+  const tick = result.timeline[state.selectedTick - 1] || result.timeline[result.timeline.length - 1];
+  state.selectedTick = tick.tick;
+  $("tickRange").min = 1;
+  $("tickRange").max = result.timeline.length;
+  $("tickRange").value = state.selectedTick;
+  $("tickLabel").textContent = `tick ${tick.tick}`;
+  $("hash-pill").textContent = `hash: ${result.semantic_hash.slice(0, 16)}…`;
+  renderSummary(tick);
+  renderTickList();
+  renderTickDetail(tick);
+  renderGateTable();
+  renderLeaseTable();
+  renderShardTable();
+}
+
+function renderSummary(tick) {
+  const result = state.result;
+  const available = result.shards.filter((shard) => shard.available).length;
+  const queued = tick.queue.length;
+  const bp = result.backpressure || [];
+  const bpCodes = [...new Set(bp.map((issue) => issue.code))];
+  const metrics = [
+    ["当前 tick", tick.tick],
+    ["已用 / 预算", `${tick.used_bandwidth_milli} / ${tick.capacity_milli}`],
+    ["已提交分片", `${available} / ${result.shards.length}`],
+    ["错峰队列", queued],
+    ["租约总数", result.leases.length],
+    ["背压码", bpCodes.length ? bpCodes.length : "0"]
+  ];
+  $("summary").innerHTML = metrics.map(([label, value]) => `
+    <div class="metric"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div></div>
+  `).join("");
+  if (bpCodes.length) {
+    const extra = `<div class="metric"><div class="label">背压详情</div><div class="subtle">${esc(bpCodes.join(" · "))}</div></div>`;
+    $("summary").insertAdjacentHTML("beforeend", extra);
+  }
+}
+
+function renderTickList() {
+  const result = state.result;
+  $("tickList").innerHTML = `<table><thead><tr><th>tick</th><th>带宽</th><th>队列</th><th>提交</th><th>请求</th></tr></thead><tbody>
+    ${result.timeline.map((tick) => `
+      <tr class="clickable ${tick.tick === state.selectedTick ? "selected" : ""}" data-tick="${tick.tick}">
+        <td class="mono">${tick.tick}${tick.cache_hit ? " ♻" : ""}</td>
+        <td>${tick.used_bandwidth_milli}/${tick.capacity_milli}</td>
+        <td>${tick.queue.length}</td>
+        <td>${(tick.commits || []).length}</td>
+        <td>${(tick.requests || []).length}</td>
+      </tr>`).join("")}
+  </tbody></table>`;
+  document.querySelectorAll("[data-tick]").forEach((row) => {
+    row.addEventListener("click", () => selectTick(Number(row.dataset.tick)));
+  });
+}
+
+function selectTick(tickNumber) {
+  const tick = state.result.timeline.find((item) => item.tick === tickNumber);
+  if (!tick) return;
+  state.selectedTick = tickNumber;
+  $("tickRange").value = tickNumber;
+  $("tickLabel").textContent = `tick ${tickNumber}`;
+  renderSummary(tick);
+  renderTickList();
+  renderTickDetail(tick);
+}
+
+function renderTickDetail(tick) {
+  const result = state.result;
+  const nodes = tick.nodes.map((node) => `
+    <article class="node-card">
+      <div class="node-title"><span>${fmt(node.node_id)}</span>
+        ${badge(node.retired ? "retired" : node.active ? "active" : "waiting", node.retired ? "bad" : node.active ? "ok" : "neutral")}
+      </div>
+      <div class="mini" style="margin-top:5px">带宽 ${node.used_bandwidth_milli} / 并发 ${node.concurrency} / 缓冲 ${node.pending_buffer}</div>
+      <div class="mini" style="margin-top:8px">持租分片</div>${chipList(node.holdings)}
+      <div class="mini" style="margin-top:8px">本 tick 活跃预热</div>${chipList(node.active_shards)}
+    </article>
+  `).join("");
+  const queueRows = tick.queue.length ? tick.queue.map((entry) => `
+    <tr><td class="mono">${esc(entry.shard_id)}</td><td>${esc(entry.node_id)}</td><td>#${esc(entry.position)}</td>
+      <td>${badge(entry.constraint, entry.constraint === "C_BW_BUDGET" ? "warn" : "neutral")}</td><td>${esc(entry.since_tick)}</td></tr>
+  `).join("") : `<tr><td colspan="5" class="subtle">队列为空</td></tr>`;
+  const invalidation = (tick.invalidation || []).length ? tick.invalidation.map((item) => `
+    <div class="notice" style="margin-top:8px">
+      <strong>${esc(item.edit_id)}</strong> · ${esc(item.kind)} · source ${esc(item.source)} · reused before ${esc(item.reused_before_tick)}
+      <div class="hash" style="margin-top:4px">closure: ${esc((item.closure || []).join(" → "))}</div>
+    </div>
+  `).join("") : '<div class="subtle">基线区间，无失效传播。</div>';
+  const issues = (tick.issues || []).length ? tick.issues.map((issue) => `
+    <div class="notice bad" style="margin-top:6px">${esc(issue.code)} · ${esc(issue.detail)} <span class="mini">${esc(JSON.stringify(issue.context || {}))}</span></div>
+  `).join("") : "";
+  const requests = (tick.requests || []).length ? renderRequestRows(tick.requests) : '<div class="subtle">该时刻无写回闸门请求。</div>';
+  $("tickDetail").innerHTML = `
+    <div class="grid-2">
+      <div><h2 class="section">节点持租与预算</h2><div class="node-grid">${nodes}</div></div>
+      <div>
+        <h2 class="section">失效来源</h2>${invalidation}
+        ${issues}
+        <h2 class="section">本 tick 错峰队列</h2>
+        <div class="scroll"><table><thead><tr><th>分片</th><th>节点</th><th>位次</th><th>约束</th><th>入队 tick</th></tr></thead><tbody>${queueRows}</tbody></table></div>
+      </div>
+    </div>
+    <h2 class="section">本 tick 闸门判定</h2>${requests}
+    <h2 class="section">提交</h2>${chipList(tick.commits || [])}
+  `;
+}
+
+function renderRequestRows(requests) {
+  return `<div class="scroll"><table><thead><tr>
+    <th>请求</th><th>类型</th><th>分片</th><th>结果</th><th>来源</th><th>版本</th><th>边缘可见</th><th>待回放</th><th>原因/业务码</th>
+  </tr></thead><tbody>${requests.map((request) => `
+    <tr>
+      <td class="mono">${esc(request.request_id)}</td>
+      <td>${badge(request.kind, request.kind === "write" ? "warn" : "neutral")}</td>
+      <td class="mono">${esc(request.shard_id)}</td>
+      <td>${request.rejected ? badge("rejected", "bad") : badge("accepted", "ok")}</td>
+      <td>${esc(request.source)}</td>
+      <td>${esc(request.returned_version)}</td>
+      <td>${request.visible_on_edge ? "yes" : "no"}</td>
+      <td>${esc(request.pending_replay)}</td>
+      <td class="mono">${esc(request.code || request.reason || "")}</td>
+    </tr>`).join("")}</tbody></table></div>`;
+}
+
+function renderGateTable() {
+  const requests = state.result.requests || [];
+  $("gateTable").innerHTML = requests.length ? renderRequestRows(requests) : '<div class="subtle">无请求。</div>';
+}
+
+function renderLeaseTable() {
+  const leases = state.result.leases || [];
+  $("leaseTable").innerHTML = `<table><thead><tr>
+    <th>lease</th><th>分片</th><th>节点</th><th>领取</th><th>到期</th><th>释放</th><th>原因</th><th>重生代</th>
+  </tr></thead><tbody>${leases.map((lease) => `
+    <tr>
+      <td class="mono">${esc(lease.lease_id)}</td>
+      <td class="mono">${esc(lease.shard_id)}</td>
+      <td>${esc(lease.node_id)}</td>
+      <td>${esc(lease.acquired_tick)}</td>
+      <td>${esc(lease.expires_tick)}</td>
+      <td>${esc(lease.released_tick || "—")}</td>
+      <td>${lease.release_reason ? badge(lease.release_reason, lease.release_reason === "lease_expired" ? "warn" : lease.release_reason === "preheat_completed" ? "ok" : "neutral") : "—"}</td>
+      <td>${esc(lease.generation)}</td>
+    </tr>`).join("")}</tbody></table>`;
+}
+
+function renderShardTable() {
+  const shards = state.result.shards || [];
+  $("shardTable").innerHTML = `<table><thead><tr>
+    <th>分片</th><th>归属节点</th><th>目标/可见版本</th><th>进度</th><th>可用</th><th>租约</th><th>重生次数</th><th>待回放</th><th>最近提交</th>
+  </tr></thead><tbody>${shards.map((shard) => `
+    <tr>
+      <td class="mono">${esc(shard.shard_id)}</td>
+      <td>${esc(shard.node_id)}</td>
+      <td>${esc(shard.target_version)} / ${esc(shard.visible_version)}</td>
+      <td>${esc(shard.committed_progress)} / ${esc(shard.preheat_ticks)}</td>
+      <td>${shard.available ? badge("committed", "ok") : badge("warming", "warn")}</td>
+      <td class="mono">${esc(shard.lease_id || "—")}${shard.lease_node ? " @" + esc(shard.lease_node) : ""}</td>
+      <td>${esc(shard.rebirths)} <span class="mini">/ gen ${esc(shard.generation)}</span></td>
+      <td>${esc(shard.pending_replay)}${(shard.replay_queue || []).length ? " · " + esc(shard.replay_queue.join(", ")) : ""}</td>
+      <td>${esc(shard.last_committed_tick || "—")}</td>
+    </tr>`).join("")}</tbody></table>`;
+}
+
+async function applyEdit() {
+  const kind = $("editKind").value;
+  const edit = {
+    id: `ui-${kind}-${Date.now()}`,
+    kind,
+    at_tick: Number($("editTick").value || 1)
+  };
+  if (kind === "bump_shard") edit.shard_id = $("editShard").value;
+  if (kind === "retire_node") edit.node_id = $("editNode").value;
+  if (kind === "set_budget") {
+    edit.budget_milli = Number($("editBudget").value || 150);
+    edit.node_id = $("editNode").value;
+  }
+  const body = { ...baseRunBody(), edits: [edit] };
+  setBusy(true);
+  try {
+    const data = await api("/api/edit", { method: "POST", body: JSON.stringify(body) });
+    state.editResult = data;
+    state.result = data.result;
+    state.selectedTick = Math.min(edit.at_tick, state.result.timeline.length);
+    renderRun();
+    renderEditResult(data);
+    showTab("incremental");
+  } catch (error) {
+    showBiz(error);
+  } finally {
+    setBusy(false);
+  }
+}
+
+function renderEditResult(data) {
+  const result = data.result;
+  const diff = data.diff || { changed_ticks: [], changed_count: 0, recomputed_without_visible_change: 0 };
+  const invalidations = [];
+  result.timeline.forEach((tick) => {
+    (tick.invalidation || []).forEach((item) => {
+      if (!invalidations.some((existing) => existing.edit_id === item.edit_id)) invalidations.push(item);
+    });
+  });
+  $("editResult").innerHTML = `
+    <div class="grid-3">
+      <div class="metric"><div class="label">增量 == 全量</div><div class="value">${data.matches_full ? badge("yes", "ok") : badge("no", "bad")}</div></div>
+      <div class="metric"><div class="label">复用 tick</div><div class="value">${esc(result.reused_ticks)}</div></div>
+      <div class="metric"><div class="label">重算 tick</div><div class="value">${esc((result.diagnostics.recomputed_ticks || []).length)}</div></div>
+    </div>
+    <div class="grid-3" style="margin-top:10px">
+      <div class="metric"><div class="label">可见差异 tick</div><div class="value">${esc(diff.changed_count)}</div></div>
+      <div class="metric"><div class="label">重算但无可见变化</div><div class="value">${esc(diff.recomputed_without_visible_change)}</div></div>
+      <div class="metric"><div class="label">首个编辑 tick</div><div class="value">${esc(diff.edit_tick)}</div></div>
+    </div>
+    <div class="hash" style="margin-top:8px">comparison: ${esc(data.full_comparison || "—")}</div>
+    <h3 class="section">逐 tick 差异</h3>
+    <div class="scroll"><table><thead><tr><th>tick</th><th>变化域</th></tr></thead><tbody>
+      ${(diff.changed_ticks && diff.changed_ticks.length) ? diff.changed_ticks.map((item) => `<tr><td class="mono">${esc(item.tick)}</td><td>${item.fields.map((field) => badge(field, "warn")).join(" ")}</td></tr>`).join("") : `<tr><td colspan="2" class="subtle">编辑 tick 之后暂无可见状态差异</td></tr>`}
+    </tbody></table></div>
+    ${invalidations.map((item) => `
+      <div class="notice" style="margin-top:10px">
+        <strong>${esc(item.edit_id)}</strong> · ${esc(item.kind)} · tick ${esc(item.at_tick)}
+        <div class="mini" style="margin-top:5px">closure</div>
+        <div class="hash">${esc(item.closure.join(" → "))}</div>
+      </div>
+    `).join("")}
+  `;
+}
+
+async function checkpointCompare() {
+  const body = { ...baseRunBody() };
+  const tick = Number($("checkpointTick").value || 0);
+  if (tick > 0) body.checkpoint_tick = tick;
+  setBusy(true);
+  try {
+    const data = await api("/api/checkpoint/compare", { method: "POST", body: JSON.stringify(body) });
+    state.checkpointResult = data;
+    renderCheckpoint(data);
+    showTab("checkpoint");
+  } catch (error) {
+    showBiz(error);
+  } finally {
+    setBusy(false);
+  }
+}
+
+function checkpointNodeSummary(tickState) {
+  if (!tickState) return '<div class="subtle">无数据</div>';
+  return `<div class="mini">tick ${esc(tickState.tick)} · budget ${esc(tickState.used_bandwidth_milli)}/${esc(tickState.capacity_milli)} · shards ${esc((tickState.shards || []).length)}</div>
+    ${(tickState.nodes || []).map((node) => `<div class="node-card" style="margin-top:8px"><div class="node-title">${esc(node.node_id)} ${badge(node.active ? "active" : "inactive", node.active ? "ok" : "neutral")}</div><div class="mini">holdings: ${esc((node.holdings || []).join(", ") || "—")}</div><div class="mini">bandwidth ${esc(node.used_bandwidth_milli)} · concurrency ${esc(node.concurrency)}</div></div>`).join("")}`;
+}
+
+function renderCheckpoint(data) {
+  $("checkpointResult").innerHTML = `
+    <div class="grid-3">
+      <div class="metric"><div class="label">检查点 tick</div><div class="value">${esc(data.checkpoint_tick)}</div></div>
+      <div class="metric"><div class="label">重开一致</div><div class="value">${data.equal_at_checkpoint ? badge("yes", "ok") : badge("no", "bad")}</div></div>
+      <div class="metric"><div class="label">继续到 tick</div><div class="value">${esc(data.continued_tick)} ${data.equal_after_continue ? badge("equal", "ok") : badge("diff", "bad")}</div></div>
+    </div>
+    <div class="grid-2" style="margin-top:14px">
+      <div><h3 class="section">提交前内存状态</h3>${checkpointNodeSummary(data.before)}</div>
+      <div><h3 class="section">SQLite 重开状态</h3>${checkpointNodeSummary(data.after_reopen)}</div>
+    </div>
+    <div class="hash" style="margin-top:10px">before ${esc(data.before_state_hash)} · after ${esc(data.after_state_hash)}</div>
+    <div class="hash" style="margin-top:4px">snapshot ${esc(data.snapshot_version)} · file ${esc(data.checkpoint_file_bytes)} bytes</div>
+  `;
+}
+
+async function injectAnomaly() {
+  const kind = $("injectKind").value;
+  const body = { version: $("version").value, kind };
+  setBusy(true);
+  try {
+    const data = await api("/api/inject", { method: "POST", body: JSON.stringify(body) });
+    $("injectResult").innerHTML = `<div class="notice bad">注入未按预期失败：${pretty(data)}</div>`;
+  } catch (error) {
+    const biz = showBiz(error);
+    state.injection = biz;
+    $("injectResult").innerHTML = `
+      <div class="grid-2">
+        <div class="metric"><div class="label">业务码</div><div class="value mono">${esc(biz.code)}</div></div>
+        <div class="metric"><div class="label">HTTP</div><div class="value">${esc(error.status || "—")}</div></div>
+      </div>
+      <div class="notice bad" style="margin-top:12px">${esc(biz.message || "")}</div>
+      <h3 class="section">可定位上下文</h3>
+      <pre>${pretty(biz.context || {})}</pre>
+      <div class="mini" style="margin-top:8px">op: ${esc(biz.op || "—")} · 源工程数据只读，未发生修改。</div>
+    `;
+    showTab("inject");
+  } finally {
+    setBusy(false);
+  }
+}
+
+function showTab(name) {
+  document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.tab === name));
+  document.querySelectorAll(".tabpane").forEach((pane) => pane.classList.toggle("active", pane.id === `pane-${name}`));
+}
+
+document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => showTab(tab.dataset.tab)));
+$("version").addEventListener("change", () => { populateShards(); runScenario(); });
+$("runBtn").addEventListener("click", () => runScenario());
+$("tickRange").addEventListener("input", (event) => selectTick(Number(event.target.value)));
+$("editBtn").addEventListener("click", applyEdit);
+$("checkpointBtn").addEventListener("click", checkpointCompare);
+$("injectBtn").addEventListener("click", injectAnomaly);
+
+init();
+</script>
+</body>
+</html>

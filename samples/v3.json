@@ -1,0 +1,137 @@
+{
+  "bandwidth": {
+    "limit": 2000,
+    "unit": "basis_points"
+  },
+  "clock": {
+    "lease_seconds": 1.5,
+    "preheat_seconds": 1,
+    "tick_millis": 250
+  },
+  "preheat_watermark": 1000,
+  "project": "cache-warm-seed-4242",
+  "replica_groups": [
+    {
+      "group": "g1",
+      "members": [
+        {
+          "buffer_limit": 2,
+          "claim_interval_ms": 500,
+          "join_tick": 1,
+          "lease_ms": 1500,
+          "max_concurrent": 2,
+          "node_id": "edge-a"
+        },
+        {
+          "buffer_limit": 2,
+          "claim_interval_ms": 750,
+          "join_tick": 1,
+          "lease_ms": 1500,
+          "max_concurrent": 2,
+          "node_id": "edge-b"
+        }
+      ],
+      "replicas": [
+        {
+          "bandwidth_bps": 800,
+          "digest": 106848466137885,
+          "node_id": "edge-a",
+          "preheat_ms": 1000,
+          "previous_version": 3,
+          "shard_id": "shard-01",
+          "source_version": 4
+        },
+        {
+          "bandwidth_bps": 800,
+          "digest": 103549931253252,
+          "node_id": "edge-b",
+          "preheat_ms": 1250,
+          "previous_version": 3,
+          "shard_id": "shard-02",
+          "source_version": 4
+        },
+        {
+          "bandwidth_bps": 700,
+          "digest": 101350907996830,
+          "node_id": "edge-a",
+          "preheat_ms": 750,
+          "previous_version": 3,
+          "shard_id": "shard-04",
+          "source_version": 4
+        },
+        {
+          "bandwidth_bps": 900,
+          "digest": 102450419625041,
+          "node_id": "edge-b",
+          "preheat_ms": 1000,
+          "previous_version": 3,
+          "shard_id": "shard-05",
+          "source_version": 4
+        },
+        {
+          "bandwidth_bps": 1000,
+          "digest": 100251396368619,
+          "node_id": "edge-a",
+          "preheat_ms": 1000,
+          "previous_version": 3,
+          "shard_id": "shard-07",
+          "source_version": 4
+        },
+        {
+          "bandwidth_bps": 700,
+          "digest": 96952861483986,
+          "node_id": "edge-b",
+          "preheat_ms": 750,
+          "previous_version": 3,
+          "shard_id": "shard-08",
+          "source_version": 4
+        }
+      ]
+    },
+    {
+      "group": "g2",
+      "members": [
+        {
+          "buffer_limit": 3,
+          "claim_interval_ms": 500,
+          "join_tick": 2,
+          "lease_ms": 1500,
+          "max_concurrent": 2,
+          "node_id": "edge-c"
+        }
+      ],
+      "replicas": [
+        {
+          "bandwidth_bps": 800,
+          "digest": 104649442881463,
+          "node_id": "edge-c",
+          "preheat_ms": 1000,
+          "previous_version": 3,
+          "shard_id": "shard-03",
+          "source_version": 4
+        },
+        {
+          "bandwidth_bps": 600,
+          "digest": 99151884740408,
+          "node_id": "edge-c",
+          "preheat_ms": 1250,
+          "previous_version": 3,
+          "shard_id": "shard-06",
+          "source_version": 4
+        },
+        {
+          "bandwidth_bps": 900,
+          "digest": 98052373112197,
+          "node_id": "edge-c",
+          "preheat_ms": 1000,
+          "previous_version": 3,
+          "shard_id": "shard-09",
+          "source_version": 4
+        }
+      ]
+    }
+  ],
+  "schema": "cache-warm.v3",
+  "seed": 4242,
+  "source_version": 4
+}
