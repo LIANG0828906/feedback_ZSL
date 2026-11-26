@@ -1,0 +1,224 @@
+{
+  "events": [
+    {
+      "amount_bytes": 1048576,
+      "budget_ms": 4,
+      "event_id": "e-alpha-open",
+      "node_id": "node-a",
+      "op": "apply",
+      "tenant_id": "t-alpha",
+      "tick": 1
+    },
+    {
+      "amount_bytes": 786432,
+      "budget_ms": 4,
+      "event_id": "e-beta-open",
+      "node_id": "node-a",
+      "op": "apply",
+      "tenant_id": "t-beta",
+      "tick": 1
+    },
+    {
+      "amount_bytes": 262144,
+      "budget_ms": 2,
+      "event_id": "e-gamma-open",
+      "node_id": "node-a",
+      "op": "apply",
+      "tenant_id": "t-gamma",
+      "tick": 1
+    },
+    {
+      "amount_bytes": 249856,
+      "budget_ms": 3,
+      "causal_refs": [
+        "e-gamma-open"
+      ],
+      "event_id": "e-gamma-top-guarantee",
+      "node_id": "node-a",
+      "op": "apply",
+      "tenant_id": "t-gamma",
+      "tick": 2
+    },
+    {
+      "amount_bytes": 1572864,
+      "budget_ms": 1,
+      "event_id": "e-delta-contend",
+      "node_id": "node-a",
+      "op": "apply",
+      "tenant_id": "t-delta",
+      "tick": 2
+    },
+    {
+      "amount_bytes": 1048576,
+      "budget_ms": 4,
+      "causal_refs": [
+        "e-alpha-open"
+      ],
+      "event_id": "e-alpha-expand",
+      "node_id": "node-a",
+      "op": "apply",
+      "tenant_id": "t-alpha",
+      "tick": 3
+    },
+    {
+      "amount_bytes": 786432,
+      "budget_ms": 4,
+      "causal_refs": [
+        "e-beta-open"
+      ],
+      "event_id": "e-beta-expand",
+      "node_id": "node-a",
+      "op": "apply",
+      "tenant_id": "t-beta",
+      "tick": 3
+    },
+    {
+      "amount_bytes": 524288,
+      "budget_ms": 2,
+      "causal_refs": [
+        "e-beta-expand"
+      ],
+      "event_id": "e-beta-release-512",
+      "node_id": "node-a",
+      "op": "release",
+      "tenant_id": "t-beta",
+      "tick": 4
+    },
+    {
+      "amount_bytes": 524288,
+      "budget_ms": 2,
+      "causal_refs": [
+        "e-alpha-expand"
+      ],
+      "event_id": "e-alpha-release-512",
+      "node_id": "node-a",
+      "op": "release",
+      "tenant_id": "t-alpha",
+      "tick": 5
+    },
+    {
+      "budget_ms": 1,
+      "event_id": "e-delta-weight-up",
+      "op": "weight",
+      "tenant_id": "t-delta",
+      "tick": 5,
+      "weight_permille": 900
+    },
+    {
+      "amount_bytes": 61440,
+      "budget_ms": 2,
+      "event_id": "e-beta-release-60",
+      "node_id": "node-a",
+      "op": "release",
+      "tenant_id": "t-beta",
+      "tick": 6
+    },
+    {
+      "amount_bytes": 36864,
+      "budget_ms": 2,
+      "event_id": "e-alpha-release-36",
+      "node_id": "node-a",
+      "op": "release",
+      "tenant_id": "t-alpha",
+      "tick": 7
+    },
+    {
+      "amount_bytes": 262144,
+      "budget_ms": 3,
+      "event_id": "e-gamma-node-c",
+      "node_id": "node-c",
+      "op": "apply",
+      "tenant_id": "t-gamma",
+      "tick": 8
+    },
+    {
+      "amount_bytes": 262144,
+      "budget_ms": 1,
+      "event_id": "e-delta-node-c",
+      "node_id": "node-c",
+      "op": "apply",
+      "tenant_id": "t-delta",
+      "tick": 8
+    }
+  ],
+  "fixed_policy": {
+    "bit_width": 64,
+    "fraction_bits": 16,
+    "tolerance_bytes": 1,
+    "tolerance_ppm": 10
+  },
+  "nodes": [
+    {
+      "allowed_tenants": [
+        "t-alpha",
+        "t-beta",
+        "t-gamma",
+        "t-delta"
+      ],
+      "capacity_bytes": 4194304,
+      "node_id": "node-a",
+      "rack": "rack-r1"
+    },
+    {
+      "allowed_tenants": [
+        "t-alpha",
+        "t-beta",
+        "t-delta"
+      ],
+      "capacity_bytes": 3145728,
+      "node_id": "node-b",
+      "rack": "rack-r1"
+    },
+    {
+      "allowed_tenants": [
+        "t-gamma",
+        "t-delta"
+      ],
+      "capacity_bytes": 2899968,
+      "node_id": "node-c",
+      "rack": "rack-r2"
+    }
+  ],
+  "project_id": "seed-42-multitenant-quota",
+  "schema": "quotakernel.project/v1",
+  "seed": 42,
+  "tenants": [
+    {
+      "burst_limit_bytes": 768000,
+      "guarantee_bytes": 1536000,
+      "guarantee_node_id": "node-a",
+      "priority": 10,
+      "quota_bytes": 3072000,
+      "tenant_id": "t-alpha",
+      "weight_permille": 800
+    },
+    {
+      "burst_limit_bytes": 512000,
+      "guarantee_bytes": 1024000,
+      "guarantee_node_id": "node-a",
+      "priority": 8,
+      "quota_bytes": 2048000,
+      "tenant_id": "t-beta",
+      "weight_permille": 600
+    },
+    {
+      "burst_limit_bytes": 640000,
+      "guarantee_bytes": 512000,
+      "guarantee_node_id": "node-a",
+      "priority": 5,
+      "quota_bytes": 2560000,
+      "tenant_id": "t-gamma",
+      "weight_permille": 400
+    },
+    {
+      "burst_limit_bytes": 384000,
+      "guarantee_bytes": 512000,
+      "guarantee_node_id": "node-a",
+      "priority": 5,
+      "quota_bytes": 1536000,
+      "tenant_id": "t-delta",
+      "weight_permille": 200
+    }
+  ],
+  "tick_ms": 100
+}

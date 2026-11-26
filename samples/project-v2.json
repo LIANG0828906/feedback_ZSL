@@ -1,0 +1,230 @@
+{
+  "defaultBurstRatioPermille": 250,
+  "eventLog": [
+    {
+      "amountKiB": 1024,
+      "atMs": 100,
+      "decisionBudgetMs": 4,
+      "eventId": "e-alpha-open",
+      "nodeId": "node-a",
+      "op": "reserve",
+      "tenantId": "t-alpha"
+    },
+    {
+      "amountKiB": 768,
+      "atMs": 100,
+      "decisionBudgetMs": 4,
+      "eventId": "e-beta-open",
+      "nodeId": "node-a",
+      "op": "reserve",
+      "tenantId": "t-beta"
+    },
+    {
+      "amountKiB": 256,
+      "atMs": 100,
+      "decisionBudgetMs": 2,
+      "eventId": "e-gamma-open",
+      "nodeId": "node-a",
+      "op": "reserve",
+      "tenantId": "t-gamma"
+    },
+    {
+      "amountKiB": 244,
+      "atMs": 200,
+      "causalRefs": [
+        "e-gamma-open"
+      ],
+      "decisionBudgetMs": 3,
+      "eventId": "e-gamma-top-guarantee",
+      "nodeId": "node-a",
+      "op": "reserve",
+      "tenantId": "t-gamma"
+    },
+    {
+      "amountKiB": 1536,
+      "atMs": 200,
+      "decisionBudgetMs": 1,
+      "eventId": "e-delta-contend",
+      "nodeId": "node-a",
+      "op": "reserve",
+      "tenantId": "t-delta"
+    },
+    {
+      "amountKiB": 1024,
+      "atMs": 300,
+      "causalRefs": [
+        "e-alpha-open"
+      ],
+      "decisionBudgetMs": 4,
+      "eventId": "e-alpha-expand",
+      "nodeId": "node-a",
+      "op": "reserve",
+      "tenantId": "t-alpha"
+    },
+    {
+      "amountKiB": 768,
+      "atMs": 300,
+      "causalRefs": [
+        "e-beta-open"
+      ],
+      "decisionBudgetMs": 4,
+      "eventId": "e-beta-expand",
+      "nodeId": "node-a",
+      "op": "reserve",
+      "tenantId": "t-beta"
+    },
+    {
+      "amountKiB": 512,
+      "atMs": 400,
+      "causalRefs": [
+        "e-beta-expand"
+      ],
+      "decisionBudgetMs": 2,
+      "eventId": "e-beta-release-512",
+      "nodeId": "node-a",
+      "op": "free",
+      "tenantId": "t-beta"
+    },
+    {
+      "amountKiB": 512,
+      "atMs": 500,
+      "causalRefs": [
+        "e-alpha-expand"
+      ],
+      "decisionBudgetMs": 2,
+      "eventId": "e-alpha-release-512",
+      "nodeId": "node-a",
+      "op": "free",
+      "tenantId": "t-alpha"
+    },
+    {
+      "atMs": 500,
+      "decisionBudgetMs": 1,
+      "eventId": "e-delta-weight-up",
+      "op": "reweight",
+      "tenantId": "t-delta",
+      "weightPermille": 900
+    },
+    {
+      "amountKiB": 60,
+      "atMs": 600,
+      "decisionBudgetMs": 2,
+      "eventId": "e-beta-release-60",
+      "nodeId": "node-a",
+      "op": "free",
+      "tenantId": "t-beta"
+    },
+    {
+      "amountKiB": 36,
+      "atMs": 700,
+      "decisionBudgetMs": 2,
+      "eventId": "e-alpha-release-36",
+      "nodeId": "node-a",
+      "op": "free",
+      "tenantId": "t-alpha"
+    },
+    {
+      "amountKiB": 256,
+      "atMs": 800,
+      "decisionBudgetMs": 3,
+      "eventId": "e-gamma-node-c",
+      "nodeId": "node-c",
+      "op": "reserve",
+      "tenantId": "t-gamma"
+    },
+    {
+      "amountKiB": 256,
+      "atMs": 800,
+      "decisionBudgetMs": 1,
+      "eventId": "e-delta-node-c",
+      "nodeId": "node-c",
+      "op": "reserve",
+      "tenantId": "t-delta"
+    }
+  ],
+  "fixedPolicy": {
+    "bitWidth": 64,
+    "fractionBits": 16,
+    "toleranceBytes": 1,
+    "tolerancePPM": 10
+  },
+  "projectId": "seed-42-multitenant-quota",
+  "schema": "quotakernel.project/v2",
+  "seed": 42,
+  "tenantPool": [
+    {
+      "guaranteeNodeId": "node-a",
+      "guaranteePermille": 150,
+      "priority": 10,
+      "quotaPermille": 300,
+      "tenantId": "t-alpha",
+      "weightPermille": 800
+    },
+    {
+      "guaranteeNodeId": "node-a",
+      "guaranteePermille": 100,
+      "priority": 8,
+      "quotaPermille": 200,
+      "tenantId": "t-beta",
+      "weightPermille": 600
+    },
+    {
+      "guaranteeNodeId": "node-a",
+      "guaranteePermille": 50,
+      "priority": 5,
+      "quotaPermille": 250,
+      "tenantId": "t-gamma",
+      "weightPermille": 400
+    },
+    {
+      "guaranteeNodeId": "node-a",
+      "guaranteePermille": 50,
+      "priority": 5,
+      "quotaPermille": 150,
+      "tenantId": "t-delta",
+      "weightPermille": 200
+    }
+  ],
+  "tickDurationMs": 100,
+  "topology": {
+    "racks": [
+      {
+        "nodes": [
+          {
+            "capacityKiB": 4096,
+            "nodeId": "node-a",
+            "tenantIds": [
+              "t-alpha",
+              "t-beta",
+              "t-gamma",
+              "t-delta"
+            ]
+          },
+          {
+            "capacityKiB": 3072,
+            "nodeId": "node-b",
+            "tenantIds": [
+              "t-alpha",
+              "t-beta",
+              "t-delta"
+            ]
+          }
+        ],
+        "rackId": "rack-r1"
+      },
+      {
+        "nodes": [
+          {
+            "capacityKiB": 2832,
+            "nodeId": "node-c",
+            "tenantIds": [
+              "t-gamma",
+              "t-delta"
+            ]
+          }
+        ],
+        "rackId": "rack-r2"
+      }
+    ]
+  }
+}

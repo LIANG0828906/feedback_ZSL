@@ -1,0 +1,1689 @@
+{
+  "project_id": "seed-42-multitenant-quota",
+  "seed": 42,
+  "path": "reference",
+  "budgets": {
+    "workers": 4,
+    "per_tenant_queue": 32,
+    "fail_fast_workers": false
+  },
+  "ticks": [
+    {
+      "tick": 0,
+      "admission_order": null,
+      "allocations": null,
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 0,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 0,
+          "held_bytes": 0,
+          "available_quota_bytes": 3072000,
+          "guarantee_remaining_bytes": 1536000,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 3840000,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 0,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 0,
+          "held_bytes": 0,
+          "available_quota_bytes": 2048000,
+          "guarantee_remaining_bytes": 1024000,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 2560000,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 0,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 0,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 512000,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 1920000,
+          "effective_priority": 5,
+          "effective_weight_bp": 2000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 0,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 0,
+          "held_bytes": 0,
+          "available_quota_bytes": 2560000,
+          "guarantee_remaining_bytes": 512000,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 3200000,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 0,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 4194304,
+          "protected_guarantee_bytes": 3584000
+        },
+        {
+          "node_id": "node-b",
+          "tick": 0,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 0,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": null
+    },
+    {
+      "tick": 1,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-alpha-open",
+          "tranche": "guarantee",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 1048576,
+          "granted_bytes": 1048576
+        },
+        {
+          "order": 2,
+          "request_id": "e-beta-open",
+          "tranche": "guarantee",
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 786432,
+          "granted_bytes": 786432
+        },
+        {
+          "order": 3,
+          "request_id": "e-gamma-open",
+          "tranche": "guarantee",
+          "tenant_id": "t-gamma",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 262144,
+          "granted_bytes": 262144
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-alpha-open",
+          "tick": 1,
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "requested_bytes": 1048576,
+          "granted_bytes": 1048576,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "exact",
+          "pre_hold_bytes": 1048576,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "final_settled": true
+        },
+        {
+          "request_id": "e-beta-open",
+          "tick": 1,
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "requested_bytes": 786432,
+          "granted_bytes": 786432,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "exact",
+          "pre_hold_bytes": 786432,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "final_settled": true
+        },
+        {
+          "request_id": "e-gamma-open",
+          "tick": 1,
+          "tenant_id": "t-gamma",
+          "node_id": "node-a",
+          "requested_bytes": 262144,
+          "granted_bytes": 262144,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 262144,
+          "delay_ms": 1,
+          "budget_ms": 2,
+          "within_budget": true,
+          "final_settled": true
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 1,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1048576,
+          "held_bytes": 0,
+          "available_quota_bytes": 2023424,
+          "guarantee_remaining_bytes": 487424,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2791424,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 1,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 786432,
+          "held_bytes": 0,
+          "available_quota_bytes": 1261568,
+          "guarantee_remaining_bytes": 237568,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1773568,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 1,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 0,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 512000,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 1920000,
+          "effective_priority": 5,
+          "effective_weight_bp": 2000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 1,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 262144,
+          "held_bytes": 0,
+          "available_quota_bytes": 2297856,
+          "guarantee_remaining_bytes": 249856,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2937856,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 1,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 2097152,
+          "held_bytes": 0,
+          "available_bytes": 2097152,
+          "protected_guarantee_bytes": 1486848
+        },
+        {
+          "node_id": "node-b",
+          "tick": 1,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 1,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": null
+    },
+    {
+      "tick": 2,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-gamma-top-guarantee",
+          "tranche": "guarantee",
+          "tenant_id": "t-gamma",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 249856,
+          "granted_bytes": 249856
+        },
+        {
+          "order": 2,
+          "request_id": "e-delta-contend",
+          "tranche": "guarantee",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 512000,
+          "granted_bytes": 512000
+        },
+        {
+          "order": 3,
+          "request_id": "e-delta-contend",
+          "tranche": "quota",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "layer": 1,
+          "requested_bytes": 1024000,
+          "granted_bytes": 610304
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-delta-contend",
+          "tick": 2,
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "requested_bytes": 1572864,
+          "granted_bytes": 1122304,
+          "queued_bytes": 450560,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 1122304,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-alpha",
+            "t-beta"
+          ],
+          "retry_after_tick": 4,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-gamma-top-guarantee",
+          "tick": 2,
+          "tenant_id": "t-gamma",
+          "node_id": "node-a",
+          "requested_bytes": 249856,
+          "granted_bytes": 249856,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "exact",
+          "pre_hold_bytes": 249856,
+          "delay_ms": 3,
+          "budget_ms": 3,
+          "within_budget": true,
+          "final_settled": true
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 2,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1048576,
+          "held_bytes": 0,
+          "available_quota_bytes": 2023424,
+          "guarantee_remaining_bytes": 487424,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2791424,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 2,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 786432,
+          "held_bytes": 0,
+          "available_quota_bytes": 1261568,
+          "guarantee_remaining_bytes": 237568,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1773568,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 2,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 1122304,
+          "held_bytes": 0,
+          "available_quota_bytes": 413696,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 797696,
+          "effective_priority": 5,
+          "effective_weight_bp": 2000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 2,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 512000,
+          "held_bytes": 0,
+          "available_quota_bytes": 2048000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2688000,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 2,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 3469312,
+          "held_bytes": 0,
+          "available_bytes": 724992,
+          "protected_guarantee_bytes": 724992
+        },
+        {
+          "node_id": "node-b",
+          "tick": 2,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 2,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": [
+        {
+          "request_id": "e-delta-contend",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "amount_remaining": 450560,
+          "enqueued_tick": 2,
+          "budget_ms": 1,
+          "retry_after_tick": 4,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-alpha",
+            "t-beta"
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-alpha-expand",
+          "tranche": "guarantee",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 487424,
+          "granted_bytes": 487424
+        },
+        {
+          "order": 2,
+          "request_id": "e-beta-expand",
+          "tranche": "guarantee",
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 237568,
+          "granted_bytes": 237568
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-alpha-expand",
+          "tick": 3,
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "requested_bytes": 1048576,
+          "granted_bytes": 487424,
+          "queued_bytes": 561152,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "exact",
+          "pre_hold_bytes": 487424,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-alpha",
+          "retry_after_tick": 4,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-beta-expand",
+          "tick": 3,
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "requested_bytes": 786432,
+          "granted_bytes": 237568,
+          "queued_bytes": 548864,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "exact",
+          "pre_hold_bytes": 237568,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-beta",
+          "retry_after_tick": 4,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-delta-contend",
+          "tick": 3,
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "requested_bytes": 450560,
+          "granted_bytes": 0,
+          "queued_bytes": 450560,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 0,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-delta",
+          "retry_after_tick": 4,
+          "final_settled": false
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 3,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1536000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2304000,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 3,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 1024000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1024000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1536000,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 3,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 1122304,
+          "held_bytes": 0,
+          "available_quota_bytes": 413696,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 797696,
+          "effective_priority": 5,
+          "effective_weight_bp": 2000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 3,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 512000,
+          "held_bytes": 0,
+          "available_quota_bytes": 2048000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2688000,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 3,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 4194304,
+          "held_bytes": 0,
+          "available_bytes": 0,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-b",
+          "tick": 3,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 3,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": [
+        {
+          "request_id": "e-delta-contend",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "amount_remaining": 450560,
+          "enqueued_tick": 2,
+          "budget_ms": 1,
+          "retry_after_tick": 4,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-delta"
+        },
+        {
+          "request_id": "e-alpha-expand",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "amount_remaining": 561152,
+          "enqueued_tick": 3,
+          "budget_ms": 4,
+          "retry_after_tick": 4,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-alpha"
+        },
+        {
+          "request_id": "e-beta-expand",
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "amount_remaining": 548864,
+          "enqueued_tick": 3,
+          "budget_ms": 4,
+          "retry_after_tick": 4,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-beta"
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-beta-expand",
+          "tranche": "guarantee",
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 524288,
+          "granted_bytes": 524288
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-alpha-expand",
+          "tick": 4,
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "requested_bytes": 561152,
+          "granted_bytes": 0,
+          "queued_bytes": 561152,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "exact",
+          "pre_hold_bytes": 0,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-alpha",
+          "retry_after_tick": 5,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-beta-expand",
+          "tick": 4,
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "requested_bytes": 548864,
+          "granted_bytes": 524288,
+          "queued_bytes": 24576,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "exact",
+          "pre_hold_bytes": 524288,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-beta",
+          "retry_after_tick": 5,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-delta-contend",
+          "tick": 4,
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "requested_bytes": 450560,
+          "granted_bytes": 0,
+          "queued_bytes": 450560,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 0,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-delta",
+          "retry_after_tick": 5,
+          "final_settled": false
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 4,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1536000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2304000,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 4,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 1024000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1024000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1536000,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 4,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 1122304,
+          "held_bytes": 0,
+          "available_quota_bytes": 413696,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 797696,
+          "effective_priority": 5,
+          "effective_weight_bp": 2000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 4,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 512000,
+          "held_bytes": 0,
+          "available_quota_bytes": 2048000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2688000,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 4,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 4194304,
+          "held_bytes": 0,
+          "available_bytes": 0,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-b",
+          "tick": 4,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 4,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": [
+        {
+          "request_id": "e-delta-contend",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "amount_remaining": 450560,
+          "enqueued_tick": 2,
+          "budget_ms": 1,
+          "retry_after_tick": 5,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-delta"
+        },
+        {
+          "request_id": "e-alpha-expand",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "amount_remaining": 561152,
+          "enqueued_tick": 3,
+          "budget_ms": 4,
+          "retry_after_tick": 5,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-alpha"
+        },
+        {
+          "request_id": "e-beta-expand",
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "amount_remaining": 24576,
+          "enqueued_tick": 3,
+          "budget_ms": 4,
+          "retry_after_tick": 5,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-beta"
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-alpha-expand",
+          "tranche": "guarantee",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 524288,
+          "granted_bytes": 524288
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-alpha-expand",
+          "tick": 5,
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "requested_bytes": 561152,
+          "granted_bytes": 524288,
+          "queued_bytes": 36864,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "exact",
+          "pre_hold_bytes": 524288,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-alpha",
+          "retry_after_tick": 6,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-beta-expand",
+          "tick": 5,
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "requested_bytes": 24576,
+          "granted_bytes": 0,
+          "queued_bytes": 24576,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "exact",
+          "pre_hold_bytes": 0,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-beta",
+          "retry_after_tick": 6,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-delta-contend",
+          "tick": 5,
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "requested_bytes": 450560,
+          "granted_bytes": 0,
+          "queued_bytes": 450560,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 0,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-delta",
+          "retry_after_tick": 6,
+          "final_settled": false
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 5,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1536000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2304000,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 5,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 1024000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1024000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1536000,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 5,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 1122304,
+          "held_bytes": 0,
+          "available_quota_bytes": 413696,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 797696,
+          "effective_priority": 5,
+          "effective_weight_bp": 9000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 5,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 512000,
+          "held_bytes": 0,
+          "available_quota_bytes": 2048000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2688000,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 5,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 4194304,
+          "held_bytes": 0,
+          "available_bytes": 0,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-b",
+          "tick": 5,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 5,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": [
+        {
+          "request_id": "e-delta-contend",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "amount_remaining": 450560,
+          "enqueued_tick": 2,
+          "budget_ms": 1,
+          "retry_after_tick": 6,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-delta"
+        },
+        {
+          "request_id": "e-alpha-expand",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "amount_remaining": 36864,
+          "enqueued_tick": 3,
+          "budget_ms": 4,
+          "retry_after_tick": 6,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-alpha"
+        },
+        {
+          "request_id": "e-beta-expand",
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "amount_remaining": 24576,
+          "enqueued_tick": 3,
+          "budget_ms": 4,
+          "retry_after_tick": 6,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-beta"
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-beta-expand",
+          "tranche": "guarantee",
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 24576,
+          "granted_bytes": 24576
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-alpha-expand",
+          "tick": 6,
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "requested_bytes": 36864,
+          "granted_bytes": 0,
+          "queued_bytes": 36864,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "exact",
+          "pre_hold_bytes": 0,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-alpha",
+          "protected_tenant_ids": [
+            "t-beta"
+          ],
+          "retry_after_tick": 7,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-beta-expand",
+          "tick": 6,
+          "tenant_id": "t-beta",
+          "node_id": "node-a",
+          "requested_bytes": 24576,
+          "granted_bytes": 24576,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "exact",
+          "pre_hold_bytes": 24576,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_NODE_CAPACITY_EXHAUSTED",
+          "constraint_id": "C-NODE-CAPACITY",
+          "invader_tenant_id": "t-beta",
+          "retry_after_tick": 6,
+          "final_settled": true
+        },
+        {
+          "request_id": "e-delta-contend",
+          "tick": 6,
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "requested_bytes": 450560,
+          "granted_bytes": 0,
+          "queued_bytes": 450560,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 0,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-beta"
+          ],
+          "retry_after_tick": 7,
+          "final_settled": false
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 6,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1536000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2304000,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 6,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 987136,
+          "held_bytes": 0,
+          "available_quota_bytes": 1060864,
+          "guarantee_remaining_bytes": 36864,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1572864,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 6,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 1122304,
+          "held_bytes": 0,
+          "available_quota_bytes": 413696,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 797696,
+          "effective_priority": 5,
+          "effective_weight_bp": 9000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 6,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 512000,
+          "held_bytes": 0,
+          "available_quota_bytes": 2048000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2688000,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 6,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 4157440,
+          "held_bytes": 0,
+          "available_bytes": 36864,
+          "protected_guarantee_bytes": 36864
+        },
+        {
+          "node_id": "node-b",
+          "tick": 6,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 6,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": [
+        {
+          "request_id": "e-delta-contend",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "amount_remaining": 450560,
+          "enqueued_tick": 2,
+          "budget_ms": 1,
+          "retry_after_tick": 7,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-beta"
+          ]
+        },
+        {
+          "request_id": "e-alpha-expand",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "amount_remaining": 36864,
+          "enqueued_tick": 3,
+          "budget_ms": 4,
+          "retry_after_tick": 7,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-alpha",
+          "protected_tenant_ids": [
+            "t-beta"
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-alpha-expand",
+          "tranche": "guarantee",
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "layer": 0,
+          "requested_bytes": 36864,
+          "granted_bytes": 36864
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-alpha-expand",
+          "tick": 7,
+          "tenant_id": "t-alpha",
+          "node_id": "node-a",
+          "requested_bytes": 36864,
+          "granted_bytes": 36864,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "exact",
+          "pre_hold_bytes": 36864,
+          "delay_ms": 3,
+          "budget_ms": 4,
+          "within_budget": true,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-alpha",
+          "protected_tenant_ids": [
+            "t-beta"
+          ],
+          "retry_after_tick": 7,
+          "final_settled": true
+        },
+        {
+          "request_id": "e-delta-contend",
+          "tick": 7,
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "requested_bytes": 450560,
+          "granted_bytes": 0,
+          "queued_bytes": 450560,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 0,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-beta"
+          ],
+          "retry_after_tick": 8,
+          "final_settled": false
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 7,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1536000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2304000,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 7,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 987136,
+          "held_bytes": 0,
+          "available_quota_bytes": 1060864,
+          "guarantee_remaining_bytes": 36864,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1572864,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 7,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 1122304,
+          "held_bytes": 0,
+          "available_quota_bytes": 413696,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 797696,
+          "effective_priority": 5,
+          "effective_weight_bp": 9000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 7,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 512000,
+          "held_bytes": 0,
+          "available_quota_bytes": 2048000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2688000,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 7,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 4157440,
+          "held_bytes": 0,
+          "available_bytes": 36864,
+          "protected_guarantee_bytes": 36864
+        },
+        {
+          "node_id": "node-b",
+          "tick": 7,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 7,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 2899968,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": [
+        {
+          "request_id": "e-delta-contend",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "amount_remaining": 450560,
+          "enqueued_tick": 2,
+          "budget_ms": 1,
+          "retry_after_tick": 8,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-beta"
+          ]
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "admission_order": [
+        {
+          "order": 1,
+          "request_id": "e-delta-node-c",
+          "tranche": "quota",
+          "tenant_id": "t-delta",
+          "node_id": "node-c",
+          "layer": 1,
+          "requested_bytes": 262144,
+          "granted_bytes": 262144
+        },
+        {
+          "order": 2,
+          "request_id": "e-gamma-node-c",
+          "tranche": "quota",
+          "tenant_id": "t-gamma",
+          "node_id": "node-c",
+          "layer": 1,
+          "requested_bytes": 262144,
+          "granted_bytes": 262144
+        }
+      ],
+      "allocations": [
+        {
+          "request_id": "e-delta-contend",
+          "tick": 8,
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "requested_bytes": 450560,
+          "granted_bytes": 0,
+          "queued_bytes": 450560,
+          "rejected_bytes": 0,
+          "decision": "queue",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 0,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-beta"
+          ],
+          "retry_after_tick": 9,
+          "final_settled": false
+        },
+        {
+          "request_id": "e-delta-node-c",
+          "tick": 8,
+          "tenant_id": "t-delta",
+          "node_id": "node-c",
+          "requested_bytes": 262144,
+          "granted_bytes": 262144,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "pre_deduct",
+          "pre_hold_bytes": 262144,
+          "delay_ms": 1,
+          "budget_ms": 1,
+          "within_budget": true,
+          "final_settled": true
+        },
+        {
+          "request_id": "e-gamma-node-c",
+          "tick": 8,
+          "tenant_id": "t-gamma",
+          "node_id": "node-c",
+          "requested_bytes": 262144,
+          "granted_bytes": 262144,
+          "queued_bytes": 0,
+          "rejected_bytes": 0,
+          "decision": "admit",
+          "path": "exact",
+          "pre_hold_bytes": 262144,
+          "delay_ms": 3,
+          "budget_ms": 3,
+          "within_budget": true,
+          "final_settled": true
+        }
+      ],
+      "ledgers": [
+        {
+          "tenant_id": "t-alpha",
+          "tick": 8,
+          "quota_bytes": 3072000,
+          "guarantee_bytes": 1536000,
+          "burst_limit_bytes": 768000,
+          "used_bytes": 1536000,
+          "held_bytes": 0,
+          "available_quota_bytes": 1536000,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 768000,
+          "hard_headroom_bytes": 2304000,
+          "effective_priority": 10,
+          "effective_weight_bp": 8000
+        },
+        {
+          "tenant_id": "t-beta",
+          "tick": 8,
+          "quota_bytes": 2048000,
+          "guarantee_bytes": 1024000,
+          "burst_limit_bytes": 512000,
+          "used_bytes": 987136,
+          "held_bytes": 0,
+          "available_quota_bytes": 1060864,
+          "guarantee_remaining_bytes": 36864,
+          "burst_remaining_bytes": 512000,
+          "hard_headroom_bytes": 1572864,
+          "effective_priority": 8,
+          "effective_weight_bp": 6000
+        },
+        {
+          "tenant_id": "t-delta",
+          "tick": 8,
+          "quota_bytes": 1536000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 384000,
+          "used_bytes": 1384448,
+          "held_bytes": 0,
+          "available_quota_bytes": 151552,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 384000,
+          "hard_headroom_bytes": 535552,
+          "effective_priority": 5,
+          "effective_weight_bp": 9000
+        },
+        {
+          "tenant_id": "t-gamma",
+          "tick": 8,
+          "quota_bytes": 2560000,
+          "guarantee_bytes": 512000,
+          "burst_limit_bytes": 640000,
+          "used_bytes": 774144,
+          "held_bytes": 0,
+          "available_quota_bytes": 1785856,
+          "guarantee_remaining_bytes": 0,
+          "burst_remaining_bytes": 640000,
+          "hard_headroom_bytes": 2425856,
+          "effective_priority": 5,
+          "effective_weight_bp": 4000
+        }
+      ],
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "tick": 8,
+          "capacity_bytes": 4194304,
+          "occupied_bytes": 4157440,
+          "held_bytes": 0,
+          "available_bytes": 36864,
+          "protected_guarantee_bytes": 36864
+        },
+        {
+          "node_id": "node-b",
+          "tick": 8,
+          "capacity_bytes": 3145728,
+          "occupied_bytes": 0,
+          "held_bytes": 0,
+          "available_bytes": 3145728,
+          "protected_guarantee_bytes": 0
+        },
+        {
+          "node_id": "node-c",
+          "tick": 8,
+          "capacity_bytes": 2899968,
+          "occupied_bytes": 524288,
+          "held_bytes": 0,
+          "available_bytes": 2375680,
+          "protected_guarantee_bytes": 0
+        }
+      ],
+      "queues": [
+        {
+          "request_id": "e-delta-contend",
+          "tenant_id": "t-delta",
+          "node_id": "node-a",
+          "amount_remaining": 450560,
+          "enqueued_tick": 2,
+          "budget_ms": 1,
+          "retry_after_tick": 9,
+          "reason_code": "E_GUARANTEE_INVASION_BLOCKED",
+          "constraint_id": "C-GUARANTEE-FLOOR",
+          "invader_tenant_id": "t-delta",
+          "protected_tenant_ids": [
+            "t-beta"
+          ]
+        }
+      ]
+    }
+  ]
+}

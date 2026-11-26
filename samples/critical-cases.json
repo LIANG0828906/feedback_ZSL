@@ -1,0 +1,126 @@
+{
+  "seed": 42,
+  "policy": {
+    "bit_width": 64,
+    "fraction_bits": 16,
+    "tolerance_bytes": 1,
+    "tolerance_ppm": 10
+  },
+  "cases": [
+    {
+      "name": "permille-one-to-bp",
+      "kind": "scale",
+      "input": 1,
+      "expected": 10,
+      "got": 10,
+      "within_tolerance": true
+    },
+    {
+      "name": "permille-999-to-bp",
+      "kind": "scale",
+      "input": 999,
+      "expected": 9990,
+      "got": 9990,
+      "within_tolerance": true
+    },
+    {
+      "name": "permille-overflow",
+      "kind": "scale-overflow",
+      "input": 4611686018427387904,
+      "expected": 0,
+      "got": 0,
+      "code": "E_FIXED_POINT_OVERFLOW",
+      "within_tolerance": false
+    },
+    {
+      "name": "bytes-1536-to-kib-q16",
+      "kind": "unit",
+      "input": 1536,
+      "expected": 98304,
+      "got": 98304,
+      "within_tolerance": true
+    },
+    {
+      "name": "tick-7-to-ms",
+      "kind": "time",
+      "input": 7,
+      "expected": 700,
+      "got": 700,
+      "within_tolerance": true
+    },
+    {
+      "name": "ms-750-alignment",
+      "kind": "time-alignment",
+      "input": 750,
+      "expected": 7,
+      "got": 7,
+      "within_tolerance": true
+    },
+    {
+      "name": "critical-quota-drift-locator",
+      "kind": "tolerance-drift",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "input": 3072000,
+      "expected": 3072000,
+      "got": 3072031,
+      "code": "E_TOLERANCE_EXCEEDED",
+      "within_tolerance": false,
+      "available_quota_bytes": 3072031,
+      "guarantee_remaining_bytes": 1536000,
+      "burst_remaining_bytes": 768000
+    },
+    {
+      "name": "declaration-t-alpha",
+      "kind": "tenant-declaration",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "input": 3072000,
+      "expected": 3072000,
+      "got": 3072000,
+      "within_tolerance": true,
+      "available_quota_bytes": 3072000,
+      "guarantee_remaining_bytes": 1536000,
+      "burst_remaining_bytes": 768000
+    },
+    {
+      "name": "declaration-t-beta",
+      "kind": "tenant-declaration",
+      "tenant_id": "t-beta",
+      "node_id": "node-a",
+      "input": 2048000,
+      "expected": 2048000,
+      "got": 2048000,
+      "within_tolerance": true,
+      "available_quota_bytes": 2048000,
+      "guarantee_remaining_bytes": 1024000,
+      "burst_remaining_bytes": 512000
+    },
+    {
+      "name": "declaration-t-gamma",
+      "kind": "tenant-declaration",
+      "tenant_id": "t-gamma",
+      "node_id": "node-a",
+      "input": 2560000,
+      "expected": 2560000,
+      "got": 2560000,
+      "within_tolerance": true,
+      "available_quota_bytes": 2560000,
+      "guarantee_remaining_bytes": 512000,
+      "burst_remaining_bytes": 640000
+    },
+    {
+      "name": "declaration-t-delta",
+      "kind": "tenant-declaration",
+      "tenant_id": "t-delta",
+      "node_id": "node-a",
+      "input": 1536000,
+      "expected": 1536000,
+      "got": 1536000,
+      "within_tolerance": true,
+      "available_quota_bytes": 1536000,
+      "guarantee_remaining_bytes": 512000,
+      "burst_remaining_bytes": 384000
+    }
+  ]
+}

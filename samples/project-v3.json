@@ -1,0 +1,233 @@
+{
+  "events": [
+    {
+      "amount-kib": 1024,
+      "budget-ms": 4,
+      "event-id": "e-alpha-open",
+      "kind": "capacity.apply",
+      "node-id": "node-a",
+      "tenant-id": "t-alpha",
+      "timestamp-ms": 100
+    },
+    {
+      "amount-kib": 768,
+      "budget-ms": 4,
+      "event-id": "e-beta-open",
+      "kind": "capacity.apply",
+      "node-id": "node-a",
+      "tenant-id": "t-beta",
+      "timestamp-ms": 100
+    },
+    {
+      "amount-kib": 256,
+      "budget-ms": 2,
+      "event-id": "e-gamma-open",
+      "kind": "capacity.apply",
+      "node-id": "node-a",
+      "tenant-id": "t-gamma",
+      "timestamp-ms": 100
+    },
+    {
+      "amount-kib": 244,
+      "budget-ms": 3,
+      "causal-refs": [
+        "e-gamma-open"
+      ],
+      "event-id": "e-gamma-top-guarantee",
+      "kind": "capacity.apply",
+      "node-id": "node-a",
+      "tenant-id": "t-gamma",
+      "timestamp-ms": 200
+    },
+    {
+      "amount-kib": 1536,
+      "budget-ms": 1,
+      "event-id": "e-delta-contend",
+      "kind": "capacity.apply",
+      "node-id": "node-a",
+      "tenant-id": "t-delta",
+      "timestamp-ms": 200
+    },
+    {
+      "amount-kib": 1024,
+      "budget-ms": 4,
+      "causal-refs": [
+        "e-alpha-open"
+      ],
+      "event-id": "e-alpha-expand",
+      "kind": "capacity.apply",
+      "node-id": "node-a",
+      "tenant-id": "t-alpha",
+      "timestamp-ms": 300
+    },
+    {
+      "amount-kib": 768,
+      "budget-ms": 4,
+      "causal-refs": [
+        "e-beta-open"
+      ],
+      "event-id": "e-beta-expand",
+      "kind": "capacity.apply",
+      "node-id": "node-a",
+      "tenant-id": "t-beta",
+      "timestamp-ms": 300
+    },
+    {
+      "amount-kib": 512,
+      "budget-ms": 2,
+      "causal-refs": [
+        "e-beta-expand"
+      ],
+      "event-id": "e-beta-release-512",
+      "kind": "capacity.release",
+      "node-id": "node-a",
+      "tenant-id": "t-beta",
+      "timestamp-ms": 400
+    },
+    {
+      "amount-kib": 512,
+      "budget-ms": 2,
+      "causal-refs": [
+        "e-alpha-expand"
+      ],
+      "event-id": "e-alpha-release-512",
+      "kind": "capacity.release",
+      "node-id": "node-a",
+      "tenant-id": "t-alpha",
+      "timestamp-ms": 500
+    },
+    {
+      "budget-ms": 1,
+      "event-id": "e-delta-weight-up",
+      "kind": "weight.set",
+      "tenant-id": "t-delta",
+      "timestamp-ms": 500,
+      "weight-bp": 9000
+    },
+    {
+      "amount-kib": 60,
+      "budget-ms": 2,
+      "event-id": "e-beta-release-60",
+      "kind": "capacity.release",
+      "node-id": "node-a",
+      "tenant-id": "t-beta",
+      "timestamp-ms": 600
+    },
+    {
+      "amount-kib": 36,
+      "budget-ms": 2,
+      "event-id": "e-alpha-release-36",
+      "kind": "capacity.release",
+      "node-id": "node-a",
+      "tenant-id": "t-alpha",
+      "timestamp-ms": 700
+    },
+    {
+      "amount-kib": 256,
+      "budget-ms": 3,
+      "event-id": "e-gamma-node-c",
+      "kind": "capacity.apply",
+      "node-id": "node-c",
+      "tenant-id": "t-gamma",
+      "timestamp-ms": 800
+    },
+    {
+      "amount-kib": 256,
+      "budget-ms": 1,
+      "event-id": "e-delta-node-c",
+      "kind": "capacity.apply",
+      "node-id": "node-c",
+      "tenant-id": "t-delta",
+      "timestamp-ms": 800
+    }
+  ],
+  "fixed-policy": {
+    "bit-width": 64,
+    "fraction-bits": 16,
+    "tolerance-bytes": 1,
+    "tolerance-ppm": 10
+  },
+  "project-id": "seed-42-multitenant-quota",
+  "schema": "quotakernel.project/v3",
+  "seed": 42,
+  "tenants": [
+    {
+      "burst-cap-bp": 750,
+      "guarantee-bp": 1500,
+      "guarantee-node-id": "node-a",
+      "quota-bp": 3000,
+      "sla-priority": 10,
+      "tenant-id": "t-alpha",
+      "weight-bp": 8000
+    },
+    {
+      "burst-cap-bp": 500,
+      "guarantee-bp": 1000,
+      "guarantee-node-id": "node-a",
+      "quota-bp": 2000,
+      "sla-priority": 8,
+      "tenant-id": "t-beta",
+      "weight-bp": 6000
+    },
+    {
+      "burst-cap-bp": 625,
+      "guarantee-bp": 500,
+      "guarantee-node-id": "node-a",
+      "quota-bp": 2500,
+      "sla-priority": 5,
+      "tenant-id": "t-gamma",
+      "weight-bp": 4000
+    },
+    {
+      "burst-cap-bp": 375,
+      "guarantee-bp": 500,
+      "guarantee-node-id": "node-a",
+      "quota-bp": 1500,
+      "sla-priority": 5,
+      "tenant-id": "t-delta",
+      "weight-bp": 2000
+    }
+  ],
+  "tick-milliseconds": 100,
+  "topology": {
+    "rack-tree": [
+      {
+        "rack-name": "rack-r1",
+        "storage-nodes": [
+          {
+            "capacity-kib": 4096,
+            "host-tenants": [
+              "t-alpha",
+              "t-beta",
+              "t-gamma",
+              "t-delta"
+            ],
+            "node-id": "node-a"
+          },
+          {
+            "capacity-kib": 3072,
+            "host-tenants": [
+              "t-alpha",
+              "t-beta",
+              "t-delta"
+            ],
+            "node-id": "node-b"
+          }
+        ]
+      },
+      {
+        "rack-name": "rack-r2",
+        "storage-nodes": [
+          {
+            "capacity-kib": 2832,
+            "host-tenants": [
+              "t-gamma",
+              "t-delta"
+            ],
+            "node-id": "node-c"
+          }
+        ]
+      }
+    ]
+  }
+}
