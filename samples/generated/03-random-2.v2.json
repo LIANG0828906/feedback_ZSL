@@ -1,0 +1,222 @@
+{
+  "schema": "mirrorcast.project/v2",
+  "projectId": "random-02-seed-42a8691e",
+  "seed": 1118349052,
+  "masterFrame": {
+    "originX": 8,
+    "originY": 4,
+    "widthPixels": 1600,
+    "heightPixels": 900
+  },
+  "totalBudgetKbps": 3894823,
+  "dispatchThreads": 17,
+  "bufferBudgetUnits": 134217728,
+  "hosts": [
+    {
+      "hostId": "h2",
+      "screens": [
+        {
+          "screenId": "r2s01",
+          "resolution": {
+            "areaKiloPixels": 120,
+            "aspectWidth": 4,
+            "aspectHeight": 3
+          },
+          "scalePerTenThousand": 6250,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 16,
+          "downgradePriority": 2
+        },
+        {
+          "screenId": "r2s05",
+          "resolution": {
+            "areaKiloPixels": 2000,
+            "aspectWidth": 2,
+            "aspectHeight": 1
+          },
+          "scalePerTenThousand": 8750,
+          "minScalePerTenThousand": 3750,
+          "chromaBitsPerPixel": 12,
+          "downgradePriority": 1
+        }
+      ]
+    },
+    {
+      "hostId": "h3",
+      "screens": [
+        {
+          "screenId": "r2s02",
+          "resolution": {
+            "areaKiloPixels": 64,
+            "aspectWidth": 8,
+            "aspectHeight": 5
+          },
+          "scalePerTenThousand": 6250,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 12,
+          "downgradePriority": 9
+        },
+        {
+          "screenId": "r2s04",
+          "resolution": {
+            "areaKiloPixels": 480,
+            "aspectWidth": 4,
+            "aspectHeight": 3
+          },
+          "scalePerTenThousand": 7500,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 24,
+          "downgradePriority": 5
+        },
+        {
+          "screenId": "r2s06",
+          "resolution": {
+            "areaKiloPixels": 2000,
+            "aspectWidth": 2,
+            "aspectHeight": 1
+          },
+          "scalePerTenThousand": 8750,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 24,
+          "downgradePriority": 1
+        },
+        {
+          "screenId": "r2s07",
+          "resolution": {
+            "areaKiloPixels": 256,
+            "aspectWidth": 8,
+            "aspectHeight": 5
+          },
+          "scalePerTenThousand": 5000,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 12,
+          "downgradePriority": 8
+        }
+      ]
+    },
+    {
+      "hostId": "h1",
+      "screens": [
+        {
+          "screenId": "r2s03",
+          "resolution": {
+            "areaKiloPixels": 960,
+            "aspectWidth": 3,
+            "aspectHeight": 2
+          },
+          "scalePerTenThousand": 8750,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 12,
+          "downgradePriority": 8
+        },
+        {
+          "screenId": "r2s08",
+          "resolution": {
+            "areaKiloPixels": 960,
+            "aspectWidth": 3,
+            "aspectHeight": 2
+          },
+          "scalePerTenThousand": 7500,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 12,
+          "downgradePriority": 1
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "r2-e01-join",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "r2s01"
+    },
+    {
+      "event_id": "r2-e02-join",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "r2s02"
+    },
+    {
+      "event_id": "r2-e03-join",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "r2s03"
+    },
+    {
+      "event_id": "r2-e04-join",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "r2s04"
+    },
+    {
+      "event_id": "r2-e05-join",
+      "logical_tick": 5,
+      "event_type": "join",
+      "screen_id": "r2s05"
+    },
+    {
+      "event_id": "r2-e06-join",
+      "logical_tick": 6,
+      "event_type": "join",
+      "screen_id": "r2s06"
+    },
+    {
+      "event_id": "r2-e07-join",
+      "logical_tick": 7,
+      "event_type": "join",
+      "screen_id": "r2s07"
+    },
+    {
+      "event_id": "r2-e08-join",
+      "logical_tick": 8,
+      "event_type": "join",
+      "screen_id": "r2s08"
+    },
+    {
+      "event_id": "r2-e09-leave",
+      "logical_tick": 9,
+      "event_type": "leave",
+      "screen_id": "r2s01"
+    },
+    {
+      "event_id": "r2-e10-topology",
+      "logical_tick": 10,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h2",
+            "screen_ids": [
+              "r2s05",
+              "r2s01"
+            ]
+          },
+          {
+            "host_id": "h3",
+            "screen_ids": [
+              "r2s02",
+              "r2s04",
+              "r2s06",
+              "r2s07"
+            ]
+          },
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "r2s08",
+              "r2s03"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "r2-e11-budget",
+      "logical_tick": 11,
+      "event_type": "budget",
+      "budget_kbps": 2142152
+    }
+  ]
+}

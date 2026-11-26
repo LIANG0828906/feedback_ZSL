@@ -1,0 +1,174 @@
+{
+  "schema": "mirrorcast.project/v2",
+  "projectId": "random-01-seed-42a8691e",
+  "seed": 1118341133,
+  "masterFrame": {
+    "originX": 8,
+    "originY": 4,
+    "widthPixels": 1600,
+    "heightPixels": 900
+  },
+  "totalBudgetKbps": 1544440,
+  "dispatchThreads": 10,
+  "bufferBudgetUnits": 524288,
+  "hosts": [
+    {
+      "hostId": "h3",
+      "screens": [
+        {
+          "screenId": "r1s01",
+          "resolution": {
+            "areaKiloPixels": 480,
+            "aspectWidth": 4,
+            "aspectHeight": 3
+          },
+          "scalePerTenThousand": 7500,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 12,
+          "downgradePriority": 9
+        },
+        {
+          "screenId": "r1s03",
+          "resolution": {
+            "areaKiloPixels": 960,
+            "aspectWidth": 3,
+            "aspectHeight": 2
+          },
+          "scalePerTenThousand": 8750,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 16,
+          "downgradePriority": 9
+        },
+        {
+          "screenId": "r1s04",
+          "resolution": {
+            "areaKiloPixels": 480,
+            "aspectWidth": 4,
+            "aspectHeight": 3
+          },
+          "scalePerTenThousand": 5000,
+          "minScalePerTenThousand": 3750,
+          "chromaBitsPerPixel": 24,
+          "downgradePriority": 7
+        },
+        {
+          "screenId": "r1s05",
+          "resolution": {
+            "areaKiloPixels": 256,
+            "aspectWidth": 8,
+            "aspectHeight": 5
+          },
+          "scalePerTenThousand": 7500,
+          "minScalePerTenThousand": 2500,
+          "chromaBitsPerPixel": 16,
+          "downgradePriority": 6
+        }
+      ]
+    },
+    {
+      "hostId": "h1",
+      "screens": [
+        {
+          "screenId": "r1s02",
+          "resolution": {
+            "areaKiloPixels": 2000,
+            "aspectWidth": 2,
+            "aspectHeight": 1
+          },
+          "scalePerTenThousand": 6250,
+          "minScalePerTenThousand": 3750,
+          "chromaBitsPerPixel": 12,
+          "downgradePriority": 5
+        },
+        {
+          "screenId": "r1s06",
+          "resolution": {
+            "areaKiloPixels": 256,
+            "aspectWidth": 8,
+            "aspectHeight": 5
+          },
+          "scalePerTenThousand": 6250,
+          "minScalePerTenThousand": 3750,
+          "chromaBitsPerPixel": 24,
+          "downgradePriority": 9
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "r1-e01-join",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "r1s01"
+    },
+    {
+      "event_id": "r1-e02-join",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "r1s02"
+    },
+    {
+      "event_id": "r1-e03-join",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "r1s03"
+    },
+    {
+      "event_id": "r1-e04-join",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "r1s04"
+    },
+    {
+      "event_id": "r1-e05-join",
+      "logical_tick": 5,
+      "event_type": "join",
+      "screen_id": "r1s05"
+    },
+    {
+      "event_id": "r1-e06-join",
+      "logical_tick": 6,
+      "event_type": "join",
+      "screen_id": "r1s06"
+    },
+    {
+      "event_id": "r1-e07-leave",
+      "logical_tick": 7,
+      "event_type": "leave",
+      "screen_id": "r1s01"
+    },
+    {
+      "event_id": "r1-e08-topology",
+      "logical_tick": 8,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h3",
+            "screen_ids": [
+              "r1s05",
+              "r1s04",
+              "r1s03",
+              "r1s01"
+            ]
+          },
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "r1s02",
+              "r1s06"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "r1-e09-budget",
+      "logical_tick": 9,
+      "event_type": "budget",
+      "budget_kbps": 849442
+    }
+  ]
+}

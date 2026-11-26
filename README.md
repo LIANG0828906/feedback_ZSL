@@ -18,3 +18,21 @@
 
 验收：
 用固定种子样本装载三版会话工程，核对逐受控屏镜像区域、降档取舍、编辑后增量重算与检查点恢复，并验证异常注入返回稳定业务码。
+
+## 交付入口
+
+实现、口径与实际验证结果见：
+
+- `docs/DESIGN.md`
+- `docs/VERIFICATION.md`
+
+快速命令：
+
+```bash
+go test -count=1 ./...
+go run ./cmd/mirrorcast generate --out samples/generated
+go run ./cmd/mirrorcast verify --dir samples/generated
+go run ./cmd/mirrorcast acceptance --work artifacts/acceptance
+```
+
+固定种子为 `0x42A8691E`（十进制 `1118333214`）。生成样本已包含 v1/v2/v3 工程、逐时刻真值、临界用例和精度报告。

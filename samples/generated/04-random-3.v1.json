@@ -1,0 +1,174 @@
+{
+  "schema": "mirrorcast.project/v1",
+  "project_id": "random-03-seed-42a8691e",
+  "seed": 1118356971,
+  "master_frame": {
+    "x": 8,
+    "y": 4,
+    "width_px": 1600,
+    "height_px": 900
+  },
+  "total_budget_kbps": 2648419,
+  "dispatch_threads": 14,
+  "buffer_budget_units": 4194304,
+  "screens_flat": [
+    {
+      "screen_id": "r3s01",
+      "host_id": "h1",
+      "width_px": 1000,
+      "height_px": 800,
+      "scale_permille": 750,
+      "min_scale_permille": 375,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 9
+    },
+    {
+      "screen_id": "r3s02",
+      "host_id": "h2",
+      "width_px": 800,
+      "height_px": 600,
+      "scale_permille": 500,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_422",
+      "downgrade_priority": 9
+    },
+    {
+      "screen_id": "r3s03",
+      "host_id": "h3",
+      "width_px": 2000,
+      "height_px": 1000,
+      "scale_permille": 750,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_422",
+      "downgrade_priority": 4
+    },
+    {
+      "screen_id": "r3s04",
+      "host_id": "h2",
+      "width_px": 320,
+      "height_px": 200,
+      "scale_permille": 875,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_444",
+      "downgrade_priority": 7
+    },
+    {
+      "screen_id": "r3s05",
+      "host_id": "h3",
+      "width_px": 2000,
+      "height_px": 1000,
+      "scale_permille": 875,
+      "min_scale_permille": 375,
+      "chroma_planar": "PLANAR_422",
+      "downgrade_priority": 9
+    },
+    {
+      "screen_id": "r3s06",
+      "host_id": "h2",
+      "width_px": 1000,
+      "height_px": 800,
+      "scale_permille": 1000,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_422",
+      "downgrade_priority": 6
+    },
+    {
+      "screen_id": "r3s07",
+      "host_id": "h1",
+      "width_px": 1600,
+      "height_px": 1000,
+      "scale_permille": 500,
+      "min_scale_permille": 375,
+      "chroma_planar": "PLANAR_422",
+      "downgrade_priority": 8
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "r3-e01-join",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "r3s01"
+    },
+    {
+      "event_id": "r3-e02-join",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "r3s02"
+    },
+    {
+      "event_id": "r3-e03-join",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "r3s03"
+    },
+    {
+      "event_id": "r3-e04-join",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "r3s04"
+    },
+    {
+      "event_id": "r3-e05-join",
+      "logical_tick": 5,
+      "event_type": "join",
+      "screen_id": "r3s05"
+    },
+    {
+      "event_id": "r3-e06-join",
+      "logical_tick": 6,
+      "event_type": "join",
+      "screen_id": "r3s06"
+    },
+    {
+      "event_id": "r3-e07-join",
+      "logical_tick": 7,
+      "event_type": "join",
+      "screen_id": "r3s07"
+    },
+    {
+      "event_id": "r3-e08-leave",
+      "logical_tick": 8,
+      "event_type": "leave",
+      "screen_id": "r3s01"
+    },
+    {
+      "event_id": "r3-e09-topology",
+      "logical_tick": 9,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "r3s07",
+              "r3s01"
+            ]
+          },
+          {
+            "host_id": "h2",
+            "screen_ids": [
+              "r3s02",
+              "r3s04",
+              "r3s06"
+            ]
+          },
+          {
+            "host_id": "h3",
+            "screen_ids": [
+              "r3s05",
+              "r3s03"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "r3-e10-budget",
+      "logical_tick": 10,
+      "event_type": "budget",
+      "budget_kbps": 1456630
+    }
+  ]
+}

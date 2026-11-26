@@ -1,0 +1,212 @@
+{
+  "schemaVersion": "mirrorcast.project/v3",
+  "sessionId": "random-04-seed-42a8691e",
+  "deterministicSeed": 1118364890,
+  "captureRegion": {
+    "originX": 8,
+    "originY": 4,
+    "widthPixels": 1600,
+    "heightPixels": 900
+  },
+  "deliveryBudget": {
+    "totalKbps": 1915829,
+    "workerThreads": 17,
+    "bufferUnits": 134217728
+  },
+  "topologyGroups": [
+    {
+      "groupId": "h2",
+      "displays": [
+        {
+          "displayId": "r4s01",
+          "widthPixels": 1200,
+          "heightPixels": 800,
+          "equivalentAreaKiloPixels": 960,
+          "scalePermyriad": 10000,
+          "minimumScalePermyriad": 3750,
+          "chroma": {
+            "planarFormat": "PLANAR_444",
+            "derivedBitsPerPixel": 24
+          },
+          "downgradePriority": 6
+        },
+        {
+          "displayId": "r4s02",
+          "widthPixels": 400,
+          "heightPixels": 300,
+          "equivalentAreaKiloPixels": 120,
+          "scalePermyriad": 7500,
+          "minimumScalePermyriad": 3750,
+          "chroma": {
+            "planarFormat": "PLANAR_420",
+            "derivedBitsPerPixel": 12
+          },
+          "downgradePriority": 1
+        },
+        {
+          "displayId": "r4s06",
+          "widthPixels": 320,
+          "heightPixels": 200,
+          "equivalentAreaKiloPixels": 64,
+          "scalePermyriad": 8750,
+          "minimumScalePermyriad": 2500,
+          "chroma": {
+            "planarFormat": "PLANAR_422",
+            "derivedBitsPerPixel": 16
+          },
+          "downgradePriority": 2
+        }
+      ]
+    },
+    {
+      "groupId": "h1",
+      "displays": [
+        {
+          "displayId": "r4s03",
+          "widthPixels": 640,
+          "heightPixels": 400,
+          "equivalentAreaKiloPixels": 256,
+          "scalePermyriad": 10000,
+          "minimumScalePermyriad": 2500,
+          "chroma": {
+            "planarFormat": "PLANAR_422",
+            "derivedBitsPerPixel": 16
+          },
+          "downgradePriority": 3
+        }
+      ]
+    },
+    {
+      "groupId": "h3",
+      "displays": [
+        {
+          "displayId": "r4s04",
+          "widthPixels": 1000,
+          "heightPixels": 800,
+          "equivalentAreaKiloPixels": 800,
+          "scalePermyriad": 5000,
+          "minimumScalePermyriad": 2500,
+          "chroma": {
+            "planarFormat": "PLANAR_444",
+            "derivedBitsPerPixel": 24
+          },
+          "downgradePriority": 3
+        },
+        {
+          "displayId": "r4s05",
+          "widthPixels": 800,
+          "heightPixels": 600,
+          "equivalentAreaKiloPixels": 480,
+          "scalePermyriad": 8750,
+          "minimumScalePermyriad": 3750,
+          "chroma": {
+            "planarFormat": "PLANAR_422",
+            "derivedBitsPerPixel": 16
+          },
+          "downgradePriority": 2
+        },
+        {
+          "displayId": "r4s07",
+          "widthPixels": 640,
+          "heightPixels": 400,
+          "equivalentAreaKiloPixels": 256,
+          "scalePermyriad": 5000,
+          "minimumScalePermyriad": 3750,
+          "chroma": {
+            "planarFormat": "PLANAR_444",
+            "derivedBitsPerPixel": 24
+          },
+          "downgradePriority": 2
+        }
+      ]
+    }
+  ],
+  "logicalTimeline": [
+    {
+      "event_id": "r4-e01-join",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "r4s01"
+    },
+    {
+      "event_id": "r4-e02-join",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "r4s02"
+    },
+    {
+      "event_id": "r4-e03-join",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "r4s03"
+    },
+    {
+      "event_id": "r4-e04-join",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "r4s04"
+    },
+    {
+      "event_id": "r4-e05-join",
+      "logical_tick": 5,
+      "event_type": "join",
+      "screen_id": "r4s05"
+    },
+    {
+      "event_id": "r4-e06-join",
+      "logical_tick": 6,
+      "event_type": "join",
+      "screen_id": "r4s06"
+    },
+    {
+      "event_id": "r4-e07-join",
+      "logical_tick": 7,
+      "event_type": "join",
+      "screen_id": "r4s07"
+    },
+    {
+      "event_id": "r4-e08-leave",
+      "logical_tick": 8,
+      "event_type": "leave",
+      "screen_id": "r4s01"
+    },
+    {
+      "event_id": "r4-e09-topology",
+      "logical_tick": 9,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h2",
+            "screen_ids": [
+              "r4s06",
+              "r4s02",
+              "r4s01"
+            ]
+          },
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "r4s03"
+            ]
+          },
+          {
+            "host_id": "h3",
+            "screen_ids": [
+              "r4s07",
+              "r4s05",
+              "r4s04"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "r4-e10-budget",
+      "logical_tick": 10,
+      "event_type": "budget",
+      "budget_kbps": 1053705
+    }
+  ]
+}

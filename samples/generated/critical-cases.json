@@ -1,0 +1,344 @@
+{
+  "seed": 1118333214,
+  "cases": [
+    {
+      "id": "crit-420-exact-unit",
+      "kind": "mapping",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 100,
+        "height": 100,
+        "scale_permyriad": 200,
+        "chroma": "420",
+        "budget_kbps": 3
+      },
+      "expected_mapping": {
+        "source": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "destination": {
+          "x": 49,
+          "y": 49,
+          "width": 2,
+          "height": 2
+        },
+        "scaled_width": 2,
+        "scaled_height": 2,
+        "plane_width": 1,
+        "plane_height": 1,
+        "chroma": "420",
+        "chroma_bits_per_pixel": 4,
+        "nominal_bits_per_pixel": 12,
+        "frame_bits": 48,
+        "budget_cost_kbps": 3
+      },
+      "expected_decision": "admitted"
+    },
+    {
+      "id": "crit-422-exact-unit",
+      "kind": "mapping",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 2,
+          "height": 1
+        },
+        "width": 100,
+        "height": 50,
+        "scale_permyriad": 200,
+        "chroma": "422",
+        "budget_kbps": 2
+      },
+      "expected_mapping": {
+        "source": {
+          "x": 0,
+          "y": 0,
+          "width": 2,
+          "height": 1
+        },
+        "destination": {
+          "x": 49,
+          "y": 24,
+          "width": 2,
+          "height": 1
+        },
+        "scaled_width": 2,
+        "scaled_height": 1,
+        "plane_width": 1,
+        "plane_height": 1,
+        "chroma": "422",
+        "chroma_bits_per_pixel": 8,
+        "nominal_bits_per_pixel": 16,
+        "frame_bits": 32,
+        "budget_cost_kbps": 2
+      },
+      "expected_decision": "admitted"
+    },
+    {
+      "id": "crit-444-exact-unit",
+      "kind": "mapping",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 100,
+        "height": 100,
+        "scale_permyriad": 100,
+        "chroma": "444",
+        "budget_kbps": 2
+      },
+      "expected_mapping": {
+        "source": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "destination": {
+          "x": 49,
+          "y": 49,
+          "width": 1,
+          "height": 1
+        },
+        "scaled_width": 1,
+        "scaled_height": 1,
+        "plane_width": 1,
+        "plane_height": 1,
+        "chroma": "444",
+        "chroma_bits_per_pixel": 16,
+        "nominal_bits_per_pixel": 24,
+        "frame_bits": 24,
+        "budget_cost_kbps": 2
+      },
+      "expected_decision": "admitted"
+    },
+    {
+      "id": "crit-420-one-pixel-short",
+      "kind": "mapping_error",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 100,
+        "height": 100,
+        "scale_permyriad": 100,
+        "chroma": "420"
+      },
+      "expected_code": "E_RESOLUTION_TOO_SMALL"
+    },
+    {
+      "id": "crit-scale-zero",
+      "kind": "mapping_error",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 320,
+        "height": 200,
+        "chroma": "420"
+      },
+      "expected_code": "E_SCALE_ZERO"
+    },
+    {
+      "id": "crit-scale-negative",
+      "kind": "mapping_error",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 320,
+        "height": 200,
+        "scale_permyriad": -1,
+        "chroma": "420"
+      },
+      "expected_code": "E_SCALE_OUT_OF_RANGE"
+    },
+    {
+      "id": "crit-scale-too-large",
+      "kind": "mapping_error",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 320,
+        "height": 200,
+        "scale_permyriad": 10001,
+        "chroma": "420"
+      },
+      "expected_code": "E_SCALE_OUT_OF_RANGE"
+    },
+    {
+      "id": "crit-resolution-negative",
+      "kind": "mapping_error",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": -320,
+        "height": 200,
+        "scale_permyriad": 10000,
+        "chroma": "420"
+      },
+      "expected_code": "E_RESOLUTION_NEGATIVE"
+    },
+    {
+      "id": "crit-chroma-invalid",
+      "kind": "mapping_error",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 320,
+        "height": 200,
+        "scale_permyriad": 10000,
+        "chroma": "PLANAR_411"
+      },
+      "expected_code": "E_CHROMA_ENUM_INVALID"
+    },
+    {
+      "id": "crit-arithmetic-overflow",
+      "kind": "mapping_error",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 9223372036854775807,
+        "height": 9223372036854775807,
+        "scale_permyriad": 10000,
+        "chroma": "444"
+      },
+      "expected_code": "E_OVERFLOW"
+    },
+    {
+      "id": "crit-threads-out-of-range",
+      "kind": "project_error",
+      "input": {
+        "threads": 128
+      },
+      "expected_code": "E_THREAD_OUT_OF_RANGE"
+    },
+    {
+      "id": "crit-buffer-out-of-range",
+      "kind": "project_error",
+      "input": {
+        "buffer_budget_units": -1
+      },
+      "expected_code": "E_BUFFER_BUDGET_OUT_OF_RANGE"
+    },
+    {
+      "id": "crit-budget-exact-fit",
+      "kind": "budget_boundary",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 100,
+        "height": 100,
+        "scale_permyriad": 200,
+        "chroma": "420",
+        "budget_kbps": 3
+      },
+      "expected_mapping": {
+        "source": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "destination": {
+          "x": 49,
+          "y": 49,
+          "width": 2,
+          "height": 2
+        },
+        "scaled_width": 2,
+        "scaled_height": 2,
+        "plane_width": 1,
+        "plane_height": 1,
+        "chroma": "420",
+        "chroma_bits_per_pixel": 4,
+        "nominal_bits_per_pixel": 12,
+        "frame_bits": 48,
+        "budget_cost_kbps": 3
+      },
+      "expected_decision": "admitted"
+    },
+    {
+      "id": "crit-budget-one-kbps-short",
+      "kind": "budget_boundary",
+      "input": {
+        "master": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "width": 100,
+        "height": 100,
+        "scale_permyriad": 200,
+        "chroma": "420",
+        "budget_kbps": 2
+      },
+      "expected_mapping": {
+        "source": {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        "destination": {
+          "x": 49,
+          "y": 49,
+          "width": 2,
+          "height": 2
+        },
+        "scaled_width": 2,
+        "scaled_height": 2,
+        "plane_width": 1,
+        "plane_height": 1,
+        "chroma": "420",
+        "chroma_bits_per_pixel": 4,
+        "nominal_bits_per_pixel": 12,
+        "frame_bits": 48,
+        "budget_cost_kbps": 3
+      },
+      "expected_decision": "rejected"
+    }
+  ]
+}

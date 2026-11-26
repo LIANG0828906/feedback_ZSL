@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "mirrorcast.project/v3",
+  "sessionId": "canonical-budget-topology",
+  "deterministicSeed": 1118333214,
+  "captureRegion": {
+    "originX": 16,
+    "originY": 9,
+    "widthPixels": 1920,
+    "heightPixels": 1080
+  },
+  "deliveryBudget": {
+    "totalKbps": 80000,
+    "workerThreads": 4,
+    "bufferUnits": 1048576
+  },
+  "topologyGroups": [
+    {
+      "groupId": "h1",
+      "displays": [
+        {
+          "displayId": "s01",
+          "widthPixels": 320,
+          "heightPixels": 200,
+          "equivalentAreaKiloPixels": 64,
+          "scalePermyriad": 10000,
+          "minimumScalePermyriad": 5000,
+          "chroma": {
+            "planarFormat": "PLANAR_420",
+            "derivedBitsPerPixel": 12
+          },
+          "downgradePriority": 10
+        },
+        {
+          "displayId": "s02",
+          "widthPixels": 320,
+          "heightPixels": 200,
+          "equivalentAreaKiloPixels": 64,
+          "scalePermyriad": 7500,
+          "minimumScalePermyriad": 5000,
+          "chroma": {
+            "planarFormat": "PLANAR_422",
+            "derivedBitsPerPixel": 16
+          },
+          "downgradePriority": 5
+        }
+      ]
+    },
+    {
+      "groupId": "h2",
+      "displays": [
+        {
+          "displayId": "s03",
+          "widthPixels": 320,
+          "heightPixels": 200,
+          "equivalentAreaKiloPixels": 64,
+          "scalePermyriad": 10000,
+          "minimumScalePermyriad": 2500,
+          "chroma": {
+            "planarFormat": "PLANAR_420",
+            "derivedBitsPerPixel": 12
+          },
+          "downgradePriority": 1
+        },
+        {
+          "displayId": "s04",
+          "widthPixels": 320,
+          "heightPixels": 200,
+          "equivalentAreaKiloPixels": 64,
+          "scalePermyriad": 10000,
+          "minimumScalePermyriad": 5000,
+          "chroma": {
+            "planarFormat": "PLANAR_444",
+            "derivedBitsPerPixel": 24
+          },
+          "downgradePriority": 4
+        }
+      ]
+    }
+  ],
+  "logicalTimeline": [
+    {
+      "event_id": "e01",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "s01"
+    },
+    {
+      "event_id": "e02",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "s02"
+    },
+    {
+      "event_id": "e03",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "s03"
+    },
+    {
+      "event_id": "e04",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "s04"
+    },
+    {
+      "event_id": "e05",
+      "logical_tick": 5,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "s02",
+              "s01",
+              "s04"
+            ]
+          },
+          {
+            "host_id": "h2",
+            "screen_ids": [
+              "s03"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "e06",
+      "logical_tick": 6,
+      "event_type": "leave",
+      "screen_id": "s02"
+    },
+    {
+      "event_id": "e07",
+      "logical_tick": 7,
+      "event_type": "join",
+      "screen_id": "s04"
+    },
+    {
+      "event_id": "e08",
+      "logical_tick": 8,
+      "event_type": "budget",
+      "budget_kbps": 45000
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "mirrorcast.project/v1",
+  "project_id": "canonical-budget-topology",
+  "seed": 1118333214,
+  "master_frame": {
+    "x": 16,
+    "y": 9,
+    "width_px": 1920,
+    "height_px": 1080
+  },
+  "total_budget_kbps": 80000,
+  "dispatch_threads": 4,
+  "buffer_budget_units": 1048576,
+  "screens_flat": [
+    {
+      "screen_id": "s01",
+      "host_id": "h1",
+      "width_px": 320,
+      "height_px": 200,
+      "scale_permille": 1000,
+      "min_scale_permille": 500,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 10
+    },
+    {
+      "screen_id": "s02",
+      "host_id": "h1",
+      "width_px": 320,
+      "height_px": 200,
+      "scale_permille": 750,
+      "min_scale_permille": 500,
+      "chroma_planar": "PLANAR_422",
+      "downgrade_priority": 5
+    },
+    {
+      "screen_id": "s03",
+      "host_id": "h2",
+      "width_px": 320,
+      "height_px": 200,
+      "scale_permille": 1000,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 1
+    },
+    {
+      "screen_id": "s04",
+      "host_id": "h2",
+      "width_px": 320,
+      "height_px": 200,
+      "scale_permille": 1000,
+      "min_scale_permille": 500,
+      "chroma_planar": "PLANAR_444",
+      "downgrade_priority": 4
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "e01",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "s01"
+    },
+    {
+      "event_id": "e02",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "s02"
+    },
+    {
+      "event_id": "e03",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "s03"
+    },
+    {
+      "event_id": "e04",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "s04"
+    },
+    {
+      "event_id": "e05",
+      "logical_tick": 5,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "s02",
+              "s01",
+              "s04"
+            ]
+          },
+          {
+            "host_id": "h2",
+            "screen_ids": [
+              "s03"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "e06",
+      "logical_tick": 6,
+      "event_type": "leave",
+      "screen_id": "s02"
+    },
+    {
+      "event_id": "e07",
+      "logical_tick": 7,
+      "event_type": "join",
+      "screen_id": "s04"
+    },
+    {
+      "event_id": "e08",
+      "logical_tick": 8,
+      "event_type": "budget",
+      "budget_kbps": 45000
+    }
+  ]
+}

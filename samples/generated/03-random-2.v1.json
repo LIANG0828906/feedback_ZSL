@@ -1,0 +1,191 @@
+{
+  "schema": "mirrorcast.project/v1",
+  "project_id": "random-02-seed-42a8691e",
+  "seed": 1118349052,
+  "master_frame": {
+    "x": 8,
+    "y": 4,
+    "width_px": 1600,
+    "height_px": 900
+  },
+  "total_budget_kbps": 3894823,
+  "dispatch_threads": 17,
+  "buffer_budget_units": 134217728,
+  "screens_flat": [
+    {
+      "screen_id": "r2s01",
+      "host_id": "h2",
+      "width_px": 400,
+      "height_px": 300,
+      "scale_permille": 625,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_422",
+      "downgrade_priority": 2
+    },
+    {
+      "screen_id": "r2s02",
+      "host_id": "h3",
+      "width_px": 320,
+      "height_px": 200,
+      "scale_permille": 625,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 9
+    },
+    {
+      "screen_id": "r2s03",
+      "host_id": "h1",
+      "width_px": 1200,
+      "height_px": 800,
+      "scale_permille": 875,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 8
+    },
+    {
+      "screen_id": "r2s04",
+      "host_id": "h3",
+      "width_px": 800,
+      "height_px": 600,
+      "scale_permille": 750,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_444",
+      "downgrade_priority": 5
+    },
+    {
+      "screen_id": "r2s05",
+      "host_id": "h2",
+      "width_px": 2000,
+      "height_px": 1000,
+      "scale_permille": 875,
+      "min_scale_permille": 375,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 1
+    },
+    {
+      "screen_id": "r2s06",
+      "host_id": "h3",
+      "width_px": 2000,
+      "height_px": 1000,
+      "scale_permille": 875,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_444",
+      "downgrade_priority": 1
+    },
+    {
+      "screen_id": "r2s07",
+      "host_id": "h3",
+      "width_px": 640,
+      "height_px": 400,
+      "scale_permille": 500,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 8
+    },
+    {
+      "screen_id": "r2s08",
+      "host_id": "h1",
+      "width_px": 1200,
+      "height_px": 800,
+      "scale_permille": 750,
+      "min_scale_permille": 250,
+      "chroma_planar": "PLANAR_420",
+      "downgrade_priority": 1
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "r2-e01-join",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "r2s01"
+    },
+    {
+      "event_id": "r2-e02-join",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "r2s02"
+    },
+    {
+      "event_id": "r2-e03-join",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "r2s03"
+    },
+    {
+      "event_id": "r2-e04-join",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "r2s04"
+    },
+    {
+      "event_id": "r2-e05-join",
+      "logical_tick": 5,
+      "event_type": "join",
+      "screen_id": "r2s05"
+    },
+    {
+      "event_id": "r2-e06-join",
+      "logical_tick": 6,
+      "event_type": "join",
+      "screen_id": "r2s06"
+    },
+    {
+      "event_id": "r2-e07-join",
+      "logical_tick": 7,
+      "event_type": "join",
+      "screen_id": "r2s07"
+    },
+    {
+      "event_id": "r2-e08-join",
+      "logical_tick": 8,
+      "event_type": "join",
+      "screen_id": "r2s08"
+    },
+    {
+      "event_id": "r2-e09-leave",
+      "logical_tick": 9,
+      "event_type": "leave",
+      "screen_id": "r2s01"
+    },
+    {
+      "event_id": "r2-e10-topology",
+      "logical_tick": 10,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h2",
+            "screen_ids": [
+              "r2s05",
+              "r2s01"
+            ]
+          },
+          {
+            "host_id": "h3",
+            "screen_ids": [
+              "r2s02",
+              "r2s04",
+              "r2s06",
+              "r2s07"
+            ]
+          },
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "r2s08",
+              "r2s03"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "r2-e11-budget",
+      "logical_tick": 11,
+      "event_type": "budget",
+      "budget_kbps": 2142152
+    }
+  ]
+}

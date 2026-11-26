@@ -1,0 +1,1350 @@
+{
+  "schema_version": "mirrorcast.truth/v1",
+  "project_id": "canonical-budget-topology",
+  "seed": 1118333214,
+  "tolerances": {
+    "rectangle_pixels": 0,
+    "plane_pixels": 0,
+    "budget_kbps": 0
+  },
+  "ticks": [
+    {
+      "tick": 1,
+      "topology_version": 1,
+      "total_budget_kbps": 80000,
+      "used_budget_kbps": 41472,
+      "remaining_budget_kbps": 38528,
+      "results": [
+        {
+          "tick": 1,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "admitted",
+          "reason": "REQUESTED_QUALITY_FITS",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e01",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 41472,
+          "budget_margin_kbps": 38528,
+          "remaining_budget_kbps": 38528,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 1,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 7500,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 38528,
+          "join_verdict": "admitted",
+          "join_scale_permyriad": 7500,
+          "join_cost_kbps": 31104
+        },
+        {
+          "tick": 1,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 38528,
+          "join_verdict": "downgraded",
+          "join_scale_permyriad": 8750,
+          "join_cost_kbps": 31853
+        },
+        {
+          "tick": 1,
+          "screen_id": "s04",
+          "host": "h2",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 320,
+            "plane_height": 180,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 1382400,
+            "budget_cost_kbps": 82944
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 38528,
+          "join_verdict": "downgraded",
+          "join_scale_permyriad": 6250,
+          "join_cost_kbps": 32544
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "topology_version": 1,
+      "total_budget_kbps": 80000,
+      "used_budget_kbps": 72576,
+      "remaining_budget_kbps": 7424,
+      "results": [
+        {
+          "tick": 2,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 10000,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 41472,
+          "remaining_budget_kbps": 7424,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 2,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": true,
+          "decision": "admitted",
+          "reason": "REQUESTED_QUALITY_FITS",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e02",
+          "requested_scale_permyriad": 7500,
+          "settled_scale_permyriad": 7500,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 31104,
+          "budget_margin_kbps": 7424,
+          "remaining_budget_kbps": 7424,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 2,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 7424,
+          "join_verdict": "downgraded",
+          "join_scale_permyriad": 3750,
+          "join_cost_kbps": 5876
+        },
+        {
+          "tick": 2,
+          "screen_id": "s04",
+          "host": "h2",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 320,
+            "plane_height": 180,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 1382400,
+            "budget_cost_kbps": 82944
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 7424,
+          "join_verdict": "rejected",
+          "join_scale_permyriad": 5000,
+          "join_cost_kbps": 20736
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "topology_version": 1,
+      "total_budget_kbps": 80000,
+      "used_budget_kbps": 78452,
+      "remaining_budget_kbps": 1548,
+      "results": [
+        {
+          "tick": 3,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 10000,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 41472,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 3,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 7500,
+          "settled_scale_permyriad": 7500,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 31104,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 3,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": true,
+          "decision": "downgraded",
+          "reason": "INSUFFICIENT_BUDGET_HEADROOM_FOR_REQUESTED_SCALE",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e03",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 3750,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 100,
+              "y": 66,
+              "width": 120,
+              "height": 68
+            },
+            "scaled_width": 120,
+            "scaled_height": 68,
+            "plane_width": 60,
+            "plane_height": 34,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 97920,
+            "budget_cost_kbps": 5876
+          },
+          "budget_cost_kbps": 5876,
+          "budget_margin_kbps": 1548,
+          "budget_shortfall_kbps": 34048,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 3,
+          "screen_id": "s04",
+          "host": "h2",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 320,
+            "plane_height": 180,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 1382400,
+            "budget_cost_kbps": 82944
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "rejected",
+          "join_scale_permyriad": 5000,
+          "join_cost_kbps": 20736
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "topology_version": 1,
+      "total_budget_kbps": 80000,
+      "used_budget_kbps": 78452,
+      "remaining_budget_kbps": 1548,
+      "results": [
+        {
+          "tick": 4,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 10000,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 41472,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 4,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 7500,
+          "settled_scale_permyriad": 7500,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 31104,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 4,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 3750,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 100,
+              "y": 66,
+              "width": 120,
+              "height": 68
+            },
+            "scaled_width": 120,
+            "scaled_height": 68,
+            "plane_width": 60,
+            "plane_height": 34,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 97920,
+            "budget_cost_kbps": 5876
+          },
+          "budget_cost_kbps": 5876,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 4,
+          "screen_id": "s04",
+          "host": "h2",
+          "active": false,
+          "decision": "rejected",
+          "reason": "MINIMUM_ACCEPTABLE_QUALITY_EXCEEDS_REMAINING_BUDGET",
+          "constraint": "C-MIN-QUALITY",
+          "trigger_source": "e04",
+          "error_code": "E_ADMISSION_REJECTED",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 5000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 320,
+            "plane_height": 180,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 1382400,
+            "budget_cost_kbps": 82944
+          },
+          "budget_cost_kbps": 0,
+          "budget_shortfall_kbps": 19188,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "rejected",
+          "join_scale_permyriad": 5000,
+          "join_cost_kbps": 20736
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "topology_version": 2,
+      "total_budget_kbps": 80000,
+      "used_budget_kbps": 78452,
+      "remaining_budget_kbps": 1548,
+      "results": [
+        {
+          "tick": 5,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 10000,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 41472,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 5,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 7500,
+          "settled_scale_permyriad": 7500,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 31104,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 5,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 3750,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 100,
+              "y": 66,
+              "width": 120,
+              "height": 68
+            },
+            "scaled_width": 120,
+            "scaled_height": 68,
+            "plane_width": 60,
+            "plane_height": 34,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 97920,
+            "budget_cost_kbps": 5876
+          },
+          "budget_cost_kbps": 5876,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 5,
+          "screen_id": "s04",
+          "host": "h1",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 320,
+            "plane_height": 180,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 1382400,
+            "budget_cost_kbps": 82944
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 1548,
+          "join_verdict": "rejected",
+          "join_scale_permyriad": 5000,
+          "join_cost_kbps": 20736
+        }
+      ]
+    },
+    {
+      "tick": 6,
+      "topology_version": 2,
+      "total_budget_kbps": 80000,
+      "used_budget_kbps": 47348,
+      "remaining_budget_kbps": 32652,
+      "results": [
+        {
+          "tick": 6,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 10000,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 41472,
+          "remaining_budget_kbps": 32652,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 6,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": false,
+          "decision": "left",
+          "reason": "SCREEN_LEAVE_RELEASES_ALLOCATION",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e06",
+          "requested_scale_permyriad": 7500,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 32652,
+          "join_verdict": "admitted",
+          "join_scale_permyriad": 7500,
+          "join_cost_kbps": 31104
+        },
+        {
+          "tick": 6,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 3750,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 100,
+              "y": 66,
+              "width": 120,
+              "height": 68
+            },
+            "scaled_width": 120,
+            "scaled_height": 68,
+            "plane_width": 60,
+            "plane_height": 34,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 97920,
+            "budget_cost_kbps": 5876
+          },
+          "budget_cost_kbps": 5876,
+          "remaining_budget_kbps": 32652,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 6,
+          "screen_id": "s04",
+          "host": "h1",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 10000,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 320,
+            "plane_height": 180,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 1382400,
+            "budget_cost_kbps": 82944
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 32652,
+          "join_verdict": "downgraded",
+          "join_scale_permyriad": 6250,
+          "join_cost_kbps": 32544
+        }
+      ]
+    },
+    {
+      "tick": 7,
+      "topology_version": 2,
+      "total_budget_kbps": 80000,
+      "used_budget_kbps": 79892,
+      "remaining_budget_kbps": 108,
+      "results": [
+        {
+          "tick": 7,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 10000,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 691200,
+            "budget_cost_kbps": 41472
+          },
+          "budget_cost_kbps": 41472,
+          "remaining_budget_kbps": 108,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 7,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 7500,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 108,
+          "join_verdict": "rejected",
+          "join_scale_permyriad": 5000,
+          "join_cost_kbps": 13824
+        },
+        {
+          "tick": 7,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": true,
+          "decision": "unchanged",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 3750,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 100,
+              "y": 66,
+              "width": 120,
+              "height": 68
+            },
+            "scaled_width": 120,
+            "scaled_height": 68,
+            "plane_width": 60,
+            "plane_height": 34,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 97920,
+            "budget_cost_kbps": 5876
+          },
+          "budget_cost_kbps": 5876,
+          "remaining_budget_kbps": 108,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 7,
+          "screen_id": "s04",
+          "host": "h1",
+          "active": true,
+          "decision": "downgraded",
+          "reason": "INSUFFICIENT_BUDGET_HEADROOM_FOR_REQUESTED_SCALE",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e07",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 6250,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 0,
+              "y": 10,
+              "width": 320,
+              "height": 180
+            },
+            "scaled_width": 320,
+            "scaled_height": 180,
+            "plane_width": 320,
+            "plane_height": 180,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 1382400,
+            "budget_cost_kbps": 82944
+          },
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 60,
+              "y": 43,
+              "width": 200,
+              "height": 113
+            },
+            "scaled_width": 200,
+            "scaled_height": 113,
+            "plane_width": 200,
+            "plane_height": 113,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 542400,
+            "budget_cost_kbps": 32544
+          },
+          "budget_cost_kbps": 32544,
+          "budget_margin_kbps": 108,
+          "budget_shortfall_kbps": 50292,
+          "remaining_budget_kbps": 108,
+          "join_verdict": "active"
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "topology_version": 2,
+      "total_budget_kbps": 45000,
+      "used_budget_kbps": 39668,
+      "remaining_budget_kbps": 5332,
+      "results": [
+        {
+          "tick": 8,
+          "screen_id": "s01",
+          "host": "h1",
+          "active": true,
+          "decision": "downgraded",
+          "reason": "TOTAL_BUDGET_REDUCED_BELOW_REQUESTED_ALLOCATION",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e08",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 6250,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 60,
+              "y": 43,
+              "width": 200,
+              "height": 113
+            },
+            "scaled_width": 200,
+            "scaled_height": 113,
+            "plane_width": 100,
+            "plane_height": 57,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 272000,
+            "budget_cost_kbps": 16320
+          },
+          "budget_cost_kbps": 16320,
+          "budget_margin_kbps": 5332,
+          "budget_shortfall_kbps": 1734,
+          "remaining_budget_kbps": 5332,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 8,
+          "screen_id": "s02",
+          "host": "h1",
+          "active": false,
+          "decision": "pending",
+          "requested_scale_permyriad": 7500,
+          "requested_mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 40,
+              "y": 32,
+              "width": 240,
+              "height": 135
+            },
+            "scaled_width": 240,
+            "scaled_height": 135,
+            "plane_width": 120,
+            "plane_height": 135,
+            "chroma": "422",
+            "chroma_bits_per_pixel": 8,
+            "nominal_bits_per_pixel": 16,
+            "frame_bits": 518400,
+            "budget_cost_kbps": 31104
+          },
+          "budget_cost_kbps": 0,
+          "remaining_budget_kbps": 5332,
+          "join_verdict": "rejected",
+          "join_scale_permyriad": 5000,
+          "join_cost_kbps": 13824
+        },
+        {
+          "tick": 8,
+          "screen_id": "s03",
+          "host": "h2",
+          "active": true,
+          "decision": "downgraded",
+          "reason": "TOTAL_BUDGET_REDUCED_BELOW_REQUESTED_ALLOCATION",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e08",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 2500,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 120,
+              "y": 77,
+              "width": 80,
+              "height": 45
+            },
+            "scaled_width": 80,
+            "scaled_height": 45,
+            "plane_width": 40,
+            "plane_height": 23,
+            "chroma": "420",
+            "chroma_bits_per_pixel": 4,
+            "nominal_bits_per_pixel": 12,
+            "frame_bits": 43520,
+            "budget_cost_kbps": 2612
+          },
+          "budget_cost_kbps": 2612,
+          "budget_margin_kbps": -31628,
+          "budget_shortfall_kbps": 34892,
+          "remaining_budget_kbps": 5332,
+          "join_verdict": "active"
+        },
+        {
+          "tick": 8,
+          "screen_id": "s04",
+          "host": "h1",
+          "active": true,
+          "decision": "downgraded",
+          "reason": "TOTAL_BUDGET_REDUCED_BELOW_REQUESTED_ALLOCATION",
+          "constraint": "C-BUDGET-TOTAL",
+          "trigger_source": "e08",
+          "requested_scale_permyriad": 10000,
+          "settled_scale_permyriad": 5000,
+          "mapping": {
+            "source": {
+              "x": 16,
+              "y": 9,
+              "width": 1920,
+              "height": 1080
+            },
+            "destination": {
+              "x": 80,
+              "y": 55,
+              "width": 160,
+              "height": 90
+            },
+            "scaled_width": 160,
+            "scaled_height": 90,
+            "plane_width": 160,
+            "plane_height": 90,
+            "chroma": "444",
+            "chroma_bits_per_pixel": 16,
+            "nominal_bits_per_pixel": 24,
+            "frame_bits": 345600,
+            "budget_cost_kbps": 20736
+          },
+          "budget_cost_kbps": 20736,
+          "budget_margin_kbps": -19820,
+          "budget_shortfall_kbps": 31628,
+          "remaining_budget_kbps": 5332,
+          "join_verdict": "active"
+        }
+      ]
+    }
+  ]
+}

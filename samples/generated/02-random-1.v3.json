@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "mirrorcast.project/v3",
+  "sessionId": "random-01-seed-42a8691e",
+  "deterministicSeed": 1118341133,
+  "captureRegion": {
+    "originX": 8,
+    "originY": 4,
+    "widthPixels": 1600,
+    "heightPixels": 900
+  },
+  "deliveryBudget": {
+    "totalKbps": 1544440,
+    "workerThreads": 10,
+    "bufferUnits": 524288
+  },
+  "topologyGroups": [
+    {
+      "groupId": "h3",
+      "displays": [
+        {
+          "displayId": "r1s01",
+          "widthPixels": 800,
+          "heightPixels": 600,
+          "equivalentAreaKiloPixels": 480,
+          "scalePermyriad": 7500,
+          "minimumScalePermyriad": 2500,
+          "chroma": {
+            "planarFormat": "PLANAR_420",
+            "derivedBitsPerPixel": 12
+          },
+          "downgradePriority": 9
+        },
+        {
+          "displayId": "r1s03",
+          "widthPixels": 1200,
+          "heightPixels": 800,
+          "equivalentAreaKiloPixels": 960,
+          "scalePermyriad": 8750,
+          "minimumScalePermyriad": 2500,
+          "chroma": {
+            "planarFormat": "PLANAR_422",
+            "derivedBitsPerPixel": 16
+          },
+          "downgradePriority": 9
+        },
+        {
+          "displayId": "r1s04",
+          "widthPixels": 800,
+          "heightPixels": 600,
+          "equivalentAreaKiloPixels": 480,
+          "scalePermyriad": 5000,
+          "minimumScalePermyriad": 3750,
+          "chroma": {
+            "planarFormat": "PLANAR_444",
+            "derivedBitsPerPixel": 24
+          },
+          "downgradePriority": 7
+        },
+        {
+          "displayId": "r1s05",
+          "widthPixels": 640,
+          "heightPixels": 400,
+          "equivalentAreaKiloPixels": 256,
+          "scalePermyriad": 7500,
+          "minimumScalePermyriad": 2500,
+          "chroma": {
+            "planarFormat": "PLANAR_422",
+            "derivedBitsPerPixel": 16
+          },
+          "downgradePriority": 6
+        }
+      ]
+    },
+    {
+      "groupId": "h1",
+      "displays": [
+        {
+          "displayId": "r1s02",
+          "widthPixels": 2000,
+          "heightPixels": 1000,
+          "equivalentAreaKiloPixels": 2000,
+          "scalePermyriad": 6250,
+          "minimumScalePermyriad": 3750,
+          "chroma": {
+            "planarFormat": "PLANAR_420",
+            "derivedBitsPerPixel": 12
+          },
+          "downgradePriority": 5
+        },
+        {
+          "displayId": "r1s06",
+          "widthPixels": 640,
+          "heightPixels": 400,
+          "equivalentAreaKiloPixels": 256,
+          "scalePermyriad": 6250,
+          "minimumScalePermyriad": 3750,
+          "chroma": {
+            "planarFormat": "PLANAR_444",
+            "derivedBitsPerPixel": 24
+          },
+          "downgradePriority": 9
+        }
+      ]
+    }
+  ],
+  "logicalTimeline": [
+    {
+      "event_id": "r1-e01-join",
+      "logical_tick": 1,
+      "event_type": "join",
+      "screen_id": "r1s01"
+    },
+    {
+      "event_id": "r1-e02-join",
+      "logical_tick": 2,
+      "event_type": "join",
+      "screen_id": "r1s02"
+    },
+    {
+      "event_id": "r1-e03-join",
+      "logical_tick": 3,
+      "event_type": "join",
+      "screen_id": "r1s03"
+    },
+    {
+      "event_id": "r1-e04-join",
+      "logical_tick": 4,
+      "event_type": "join",
+      "screen_id": "r1s04"
+    },
+    {
+      "event_id": "r1-e05-join",
+      "logical_tick": 5,
+      "event_type": "join",
+      "screen_id": "r1s05"
+    },
+    {
+      "event_id": "r1-e06-join",
+      "logical_tick": 6,
+      "event_type": "join",
+      "screen_id": "r1s06"
+    },
+    {
+      "event_id": "r1-e07-leave",
+      "logical_tick": 7,
+      "event_type": "leave",
+      "screen_id": "r1s01"
+    },
+    {
+      "event_id": "r1-e08-topology",
+      "logical_tick": 8,
+      "event_type": "topology",
+      "topology": {
+        "topology_version": 2,
+        "hosts": [
+          {
+            "host_id": "h3",
+            "screen_ids": [
+              "r1s05",
+              "r1s04",
+              "r1s03",
+              "r1s01"
+            ]
+          },
+          {
+            "host_id": "h1",
+            "screen_ids": [
+              "r1s02",
+              "r1s06"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_id": "r1-e09-budget",
+      "logical_tick": 9,
+      "event_type": "budget",
+      "budget_kbps": 849442
+    }
+  ]
+}
