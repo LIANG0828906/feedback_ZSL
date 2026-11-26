@@ -1,0 +1,408 @@
+{
+  "coordinateMode": "screen-origin-offset",
+  "events": [
+    {
+      "atMillis": 0,
+      "domain": "west",
+      "fromDomain": "",
+      "id": "ev-0000",
+      "screenId": "screen-alpha",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 0,
+      "domain": "west",
+      "fromDomain": "",
+      "id": "ev-0001",
+      "screenId": "screen-bravo",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 0,
+      "domain": "east",
+      "fromDomain": "",
+      "id": "ev-0002",
+      "screenId": "screen-charlie",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 0,
+      "domain": "east",
+      "fromDomain": "",
+      "id": "ev-0003",
+      "screenId": "screen-delta",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 60,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0010",
+      "screenId": "screen-alpha",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "negotiate"
+    },
+    {
+      "atMillis": 60,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0011",
+      "screenId": "screen-bravo",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "negotiate"
+    },
+    {
+      "atMillis": 60,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0012",
+      "screenId": "screen-charlie",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "negotiate"
+    },
+    {
+      "atMillis": 60,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0013",
+      "screenId": "screen-delta",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "negotiate"
+    },
+    {
+      "atMillis": 100,
+      "domain": "",
+      "fromDomain": "west",
+      "id": "ev-0020",
+      "screenId": "screen-bravo",
+      "timeoutMillis": 0,
+      "toDomain": "east",
+      "type": "topology"
+    },
+    {
+      "atMillis": 100,
+      "domain": "east",
+      "fromDomain": "",
+      "id": "ev-0021",
+      "screenId": "screen-bravo",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 700,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0030",
+      "screenId": "screen-charlie",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "leave"
+    },
+    {
+      "atMillis": 850,
+      "domain": "east",
+      "fromDomain": "",
+      "id": "ev-0031",
+      "screenId": "screen-charlie",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 900,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0032",
+      "screenId": "screen-charlie",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "negotiate"
+    },
+    {
+      "atMillis": 950,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0040",
+      "screenId": "screen-delta",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "leave"
+    },
+    {
+      "atMillis": 950,
+      "domain": "east",
+      "fromDomain": "",
+      "id": "ev-0041",
+      "screenId": "screen-delta",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 1050,
+      "domain": "east",
+      "fromDomain": "",
+      "id": "ev-0042",
+      "screenId": "screen-delta",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "join"
+    },
+    {
+      "atMillis": 1100,
+      "domain": "",
+      "fromDomain": "",
+      "id": "ev-0043",
+      "screenId": "screen-delta",
+      "timeoutMillis": 0,
+      "toDomain": "",
+      "type": "negotiate"
+    }
+  ],
+  "rounding": {
+    "coord": "floor",
+    "time": "floor"
+  },
+  "schemaVersion": 2,
+  "session": {
+    "algorithmVersion": "mirror-1.0",
+    "id": "mirror-session-0000000042",
+    "masterScreenId": "screen-alpha",
+    "seed": 42
+  },
+  "timebase": {
+    "negotiationTimeoutMillis": 800,
+    "reconnectTimeoutMillis": 2500,
+    "tickMillis": 10
+  },
+  "topology": [
+    {
+      "domain": "east",
+      "origin": {
+        "x": 320,
+        "y": 200
+      },
+      "parent": "root",
+      "screens": [
+        {
+          "chromaModes": [
+            0,
+            2
+          ],
+          "defaultChroma": 0,
+          "defaultScale": 10000,
+          "displayName": "Stage Charlie",
+          "master": false,
+          "maxPacketBytes": 262144,
+          "originX": 178,
+          "originY": 79,
+          "resolution": {
+            "h": 1080,
+            "w": 1920
+          },
+          "scaleProfiles": [
+            10000,
+            12500
+          ],
+          "screenId": "screen-charlie"
+        },
+        {
+          "chromaModes": [
+            0,
+            2
+          ],
+          "defaultChroma": 2,
+          "defaultScale": 12500,
+          "displayName": "Stage Delta",
+          "master": false,
+          "maxPacketBytes": 98304,
+          "originX": 235,
+          "originY": 118,
+          "resolution": {
+            "h": 720,
+            "w": 1536
+          },
+          "scaleProfiles": [
+            10000,
+            12500
+          ],
+          "screenId": "screen-delta"
+        }
+      ]
+    },
+    {
+      "domain": "root",
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "parent": "",
+      "screens": []
+    },
+    {
+      "domain": "west",
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "parent": "root",
+      "screens": [
+        {
+          "chromaModes": [
+            0,
+            2
+          ],
+          "defaultChroma": 0,
+          "defaultScale": 10000,
+          "displayName": "Stage Alpha",
+          "master": true,
+          "maxPacketBytes": 65536,
+          "originX": 0,
+          "originY": 0,
+          "resolution": {
+            "h": 1080,
+            "w": 1920
+          },
+          "scaleProfiles": [
+            10000,
+            12500
+          ],
+          "screenId": "screen-alpha"
+        },
+        {
+          "chromaModes": [
+            0,
+            2
+          ],
+          "defaultChroma": 2,
+          "defaultScale": 12500,
+          "displayName": "Stage Bravo",
+          "master": false,
+          "maxPacketBytes": 262144,
+          "originX": 90,
+          "originY": 54,
+          "resolution": {
+            "h": 864,
+            "w": 1920
+          },
+          "scaleProfiles": [
+            10000,
+            12500
+          ],
+          "screenId": "screen-bravo"
+        }
+      ]
+    }
+  ],
+  "windows": [
+    {
+      "chroma": 0,
+      "endMillis": 300,
+      "id": "window-00",
+      "maxPacketBytes": 196608,
+      "region": {
+        "dh": 611,
+        "dw": 977,
+        "dx": 40,
+        "dy": 33,
+        "originScreenId": "screen-alpha"
+      },
+      "scale": 12500,
+      "sequence": 0,
+      "startMillis": 200
+    },
+    {
+      "chroma": 2,
+      "endMillis": 500,
+      "id": "window-01",
+      "maxPacketBytes": 131072,
+      "region": {
+        "dh": 757,
+        "dw": 1419,
+        "dx": 12,
+        "dy": 36,
+        "originScreenId": "screen-alpha"
+      },
+      "scale": 10000,
+      "sequence": 1,
+      "startMillis": 400
+    },
+    {
+      "chroma": 2,
+      "endMillis": 800,
+      "id": "window-02",
+      "maxPacketBytes": 196608,
+      "region": {
+        "dh": 698,
+        "dw": 973,
+        "dx": 39,
+        "dy": 39,
+        "originScreenId": "screen-alpha"
+      },
+      "scale": 12500,
+      "sequence": 2,
+      "startMillis": 600
+    },
+    {
+      "chroma": 0,
+      "endMillis": 1000,
+      "id": "window-03",
+      "maxPacketBytes": 131072,
+      "region": {
+        "dh": 700,
+        "dw": 1175,
+        "dx": 61,
+        "dy": 64,
+        "originScreenId": "screen-alpha"
+      },
+      "scale": 10000,
+      "sequence": 3,
+      "startMillis": 900
+    },
+    {
+      "chroma": 0,
+      "endMillis": 1250,
+      "id": "window-04",
+      "maxPacketBytes": 262144,
+      "region": {
+        "dh": 817,
+        "dw": 926,
+        "dx": 65,
+        "dy": 79,
+        "originScreenId": "screen-alpha"
+      },
+      "scale": 10000,
+      "sequence": 4,
+      "startMillis": 1100
+    },
+    {
+      "chroma": 2,
+      "endMillis": 1400,
+      "id": "window-05",
+      "maxPacketBytes": 262144,
+      "region": {
+        "dh": 1080,
+        "dw": 1920,
+        "dx": 0,
+        "dy": 0,
+        "originScreenId": "screen-alpha"
+      },
+      "scale": 10000,
+      "sequence": 5,
+      "startMillis": 1300
+    }
+  ]
+}

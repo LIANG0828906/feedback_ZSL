@@ -1,0 +1,407 @@
+{
+  "algorithm_version": "mirror-1.0",
+  "defaults": {
+    "chroma": "444",
+    "max_packet_bytes": 65536,
+    "scale": "100%"
+  },
+  "domains": [
+    {
+      "id": "east",
+      "origin": {
+        "x": 320,
+        "y": 200
+      },
+      "parent": "root"
+    },
+    {
+      "id": "root",
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "parent": ""
+    },
+    {
+      "id": "west",
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "parent": "root"
+    }
+  ],
+  "events": [
+    {
+      "at_tick": 0,
+      "domain": "west",
+      "from_domain": "",
+      "id": "ev-0000",
+      "kind": "join",
+      "screen_id": "screen-alpha",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 0,
+      "domain": "west",
+      "from_domain": "",
+      "id": "ev-0001",
+      "kind": "join",
+      "screen_id": "screen-bravo",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 0,
+      "domain": "east",
+      "from_domain": "",
+      "id": "ev-0002",
+      "kind": "join",
+      "screen_id": "screen-charlie",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 0,
+      "domain": "east",
+      "from_domain": "",
+      "id": "ev-0003",
+      "kind": "join",
+      "screen_id": "screen-delta",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 6,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0010",
+      "kind": "negotiate",
+      "screen_id": "screen-alpha",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 6,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0011",
+      "kind": "negotiate",
+      "screen_id": "screen-bravo",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 6,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0012",
+      "kind": "negotiate",
+      "screen_id": "screen-charlie",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 6,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0013",
+      "kind": "negotiate",
+      "screen_id": "screen-delta",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 10,
+      "domain": "",
+      "from_domain": "west",
+      "id": "ev-0020",
+      "kind": "topology",
+      "screen_id": "screen-bravo",
+      "timeout_ticks": 0,
+      "to_domain": "east"
+    },
+    {
+      "at_tick": 10,
+      "domain": "east",
+      "from_domain": "",
+      "id": "ev-0021",
+      "kind": "join",
+      "screen_id": "screen-bravo",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 70,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0030",
+      "kind": "leave",
+      "screen_id": "screen-charlie",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 85,
+      "domain": "east",
+      "from_domain": "",
+      "id": "ev-0031",
+      "kind": "join",
+      "screen_id": "screen-charlie",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 90,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0032",
+      "kind": "negotiate",
+      "screen_id": "screen-charlie",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 95,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0040",
+      "kind": "leave",
+      "screen_id": "screen-delta",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 95,
+      "domain": "east",
+      "from_domain": "",
+      "id": "ev-0041",
+      "kind": "join",
+      "screen_id": "screen-delta",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 105,
+      "domain": "east",
+      "from_domain": "",
+      "id": "ev-0042",
+      "kind": "join",
+      "screen_id": "screen-delta",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    },
+    {
+      "at_tick": 110,
+      "domain": "",
+      "from_domain": "",
+      "id": "ev-0043",
+      "kind": "negotiate",
+      "screen_id": "screen-delta",
+      "timeout_ticks": 0,
+      "to_domain": ""
+    }
+  ],
+  "master_screen_id": "screen-alpha",
+  "negotiation_timeout_ticks": 80,
+  "reconnect_timeout_ticks": 250,
+  "rounding": {
+    "coord": "floor",
+    "time": "floor"
+  },
+  "schema_version": "1.0",
+  "screens": [
+    {
+      "chroma_modes": [
+        "444",
+        "420"
+      ],
+      "domain": "west",
+      "id": "screen-alpha",
+      "master": true,
+      "max_packet_bytes": 65536,
+      "name": "Stage Alpha",
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "resolution": {
+        "height": 1080,
+        "width": 1920
+      },
+      "scale_profiles": [
+        "100%",
+        "125%"
+      ]
+    },
+    {
+      "chroma_modes": [
+        "444",
+        "420"
+      ],
+      "default_chroma": "420",
+      "default_scale": "125%",
+      "domain": "west",
+      "id": "screen-bravo",
+      "master": false,
+      "max_packet_bytes": 262144,
+      "name": "Stage Bravo",
+      "origin": {
+        "x": 90,
+        "y": 54
+      },
+      "resolution": {
+        "height": 864,
+        "width": 1920
+      },
+      "scale_profiles": [
+        "100%",
+        "125%"
+      ]
+    },
+    {
+      "chroma_modes": [
+        "444",
+        "420"
+      ],
+      "domain": "east",
+      "id": "screen-charlie",
+      "master": false,
+      "max_packet_bytes": 262144,
+      "name": "Stage Charlie",
+      "origin": {
+        "x": 178,
+        "y": 79
+      },
+      "resolution": {
+        "height": 1080,
+        "width": 1920
+      },
+      "scale_profiles": [
+        "100%",
+        "125%"
+      ]
+    },
+    {
+      "chroma_modes": [
+        "444",
+        "420"
+      ],
+      "default_chroma": "420",
+      "default_scale": "125%",
+      "domain": "east",
+      "id": "screen-delta",
+      "master": false,
+      "max_packet_bytes": 98304,
+      "name": "Stage Delta",
+      "origin": {
+        "x": 235,
+        "y": 118
+      },
+      "resolution": {
+        "height": 720,
+        "width": 1536
+      },
+      "scale_profiles": [
+        "100%",
+        "125%"
+      ]
+    }
+  ],
+  "seed": 42,
+  "session_id": "mirror-session-0000000042",
+  "tick_ms": 10,
+  "windows": [
+    {
+      "chroma": "444",
+      "end_tick": 30,
+      "id": "window-00",
+      "index": 0,
+      "max_packet_bytes": 196608,
+      "region": {
+        "height": 611,
+        "width": 977,
+        "x": 40,
+        "y": 33
+      },
+      "scale": "125%",
+      "start_tick": 20
+    },
+    {
+      "chroma": "420",
+      "end_tick": 50,
+      "id": "window-01",
+      "index": 1,
+      "max_packet_bytes": 131072,
+      "region": {
+        "height": 757,
+        "width": 1419,
+        "x": 12,
+        "y": 36
+      },
+      "scale": "100%",
+      "start_tick": 40
+    },
+    {
+      "chroma": "420",
+      "end_tick": 80,
+      "id": "window-02",
+      "index": 2,
+      "max_packet_bytes": 196608,
+      "region": {
+        "height": 698,
+        "width": 973,
+        "x": 39,
+        "y": 39
+      },
+      "scale": "125%",
+      "start_tick": 60
+    },
+    {
+      "chroma": "444",
+      "end_tick": 100,
+      "id": "window-03",
+      "index": 3,
+      "max_packet_bytes": 131072,
+      "region": {
+        "height": 700,
+        "width": 1175,
+        "x": 61,
+        "y": 64
+      },
+      "scale": "100%",
+      "start_tick": 90
+    },
+    {
+      "chroma": "444",
+      "end_tick": 125,
+      "id": "window-04",
+      "index": 4,
+      "max_packet_bytes": 262144,
+      "region": {
+        "height": 817,
+        "width": 926,
+        "x": 65,
+        "y": 79
+      },
+      "scale": "100%",
+      "start_tick": 110
+    },
+    {
+      "chroma": "420",
+      "end_tick": 140,
+      "id": "window-05",
+      "index": 5,
+      "max_packet_bytes": 262144,
+      "region": {
+        "height": 1080,
+        "width": 1920,
+        "x": 0,
+        "y": 0
+      },
+      "scale": "100%",
+      "start_tick": 130
+    }
+  ]
+}
