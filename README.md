@@ -19,3 +19,5 @@
 
 验收：
 在本地样本上验证三版本装载、逐 tick 排程与仲裁、失效传播、检查点三路径一致性及异常链路，运行演示输出结果。
+
+实现、命令与实测结果见 `IMPLEMENTATION.md`；可直接运行 `go run ./cmd/skillbudget demo`。
