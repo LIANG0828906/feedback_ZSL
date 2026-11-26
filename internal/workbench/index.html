@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>多光谱 / HDR 量化诊断工作台</title>
+  <style>
+    :root {
+      --bg: #0b1020; --panel: #121a31; --panel2: #18223f; --line: #2a3866;
+      --text: #e8eeff; --muted: #9fb0d8; --ok: #46d39a; --warn: #ffcc66;
+      --bad: #ff6b8a; --accent: #7aa2ff; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(circle at 20% 0%, #182653 0, var(--bg) 42%); color: var(--text); font: 14px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    header { padding: 28px 34px 18px; border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 6px; font-size: 24px; letter-spacing: .02em; }
+    .sub { color: var(--muted); }
+    main { padding: 22px 34px 50px; max-width: 1440px; margin: 0 auto; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .card { background: linear-gradient(180deg, var(--panel2), var(--panel)); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; box-shadow: 0 10px 30px rgba(0,0,0,.18); }
+    .card .k { color: var(--muted); font-size: 12px; }
+    .card .v { font-size: 22px; font-weight: 700; margin-top: 4px; font-family: var(--mono); }
+    .pass { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); } .accent { color: var(--accent); }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 14px; }
+    button { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+    button.active { background: var(--accent); border-color: var(--accent); color: #071022; font-weight: 700; }
+    section { display: none; } section.active { display: block; }
+    .panel { background: rgba(18,26,49,.92); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 14px; overflow: auto; }
+    h2 { font-size: 16px; margin: 0 0 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    th, td { border-bottom: 1px solid rgba(42,56,102,.7); padding: 8px 9px; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; position: sticky; top: 0; background: var(--panel); }
+    code, .mono { font-family: var(--mono); font-size: 12px; }
+    .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; border: 1px solid var(--line); background: var(--panel2); }
+    .pill.ok { color: var(--ok); border-color: rgba(70,211,154,.4); }
+    .pill.apx { color: var(--warn); border-color: rgba(255,204,102,.4); }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0a0f22; border: 1px solid var(--line); border-radius: 10px; padding: 12px; max-height: 520px; overflow: auto; }
+    .foot { color: var(--muted); font-size: 12px; margin-top: 18px; }
+    @media (max-width: 980px) { .grid2 { grid-template-columns: 1fr; } main, header { padding-left: 16px; padding-right: 16px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>多光谱与 HDR 素材 · 波段量化 / 色调重建诊断工作台</h1>
+    <div class="sub">固定种子确定性样本 · 全链路整型口径 · 三 schema 版本 · 自适应量化 · 依赖失效 · 原子检查点</div>
+  </header>
+  <main>
+    <div id="cards" class="cards"></div>
+    <nav>
+      <button data-tab="overview" class="active">验收总览</button>
+      <button data-tab="blocks">分块与色度</button>
+      <button data-tab="schema">Schema / 损失</button>
+      <button data-tab="graph">依赖失效</button>
+      <button data-tab="recovery">恢复与调度</button>
+    </nav>
+
+    <section id="overview" class="active">
+      <div class="panel"><h2>验收检查</h2><div id="acceptance"></div></div>
+      <div class="panel"><h2>口径说明</h2>
+        <ul>
+          <li>稀疏档：逐像素共享整型量化器，方式 <code>sparse_pixel_exact</code>，误差界 0。</li>
+          <li>中等档：逐行累计余数/辐亮度，并在块边界重算，方式 <code>medium_row_accum_recompute</code>。</li>
+          <li>稠密档：分块累计 + 有界 LUT；同量化区间直接命中，跨区间回退同一整型量化器。</li>
+          <li>检查点采用每块每阶段单事务原子提交；无第三方 SQLite 驱动时，本地验证使用仓库内纯 Go 原子文件事务，另附 <code>database/sql</code> SQLite 适配器与 DDL。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="blocks">
+      <div class="panel"><h2>逐块方式、峰值与误差界</h2><div id="blocksTable"></div></div>
+    </section>
+
+    <section id="schema">
+      <div class="grid2">
+        <div class="panel"><h2>三版本装载</h2><div id="schemaTable"></div></div>
+        <div class="panel"><h2>降级损失清单摘要</h2><div id="loss"></div></div>
+      </div>
+    </section>
+
+    <section id="graph">
+      <div class="grid2">
+        <div class="panel"><h2>波段增益编辑失效清单</h2><div id="gainManifest"></div></div>
+        <div class="panel"><h2>样本规模切换失效清单</h2><div id="profileManifest"></div></div>
+      </div>
+      <div class="panel"><h2>版本切换</h2><div id="versionManifest"></div></div>
+    </section>
+
+    <section id="recovery">
+      <div class="grid2">
+        <div class="panel"><h2>强制终止恢复边界</h2><div id="recovery"></div></div>
+        <div class="panel"><h2>受限预算调度</h2><div id="scheduler"></div></div>
+      </div>
+    </section>
+    <div class="foot">数据来自本地确定性运行；完整机器可读结果见 <code>verification.json</code>。</div>
+  </main>
+  <script src="report-data.js"></script>
+  <script>
+    const s = window.MS_SUMMARY;
+    const esc = x => String(x ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const cards = [
+      ["Seed", s.seed, "accent"], ["Blocks", s.block_count, ""], ["Bands", s.band_count, ""],
+      ["Checks", s.acceptance.length + "/6", "pass"], ["Recovery", s.recovery.final_records + " stages", "pass"],
+      ["Wait events", s.scheduler.wait_events, s.scheduler.wait_events ? "warn" : ""]
+    ];
+    document.getElementById("cards").innerHTML = cards.map(([k,v,c]) => `<div class="card"><div class="k">${k}</div><div class="v ${c}">${esc(v)}</div></div>`).join("");
+    document.getElementById("acceptance").innerHTML = `<table><thead><tr><th>检查</th><th>状态</th><th>证据</th></tr></thead><tbody>${
+      s.acceptance.map(a => `<tr><td>${esc(a.name)}</td><td><span class="pill ok">${esc(a.status)}</span></td><td>${esc(a.detail)}</td></tr>`).join("")}</tbody></table>`;
+    document.getElementById("blocksTable").innerHTML = `<table><thead><tr><th>块 x,y</th><th>方式</th><th>分类</th><th>复用来源</th><th>Peak Y</th><th>Peak RGB</th><th>通道误差界</th><th>Quant</th><th>Recon</th></tr></thead><tbody>${
+      s.blocks.map(b => `<tr><td class="mono">${esc(b.block)}</td><td><code>${esc(b.method)}</code></td><td>${b.approximate ? '<span class="pill apx">approximate</span>' : '<span class="pill ok">exact</span>'}</td><td>${esc(b.source)}</td><td class="mono">${b.peak_y_bp}</td><td class="mono">[${b.peak_rgb_bp.join(",")}]</td><td class="mono">[${b.error_bound_bp.join(",")}]</td><td class="mono">${esc(b.quant_hash)}</td><td class="mono">${esc(b.recon_hash)}</td></tr>`).join("")}</tbody></table>`;
+    document.getElementById("schemaTable").innerHTML = `<table><thead><tr><th>版本</th><th>状态</th><th>语义哈希</th><th>痕迹</th><th>损失项</th></tr></thead><tbody>${
+      s.schema_checks.map(c => `<tr><td><code>${esc(c.version)}</code></td><td>${c.ok ? '<span class="pill ok">PASS</span>' : `<span class="pill bad">${esc(c.error_code)}</span>`}</td><td class="mono">${esc((c.canonical_hash||"").slice(0,16))}</td><td>${c.trace_count}</td><td>${c.loss_items}</td></tr>`).join("")}</tbody></table>`;
+    document.getElementById("loss").innerHTML = s.v1_loss ? `<p>Digest <code>${esc(s.v1_loss.digest)}</code>，${s.v1_loss.items.length} 项；再次导入/导出清单逐字段一致。</p><pre>${esc(JSON.stringify(s.v1_loss.items.slice(0, 12), null, 2))}</pre>` : "无损失项。";
+    const manifest = m => !m ? "无" : `<p>${esc(m.edit)} · invalidated=${m.invalidated.length} · reused=${m.reused.length}</p><pre>${esc(JSON.stringify({invalidated:m.invalidated.slice(0,30), reused_preview:m.reused.slice(0,12)}, null, 2))}</pre>`;
+    document.getElementById("gainManifest").innerHTML = manifest(s.gain_manifest);
+    document.getElementById("profileManifest").innerHTML = manifest(s.profile_manifest);
+    document.getElementById("versionManifest").innerHTML = manifest(s.version_manifest);
+    document.getElementById("recovery").innerHTML = `<pre>${esc(JSON.stringify(s.recovery, null, 2))}</pre><p>破坏任一运行内 <code>content_hash</code> 或版本字段，恢复整体返回 <code>E_VER</code>。</p>`;
+    document.getElementById("scheduler").innerHTML = `<pre>${esc(JSON.stringify(s.scheduler, null, 2))}</pre><p>预算：最大并行度、每线程像素缓冲、待处理块队列均可注入；队列满时阻塞并记录等待微秒数。</p>`;
+    document.querySelectorAll("button[data-tab]").forEach(btn => btn.addEventListener("click", () => {
+      document.querySelectorAll("button[data-tab]").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("section").forEach(x => x.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+    }));
+  </script>
+</body>
+</html>

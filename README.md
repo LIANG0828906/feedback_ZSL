@@ -19,3 +19,20 @@ Linux（WSL Ubuntu）已安装 Go 1.22 或以上工具链，go 命令能在本�
 
 验收：
 用本地样本验证三版本装载、量化与色度重建及三条路径逐块一致，并核对业务码与中断恢复。
+
+---
+
+## 交付入口
+
+可运行实现、架构说明与实测结果见：
+
+- `docs/DELIVERY.md`
+- `docs/VERIFICATION.md`
+
+常用命令：
+
+```bash
+go test ./... -count=1
+go run ./cmd/msdemo all --out artifacts/demo
+go run ./cmd/msdemo serve --dir artifacts/demo --addr 127.0.0.1:8088
+```
