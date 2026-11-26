@@ -1,22 +1,189 @@
-架构评审通过后的首个版本落在掩码制作链路上：美术在切图前用多笔覆盖候选掩码，返工时常说不清是哪一笔、以什么先后顺序落笔造成了轮廓偏差，而现有工作区只有一个尚未初始化的空目录，Go 工具链已就绪，没有源码、样本与历史约定可继承。首个可验收版本要独立交付一套笔画施工还原内核，既作为可集成的 Go 领域组件，也提供本地可重复演示的诊断入口：把候选掩码、施工记录与分块真值装载为内部笔画模型，按声明工序与笔序号裁定唯一合成次序，栅格化每笔并与候选掩码做覆盖合成得到积算掩码，再逐域比对参考前景并归因到具体笔画，在设计师调整笔序、笔刷参数或覆盖权重后只重算实际受影响的分块，且中断后仅依据已提交分块继续。图标图像、候选掩码、施工记录与解析真值全部由题内确定性生成器按固定种子产出：图标含前景色块、与前景近色的背景渐变、半透明描边与嵌入式噪声，候选掩码刻意内缩、外溢并带小空洞；施工记录逐笔声明落笔先后、起止像素、笔刷硬度与覆盖权重，真值给出各前景连通域重心、面积、外接框、孔洞数量、像素级参考掩码与逐笔贡献。
+# StrokeLab
 
-任务环境与准备：
-准备 Linux（WSL Ubuntu）运行环境并确保 go 命令可用（如 go1.21 及以上版本，按本地已安装版本执行）。
-项目从空工作区新建 Go 模块，只使用 Go 标准库（含 database/sql 与 sqlite3 驱动的可运行路径需在题内以标准库可替代的持久化方式声明，或明确本地无需外部服务）。
-准备可写的本地目录用于 SQLite 检查点文件与诊断入口输出，不依赖任何网络服务与外部账号。
-通过 go build 与本地运行命令执行组件与样例，验收样本由题内确定性生成器按固定种子产出。
+StrokeLab is a deterministic Go domain component for reconstructing a mask from
+declared brush construction records. It loads three historical project versions,
+normalizes them into one integer-only internal model, resolves a unique stroke
+order, rasterizes and accumulates per-stroke coverage, verifies connected
+topology against truth, attributes pixel differences to strokes, reuses
+unaffected blocks after edits, and resumes from committed stroke checkpoints.
 
-业务要求：
-1. 实现确定性施工样本生成器与三版本图标工程加载器：按固定种子产出多张不同分辨率图标、带内缩外溢与空洞的候选掩码、逐笔施工记录与真值清单，并把字段命名差异、笔画坐标的绝对与相对表达、权重的千分比与万分比刻度、笔刷硬度字段有无、工序序号基准统一映射为内部笔画模型并保留源版本标识与逐字段转换痕迹，未知版本或必填字段缺失返回 E_VER。
-2. 实现版本升降级的显式转换规则与可追溯痕迹：低版本升级时按声明默认值补齐笔刷硬度、工序序号与覆盖权重字段，每次补齐记录字段路径、旧值与来源默认值；内部模型导出到低版本时，对无法表达的按笔画分组结构、相对坐标或权重刻度生成 E_LOSSY 损失清单并记录降级处置方式；导出产物必须能被对应版本加载器读回恢复出等价内部模型。
-3. 实现笔画坐标表达与覆盖权重刻度的整型换算及往返一致：绝对像素与按笔画序号推导的偏移之间、千分比与万分比权重之间用整型运算按声明取舍方向处理余数，逐处记录截断位置与残差并全链路禁止浮点累积，换算溢出返回 E_OVF 并给出字段与两个操作数；同一笔起止坐标与覆盖权重经高版本到低版本再回到高版本后必须完全不变，否则返回 E_RT。
-4. 实现合成次序的确定性裁决与积算掩码栅格化核心：同一组笔画在不同声明顺序下合成可能得到不同中间掩码，须按施工记录声明的工序优先级与工序序号定义唯一合成次序，并逐分块记录参与笔序号、胜出依据与被抑制笔；按笔刷硬度与覆盖权重把每笔栅格化为覆盖分量并与候选掩码按 alpha 规则累加，同一工程在任意枚举顺序、任意分块完成顺序下须得到逐像素相同的积算掩码，无法裁决时返回 E_ORD。
-5. 实现基于笔级贡献的连通拓扑核验与偏差归因：由积算掩码提取各前景连通域，计算重心、面积、外接框、描边环带宽度与孔洞数量并与真值逐域做一对一匹配比对，孔洞或环带宽度偏差超限返回 E_TOP 并列出域编号与实测值；对不通过区域按逐笔贡献分量判定责任笔画，输出每个差异像素的首位责任笔序号与贡献份额，归因只由施工记录与覆盖权重决定，不受分块调度影响。
-6. 实现笔画与分块之间的依赖图及编辑后的精确失效传播：缓存键由分块输入内容哈希、笔画标识、合成次序版本、换算参数版本与算法版本共同决定，显式记录笔画、合成次序、拓扑核验与下游分块产出之间的依赖；编辑某笔起止坐标、硬度、覆盖权重或工序序号时仅将实际受影响分块及其下游标记失效，未失效分块复用持久化结果并输出含笔序号、分块号与失效原因的失效清单。
-7. 实现基于 SQLite 的笔画级原子检查点、强制终止恢复边界与三条路径逐像素一致：每提交一个笔画在受影响分块上的覆盖分量，把该分量摘要、缓存键、内容哈希、换算残差摘要、合成次序版本与算法版本在单一事务中串行写入，写入不得交错且提交顺序稳定；实时增量核验、断点恢复核验与一次性全量重算须产出相同积算掩码、相同连通域统计与相同归因结果，自动比对定位首个不一致的分块号与笔序号；用户取消或进程被强制终止后重启只能依据已提交且版本匹配的笔画恢复，不承诺生成退出报告。
-8. 实现受限预算下的分块并行调度与本地诊断入口：笔画栅格化与分块覆盖累加在工作线程池并行推进时须限制最大并行度、每线程像素缓冲上限与待处理分块队列预算，预算耗尽时阻塞排队并记录排队原因与等待时长而非静默丢弃；单分块内部失败须置该分块为失败并允许重试且不污染其他分块与已提交结果，诊断入口展示候选掩码与积算掩码对照、逐笔贡献、失效传播示意、检查点状态与排队明细。
+The repository also ships `strokediag`, a local diagnostic command that writes a
+directory-local HTML report with PNG evidence. It uses no network, container,
+external account, CGO driver, or database service.
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## Quick Start
 
-验收：
-用本地固定种子样本验证积算掩码、拓扑比对与归因结果，并核对三路径一致、失效清单与断点恢复。
+Requirements: Go 1.22+ on Linux/WSL. The module uses only the Go standard
+library.
+
+```bash
+go build ./...
+go test ./...
+
+go run ./cmd/strokediag generate -seed 424242 -out artifacts/final-demo
+go run ./cmd/strokediag verify   -seed 424242 -out artifacts/final-acceptance
+```
+
+Open the generated reports directly from the local filesystem:
+
+```text
+artifacts/final-acceptance/reports/full/report.html
+artifacts/final-acceptance/reports/resume/report.html
+artifacts/final-acceptance/reports/edited/report.html
+```
+
+The report shows candidate/composite/reference/difference masks, per-stroke
+contributions, topology domains, pixel attribution, invalidation propagation,
+checkpoint state, block reuse/recompute status, and scheduler queue records.
+
+## Commands
+
+```bash
+# Generate 64x64/v1, 96x96/v2, and 128x128/v3 samples from one seed.
+go run ./cmd/strokediag generate -seed 424242 -out artifacts/demo
+
+# One-shot full recomputation.
+go run ./cmd/strokediag run \
+  -dir artifacts/demo/v3-grouped-128 -mode full -out artifacts/diag-full
+
+# Incremental run with fixed checkpoint path.
+go run ./cmd/strokediag run \
+  -dir artifacts/demo/v3-grouped-128 -mode incremental \
+  -checkpoint artifacts/run.ckpt -out artifacts/diag-incremental
+
+# Resume only after committed, version-matching records.
+go run ./cmd/strokediag run \
+  -dir artifacts/demo/v3-grouped-128 -mode resume \
+  -checkpoint artifacts/run.ckpt -out artifacts/diag-resume
+
+# Simulate abrupt process termination after three commits.
+go run ./cmd/strokediag run \
+  -dir artifacts/demo/v3-grouped-128 -mode incremental \
+  -checkpoint artifacts/kill.ckpt -hard-abort-after 3
+
+# Then restart and resume.
+go run ./cmd/strokediag run \
+  -dir artifacts/demo/v3-grouped-128 -mode resume \
+  -checkpoint artifacts/kill.ckpt -out artifacts/diag-restarted
+
+# Edit one stroke, reuse the prior block cache, and show invalidation.
+go run ./cmd/strokediag run \
+  -dir artifacts/demo/v3-grouped-128 -mode full \
+  -reuse-cache artifacts/final-acceptance/cache/blocks.json \
+  -edit-stroke body-top -edit-weight 7800 \
+  -cache-out artifacts/edited-cache.json -out artifacts/diag-edited
+```
+
+`-hard-abort-after` calls `os.Exit(17)` after the selected number of fsynced
+commits and intentionally produces no exit report. A built binary therefore
+returns status 17; `go run` wraps that status as 1.
+
+## Persistence Decision
+
+The task permits a standard-library substitute when the SQLite driver is
+external. StrokeLab deliberately uses that substitute:
+
+- `checkpoint.go` is an append-only journal with a fixed header, one
+  base64-encoded JSON record per line, a CRC32 trailer, one serialized write per
+  stroke, and `fsync` before commit acknowledgement.
+- Transaction IDs are strictly contiguous. Recovery ignores an incomplete or
+  bad final record, truncates back to the last valid record boundary, then
+  continues with new transactions. Corruption before the tail returns
+  `E_CKPT`.
+- Every stroke record contains the per-block component, component digest,
+  block cache key, cumulative content hash, conversion residual digest, order
+  version, stage/seq, and algorithm version.
+- `-reuse-cache` / `-cache-out` persist complete block outputs separately using
+  an atomic temp-file + fsync + rename replacement.
+
+No `database/sql` driver, local SQLite file, shared database, or external
+service is needed.
+
+## Versions
+
+| Version | Stroke field | Coordinates | Weight | Hardness | Sequence | Groups |
+|---|---|---|---|---|---|---|
+| `mask-work/v1` | `operations` | absolute `from_px` / `to_px` | per-mille | absent, default 1000 | zero-based, optional | synthesized from stage |
+| `mask-work/v2` | `brush_ops` | offset from previous endpoint, quantum 2 | per-mille, optional default 1000 | absent, default 1000 | one-based, optional | per-stroke `group` |
+| `mask-work/v3` | grouped `constructs` | absolute `from` / `to` | pp10000 | present | one-based | grouped with stage |
+
+The internal model uses absolute integer pixels, one-based sequence, hardness
+in permille, and weight in pp10000. Every field mapping/default is recorded in
+`Project.ConversionTrace`. Unknown versions and missing required fields return
+`E_VER`.
+
+Strict export rejects values a target cannot represent with `E_LOSSY` and a
+structured loss list. Successful exports are loaded back immediately and
+compared field-by-field; a mismatch returns `E_RT`. Integer scale and quantum
+overflows return `E_OVF` with the field and operands. Generated v1/v2 samples
+declare values that survive downgrade and upgrade exactly.
+
+## Core Semantics
+
+- Composition order is `(stage priority, sequence)` ascending. Duplicate
+  priority/sequence pairs are ambiguous and return `E_ORD`.
+- Stroke coverage is rasterized with integer fixed-point geometry, hardness
+  falloff, and pp10000 weight. Candidate coverage and stroke alpha are combined
+  with integer source-over rounding; no float accumulation exists in the
+  composition path.
+- Each block records canonical participants, winner basis, suppressed strokes,
+  and local order version. Pixel results are independent of declaration order,
+  worker count, queue pressure, and completion order.
+- Topology uses row-major 4-connected foreground domains, one-to-one IoU
+  matching, area/centroid/bbox/hole/ring checks, and `E_TOP` evidence containing
+  the domain ID and measured values. Ring width is
+  `2000 * area / boundaryPixels` milli-pixels.
+- Attribution assigns every differing pixel to the largest recorded stroke
+  component, with both first-applied and primary stroke order, plus contribution
+  share in pp10000.
+- Cache keys combine block input content, participating stroke content, local
+  composition order, conversion parameter version, and algorithm version.
+  Editing one stroke invalidates only old/new footprint blocks or blocks whose
+  local canonical order actually flips, then marks topology/attribution
+  downstream.
+- Scheduler budgets bound worker count, pixels per worker, pending queue depth,
+  and retries. Every wait/failure/retry is recorded. A failed stroke is never
+  committed; successful sibling blocks remain uncommitted until all blocks of
+  that stroke succeed.
+
+## Error Codes
+
+| Code | Meaning |
+|---|---|
+| `E_VER` | unknown version or invalid/missing required field |
+| `E_LOSSY` | strict downgrade loss list |
+| `E_OVF` | checked integer conversion overflow |
+| `E_RT` | export/load-back mismatch |
+| `E_ORD` | ambiguous composition order |
+| `E_TOP` | topology or pixel tolerance failure |
+| `E_BUDGET` | scheduler budget violation |
+| `E_CKPT` | stale/corrupt/mismatched checkpoint or cache |
+| `E_EXEC` | block failed after retries |
+| `E_CANCELED` | context cancellation |
+
+`errors.As` with `*strokelab.CodedError` exposes `Code`, `Message`, and
+structured `Details`.
+
+## Layout
+
+```text
+model.go          internal model and deterministic ordering
+generator.go      seeded icons, candidate perturbations, strokes, truth
+version.go        v1/v2/v3 loaders, strict exporter, RLE, trace/loss rules
+integer.go        checked integer conversion and alpha rules
+raster.go         fixed-point stroke rasterization and accumulation
+topology.go       domains, holes, ring width, one-to-one comparison
+attribution.go    per-pixel responsibility and culprit summary
+engine.go         common full/incremental/resume engine and path comparison
+scheduler.go      bounded worker/queue/pixel scheduler and retries
+cache.go          block keys, block cache, order traces
+invalidation.go   edits and exact local invalidation planning
+checkpoint.go     CRC32 append-only transaction journal
+diagnostic.go     PNG/HTML/JSON local diagnostics
+verification.go   fixed-seed acceptance pipeline
+deps.go           explicit stroke/order/block/topology dependency graph
+cmd/strokediag    local command
+```
+
+See `docs/ARCHITECTURE.md` for design details and `docs/VERIFICATION.md` for the
+recorded test and acceptance results.
