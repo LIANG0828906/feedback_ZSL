@@ -1,0 +1,103 @@
+{
+  "seed": 42,
+  "dialogue_id": "dlg-seed-42",
+  "sample_rate": 16000,
+  "total_samples": 18560,
+  "scenes": 2,
+  "segments": 4,
+  "frames": 112,
+  "target_loudness": 5600,
+  "files": [
+    {
+      "version": "1.0",
+      "path": "samples/dialogue-v1.json",
+      "sha256": "5b4acef6cc4bc5d19524492668c4a53edfcf4e19bcfa9f6b0d61c910a821be0e",
+      "bytes": 265252,
+      "lossy": 23,
+      "lossy_codes": [
+        "E_LOSSY:scene.scene-a:scene tree flattened into phrases; loader will rebuild one default scene",
+        "E_LOSSY:scene.scene-b:scene tree flattened into phrases; loader will rebuild one default scene",
+        "E_LOSSY:scenes[0].segments[0].phonemes[0].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[0].phonemes[1].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[0].phonemes[2].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[0].phonemes[3].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[0].phonemes[4].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[0].phonemes[5].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[1].phonemes[0].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[1].phonemes[1].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[1].phonemes[2].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[1].phonemes[3].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[0].segments[1].phonemes[4].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[0].phonemes[0].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[0].phonemes[1].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[0].phonemes[2].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[0].phonemes[3].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[0].phonemes[4].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[1].phonemes[0].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[1].phonemes[1].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[1].phonemes[2].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[1].phonemes[3].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start",
+        "E_LOSSY:scenes[1].segments[1].phonemes[4].f0_breakpoints:F0 curve collapsed to one constant breakpoint at phoneme start"
+      ],
+      "truncations": 282,
+      "loads_after_export": true,
+      "source_version_after_load": "1.0"
+    },
+    {
+      "version": "2.0",
+      "path": "samples/dialogue-v2.json",
+      "sha256": "9308a8d43841d35f0e3a425e1977ad232c67789ba245e940814b60e3ffc98eb0",
+      "bytes": 270282,
+      "lossy": 4,
+      "lossy_codes": [
+        "E_LOSSY:scene.scene-a.name:nested scene tree flattened into segment.sceneId; scene display name omitted",
+        "E_LOSSY:scene.scene-b.name:nested scene tree flattened into segment.sceneId; scene display name omitted",
+        "E_LOSSY:scene.scene-b.segment.seg-03.phoneme[2].f0[1]:spin/sample rounding recorded; loader re-expands milliseconds to samples",
+        "E_LOSSY:scene.scene-b.segment.seg-03.phoneme[4].f0[1]:spin/sample rounding recorded; loader re-expands milliseconds to samples"
+      ],
+      "truncations": 2,
+      "loads_after_export": true,
+      "source_version_after_load": "2.0"
+    },
+    {
+      "version": "3.0",
+      "path": "samples/dialogue-v3.json",
+      "sha256": "e8e5f8c4f89706f8e1803fc14e26cdfccaea24a314d0acdbb0b8d1f1138cda4a",
+      "bytes": 274210,
+      "lossy": 0,
+      "truncations": 0,
+      "loads_after_export": true,
+      "source_version_after_load": "3.0"
+    }
+  ],
+  "calibration": [
+    {
+      "segment_id": "seg-01",
+      "gain_adjustment": 674,
+      "base_loudness": 5789,
+      "calibrated_loudness": 5600,
+      "reached": true
+    },
+    {
+      "segment_id": "seg-02",
+      "gain_adjustment": -357,
+      "base_loudness": 6125,
+      "calibrated_loudness": 5600,
+      "reached": true
+    },
+    {
+      "segment_id": "seg-03",
+      "gain_adjustment": 2652,
+      "base_loudness": 4890,
+      "calibrated_loudness": 5600,
+      "reached": true
+    },
+    {
+      "segment_id": "seg-04",
+      "gain_adjustment": -512,
+      "base_loudness": 6446,
+      "calibrated_loudness": 5600,
+      "reached": true
+    }
+  ]
+}
