@@ -1,0 +1,239 @@
+package bonerig
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+	"sync"
+)
+
+// IntervalCheckpoint is one atomic transaction's durable payload.
+type IntervalCheckpoint struct {
+	IntervalID       string            `json:"interval_id"`
+	CacheKey         string            `json:"cache_key"`
+	StartFrame       int               `json:"start_frame"`
+	EndFrame         int               `json:"end_frame"`
+	FrameCount       int               `json:"frame_count"`
+	JointDigests     map[string]string `json:"joint_digests"`
+	Precision        []PrecisionRecord `json:"precision"`
+	Frames           []FrameResult     `json:"frames"`
+	DependencySet    []string          `json:"dependency_set"`
+	ActionHash       string            `json:"action_hash"`
+	TopologyVersion  string            `json:"topology_version"`
+	ParameterVersion string            `json:"parameter_version"`
+	AlgorithmVersion string            `json:"algorithm_version"`
+	CommitSequence   int               `json:"commit_sequence"`
+}
+
+type checkpointFile struct {
+	Records       map[string]IntervalCheckpoint `json:"records"`
+	WriteSequence []string                      `json:"write_sequence"`
+	NextSequence  int                           `json:"next_sequence"`
+}
+
+// SQLiteCheckpointStore persists interval transactions atomically.
+//
+// The stdlib-only constraint excludes a SQLite driver. The JSON snapshot is the
+// commit/atomic-rename source of truth; ExportSQL emits a single SQLite script
+// with the same transaction payload for external verification.
+type SQLiteCheckpointStore struct {
+	mu      sync.Mutex
+	path    string
+	sqlPath string
+	file    checkpointFile
+}
+
+func OpenCheckpointStore(path string) (*SQLiteCheckpointStore, *Error) {
+	s := &SQLiteCheckpointStore{path: path, sqlPath: strings.TrimSuffix(path, filepath.Ext(path)) + ".sql"}
+	s.file.Records = map[string]IntervalCheckpoint{}
+	b, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return s, nil
+		}
+		return nil, ioSchemaError(path, err)
+	}
+	if err := json.Unmarshal(b, &s.file); err != nil {
+		return nil, ioSchemaError(path, err)
+	}
+	if s.file.Records == nil {
+		s.file.Records = map[string]IntervalCheckpoint{}
+	}
+	return s, nil
+}
+
+func ioSchemaError(path string, err error) *Error {
+	e := errorf(CodeSchema, "cannot read checkpoint: "+err.Error())
+	e.Field = path
+	return e
+}
+
+// CommitInterval serializes one interval in one locked/atomic transaction.
+func (s *SQLiteCheckpointStore) CommitInterval(rec IntervalCheckpoint) *Error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.file.Records == nil {
+		s.file.Records = map[string]IntervalCheckpoint{}
+	}
+	s.file.NextSequence++
+	rec.CommitSequence = s.file.NextSequence
+	s.file.Records[rec.IntervalID] = rec
+	s.file.WriteSequence = append(s.file.WriteSequence, rec.IntervalID)
+	if err := s.persistLocked(); err != nil {
+		return err
+	}
+	if err := s.exportSQLLocked(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SQLiteCheckpointStore) persistLocked() *Error {
+	b, err := json.MarshalIndent(s.file, "", "  ")
+	if err != nil {
+		return errorf(CodeSchema, err.Error())
+	}
+	dir := filepath.Dir(s.path)
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return ioSchemaError(s.path, err)
+	}
+	tmp, err := os.CreateTemp(dir, ".checkpoint-*.tmp")
+	if err != nil {
+		return ioSchemaError(s.path, err)
+	}
+	tmpName := tmp.Name()
+	defer os.Remove(tmpName)
+	if _, err := tmp.Write(append(b, '\n')); err != nil {
+		tmp.Close()
+		return ioSchemaError(s.path, err)
+	}
+	if err := tmp.Sync(); err != nil {
+		tmp.Close()
+		return ioSchemaError(s.path, err)
+	}
+	if err := tmp.Close(); err != nil {
+		return ioSchemaError(s.path, err)
+	}
+	if err := os.Rename(tmpName, s.path); err != nil {
+		return ioSchemaError(s.path, err)
+	}
+	return nil
+}
+
+func (s *SQLiteCheckpointStore) Get(id string) (IntervalCheckpoint, bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	r, ok := s.file.Records[id]
+	return r, ok
+}
+
+func (s *SQLiteCheckpointStore) WriteSequence() []string {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return append([]string(nil), s.file.WriteSequence...)
+}
+
+func (s *SQLiteCheckpointStore) Recoverable(id, cacheKey, topologyVersion, parameterVersion, algorithmVersion string) (IntervalCheckpoint, bool) {
+	r, ok := s.Get(id)
+	if !ok {
+		return IntervalCheckpoint{}, false
+	}
+	if r.CacheKey != cacheKey || r.TopologyVersion != topologyVersion || r.ParameterVersion != parameterVersion || r.AlgorithmVersion != algorithmVersion {
+		return IntervalCheckpoint{}, false
+	}
+	return r, true
+}
+
+func sqlQuote(v any) string {
+	var str string
+	switch x := v.(type) {
+	case string:
+		str = x
+	default:
+		b, _ := json.Marshal(v)
+		str = string(b)
+	}
+	return "'" + strings.ReplaceAll(str, "'", "''") + "'"
+}
+
+func (s *SQLiteCheckpointStore) exportSQLLocked() *Error {
+	var b strings.Builder
+	b.WriteString("-- Generated by bonerig stdlib-only checkpoint store.\n")
+	b.WriteString("PRAGMA journal_mode=WAL;\n")
+	b.WriteString("CREATE TABLE IF NOT EXISTS interval_checkpoint (\n")
+	b.WriteString("  interval_id TEXT PRIMARY KEY, cache_key TEXT, start_frame INT, end_frame INT,\n")
+	b.WriteString("  action_hash TEXT, topology_version TEXT, parameter_version TEXT,\n")
+	b.WriteString("  algorithm_version TEXT, dependency_set TEXT, committed_sequence INT\n")
+	b.WriteString(");\n")
+	b.WriteString("CREATE TABLE IF NOT EXISTS joint_pose_digest (\n")
+	b.WriteString("  interval_id TEXT, frame_index INT, joint TEXT, digest TEXT,\n")
+	b.WriteString("  PRIMARY KEY(interval_id, frame_index, joint)\n")
+	b.WriteString(");\n")
+	b.WriteString("CREATE TABLE IF NOT EXISTS precision_component (\n")
+	b.WriteString("  interval_id TEXT, frame_index INT, joint TEXT, components_json TEXT,\n")
+	b.WriteString("  total_upper INT, measured_deviation INT, within_bound INT\n")
+	b.WriteString(");\n\n")
+
+	records := make([]IntervalCheckpoint, 0, len(s.file.Records))
+	for _, r := range s.file.Records {
+		records = append(records, r)
+	}
+	sort.Slice(records, func(i, j int) bool { return records[i].CommitSequence < records[j].CommitSequence })
+	for _, r := range records {
+		deps, _ := json.Marshal(r.DependencySet)
+		b.WriteString("BEGIN IMMEDIATE;\n")
+		fmt.Fprintf(&b, "INSERT OR REPLACE INTO interval_checkpoint VALUES (%s,%s,%d,%d,%s,%s,%s,%s,%s,%d);\n",
+			sqlQuote(r.IntervalID), sqlQuote(r.CacheKey), r.StartFrame, r.EndFrame,
+			sqlQuote(r.ActionHash), sqlQuote(r.TopologyVersion), sqlQuote(r.ParameterVersion),
+			sqlQuote(r.AlgorithmVersion), sqlQuote(string(deps)), r.CommitSequence)
+		keys := make([]string, 0, len(r.JointDigests))
+		for k := range r.JointDigests {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			parts := strings.SplitN(k, "/", 2)
+			frame, joint := "0", k
+			if len(parts) == 2 {
+				frame, joint = parts[0], parts[1]
+			}
+			fmt.Fprintf(&b, "INSERT OR REPLACE INTO joint_pose_digest VALUES (%s,%s,%s,%s);\n",
+				sqlQuote(r.IntervalID), frame, sqlQuote(joint), sqlQuote(r.JointDigests[k]))
+		}
+		for _, rec := range r.Precision {
+			j, _ := json.Marshal(rec)
+			fmt.Fprintf(&b, "INSERT OR REPLACE INTO precision_component VALUES (%s,%d,%s,%s,%d,%d,%d);\n",
+				sqlQuote(r.IntervalID), rec.FrameIndex, sqlQuote(rec.Joint), sqlQuote(string(j)),
+				rec.TotalUpper, rec.MeasuredDeviation, boolInt(rec.WithinBound))
+		}
+		b.WriteString("COMMIT;\n")
+		b.WriteString("\n")
+	}
+	tmp, err := os.CreateTemp(filepath.Dir(s.sqlPath), ".checkpoint-sql-*.tmp")
+	if err != nil {
+		return ioSchemaError(s.sqlPath, err)
+	}
+	tmpName := tmp.Name()
+	defer os.Remove(tmpName)
+	if _, err := tmp.WriteString(b.String()); err != nil {
+		tmp.Close()
+		return ioSchemaError(s.sqlPath, err)
+	}
+	if err := tmp.Close(); err != nil {
+		return ioSchemaError(s.sqlPath, err)
+	}
+	if err := os.Rename(tmpName, s.sqlPath); err != nil {
+		return ioSchemaError(s.sqlPath, err)
+	}
+	return nil
+}
+
+func boolInt(v bool) int {
+	if v {
+		return 1
+	}
+	return 0
+}
