@@ -1,21 +1,146 @@
-换装系统排期落定前，团队要先把部件合批的口径固定成可验收的首版；客户希望拿到一个稳定可复现的数据内核，而不是零散脚本。交付从项目背景出发，工作区是 Linux（WSL Ubuntu）上一个刚建好的空目录，无需考虑既有源码、样本或历史约定。需要交付一套角色换装部件合批渲染数据内核与装配冲突诊断组件，既作为可集成的 Go 领域组件，也提供本地可重复演示与诊断入口。全部输入与解析真值由实现自带的确定性生成器按固定种子产出，不依赖真实美术工具链或线上服务：每个角色由若干挂点上的部件组成，部件声明网格顶点数、三角面数、材质槽位、子网格顶点与索引区间、骨骼蒙皮标记与互斥规则；合批约束声明每批允许的最大材质槽位数、最大顶点预算、最大索引预算与是否允许跨蒙皮合批；真值给出采样姿态下每部件所属批次编号、批内子网格顶点与索引偏移、冲突明细类别与批次提交序列。
+# Wardrobe Batch Kernel
 
-任务环境与准备：
-在 Linux（WSL Ubuntu）上准备 Go 工具链（安装后直接用 go 命令），仅使用 Go 标准库与仓库内文件。
-工作区从空目录开始，实现自行编写确定性样本生成器，固定种子与样本文件放入仓库。
-SQLite 采用 Go 标准库或仓库内自带的纯 Go 实现，不引入外部数据库服务与第三方包。
+角色换装部件合批渲染数据内核与装配冲突诊断组件。项目只依赖 Go 标准库和仓库内代码，提供：
 
-业务要求：
-1. 实现装配工程与合批约束的加载及结构校验：读取角色挂点表、部件几何与材质槽声明、互斥规则、合批约束和真值清单，校验挂点标识唯一、部件引用的挂点存在、子网格顶点与索引区间落在部件几何范围内且互不重叠、互斥规则引用的部件存在、预算为正整数，任一违规返回 E_SCHEMA 并指出部件与字段路径。
-2. 实现装配合法性判定的纯函数核心：按挂点占用、部件互斥与骨骼蒙皮标记判定一组部件能否同时装配，输出合法装配集合与逐条冲突明细，冲突类别须区分挂点争用、显式互斥与蒙皮不相容；判定只依赖装配集合内容，不随部件列举顺序或并发调度改变。
-3. 实现确定性合批划分核心：在合法装配集合上按每批材质槽位数上限、顶点预算、索引预算与是否允许跨蒙皮合批把部件划入批次，输出每批部件列表、批内子网格顶点起止偏移与索引偏移；采样姿态下每部件所属批次编号与偏移须与真值逐项一致，批内顶点与索引总量不得超预算。
-4. 实现材质槽争用与预算挤压下的可解释取舍策略：多个部件争用同一材质槽或剩余预算不足时，按声明取舍优先级决定拆出新批次还是延后装入，逐次记录批次编号、候选部件标识、取舍结果与判定依据；取舍规则须完全确定，无法裁决时返回 E_ARB 并列出争用双方与依据链。
-5. 实现部件、材质槽与批次之间的依赖图及精确失效传播：显式记录挂点占用、材质槽归属、预算余量与下游批次划分、子网格偏移的依赖，缓存键由部件内容哈希、材质槽版本、约束参数版本与上游缓存键共同决定；编辑某部件材质槽或几何规模时只标记实际受影响的批次及其下游，未受影响批次必须复用持久化结果并输出失效清单。
-6. 实现增量重划分调度与从空缓存全量重划分的逐项一致性比对：对失效批次按依赖拓扑序重划分并原子替换缓存，未失效批次直接复用；两条路径在批次划分、子网格顶点与索引偏移、冲突明细及批次提交序列上须逐项相等，并提供自动比对定位首个不一致的批次编号、部件标识与字段名，不一致返回 E_DIFF。
-7. 实现基于 SQLite 的批次原子检查点与强制终止恢复边界：每提交一个批次，把该批部件列表、子网格偏移、预算占用、依赖集合、内容哈希、约束参数版本与算法版本在单一事务中串行写入，写入不得交错且提交顺序稳定；进程被强制终止后重启只能依据已持久化且版本匹配的批次继续，版本不匹配返回 E_VER 并要求从受影响批次重算。
-8. 保证实时合批、断点恢复与一次性全量重算三条路径逐部件一致，受限预算下的并行调度须限制最大并行度、每线程候选缓冲上限与待处理部件队列预算，耗尽时阻塞排队并记录原因与等待时长；单部件内部失败只置该部件为失败且可重试，不得污染其他部件与已提交批次。
+- 工程加载与 `E_SCHEMA` 字段级结构校验；
+- 与输入顺序、并发调度无关的装配合法性判定；
+- 确定性合批、子网格偏移和预算校验；
+- 材质槽争用、预算挤压的可解释仲裁与 `E_ARB`；
+- 部件、材质槽、挂点、预算、批次和偏移依赖图；
+- 精确缓存失效、增量重划分及 `E_DIFF` 首差异定位；
+- 仓库内纯 Go 写出的真实 SQLite 3 检查点文件；
+- SIGKILL 后的批次边界恢复与 `E_VER` 版本边界；
+- 有界并行实时路径、断点恢复路径、一次性全量路径的逐项一致性。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速运行
 
-验收：
-用本地样本验证合批划分、冲突诊断与三路径结果一致，并核对异常码与检查点恢复。
+```bash
+go version          # go1.22+
+make verify         # 生成样本、跑测试外的完整验收（含真实 SIGKILL 子进程）
+go test -count=1 ./...
+```
+
+常用命令：
+
+```bash
+go run ./cmd/wardrobe generate --dir samples --seed 20261127
+go run ./cmd/wardrobe validate --project samples/project.json --truth samples/truth.json
+go run ./cmd/wardrobe demo --checkpoint artifacts/checkpoint.sqlite
+go run ./cmd/wardrobe incremental-demo
+go run ./cmd/wardrobe resume --checkpoint artifacts/checkpoint.sqlite
+go run ./cmd/wardrobe diff-demo
+go run ./cmd/wardrobe verify
+```
+
+也可先构建：
+
+```bash
+make build
+./artifacts/bin/wardrobe verify
+```
+
+## 作为 Go 组件集成
+
+公共 facade 在根包 `wardrobe.go`：
+
+```go
+import wardrobe "wardrobekernel"
+
+project, _ := wardrobe.LoadProject("samples/project.json")
+assembly, _ := wardrobe.EvaluateAssembly(project, project.CandidateAssembly)
+plan, _ := wardrobe.FullPlan(project)
+
+store, _ := wardrobe.ResumeCheckpoint("checkpoint.sqlite",
+    wardrobe.AlgorithmVersion, wardrobe.ConstraintVersion)
+resumed, _ := wardrobe.ResumeAndContinue(ctx, project, store, wardrobe.SchedulerOptions{})
+```
+
+## 固定样本口径
+
+固定种子：`20261127`。生成器在 `internal/samplegen/generator.go`，样本文件：
+
+- `samples/project.json`：角色、10 个挂点、15 个部件、材质/子网格、互斥规则和预算；
+- `samples/truth.json`：真值冲突、合法集合、批次、偏移、决策链和提交序列；
+- `samples/invalid_schema.json`：覆盖重复挂点、悬空引用、区间越界/重叠、互斥悬空和非法预算；
+- `samples/ambiguous_arb.json`：严格同优先级争用，用于核对 `E_ARB`。
+
+首版样本的合法装配为 9 个部件，真值批次如下：
+
+| 批次 | 部件顺序 | 顶点占用 | 索引占用 | 材质槽 |
+|---:|---|---:|---:|---:|
+| 1 | `face_base`, `chest_plate`, `hair_long` | 1060 | 1848 | 4 |
+| 2 | `cape_red`, `pauldron_l`, `boot_pair`, `gauntlet_pair` | 1080 | 1710 | 3 |
+| 3 | `waist_belt` | 140 | 210 | 1 |
+| 4 | `greave_l`（挤压后延后重试） | 300 | 480 | 1 |
+
+预算为每批 4 个材质槽、1100 顶点、2200 索引，且不允许跨皮肤组混批。
+
+冲突明细覆盖：
+
+- `ATTACH_POINT_CONTENTION`：例如 `hair_long` 对 `hair_short` 的挂点争用；
+- `EXPLICIT_MUTEX`：`mutex_gauntlet_covers_ring` 使 `ring_left` 败给 `gauntlet_pair`；
+- `SKIN_INCOMPATIBLE`：`sash_arcane` 的 `mage` 蒙皮组与 `human` 主装配不相容。
+
+## 关键规则
+
+- 裁决序固定为 `arbitration_priority DESC, id ASC`。
+- 默认同优先级用部件 ID 字典序打破平局；`tie_policy=strict` 时返回 `E_ARB`。
+- 合批按同一裁决序处理候选，依次尝试已有批次，再决定重映射、拆新批或延后。
+- 相同 `(slot_id, material_id, material_version)` 共享批内材质槽；同逻辑槽但材质版本不同会记录争用并把候选材质重映射到新槽。
+- 子网格顶点批内偏移为 `part_vertex_base + source_vertex_start`；索引目标区间紧凑追加，同时保留 `source_index_start` 和顶点重基址 `vertex_base`。
+- 缓存键由算法版本、约束版本/参数哈希、部件内容哈希、材质槽版本和所有上游键共同哈希得到。
+- 示例编辑 `waist_belt` 材质版本或顶点规模 `+24` 时，仅失效批次 `3` 及其 offset/commit 下游，批次 `1、2、4` 从持久化缓存复用；增量结果与空缓存全量结果逐项相等。
+
+## SQLite 检查点
+
+仓库没有引入第三方 SQLite 驱动。`internal/sqlitefile` 是一个最小纯 Go SQLite 3 KV 文件生成/读取器，写出的文件具有官方 `SQLite format 3` 文件头，包含真实的：
+
+```sql
+CREATE TABLE records(k TEXT, v TEXT)
+```
+
+每个已提交批次写入 `batch:000001` 等键，值中包含部件列表、子网格偏移、预算占用、依赖集合、部件哈希、缓存键、约束版本、算法版本和提交记录。提交由 `checkpoint.Store.Update` 的互斥事务串行化，通过同目录临时文件、`fsync`、`rename` 和目录 `fsync` 原子替换。
+
+可用外部 SQLite 实现检查：
+
+```bash
+python3 - <<'PY'
+import sqlite3
+c=sqlite3.connect('artifacts/verify-final/kill-boundary.sqlite')
+print(c.execute("select k from records where k like 'batch:%' order by k").fetchall())
+PY
+```
+
+强制终止边界由 `wardrobe verify` 实际启动子进程验证：子进程在第 2 批提交后收到 SIGKILL，重启文件中恰有批次 1、2；resume 重算尾部并与全量路径一致。算法版本不匹配返回 `E_VER` 和受影响批次。
+
+## 错误码
+
+| 码 | 含义 | 验收入口 |
+|---|---|---|
+| `E_SCHEMA` | 输入结构/区间/引用/预算违规，含部件与字段路径 | `wardrobe validate --project samples/invalid_schema.json` |
+| `E_ARB` | strict 策略下无法裁决同优先级争用，含双方和依据链 | `wardrobe demo --project samples/ambiguous_arb.json --truth=` |
+| `E_DIFF` | 增量与全量结果不一致，含首个批次/部件/字段 | `wardrobe diff-demo` |
+| `E_VER` | 检查点算法或约束版本不匹配，含受影响批次 | `wardrobe version-check --checkpoint <db> --algorithm-version wrong` |
+
+## 目录结构
+
+```text
+wardrobe.go                    公共集成 facade
+cmd/wardrobe/                  本地 demo / 诊断 / verify CLI
+internal/model/                稳定领域模型与 JSON 契约
+internal/xerr/                 E_SCHEMA/E_ARB/E_DIFF/E_VER
+internal/schema/               加载与结构校验
+internal/assembly/             顺序无关装配合法性纯函数
+internal/batching/             确定性合批、偏移、仲裁
+internal/depgraph/             依赖图、哈希键、精确传播、拓扑排序
+internal/cache/                原子 JSON 持久化缓存
+internal/scheduler/            有界并行准备、队列阻塞等待、失败隔离
+internal/checkpoint/           SQLite 批次检查点与版本恢复
+internal/sqlitefile/           纯 Go SQLite 3 文件读写
+internal/compare/              逐项一致性比对与首差异定位
+internal/pipeline/             三路径、增量和恢复编排
+internal/samplegen/            固定种子样本与真值生成器
+samples/                       已生成并入库的确定性样本
+docs/VALIDATION.md             实际验证记录
+docs/ACCEPTANCE.md             八条要求追踪矩阵
+```

@@ -1,0 +1,92 @@
+{
+  "schema_version": "wardrobe.project/v1",
+  "seed": 2,
+  "algorithm_version": "batch-kernel-v1.0.0",
+  "constraint_version": "arb-v1",
+  "character": {
+    "id": "arb",
+    "name": "",
+    "sampling_pose": ""
+  },
+  "attach_points": [
+    {
+      "id": "a"
+    },
+    {
+      "id": "b"
+    }
+  ],
+  "parts": [
+    {
+      "id": "part_a",
+      "attach_point_id": "a",
+      "vertices": 10,
+      "triangles": 4,
+      "material_slots": [
+        {
+          "slot_id": "shared_slot",
+          "material_id": "mat_a",
+          "material_version": "1"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_a",
+          "material_slot_id": "shared_slot",
+          "vertex_start": 0,
+          "vertex_count": 10,
+          "index_start": 0,
+          "index_count": 12
+        }
+      ],
+      "skinned": false,
+      "arbitration_priority": 50,
+      "pressure_action": ""
+    },
+    {
+      "id": "part_b",
+      "attach_point_id": "b",
+      "vertices": 10,
+      "triangles": 4,
+      "material_slots": [
+        {
+          "slot_id": "shared_slot",
+          "material_id": "mat_b",
+          "material_version": "1"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_b",
+          "material_slot_id": "shared_slot",
+          "vertex_start": 0,
+          "vertex_count": 10,
+          "index_start": 0,
+          "index_count": 12
+        }
+      ],
+      "skinned": false,
+      "arbitration_priority": 50,
+      "pressure_action": ""
+    }
+  ],
+  "mutex_rules": null,
+  "batch_constraints": {
+    "max_material_slots": 4,
+    "max_vertex_budget": 100,
+    "max_index_budget": 100,
+    "allow_cross_skin_batching": false,
+    "arbitration": {
+      "tie_policy": "strict"
+    },
+    "scheduler": {
+      "max_parallelism": 1,
+      "candidate_buffer_per_worker": 1,
+      "pending_queue_budget": 1
+    }
+  },
+  "candidate_assembly": [
+    "part_a",
+    "part_b"
+  ]
+}

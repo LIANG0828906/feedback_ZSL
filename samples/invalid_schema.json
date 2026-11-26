@@ -1,0 +1,79 @@
+{
+  "schema_version": "wardrobe.project/v1",
+  "seed": 1,
+  "algorithm_version": "",
+  "constraint_version": "",
+  "character": {
+    "id": "bad",
+    "name": "",
+    "sampling_pose": ""
+  },
+  "attach_points": [
+    {
+      "id": "socket_a"
+    },
+    {
+      "id": "socket_a"
+    }
+  ],
+  "parts": [
+    {
+      "id": "p_bad_ref",
+      "attach_point_id": "missing",
+      "vertices": 10,
+      "triangles": 4,
+      "material_slots": [
+        {
+          "slot_id": "m",
+          "material_id": "",
+          "material_version": "v"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm1",
+          "material_slot_id": "m",
+          "vertex_start": 0,
+          "vertex_count": 8,
+          "index_start": 0,
+          "index_count": 6
+        },
+        {
+          "id": "sm2",
+          "material_slot_id": "m",
+          "vertex_start": 6,
+          "vertex_count": 5,
+          "index_start": 3,
+          "index_count": 6
+        }
+      ],
+      "skinned": false,
+      "arbitration_priority": 0,
+      "pressure_action": ""
+    }
+  ],
+  "mutex_rules": [
+    {
+      "id": "rule_bad",
+      "part_ids": [
+        "p_bad_ref",
+        "ghost_part"
+      ]
+    }
+  ],
+  "batch_constraints": {
+    "max_material_slots": 0,
+    "max_vertex_budget": -1,
+    "max_index_budget": 0,
+    "allow_cross_skin_batching": false,
+    "arbitration": {
+      "tie_policy": ""
+    },
+    "scheduler": {
+      "max_parallelism": 0,
+      "candidate_buffer_per_worker": 0,
+      "pending_queue_budget": 0
+    }
+  },
+  "candidate_assembly": null
+}

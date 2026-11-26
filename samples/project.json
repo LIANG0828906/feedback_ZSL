@@ -1,0 +1,526 @@
+{
+  "schema_version": "wardrobe.project/v1",
+  "seed": 20261127,
+  "algorithm_version": "batch-kernel-v1.0.0",
+  "constraint_version": "constraints-sample-v1",
+  "character": {
+    "id": "char-aurora-01",
+    "name": "Aurora / sample rig",
+    "sampling_pose": "T_pose_sample_01"
+  },
+  "attach_points": [
+    {
+      "id": "face",
+      "label": "Face"
+    },
+    {
+      "id": "hair",
+      "label": "Hair"
+    },
+    {
+      "id": "torso",
+      "label": "Torso"
+    },
+    {
+      "id": "shoulder_l",
+      "label": "Left shoulder"
+    },
+    {
+      "id": "hands",
+      "label": "Hands"
+    },
+    {
+      "id": "finger_l",
+      "label": "Left finger"
+    },
+    {
+      "id": "waist",
+      "label": "Waist"
+    },
+    {
+      "id": "legs",
+      "label": "Legs"
+    },
+    {
+      "id": "feet",
+      "label": "Feet"
+    },
+    {
+      "id": "back",
+      "label": "Back"
+    }
+  ],
+  "parts": [
+    {
+      "id": "face_base",
+      "label": "Base face",
+      "attach_point_id": "face",
+      "vertices": 180,
+      "triangles": 96,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_skin",
+          "material_version": "v2.48cd"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_face",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 180,
+          "index_start": 0,
+          "index_count": 288
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 100,
+      "pressure_action": "split"
+    },
+    {
+      "id": "chest_plate",
+      "label": "Priority chest plate",
+      "attach_point_id": "torso",
+      "vertices": 620,
+      "triangles": 360,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_iron",
+          "material_version": "v3.c437"
+        },
+        {
+          "slot_id": "trim",
+          "material_id": "mat_gold",
+          "material_version": "v1.74f4"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_chest_body",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 420,
+          "index_start": 0,
+          "index_count": 720
+        },
+        {
+          "id": "sm_chest_trim",
+          "material_slot_id": "trim",
+          "vertex_start": 420,
+          "vertex_count": 200,
+          "index_start": 720,
+          "index_count": 360
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 90,
+      "pressure_action": "split"
+    },
+    {
+      "id": "hair_long",
+      "label": "Long hair",
+      "attach_point_id": "hair",
+      "vertices": 260,
+      "triangles": 160,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_hair",
+          "material_version": "v4.5e42"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_hair_long",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 260,
+          "index_start": 0,
+          "index_count": 480
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 80,
+      "pressure_action": "split"
+    },
+    {
+      "id": "cape_red",
+      "label": "Red cape",
+      "attach_point_id": "back",
+      "vertices": 360,
+      "triangles": 180,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_cloth_red",
+          "material_version": "v1.ea24"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_cape",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 360,
+          "index_start": 0,
+          "index_count": 540
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 65,
+      "pressure_action": "split"
+    },
+    {
+      "id": "pauldron_l",
+      "label": "Left pauldron",
+      "attach_point_id": "shoulder_l",
+      "vertices": 260,
+      "triangles": 140,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_iron",
+          "material_version": "v3.c437"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_pauldron",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 260,
+          "index_start": 0,
+          "index_count": 420
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 60,
+      "pressure_action": "split"
+    },
+    {
+      "id": "boot_pair",
+      "label": "Boot pair",
+      "attach_point_id": "feet",
+      "vertices": 240,
+      "triangles": 130,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_leather_black",
+          "material_version": "v2.85d9"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_boots",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 240,
+          "index_start": 0,
+          "index_count": 390
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 55,
+      "pressure_action": "split"
+    },
+    {
+      "id": "greave_l",
+      "label": "Left greave",
+      "attach_point_id": "legs",
+      "vertices": 300,
+      "triangles": 160,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_steel",
+          "material_version": "v2.38b0"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_greave",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 300,
+          "index_start": 0,
+          "index_count": 480
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 52,
+      "pressure_action": "defer"
+    },
+    {
+      "id": "gauntlet_pair",
+      "label": "Gauntlet pair",
+      "attach_point_id": "hands",
+      "vertices": 220,
+      "triangles": 120,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_iron",
+          "material_version": "v3.c437"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_gauntlets",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 220,
+          "index_start": 0,
+          "index_count": 360
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 50,
+      "pressure_action": "split"
+    },
+    {
+      "id": "waist_belt",
+      "label": "Waist belt",
+      "attach_point_id": "waist",
+      "vertices": 140,
+      "triangles": 70,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_leather_brown",
+          "material_version": "v1.e2bc"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_belt",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 140,
+          "index_start": 0,
+          "index_count": 210
+        }
+      ],
+      "skinned": false,
+      "arbitration_priority": 48,
+      "pressure_action": "split"
+    },
+    {
+      "id": "hair_short",
+      "label": "Short hair alternative",
+      "attach_point_id": "hair",
+      "vertices": 220,
+      "triangles": 120,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_hair_dark",
+          "material_version": "v1.9ccd"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_hair_short",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 220,
+          "index_start": 0,
+          "index_count": 360
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 40,
+      "pressure_action": "split"
+    },
+    {
+      "id": "torso_cloth",
+      "label": "Cloth torso alternative",
+      "attach_point_id": "torso",
+      "vertices": 540,
+      "triangles": 300,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_linen",
+          "material_version": "v2.5382"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_torso_cloth",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 540,
+          "index_start": 0,
+          "index_count": 900
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 70,
+      "pressure_action": "split"
+    },
+    {
+      "id": "pack_heavy",
+      "label": "Heavy backpack",
+      "attach_point_id": "back",
+      "vertices": 400,
+      "triangles": 220,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_canvas",
+          "material_version": "v4.5b6b"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_pack",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 400,
+          "index_start": 0,
+          "index_count": 660
+        }
+      ],
+      "skinned": false,
+      "arbitration_priority": 45,
+      "pressure_action": "split"
+    },
+    {
+      "id": "glove_silk",
+      "label": "Silk gloves",
+      "attach_point_id": "hands",
+      "vertices": 200,
+      "triangles": 100,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_silk",
+          "material_version": "v1.bdb5"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_gloves",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 200,
+          "index_start": 0,
+          "index_count": 300
+        }
+      ],
+      "skinned": true,
+      "skin_group": "human",
+      "arbitration_priority": 45,
+      "pressure_action": "split"
+    },
+    {
+      "id": "ring_left",
+      "label": "Left ring",
+      "attach_point_id": "finger_l",
+      "vertices": 32,
+      "triangles": 18,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_gem",
+          "material_version": "v1.45cb"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_ring",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 32,
+          "index_start": 0,
+          "index_count": 54
+        }
+      ],
+      "skinned": false,
+      "arbitration_priority": 20,
+      "pressure_action": "split"
+    },
+    {
+      "id": "sash_arcane",
+      "label": "Arcane sash rig",
+      "attach_point_id": "waist",
+      "vertices": 180,
+      "triangles": 90,
+      "material_slots": [
+        {
+          "slot_id": "main",
+          "material_id": "mat_arcane",
+          "material_version": "v5.2ea4"
+        }
+      ],
+      "submeshes": [
+        {
+          "id": "sm_sash",
+          "material_slot_id": "main",
+          "vertex_start": 0,
+          "vertex_count": 180,
+          "index_start": 0,
+          "index_count": 270
+        }
+      ],
+      "skinned": true,
+      "skin_group": "mage",
+      "arbitration_priority": 35,
+      "pressure_action": "split"
+    }
+  ],
+  "mutex_rules": [
+    {
+      "id": "mutex_gauntlet_covers_ring",
+      "part_ids": [
+        "gauntlet_pair",
+        "ring_left"
+      ],
+      "reason": "heavy gauntlet covers the ring socket"
+    }
+  ],
+  "batch_constraints": {
+    "max_material_slots": 4,
+    "max_vertex_budget": 1100,
+    "max_index_budget": 2200,
+    "allow_cross_skin_batching": false,
+    "arbitration": {
+      "tie_policy": "lexicographic_id"
+    },
+    "scheduler": {
+      "max_parallelism": 2,
+      "candidate_buffer_per_worker": 1,
+      "pending_queue_budget": 3
+    }
+  },
+  "candidate_assembly": [
+    "greave_l",
+    "pack_heavy",
+    "gauntlet_pair",
+    "hair_short",
+    "face_base",
+    "boot_pair",
+    "ring_left",
+    "cape_red",
+    "sash_arcane",
+    "glove_silk",
+    "torso_cloth",
+    "chest_plate",
+    "pauldron_l",
+    "hair_long",
+    "waist_belt"
+  ]
+}

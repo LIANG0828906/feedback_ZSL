@@ -1,0 +1,700 @@
+{
+  "schema_version": "wardrobe.truth/v1",
+  "seed": 20261127,
+  "algorithm_version": "batch-kernel-v1.0.0",
+  "constraint_version": "constraints-sample-v1",
+  "sampling_pose": "T_pose_sample_01",
+  "assembly": {
+    "candidate_ids": [
+      "boot_pair",
+      "cape_red",
+      "chest_plate",
+      "face_base",
+      "gauntlet_pair",
+      "glove_silk",
+      "greave_l",
+      "hair_long",
+      "hair_short",
+      "pack_heavy",
+      "pauldron_l",
+      "ring_left",
+      "sash_arcane",
+      "torso_cloth",
+      "waist_belt"
+    ],
+    "legal": false,
+    "legal_assembly": [
+      "boot_pair",
+      "cape_red",
+      "chest_plate",
+      "face_base",
+      "gauntlet_pair",
+      "greave_l",
+      "hair_long",
+      "pauldron_l",
+      "waist_belt"
+    ],
+    "conflicts": [
+      {
+        "category": "ATTACH_POINT_CONTENTION",
+        "code": "ATTACH_POINT_CONTENTION",
+        "part_ids": [
+          "cape_red",
+          "pack_heavy"
+        ],
+        "winner_id": "cape_red",
+        "loser_id": "pack_heavy",
+        "attach_point_id": "back",
+        "message": "parts cape_red and pack_heavy both occupy attach point back"
+      },
+      {
+        "category": "ATTACH_POINT_CONTENTION",
+        "code": "ATTACH_POINT_CONTENTION",
+        "part_ids": [
+          "chest_plate",
+          "torso_cloth"
+        ],
+        "winner_id": "chest_plate",
+        "loser_id": "torso_cloth",
+        "attach_point_id": "torso",
+        "message": "parts chest_plate and torso_cloth both occupy attach point torso"
+      },
+      {
+        "category": "ATTACH_POINT_CONTENTION",
+        "code": "ATTACH_POINT_CONTENTION",
+        "part_ids": [
+          "gauntlet_pair",
+          "glove_silk"
+        ],
+        "winner_id": "gauntlet_pair",
+        "loser_id": "glove_silk",
+        "attach_point_id": "hands",
+        "message": "parts gauntlet_pair and glove_silk both occupy attach point hands"
+      },
+      {
+        "category": "ATTACH_POINT_CONTENTION",
+        "code": "ATTACH_POINT_CONTENTION",
+        "part_ids": [
+          "hair_long",
+          "hair_short"
+        ],
+        "winner_id": "hair_long",
+        "loser_id": "hair_short",
+        "attach_point_id": "hair",
+        "message": "parts hair_long and hair_short both occupy attach point hair"
+      },
+      {
+        "category": "ATTACH_POINT_CONTENTION",
+        "code": "ATTACH_POINT_CONTENTION",
+        "part_ids": [
+          "sash_arcane",
+          "waist_belt"
+        ],
+        "winner_id": "waist_belt",
+        "loser_id": "sash_arcane",
+        "attach_point_id": "waist",
+        "message": "parts waist_belt and sash_arcane both occupy attach point waist"
+      },
+      {
+        "category": "EXPLICIT_MUTEX",
+        "code": "EXPLICIT_MUTEX",
+        "part_ids": [
+          "gauntlet_pair",
+          "ring_left"
+        ],
+        "winner_id": "gauntlet_pair",
+        "loser_id": "ring_left",
+        "rule_id": "mutex_gauntlet_covers_ring",
+        "message": "heavy gauntlet covers the ring socket"
+      },
+      {
+        "category": "SKIN_INCOMPATIBLE",
+        "code": "SKIN_INCOMPATIBLE",
+        "part_ids": [
+          "face_base",
+          "sash_arcane"
+        ],
+        "winner_id": "face_base",
+        "loser_id": "sash_arcane",
+        "message": "skinned groups \"mage\" and \"human\" are incompatible"
+      }
+    ]
+  },
+  "batches": [
+    {
+      "batch_number": 1,
+      "skin_key": "skin:human",
+      "part_ids": [
+        "face_base",
+        "chest_plate",
+        "hair_long"
+      ],
+      "slots": [
+        {
+          "slot_id": "main",
+          "logical_slot_id": "main",
+          "batch_slot_index": 0,
+          "material_id": "mat_skin",
+          "material_version": "v2.48cd",
+          "owner_part_id": "face_base"
+        },
+        {
+          "slot_id": "main#remap-chest_plate",
+          "logical_slot_id": "main",
+          "batch_slot_index": 1,
+          "material_id": "mat_iron",
+          "material_version": "v3.c437",
+          "owner_part_id": "chest_plate",
+          "remapped_for": "chest_plate"
+        },
+        {
+          "slot_id": "trim",
+          "logical_slot_id": "trim",
+          "batch_slot_index": 2,
+          "material_id": "mat_gold",
+          "material_version": "v1.74f4",
+          "owner_part_id": "chest_plate"
+        },
+        {
+          "slot_id": "main#remap-hair_long",
+          "logical_slot_id": "main",
+          "batch_slot_index": 3,
+          "material_id": "mat_hair",
+          "material_version": "v4.5e42",
+          "owner_part_id": "hair_long",
+          "remapped_for": "hair_long"
+        }
+      ],
+      "vertex_used": 1060,
+      "index_used": 1848,
+      "placements": [
+        {
+          "part_id": "face_base",
+          "vertex_base": 0,
+          "index_base": 0,
+          "submeshes": [
+            {
+              "submesh_id": "sm_face",
+              "material_slot_id": "main",
+              "batch_slot_index": 0,
+              "part_id": "face_base",
+              "vertex_base": 0,
+              "source_vertex_start": 0,
+              "vertex_start": 0,
+              "vertex_end": 180,
+              "source_index_start": 0,
+              "index_start": 0,
+              "index_end": 288,
+              "index_count": 288
+            }
+          ]
+        },
+        {
+          "part_id": "chest_plate",
+          "vertex_base": 180,
+          "index_base": 288,
+          "submeshes": [
+            {
+              "submesh_id": "sm_chest_body",
+              "material_slot_id": "main",
+              "batch_slot_index": 1,
+              "part_id": "chest_plate",
+              "vertex_base": 180,
+              "source_vertex_start": 0,
+              "vertex_start": 180,
+              "vertex_end": 600,
+              "source_index_start": 0,
+              "index_start": 288,
+              "index_end": 1008,
+              "index_count": 720
+            },
+            {
+              "submesh_id": "sm_chest_trim",
+              "material_slot_id": "trim",
+              "batch_slot_index": 2,
+              "part_id": "chest_plate",
+              "vertex_base": 180,
+              "source_vertex_start": 420,
+              "vertex_start": 600,
+              "vertex_end": 800,
+              "source_index_start": 720,
+              "index_start": 1008,
+              "index_end": 1368,
+              "index_count": 360
+            }
+          ]
+        },
+        {
+          "part_id": "hair_long",
+          "vertex_base": 800,
+          "index_base": 1368,
+          "submeshes": [
+            {
+              "submesh_id": "sm_hair_long",
+              "material_slot_id": "main",
+              "batch_slot_index": 3,
+              "part_id": "hair_long",
+              "vertex_base": 800,
+              "source_vertex_start": 0,
+              "vertex_start": 800,
+              "vertex_end": 1060,
+              "source_index_start": 0,
+              "index_start": 1368,
+              "index_end": 1848,
+              "index_count": 480
+            }
+          ]
+        }
+      ],
+      "dependencies": [
+        "attach:face",
+        "attach:hair",
+        "attach:torso",
+        "constraints:constraints-sample-v1",
+        "material:chest_plate:main",
+        "material:chest_plate:trim",
+        "material:face_base:main",
+        "material:hair_long:main",
+        "part:chest_plate",
+        "part:face_base",
+        "part:hair_long"
+      ],
+      "part_hashes": {
+        "chest_plate": "sha256:2a207f61ab0f68799ff9caaea963c163",
+        "face_base": "sha256:14440b0e68ca62fd52eedf5a116e460c",
+        "hair_long": "sha256:f12fd130a59dba0e64b8c826cfd024ac"
+      },
+      "content_hash": "sha256:b17076488ca73f3cd264e7a2ab1f4841",
+      "cache_key": "ck:b1fe10f92c5476a15100c4bc",
+      "constraint_version": "constraints-sample-v1",
+      "algorithm_version": "batch-kernel-v1.0.0"
+    },
+    {
+      "batch_number": 2,
+      "skin_key": "skin:human",
+      "part_ids": [
+        "cape_red",
+        "pauldron_l",
+        "boot_pair",
+        "gauntlet_pair"
+      ],
+      "slots": [
+        {
+          "slot_id": "main",
+          "logical_slot_id": "main",
+          "batch_slot_index": 0,
+          "material_id": "mat_cloth_red",
+          "material_version": "v1.ea24",
+          "owner_part_id": "cape_red"
+        },
+        {
+          "slot_id": "main#remap-pauldron_l",
+          "logical_slot_id": "main",
+          "batch_slot_index": 1,
+          "material_id": "mat_iron",
+          "material_version": "v3.c437",
+          "owner_part_id": "pauldron_l",
+          "shared_with": [
+            "gauntlet_pair"
+          ],
+          "remapped_for": "pauldron_l"
+        },
+        {
+          "slot_id": "main#remap-boot_pair",
+          "logical_slot_id": "main",
+          "batch_slot_index": 2,
+          "material_id": "mat_leather_black",
+          "material_version": "v2.85d9",
+          "owner_part_id": "boot_pair",
+          "remapped_for": "boot_pair"
+        }
+      ],
+      "vertex_used": 1080,
+      "index_used": 1710,
+      "placements": [
+        {
+          "part_id": "cape_red",
+          "vertex_base": 0,
+          "index_base": 0,
+          "submeshes": [
+            {
+              "submesh_id": "sm_cape",
+              "material_slot_id": "main",
+              "batch_slot_index": 0,
+              "part_id": "cape_red",
+              "vertex_base": 0,
+              "source_vertex_start": 0,
+              "vertex_start": 0,
+              "vertex_end": 360,
+              "source_index_start": 0,
+              "index_start": 0,
+              "index_end": 540,
+              "index_count": 540
+            }
+          ]
+        },
+        {
+          "part_id": "pauldron_l",
+          "vertex_base": 360,
+          "index_base": 540,
+          "submeshes": [
+            {
+              "submesh_id": "sm_pauldron",
+              "material_slot_id": "main",
+              "batch_slot_index": 1,
+              "part_id": "pauldron_l",
+              "vertex_base": 360,
+              "source_vertex_start": 0,
+              "vertex_start": 360,
+              "vertex_end": 620,
+              "source_index_start": 0,
+              "index_start": 540,
+              "index_end": 960,
+              "index_count": 420
+            }
+          ]
+        },
+        {
+          "part_id": "boot_pair",
+          "vertex_base": 620,
+          "index_base": 960,
+          "submeshes": [
+            {
+              "submesh_id": "sm_boots",
+              "material_slot_id": "main",
+              "batch_slot_index": 2,
+              "part_id": "boot_pair",
+              "vertex_base": 620,
+              "source_vertex_start": 0,
+              "vertex_start": 620,
+              "vertex_end": 860,
+              "source_index_start": 0,
+              "index_start": 960,
+              "index_end": 1350,
+              "index_count": 390
+            }
+          ]
+        },
+        {
+          "part_id": "gauntlet_pair",
+          "vertex_base": 860,
+          "index_base": 1350,
+          "submeshes": [
+            {
+              "submesh_id": "sm_gauntlets",
+              "material_slot_id": "main",
+              "batch_slot_index": 1,
+              "part_id": "gauntlet_pair",
+              "vertex_base": 860,
+              "source_vertex_start": 0,
+              "vertex_start": 860,
+              "vertex_end": 1080,
+              "source_index_start": 0,
+              "index_start": 1350,
+              "index_end": 1710,
+              "index_count": 360
+            }
+          ]
+        }
+      ],
+      "dependencies": [
+        "attach:back",
+        "attach:feet",
+        "attach:hands",
+        "attach:shoulder_l",
+        "constraints:constraints-sample-v1",
+        "material:boot_pair:main",
+        "material:cape_red:main",
+        "material:gauntlet_pair:main",
+        "material:pauldron_l:main",
+        "part:boot_pair",
+        "part:cape_red",
+        "part:gauntlet_pair",
+        "part:pauldron_l"
+      ],
+      "part_hashes": {
+        "boot_pair": "sha256:6d3dbb2bb813182447c4277bf981d293",
+        "cape_red": "sha256:03e60d393e3731cc11d05114d3fa6f55",
+        "gauntlet_pair": "sha256:50de454dd299d6d18d5f47187c7b49d9",
+        "pauldron_l": "sha256:07374104ed7793c29f783cade62707b5"
+      },
+      "content_hash": "sha256:7c1142b4a7ef2d0855a5790198d2040b",
+      "cache_key": "ck:558ba030eaaeaa97d24b42f9",
+      "constraint_version": "constraints-sample-v1",
+      "algorithm_version": "batch-kernel-v1.0.0"
+    },
+    {
+      "batch_number": 3,
+      "skin_key": "unskinned",
+      "part_ids": [
+        "waist_belt"
+      ],
+      "slots": [
+        {
+          "slot_id": "main",
+          "logical_slot_id": "main",
+          "batch_slot_index": 0,
+          "material_id": "mat_leather_brown",
+          "material_version": "v1.e2bc",
+          "owner_part_id": "waist_belt"
+        }
+      ],
+      "vertex_used": 140,
+      "index_used": 210,
+      "placements": [
+        {
+          "part_id": "waist_belt",
+          "vertex_base": 0,
+          "index_base": 0,
+          "submeshes": [
+            {
+              "submesh_id": "sm_belt",
+              "material_slot_id": "main",
+              "batch_slot_index": 0,
+              "part_id": "waist_belt",
+              "vertex_base": 0,
+              "source_vertex_start": 0,
+              "vertex_start": 0,
+              "vertex_end": 140,
+              "source_index_start": 0,
+              "index_start": 0,
+              "index_end": 210,
+              "index_count": 210
+            }
+          ]
+        }
+      ],
+      "dependencies": [
+        "attach:waist",
+        "constraints:constraints-sample-v1",
+        "material:waist_belt:main",
+        "part:waist_belt"
+      ],
+      "part_hashes": {
+        "waist_belt": "sha256:12d6c90978e7530643ab3bd4912e6fed"
+      },
+      "content_hash": "sha256:c95c40ec0b53367202433146ade759e0",
+      "cache_key": "ck:642848f5b9527aeedbf32a9a",
+      "constraint_version": "constraints-sample-v1",
+      "algorithm_version": "batch-kernel-v1.0.0"
+    },
+    {
+      "batch_number": 4,
+      "skin_key": "skin:human",
+      "part_ids": [
+        "greave_l"
+      ],
+      "slots": [
+        {
+          "slot_id": "main",
+          "logical_slot_id": "main",
+          "batch_slot_index": 0,
+          "material_id": "mat_steel",
+          "material_version": "v2.38b0",
+          "owner_part_id": "greave_l"
+        }
+      ],
+      "vertex_used": 300,
+      "index_used": 480,
+      "placements": [
+        {
+          "part_id": "greave_l",
+          "vertex_base": 0,
+          "index_base": 0,
+          "submeshes": [
+            {
+              "submesh_id": "sm_greave",
+              "material_slot_id": "main",
+              "batch_slot_index": 0,
+              "part_id": "greave_l",
+              "vertex_base": 0,
+              "source_vertex_start": 0,
+              "vertex_start": 0,
+              "vertex_end": 300,
+              "source_index_start": 0,
+              "index_start": 0,
+              "index_end": 480,
+              "index_count": 480
+            }
+          ]
+        }
+      ],
+      "dependencies": [
+        "attach:legs",
+        "constraints:constraints-sample-v1",
+        "material:greave_l:main",
+        "part:greave_l"
+      ],
+      "part_hashes": {
+        "greave_l": "sha256:b16c0581eb10b342c1fb161c32f92a53"
+      },
+      "content_hash": "sha256:290a7f800d1502fc9a49bb6dd9922753",
+      "cache_key": "ck:49f887bdeddea8a22a05312b",
+      "constraint_version": "constraints-sample-v1",
+      "algorithm_version": "batch-kernel-v1.0.0"
+    }
+  ],
+  "decisions": [
+    {
+      "sequence": 1,
+      "batch_number": 1,
+      "candidate_id": "face_base",
+      "kind": "SKIN_ISOLATION",
+      "result": "split",
+      "basis": [
+        "allow_cross_skin_batching=false",
+        "candidate_skin_key=skin:human",
+        "no compatible existing batch; opening deterministic skin lane"
+      ]
+    },
+    {
+      "sequence": 2,
+      "batch_number": 1,
+      "candidate_id": "chest_plate",
+      "incumbent_id": "face_base",
+      "kind": "MATERIAL_SLOT_CONTENTION",
+      "result": "REMAP_CANDIDATE",
+      "basis": [
+        "logical_slot=main",
+        "incumbent_material=mat_skin@v2.48cd",
+        "candidate_material=mat_iron@v3.c437",
+        "incumbent=face_base priority=100",
+        "candidate=chest_plate priority=90",
+        "higher priority incumbent owns requested slot",
+        "candidate material is remapped to a fresh batch material slot"
+      ]
+    },
+    {
+      "sequence": 3,
+      "batch_number": 1,
+      "candidate_id": "hair_long",
+      "incumbent_id": "face_base",
+      "kind": "MATERIAL_SLOT_CONTENTION",
+      "result": "REMAP_CANDIDATE",
+      "basis": [
+        "logical_slot=main",
+        "incumbent_material=mat_skin@v2.48cd",
+        "candidate_material=mat_hair@v4.5e42",
+        "incumbent=face_base priority=100",
+        "candidate=hair_long priority=80",
+        "higher priority incumbent owns requested slot",
+        "candidate material is remapped to a fresh batch material slot"
+      ]
+    },
+    {
+      "sequence": 4,
+      "batch_number": 1,
+      "candidate_id": "cape_red",
+      "incumbent_id": "face_base",
+      "kind": "MATERIAL_SLOT_CONTENTION",
+      "result": "split",
+      "basis": [
+        "constraint_version=constraints-sample-v1",
+        "pressure_kind=MATERIAL_SLOT_CONTENTION",
+        "candidate=cape_red priority=65 action=split",
+        "incumbent=face_base priority=100",
+        "priority:face_base(100)\u003ecape_red(65)",
+        "batch=1 used=1060 required=360 remaining=40 budget=1100",
+        "material_slots needed=1 available=0",
+        "incumbent face_base retains batch; candidate action=split",
+        "decision=split_new_batch",
+        "new_batch_number=2"
+      ]
+    },
+    {
+      "sequence": 5,
+      "batch_number": 2,
+      "candidate_id": "pauldron_l",
+      "incumbent_id": "cape_red",
+      "kind": "MATERIAL_SLOT_CONTENTION",
+      "result": "REMAP_CANDIDATE",
+      "basis": [
+        "logical_slot=main",
+        "incumbent_material=mat_cloth_red@v1.ea24",
+        "candidate_material=mat_iron@v3.c437",
+        "incumbent=cape_red priority=65",
+        "candidate=pauldron_l priority=60",
+        "higher priority incumbent owns requested slot",
+        "candidate material is remapped to a fresh batch material slot"
+      ]
+    },
+    {
+      "sequence": 6,
+      "batch_number": 2,
+      "candidate_id": "boot_pair",
+      "incumbent_id": "cape_red",
+      "kind": "MATERIAL_SLOT_CONTENTION",
+      "result": "REMAP_CANDIDATE",
+      "basis": [
+        "logical_slot=main",
+        "incumbent_material=mat_cloth_red@v1.ea24",
+        "candidate_material=mat_leather_black@v2.85d9",
+        "incumbent=cape_red priority=65",
+        "candidate=boot_pair priority=55",
+        "higher priority incumbent owns requested slot",
+        "candidate material is remapped to a fresh batch material slot"
+      ]
+    },
+    {
+      "sequence": 7,
+      "batch_number": 2,
+      "candidate_id": "greave_l",
+      "incumbent_id": "cape_red",
+      "kind": "BUDGET_SQUEEZE",
+      "result": "defer",
+      "basis": [
+        "constraint_version=constraints-sample-v1",
+        "pressure_kind=BUDGET_SQUEEZE",
+        "candidate=greave_l priority=52 action=defer",
+        "incumbent=cape_red priority=65",
+        "priority:cape_red(65)\u003egreave_l(52)",
+        "batch=2 used=860 required=300 remaining=240 budget=1100",
+        "material_slots needed=1 available=1",
+        "incumbent cape_red retains batch; candidate action=defer",
+        "decision=defer_to_later_deterministic_pass"
+      ]
+    },
+    {
+      "sequence": 8,
+      "batch_number": 2,
+      "candidate_id": "gauntlet_pair",
+      "incumbent_id": "pauldron_l",
+      "kind": "MATERIAL_SLOT_SHARE",
+      "result": "SHARE",
+      "basis": [
+        "logical_slot=main",
+        "material=mat_iron@v3.c437",
+        "matching material version reuses batch slot"
+      ]
+    },
+    {
+      "sequence": 9,
+      "batch_number": 3,
+      "candidate_id": "waist_belt",
+      "kind": "SKIN_ISOLATION",
+      "result": "split",
+      "basis": [
+        "allow_cross_skin_batching=false",
+        "candidate_skin_key=unskinned",
+        "no compatible existing batch; opening deterministic skin lane"
+      ]
+    },
+    {
+      "sequence": 10,
+      "batch_number": 4,
+      "candidate_id": "greave_l",
+      "kind": "DEFERRED_RETRY",
+      "result": "NEW_BATCH",
+      "basis": [
+        "deferred candidate remained unable to fit existing batches",
+        "opening fresh batch preserves all budgets and offsets"
+      ]
+    }
+  ],
+  "commit_sequence": [
+    1,
+    2,
+    3,
+    4
+  ]
+}
