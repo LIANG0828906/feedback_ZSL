@@ -1,21 +1,190 @@
-曲面小组接到的首个任务是给 CAD 侧影轮廓显示立一版可核验的采样内核，而接手时工位上只有刚初始化、连依赖都未声明的空 Go 模块，样本与既有约定均不存在。交付物既是可集成的 Go 领域组件，也附带可通过本地页面操作与诊断的领域应用：把同一份曲面场景在三个 schema 版本下装载为统一内部模型，按轮廓曲线段做确定性采样并向分块装配，再在采样预算与弦高容差之间做可解释取舍，最后输出可逐采样点核对的轮廓折线与分块装配结果。全部场景与解析真值由实现自带的确定性生成器按固定种子产出，真值只来自生成器的解析构造，不从任何采样或装配输出反推。
+# 曲面轮廓采样内核
 
-任务环境与准备：
-Linux（WSL Ubuntu）环境，安装 Go 工具链并可直接运行 go build 与 go test。
-仓库需在 go.mod 中声明并预先获取 modernc.org/sqlite 驱动（纯 Go 实现，无需系统组件），业务代码通过 database/sql 使用它，本地页面服务仅用 net/http 与 encoding/json。
-全部样本由仓库内确定性生成器按固定种子产出，不连接外部服务、数据库或网络资源。
+基于固定种子解析样本的 Go 领域组件与本地诊断应用。同一曲面场景可装载为
+schema v1/v2/v3，统一为内部定点模型；轮廓曲线段使用确定性自适应采样，经
+预算降级后装配到分块，并由 `database/sql` + `modernc.org/sqlite` 持久化。
 
-业务要求：
-1. 实现本地确定性样本生成器与三版本曲面工程的统一加载器：按固定种子产出曲面控制点网格、轮廓曲线段、分块包围范围、采样预算与真值清单；读取三个 schema 版本的描述，各版本在字段命名、控制点绝对与相对基点表达、弦高容差单位、轮廓段划分字段有无上互不相同，映射为内部模型并保留源版本标识与逐字段转换痕迹，未知版本或必填字段缺失返回 E_SCHEMA 并指出字段路径。
-2. 实现版本升降级的显式转换规则与可追溯痕迹：低版本升级时按声明默认值补齐缺失字段，每次补齐记录字段路径、旧值与来源默认值；内部模型导出到低版本时，对无法表达的曲线段划分或相对基点表达生成 E_LOSSY 清单并记录降级处置，导出产物必须能被对应版本加载器读回并复原内部模型中可表达的全部字段。
-3. 实现控制点表达与弦高容差的整型换算及往返一致：绝对坐标与相对基点增量之间、逻辑单位与像素之间用整型运算按声明取舍方向换算并全链路统一为内部定点单位，禁止浮点累积，逐处记录截断位置与残差，换算溢出返回 E_OVF 并给出字段与两个操作数；同一控制点经高版本到低版本再回到高版本后坐标与容差换算结果完全一致。
-4. 实现逐曲线段的确定性轮廓采样核心：按弦高容差与曲线曲率做自适应细分，输出轮廓折线顶点序列与该段实际最大弦高，同一曲线段在相同容差与参数下顶点序列逐项相同且不随分块完成顺序或线程调度改变；容差收紧时顶点数单调不减、实测最大弦高不增，容差不满足精度下限返回 E_TOL 并给出段标识与实测值。
-5. 实现采样预算约束下的精度取舍与可解释降级：当声明采样预算不足以容纳全部分块所需顶点时，按曲线段曲率与视觉权重决定细分降级次序并逐段记录降级依据、降级前后实测弦高与预算占用；降级后仍超预算返回 E_BUDGET 并给出超支顶点数与优先级末位段标识，降级结果只依赖曲面内容、预算与参数。
-6. 实现轮廓折线到分块的分块装配与内容哈希：把每条轮廓折线按覆盖关系装配到分块并计算分块内折线覆盖率与分块内容哈希，分块内容哈希由该分块几何投影摘要与曲线段元数据版本共同决定且只依赖内容；同一场景与相机下逐分块哈希稳定，装配到分块边界的顶点须按声明规则归属唯一分块而非重复计入。
-7. 实现分块与曲线段之间的依赖图及编辑后的精确失效传播：缓存键由分块输入内容哈希、曲线段标识、弦高容差版本、预算参数版本与上游缓存键共同决定，显式记录控制点、容差、预算余量与下游折线、分块装配之间的依赖；编辑某控制点或调整容差时仅将实际受影响的分块及其下游标记失效，未受影响分块必须复用持久化结果并输出失效清单。
-8. 实现基于 database/sql 与 modernc.org/sqlite 的分块原子检查点、受限预算并行调度与三条路径逐采样点一致：每提交一个分块把折线顶点摘要、实测弦高、覆盖率、依赖集合、内容哈希、参数版本与算法版本在单一事务中串行写入，写入不得交错且提交顺序稳定；采样与装配在工作线程池并行时须限制最大并行度与每线程顶点缓冲上限，耗尽时阻塞排队并记录原因与等待时长；实时采样、断点恢复采样与一次性全量重算须产出相同顶点序列、相同弦高统计与相同分块提交序列，自动比对定位首个不一致分块与顶点序号。
+当前本地核验结果：`PASS`（三版本装载、高→低→高往返、预算降级、精确失效、
+SQLite 原子检查点、三路径逐顶点一致、`go test -race`）。
 
-执行约束：不使用 Docker 或其他容器环境；使用本地确定性样本验证，不访问未授权目标。按上述任务意图交付相应代码、测试或技术说明，记录实际验证结果。
+## 快速开始
 
-验收：
-用本地生成样本验证三版本装载、预算下降级、失效传播与三路径逐顶点一致，附运行结果。
+```bash
+go mod download
+go test ./...
+go test -race ./...
+go build ./...
+
+# 一键验收，摘要打印到终端，完整 JSON 写入 artifacts/verification.json
+go run ./cmd/verify -out artifacts/verification.json
+
+# 本地诊断页（不访问外网）
+go run ./cmd/silhouette -addr 127.0.0.1:8080
+# 打开 http://127.0.0.1:8080
+```
+
+页面支持 schema 选择、容差/预算调整、采样与分块、三路径比对，以及编辑曲线控制点
+后的失效/复用清单。服务仅使用 `net/http` 与 `encoding/json`。
+
+## 代码结构
+
+| 文件 | 职责 |
+| --- | --- |
+| `model.go`, `errors.go` | 统一内部模型、错误码、转换与降级痕迹 |
+| `fixed.go` | 绝对/相对、逻辑/像素、容差的整型换算 |
+| `generator.go` | 固定种子解析样本与真值清单 |
+| `schema.go` | v1/v2/v3 加载、默认补齐、导出、E_LOSSY |
+| `curve.go`, `sampling.go` | 有理数 de Casteljau、自适应细分、预算降级 |
+| `tiles.go` | 边界唯一归属、覆盖率、内容哈希、缓存键 |
+| `deps.go` | 依赖图、编辑失效计划、持久化复用 |
+| `checkpoint.go` | SQLite 单事务分块检查点与提交日志 |
+| `scheduler.go` | 有界并行、每线程顶点缓冲、排队等待记录 |
+| `pipeline.go` | 实时/恢复/全量重算三条路径与自动首差比对 |
+| `httpapp.go` | 本地 JSON API 与单页诊断台 |
+| `verification.go` | 可复用验收流程 |
+
+## Schema 约定
+
+内部坐标、容差和几何统计统一为微逻辑单位；声明 `1 logical = 1 pixel`，因此
+内部单位同时可视作微像素。`FixedScale = 1_000_000`。
+
+| | v1 legacy | v2 relative | v3 current |
+| --- | --- | --- | --- |
+| 版本标识 | `format: surface-schema/1` | `schema_version: 2` | `schema_version: 3` |
+| 曲面字段 | `mesh.control_points` | `surface_grid.control_deltas` | `surface.controls` |
+| 控制点表达 | 绝对逻辑坐标 | 相对 `base_point` 的微逻辑增量 | 绝对微像素 |
+| 容差字段/单位 | `tolerance_micro_logical` | `tolerance_milli_px` | `sampling.tolerance_micro_px` |
+| 轮廓划分 | 无显式字段，每 4 个三次控制点成段 | 同 v1，扁平控制点数组 | `segments[]` 显式 ID/权重/引用 |
+
+装载结果为 `Scene`，保留 `SourceVersion` 和逐字段 `Traces`。未知版本、缺失必填
+字段返回 `E_SCHEMA`，例如：
+
+```text
+E_SCHEMA at $.surface.controls: required field is missing
+```
+
+低版本装载补齐的默认字段记录 `path`、`old_value="<missing>"`、`new_value`、
+`default_source`。高版本导出低版本时，不可表达的曲线段 ID/权重/引用与相对基点
+表达会进入 `E_LOSSY` 清单；导出结果仍可被对应低版本加载器读回。由生成器构造的
+场景均可在 v3 → v1/v2 → v3 后精确复原曲面控制点、曲线控制点、分块、预算和容差。
+
+### 定点换算
+
+```text
+v1 coordinate fixed = logical * 1_000_000
+v2 coordinate fixed = base + micro_logical_delta
+v3 coordinate fixed = micro_pixel
+
+v1 tolerance fixed = micro_logical
+v2 tolerance fixed = milli_pixel * 1_000
+v3 tolerance fixed = micro_pixel
+```
+
+所有乘加都检查 `int64` 溢出；溢出返回 `E_OVF`，含字段路径与两个操作数。不可整除
+换算记录商、余数和是否截断；负坐标可指定 toward-zero/floor/ceil/nearest。采样几何
+使用 `math/big.Rat`，没有浮点累积，只在输出顶点时做一次最近整数取舍。
+
+## 确定性与预算
+
+- 每个三次曲线段独立细分；停止条件基于控制点到弦的精确有理距离，最大深度 12。
+- 顶点按参数递增输出，段结果按 `segment_id` 排序；并行完成顺序不影响顶点、哈希或提交。
+- 容差收紧时顶点数单调不减，实测最大弦高单调不增。
+- 容差小于精度下限，或最大深度仍达不到精度，返回 `E_TOL`，带段 ID、实测值和下限。
+- 超出采样预算时，按 `curve turn * visual weight` 从低到高逐段放宽容差；每条降级
+  记录依据、优先级、前后容差、前后顶点数、前后最大弦高、预算占用。
+- 所有段降到两个端点仍超预算时返回 `E_BUDGET`，带超支顶点数与优先级末位段 ID。
+
+默认样本：基础容差 `50_000 µ`，无约束采样 321 顶点；预算 90 时确定性降级到
+85 顶点，并产生 12 条可解释降级记录。
+
+## 分块、哈希与缓存键
+
+- 分块边界归属规则为 `min-tile-id-half-open`：优先最低顺序的半开区间分块，只有
+  场景外边界最大值才回退闭区间。一个采样顶点只属于一个分块。
+- 每分块记录各曲线段覆盖顶点数、覆盖率分数、实测最大弦高、依赖集合。
+- `ProjectionDigest` 由分块边界与各段装配顶点决定。
+- `ContentHash` 由投影摘要与曲线元数据版本共同决定，不含源 schema 版本、线程数、
+  文件路径或完成顺序。
+
+```text
+CacheKey = SHA256(
+  tile input content hash,
+  sorted segment ids,
+  tolerance parameter version,
+  budget parameter version,
+  upstream segment cache key
+)
+```
+
+## 依赖图与精确失效
+
+依赖链：
+
+```text
+control → curve segment → sampled polyline → tile assembly
+             ↑
+      tolerance / budget parameters
+```
+
+编辑曲线控制点后重新采样受影响段，并与旧装配比较顶点覆盖；只在受影响段顶点进入
+旧/新分块时失效。未受影响分块直接加载 SQLite 持久化结果并列入 `reused_tiles`，
+失效分块列入 `invalidated_tiles`。容差或预算参数变化会使全部下游失效。
+
+## SQLite、并行与三路径
+
+- `tile_checkpoints` 保存顶点摘要、最大弦高、覆盖率、依赖集合、内容哈希/缓存键、
+  参数版本、算法版本、完整分块 JSON 与提交序号。
+- 每个分块在单一事务中更新检查点并插入 `tile_commits`；Store 单写者互斥，流水线
+  按分块声明顺序提交，提交序号稳定递增。
+- 工作线程池限制最大并行度和每线程顶点缓冲。无空闲 worker 时提交方阻塞排队，
+  `WorkerEvent.wait_nanos` 记录等待时长，`reason` 记录并行度/缓冲耗尽原因。
+- 实时路径：新库逐分块提交。
+- 恢复路径：模拟前 2 个分块后中断，恢复时校验内容哈希/缓存键/参数/算法版本并复用。
+- 全量重算：清空场景检查点后重新采样提交。
+- `CompareRuns` 比较分块顶点、弦高、覆盖率、内容/缓存哈希、降级统计和逻辑提交序列；
+  首个差异报告 `first_mismatch_tile` 与 `first_mismatch_vertex`。
+
+## 本地 API
+
+| 方法 | 路径 | 用途 |
+| --- | --- | --- |
+| `GET` | `/` | 单页诊断台 |
+| `GET` | `/api/health` | 健康检查 |
+| `GET` | `/api/scene?seed=&version=` | 生成 schema 与解析真值 |
+| `POST` | `/api/run` | 装载、采样、预算降级、装配、持久化 |
+| `POST` | `/api/compare` | 实时/恢复/全量重算逐顶点比对 |
+| `POST` | `/api/invalidation` | 控制点编辑后的失效与复用 |
+
+示例：
+
+```bash
+curl -s -X POST http://127.0.0.1:8080/api/run \
+  -H 'content-type: application/json' \
+  -d '{"seed":20261127,"version":3,"tolerance":50000,"budget":90,"workers":3,"vertices_per_worker":8192}'
+```
+
+## 实际验证结果
+
+```text
+$ go test ./...
+ok  	example.com/silhouette
+
+$ go test -race ./...
+ok  	example.com/silhouette
+
+$ go run ./cmd/verify -out artifacts/verification.json
+verification PASS seed=20261127 algorithm=silhouette-sample/1.0.0
+  schema-v1: canonical=true truth=true traces=104 defaults=12
+  schema-v2: canonical=true truth=true traces=94 defaults=12
+  schema-v3: canonical=true truth=true traces=77 defaults=0
+  roundtrip-v1: controls=true tolerance=true tiles=true curves=true E_LOSSY=5
+  roundtrip-v2: controls=true tolerance=true tiles=true curves=true E_LOSSY=4
+  budget: 321 -> 85 <= 90, degradation-records=12, low-budget=E_BUDGET
+  invalidation: invalidated=[tile-0 tile-1] reused=[tile-2 tile-3] commits=2/6
+  paths: resume=true full=true sqlite=4/4
+  workers: events=4 blocked=4 max-wait-ns=7094
+  errors: schema=E_SCHEMA missing=E_SCHEMA($.surface) overflow=E_OVF tol=E_TOL
+```
+
+完整机器可读报告位于 `artifacts/verification.json`。测试不访问网络、外部数据库或
+容器运行时；SQLite 使用纯 Go 驱动，数据库文件仅在本地临时目录或内存中创建。
