@@ -1,0 +1,61 @@
+{
+  "apiVersion": "quotakernel.local/v2beta2",
+  "projectId": "gate-reconcile",
+  "seed": 44,
+  "tickDurationMs": 100,
+  "rackTree": [
+    {
+      "rackId": "rack-r",
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityKiB": 102400,
+          "allowedTenantIds": [
+            "r-high",
+            "r-low"
+          ]
+        }
+      ],
+      "tenantGroups": [
+        {
+          "tenantId": "r-high",
+          "homeNodeId": "reconcile-node",
+          "priorityLevel": 10,
+          "weight": 100,
+          "quotaPerTenThousand": 10000,
+          "guaranteePerMille": 0,
+          "rateWindowMs": 1000,
+          "maxWaitMillis": 500
+        },
+        {
+          "tenantId": "r-low",
+          "homeNodeId": "reconcile-node",
+          "priorityLevel": 1,
+          "weight": 100,
+          "quotaPerTenThousand": 10000,
+          "guaranteePerMille": 0,
+          "rateWindowMs": 1000,
+          "maxWaitMillis": 500
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "id": "rec-01-low-fast-hold",
+      "atMillis": 100,
+      "kind": "apply",
+      "tenant": "r-low",
+      "node": "reconcile-node",
+      "amountKiB": 61440
+    },
+    {
+      "id": "rec-02-high-priority",
+      "atMillis": 100,
+      "kind": "apply",
+      "tenant": "r-high",
+      "node": "reconcile-node",
+      "amountKiB": 61440
+    }
+  ]
+}

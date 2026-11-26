@@ -1,0 +1,127 @@
+{
+  "apiVersion": "quotakernel.local/v1alpha1",
+  "project_id": "burst-contention",
+  "seed": 43,
+  "tick_interval_ms": 100,
+  "nodes": [
+    {
+      "node_id": "contend-node",
+      "rack": "rack-c",
+      "capacity_bytes": 1048576000,
+      "allowed_tenants": [
+        "c-alpha",
+        "c-bravo",
+        "c-charlie",
+        "c-delta"
+      ]
+    }
+  ],
+  "tenants_flat": [
+    {
+      "tenant_id": "c-alpha",
+      "rack": "rack-c",
+      "home_node_id": "contend-node",
+      "priority": 10,
+      "scheduling_weight": 100,
+      "quota_permille": 400,
+      "guarantee_permyriad": 2000,
+      "burst_cap_bytes": 104857600,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    },
+    {
+      "tenant_id": "c-bravo",
+      "rack": "rack-c",
+      "home_node_id": "contend-node",
+      "priority": 9,
+      "scheduling_weight": 100,
+      "quota_permille": 300,
+      "guarantee_permyriad": 1000,
+      "burst_cap_bytes": 104857600,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    },
+    {
+      "tenant_id": "c-charlie",
+      "rack": "rack-c",
+      "home_node_id": "contend-node",
+      "priority": 8,
+      "scheduling_weight": 100,
+      "quota_permille": 200,
+      "guarantee_permyriad": 1000,
+      "burst_cap_bytes": 104857600,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    },
+    {
+      "tenant_id": "c-delta",
+      "rack": "rack-c",
+      "home_node_id": "contend-node",
+      "priority": 7,
+      "scheduling_weight": 100,
+      "quota_permille": 100,
+      "guarantee_permyriad": 500,
+      "burst_cap_bytes": 52428800,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    }
+  ],
+  "events": [
+    {
+      "event_id": "con-01-alpha-quota",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "c-alpha",
+      "node_id": "contend-node",
+      "amount_bytes": 419430400
+    },
+    {
+      "event_id": "con-02-bravo-quota",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "c-bravo",
+      "node_id": "contend-node",
+      "amount_bytes": 314572800
+    },
+    {
+      "event_id": "con-03-charlie-quota",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "c-charlie",
+      "node_id": "contend-node",
+      "amount_bytes": 209715200
+    },
+    {
+      "event_id": "con-04-delta-guarantee",
+      "at_tick": 2,
+      "type": "capacity_request",
+      "tenant_id": "c-delta",
+      "node_id": "contend-node",
+      "amount_bytes": 52428800
+    },
+    {
+      "event_id": "con-05-alpha-burst",
+      "at_tick": 2,
+      "type": "burst_surge",
+      "tenant_id": "c-alpha",
+      "node_id": "contend-node",
+      "amount_bytes": 104857600
+    },
+    {
+      "event_id": "con-06-bravo-burst",
+      "at_tick": 2,
+      "type": "burst_surge",
+      "tenant_id": "c-bravo",
+      "node_id": "contend-node",
+      "amount_bytes": 104857600
+    },
+    {
+      "event_id": "con-07-charlie-burst",
+      "at_tick": 2,
+      "type": "burst_surge",
+      "tenant_id": "c-charlie",
+      "node_id": "contend-node",
+      "amount_bytes": 104857600
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "schema": "quota-project/v3",
+  "metadata": {
+    "projectName": "cluster-main",
+    "deterministicSeed": 42,
+    "tickMs": 100
+  },
+  "cluster": {
+    "storage_nodes": [
+      {
+        "name": "node-a",
+        "rack_name": "rack-a",
+        "byte_capacity": 125829120,
+        "tenant_acl": [
+          "t-alpha",
+          "t-bravo"
+        ]
+      },
+      {
+        "name": "node-b",
+        "rack_name": "rack-b",
+        "byte_capacity": 188743680,
+        "tenant_acl": [
+          "t-charlie",
+          "t-delta"
+        ]
+      }
+    ],
+    "tenant_table": [
+      {
+        "id": "t-alpha",
+        "rack_name": "rack-a",
+        "primary_node": "node-a",
+        "priority_rank": 8,
+        "sched_weight": 100,
+        "quota_milli": 400,
+        "assurance_bips": 1500,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      },
+      {
+        "id": "t-bravo",
+        "rack_name": "rack-a",
+        "primary_node": "node-a",
+        "priority_rank": 8,
+        "sched_weight": 100,
+        "quota_milli": 300,
+        "assurance_bips": 1000,
+        "burst_limit_bytes": 20971520,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      },
+      {
+        "id": "t-charlie",
+        "rack_name": "rack-b",
+        "primary_node": "node-b",
+        "priority_rank": 6,
+        "sched_weight": 100,
+        "quota_milli": 200,
+        "assurance_bips": 800,
+        "burst_limit_bytes": 10485760,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      },
+      {
+        "id": "t-delta",
+        "rack_name": "rack-b",
+        "primary_node": "node-b",
+        "priority_rank": 4,
+        "sched_weight": 100,
+        "quota_milli": 100,
+        "assurance_bips": 700,
+        "burst_limit_bytes": 10485760,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "event_name": "evt-01-alpha-guarantee",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "t-alpha",
+      "target_node": "node-a",
+      "byte_count": 47185920
+    },
+    {
+      "event_name": "evt-02-bravo-guarantee",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "t-bravo",
+      "target_node": "node-a",
+      "byte_count": 31457280
+    },
+    {
+      "event_name": "evt-03-charlie-guarantee",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "t-charlie",
+      "target_node": "node-b",
+      "byte_count": 25165824
+    },
+    {
+      "event_name": "evt-04-delta-guarantee",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "t-delta",
+      "target_node": "node-b",
+      "byte_count": 22020096
+    },
+    {
+      "event_name": "evt-05-alpha-quota-rest",
+      "logical_tick": 2,
+      "action": "request",
+      "tenant_name": "t-alpha",
+      "target_node": "node-a",
+      "byte_count": 78643200
+    },
+    {
+      "event_name": "evt-06-bravo-quota-rest",
+      "logical_tick": 2,
+      "action": "request",
+      "tenant_name": "t-bravo",
+      "target_node": "node-a",
+      "byte_count": 62914560
+    },
+    {
+      "event_name": "evt-07-alpha-release-30",
+      "logical_tick": 3,
+      "action": "free",
+      "tenant_name": "t-alpha",
+      "target_node": "node-a",
+      "byte_count": 31457280
+    },
+    {
+      "event_name": "evt-08-bravo-weight-up",
+      "logical_tick": 4,
+      "action": "reweight",
+      "tenant_name": "t-bravo",
+      "weight": 300
+    },
+    {
+      "event_name": "evt-09-alpha-release-60",
+      "logical_tick": 5,
+      "action": "free",
+      "tenant_name": "t-alpha",
+      "target_node": "node-a",
+      "byte_count": 62914560
+    },
+    {
+      "event_name": "evt-10-alpha-fill-guarantee",
+      "logical_tick": 6,
+      "action": "request",
+      "tenant_name": "t-alpha",
+      "target_node": "node-a",
+      "byte_count": 15728640
+    },
+    {
+      "event_name": "evt-11-bravo-release-15",
+      "logical_tick": 7,
+      "action": "free",
+      "tenant_name": "t-bravo",
+      "target_node": "node-a",
+      "byte_count": 15728640
+    },
+    {
+      "event_name": "evt-12-charlie-burst",
+      "logical_tick": 8,
+      "action": "surge",
+      "tenant_name": "t-charlie",
+      "target_node": "node-b",
+      "byte_count": 62914560
+    },
+    {
+      "event_name": "evt-13-alpha-burst",
+      "logical_tick": 8,
+      "action": "surge",
+      "tenant_name": "t-alpha",
+      "target_node": "node-a",
+      "byte_count": 20971520
+    },
+    {
+      "event_name": "evt-14-bravo-burst",
+      "logical_tick": 8,
+      "action": "surge",
+      "tenant_name": "t-bravo",
+      "target_node": "node-a",
+      "byte_count": 20971520
+    },
+    {
+      "event_name": "evt-15-bravo-release-20",
+      "logical_tick": 9,
+      "action": "free",
+      "tenant_name": "t-bravo",
+      "target_node": "node-a",
+      "byte_count": 20971520
+    }
+  ]
+}

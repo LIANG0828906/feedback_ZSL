@@ -1,0 +1,141 @@
+[
+  {
+    "tenantId": "critical-tenant",
+    "tick": 1,
+    "fieldName": "quota_ppm_permille_400",
+    "expected": 400000,
+    "actual": 400000,
+    "check": {
+      "input": 400,
+      "factor": 1000,
+      "value": 400000,
+      "overflow": false,
+      "saturated": false,
+      "within_bound": true
+    }
+  },
+  {
+    "tenantId": "critical-tenant",
+    "tick": 1,
+    "fieldName": "guarantee_ppm_permyriad_1500",
+    "expected": 150000,
+    "actual": 150000,
+    "check": {
+      "input": 1500,
+      "factor": 100,
+      "value": 150000,
+      "overflow": false,
+      "saturated": false,
+      "within_bound": true
+    }
+  },
+  {
+    "tenantId": "critical-tenant",
+    "tick": 1,
+    "fieldName": "node_capacity_kib_to_bytes",
+    "expected": 1024000000,
+    "actual": 1024000000,
+    "check": {
+      "input": 1000000,
+      "factor": 1024,
+      "value": 1024000000,
+      "overflow": false,
+      "saturated": false,
+      "within_bound": true
+    }
+  },
+  {
+    "tenantId": "critical-tenant",
+    "tick": 1,
+    "fieldName": "available_quota_bytes",
+    "expected": 409600000,
+    "actual": 409600000,
+    "check": {
+      "input": 1024000000,
+      "factor": 400000,
+      "value": 409600000,
+      "overflow": false,
+      "saturated": false,
+      "tolerance_bytes": 1,
+      "within_bound": true
+    }
+  },
+  {
+    "tenantId": "critical-tenant",
+    "tick": 1,
+    "fieldName": "guarantee_remaining_bytes",
+    "expected": 153600000,
+    "actual": 153600000,
+    "check": {
+      "input": 1024000000,
+      "factor": 150000,
+      "value": 153600000,
+      "overflow": false,
+      "saturated": false,
+      "tolerance_bytes": 1,
+      "within_bound": true
+    }
+  },
+  {
+    "tenantId": "critical-tenant",
+    "tick": 1,
+    "fieldName": "burst_cap_bytes",
+    "expected": 20971520,
+    "actual": 20971520,
+    "check": {
+      "input": 20480,
+      "factor": 1024,
+      "value": 20971520,
+      "overflow": false,
+      "saturated": false,
+      "within_bound": true
+    }
+  },
+  {
+    "tenantId": "critical-overflow",
+    "tick": 2,
+    "fieldName": "capacity_kib_overflow_saturated",
+    "expected": 9223372036854775807,
+    "actual": 9223372036854775807,
+    "check": {
+      "input": 9007199254740992,
+      "factor": 1024,
+      "value": 9223372036854775807,
+      "overflow": true,
+      "saturated": true
+    }
+  },
+  {
+    "tenantId": "critical-rounding",
+    "tick": 3,
+    "fieldName": "sub_byte_rate_floor",
+    "expected": 1,
+    "actual": 0,
+    "check": {
+      "input": 1,
+      "factor": 1,
+      "value": 0,
+      "remainder": 1,
+      "overflow": false,
+      "saturated": false,
+      "tolerance_bytes": 1,
+      "diff_bytes": 1,
+      "within_bound": true
+    }
+  },
+  {
+    "tenantId": "critical-drift",
+    "tick": 4,
+    "fieldName": "injected_quota_bytes_drift_probe",
+    "expected": 103,
+    "actual": 100,
+    "check": {
+      "input": 0,
+      "value": 100,
+      "overflow": false,
+      "saturated": false,
+      "tolerance_bytes": 1,
+      "diff_bytes": 3
+    }
+  }
+]

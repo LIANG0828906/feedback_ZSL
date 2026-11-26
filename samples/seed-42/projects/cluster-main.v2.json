@@ -1,0 +1,203 @@
+{
+  "apiVersion": "quotakernel.local/v2beta2",
+  "projectId": "cluster-main",
+  "seed": 42,
+  "tickDurationMs": 100,
+  "rackTree": [
+    {
+      "rackId": "rack-a",
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityKiB": 122880,
+          "allowedTenantIds": [
+            "t-alpha",
+            "t-bravo"
+          ]
+        }
+      ],
+      "tenantGroups": [
+        {
+          "tenantId": "t-alpha",
+          "homeNodeId": "node-a",
+          "priorityLevel": 8,
+          "weight": 100,
+          "quotaPerTenThousand": 4000,
+          "guaranteePerMille": 150,
+          "maxBurstKiB": 20480,
+          "rateWindowMs": 1000,
+          "maxWaitMillis": 500
+        },
+        {
+          "tenantId": "t-bravo",
+          "homeNodeId": "node-a",
+          "priorityLevel": 8,
+          "weight": 100,
+          "quotaPerTenThousand": 3000,
+          "guaranteePerMille": 100,
+          "maxBurstKiB": 20480,
+          "rateWindowMs": 1000,
+          "maxWaitMillis": 500
+        }
+      ]
+    },
+    {
+      "rackId": "rack-b",
+      "nodes": [
+        {
+          "nodeId": "node-b",
+          "capacityKiB": 184320,
+          "allowedTenantIds": [
+            "t-charlie",
+            "t-delta"
+          ]
+        }
+      ],
+      "tenantGroups": [
+        {
+          "tenantId": "t-charlie",
+          "homeNodeId": "node-b",
+          "priorityLevel": 6,
+          "weight": 100,
+          "quotaPerTenThousand": 2000,
+          "guaranteePerMille": 80,
+          "maxBurstKiB": 10240,
+          "rateWindowMs": 1000,
+          "maxWaitMillis": 500
+        },
+        {
+          "tenantId": "t-delta",
+          "homeNodeId": "node-b",
+          "priorityLevel": 4,
+          "weight": 100,
+          "quotaPerTenThousand": 1000,
+          "guaranteePerMille": 70,
+          "maxBurstKiB": 10240,
+          "rateWindowMs": 1000,
+          "maxWaitMillis": 500
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "id": "evt-01-alpha-guarantee",
+      "atMillis": 100,
+      "kind": "apply",
+      "tenant": "t-alpha",
+      "node": "node-a",
+      "amountKiB": 46080
+    },
+    {
+      "id": "evt-02-bravo-guarantee",
+      "atMillis": 100,
+      "kind": "apply",
+      "tenant": "t-bravo",
+      "node": "node-a",
+      "amountKiB": 30720
+    },
+    {
+      "id": "evt-03-charlie-guarantee",
+      "atMillis": 100,
+      "kind": "apply",
+      "tenant": "t-charlie",
+      "node": "node-b",
+      "amountKiB": 24576
+    },
+    {
+      "id": "evt-04-delta-guarantee",
+      "atMillis": 100,
+      "kind": "apply",
+      "tenant": "t-delta",
+      "node": "node-b",
+      "amountKiB": 21504
+    },
+    {
+      "id": "evt-05-alpha-quota-rest",
+      "atMillis": 200,
+      "kind": "apply",
+      "tenant": "t-alpha",
+      "node": "node-a",
+      "amountKiB": 76800
+    },
+    {
+      "id": "evt-06-bravo-quota-rest",
+      "atMillis": 200,
+      "kind": "apply",
+      "tenant": "t-bravo",
+      "node": "node-a",
+      "amountKiB": 61440
+    },
+    {
+      "id": "evt-07-alpha-release-30",
+      "atMillis": 300,
+      "kind": "release",
+      "tenant": "t-alpha",
+      "node": "node-a",
+      "amountKiB": 30720
+    },
+    {
+      "id": "evt-08-bravo-weight-up",
+      "atMillis": 400,
+      "kind": "weight_adjust",
+      "tenant": "t-bravo",
+      "weightValue": 300
+    },
+    {
+      "id": "evt-09-alpha-release-60",
+      "atMillis": 500,
+      "kind": "release",
+      "tenant": "t-alpha",
+      "node": "node-a",
+      "amountKiB": 61440
+    },
+    {
+      "id": "evt-10-alpha-fill-guarantee",
+      "atMillis": 600,
+      "kind": "apply",
+      "tenant": "t-alpha",
+      "node": "node-a",
+      "amountKiB": 15360
+    },
+    {
+      "id": "evt-11-bravo-release-15",
+      "atMillis": 700,
+      "kind": "release",
+      "tenant": "t-bravo",
+      "node": "node-a",
+      "amountKiB": 15360
+    },
+    {
+      "id": "evt-12-charlie-burst",
+      "atMillis": 800,
+      "kind": "burst",
+      "tenant": "t-charlie",
+      "node": "node-b",
+      "amountKiB": 61440
+    },
+    {
+      "id": "evt-13-alpha-burst",
+      "atMillis": 800,
+      "kind": "burst",
+      "tenant": "t-alpha",
+      "node": "node-a",
+      "amountKiB": 20480
+    },
+    {
+      "id": "evt-14-bravo-burst",
+      "atMillis": 800,
+      "kind": "burst",
+      "tenant": "t-bravo",
+      "node": "node-a",
+      "amountKiB": 20480
+    },
+    {
+      "id": "evt-15-bravo-release-20",
+      "atMillis": 900,
+      "kind": "release",
+      "tenant": "t-bravo",
+      "node": "node-a",
+      "amountKiB": 20480
+    }
+  ]
+}

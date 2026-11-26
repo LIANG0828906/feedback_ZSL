@@ -1,0 +1,2732 @@
+{
+  "seed": 42,
+  "projectFingerprint": "17e333e2a4bd5337374f8627ded77a0a",
+  "ticks": [
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 1,
+      "canonicalOrder": [
+        "evt-01-alpha-guarantee",
+        "evt-02-bravo-guarantee",
+        "evt-03-charlie-guarantee",
+        "evt-04-delta-guarantee"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-01-alpha-guarantee",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "kind": "apply",
+          "requestedBytes": 47185920,
+          "admittedBytes": 47185920,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 47185920,
+              "nodeUsedAfter": 47185920,
+              "tenantUsedAfter": 47185920
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        },
+        {
+          "eventId": "evt-02-bravo-guarantee",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "kind": "apply",
+          "requestedBytes": 31457280,
+          "admittedBytes": 31457280,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 31457280,
+              "nodeUsedAfter": 78643200,
+              "tenantUsedAfter": 31457280
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        },
+        {
+          "eventId": "evt-03-charlie-guarantee",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "kind": "apply",
+          "requestedBytes": 25165824,
+          "admittedBytes": 25165824,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 25165824,
+              "nodeUsedAfter": 25165824,
+              "tenantUsedAfter": 25165824
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        },
+        {
+          "eventId": "evt-04-delta-guarantee",
+          "tenantId": "t-delta",
+          "nodeId": "node-b",
+          "kind": "apply",
+          "requestedBytes": 22020096,
+          "admittedBytes": 22020096,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 22020096,
+              "nodeUsedAfter": 47185920,
+              "tenantUsedAfter": 22020096
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        }
+      ],
+      "releases": null,
+      "queue": null,
+      "rejections": null,
+      "gate": [
+        {
+          "decisionId": "gate-evt-01-alpha-guarantee",
+          "eventId": "evt-01-alpha-guarantee",
+          "tick": 1,
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 47185920,
+          "tenantSafeRemainingBytes": 125829120
+        },
+        {
+          "decisionId": "gate-evt-02-bravo-guarantee",
+          "eventId": "evt-02-bravo-guarantee",
+          "tick": 1,
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 31457280,
+          "tenantSafeRemainingBytes": 94371840
+        },
+        {
+          "decisionId": "gate-evt-03-charlie-guarantee",
+          "eventId": "evt-03-charlie-guarantee",
+          "tick": 1,
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 25165824,
+          "tenantSafeRemainingBytes": 62914560
+        },
+        {
+          "decisionId": "gate-evt-04-delta-guarantee",
+          "eventId": "evt-04-delta-guarantee",
+          "tick": 1,
+          "tenantId": "t-delta",
+          "nodeId": "node-b",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 22020096,
+          "tenantSafeRemainingBytes": 31457280
+        }
+      ],
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 31457280,
+          "quotaUsedBytes": 31457280,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 25165824,
+          "quotaUsedBytes": 25165824,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 37748736,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 78643200,
+          "availableBytes": 47185920,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 47185920,
+          "availableBytes": 141557760,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": [
+          {
+            "decisionId": "gate-evt-01-alpha-guarantee",
+            "eventId": "evt-01-alpha-guarantee",
+            "tick": 1,
+            "tenantId": "t-alpha",
+            "nodeId": "node-a",
+            "reservedBytes": 47185920,
+            "settledBytes": 47185920,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-evt-02-bravo-guarantee",
+            "eventId": "evt-02-bravo-guarantee",
+            "tick": 1,
+            "tenantId": "t-bravo",
+            "nodeId": "node-a",
+            "reservedBytes": 31457280,
+            "settledBytes": 31457280,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-evt-03-charlie-guarantee",
+            "eventId": "evt-03-charlie-guarantee",
+            "tick": 1,
+            "tenantId": "t-charlie",
+            "nodeId": "node-b",
+            "reservedBytes": 25165824,
+            "settledBytes": 25165824,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-evt-04-delta-guarantee",
+            "eventId": "evt-04-delta-guarantee",
+            "tick": 1,
+            "tenantId": "t-delta",
+            "nodeId": "node-b",
+            "reservedBytes": 22020096,
+            "settledBytes": 22020096,
+            "deltaBytes": 0,
+            "status": "matched"
+          }
+        ],
+        "totalReservedBytes": 125829120,
+        "totalSettledBytes": 125829120,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-bravo",
+          "t-charlie",
+          "t-delta"
+        ],
+        "nodeIds": [
+          "node-a",
+          "node-b"
+        ],
+        "eventIds": [
+          "evt-01-alpha-guarantee",
+          "evt-02-bravo-guarantee",
+          "evt-03-charlie-guarantee",
+          "evt-04-delta-guarantee"
+        ]
+      },
+      "stateHash": "e09408b7fd513eea16a6b0dbceffbbedac788fe1707c0ce41327063576b837ac"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 2,
+      "canonicalOrder": [
+        "evt-05-alpha-quota-rest",
+        "evt-06-bravo-quota-rest"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-05-alpha-quota-rest",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "kind": "apply",
+          "requestedBytes": 78643200,
+          "admittedBytes": 47185920,
+          "queuedBytes": 31457280,
+          "rejectedBytes": 0,
+          "fullyAdmitted": false,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 47185920,
+              "nodeUsedAfter": 125829120,
+              "tenantUsedAfter": 94371840
+            }
+          ],
+          "gateConclusion": "QUEUE"
+        }
+      ],
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-evt-05-alpha-quota-rest",
+          "eventId": "evt-05-alpha-quota-rest",
+          "kind": "apply",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "originalAmountBytes": 78643200,
+          "remainingAmountBytes": 31457280,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 2,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 47185920,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha"
+        },
+        {
+          "id": "queue-evt-06-bravo-quota-rest",
+          "eventId": "evt-06-bravo-quota-rest",
+          "kind": "apply",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 62914560,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 2,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 31457280,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-alpha",
+          "victimTenantId": "t-bravo"
+        }
+      ],
+      "rejections": null,
+      "gate": [
+        {
+          "decisionId": "gate-evt-05-alpha-quota-rest",
+          "eventId": "evt-05-alpha-quota-rest",
+          "tick": 2,
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 78643200,
+          "tenantSafeRemainingBytes": 78643200
+        },
+        {
+          "decisionId": "gate-evt-06-bravo-quota-rest",
+          "eventId": "evt-06-bravo-quota-rest",
+          "tick": 2,
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 62914560,
+          "tenantSafeRemainingBytes": 62914560
+        }
+      ],
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 94371840,
+          "quotaUsedBytes": 94371840,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 31457280,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 31457280,
+          "quotaUsedBytes": 31457280,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 25165824,
+          "quotaUsedBytes": 25165824,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 37748736,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 47185920,
+          "availableBytes": 141557760,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": [
+          {
+            "decisionId": "gate-evt-05-alpha-quota-rest",
+            "eventId": "evt-05-alpha-quota-rest",
+            "tick": 2,
+            "tenantId": "t-alpha",
+            "nodeId": "node-a",
+            "reservedBytes": 0,
+            "settledBytes": 47185920,
+            "deltaBytes": 47185920,
+            "status": "fast_queue_caught_up"
+          },
+          {
+            "decisionId": "gate-evt-06-bravo-quota-rest",
+            "eventId": "evt-06-bravo-quota-rest",
+            "tick": 2,
+            "tenantId": "t-bravo",
+            "nodeId": "node-a",
+            "reservedBytes": 0,
+            "settledBytes": 0,
+            "deltaBytes": 0,
+            "status": "matched"
+          }
+        ],
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 47185920,
+        "totalDeltaBytes": 47185920,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-bravo"
+        ],
+        "nodeIds": [
+          "node-a"
+        ],
+        "eventIds": [
+          "evt-05-alpha-quota-rest",
+          "evt-06-bravo-quota-rest"
+        ]
+      },
+      "stateHash": "c4a49cdbfc6dc0dfe9627433cd6c9f7b4d4ae84fa877f96705d265f51f124acf"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 3,
+      "canonicalOrder": [
+        "evt-07-alpha-release-30"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-05-alpha-quota-rest",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "kind": "apply",
+          "requestedBytes": 31457280,
+          "admittedBytes": 31457280,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 31457280,
+              "nodeUsedAfter": 125829120,
+              "tenantUsedAfter": 94371840
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        }
+      ],
+      "releases": [
+        {
+          "eventId": "evt-07-alpha-release-30",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "releasedBytes": 31457280,
+          "quotaReleasedBytes": 31457280,
+          "burstReleasedBytes": 0
+        }
+      ],
+      "queue": [
+        {
+          "id": "queue-evt-06-bravo-quota-rest",
+          "eventId": "evt-06-bravo-quota-rest",
+          "kind": "apply",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 62914560,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 3,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 31457280,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-alpha",
+          "victimTenantId": "t-bravo"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 94371840,
+          "quotaUsedBytes": 94371840,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 31457280,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 31457280,
+          "quotaUsedBytes": 31457280,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 25165824,
+          "quotaUsedBytes": 25165824,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 37748736,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 47185920,
+          "availableBytes": 141557760,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-bravo"
+        ],
+        "nodeIds": [
+          "node-a"
+        ],
+        "eventIds": [
+          "evt-05-alpha-quota-rest",
+          "evt-06-bravo-quota-rest",
+          "evt-07-alpha-release-30"
+        ]
+      },
+      "stateHash": "fa6a9d1ef8274bf3aa7be14a9feadd2439118f84c922c3886ec5cdbabc51bd16"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 4,
+      "canonicalOrder": [
+        "evt-08-bravo-weight-up"
+      ],
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-evt-06-bravo-quota-rest",
+          "eventId": "evt-06-bravo-quota-rest",
+          "kind": "apply",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 62914560,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 4,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 300,
+          "guaranteeBytes": 31457280,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-alpha",
+          "victimTenantId": "t-bravo"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 94371840,
+          "quotaUsedBytes": 94371840,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 31457280,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 31457280,
+          "quotaUsedBytes": 31457280,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 25165824,
+          "quotaUsedBytes": 25165824,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 37748736,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 47185920,
+          "availableBytes": 141557760,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-bravo"
+        ],
+        "nodeIds": [
+          "node-a"
+        ],
+        "eventIds": [
+          "evt-06-bravo-quota-rest",
+          "evt-08-bravo-weight-up"
+        ]
+      },
+      "stateHash": "1302a5e469ce3496b79f1ff877555f5c23d0672d2ec26c60a5fa1e7fc2956d99"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 5,
+      "canonicalOrder": [
+        "evt-09-alpha-release-60"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-06-bravo-quota-rest",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "kind": "apply",
+          "requestedBytes": 62914560,
+          "admittedBytes": 47185920,
+          "queuedBytes": 15728640,
+          "rejectedBytes": 0,
+          "fullyAdmitted": false,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 47185920,
+              "nodeUsedAfter": 110100480,
+              "tenantUsedAfter": 78643200
+            }
+          ],
+          "gateConclusion": "QUEUE"
+        }
+      ],
+      "releases": [
+        {
+          "eventId": "evt-09-alpha-release-60",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "releasedBytes": 62914560,
+          "quotaReleasedBytes": 62914560,
+          "burstReleasedBytes": 0
+        }
+      ],
+      "queue": [
+        {
+          "id": "queue-evt-06-bravo-quota-rest",
+          "eventId": "evt-06-bravo-quota-rest",
+          "kind": "apply",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 15728640,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 5,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 300,
+          "guaranteeBytes": 31457280,
+          "reasonCode": "BURST_WOULD_ENCROACH_GUARANTEE",
+          "constraintId": "C-GUARANTEE-RESERVE",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 31457280,
+          "quotaUsedBytes": 31457280,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 94371840,
+          "guaranteeRemainingBytes": 15728640,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 25165824,
+          "quotaUsedBytes": 25165824,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 37748736,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 110100480,
+          "availableBytes": 15728640,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 15728640
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 47185920,
+          "availableBytes": 141557760,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-bravo"
+        ],
+        "nodeIds": [
+          "node-a"
+        ],
+        "eventIds": [
+          "evt-06-bravo-quota-rest",
+          "evt-09-alpha-release-60"
+        ]
+      },
+      "stateHash": "d95b8ff242c2b872485eb3226a24ca523ead8974a8ede441ab7aaaac4f30199d"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 6,
+      "canonicalOrder": [
+        "evt-10-alpha-fill-guarantee"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-10-alpha-fill-guarantee",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "kind": "apply",
+          "requestedBytes": 15728640,
+          "admittedBytes": 15728640,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 15728640,
+              "nodeUsedAfter": 125829120,
+              "tenantUsedAfter": 47185920
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        }
+      ],
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-evt-06-bravo-quota-rest",
+          "eventId": "evt-06-bravo-quota-rest",
+          "kind": "apply",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 15728640,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 6,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 300,
+          "guaranteeBytes": 31457280,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-alpha",
+          "victimTenantId": "t-bravo"
+        }
+      ],
+      "rejections": null,
+      "gate": [
+        {
+          "decisionId": "gate-evt-10-alpha-fill-guarantee",
+          "eventId": "evt-10-alpha-fill-guarantee",
+          "tick": 6,
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 15728640,
+          "tenantSafeRemainingBytes": 94371840
+        }
+      ],
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 25165824,
+          "quotaUsedBytes": 25165824,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 37748736,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 47185920,
+          "availableBytes": 141557760,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": [
+          {
+            "decisionId": "gate-evt-10-alpha-fill-guarantee",
+            "eventId": "evt-10-alpha-fill-guarantee",
+            "tick": 6,
+            "tenantId": "t-alpha",
+            "nodeId": "node-a",
+            "reservedBytes": 15728640,
+            "settledBytes": 15728640,
+            "deltaBytes": 0,
+            "status": "matched"
+          }
+        ],
+        "totalReservedBytes": 15728640,
+        "totalSettledBytes": 15728640,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-bravo"
+        ],
+        "nodeIds": [
+          "node-a"
+        ],
+        "eventIds": [
+          "evt-06-bravo-quota-rest",
+          "evt-10-alpha-fill-guarantee"
+        ]
+      },
+      "stateHash": "3f8d3c4ab4c9df91fa947839838eb7d0eb6c7d583453a515745d52900b5d789f"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 7,
+      "canonicalOrder": [
+        "evt-11-bravo-release-15"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-06-bravo-quota-rest",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "kind": "apply",
+          "requestedBytes": 15728640,
+          "admittedBytes": 15728640,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 15728640,
+              "nodeUsedAfter": 125829120,
+              "tenantUsedAfter": 78643200
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        }
+      ],
+      "releases": [
+        {
+          "eventId": "evt-11-bravo-release-15",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "releasedBytes": 15728640,
+          "quotaReleasedBytes": 15728640,
+          "burstReleasedBytes": 0
+        }
+      ],
+      "queue": null,
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 25165824,
+          "quotaUsedBytes": 25165824,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 37748736,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 47185920,
+          "availableBytes": 141557760,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-bravo"
+        ],
+        "nodeIds": [
+          "node-a"
+        ],
+        "eventIds": [
+          "evt-06-bravo-quota-rest",
+          "evt-11-bravo-release-15"
+        ]
+      },
+      "stateHash": "613e070a582c7b033094e4ac5d6433ef3b102366adb3d915f24d1d3ca34b2bd2"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 8,
+      "canonicalOrder": [
+        "evt-12-charlie-burst",
+        "evt-13-alpha-burst",
+        "evt-14-bravo-burst"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-12-charlie-burst",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "kind": "burst",
+          "requestedBytes": 62914560,
+          "admittedBytes": 48234496,
+          "queuedBytes": 14680064,
+          "rejectedBytes": 0,
+          "fullyAdmitted": false,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 37748736,
+              "nodeUsedAfter": 84934656,
+              "tenantUsedAfter": 62914560
+            },
+            {
+              "class": "burst",
+              "bytes": 10485760,
+              "nodeUsedAfter": 95420416,
+              "tenantUsedAfter": 73400320
+            }
+          ],
+          "gateConclusion": "QUEUE"
+        }
+      ],
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-evt-13-alpha-burst",
+          "eventId": "evt-13-alpha-burst",
+          "kind": "burst",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "originalAmountBytes": 20971520,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 8,
+          "expiresTick": 13,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 47185920,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha"
+        },
+        {
+          "id": "queue-evt-14-bravo-burst",
+          "eventId": "evt-14-bravo-burst",
+          "kind": "burst",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "originalAmountBytes": 20971520,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 8,
+          "expiresTick": 13,
+          "priority": 8,
+          "weight": 300,
+          "guaranteeBytes": 31457280,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-alpha",
+          "victimTenantId": "t-bravo"
+        },
+        {
+          "id": "queue-evt-12-charlie-burst",
+          "eventId": "evt-12-charlie-burst",
+          "kind": "burst",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 14680064,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 8,
+          "expiresTick": 13,
+          "priority": 6,
+          "weight": 100,
+          "guaranteeBytes": 25165824,
+          "reasonCode": "TENANT_CLASS_QUOTA_EXHAUSTED",
+          "constraintId": "C-QUOTA-HARD",
+          "encroachingTenantId": "t-charlie",
+          "victimTenantId": "t-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": [
+        {
+          "decisionId": "gate-evt-12-charlie-burst",
+          "eventId": "evt-12-charlie-burst",
+          "tick": 8,
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_TENANT_QUOTA_WAIT",
+          "constraintId": "C-QUOTA-HARD",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 62914560,
+          "tenantSafeRemainingBytes": 48234496
+        },
+        {
+          "decisionId": "gate-evt-13-alpha-burst",
+          "eventId": "evt-13-alpha-burst",
+          "tick": 8,
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 20971520,
+          "tenantSafeRemainingBytes": 99614720
+        },
+        {
+          "decisionId": "gate-evt-14-bravo-burst",
+          "eventId": "evt-14-bravo-burst",
+          "tick": 8,
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 20971520,
+          "tenantSafeRemainingBytes": 36700160
+        }
+      ],
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": [
+          {
+            "decisionId": "gate-evt-12-charlie-burst",
+            "eventId": "evt-12-charlie-burst",
+            "tick": 8,
+            "tenantId": "t-charlie",
+            "nodeId": "node-b",
+            "reservedBytes": 0,
+            "settledBytes": 48234496,
+            "deltaBytes": 48234496,
+            "status": "fast_queue_caught_up"
+          },
+          {
+            "decisionId": "gate-evt-13-alpha-burst",
+            "eventId": "evt-13-alpha-burst",
+            "tick": 8,
+            "tenantId": "t-alpha",
+            "nodeId": "node-a",
+            "reservedBytes": 0,
+            "settledBytes": 0,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-evt-14-bravo-burst",
+            "eventId": "evt-14-bravo-burst",
+            "tick": 8,
+            "tenantId": "t-bravo",
+            "nodeId": "node-a",
+            "reservedBytes": 0,
+            "settledBytes": 0,
+            "deltaBytes": 0,
+            "status": "matched"
+          }
+        ],
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 48234496,
+        "totalDeltaBytes": 48234496,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-bravo",
+          "t-charlie"
+        ],
+        "nodeIds": [
+          "node-a",
+          "node-b"
+        ],
+        "eventIds": [
+          "evt-12-charlie-burst",
+          "evt-13-alpha-burst",
+          "evt-14-bravo-burst"
+        ]
+      },
+      "stateHash": "62c1aa9d66840e1d202864cd6a4a481e74db99465a172ed376215666160ba7cc"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 9,
+      "canonicalOrder": [
+        "evt-15-bravo-release-20"
+      ],
+      "admissions": [
+        {
+          "eventId": "evt-14-bravo-burst",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "kind": "burst",
+          "requestedBytes": 20971520,
+          "admittedBytes": 20971520,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 20971520,
+              "nodeUsedAfter": 125829120,
+              "tenantUsedAfter": 78643200
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        }
+      ],
+      "releases": [
+        {
+          "eventId": "evt-15-bravo-release-20",
+          "tenantId": "t-bravo",
+          "nodeId": "node-a",
+          "releasedBytes": 20971520,
+          "quotaReleasedBytes": 20971520,
+          "burstReleasedBytes": 0
+        }
+      ],
+      "queue": [
+        {
+          "id": "queue-evt-13-alpha-burst",
+          "eventId": "evt-13-alpha-burst",
+          "kind": "burst",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "originalAmountBytes": 20971520,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 9,
+          "expiresTick": 13,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 47185920,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha"
+        },
+        {
+          "id": "queue-evt-12-charlie-burst",
+          "eventId": "evt-12-charlie-burst",
+          "kind": "burst",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 14680064,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 9,
+          "expiresTick": 13,
+          "priority": 6,
+          "weight": 100,
+          "guaranteeBytes": 25165824,
+          "reasonCode": "TENANT_CLASS_QUOTA_EXHAUSTED",
+          "constraintId": "C-QUOTA-HARD",
+          "encroachingTenantId": "t-charlie",
+          "victimTenantId": "t-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-bravo",
+          "t-charlie"
+        ],
+        "nodeIds": [
+          "node-a",
+          "node-b"
+        ],
+        "eventIds": [
+          "evt-12-charlie-burst",
+          "evt-13-alpha-burst",
+          "evt-14-bravo-burst",
+          "evt-15-bravo-release-20"
+        ]
+      },
+      "stateHash": "25f69e42b384f61b6e03f17259a4a381a61e83886a6d61d5e26f08b1646e7d52"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 10,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-evt-13-alpha-burst",
+          "eventId": "evt-13-alpha-burst",
+          "kind": "burst",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "originalAmountBytes": 20971520,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 10,
+          "expiresTick": 13,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 47185920,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha"
+        },
+        {
+          "id": "queue-evt-12-charlie-burst",
+          "eventId": "evt-12-charlie-burst",
+          "kind": "burst",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 14680064,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 10,
+          "expiresTick": 13,
+          "priority": 6,
+          "weight": 100,
+          "guaranteeBytes": 25165824,
+          "reasonCode": "TENANT_CLASS_QUOTA_EXHAUSTED",
+          "constraintId": "C-QUOTA-HARD",
+          "encroachingTenantId": "t-charlie",
+          "victimTenantId": "t-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-charlie"
+        ],
+        "nodeIds": [
+          "node-a",
+          "node-b"
+        ],
+        "eventIds": [
+          "evt-12-charlie-burst",
+          "evt-13-alpha-burst"
+        ]
+      },
+      "stateHash": "83499da89504db30ee6868f3f1b580047ca13d59eab595677766314d10cf8772"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 11,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-evt-13-alpha-burst",
+          "eventId": "evt-13-alpha-burst",
+          "kind": "burst",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "originalAmountBytes": 20971520,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 11,
+          "expiresTick": 13,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 47185920,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha"
+        },
+        {
+          "id": "queue-evt-12-charlie-burst",
+          "eventId": "evt-12-charlie-burst",
+          "kind": "burst",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 14680064,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 11,
+          "expiresTick": 13,
+          "priority": 6,
+          "weight": 100,
+          "guaranteeBytes": 25165824,
+          "reasonCode": "TENANT_CLASS_QUOTA_EXHAUSTED",
+          "constraintId": "C-QUOTA-HARD",
+          "encroachingTenantId": "t-charlie",
+          "victimTenantId": "t-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-charlie"
+        ],
+        "nodeIds": [
+          "node-a",
+          "node-b"
+        ],
+        "eventIds": [
+          "evt-12-charlie-burst",
+          "evt-13-alpha-burst"
+        ]
+      },
+      "stateHash": "9520326d7b769b5153471a47ca9bb25f47070404e16f616b3fe825471fd20c89"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 12,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-evt-13-alpha-burst",
+          "eventId": "evt-13-alpha-burst",
+          "kind": "burst",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "originalAmountBytes": 20971520,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 12,
+          "expiresTick": 13,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 47185920,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha"
+        },
+        {
+          "id": "queue-evt-12-charlie-burst",
+          "eventId": "evt-12-charlie-burst",
+          "kind": "burst",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 14680064,
+          "enqueuedTick": 8,
+          "lastAttemptTick": 12,
+          "expiresTick": 13,
+          "priority": 6,
+          "weight": 100,
+          "guaranteeBytes": 25165824,
+          "reasonCode": "TENANT_CLASS_QUOTA_EXHAUSTED",
+          "constraintId": "C-QUOTA-HARD",
+          "encroachingTenantId": "t-charlie",
+          "victimTenantId": "t-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-charlie"
+        ],
+        "nodeIds": [
+          "node-a",
+          "node-b"
+        ],
+        "eventIds": [
+          "evt-12-charlie-burst",
+          "evt-13-alpha-burst"
+        ]
+      },
+      "stateHash": "0abc5224c1eeab8e2758ba2d383fb01807e8d13530571e8f6a84cb2980d0f422"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 13,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": null,
+      "rejections": [
+        {
+          "eventId": "evt-12-charlie-burst",
+          "tenantId": "t-charlie",
+          "nodeId": "node-b",
+          "requestedBytes": 14680064,
+          "rejectedBytes": 14680064,
+          "code": "REJECT_WAIT_TTL",
+          "reason": "request remained unserved through declared queue window",
+          "constraintId": "C-WAIT-TTL",
+          "encroachingTenantId": "t-charlie",
+          "victimTenantId": "t-charlie",
+          "suggestedRetryTick": 14
+        },
+        {
+          "eventId": "evt-13-alpha-burst",
+          "tenantId": "t-alpha",
+          "nodeId": "node-a",
+          "requestedBytes": 20971520,
+          "rejectedBytes": 20971520,
+          "code": "REJECT_WAIT_TTL",
+          "reason": "request remained unserved through declared queue window",
+          "constraintId": "C-WAIT-TTL",
+          "encroachingTenantId": "t-bravo",
+          "victimTenantId": "t-alpha",
+          "suggestedRetryTick": 14
+        }
+      ],
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "t-alpha",
+          "t-charlie"
+        ],
+        "nodeIds": [
+          "node-a",
+          "node-b"
+        ],
+        "eventIds": [
+          "evt-12-charlie-burst",
+          "evt-13-alpha-burst"
+        ]
+      },
+      "stateHash": "22a8c5acbbe2e063addb9de25f4cb65c7227807b0d2125f69915c15ec738af2a"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 14,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": null,
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [],
+        "nodeIds": [],
+        "eventIds": []
+      },
+      "stateHash": "7b62a6b2481e6993980ad4715b35d9a7f3642680d676fdd36eb8cd4d91790ca7"
+    },
+    {
+      "projectId": "cluster-main",
+      "seed": 42,
+      "tick": 15,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": null,
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "t-alpha",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 125829120,
+          "guaranteeBytes": 47185920,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 47185920,
+          "quotaUsedBytes": 47185920,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 78643200,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-bravo",
+          "priority": 8,
+          "weight": 300,
+          "quotaBytes": 94371840,
+          "guaranteeBytes": 31457280,
+          "burstCapBytes": 20971520,
+          "burstEnabled": true,
+          "usedBytes": 78643200,
+          "quotaUsedBytes": 78643200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 15728640,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 20971520,
+          "pinnedNodeId": "node-a",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-charlie",
+          "priority": 6,
+          "weight": 100,
+          "quotaBytes": 62914560,
+          "guaranteeBytes": 25165824,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 73400320,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 10485760,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "t-delta",
+          "priority": 4,
+          "weight": 100,
+          "quotaBytes": 31457280,
+          "guaranteeBytes": 22020096,
+          "burstCapBytes": 10485760,
+          "burstEnabled": true,
+          "usedBytes": 22020096,
+          "quotaUsedBytes": 22020096,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 9437184,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 10485760,
+          "pinnedNodeId": "node-b",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "node-a",
+          "capacityBytes": 125829120,
+          "usedBytes": 125829120,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        },
+        {
+          "nodeId": "node-b",
+          "capacityBytes": 188743680,
+          "usedBytes": 95420416,
+          "availableBytes": 93323264,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [],
+        "nodeIds": [],
+        "eventIds": []
+      },
+      "stateHash": "20ec48d1c0594e63cc0e38ffc6236ceacd3a9656b6cddf8ebd288f134731751d"
+    }
+  ]
+}

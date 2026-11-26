@@ -1,0 +1,197 @@
+{
+  "apiVersion": "quotakernel.local/v1alpha1",
+  "project_id": "cluster-main",
+  "seed": 42,
+  "tick_interval_ms": 100,
+  "nodes": [
+    {
+      "node_id": "node-a",
+      "rack": "rack-a",
+      "capacity_bytes": 125829120,
+      "allowed_tenants": [
+        "t-alpha",
+        "t-bravo"
+      ]
+    },
+    {
+      "node_id": "node-b",
+      "rack": "rack-b",
+      "capacity_bytes": 188743680,
+      "allowed_tenants": [
+        "t-charlie",
+        "t-delta"
+      ]
+    }
+  ],
+  "tenants_flat": [
+    {
+      "tenant_id": "t-alpha",
+      "rack": "rack-a",
+      "home_node_id": "node-a",
+      "priority": 8,
+      "scheduling_weight": 100,
+      "quota_permille": 400,
+      "guarantee_permyriad": 1500,
+      "burst_cap_bytes": 20971520,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    },
+    {
+      "tenant_id": "t-bravo",
+      "rack": "rack-a",
+      "home_node_id": "node-a",
+      "priority": 8,
+      "scheduling_weight": 100,
+      "quota_permille": 300,
+      "guarantee_permyriad": 1000,
+      "burst_cap_bytes": 20971520,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    },
+    {
+      "tenant_id": "t-charlie",
+      "rack": "rack-b",
+      "home_node_id": "node-b",
+      "priority": 6,
+      "scheduling_weight": 100,
+      "quota_permille": 200,
+      "guarantee_permyriad": 800,
+      "burst_cap_bytes": 10485760,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    },
+    {
+      "tenant_id": "t-delta",
+      "rack": "rack-b",
+      "home_node_id": "node-b",
+      "priority": 4,
+      "scheduling_weight": 100,
+      "quota_permille": 100,
+      "guarantee_permyriad": 700,
+      "burst_cap_bytes": 10485760,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    }
+  ],
+  "events": [
+    {
+      "event_id": "evt-01-alpha-guarantee",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "amount_bytes": 47185920
+    },
+    {
+      "event_id": "evt-02-bravo-guarantee",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "t-bravo",
+      "node_id": "node-a",
+      "amount_bytes": 31457280
+    },
+    {
+      "event_id": "evt-03-charlie-guarantee",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "t-charlie",
+      "node_id": "node-b",
+      "amount_bytes": 25165824
+    },
+    {
+      "event_id": "evt-04-delta-guarantee",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "t-delta",
+      "node_id": "node-b",
+      "amount_bytes": 22020096
+    },
+    {
+      "event_id": "evt-05-alpha-quota-rest",
+      "at_tick": 2,
+      "type": "capacity_request",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "amount_bytes": 78643200
+    },
+    {
+      "event_id": "evt-06-bravo-quota-rest",
+      "at_tick": 2,
+      "type": "capacity_request",
+      "tenant_id": "t-bravo",
+      "node_id": "node-a",
+      "amount_bytes": 62914560
+    },
+    {
+      "event_id": "evt-07-alpha-release-30",
+      "at_tick": 3,
+      "type": "capacity_release",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "amount_bytes": 31457280
+    },
+    {
+      "event_id": "evt-08-bravo-weight-up",
+      "at_tick": 4,
+      "type": "weight_adjustment",
+      "tenant_id": "t-bravo",
+      "new_weight": 300
+    },
+    {
+      "event_id": "evt-09-alpha-release-60",
+      "at_tick": 5,
+      "type": "capacity_release",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "amount_bytes": 62914560
+    },
+    {
+      "event_id": "evt-10-alpha-fill-guarantee",
+      "at_tick": 6,
+      "type": "capacity_request",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "amount_bytes": 15728640
+    },
+    {
+      "event_id": "evt-11-bravo-release-15",
+      "at_tick": 7,
+      "type": "capacity_release",
+      "tenant_id": "t-bravo",
+      "node_id": "node-a",
+      "amount_bytes": 15728640
+    },
+    {
+      "event_id": "evt-12-charlie-burst",
+      "at_tick": 8,
+      "type": "burst_surge",
+      "tenant_id": "t-charlie",
+      "node_id": "node-b",
+      "amount_bytes": 62914560
+    },
+    {
+      "event_id": "evt-13-alpha-burst",
+      "at_tick": 8,
+      "type": "burst_surge",
+      "tenant_id": "t-alpha",
+      "node_id": "node-a",
+      "amount_bytes": 20971520
+    },
+    {
+      "event_id": "evt-14-bravo-burst",
+      "at_tick": 8,
+      "type": "burst_surge",
+      "tenant_id": "t-bravo",
+      "node_id": "node-a",
+      "amount_bytes": 20971520
+    },
+    {
+      "event_id": "evt-15-bravo-release-20",
+      "at_tick": 9,
+      "type": "capacity_release",
+      "tenant_id": "t-bravo",
+      "node_id": "node-a",
+      "amount_bytes": 20971520
+    }
+  ]
+}

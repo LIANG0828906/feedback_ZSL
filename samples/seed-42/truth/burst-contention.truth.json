@@ -1,0 +1,1557 @@
+{
+  "seed": 43,
+  "projectFingerprint": "4b02cc90b5869b476f54eda785755a87",
+  "ticks": [
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 1,
+      "canonicalOrder": [
+        "con-01-alpha-quota",
+        "con-02-bravo-quota",
+        "con-03-charlie-quota"
+      ],
+      "admissions": [
+        {
+          "eventId": "con-01-alpha-quota",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "kind": "apply",
+          "requestedBytes": 419430400,
+          "admittedBytes": 419430400,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 209715200,
+              "nodeUsedAfter": 209715200,
+              "tenantUsedAfter": 209715200
+            },
+            {
+              "class": "quota",
+              "bytes": 209715200,
+              "nodeUsedAfter": 629145600,
+              "tenantUsedAfter": 419430400
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        },
+        {
+          "eventId": "con-02-bravo-quota",
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "kind": "apply",
+          "requestedBytes": 314572800,
+          "admittedBytes": 314572800,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 104857600,
+              "nodeUsedAfter": 314572800,
+              "tenantUsedAfter": 104857600
+            },
+            {
+              "class": "quota",
+              "bytes": 209715200,
+              "nodeUsedAfter": 838860800,
+              "tenantUsedAfter": 314572800
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        },
+        {
+          "eventId": "con-03-charlie-quota",
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "kind": "apply",
+          "requestedBytes": 209715200,
+          "admittedBytes": 209715200,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 104857600,
+              "nodeUsedAfter": 419430400,
+              "tenantUsedAfter": 104857600
+            },
+            {
+              "class": "quota",
+              "bytes": 104857600,
+              "nodeUsedAfter": 943718400,
+              "tenantUsedAfter": 209715200
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        }
+      ],
+      "releases": null,
+      "queue": null,
+      "rejections": null,
+      "gate": [
+        {
+          "decisionId": "gate-con-01-alpha-quota",
+          "eventId": "con-01-alpha-quota",
+          "tick": 1,
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 419430400,
+          "tenantSafeRemainingBytes": 419430400
+        },
+        {
+          "decisionId": "gate-con-02-bravo-quota",
+          "eventId": "con-02-bravo-quota",
+          "tick": 1,
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 314572800,
+          "tenantSafeRemainingBytes": 314572800
+        },
+        {
+          "decisionId": "gate-con-03-charlie-quota",
+          "eventId": "con-03-charlie-quota",
+          "tick": 1,
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 209715200,
+          "tenantSafeRemainingBytes": 209715200
+        }
+      ],
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 419430400,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 0,
+          "quotaUsedBytes": 0,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 104857600,
+          "guaranteeRemainingBytes": 52428800,
+          "burstRemainingBytes": 52428800,
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 943718400,
+          "availableBytes": 104857600,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 52428800
+        }
+      ],
+      "reconciliation": {
+        "records": [
+          {
+            "decisionId": "gate-con-01-alpha-quota",
+            "eventId": "con-01-alpha-quota",
+            "tick": 1,
+            "tenantId": "c-alpha",
+            "nodeId": "contend-node",
+            "reservedBytes": 419430400,
+            "settledBytes": 419430400,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-con-02-bravo-quota",
+            "eventId": "con-02-bravo-quota",
+            "tick": 1,
+            "tenantId": "c-bravo",
+            "nodeId": "contend-node",
+            "reservedBytes": 314572800,
+            "settledBytes": 314572800,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-con-03-charlie-quota",
+            "eventId": "con-03-charlie-quota",
+            "tick": 1,
+            "tenantId": "c-charlie",
+            "nodeId": "contend-node",
+            "reservedBytes": 209715200,
+            "settledBytes": 209715200,
+            "deltaBytes": 0,
+            "status": "matched"
+          }
+        ],
+        "totalReservedBytes": 943718400,
+        "totalSettledBytes": 943718400,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie"
+        ],
+        "nodeIds": [
+          "contend-node"
+        ],
+        "eventIds": [
+          "con-01-alpha-quota",
+          "con-02-bravo-quota",
+          "con-03-charlie-quota"
+        ]
+      },
+      "stateHash": "37ef5e935b04b6ece0bf45678066285d155e7dc82ae0568a05c3606b024b4020"
+    },
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 2,
+      "canonicalOrder": [
+        "con-04-delta-guarantee",
+        "con-05-alpha-burst",
+        "con-06-bravo-burst",
+        "con-07-charlie-burst"
+      ],
+      "admissions": [
+        {
+          "eventId": "con-04-delta-guarantee",
+          "tenantId": "c-delta",
+          "nodeId": "contend-node",
+          "kind": "apply",
+          "requestedBytes": 52428800,
+          "admittedBytes": 52428800,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "guarantee",
+              "bytes": 52428800,
+              "nodeUsedAfter": 996147200,
+              "tenantUsedAfter": 52428800
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        },
+        {
+          "eventId": "con-05-alpha-burst",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "kind": "burst",
+          "requestedBytes": 104857600,
+          "admittedBytes": 52428800,
+          "queuedBytes": 52428800,
+          "rejectedBytes": 0,
+          "fullyAdmitted": false,
+          "tranches": [
+            {
+              "class": "burst",
+              "bytes": 52428800,
+              "nodeUsedAfter": 1048576000,
+              "tenantUsedAfter": 471859200
+            }
+          ],
+          "gateConclusion": "QUEUE"
+        }
+      ],
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-con-05-alpha-burst",
+          "eventId": "con-05-alpha-burst",
+          "kind": "burst",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 52428800,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 2,
+          "expiresTick": 7,
+          "priority": 10,
+          "weight": 100,
+          "guaranteeBytes": 209715200,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-bravo",
+          "victimTenantId": "c-alpha"
+        },
+        {
+          "id": "queue-con-06-bravo-burst",
+          "eventId": "con-06-bravo-burst",
+          "kind": "burst",
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 2,
+          "expiresTick": 7,
+          "priority": 9,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-bravo"
+        },
+        {
+          "id": "queue-con-07-charlie-burst",
+          "eventId": "con-07-charlie-burst",
+          "kind": "burst",
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 2,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": [
+        {
+          "decisionId": "gate-con-04-delta-guarantee",
+          "eventId": "con-04-delta-guarantee",
+          "tick": 2,
+          "tenantId": "c-delta",
+          "nodeId": "contend-node",
+          "conclusion": "ALLOW",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 52428800,
+          "tenantSafeRemainingBytes": 104857600
+        },
+        {
+          "decisionId": "gate-con-05-alpha-burst",
+          "eventId": "con-05-alpha-burst",
+          "tick": 2,
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 104857600,
+          "tenantSafeRemainingBytes": 104857600
+        },
+        {
+          "decisionId": "gate-con-06-bravo-burst",
+          "eventId": "con-06-bravo-burst",
+          "tick": 2,
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 104857600,
+          "tenantSafeRemainingBytes": 104857600
+        },
+        {
+          "decisionId": "gate-con-07-charlie-burst",
+          "eventId": "con-07-charlie-burst",
+          "tick": 2,
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "conclusion": "QUEUE",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 104857600,
+          "tenantSafeRemainingBytes": 104857600
+        }
+      ],
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 471859200,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 52428800,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 52428800,
+          "quotaUsedBytes": 52428800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 52428800,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 1048576000,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": [
+          {
+            "decisionId": "gate-con-04-delta-guarantee",
+            "eventId": "con-04-delta-guarantee",
+            "tick": 2,
+            "tenantId": "c-delta",
+            "nodeId": "contend-node",
+            "reservedBytes": 52428800,
+            "settledBytes": 52428800,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-con-05-alpha-burst",
+            "eventId": "con-05-alpha-burst",
+            "tick": 2,
+            "tenantId": "c-alpha",
+            "nodeId": "contend-node",
+            "reservedBytes": 0,
+            "settledBytes": 52428800,
+            "deltaBytes": 52428800,
+            "status": "fast_queue_caught_up"
+          },
+          {
+            "decisionId": "gate-con-06-bravo-burst",
+            "eventId": "con-06-bravo-burst",
+            "tick": 2,
+            "tenantId": "c-bravo",
+            "nodeId": "contend-node",
+            "reservedBytes": 0,
+            "settledBytes": 0,
+            "deltaBytes": 0,
+            "status": "matched"
+          },
+          {
+            "decisionId": "gate-con-07-charlie-burst",
+            "eventId": "con-07-charlie-burst",
+            "tick": 2,
+            "tenantId": "c-charlie",
+            "nodeId": "contend-node",
+            "reservedBytes": 0,
+            "settledBytes": 0,
+            "deltaBytes": 0,
+            "status": "matched"
+          }
+        ],
+        "totalReservedBytes": 52428800,
+        "totalSettledBytes": 104857600,
+        "totalDeltaBytes": 52428800,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie",
+          "c-delta"
+        ],
+        "nodeIds": [
+          "contend-node"
+        ],
+        "eventIds": [
+          "con-04-delta-guarantee",
+          "con-05-alpha-burst",
+          "con-06-bravo-burst",
+          "con-07-charlie-burst"
+        ]
+      },
+      "stateHash": "f10ac6d6b94cb283f309758964132fbfa990ff37a78162f902fce63e4693719a"
+    },
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 3,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-con-05-alpha-burst",
+          "eventId": "con-05-alpha-burst",
+          "kind": "burst",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 52428800,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 3,
+          "expiresTick": 7,
+          "priority": 10,
+          "weight": 100,
+          "guaranteeBytes": 209715200,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-bravo",
+          "victimTenantId": "c-alpha"
+        },
+        {
+          "id": "queue-con-06-bravo-burst",
+          "eventId": "con-06-bravo-burst",
+          "kind": "burst",
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 3,
+          "expiresTick": 7,
+          "priority": 9,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-bravo"
+        },
+        {
+          "id": "queue-con-07-charlie-burst",
+          "eventId": "con-07-charlie-burst",
+          "kind": "burst",
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 3,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 471859200,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 52428800,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 52428800,
+          "quotaUsedBytes": 52428800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 52428800,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 1048576000,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie"
+        ],
+        "nodeIds": [
+          "contend-node"
+        ],
+        "eventIds": [
+          "con-05-alpha-burst",
+          "con-06-bravo-burst",
+          "con-07-charlie-burst"
+        ]
+      },
+      "stateHash": "7521a618acb3766ca7b3f7efa2b1b8e320aa637531a7e603c87fd033483db6cc"
+    },
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 4,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-con-05-alpha-burst",
+          "eventId": "con-05-alpha-burst",
+          "kind": "burst",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 52428800,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 4,
+          "expiresTick": 7,
+          "priority": 10,
+          "weight": 100,
+          "guaranteeBytes": 209715200,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-bravo",
+          "victimTenantId": "c-alpha"
+        },
+        {
+          "id": "queue-con-06-bravo-burst",
+          "eventId": "con-06-bravo-burst",
+          "kind": "burst",
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 4,
+          "expiresTick": 7,
+          "priority": 9,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-bravo"
+        },
+        {
+          "id": "queue-con-07-charlie-burst",
+          "eventId": "con-07-charlie-burst",
+          "kind": "burst",
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 4,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 471859200,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 52428800,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 52428800,
+          "quotaUsedBytes": 52428800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 52428800,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 1048576000,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie"
+        ],
+        "nodeIds": [
+          "contend-node"
+        ],
+        "eventIds": [
+          "con-05-alpha-burst",
+          "con-06-bravo-burst",
+          "con-07-charlie-burst"
+        ]
+      },
+      "stateHash": "dfae7bfa8adb777ed1de38accbeb4be57ff9791cdbfbc5faa73b3dbf2161baad"
+    },
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 5,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-con-05-alpha-burst",
+          "eventId": "con-05-alpha-burst",
+          "kind": "burst",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 52428800,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 5,
+          "expiresTick": 7,
+          "priority": 10,
+          "weight": 100,
+          "guaranteeBytes": 209715200,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-bravo",
+          "victimTenantId": "c-alpha"
+        },
+        {
+          "id": "queue-con-06-bravo-burst",
+          "eventId": "con-06-bravo-burst",
+          "kind": "burst",
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 5,
+          "expiresTick": 7,
+          "priority": 9,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-bravo"
+        },
+        {
+          "id": "queue-con-07-charlie-burst",
+          "eventId": "con-07-charlie-burst",
+          "kind": "burst",
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 5,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 471859200,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 52428800,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 52428800,
+          "quotaUsedBytes": 52428800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 52428800,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 1048576000,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie"
+        ],
+        "nodeIds": [
+          "contend-node"
+        ],
+        "eventIds": [
+          "con-05-alpha-burst",
+          "con-06-bravo-burst",
+          "con-07-charlie-burst"
+        ]
+      },
+      "stateHash": "87983eac8fdd9ed6ec44087e75521e754c9997929524c1932665eaa6999a4f91"
+    },
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 6,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-con-05-alpha-burst",
+          "eventId": "con-05-alpha-burst",
+          "kind": "burst",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 52428800,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 6,
+          "expiresTick": 7,
+          "priority": 10,
+          "weight": 100,
+          "guaranteeBytes": 209715200,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-bravo",
+          "victimTenantId": "c-alpha"
+        },
+        {
+          "id": "queue-con-06-bravo-burst",
+          "eventId": "con-06-bravo-burst",
+          "kind": "burst",
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 6,
+          "expiresTick": 7,
+          "priority": 9,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-bravo"
+        },
+        {
+          "id": "queue-con-07-charlie-burst",
+          "eventId": "con-07-charlie-burst",
+          "kind": "burst",
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "originalAmountBytes": 104857600,
+          "remainingAmountBytes": 104857600,
+          "enqueuedTick": 2,
+          "lastAttemptTick": 6,
+          "expiresTick": 7,
+          "priority": 8,
+          "weight": 100,
+          "guaranteeBytes": 104857600,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-charlie"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 471859200,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 52428800,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 1
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 52428800,
+          "quotaUsedBytes": 52428800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 52428800,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 1048576000,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie"
+        ],
+        "nodeIds": [
+          "contend-node"
+        ],
+        "eventIds": [
+          "con-05-alpha-burst",
+          "con-06-bravo-burst",
+          "con-07-charlie-burst"
+        ]
+      },
+      "stateHash": "fa1f22b8754ee661ed866ed6aa6d9c87c47157124b98dcd606acbfc39ff294b3"
+    },
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 7,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": null,
+      "rejections": [
+        {
+          "eventId": "con-05-alpha-burst",
+          "tenantId": "c-alpha",
+          "nodeId": "contend-node",
+          "requestedBytes": 52428800,
+          "rejectedBytes": 52428800,
+          "code": "REJECT_WAIT_TTL",
+          "reason": "request remained unserved through declared queue window",
+          "constraintId": "C-WAIT-TTL",
+          "encroachingTenantId": "c-bravo",
+          "victimTenantId": "c-alpha",
+          "suggestedRetryTick": 8
+        },
+        {
+          "eventId": "con-06-bravo-burst",
+          "tenantId": "c-bravo",
+          "nodeId": "contend-node",
+          "requestedBytes": 104857600,
+          "rejectedBytes": 104857600,
+          "code": "REJECT_WAIT_TTL",
+          "reason": "request remained unserved through declared queue window",
+          "constraintId": "C-WAIT-TTL",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-bravo",
+          "suggestedRetryTick": 8
+        },
+        {
+          "eventId": "con-07-charlie-burst",
+          "tenantId": "c-charlie",
+          "nodeId": "contend-node",
+          "requestedBytes": 104857600,
+          "rejectedBytes": 104857600,
+          "code": "REJECT_WAIT_TTL",
+          "reason": "request remained unserved through declared queue window",
+          "constraintId": "C-WAIT-TTL",
+          "encroachingTenantId": "c-alpha",
+          "victimTenantId": "c-charlie",
+          "suggestedRetryTick": 8
+        }
+      ],
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 471859200,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 52428800,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 52428800,
+          "quotaUsedBytes": 52428800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 52428800,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 1048576000,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie"
+        ],
+        "nodeIds": [
+          "contend-node"
+        ],
+        "eventIds": [
+          "con-05-alpha-burst",
+          "con-06-bravo-burst",
+          "con-07-charlie-burst"
+        ]
+      },
+      "stateHash": "2f15e3ad7047e7ea447e126ba92501ce11fd59ec5e04fdc730355b87117cde95"
+    },
+    {
+      "projectId": "burst-contention",
+      "seed": 43,
+      "tick": 8,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": null,
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "c-alpha",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 419430400,
+          "guaranteeBytes": 209715200,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 471859200,
+          "quotaUsedBytes": 419430400,
+          "burstUsedBytes": 52428800,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-bravo",
+          "priority": 9,
+          "weight": 100,
+          "quotaBytes": 314572800,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 314572800,
+          "quotaUsedBytes": 314572800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-charlie",
+          "priority": 8,
+          "weight": 100,
+          "quotaBytes": 209715200,
+          "guaranteeBytes": 104857600,
+          "burstCapBytes": 104857600,
+          "burstEnabled": true,
+          "usedBytes": 209715200,
+          "quotaUsedBytes": 209715200,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 0,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 104857600,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "c-delta",
+          "priority": 7,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 52428800,
+          "burstCapBytes": 52428800,
+          "burstEnabled": true,
+          "usedBytes": 52428800,
+          "quotaUsedBytes": 52428800,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 52428800,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 52428800,
+          "pinnedNodeId": "contend-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "contend-node",
+          "capacityBytes": 1048576000,
+          "usedBytes": 1048576000,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [],
+        "nodeIds": [],
+        "eventIds": []
+      },
+      "stateHash": "47691b18ebe525b8cb26dc5c49aa047806ab7805a6fd98c17661a6d2545c8ecc"
+    }
+  ]
+}

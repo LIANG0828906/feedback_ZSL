@@ -1,0 +1,63 @@
+{
+  "schema": "quota-project/v3",
+  "metadata": {
+    "projectName": "gate-reconcile",
+    "deterministicSeed": 44,
+    "tickMs": 100
+  },
+  "cluster": {
+    "storage_nodes": [
+      {
+        "name": "reconcile-node",
+        "rack_name": "rack-r",
+        "byte_capacity": 104857600,
+        "tenant_acl": [
+          "r-high",
+          "r-low"
+        ]
+      }
+    ],
+    "tenant_table": [
+      {
+        "id": "r-high",
+        "rack_name": "rack-r",
+        "primary_node": "reconcile-node",
+        "priority_rank": 10,
+        "sched_weight": 100,
+        "quota_milli": 1000,
+        "assurance_bips": 0,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      },
+      {
+        "id": "r-low",
+        "rack_name": "rack-r",
+        "primary_node": "reconcile-node",
+        "priority_rank": 1,
+        "sched_weight": 100,
+        "quota_milli": 1000,
+        "assurance_bips": 0,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "event_name": "rec-01-low-fast-hold",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "r-low",
+      "target_node": "reconcile-node",
+      "byte_count": 62914560
+    },
+    {
+      "event_name": "rec-02-high-priority",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "r-high",
+      "target_node": "reconcile-node",
+      "byte_count": 62914560
+    }
+  ]
+}

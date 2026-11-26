@@ -1,0 +1,131 @@
+{
+  "schema": "quota-project/v3",
+  "metadata": {
+    "projectName": "burst-contention",
+    "deterministicSeed": 43,
+    "tickMs": 100
+  },
+  "cluster": {
+    "storage_nodes": [
+      {
+        "name": "contend-node",
+        "rack_name": "rack-c",
+        "byte_capacity": 1048576000,
+        "tenant_acl": [
+          "c-alpha",
+          "c-bravo",
+          "c-charlie",
+          "c-delta"
+        ]
+      }
+    ],
+    "tenant_table": [
+      {
+        "id": "c-alpha",
+        "rack_name": "rack-c",
+        "primary_node": "contend-node",
+        "priority_rank": 10,
+        "sched_weight": 100,
+        "quota_milli": 400,
+        "assurance_bips": 2000,
+        "burst_limit_bytes": 104857600,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      },
+      {
+        "id": "c-bravo",
+        "rack_name": "rack-c",
+        "primary_node": "contend-node",
+        "priority_rank": 9,
+        "sched_weight": 100,
+        "quota_milli": 300,
+        "assurance_bips": 1000,
+        "burst_limit_bytes": 104857600,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      },
+      {
+        "id": "c-charlie",
+        "rack_name": "rack-c",
+        "primary_node": "contend-node",
+        "priority_rank": 8,
+        "sched_weight": 100,
+        "quota_milli": 200,
+        "assurance_bips": 1000,
+        "burst_limit_bytes": 104857600,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      },
+      {
+        "id": "c-delta",
+        "rack_name": "rack-c",
+        "primary_node": "contend-node",
+        "priority_rank": 7,
+        "sched_weight": 100,
+        "quota_milli": 100,
+        "assurance_bips": 500,
+        "burst_limit_bytes": 52428800,
+        "window_milliseconds": 1000,
+        "wait_milliseconds": 500
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "event_name": "con-01-alpha-quota",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "c-alpha",
+      "target_node": "contend-node",
+      "byte_count": 419430400
+    },
+    {
+      "event_name": "con-02-bravo-quota",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "c-bravo",
+      "target_node": "contend-node",
+      "byte_count": 314572800
+    },
+    {
+      "event_name": "con-03-charlie-quota",
+      "logical_tick": 1,
+      "action": "request",
+      "tenant_name": "c-charlie",
+      "target_node": "contend-node",
+      "byte_count": 209715200
+    },
+    {
+      "event_name": "con-04-delta-guarantee",
+      "logical_tick": 2,
+      "action": "request",
+      "tenant_name": "c-delta",
+      "target_node": "contend-node",
+      "byte_count": 52428800
+    },
+    {
+      "event_name": "con-05-alpha-burst",
+      "logical_tick": 2,
+      "action": "surge",
+      "tenant_name": "c-alpha",
+      "target_node": "contend-node",
+      "byte_count": 104857600
+    },
+    {
+      "event_name": "con-06-bravo-burst",
+      "logical_tick": 2,
+      "action": "surge",
+      "tenant_name": "c-bravo",
+      "target_node": "contend-node",
+      "byte_count": 104857600
+    },
+    {
+      "event_name": "con-07-charlie-burst",
+      "logical_tick": 2,
+      "action": "surge",
+      "tenant_name": "c-charlie",
+      "target_node": "contend-node",
+      "byte_count": 104857600
+    }
+  ]
+}

@@ -1,0 +1,747 @@
+{
+  "seed": 44,
+  "projectFingerprint": "4861c44b1bdef0d6d0bf6069d0e0c23a",
+  "ticks": [
+    {
+      "projectId": "gate-reconcile",
+      "seed": 44,
+      "tick": 1,
+      "canonicalOrder": [
+        "rec-01-low-fast-hold",
+        "rec-02-high-priority"
+      ],
+      "admissions": [
+        {
+          "eventId": "rec-01-low-fast-hold",
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "kind": "apply",
+          "requestedBytes": 62914560,
+          "admittedBytes": 41943040,
+          "queuedBytes": 20971520,
+          "rejectedBytes": 0,
+          "fullyAdmitted": false,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 41943040,
+              "nodeUsedAfter": 104857600,
+              "tenantUsedAfter": 41943040
+            }
+          ],
+          "gateConclusion": "QUEUE"
+        },
+        {
+          "eventId": "rec-02-high-priority",
+          "tenantId": "r-high",
+          "nodeId": "reconcile-node",
+          "kind": "apply",
+          "requestedBytes": 62914560,
+          "admittedBytes": 62914560,
+          "queuedBytes": 0,
+          "rejectedBytes": 0,
+          "fullyAdmitted": true,
+          "tranches": [
+            {
+              "class": "quota",
+              "bytes": 62914560,
+              "nodeUsedAfter": 62914560,
+              "tenantUsedAfter": 62914560
+            }
+          ],
+          "gateConclusion": "ALLOW"
+        }
+      ],
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-rec-01-low-fast-hold",
+          "eventId": "rec-01-low-fast-hold",
+          "kind": "apply",
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 1,
+          "lastAttemptTick": 1,
+          "expiresTick": 6,
+          "priority": 1,
+          "weight": 100,
+          "guaranteeBytes": 0,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "r-high",
+          "victimTenantId": "r-low"
+        }
+      ],
+      "rejections": null,
+      "gate": [
+        {
+          "decisionId": "gate-rec-01-low-fast-hold",
+          "eventId": "rec-01-low-fast-hold",
+          "tick": 1,
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "conclusion": "QUEUE",
+          "fastConclusion": "ALLOW",
+          "reasonCode": "OK_ADMITTED",
+          "fastPath": true,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 62914560,
+          "tenantSafeRemainingBytes": 104857600
+        },
+        {
+          "decisionId": "gate-rec-02-high-priority",
+          "eventId": "rec-02-high-priority",
+          "tick": 1,
+          "tenantId": "r-high",
+          "nodeId": "reconcile-node",
+          "conclusion": "ALLOW",
+          "fastConclusion": "QUEUE",
+          "reasonCode": "FAST_NODE_RESERVE_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "fastPath": false,
+          "reconciled": true,
+          "budgetNs": 10000000,
+          "nodeReserveBytes": 62914560,
+          "tenantSafeRemainingBytes": 104857600
+        }
+      ],
+      "ledgers": [
+        {
+          "tenantId": "r-high",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 62914560,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 41943040,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "r-low",
+          "priority": 1,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 41943040,
+          "quotaUsedBytes": 41943040,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 1
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityBytes": 104857600,
+          "usedBytes": 104857600,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": [
+          {
+            "decisionId": "gate-rec-01-low-fast-hold",
+            "eventId": "rec-01-low-fast-hold",
+            "tick": 1,
+            "tenantId": "r-low",
+            "nodeId": "reconcile-node",
+            "reservedBytes": 62914560,
+            "settledBytes": 41943040,
+            "deltaBytes": -20971520,
+            "status": "over_reserved_released"
+          },
+          {
+            "decisionId": "gate-rec-02-high-priority",
+            "eventId": "rec-02-high-priority",
+            "tick": 1,
+            "tenantId": "r-high",
+            "nodeId": "reconcile-node",
+            "reservedBytes": 0,
+            "settledBytes": 62914560,
+            "deltaBytes": 62914560,
+            "status": "fast_queue_caught_up"
+          }
+        ],
+        "totalReservedBytes": 62914560,
+        "totalSettledBytes": 104857600,
+        "totalDeltaBytes": 41943040,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "r-high",
+          "r-low"
+        ],
+        "nodeIds": [
+          "reconcile-node"
+        ],
+        "eventIds": [
+          "rec-01-low-fast-hold",
+          "rec-02-high-priority"
+        ]
+      },
+      "stateHash": "9b58bdac431bc1807bc3bb2662e538a6a1391a8199a11777c772fa3c7692a3c9"
+    },
+    {
+      "projectId": "gate-reconcile",
+      "seed": 44,
+      "tick": 2,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-rec-01-low-fast-hold",
+          "eventId": "rec-01-low-fast-hold",
+          "kind": "apply",
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 1,
+          "lastAttemptTick": 2,
+          "expiresTick": 6,
+          "priority": 1,
+          "weight": 100,
+          "guaranteeBytes": 0,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "r-high",
+          "victimTenantId": "r-low"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "r-high",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 62914560,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 41943040,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "r-low",
+          "priority": 1,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 41943040,
+          "quotaUsedBytes": 41943040,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 1
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityBytes": 104857600,
+          "usedBytes": 104857600,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "r-low"
+        ],
+        "nodeIds": [
+          "reconcile-node"
+        ],
+        "eventIds": [
+          "rec-01-low-fast-hold"
+        ]
+      },
+      "stateHash": "a4c2056251597f5c571c127782cf24a7d81ff3eea2022f90b0b8fa693335dca8"
+    },
+    {
+      "projectId": "gate-reconcile",
+      "seed": 44,
+      "tick": 3,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-rec-01-low-fast-hold",
+          "eventId": "rec-01-low-fast-hold",
+          "kind": "apply",
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 1,
+          "lastAttemptTick": 3,
+          "expiresTick": 6,
+          "priority": 1,
+          "weight": 100,
+          "guaranteeBytes": 0,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "r-high",
+          "victimTenantId": "r-low"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "r-high",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 62914560,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 41943040,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "r-low",
+          "priority": 1,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 41943040,
+          "quotaUsedBytes": 41943040,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 1
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityBytes": 104857600,
+          "usedBytes": 104857600,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "r-low"
+        ],
+        "nodeIds": [
+          "reconcile-node"
+        ],
+        "eventIds": [
+          "rec-01-low-fast-hold"
+        ]
+      },
+      "stateHash": "9d93b0586851b2b47764ed4f119e8cba7b79c29cdef93761f16ae47526b65ad3"
+    },
+    {
+      "projectId": "gate-reconcile",
+      "seed": 44,
+      "tick": 4,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-rec-01-low-fast-hold",
+          "eventId": "rec-01-low-fast-hold",
+          "kind": "apply",
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 1,
+          "lastAttemptTick": 4,
+          "expiresTick": 6,
+          "priority": 1,
+          "weight": 100,
+          "guaranteeBytes": 0,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "r-high",
+          "victimTenantId": "r-low"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "r-high",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 62914560,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 41943040,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "r-low",
+          "priority": 1,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 41943040,
+          "quotaUsedBytes": 41943040,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 1
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityBytes": 104857600,
+          "usedBytes": 104857600,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "r-low"
+        ],
+        "nodeIds": [
+          "reconcile-node"
+        ],
+        "eventIds": [
+          "rec-01-low-fast-hold"
+        ]
+      },
+      "stateHash": "afb64b93c67dc241a3092b88b25233e54661b2f19eeec7deb1704e292158a474"
+    },
+    {
+      "projectId": "gate-reconcile",
+      "seed": 44,
+      "tick": 5,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": [
+        {
+          "id": "queue-rec-01-low-fast-hold",
+          "eventId": "rec-01-low-fast-hold",
+          "kind": "apply",
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "originalAmountBytes": 62914560,
+          "remainingAmountBytes": 20971520,
+          "enqueuedTick": 1,
+          "lastAttemptTick": 5,
+          "expiresTick": 6,
+          "priority": 1,
+          "weight": 100,
+          "guaranteeBytes": 0,
+          "reasonCode": "NODE_CAPACITY_WAIT",
+          "constraintId": "C-NODE-CAPACITY",
+          "encroachingTenantId": "r-high",
+          "victimTenantId": "r-low"
+        }
+      ],
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "r-high",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 62914560,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 41943040,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "r-low",
+          "priority": 1,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 41943040,
+          "quotaUsedBytes": 41943040,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 1
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityBytes": 104857600,
+          "usedBytes": 104857600,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "r-low"
+        ],
+        "nodeIds": [
+          "reconcile-node"
+        ],
+        "eventIds": [
+          "rec-01-low-fast-hold"
+        ]
+      },
+      "stateHash": "001d72244c2e2749d8a4d7663b02f76c02ec28d2c63ae7c731d353da1ebedc0c"
+    },
+    {
+      "projectId": "gate-reconcile",
+      "seed": 44,
+      "tick": 6,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": null,
+      "rejections": [
+        {
+          "eventId": "rec-01-low-fast-hold",
+          "tenantId": "r-low",
+          "nodeId": "reconcile-node",
+          "requestedBytes": 20971520,
+          "rejectedBytes": 20971520,
+          "code": "REJECT_WAIT_TTL",
+          "reason": "request remained unserved through declared queue window",
+          "constraintId": "C-WAIT-TTL",
+          "encroachingTenantId": "r-high",
+          "victimTenantId": "r-low",
+          "suggestedRetryTick": 7
+        }
+      ],
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "r-high",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 62914560,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 41943040,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "r-low",
+          "priority": 1,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 41943040,
+          "quotaUsedBytes": 41943040,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityBytes": 104857600,
+          "usedBytes": 104857600,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [
+          "r-low"
+        ],
+        "nodeIds": [
+          "reconcile-node"
+        ],
+        "eventIds": [
+          "rec-01-low-fast-hold"
+        ]
+      },
+      "stateHash": "55c019dcdfbbfc8d7f22833934878ca6ef453bab7e5c830ad89996f43e417d24"
+    },
+    {
+      "projectId": "gate-reconcile",
+      "seed": 44,
+      "tick": 7,
+      "canonicalOrder": null,
+      "admissions": null,
+      "releases": null,
+      "queue": null,
+      "rejections": null,
+      "gate": null,
+      "ledgers": [
+        {
+          "tenantId": "r-high",
+          "priority": 10,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 62914560,
+          "quotaUsedBytes": 62914560,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 41943040,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        },
+        {
+          "tenantId": "r-low",
+          "priority": 1,
+          "weight": 100,
+          "quotaBytes": 104857600,
+          "guaranteeBytes": 0,
+          "burstCapBytes": 0,
+          "burstEnabled": false,
+          "usedBytes": 41943040,
+          "quotaUsedBytes": 41943040,
+          "burstUsedBytes": 0,
+          "availableQuotaBytes": 62914560,
+          "guaranteeRemainingBytes": 0,
+          "burstRemainingBytes": 0,
+          "pinnedNodeId": "reconcile-node",
+          "queueLength": 0
+        }
+      ],
+      "nodes": [
+        {
+          "nodeId": "reconcile-node",
+          "capacityBytes": 104857600,
+          "usedBytes": 104857600,
+          "availableBytes": 0,
+          "preDeductedBytes": 0,
+          "protectedGuaranteeBytes": 0
+        }
+      ],
+      "reconciliation": {
+        "records": null,
+        "totalReservedBytes": 0,
+        "totalSettledBytes": 0,
+        "totalDeltaBytes": 0,
+        "closed": true
+      },
+      "dependencies": {
+        "tenantIds": [],
+        "nodeIds": [],
+        "eventIds": []
+      },
+      "stateHash": "14a60fa6f62781b0edfa20c4ee28dd9a245837f33adcd52ea89c8c2272976358"
+    }
+  ]
+}

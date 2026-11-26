@@ -1,0 +1,59 @@
+{
+  "apiVersion": "quotakernel.local/v1alpha1",
+  "project_id": "gate-reconcile",
+  "seed": 44,
+  "tick_interval_ms": 100,
+  "nodes": [
+    {
+      "node_id": "reconcile-node",
+      "rack": "rack-r",
+      "capacity_bytes": 104857600,
+      "allowed_tenants": [
+        "r-high",
+        "r-low"
+      ]
+    }
+  ],
+  "tenants_flat": [
+    {
+      "tenant_id": "r-high",
+      "rack": "rack-r",
+      "home_node_id": "reconcile-node",
+      "priority": 10,
+      "scheduling_weight": 100,
+      "quota_permille": 1000,
+      "guarantee_permyriad": 0,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    },
+    {
+      "tenant_id": "r-low",
+      "rack": "rack-r",
+      "home_node_id": "reconcile-node",
+      "priority": 1,
+      "scheduling_weight": 100,
+      "quota_permille": 1000,
+      "guarantee_permyriad": 0,
+      "window_ms": 1000,
+      "max_queue_wait_ms": 500
+    }
+  ],
+  "events": [
+    {
+      "event_id": "rec-01-low-fast-hold",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "r-low",
+      "node_id": "reconcile-node",
+      "amount_bytes": 62914560
+    },
+    {
+      "event_id": "rec-02-high-priority",
+      "at_tick": 1,
+      "type": "capacity_request",
+      "tenant_id": "r-high",
+      "node_id": "reconcile-node",
+      "amount_bytes": 62914560
+    }
+  ]
+}
