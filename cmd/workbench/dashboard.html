@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>掩码质检诊断工作台</title>
+<style>
+:root{color-scheme:dark;font-family:ui-sans-serif,system-ui,"Segoe UI","Microsoft YaHei",sans-serif}
+body{margin:0;background:#0b1220;color:#e5eefc}
+header{padding:20px 28px;background:linear-gradient(120deg,#123b63,#172033);border-bottom:1px solid #26364f}
+h1{margin:0 0 6px;font-size:22px}.sub{color:#a9bdd8;font-size:13px}
+main{padding:22px 28px;display:grid;gap:18px}
+section{background:#111a2c;border:1px solid #24334d;border-radius:14px;padding:16px 18px;box-shadow:0 10px 30px #0003}
+h2{font-size:16px;margin:0 0 12px}
+.ok{color:#75e0a7}.bad{color:#ff8b8b}.warn{color:#ffd166}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:12px}
+.card{background:#0d1626;border:1px solid #263853;border-radius:12px;padding:12px}
+.card img{width:100%;image-rendering:pixelated;background:repeating-conic-gradient(#18243a 0% 25%,#101a2c 0% 50%) 50%/16px 16px;border-radius:8px;border:1px solid #263853}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{border-bottom:1px solid #24334d;padding:7px 8px;text-align:left;vertical-align:top}
+th{color:#9fb6d6;font-weight:600;background:#0d1626}
+code{color:#9ad7ff;word-break:break-all}
+.pill{display:inline-block;border-radius:999px;padding:2px 8px;font-size:11px;border:1px solid #345075}
+.pill.committed{color:#8ef0bd;border-color:#246447}.pill.failed{color:#ff9c9c;border-color:#7a2f35}.pill.processing{color:#ffd166;border-color:#7a6128}.pill.pending{color:#a9bdd8}
+.muted{color:#8fa5c2}.scroll{overflow:auto;max-height:420px}
+</style>
+</head>
+<body>
+<header><h1>掩码质检诊断工作台</h1><div class="sub">确定性样本 · 三 schema · 整型换算 · 检查点恢复 · 分块失效传播</div></header>
+<main id="app"><section>Loading /api/report ...</section></main>
+<script>
+const esc = x => String(x ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const short = x => x ? `<code>${esc(x.slice(0,16))}</code>` : "";
+function pill(s){return `<span class="pill ${esc(s)}">${esc(s)}</span>`}
+function checkTable(checks){return `<table><thead><tr><th>结果</th><th>检查</th><th>码</th><th>定位/详情</th></tr></thead><tbody>${checks.map(c=>`<tr><td class="${c.ok?'ok':'bad'}">${c.ok?'PASS':'FAIL'}</td><td>${esc(c.name)}</td><td><code>${esc(c.code||'')}</code></td><td class="muted">chunk=${c.chunk_id??-1} stroke=${esc(c.stroke_id||'')}<br>${esc(c.detail)}</td></tr>`).join('')}</tbody></table>`}
+function chunks(r){if(!r)return '<span class=bad>无结果</span>';return `<div class=grid>${r.diagnostics.map(d=>`<div class=card><b>chunk ${d.chunk_id}</b> ${pill(d.coverage_state)} ${pill(d.topology_state)} ${d.reused?'<span class=ok>复用持久化</span>':'<span class=warn>重算</span>'}<br><br><img src="/mask.png?path=live&chunk=${d.chunk_id}&scale=8" alt="chunk ${d.chunk_id}"/><div class=muted>rect ${d.rect.x},${d.rect.y} ${d.rect.width}x${d.rect.height}<br>strokes: ${esc((d.stroke_ids||[]).join(', '))}<br>key ${short(d.cache_key)}<br>sha ${short(d.mask_sha)}</div></div>`).join('')}</div>`}
+function domains(r){if(!r?.report?.domains?.length)return '<span class=warn>无域统计</span>';return `<table><thead><tr><th>域</th><th>面积</th><th>重心×1000</th><th>外接框</th><th>孔洞</th><th>环宽×1000</th></tr></thead><tbody>${r.report.domains.map(d=>`<tr><td>${d.domain_id}</td><td>${d.area}</td><td>${d.centroid_x1000},${d.centroid_y1000}</td><td>${esc(JSON.stringify(d.bbox))}</td><td>${d.holes}</td><td>${d.ring_width1000}</td></tr>`).join('')}</tbody></table>`}
+function edits(steps){return steps.map(s=>`<div class=card><b>#${s.index} ${esc(s.description)}</b><p class=muted>复用 [${s.reused_chunks.join(',')}] · 重算 [${s.recomputed_chunks.join(',')}] · <span class="${s.reuse_matches_plan?'ok':'bad'}">${s.reuse_matches_plan?'范围一致':'范围不一致'}</span></p><table><thead><tr><th>分块</th><th>触发笔画</th><th>传播路径</th><th>原因</th></tr></thead><tbody>${s.plan.items.map(i=>`<tr><td>${i.chunk_id}</td><td><code>${esc(i.trigger_stroke)}</code></td><td><code>${esc(i.propagation_path.join(' → '))}</code></td><td class=muted>${esc(i.reason)}</td></tr>`).join('')}</tbody></table></div>`).join('')}
+function queues(rep){const ev=[...(rep.queue_budget_demo||[]),...(rep.three_path?.live?.queue_events||[])];return `<table><thead><tr><th>分块</th><th>笔画</th><th>原因</th><th>队列前长度/预算</th><th>等待 ns</th></tr></thead><tbody>${ev.map(e=>`<tr><td>${e.chunk_id}</td><td>${esc(e.stroke_id||'')}</td><td class="${e.reason.includes('exhausted')?'warn':''}">${esc(e.reason)}</td><td>${e.queue_length_before}/${e.queue_budget}</td><td>${e.wait_nanoseconds}</td></tr>`).join('')}</tbody></table>`}
+async function main(){
+  const rep=await (await fetch('/api/report')).json();
+  const tp=rep.three_path;
+  document.getElementById('app').innerHTML=`
+<section><h2>验收总览：<span class="${rep.acceptance_ok?'ok':'bad'}">${rep.acceptance_ok?'ACCEPTANCE OK':'CHECK FAILED'}</span></h2><div class=sub>seed=${rep.seed} selected=${esc(rep.selected_sample_id)} · live/recovery/full ${tp.ok?'<span class=ok>逐像素一致</span>':'<span class=bad>存在差异</span>'}</div></section>
+<section><h2>样本与 Schema</h2><table><thead><tr><th>样本</th><th>尺寸</th><th>分块</th><th>笔画</th><th>组</th><th>真值域</th><th>v1/v2/v3</th><th>v1损失</th></tr></thead><tbody>${rep.samples.map(s=>`<tr><td>${s.id}</td><td>${s.width}x${s.height}</td><td>${s.chunks}</td><td>${s.strokes}</td><td>${s.groups}</td><td>${s.domains}</td><td>${s.v1_loaded}/${s.v2_loaded}/${s.v3_loaded}</td><td class=warn>${s.v1_lossy}</td></tr>`).join('')}</tbody></table></section>
+<section><h2>业务码与确定性检查</h2>${checkTable(rep.checks)}</section>
+<section><h2>分块积算掩码</h2>${chunks(tp.live)}</section>
+<section><h2>连通域统计</h2><div class=scroll>${domains(tp.live)}</div><p class=muted>拓扑核验：${tp.live?.topology_error?esc(tp.live.topology_error.message):'通过'}</p></section>
+<section><h2>编辑精确失效传播</h2><div class=grid>${edits(rep.edit_steps)}</div></section>
+<section><h2>预算与排队明细</h2><div class=scroll>${queues(rep)}</div></section>`;
+}
+main();
+</script>
+</body>
+</html>

@@ -19,3 +19,18 @@ WSL Ubuntu Linux，已安装 Go 1.21 及以上工具链并可直接执行 go bui
 
 验收：
 用自带样本与注入编辑序列验证三路径逐像素一致、失效传播范围与异常业务码，并演示诊断界面。
+
+---
+
+## 实现入口
+
+本仓库已交付纯 Go 标准库实现，架构、需求映射和验证结果见 `TECHNICAL.md`。
+
+```bash
+go test ./...
+go run ./cmd/workbench --selftest
+go run ./cmd/workbench --serve
+go run ./cmd/review -a artifacts/workbench/path-live.json -b artifacts/workbench/path-full.json
+```
+
+本地诊断界面默认地址为 `http://127.0.0.1:8765`。Go 标准库没有内置 `sqlite3` 驱动，当前按环境准备中明确允许的方案使用仓库内纯 Go、fsync、校验和事务日志存储。
