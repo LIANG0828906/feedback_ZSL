@@ -1,0 +1,82 @@
+{
+  "seed": 20261127,
+  "batches": [
+    {
+      "timeMs": 300,
+      "batchId": "b1",
+      "promote": [
+        "o6",
+        "o4",
+        "o5"
+      ],
+      "demote": [
+        "o1",
+        "o2",
+        "o7"
+      ]
+    },
+    {
+      "timeMs": 500,
+      "batchId": "b2",
+      "promote": [
+        "o8"
+      ],
+      "demote": [
+        "o6",
+        "o4",
+        "o5"
+      ]
+    },
+    {
+      "timeMs": 650,
+      "batchId": "b3",
+      "promote": [
+        "o8"
+      ],
+      "demote": [
+        "o6",
+        "o4",
+        "o5"
+      ]
+    }
+  ],
+  "commitTimes": [
+    400,
+    750
+  ],
+  "abortTimes": [
+    600
+  ],
+  "heatChecks": [
+    {
+      "timeMs": 300,
+      "object": "o4",
+      "level": "HOT"
+    },
+    {
+      "timeMs": 300,
+      "object": "o1",
+      "level": "COLD"
+    },
+    {
+      "timeMs": 500,
+      "object": "o8",
+      "level": "HOT"
+    },
+    {
+      "timeMs": 500,
+      "object": "o4",
+      "level": "COLD"
+    }
+  ],
+  "finalLayers": {
+    "o1": "cold-a",
+    "o2": "cold-a",
+    "o3": "hot-a",
+    "o4": "cold-a",
+    "o5": "cold-a",
+    "o6": "cold-a",
+    "o7": "cold-a",
+    "o8": "hot-a"
+  }
+}
