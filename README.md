@@ -19,3 +19,49 @@
 
 验收：
 用本地样本跑通三版本装载、逐请求转发与逐跳精度追踪，并核对增量重建、断点恢复与注入异常的业务码。
+
+---
+
+## 已交付实现
+
+本目录现已包含可构建的 Go 1.22 模块、确定性样本生成器、三版 schema 装载器、转发与逐跳精度引擎、增量失效缓存、受限并发与背压、追加式检查点以及终端交互工作台。实现只使用 Go 标准库，不访问网络、真实上游或外部账号。
+
+设计与业务码详见 `DESIGN.md`。
+
+## 快速开始
+
+```bash
+make build
+make test
+make race
+make verify
+make demo
+```
+
+或直接使用命令行：
+
+```bash
+go run ./cmd/proxydiag generate -seed 424242 -out samples
+go run ./cmd/proxydiag verify -samples samples
+go run ./cmd/proxydiag run -samples samples -version v3 -workers 2
+go run ./cmd/proxydiag incremental -samples samples
+go run ./cmd/proxydiag checkpoint -samples samples
+go run ./cmd/proxydiag inject -samples samples
+go run ./cmd/proxydiag workbench -samples samples
+```
+
+本地样本已按固定种子 `424242` 生成在 `samples/`，包含 v1/v2/v3 工程、独立真值与 SHA-256 清单。重新生成会得到相同内容。
+
+## 实际验证结果
+
+验证环境：Linux amd64，Go 1.22.12，仅标准库。
+
+- `go test ./...`：全部包通过。
+- `go test -race ./...`：全部包通过。
+- 三版装载：3 个监听入口、7 个上游、40 个请求；核心指纹一致。
+- 逐请求真值：v1/v2/v3 均为 `40/40`，逐跳 `max_abs_delta=0`，均在声明容差内。
+- tick 与毫秒：v2/v3 转发判定完全一致；`tick_ms_parity=true`。
+- 增量重建：健康、权重、改写、删除、增加五类编辑后，缓存结果与全量重算逐请求一致，且每次均有未受影响结果复用。
+- 检查点：40 条提交恢复为 40 条；prepare-only 不推进全局序号；截断返回 `E_CHECKPOINT_TRUNCATED` 且旧提交可用；版本不匹配返回 `E_CHECKPOINT_VERSION_MISMATCH` 并对当前快照整段重算 40 条。
+- 并发：`workers=2` 与 `workers=8` 的逐请求决定一致；`workers=1` 稳定产生 `E_BACKPRESSURE_WORKERS`；零缓冲稳定产生 `E_BACKPRESSURE_BUFFER`，每个输入序号仍恰好出现一次。
+- 异常注入：重叠入口、缺失上游、空请求行、越界权重、越界在途预算、超时倒置、截断检查点、版本不匹配快照、版本不兼容字段组合均返回稳定业务码，源工程未变，已提交缓存仍可用。

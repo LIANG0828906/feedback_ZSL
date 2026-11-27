@@ -1,0 +1,3547 @@
+{
+  "version": "edge-lab-2026@1",
+  "seed": 424242,
+  "requests": [
+    {
+      "seq": 1,
+      "listener_id": "edge-api",
+      "route_id": "R-api-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /backend/health/100 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-001"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 0,
+          "end_ms": 6,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 36,
+          "end_ms": 41,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83012
+        },
+        {
+          "name": "weight.total",
+          "value": 170000
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 42405
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 23130
+        },
+        {
+          "name": "weight.target",
+          "value": 29112
+        },
+        {
+          "name": "weight.selected",
+          "value": 42405
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 2,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1-admin",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /backend/admin/audit/101 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-002"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1/admin"
+        },
+        {
+          "name": "X-Admin-Route",
+          "value": "true"
+        }
+      ],
+      "selected_upstream_id": "u-gold",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-gold",
+          "start_ms": 0,
+          "end_ms": 7,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-gold",
+          "start_ms": 37,
+          "end_ms": 43,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 3,
+          "upstream_id": "u-gold",
+          "start_ms": 80,
+          "end_ms": 86,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 68385
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 45875
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 19660
+        },
+        {
+          "name": "weight.target",
+          "value": 61626
+        },
+        {
+          "name": "weight.selected",
+          "value": 19660
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.2",
+          "value": 2424
+        },
+        {
+          "name": "attempt.window.3",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 3,
+      "listener_id": "edge-static",
+      "route_id": "R-static-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /assets/favicon-102.ico HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-003"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 10,
+          "end_ms": 310,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 340,
+          "end_ms": 344,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 65536
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 25251
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 19660
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        }
+      ]
+    },
+    {
+      "seq": 4,
+      "listener_id": "edge-static",
+      "route_id": "R-static-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /assets/favicon-103.ico HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-004"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 10,
+          "end_ms": 15,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 45,
+          "end_ms": 50,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_HTTP_503",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 65536
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 10129
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 5,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /ops-internal/healthz HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-005"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 20,
+          "end_ms": 26,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 56,
+          "end_ms": 62,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 114688
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 29491
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 36044
+        },
+        {
+          "name": "weight.target",
+          "value": 30580
+        },
+        {
+          "name": "weight.selected",
+          "value": 36044
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 6,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /internal/metrics/q/105?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-006"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 20,
+          "end_ms": 27,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 57237
+        },
+        {
+          "name": "weight.selected",
+          "value": 39891
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        }
+      ]
+    },
+    {
+      "seq": 7,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /internal/metrics/q/106?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-007"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-ops",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-ops",
+          "start_ms": 30,
+          "end_ms": 280,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_TIMEOUT",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 17426
+        },
+        {
+          "name": "weight.selected",
+          "value": 25644
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 16384
+        }
+      ]
+    },
+    {
+      "seq": 8,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /internal/metrics/q/107?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-008"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 30,
+          "end_ms": 35,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 46749
+        },
+        {
+          "name": "weight.selected",
+          "value": 39891
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 9,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /backend/v1/users/108?expand=roles HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-009"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-gold",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-gold",
+          "start_ms": 40,
+          "end_ms": 46,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-gold",
+          "start_ms": 76,
+          "end_ms": 80,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 58980
+        },
+        {
+          "name": "weight.selected",
+          "value": 11565
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        }
+      ]
+    },
+    {
+      "seq": 10,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1-admin",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /backend/admin/audit/109 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-010"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1/admin"
+        },
+        {
+          "name": "X-Admin-Route",
+          "value": "true"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 40,
+          "end_ms": 47,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-blue",
+          "start_ms": 77,
+          "end_ms": 82,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 3,
+          "upstream_id": "u-blue",
+          "start_ms": 119,
+          "end_ms": 125,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 68385
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 45875
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 19660
+        },
+        {
+          "name": "weight.target",
+          "value": 5648
+        },
+        {
+          "name": "weight.selected",
+          "value": 45875
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        },
+        {
+          "name": "retry.backoff.2",
+          "value": 2424
+        },
+        {
+          "name": "attempt.window.3",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 11,
+      "listener_id": "edge-static",
+      "route_id": "R-static-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /assets/favicon-110.ico HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-011"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 50,
+          "end_ms": 350,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 380,
+          "end_ms": 386,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 65536
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 13001
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 19660
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 12,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /ops-internal/healthz HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-012"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 50,
+          "end_ms": 55,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 85,
+          "end_ms": 89,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_HTTP_503",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 114688
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 29491
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 36044
+        },
+        {
+          "name": "weight.target",
+          "value": 39031
+        },
+        {
+          "name": "weight.selected",
+          "value": 36044
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        }
+      ]
+    },
+    {
+      "seq": 13,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /ops-internal/healthz HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-013"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "selected_upstream_id": "u-ops",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-ops",
+          "start_ms": 60,
+          "end_ms": 310,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_TIMEOUT",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 114688
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 29491
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 36044
+        },
+        {
+          "name": "weight.target",
+          "value": 4159
+        },
+        {
+          "name": "weight.selected",
+          "value": 29491
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 16384
+        }
+      ]
+    },
+    {
+      "seq": 14,
+      "listener_id": "edge-static",
+      "route_id": "R-static-assets",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /cdn/app-113.js HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-014"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-CDN-Tier",
+          "value": "edge"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 60,
+          "end_ms": 67,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 39321
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 2681
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        }
+      ]
+    },
+    {
+      "seq": 15,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /internal/metrics/q/114?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-015"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 70,
+          "end_ms": 320,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-blue",
+          "start_ms": 350,
+          "end_ms": 354,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 3,
+          "upstream_id": "u-blue",
+          "start_ms": 391,
+          "end_ms": 398,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 58429
+        },
+        {
+          "name": "weight.selected",
+          "value": 39891
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 16384
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        },
+        {
+          "name": "retry.backoff.2",
+          "value": 2424
+        },
+        {
+          "name": "attempt.window.3",
+          "value": 458
+        }
+      ]
+    },
+    {
+      "seq": 16,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /internal/metrics/q/115?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-016"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-ops",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-ops",
+          "start_ms": 70,
+          "end_ms": 75,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 8749
+        },
+        {
+          "name": "weight.selected",
+          "value": 25644
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 17,
+      "listener_id": "edge-api",
+      "route_id": "R-api-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /backend/health/116 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-017"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api"
+        }
+      ],
+      "selected_upstream_id": "u-gold",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-gold",
+          "start_ms": 80,
+          "end_ms": 86,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-gold",
+          "start_ms": 116,
+          "end_ms": 122,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83012
+        },
+        {
+          "name": "weight.total",
+          "value": 170000
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 42405
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 23130
+        },
+        {
+          "name": "weight.target",
+          "value": 49852
+        },
+        {
+          "name": "weight.selected",
+          "value": 23130
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 18,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /backend/v1/items/117 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-018"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 80,
+          "end_ms": 87,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-blue",
+          "start_ms": 117,
+          "end_ms": 121,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 3,
+          "upstream_id": "u-blue",
+          "start_ms": 158,
+          "end_ms": 164,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 2901
+        },
+        {
+          "name": "weight.selected",
+          "value": 26985
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        },
+        {
+          "name": "retry.backoff.2",
+          "value": 2424
+        },
+        {
+          "name": "attempt.window.3",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 19,
+      "listener_id": "edge-static",
+      "route_id": "R-static-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /assets/favicon-118.ico HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-019"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 90,
+          "end_ms": 390,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 420,
+          "end_ms": 425,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 65536
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 19113
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 19660
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 20,
+      "listener_id": "edge-static",
+      "route_id": "R-static-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /assets/favicon-119.ico HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-020"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 90,
+          "end_ms": 95,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 125,
+          "end_ms": 131,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_HTTP_503",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 65536
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 29899
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 21,
+      "listener_id": "edge-static",
+      "route_id": "R-static-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /assets/favicon-120.ico HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-021"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 100,
+          "end_ms": 106,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 136,
+          "end_ms": 140,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 65536
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 56735
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        }
+      ]
+    },
+    {
+      "seq": 22,
+      "listener_id": "edge-static",
+      "route_id": "R-static-assets",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /cdn/app-121.js HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-022"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-CDN-Tier",
+          "value": "edge"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 100,
+          "end_ms": 107,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 39321
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 9115
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        }
+      ]
+    },
+    {
+      "seq": 23,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /internal/metrics/q/122?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-023"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 110,
+          "end_ms": 360,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-blue",
+          "start_ms": 390,
+          "end_ms": 396,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 3,
+          "upstream_id": "u-blue",
+          "start_ms": 433,
+          "end_ms": 440,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 30085
+        },
+        {
+          "name": "weight.selected",
+          "value": 39891
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 16384
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.2",
+          "value": 2424
+        },
+        {
+          "name": "attempt.window.3",
+          "value": 458
+        }
+      ]
+    },
+    {
+      "seq": 24,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /internal/metrics/q/123?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-024"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 110,
+          "end_ms": 115,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 34714
+        },
+        {
+          "name": "weight.selected",
+          "value": 39891
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 25,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /backend/v1/users/124?expand=roles HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-025"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 120,
+          "end_ms": 126,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-blue",
+          "start_ms": 156,
+          "end_ms": 161,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 14910
+        },
+        {
+          "name": "weight.selected",
+          "value": 26985
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 26,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /backend/v1/items/125 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-026"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 120,
+          "end_ms": 320,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-blue",
+          "start_ms": 350,
+          "end_ms": 550,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 3,
+          "upstream_id": "u-blue",
+          "start_ms": 587,
+          "end_ms": 787,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_TIMEOUT",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 15208
+        },
+        {
+          "name": "weight.selected",
+          "value": 26985
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 13107
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 13107
+        },
+        {
+          "name": "retry.backoff.2",
+          "value": 2424
+        },
+        {
+          "name": "attempt.window.3",
+          "value": 13107
+        }
+      ]
+    },
+    {
+      "seq": 27,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /backend/v1/users/126?expand=roles HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-027"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 130,
+          "end_ms": 330,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 360,
+          "end_ms": 364,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 30054
+        },
+        {
+          "name": "weight.selected",
+          "value": 21202
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 13107
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        }
+      ]
+    },
+    {
+      "seq": 28,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /backend/v1/items/127 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-028"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 130,
+          "end_ms": 135,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 165,
+          "end_ms": 170,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_HTTP_503",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 43812
+        },
+        {
+          "name": "weight.selected",
+          "value": 21202
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 29,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /ops-internal/healthz HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-029"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 140,
+          "end_ms": 146,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 176,
+          "end_ms": 182,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 114688
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 29491
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 36044
+        },
+        {
+          "name": "weight.target",
+          "value": 33362
+        },
+        {
+          "name": "weight.selected",
+          "value": 36044
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 30,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /ops-internal/healthz HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-030"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "selected_upstream_id": "u-ops",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-ops",
+          "start_ms": 140,
+          "end_ms": 147,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 114688
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 29491
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 36044
+        },
+        {
+          "name": "weight.target",
+          "value": 20594
+        },
+        {
+          "name": "weight.selected",
+          "value": 29491
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        }
+      ]
+    },
+    {
+      "seq": 31,
+      "listener_id": "edge-api",
+      "route_id": "R-api-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /backend/health/130 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-031"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 150,
+          "end_ms": 350,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 380,
+          "end_ms": 385,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_CONNECT",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83012
+        },
+        {
+          "name": "weight.total",
+          "value": 170000
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 42405
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 23130
+        },
+        {
+          "name": "weight.target",
+          "value": 26008
+        },
+        {
+          "name": "weight.selected",
+          "value": 42405
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 13107
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 32,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1-admin",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /backend/admin/audit/131 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-032"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1/admin"
+        },
+        {
+          "name": "X-Admin-Route",
+          "value": "true"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 150,
+          "end_ms": 155,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 68385
+        },
+        {
+          "name": "weight.total",
+          "value": 200000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 45875
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 19660
+        },
+        {
+          "name": "weight.target",
+          "value": 466
+        },
+        {
+          "name": "weight.selected",
+          "value": 45875
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 33,
+      "listener_id": "edge-api",
+      "route_id": "R-api-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /backend/health/132 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-033"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 160,
+          "end_ms": 166,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 196,
+          "end_ms": 200,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83012
+        },
+        {
+          "name": "weight.total",
+          "value": 170000
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 42405
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 23130
+        },
+        {
+          "name": "weight.target",
+          "value": 27390
+        },
+        {
+          "name": "weight.selected",
+          "value": 42405
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        }
+      ]
+    },
+    {
+      "seq": 34,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /backend/v1/items/133 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-034"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 160,
+          "end_ms": 167,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-blue",
+          "start_ms": 197,
+          "end_ms": 202,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 3,
+          "upstream_id": "u-blue",
+          "start_ms": 239,
+          "end_ms": 245,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 15132
+        },
+        {
+          "name": "weight.selected",
+          "value": 26985
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        },
+        {
+          "name": "retry.backoff.2",
+          "value": 2424
+        },
+        {
+          "name": "attempt.window.3",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 35,
+      "listener_id": "edge-api",
+      "route_id": "R-api-v1",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /backend/v1/users/134?expand=roles HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-035"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 170,
+          "end_ms": 370,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-green",
+          "start_ms": 400,
+          "end_ms": 406,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 80956
+        },
+        {
+          "name": "weight.total",
+          "value": 340000
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 26985
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 21202
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 11565
+        },
+        {
+          "name": "weight.normalize.u-standby",
+          "value": 5782
+        },
+        {
+          "name": "weight.target",
+          "value": 28701
+        },
+        {
+          "name": "weight.selected",
+          "value": 21202
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 13107
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 393
+        }
+      ]
+    },
+    {
+      "seq": 36,
+      "listener_id": "edge-static",
+      "route_id": "R-static-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /assets/favicon-135.ico HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-036"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 170,
+          "end_ms": 175,
+          "outcome": "connect",
+          "trigger_reason": "R_CONNECT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 205,
+          "end_ms": 209,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_HTTP_503",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 65536
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 35719
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 262
+        }
+      ]
+    },
+    {
+      "seq": 37,
+      "listener_id": "edge-static",
+      "route_id": "R-static-assets",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "GET /cdn/app-136.js HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-037"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-CDN-Tier",
+          "value": "edge"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 180,
+          "end_ms": 186,
+          "outcome": "http_503",
+          "trigger_reason": "R_HTTP_503",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 216,
+          "end_ms": 221,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 39321
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 28017
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 393
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 327
+        }
+      ]
+    },
+    {
+      "seq": 38,
+      "listener_id": "edge-ops",
+      "route_id": "R-ops-metrics",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "POST /internal/metrics/q/137?window=5m HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-038"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "selected_upstream_id": "u-blue",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-blue",
+          "start_ms": 180,
+          "end_ms": 187,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83740
+        },
+        {
+          "name": "weight.total",
+          "value": 230000
+        },
+        {
+          "name": "weight.normalize.u-ops",
+          "value": 25644
+        },
+        {
+          "name": "weight.normalize.u-blue",
+          "value": 39891
+        },
+        {
+          "name": "weight.target",
+          "value": 64610
+        },
+        {
+          "name": "weight.selected",
+          "value": 39891
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 458
+        }
+      ]
+    },
+    {
+      "seq": 39,
+      "listener_id": "edge-static",
+      "route_id": "R-static-assets",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "PUT /cdn/app-138.js HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-039"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-CDN-Tier",
+          "value": "edge"
+        }
+      ],
+      "selected_upstream_id": "u-cdn",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-cdn",
+          "start_ms": 190,
+          "end_ms": 490,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": true
+        },
+        {
+          "index": 2,
+          "upstream_id": "u-cdn",
+          "start_ms": 520,
+          "end_ms": 820,
+          "outcome": "timeout",
+          "trigger_reason": "R_TIMEOUT",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_RETRY_EXHAUSTED",
+      "terminal_reason": "R_TIMEOUT",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 39321
+        },
+        {
+          "name": "weight.total",
+          "value": 70000
+        },
+        {
+          "name": "weight.normalize.u-cdn",
+          "value": 65536
+        },
+        {
+          "name": "weight.target",
+          "value": 4989
+        },
+        {
+          "name": "weight.selected",
+          "value": 65536
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 19660
+        },
+        {
+          "name": "retry.backoff.1",
+          "value": 1966
+        },
+        {
+          "name": "attempt.window.2",
+          "value": 19660
+        }
+      ]
+    },
+    {
+      "seq": 40,
+      "listener_id": "edge-api",
+      "route_id": "R-api-root",
+      "decision_basis": [
+        "D01",
+        "D03"
+      ],
+      "rewritten_request_line": "DELETE /backend/health/139 HTTP/1.1",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-040"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        },
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api"
+        }
+      ],
+      "selected_upstream_id": "u-green",
+      "attempts": [
+        {
+          "index": 1,
+          "upstream_id": "u-green",
+          "start_ms": 190,
+          "end_ms": 195,
+          "outcome": "success",
+          "trigger_reason": "",
+          "retry_scheduled": false
+        }
+      ],
+      "terminal": "T_SUCCESS",
+      "hops": [
+        {
+          "name": "path.recombine",
+          "value": 83012
+        },
+        {
+          "name": "weight.total",
+          "value": 170000
+        },
+        {
+          "name": "weight.normalize.u-green",
+          "value": 42405
+        },
+        {
+          "name": "weight.normalize.u-gold",
+          "value": 23130
+        },
+        {
+          "name": "weight.target",
+          "value": 672
+        },
+        {
+          "name": "weight.selected",
+          "value": 42405
+        },
+        {
+          "name": "attempt.window.1",
+          "value": 327
+        }
+      ]
+    }
+  ]
+}

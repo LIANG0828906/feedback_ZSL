@@ -1,0 +1,1486 @@
+{
+  "schema": "proxy.project/v1",
+  "version": "edge-lab-2026@1",
+  "seed": 424242,
+  "tick_ms": 10,
+  "fixed": {
+    "path_width_bits": 32,
+    "path_fraction_bits": 16,
+    "weight_width_bits": 48,
+    "weight_fraction_bits": 16,
+    "tolerance": 1
+  },
+  "retry_tick_ms": 20,
+  "backoff_permille": 1500,
+  "listeners": [
+    {
+      "id": "edge-api",
+      "prefix": "/api/",
+      "timeout_ms": 200,
+      "inflight_limit": 3
+    },
+    {
+      "id": "edge-ops",
+      "prefix": "/ops/",
+      "timeout_ms": 250,
+      "inflight_limit": 4
+    },
+    {
+      "id": "edge-static",
+      "prefix": "/static/",
+      "timeout_ms": 300,
+      "inflight_limit": 2
+    }
+  ],
+  "routes": [
+    {
+      "id": "R-api-v1-admin",
+      "listener": "edge-api",
+      "prefix": "/v1/admin/",
+      "strip_prefix": "/api/v1/admin/",
+      "add_prefix": "/backend/admin/",
+      "remove_headers": [
+        "X-Internal-Debug"
+      ],
+      "set_headers": [
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1/admin"
+        },
+        {
+          "name": "X-Admin-Route",
+          "value": "true"
+        }
+      ],
+      "upstreams": [
+        "u-blue",
+        "u-gold"
+      ]
+    },
+    {
+      "id": "R-api-v1",
+      "listener": "edge-api",
+      "prefix": "/v1/",
+      "strip_prefix": "/api/v1/",
+      "add_prefix": "/backend/v1/",
+      "remove_headers": [
+        "X-Internal-Debug"
+      ],
+      "set_headers": [
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api/v1"
+        }
+      ],
+      "upstreams": [
+        "u-blue",
+        "u-green",
+        "u-gold",
+        "u-standby"
+      ]
+    },
+    {
+      "id": "R-api-root",
+      "listener": "edge-api",
+      "prefix": "/",
+      "strip_prefix": "/api/",
+      "add_prefix": "/backend/",
+      "set_headers": [
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/api"
+        }
+      ],
+      "upstreams": [
+        "u-green",
+        "u-gold"
+      ]
+    },
+    {
+      "id": "R-ops-metrics",
+      "listener": "edge-ops",
+      "prefix": "/metrics/",
+      "strip_prefix": "/ops/metrics/",
+      "add_prefix": "/internal/metrics/",
+      "remove_headers": [
+        "X-Debug"
+      ],
+      "set_headers": [
+        {
+          "name": "X-Forwarded-Prefix",
+          "value": "/ops/metrics"
+        }
+      ],
+      "upstreams": [
+        "u-ops",
+        "u-blue"
+      ]
+    },
+    {
+      "id": "R-ops-root",
+      "listener": "edge-ops",
+      "prefix": "/",
+      "strip_prefix": "/ops/",
+      "add_prefix": "/ops-internal/",
+      "upstreams": [
+        "u-ops",
+        "u-green"
+      ]
+    },
+    {
+      "id": "R-static-assets",
+      "listener": "edge-static",
+      "prefix": "/assets/",
+      "strip_prefix": "/static/assets/",
+      "add_prefix": "/cdn/",
+      "set_headers": [
+        {
+          "name": "X-CDN-Tier",
+          "value": "edge"
+        }
+      ],
+      "upstreams": [
+        "u-cdn",
+        "u-archive"
+      ]
+    },
+    {
+      "id": "R-static-root",
+      "listener": "edge-static",
+      "prefix": "/",
+      "strip_prefix": "/static/",
+      "add_prefix": "/assets/",
+      "upstreams": [
+        "u-cdn"
+      ]
+    }
+  ],
+  "upstreams": [
+    {
+      "id": "u-blue",
+      "address": "http://blue.local:8080",
+      "weight_permille": 140,
+      "healthy": true,
+      "max_retries": 2
+    },
+    {
+      "id": "u-green",
+      "address": "http://green.local:8080",
+      "weight_permille": 110,
+      "healthy": true,
+      "max_retries": 1
+    },
+    {
+      "id": "u-gold",
+      "address": "http://gold.local:8080",
+      "weight_permille": 60,
+      "healthy": true,
+      "max_retries": 2
+    },
+    {
+      "id": "u-ops",
+      "address": "http://ops.local:9090",
+      "weight_permille": 90,
+      "healthy": true,
+      "max_retries": 0
+    },
+    {
+      "id": "u-cdn",
+      "address": "http://cdn.local:8081",
+      "weight_permille": 70,
+      "healthy": true,
+      "max_retries": 1
+    },
+    {
+      "id": "u-archive",
+      "address": "http://archive.local:8081",
+      "weight_permille": 50,
+      "healthy": false,
+      "max_retries": 3
+    },
+    {
+      "id": "u-standby",
+      "address": "http://standby.local:8080",
+      "weight_permille": 30,
+      "healthy": true,
+      "max_retries": 0
+    }
+  ],
+  "requests": [
+    {
+      "seq": 1,
+      "arrival_ms": 0,
+      "method": "GET",
+      "path": "/api/health/100",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-001"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "connect"
+      ],
+      "latencies_ms": [
+        6,
+        5,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 2,
+      "arrival_ms": 0,
+      "method": "POST",
+      "path": "/api/v1/admin/audit/101",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-002"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "failures": [
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        7,
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 3,
+      "arrival_ms": 10,
+      "method": "PUT",
+      "path": "/static/favicon-102.ico",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-003"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "timeout"
+      ],
+      "latencies_ms": [
+        8,
+        4,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 4,
+      "arrival_ms": 10,
+      "method": "DELETE",
+      "path": "/static/favicon-103.ico",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-004"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "connect",
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        5,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 5,
+      "arrival_ms": 20,
+      "method": "GET",
+      "path": "/ops/healthz",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-005"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "http_503"
+      ],
+      "latencies_ms": [
+        6,
+        6,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 6,
+      "arrival_ms": 20,
+      "method": "POST",
+      "path": "/ops/metrics/q/105?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-006"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        7,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 7,
+      "arrival_ms": 30,
+      "method": "PUT",
+      "path": "/ops/metrics/q/106?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-007"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "timeout",
+        "connect"
+      ],
+      "latencies_ms": [
+        8,
+        5,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 8,
+      "arrival_ms": 30,
+      "method": "DELETE",
+      "path": "/ops/metrics/q/107?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-008"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        5,
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 9,
+      "arrival_ms": 40,
+      "method": "GET",
+      "path": "/api/v1/users/108?expand=roles",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-009"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "connect"
+      ],
+      "latencies_ms": [
+        6,
+        4,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 10,
+      "arrival_ms": 40,
+      "method": "POST",
+      "path": "/api/v1/admin/audit/109",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-010"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        7,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 11,
+      "arrival_ms": 50,
+      "method": "PUT",
+      "path": "/static/favicon-110.ico",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-011"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "timeout"
+      ],
+      "latencies_ms": [
+        8,
+        6,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 12,
+      "arrival_ms": 50,
+      "method": "DELETE",
+      "path": "/ops/healthz",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-012"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "failures": [
+        "connect",
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        5,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 13,
+      "arrival_ms": 60,
+      "method": "GET",
+      "path": "/ops/healthz",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-013"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "latencies_ms": [
+        999,
+        999,
+        999,
+        999
+      ]
+    },
+    {
+      "seq": 14,
+      "arrival_ms": 60,
+      "method": "POST",
+      "path": "/static/assets/app-113.js",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-014"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        7,
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 15,
+      "arrival_ms": 70,
+      "method": "PUT",
+      "path": "/ops/metrics/q/114?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-015"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "timeout",
+        "connect"
+      ],
+      "latencies_ms": [
+        8,
+        4,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 16,
+      "arrival_ms": 70,
+      "method": "DELETE",
+      "path": "/ops/metrics/q/115?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-016"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "latencies_ms": [
+        5,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 17,
+      "arrival_ms": 80,
+      "method": "GET",
+      "path": "/api/health/116",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-017"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "connect"
+      ],
+      "latencies_ms": [
+        6,
+        6,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 18,
+      "arrival_ms": 80,
+      "method": "POST",
+      "path": "/api/v1/items/117",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-018"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "failures": [
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        7,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 19,
+      "arrival_ms": 90,
+      "method": "PUT",
+      "path": "/static/favicon-118.ico",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-019"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "timeout"
+      ],
+      "latencies_ms": [
+        8,
+        5,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 20,
+      "arrival_ms": 90,
+      "method": "DELETE",
+      "path": "/static/favicon-119.ico",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-020"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "failures": [
+        "connect",
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        5,
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 21,
+      "arrival_ms": 100,
+      "method": "GET",
+      "path": "/static/favicon-120.ico",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-021"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "http_503"
+      ],
+      "latencies_ms": [
+        6,
+        4,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 22,
+      "arrival_ms": 100,
+      "method": "POST",
+      "path": "/static/assets/app-121.js",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-022"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "latencies_ms": [
+        7,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 23,
+      "arrival_ms": 110,
+      "method": "PUT",
+      "path": "/ops/metrics/q/122?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-023"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "timeout",
+        "connect"
+      ],
+      "latencies_ms": [
+        8,
+        6,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 24,
+      "arrival_ms": 110,
+      "method": "DELETE",
+      "path": "/ops/metrics/q/123?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-024"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        5,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 25,
+      "arrival_ms": 120,
+      "method": "GET",
+      "path": "/api/v1/users/124?expand=roles",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-025"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "connect"
+      ],
+      "latencies_ms": [
+        6,
+        5,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 26,
+      "arrival_ms": 120,
+      "method": "POST",
+      "path": "/api/v1/items/125",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-026"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        999,
+        999,
+        999,
+        999
+      ]
+    },
+    {
+      "seq": 27,
+      "arrival_ms": 130,
+      "method": "PUT",
+      "path": "/api/v1/users/126?expand=roles",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-027"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "timeout"
+      ],
+      "latencies_ms": [
+        8,
+        4,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 28,
+      "arrival_ms": 130,
+      "method": "DELETE",
+      "path": "/api/v1/items/127",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-028"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "connect",
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        5,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 29,
+      "arrival_ms": 140,
+      "method": "GET",
+      "path": "/ops/healthz",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-029"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "http_503"
+      ],
+      "latencies_ms": [
+        6,
+        6,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 30,
+      "arrival_ms": 140,
+      "method": "POST",
+      "path": "/ops/healthz",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-030"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        7,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 31,
+      "arrival_ms": 150,
+      "method": "PUT",
+      "path": "/api/health/130",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-031"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "timeout",
+        "connect"
+      ],
+      "latencies_ms": [
+        8,
+        5,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 32,
+      "arrival_ms": 150,
+      "method": "DELETE",
+      "path": "/api/v1/admin/audit/131",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-032"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        5,
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 33,
+      "arrival_ms": 160,
+      "method": "GET",
+      "path": "/api/health/132",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-033"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "connect"
+      ],
+      "latencies_ms": [
+        6,
+        4,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 34,
+      "arrival_ms": 160,
+      "method": "POST",
+      "path": "/api/v1/items/133",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-034"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        7,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 35,
+      "arrival_ms": 170,
+      "method": "PUT",
+      "path": "/api/v1/users/134?expand=roles",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-035"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "failures": [
+        "timeout"
+      ],
+      "latencies_ms": [
+        8,
+        6,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 36,
+      "arrival_ms": 170,
+      "method": "DELETE",
+      "path": "/static/favicon-135.ico",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-036"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "failures": [
+        "connect",
+        "http_503",
+        "connect"
+      ],
+      "latencies_ms": [
+        5,
+        4,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 37,
+      "arrival_ms": 180,
+      "method": "GET",
+      "path": "/static/assets/app-136.js",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-037"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "failures": [
+        "http_503"
+      ],
+      "latencies_ms": [
+        6,
+        5,
+        7,
+        7
+      ]
+    },
+    {
+      "seq": 38,
+      "arrival_ms": 180,
+      "method": "POST",
+      "path": "/ops/metrics/q/137?window=5m",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-038"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        }
+      ],
+      "latencies_ms": [
+        7,
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "seq": 39,
+      "arrival_ms": 190,
+      "method": "PUT",
+      "path": "/static/assets/app-138.js",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-039"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Internal-Debug",
+          "value": "drop-me"
+        }
+      ],
+      "latencies_ms": [
+        999,
+        999,
+        999,
+        999
+      ]
+    },
+    {
+      "seq": 40,
+      "arrival_ms": 190,
+      "method": "DELETE",
+      "path": "/api/health/139",
+      "headers": [
+        {
+          "name": "X-Request-ID",
+          "value": "req-040"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "proxydiag-gen/1"
+        },
+        {
+          "name": "X-Debug",
+          "value": "verbose"
+        }
+      ],
+      "latencies_ms": [
+        5,
+        5,
+        6,
+        7
+      ]
+    }
+  ]
+}
