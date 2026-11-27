@@ -1,0 +1,888 @@
+{
+  "schema_version": 1,
+  "seed": 20261127,
+  "world": {
+    "min_x": 0,
+    "min_y": 0,
+    "max_x": 383,
+    "max_y": 255,
+    "boundary": "[]"
+  },
+  "chunks": [
+    {
+      "id": "B00",
+      "bounds": {
+        "min_x": 0,
+        "min_y": 0,
+        "max_x": 127,
+        "max_y": 127,
+        "boundary": "[]"
+      },
+      "budget": {
+        "max_vertices": 3200,
+        "max_triangles": 4200
+      },
+      "chord_tol_permille": 2,
+      "tolerance_rounding": "half_up",
+      "neighbors": [
+        "B01",
+        "B03"
+      ],
+      "seams": [
+        {
+          "id": "S:B00-B01",
+          "block_a": "B00",
+          "block_b": "B01",
+          "axis": "vertical",
+          "coordinate": 128,
+          "start": 0,
+          "end": 128,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        },
+        {
+          "id": "S:B00-B03",
+          "block_a": "B00",
+          "block_b": "B03",
+          "axis": "horizontal",
+          "coordinate": 128,
+          "start": 0,
+          "end": 128,
+          "spacing": 8,
+          "angle_limit_deg": 38
+        }
+      ]
+    },
+    {
+      "id": "B01",
+      "bounds": {
+        "min_x": 128,
+        "min_y": 0,
+        "max_x": 255,
+        "max_y": 127,
+        "boundary": "[]"
+      },
+      "budget": {
+        "max_vertices": 3000,
+        "max_triangles": 4000
+      },
+      "chord_tol_permille": 3,
+      "tolerance_rounding": "half_up",
+      "neighbors": [
+        "B00",
+        "B02",
+        "B04"
+      ],
+      "seams": [
+        {
+          "id": "S:B00-B01",
+          "block_a": "B00",
+          "block_b": "B01",
+          "axis": "vertical",
+          "coordinate": 128,
+          "start": 0,
+          "end": 128,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        },
+        {
+          "id": "S:B01-B02",
+          "block_a": "B01",
+          "block_b": "B02",
+          "axis": "vertical",
+          "coordinate": 256,
+          "start": 0,
+          "end": 128,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        },
+        {
+          "id": "S:B01-B04",
+          "block_a": "B01",
+          "block_b": "B04",
+          "axis": "horizontal",
+          "coordinate": 128,
+          "start": 128,
+          "end": 256,
+          "spacing": 8,
+          "angle_limit_deg": 38
+        }
+      ]
+    },
+    {
+      "id": "B02",
+      "bounds": {
+        "min_x": 256,
+        "min_y": 0,
+        "max_x": 383,
+        "max_y": 127,
+        "boundary": "[]"
+      },
+      "budget": {
+        "max_vertices": 3600,
+        "max_triangles": 4800
+      },
+      "chord_tol_permille": 4,
+      "tolerance_rounding": "half_up",
+      "neighbors": [
+        "B01",
+        "B05"
+      ],
+      "seams": [
+        {
+          "id": "S:B01-B02",
+          "block_a": "B01",
+          "block_b": "B02",
+          "axis": "vertical",
+          "coordinate": 256,
+          "start": 0,
+          "end": 128,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        },
+        {
+          "id": "S:B02-B05",
+          "block_a": "B02",
+          "block_b": "B05",
+          "axis": "horizontal",
+          "coordinate": 128,
+          "start": 256,
+          "end": 384,
+          "spacing": 8,
+          "angle_limit_deg": 38
+        }
+      ]
+    },
+    {
+      "id": "B03",
+      "bounds": {
+        "min_x": 0,
+        "min_y": 128,
+        "max_x": 127,
+        "max_y": 255,
+        "boundary": "[]"
+      },
+      "budget": {
+        "max_vertices": 3300,
+        "max_triangles": 4400
+      },
+      "chord_tol_permille": 2,
+      "tolerance_rounding": "half_up",
+      "neighbors": [
+        "B00",
+        "B04"
+      ],
+      "seams": [
+        {
+          "id": "S:B00-B03",
+          "block_a": "B00",
+          "block_b": "B03",
+          "axis": "horizontal",
+          "coordinate": 128,
+          "start": 0,
+          "end": 128,
+          "spacing": 8,
+          "angle_limit_deg": 38
+        },
+        {
+          "id": "S:B03-B04",
+          "block_a": "B03",
+          "block_b": "B04",
+          "axis": "vertical",
+          "coordinate": 128,
+          "start": 128,
+          "end": 256,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        }
+      ]
+    },
+    {
+      "id": "B04",
+      "bounds": {
+        "min_x": 128,
+        "min_y": 128,
+        "max_x": 255,
+        "max_y": 255,
+        "boundary": "[]"
+      },
+      "budget": {
+        "max_vertices": 3100,
+        "max_triangles": 4100
+      },
+      "chord_tol_permille": 3,
+      "tolerance_rounding": "half_up",
+      "neighbors": [
+        "B01",
+        "B03",
+        "B05"
+      ],
+      "seams": [
+        {
+          "id": "S:B01-B04",
+          "block_a": "B01",
+          "block_b": "B04",
+          "axis": "horizontal",
+          "coordinate": 128,
+          "start": 128,
+          "end": 256,
+          "spacing": 8,
+          "angle_limit_deg": 38
+        },
+        {
+          "id": "S:B03-B04",
+          "block_a": "B03",
+          "block_b": "B04",
+          "axis": "vertical",
+          "coordinate": 128,
+          "start": 128,
+          "end": 256,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        },
+        {
+          "id": "S:B04-B05",
+          "block_a": "B04",
+          "block_b": "B05",
+          "axis": "vertical",
+          "coordinate": 256,
+          "start": 128,
+          "end": 256,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        }
+      ]
+    },
+    {
+      "id": "B05",
+      "bounds": {
+        "min_x": 256,
+        "min_y": 128,
+        "max_x": 383,
+        "max_y": 255,
+        "boundary": "[]"
+      },
+      "budget": {
+        "max_vertices": 3500,
+        "max_triangles": 4600
+      },
+      "chord_tol_permille": 2,
+      "tolerance_rounding": "half_up",
+      "neighbors": [
+        "B02",
+        "B04"
+      ],
+      "seams": [
+        {
+          "id": "S:B02-B05",
+          "block_a": "B02",
+          "block_b": "B05",
+          "axis": "horizontal",
+          "coordinate": 128,
+          "start": 256,
+          "end": 384,
+          "spacing": 8,
+          "angle_limit_deg": 38
+        },
+        {
+          "id": "S:B04-B05",
+          "block_a": "B04",
+          "block_b": "B05",
+          "axis": "vertical",
+          "coordinate": 256,
+          "start": 128,
+          "end": 256,
+          "spacing": 8,
+          "angle_limit_deg": 42
+        }
+      ]
+    }
+  ],
+  "camera_track": [
+    {
+      "time_ms": 0,
+      "pos_x": -40,
+      "pos_y": 80,
+      "yaw_deg": 18,
+      "pitch_deg": -12,
+      "fov_deg": 58,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B00"
+    },
+    {
+      "time_ms": 750,
+      "pos_x": 18,
+      "pos_y": 112,
+      "yaw_deg": 27,
+      "pitch_deg": -9,
+      "fov_deg": 59,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B01"
+    },
+    {
+      "time_ms": 1500,
+      "pos_x": 75,
+      "pos_y": 125,
+      "yaw_deg": 36,
+      "pitch_deg": -7,
+      "fov_deg": 60,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B02"
+    },
+    {
+      "time_ms": 2250,
+      "pos_x": 133,
+      "pos_y": 112,
+      "yaw_deg": 44,
+      "pitch_deg": -6,
+      "fov_deg": 60,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B03"
+    },
+    {
+      "time_ms": 3000,
+      "pos_x": 190,
+      "pos_y": 80,
+      "yaw_deg": 53,
+      "pitch_deg": -5,
+      "fov_deg": 61,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B04"
+    },
+    {
+      "time_ms": 3750,
+      "pos_x": 248,
+      "pos_y": 48,
+      "yaw_deg": 62,
+      "pitch_deg": -6,
+      "fov_deg": 62,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B05"
+    },
+    {
+      "time_ms": 4500,
+      "pos_x": 305,
+      "pos_y": 35,
+      "yaw_deg": 71,
+      "pitch_deg": -7,
+      "fov_deg": 63,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B00"
+    },
+    {
+      "time_ms": 5250,
+      "pos_x": 363,
+      "pos_y": 48,
+      "yaw_deg": 79,
+      "pitch_deg": -9,
+      "fov_deg": 63,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B01"
+    },
+    {
+      "time_ms": 6000,
+      "pos_x": 420,
+      "pos_y": 80,
+      "yaw_deg": 88,
+      "pitch_deg": -12,
+      "fov_deg": 64,
+      "near": 1,
+      "far": 900,
+      "focus_block": "B02"
+    }
+  ],
+  "truth": {
+    "vertices": [
+      {
+        "block": "B00",
+        "x": 16,
+        "y": 0,
+        "height_mm": 811
+      },
+      {
+        "block": "B00",
+        "x": 0,
+        "y": 48,
+        "height_mm": 855
+      },
+      {
+        "block": "B00",
+        "x": 128,
+        "y": 80,
+        "height_mm": 1108
+      },
+      {
+        "block": "B00",
+        "x": 112,
+        "y": 128,
+        "height_mm": 1148
+      },
+      {
+        "block": "B01",
+        "x": 152,
+        "y": 0,
+        "height_mm": 1031
+      },
+      {
+        "block": "B01",
+        "x": 128,
+        "y": 48,
+        "height_mm": 1065
+      },
+      {
+        "block": "B01",
+        "x": 256,
+        "y": 80,
+        "height_mm": 1240
+      },
+      {
+        "block": "B01",
+        "x": 240,
+        "y": 128,
+        "height_mm": 1293
+      },
+      {
+        "block": "B02",
+        "x": 288,
+        "y": 0,
+        "height_mm": 1119
+      },
+      {
+        "block": "B02",
+        "x": 256,
+        "y": 48,
+        "height_mm": 1192
+      },
+      {
+        "block": "B02",
+        "x": 384,
+        "y": 80,
+        "height_mm": 1217
+      },
+      {
+        "block": "B02",
+        "x": 368,
+        "y": 128,
+        "height_mm": 1301
+      },
+      {
+        "block": "B03",
+        "x": 16,
+        "y": 128,
+        "height_mm": 1016
+      },
+      {
+        "block": "B03",
+        "x": 0,
+        "y": 176,
+        "height_mm": 1088
+      },
+      {
+        "block": "B03",
+        "x": 128,
+        "y": 208,
+        "height_mm": 1270
+      },
+      {
+        "block": "B03",
+        "x": 112,
+        "y": 256,
+        "height_mm": 1316
+      },
+      {
+        "block": "B04",
+        "x": 152,
+        "y": 128,
+        "height_mm": 1202
+      },
+      {
+        "block": "B04",
+        "x": 128,
+        "y": 176,
+        "height_mm": 1230
+      },
+      {
+        "block": "B04",
+        "x": 256,
+        "y": 208,
+        "height_mm": 1380
+      },
+      {
+        "block": "B04",
+        "x": 240,
+        "y": 256,
+        "height_mm": 1402
+      },
+      {
+        "block": "B05",
+        "x": 288,
+        "y": 128,
+        "height_mm": 1316
+      },
+      {
+        "block": "B05",
+        "x": 256,
+        "y": 176,
+        "height_mm": 1354
+      },
+      {
+        "block": "B05",
+        "x": 384,
+        "y": 208,
+        "height_mm": 1386
+      },
+      {
+        "block": "B05",
+        "x": 368,
+        "y": 256,
+        "height_mm": 1426
+      }
+    ],
+    "max_triangles": {
+      "B00": 4200,
+      "B01": 4000,
+      "B02": 4800,
+      "B03": 4400,
+      "B04": 4100,
+      "B05": 4600
+    },
+    "seams": [
+      {
+        "id": "S:B00-B01",
+        "axis": "vertical",
+        "start": 0,
+        "end": 128,
+        "points": [
+          0,
+          8,
+          16,
+          24,
+          32,
+          40,
+          48,
+          56,
+          64,
+          72,
+          80,
+          88,
+          96,
+          104,
+          112,
+          120,
+          128
+        ],
+        "heights_mm": [
+          999,
+          1010,
+          1021,
+          1032,
+          1044,
+          1055,
+          1065,
+          1076,
+          1087,
+          1098,
+          1108,
+          1119,
+          1129,
+          1139,
+          1150,
+          1160,
+          1170
+        ]
+      },
+      {
+        "id": "S:B00-B03",
+        "axis": "horizontal",
+        "start": 0,
+        "end": 128,
+        "points": [
+          0,
+          8,
+          16,
+          24,
+          32,
+          40,
+          48,
+          56,
+          64,
+          72,
+          80,
+          88,
+          96,
+          104,
+          112,
+          120,
+          128
+        ],
+        "heights_mm": [
+          996,
+          1006,
+          1016,
+          1027,
+          1037,
+          1048,
+          1059,
+          1070,
+          1081,
+          1092,
+          1103,
+          1114,
+          1126,
+          1137,
+          1148,
+          1159,
+          1170
+        ]
+      },
+      {
+        "id": "S:B01-B02",
+        "axis": "vertical",
+        "start": 0,
+        "end": 128,
+        "points": [
+          0,
+          8,
+          16,
+          24,
+          32,
+          40,
+          48,
+          56,
+          64,
+          72,
+          80,
+          88,
+          96,
+          104,
+          112,
+          120,
+          128
+        ],
+        "heights_mm": [
+          1113,
+          1126,
+          1140,
+          1153,
+          1166,
+          1179,
+          1192,
+          1204,
+          1216,
+          1228,
+          1240,
+          1251,
+          1262,
+          1273,
+          1284,
+          1294,
+          1303
+        ]
+      },
+      {
+        "id": "S:B01-B04",
+        "axis": "horizontal",
+        "start": 128,
+        "end": 256,
+        "points": [
+          128,
+          136,
+          144,
+          152,
+          160,
+          168,
+          176,
+          184,
+          192,
+          200,
+          208,
+          216,
+          224,
+          232,
+          240,
+          248,
+          256
+        ],
+        "heights_mm": [
+          1170,
+          1181,
+          1191,
+          1202,
+          1212,
+          1222,
+          1231,
+          1241,
+          1250,
+          1258,
+          1266,
+          1274,
+          1281,
+          1287,
+          1293,
+          1298,
+          1303
+        ]
+      },
+      {
+        "id": "S:B02-B05",
+        "axis": "horizontal",
+        "start": 256,
+        "end": 384,
+        "points": [
+          256,
+          264,
+          272,
+          280,
+          288,
+          296,
+          304,
+          312,
+          320,
+          328,
+          336,
+          344,
+          352,
+          360,
+          368,
+          376,
+          384
+        ],
+        "heights_mm": [
+          1303,
+          1307,
+          1311,
+          1314,
+          1316,
+          1318,
+          1319,
+          1319,
+          1319,
+          1317,
+          1316,
+          1313,
+          1310,
+          1306,
+          1301,
+          1296,
+          1290
+        ]
+      },
+      {
+        "id": "S:B03-B04",
+        "axis": "vertical",
+        "start": 128,
+        "end": 256,
+        "points": [
+          128,
+          136,
+          144,
+          152,
+          160,
+          168,
+          176,
+          184,
+          192,
+          200,
+          208,
+          216,
+          224,
+          232,
+          240,
+          248,
+          256
+        ],
+        "heights_mm": [
+          1170,
+          1180,
+          1190,
+          1200,
+          1210,
+          1220,
+          1230,
+          1240,
+          1250,
+          1260,
+          1270,
+          1280,
+          1290,
+          1299,
+          1309,
+          1318,
+          1328
+        ]
+      },
+      {
+        "id": "S:B04-B05",
+        "axis": "vertical",
+        "start": 128,
+        "end": 256,
+        "points": [
+          128,
+          136,
+          144,
+          152,
+          160,
+          168,
+          176,
+          184,
+          192,
+          200,
+          208,
+          216,
+          224,
+          232,
+          240,
+          248,
+          256
+        ],
+        "heights_mm": [
+          1303,
+          1313,
+          1322,
+          1330,
+          1338,
+          1346,
+          1354,
+          1361,
+          1368,
+          1374,
+          1380,
+          1386,
+          1392,
+          1397,
+          1401,
+          1406,
+          1410
+        ]
+      }
+    ],
+    "fractures": [
+      {
+        "id": "F:undersampling:0",
+        "seam": "S:B00-B01",
+        "kind": "undersampling",
+        "at": 64,
+        "tolerance_um": 1000,
+        "angle_limit_deg": 0.25,
+        "expected_attribution": "undersampling"
+      },
+      {
+        "id": "F:alignment:1",
+        "seam": "S:B00-B03",
+        "kind": "alignment_mismatch",
+        "at": 64,
+        "tolerance_um": 12000,
+        "angle_limit_deg": 42,
+        "expected_attribution": "alignment_mismatch"
+      }
+    ]
+  }
+}

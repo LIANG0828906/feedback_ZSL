@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TerrainBake · 分块地形诊断台</title>
+  <style>
+    :root {
+      --bg: #0b1017;
+      --panel: #111923;
+      --panel-2: #162230;
+      --line: #26384b;
+      --text: #dce8f3;
+      --muted: #8ea3b7;
+      --cyan: #55d6c2;
+      --blue: #6ca8ff;
+      --amber: #ffb454;
+      --red: #ff6f78;
+      --green: #70d98d;
+      --violet: #c58bff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(65, 129, 177, .16), transparent 32rem),
+        radial-gradient(circle at 100% 20%, rgba(66, 190, 160, .09), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      font: 14px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    header {
+      padding: 22px 28px 14px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    h1 { margin: 0; font-size: 22px; letter-spacing: .03em; font-weight: 650; }
+    h1 span { color: var(--cyan); }
+    .subtitle { color: var(--muted); margin-top: 5px; }
+    .top-badges { display: flex; flex-wrap: wrap; gap: 7px; justify-content: flex-end; }
+    .badge {
+      border: 1px solid var(--line);
+      background: rgba(17, 25, 35, .8);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .badge b { color: var(--text); font-weight: 600; }
+    main { padding: 18px 22px 34px; max-width: 1780px; margin: 0 auto; }
+    .grid { display: grid; grid-template-columns: minmax(600px, 1.65fr) minmax(340px, .75fr); gap: 14px; }
+    .panel {
+      background: linear-gradient(180deg, rgba(22, 34, 48, .96), rgba(15, 23, 33, .96));
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      color: var(--muted);
+    }
+    .panel-head strong { color: var(--text); font-weight: 600; }
+    .panel-body { padding: 13px; }
+    .canvas-wrap { position: relative; padding: 10px; }
+    canvas { width: 100%; height: auto; border-radius: 9px; background: #080d13; display: block; }
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 12px; padding: 0 12px 12px; color: var(--muted); font-size: 12px;
+    }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+    .metrics { display: grid; grid-template-columns: repeat(6, minmax(100px, 1fr)); gap: 9px; margin: 12px 0; }
+    .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+    .metric .k { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+    .metric .v { font-size: 19px; margin-top: 4px; color: var(--text); }
+    .controls { display: grid; gap: 12px; }
+    .field { display: grid; gap: 5px; }
+    label { color: var(--muted); font-size: 12px; }
+    input, select, button, textarea {
+      font: inherit; color: var(--text); background: #0c141d; border: 1px solid #2d4359;
+      border-radius: 7px; padding: 8px 9px; outline: none;
+    }
+    input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(108,168,255,.13); }
+    button { cursor: pointer; background: #172638; transition: .14s ease; }
+    button:hover { border-color: var(--cyan); transform: translateY(-1px); }
+    button.primary { background: linear-gradient(135deg, #176c66, #194b70); border-color: #2c8e84; }
+    button.warn { background: #3d2916; border-color: #77502a; }
+    button.danger { background: #3a1c22; border-color: #7c353f; }
+    button:disabled { opacity: .45; cursor: wait; transform: none; }
+    .row { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 110px; }
+    .row > button { flex: 0 0 auto; }
+    .time-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+    input[type=range] { padding: 0; accent-color: var(--cyan); }
+    .callout { border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; background: rgba(7,13,19,.45); color: var(--muted); }
+    .callout b { color: var(--text); }
+    .tables { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 8px 7px; text-align: left; border-bottom: 1px solid rgba(38,56,75,.7); vertical-align: top; }
+    th { color: var(--muted); font-weight: 500; position: sticky; top: 0; background: var(--panel); }
+    tr:hover td { background: rgba(85,214,194,.035); }
+    .scroll { max-height: 330px; overflow: auto; }
+    .pill { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 2px 7px; font-size: 11px; }
+    .ok { color: var(--green); border-color: #28663c; background: #102419; }
+    .warnpill { color: var(--amber); border-color: #725326; background: #2b2111; }
+    .bad { color: var(--red); border-color: #74333b; background: #2c1519; }
+    .info { color: var(--blue); border-color: #315b86; background: #101f2f; }
+    .violet { color: var(--violet); border-color: #5d3a7c; background: #21172b; }
+    .mono { font-family: inherit; color: var(--muted); }
+    .digest { color: #7690a8; font-size: 10px; }
+    .section-title { font-size: 13px; color: var(--text); margin: 2px 0 8px; display: flex; justify-content: space-between; gap: 10px; }
+    .section-title span { color: var(--muted); }
+    .footer-note { color: var(--muted); font-size: 12px; margin-top: 14px; }
+    .toast {
+      position: fixed; right: 20px; bottom: 20px; max-width: 560px; border: 1px solid var(--line);
+      background: #121e2b; border-radius: 10px; padding: 12px 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      opacity: 0; transform: translateY(8px); transition: .2s ease; pointer-events: none; z-index: 10;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { border-color: #7c353f; }
+    .toast.ok { border-color: #2e7546; }
+    .empty { color: var(--muted); padding: 10px 0; }
+    @media (max-width: 980px) {
+      .grid, .tables { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(3, 1fr); }
+      header { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Terrain<span>Bake</span> · 分块着色网格诊断台</h1>
+    <div class="subtitle">确定性高程 · 三版 schema · 自适应剖分 · 接缝归因 · 原子检查点</div>
+  </div>
+  <div class="top-badges">
+    <div class="badge">算法 <b id="badgeAlgo">-</b></div>
+    <div class="badge">检查点 <b id="badgeCheckpoint">-</b></div>
+    <div class="badge">并行 <b id="badgeParallel">-</b></div>
+    <div class="badge" id="badgeTruth">真值核验 -</div>
+  </div>
+</header>
+
+<main>
+  <div class="metrics" id="metrics"></div>
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head">
+        <div><strong>世界分块 / 着色三角面 / 线框</strong> <span class="mono" id="worldLabel"></span></div>
+        <button id="refreshBtn">刷新状态</button>
+      </div>
+      <div class="canvas-wrap"><canvas id="scene" width="1200" height="760"></canvas></div>
+      <div class="legend">
+        <span><i class="dot" style="background:#55d6c2"></i>边界对齐</span>
+        <span><i class="dot" style="background:#ffb454"></i>欠采样</span>
+        <span><i class="dot" style="background:#ff6f78"></i>对齐错位</span>
+        <span><i class="dot" style="background:#c58bff"></i>E_ATTR</span>
+        <span><i class="dot" style="background:#6ca8ff"></i>相机焦点</span>
+        <span>暗化块不在当前视锥</span>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-head"><strong>按逻辑时刻演示</strong><span id="timeLabel">t = 0 ms</span></div>
+      <div class="panel-body controls">
+        <div class="time-row">
+          <input id="timeSlider" type="range" min="0" max="8" value="0" step="1">
+          <button id="playBtn">播放</button>
+        </div>
+        <div class="callout" id="cameraInfo">等待相机轨迹…</div>
+
+        <div class="section-title">编辑与增量重剖分 <span>仅失效编辑块 + 邻接块</span></div>
+        <div class="field">
+          <label>分块</label>
+          <select id="editBlock"></select>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>高程增量 mm</label>
+            <input id="heightDelta" type="number" value="0" step="50">
+          </div>
+          <button id="minusHeight">-150</button>
+          <button id="plusHeight">+150</button>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>顶点预算</label>
+            <input id="maxVertices" type="number" value="3200" min="16">
+          </div>
+          <div class="field">
+            <label>三角形预算</label>
+            <input id="maxTriangles" type="number" value="4200" min="8">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>容差 mm</label>
+            <input id="toleranceMM" type="number" value="0" step="0.1" min="0">
+          </div>
+          <button id="applyEdit" class="primary">应用增量</button>
+        </div>
+
+        <div class="section-title">三路径一致验证 <span>草稿 / 恢复 / 全量</span></div>
+        <button id="verifyBtn" class="primary">运行逐块比对</button>
+        <div class="callout" id="verifyInfo">尚未运行。</div>
+
+        <div class="section-title">异常隔离注入 <span>仅影响目标块或输入</span></div>
+        <div class="row">
+          <button class="warn" data-fault="decode">E_DECODE</button>
+          <button class="warn" data-fault="overlap">E_OVER</button>
+          <button class="warn" data-fault="adjacency">E_ADJ</button>
+          <button class="danger" data-fault="block">E_BLOCK</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="tables">
+    <section class="panel">
+      <div class="panel-head"><strong>分块预算与网格摘要</strong><span>顶点 / 三角形 / 边界误差</span></div>
+      <div class="panel-body scroll"><table id="blocksTable"></table></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><strong>共享边界折角与归因</strong><span>逐点对齐 + 超限位置</span></div>
+      <div class="panel-body scroll"><table id="seamsTable"></table></div>
+    </section>
+  </div>
+
+  <div class="tables">
+    <section class="panel">
+      <div class="panel-head"><strong>失效传播 / 复用 / 提交序列</strong><span id="commitSummary"></span></div>
+      <div class="panel-body scroll" id="invalidationBox"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><strong>预算占用与排队明细</strong><span id="queueSummary"></span></div>
+      <div class="panel-body scroll"><table id="queueTable"></table></div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><strong>验证与故障日志</strong><span>truth / three-path / isolation</span></div>
+    <div class="panel-body" id="logBox"></div>
+  </section>
+
+  <div class="footer-note">
+    输入、几何真值、边界序列与断裂归因样本均由固定种子生成；页面不访问外部资源。
+    当前算法仅使用 Go 标准库与本地文件检查点。
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const state = { data: null, frame: null, playing: false, timer: null, selected: null };
+  const $ = id => document.getElementById(id);
+  const canvas = $('scene');
+  const ctx = canvas.getContext('2d');
+  const colors = ['#55d6c2', '#6ca8ff', '#ffb454', '#ff6f78', '#c58bff'];
+
+  function esc(v) {
+    return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function toast(msg, kind = 'ok') {
+    const el = $('toast');
+    el.textContent = msg;
+    el.className = 'toast show ' + (kind === 'error' ? 'error' : 'ok');
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => el.className = 'toast', 5200);
+  }
+  async function api(path, opts = {}) {
+    const r = await fetch(path, {
+      headers: {'Content-Type': 'application/json'},
+      ...opts
+    });
+    let body = null;
+    try { body = await r.json(); } catch (_) { body = null; }
+    if (!r.ok) {
+      const err = body && body.error ? body.error : {code: 'HTTP_' + r.status, message: 'request failed'};
+      const e = new Error((err.code || 'ERROR') + ': ' + (err.message || ''));
+      e.payload = body; e.code = err.code;
+      throw e;
+    }
+    return body;
+  }
+  function fmt(n, digits = 0) {
+    if (n === null || n === undefined) return '-';
+    return Number(n).toLocaleString(undefined, {maximumFractionDigits: digits});
+  }
+  function fmtBytes(n) {
+    if (!n) return '0 B';
+    if (n > 1<<20) return (n/(1<<20)).toFixed(2) + ' MiB';
+    if (n > 1<<10) return (n/(1<<10)).toFixed(1) + ' KiB';
+    return n + ' B';
+  }
+  function attributionClass(a) {
+    if (a === 'ok') return 'ok';
+    if (a === 'undersampling') return 'warnpill';
+    if (a === 'alignment_mismatch') return 'bad';
+    if (a === 'E_ATTR') return 'violet';
+    return 'info';
+  }
+  function heightColor(h, min, max) {
+    const t = Math.max(0, Math.min(1, (h - min) / Math.max(1, max - min)));
+    const hue = 145 - t * 120;
+    const light = 25 + t * 30;
+    return `hsl(${hue}, 42%, ${light}%)`;
+  }
+
+  async function loadState() {
+    try {
+      const data = await api('/api/state');
+      applyState(data);
+      const run = timeSliderValue();
+      await loadFrame(run);
+      toast('状态已刷新');
+    } catch (e) {
+      toast(e.message, 'error');
+    }
+  }
+
+  function applyState(data) {
+    state.data = data;
+    const blocks = data.blocks || [];
+    const sel = $('editBlock');
+    const prev = sel.value || 'B00';
+    sel.innerHTML = blocks.map(b => `<option value="${esc(b.id)}">${esc(b.id)} · ${fmt(b.vertices)}v/${fmt(b.triangles)}t</option>`).join('');
+    sel.value = blocks.some(b => b.id === prev) ? prev : (blocks[0] ? blocks[0].id : '');
+    state.selected = sel.value;
+    renderMetrics();
+    renderTables();
+    renderLogs();
+    updateWorldLabel();
+    drawScene();
+  }
+
+  function renderMetrics() {
+    const d = state.data; if (!d) return;
+    const budget = d.budget || {};
+    const truth = d.truth_check;
+    const metrics = [
+      ['分块', `${(d.blocks||[]).length}`],
+      ['顶点总数', fmt((d.blocks||[]).reduce((a,b)=>a+(b.vertices||0),0))],
+      ['三角形总数', fmt((d.blocks||[]).reduce((a,b)=>a+(b.triangles||0),0))],
+      ['复用', `${d.reused_count ?? 0} / ${(d.blocks||[]).length}`],
+      ['内存峰值', fmtBytes(budget.peak_in_use)],
+      ['排队', `${budget.queued_count ?? 0} · ${budget.total_wait_ms ?? 0} ms`],
+    ];
+    $('metrics').innerHTML = metrics.map(([k,v]) => `<div class="metric"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+    $('badgeAlgo').textContent = 'v1';
+    $('badgeCheckpoint').textContent = (d.written_blocks || []).length + ' 块写入';
+    $('badgeParallel').textContent = `${budget.max_parallelism ?? '-'} / ${fmtBytes(budget.memory_budget)}`;
+    const ok = truth && (!truth.failures || truth.failures.length === 0);
+    $('badgeTruth').innerHTML = ok ? '真值核验 <b style="color:var(--green)">通过</b>' : '真值核验 <b style="color:var(--red)">待查</b>';
+  }
+
+  function renderTables() {
+    const d = state.data; if (!d) return;
+    const rows = (d.blocks || []).map(b => {
+      const status = b.status || 'reused';
+      const cls = status.startsWith('failed') ? 'bad' : status === 'recomputed' ? 'warnpill' : 'ok';
+      return `<tr data-block="${esc(b.id)}">
+        <td><b>${esc(b.id)}</b><div class="digest">${esc((b.mesh_digest||'').slice(0,12))}</div></td>
+        <td>${fmt(b.vertices)} / ${fmt(b.budget.max_vertices)}<div class="digest">${fmt(b.triangles)} / ${fmt(b.budget.max_triangles)} tri</div></td>
+        <td>${(b.tolerance_um/1000).toFixed(3)} mm</td>
+        <td>${(b.height_error_um/1000).toFixed(3)} mm<div class="digest">boundary ${(b.boundary_error_um/1000).toFixed(3)} mm</div></td>
+        <td><span class="pill ${cls}">${esc(status)}</span>${b.undersampled ? ' <span class="pill warnpill">under</span>' : ''}</td>
+      </tr>`;
+    }).join('');
+    $('blocksTable').innerHTML = `<thead><tr><th>块 / 摘要</th><th>顶点 / 三角形</th><th>容差</th><th>高度误差</th><th>状态</th></tr></thead><tbody>${rows}</tbody>`;
+
+    const seams = (d.seam_reports || []).map(s => {
+      const ex = (s.exceeded_positions || []).length ? s.exceeded_positions.join(', ') : '—';
+      return `<tr>
+        <td><b>${esc(s.id)}</b><div class="digest">${esc(s.block_a)} ↔ ${esc(s.block_b)}</div></td>
+        <td>${s.count_a} / ${s.count_b}<div class="digest">${s.aligned ? '逐点对齐' : '序列不一致'}</div></td>
+        <td>${Number(s.max_fold_deg).toFixed(3)}°<div class="digest">limit ${Number(s.angle_limit_deg).toFixed(1)}°</div></td>
+        <td><span class="pill ${attributionClass(s.attribution)}">${esc(s.attribution)}</span><div class="digest">${esc(ex)}</div></td>
+        <td>${s.truth_aligned ? '<span class="pill ok">truth ✓</span>' : '<span class="pill bad">truth ✗</span>'}</td>
+      </tr>`;
+    }).join('');
+    $('seamsTable').innerHTML = `<thead><tr><th>边界</th><th>顶点 A / B</th><th>最大折角</th><th>归因 / 超限位置</th><th>真值</th></tr></thead><tbody>${seams}</tbody>`;
+
+    const inv = (d.invalidations || []).map(v =>
+      `<div class="callout" style="margin-bottom:7px"><b>${esc(v.block_id)}</b> · <span class="pill info">${esc(v.reason)}</span> ${v.source ? `<span class="mono">source=${esc(v.source)}</span>` : ''} ${v.via ? `<span class="mono">via=${esc(v.via)}</span>` : ''} ${v.field ? `<span class="mono">field=${esc(v.field)}</span>` : ''}</div>`
+    ).join('') || '<div class="empty">当前无失效传播记录。</div>';
+    const seq = (d.commit_sequence || []).map((id, i) => `<span class="pill ${i < (d.written_blocks||[]).length ? 'warnpill' : 'ok'}">${i+1}. ${esc(id)}</span>`).join(' ');
+    $('invalidationBox').innerHTML = `<div class="section-title">失效清单 <span>${(d.invalidated||[]).length} 个块</span></div>${inv}
+      <div class="section-title" style="margin-top:12px">复用 <span>${d.reused_count ?? 0}</span></div>
+      <div class="callout">${(d.reused||[]).map(x=>`<span class="pill ok">${esc(x)}</span>`).join(' ') || '—'}</div>
+      <div class="section-title" style="margin-top:12px">规范提交序列 <span>${(d.commit_sequence||[]).length} 块</span></div><div>${seq}</div>`;
+    $('commitSummary').textContent = `written=${(d.written_blocks||[]).length} reused=${d.reused_count ?? 0}`;
+
+    const queues = (d.queue || []).map(q =>
+      `<tr><td><b>${esc(q.block_id)}</b></td><td>${esc(q.reason)}</td><td>${fmtBytes(q.requested_bytes)}</td><td>${fmt(q.wait_ms)} ms</td><td>${q.acquired ? '<span class="pill ok">acquired</span>' : '<span class="pill bad">blocked</span>'}</td></tr>`
+    ).join('');
+    $('queueTable').innerHTML = `<thead><tr><th>块</th><th>原因</th><th>请求</th><th>等待</th><th>结果</th></tr></thead><tbody>${queues || '<tr><td colspan="5" class="empty">没有排队事件。</td></tr>'}</tbody>`;
+    const b = d.budget || {};
+    $('queueSummary').textContent = `peak=${fmtBytes(b.peak_in_use)} / ${fmtBytes(b.memory_budget)} · wait=${b.total_wait_ms||0}ms`;
+  }
+
+  function renderLogs() {
+    const d = state.data; if (!d) return;
+    const truth = d.truth_check;
+    const truthHtml = truth
+      ? `<div class="callout"><b>真值核验</b> · samples=${truth.samples_checked ?? 0} · seams=${truth.seams_checked ?? 0} · caps=${truth.max_triangles_ok ? 'OK' : 'FAIL'}<div class="mono">${esc((truth.failures||[]).join(' | ') || '无失败项')}</div></div>`
+      : '<div class="callout">真值核验在有失败块时暂停。</div>';
+    const verify = d.verification
+      ? `<div class="callout" style="margin-top:7px"><b>三路径验证</b> · <span class="pill ${d.verification.equal ? 'ok' : 'bad'}">${d.verification.equal ? 'equal' : 'E_DIFF'}</span><div class="mono">${esc(d.verification.message || '')}</div><div class="mono">${(d.verification.comparisons||[]).map(c=>`${esc(c.left)} ↔ ${esc(c.right)}: ${c.equal?'✓':'✗'}`).join(' · ')}</div></div>`
+      : '<div class="callout" style="margin-top:7px">尚未运行三路径验证。</div>';
+    const faults = (d.fault_log||[]).slice().reverse().map(f =>
+      `<div class="callout" style="margin-top:7px"><b>${esc(f.kind)}</b> → <span class="pill ${f.code==='E_BLOCK'?'bad':'warnpill'}">${esc(f.code)}</span> ${f.isolated ? '<span class="pill ok">isolated</span>' : ''}<div class="mono">${esc(f.message)} · committed=${f.committed}</div></div>`
+    ).join('') || '<div class="callout" style="margin-top:7px">未注入故障。</div>';
+    $('logBox').innerHTML = truthHtml + verify + faults;
+  }
+
+  function updateWorldLabel() {
+    const d = state.data; if (!d) return;
+    $('worldLabel').textContent = `[${d.world.rect.min_x},${d.world.rect.max_x}) × [${d.world.rect.min_y},${d.world.rect.max_y}) · seed ${d.world.seed}`;
+  }
+
+  function fitTransform(w, h) {
+    const rect = state.data.world.rect;
+    const pad = 42;
+    const sx = (w - pad*2) / Math.max(1, rect.max_x - rect.min_x);
+    const sy = (h - pad*2) / Math.max(1, rect.max_y - rect.min_y);
+    const s = Math.min(sx, sy);
+    const ox = (w - (rect.max_x - rect.min_x)*s)/2;
+    const oy = (h - (rect.max_y - rect.min_y)*s)/2;
+    return {
+      x: x => ox + (x - rect.min_x) * s,
+      y: y => h - (oy + (y - rect.min_y) * s),
+      s
+    };
+  }
+
+  function drawScene() {
+    const d = state.data; if (!d) return;
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#080d13'; ctx.fillRect(0,0,W,H);
+    const tr = fitTransform(W, H);
+    const allHeights = [];
+    for (const m of Object.values(d.meshes || {})) for (const v of m.vertices || []) allHeights.push(v.height_mm);
+    const hmin = Math.min(...allHeights, 0), hmax = Math.max(...allHeights, 1);
+    const visible = new Set(state.frame ? state.frame.visible_blocks || [] : []);
+    const focus = state.frame ? state.frame.sample.focus_block : null;
+
+    // subtle world grid
+    ctx.save();
+    ctx.strokeStyle = 'rgba(78,110,138,.12)';
+    ctx.lineWidth = 1;
+    for (let x = d.world.rect.min_x; x <= d.world.rect.max_x; x += 32) {
+      ctx.beginPath(); ctx.moveTo(tr.x(x), tr.y(d.world.rect.min_y)); ctx.lineTo(tr.x(x), tr.y(d.world.rect.max_y)); ctx.stroke();
+    }
+    for (let y = d.world.rect.min_y; y <= d.world.rect.max_y; y += 32) {
+      ctx.beginPath(); ctx.moveTo(tr.x(d.world.rect.min_x), tr.y(y)); ctx.lineTo(tr.x(d.world.rect.max_x), tr.y(y)); ctx.stroke();
+    }
+    ctx.restore();
+
+    for (const b of d.blocks || []) {
+      const m = (d.meshes || {})[b.id];
+      if (!m) continue;
+      const dim = visible.size > 0 && !visible.has(b.id);
+      const alpha = dim ? .18 : 1;
+      for (const t of m.triangles || []) {
+        const a = m.vertices[t.a], bb = m.vertices[t.b], c = m.vertices[t.c];
+        if (!a || !bb || !c) continue;
+        const avg = (a.height_mm + bb.height_mm + c.height_mm) / 3;
+        ctx.beginPath();
+        ctx.moveTo(tr.x(a.x), tr.y(a.y));
+        ctx.lineTo(tr.x(bb.x), tr.y(bb.y));
+        ctx.lineTo(tr.x(c.x), tr.y(c.y));
+        ctx.closePath();
+        ctx.globalAlpha = alpha * 0.82;
+        ctx.fillStyle = heightColor(avg, hmin, hmax);
+        ctx.fill();
+        ctx.globalAlpha = alpha * 0.26;
+        ctx.strokeStyle = '#cfe9ff';
+        ctx.lineWidth = .65;
+        ctx.stroke();
+      }
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = b.id === focus ? '#6ca8ff' : (b.status || '').startsWith('failed') ? '#ff6f78' : 'rgba(185,220,245,.48)';
+      ctx.lineWidth = b.id === focus ? 2.4 : 1.2;
+      ctx.strokeRect(tr.x(b.rect.min_x), tr.y(b.rect.max_y), (b.rect.max_x-b.rect.min_x)*tr.s, (b.rect.max_y-b.rect.min_y)*tr.s);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = b.id === focus ? '#9cc8ff' : '#9fb4c6';
+      ctx.font = '600 12px ui-monospace, monospace';
+      ctx.fillText(b.id, tr.x(b.rect.min_x)+8, tr.y(b.rect.max_y)+17);
+      ctx.fillStyle = '#6e879c';
+      ctx.font = '10px ui-monospace, monospace';
+      ctx.fillText(`${b.vertices}v / ${b.triangles}t`, tr.x(b.rect.min_x)+8, tr.y(b.rect.max_y)+31);
+    }
+
+    const seamColor = a => a === 'ok' ? '#55d6c2' : a === 'undersampling' ? '#ffb454' : a === 'alignment_mismatch' ? '#ff6f78' : a === 'E_ATTR' ? '#c58bff' : '#8ea3b7';
+    for (const s of d.seam_reports || []) {
+      const spec = (d.seams || []).find(x => x.id === s.id);
+      if (!spec) continue;
+      ctx.save();
+      ctx.strokeStyle = seamColor(s.attribution);
+      ctx.lineWidth = 3;
+      ctx.shadowColor = ctx.strokeStyle;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      if (s.axis === 'vertical') {
+        ctx.moveTo(tr.x(spec.coordinate), tr.y(spec.start));
+        ctx.lineTo(tr.x(spec.coordinate), tr.y(spec.end));
+      } else {
+        ctx.moveTo(tr.x(spec.start), tr.y(spec.coordinate));
+        ctx.lineTo(tr.x(spec.end), tr.y(spec.coordinate));
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    if (state.frame) {
+      const c = state.frame.sample;
+      const px = tr.x(c.position.x), py = tr.y(c.position.y);
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(-(c.yaw_deg || 0) * Math.PI/180);
+      ctx.fillStyle = 'rgba(108,168,255,.15)';
+      ctx.strokeStyle = 'rgba(108,168,255,.65)';
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      const reach = Math.min(220, c.far * tr.s * .25);
+      const half = (c.fov_deg || 58) * Math.PI/360;
+      ctx.lineTo(reach*Math.cos(-half), reach*Math.sin(-half));
+      ctx.lineTo(reach*Math.cos(half), reach*Math.sin(half));
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = '#6ca8ff';
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = '#dce8f3'; ctx.lineWidth = 1; ctx.stroke();
+    }
+  }
+
+  function timeSliderValue() {
+    const d = state.data;
+    if (!d || !d.camera || !d.camera.length) return 0;
+    const idx = Number($('timeSlider').value) || 0;
+    return d.camera[Math.max(0, Math.min(idx, d.camera.length-1))].time_ms;
+  }
+
+  async function loadFrame(t) {
+    try {
+      state.frame = await api('/api/frame?t_ms=' + encodeURIComponent(t));
+      const s = state.frame.sample;
+      $('timeLabel').textContent = `t = ${s.time_ms} ms`;
+      $('cameraInfo').innerHTML = `<b>焦点 ${esc(s.focus_block)}</b> · pos (${fmt(s.position.x)}, ${fmt(s.position.y)}) · yaw ${Number(s.yaw_deg).toFixed(1)}° · fov ${Number(s.fov_deg).toFixed(1)}°<br><span class="mono">visible: ${esc((state.frame.visible_blocks||[]).join(', '))}</span>`;
+      drawScene();
+    } catch (e) {
+      toast(e.message, 'error');
+    }
+  }
+
+  async function applyEdit() {
+    const block = $('editBlock').value;
+    const height = Number($('heightDelta').value || 0);
+    const mv = Number($('maxVertices').value || 0);
+    const mt = Number($('maxTriangles').value || 0);
+    const tol = Number($('toleranceMM').value || 0);
+    const body = {block_id: block};
+    if (height !== 0) body.height_delta_mm = height;
+    if (mv > 0 && mt > 0) body.budget = {max_vertices: mv, max_triangles: mt};
+    if (tol > 0) body.tolerance_um = Math.round(tol * 1000);
+    if (Object.keys(body).length === 1) {
+      toast('请填写高程、预算或容差中的至少一项', 'error');
+      return;
+    }
+    $('applyEdit').disabled = true;
+    try {
+      const data = await api('/api/edit', {method:'POST', body: JSON.stringify(body)});
+      applyState(data);
+      await loadFrame(timeSliderValue());
+      toast(`增量完成：复用 ${data.reused_count || 0} 块，写入 ${(data.written_blocks||[]).length} 块`);
+    } catch (e) {
+      toast(e.message, 'error');
+    } finally { $('applyEdit').disabled = false; }
+  }
+
+  async function verify() {
+    $('verifyBtn').disabled = true;
+    $('verifyInfo').textContent = '正在运行草稿增量、断点恢复与全量重算…';
+    try {
+      const report = await api('/api/verify', {method:'POST'});
+      $('verifyInfo').innerHTML = `<span class="pill ${report.equal?'ok':'bad'}">${report.equal?'三路径逐项一致':'E_DIFF'}</span><div class="mono">${esc(report.message)}</div>`;
+      await refreshStateOnly();
+      toast(report.equal ? '三路径逐项一致' : '发现不一致', report.equal ? 'ok' : 'error');
+    } catch (e) {
+      $('verifyInfo').innerHTML = `<span class="pill bad">${esc(e.code || 'ERROR')}</span><div class="mono">${esc(e.message)}</div>`;
+      await refreshStateOnly();
+      toast(e.message, 'error');
+    } finally { $('verifyBtn').disabled = false; }
+  }
+
+  async function refreshStateOnly() {
+    try {
+      const data = await api('/api/state');
+      applyState(data);
+    } catch (_) {}
+  }
+
+  async function injectFault(kind) {
+    try {
+      const body = JSON.stringify({kind, block_id: $('editBlock').value || 'B02'});
+      const r = await fetch('/api/fault', {method:'POST', headers:{'Content-Type':'application/json'}, body});
+      const payload = await r.json();
+      if (payload.state) applyState(payload.state);
+      const e = payload.error || {};
+      toast(`${e.code || 'FAULT'}: ${e.message || ''}`, 'error');
+      setTimeout(() => loadFrame(timeSliderValue()), 10);
+    } catch (e) {
+      toast(e.message, 'error');
+    }
+  }
+
+  function togglePlay() {
+    state.playing = !state.playing;
+    $('playBtn').textContent = state.playing ? '暂停' : '播放';
+    if (state.playing) {
+      if (state.timer) clearInterval(state.timer);
+      state.timer = setInterval(() => {
+        const cam = (state.data && state.data.camera) || [];
+        if (!cam.length) return;
+        const cur = Number($('timeSlider').value) || 0;
+        const next = (cur + 1) % cam.length;
+        $('timeSlider').value = String(next);
+        loadFrame(cam[next].time_ms);
+      }, 1100);
+    } else if (state.timer) {
+      clearInterval(state.timer); state.timer = null;
+    }
+  }
+
+  $('refreshBtn').onclick = loadState;
+  $('applyEdit').onclick = applyEdit;
+  $('verifyBtn').onclick = verify;
+  $('playBtn').onclick = togglePlay;
+  $('timeSlider').oninput = () => loadFrame(timeSliderValue());
+  $('editBlock').onchange = () => {
+    const b = (state.data.blocks || []).find(x => x.id === $('editBlock').value);
+    if (b) {
+      $('maxVertices').value = b.budget.max_vertices;
+      $('maxTriangles').value = b.budget.max_triangles;
+      $('toleranceMM').value = (b.tolerance_um/1000).toFixed(1);
+    }
+  };
+  $('plusHeight').onclick = () => { $('heightDelta').value = String(Number($('heightDelta').value||0)+150); };
+  $('minusHeight').onclick = () => { $('heightDelta').value = String(Number($('heightDelta').value||0)-150); };
+  document.querySelectorAll('[data-fault]').forEach(b => b.onclick = () => injectFault(b.dataset.fault));
+
+  (async function init() {
+    const data = await api('/api/state');
+    applyState(data);
+    if (data.camera && data.camera.length) {
+      $('timeSlider').max = String(data.camera.length - 1);
+      $('timeSlider').value = '0';
+      await loadFrame(data.camera[0].time_ms);
+      $('editBlock').onchange();
+    }
+  })().catch(e => toast(e.message, 'error'));
+})();
+</script>
+</body>
+</html>
