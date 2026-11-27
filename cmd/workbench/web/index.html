@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volume Fog Chunk Workbench</title>
+<style>
+:root {
+  --bg: #0b0f14;
+  --panel: #121922;
+  --panel2: #182230;
+  --line: #2a394b;
+  --text: #dce7f3;
+  --muted: #8293a8;
+  --accent: #49d6c8;
+  --accent2: #f3a85b;
+  --bad: #ef6575;
+  --ok: #70d68a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: radial-gradient(circle at 15% 0%, #162334 0, var(--bg) 38%);
+  color: var(--text); font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+header { padding: 18px 22px 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0;
+  backdrop-filter: blur(10px); background: rgba(11,15,20,.86); z-index: 5; }
+h1 { font-size: 18px; margin: 0 0 3px; letter-spacing: .03em; }
+.sub { color: var(--muted); font-size: 11px; }
+.wrap { padding: 16px 20px 30px; max-width: 1500px; margin: 0 auto; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+button {
+  border: 1px solid #38536d; color: var(--text); background: #172333;
+  border-radius: 7px; padding: 8px 12px; cursor: pointer; font: inherit;
+}
+button:hover { border-color: var(--accent); color: #fff; }
+button.primary { background: #123d3b; border-color: #2a8d84; color: #cafff9; }
+button.warn { background: #3b2a18; border-color: #8e6636; color: #ffe1ba; }
+button.bad { background: #3a1c24; border-color: #8c4050; color: #ffd5dc; }
+button:disabled { opacity: .45; cursor: wait; }
+input, select {
+  background: #0e151e; color: var(--text); border: 1px solid #31455a;
+  border-radius: 6px; padding: 7px 8px; font: inherit; min-width: 0;
+}
+.grid { display: grid; gap: 12px; }
+.cols2 { grid-template-columns: minmax(0, 1.25fr) minmax(360px, .75fr); }
+.cols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+section.card {
+  background: linear-gradient(180deg, rgba(24,34,48,.95), rgba(18,25,34,.95));
+  border: 1px solid var(--line); border-radius: 10px; padding: 13px; min-width: 0;
+}
+h2 { font-size: 12px; margin: 0 0 10px; color: #b9cbe0; text-transform: uppercase; letter-spacing: .12em; }
+.metrics { display: grid; grid-template-columns: repeat(6, minmax(90px,1fr)); gap: 8px; }
+.metric { border: 1px solid #26374a; border-radius: 8px; padding: 9px; background: #0f1721; }
+.metric b { display: block; font-size: 19px; color: var(--accent); font-weight: 650; }
+.metric span { color: var(--muted); font-size: 10px; }
+.statusline { margin-top: 10px; min-height: 20px; color: var(--muted); white-space: pre-wrap; }
+.progress { height: 8px; border-radius: 999px; background: #0a1119; border: 1px solid #26374a; overflow: hidden; margin-top: 11px; }
+.progress > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #247e77, var(--accent)); transition: width .25s ease; }
+.ok { color: var(--ok); } .badtext { color: var(--bad); } .warn { color: var(--accent2); }
+.media-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(270px,1fr)); gap: 10px; }
+.media { border: 1px solid #26374a; border-radius: 8px; padding: 9px; background: #0e151e; }
+.media-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.media-head b { color: var(--accent); }
+canvas.density { width: 100%; height: 150px; border-radius: 6px; background: #070b10; display: block; }
+.chunk-grid { display: grid; gap: 4px; }
+.chunk {
+  position: relative; min-height: 42px; border-radius: 6px; border: 1px solid #2d4156;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+  font-size: 10px; text-shadow: 0 1px 2px #000; cursor: default; overflow: hidden;
+}
+.chunk.cached { border-color: #4a9e72; }
+.chunk.computed { border-color: #c09254; }
+.chunk.failed { border-color: var(--bad); box-shadow: inset 0 0 0 2px rgba(239,101,117,.35); }
+.chunk.pending { background: #101923; color: var(--muted); }
+.legend { display: flex; gap: 12px; color: var(--muted); font-size: 10px; margin-top: 8px; flex-wrap: wrap; }
+.swatch { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+th, td { text-align: left; padding: 6px 7px; border-bottom: 1px solid #233244; vertical-align: top; }
+th { color: var(--muted); font-weight: 500; position: sticky; top: 0; background: var(--panel2); }
+.scroll { max-height: 250px; overflow: auto; border: 1px solid #26374a; border-radius: 7px; }
+pre { margin: 0; white-space: pre-wrap; word-break: break-word; color: #b8c9dc; }
+.formgrid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
+.formgrid label { display: flex; flex-direction: column; gap: 3px; color: var(--muted); font-size: 10px; }
+.small { color: var(--muted); font-size: 11px; }
+.pill { display: inline-block; padding: 2px 6px; border-radius: 999px; background: #1c2a39; border: 1px solid #31485e; color: #b9cbe0; }
+@media (max-width: 1050px) { .cols2, .cols3 { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 620px) { .metrics { grid-template-columns: repeat(2,1fr); } .formgrid { grid-template-columns: repeat(2,1fr); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Volume Fog · Chunk Integration Workbench</h1>
+  <div class="sub" id="versions">loading deterministic scene…</div>
+</header>
+<div class="wrap">
+  <div class="row" style="margin-bottom:12px">
+    <button class="primary" id="btnPreview">Preview</button>
+    <button class="primary" id="btnExact">Exact</button>
+    <button id="btnResume">Resume</button>
+    <button id="btnCompare">Three-path compare</button>
+    <button id="btnTruth">Truth check</button>
+    <button class="warn" id="btnDecode">Inject E_DECODE</button>
+    <button class="warn" id="btnOrder">Inject E_ORDER</button>
+    <button class="warn" id="btnDens">Inject E_DENS</button>
+    <button class="bad" id="btnBlock">Inject E_BLOCK + retry</button>
+  </div>
+  <div class="statusline" id="status">ready</div>
+
+  <section class="card" style="margin-top:12px">
+    <h2>Frame / Cache / Budget</h2>
+    <div class="metrics">
+      <div class="metric"><b id="mChunks">–</b><span>chunks</span></div>
+      <div class="metric"><b id="mHits">–</b><span>cache hits</span></div>
+      <div class="metric"><b id="mRecompute">–</b><span>recomputed</span></div>
+      <div class="metric"><b id="mInvalid">–</b><span>invalidated</span></div>
+      <div class="metric"><b id="mShadowPeak">–</b><span>shadow peak</span></div>
+      <div class="metric"><b id="mWaits">–</b><span>queue waits</span></div>
+    </div>
+    <div class="small" id="frameMeta" style="margin-top:9px"></div>
+    <div class="progress"><i id="progressBar"></i></div>
+  </section>
+
+  <div class="grid cols2" style="margin-top:12px">
+    <section class="card">
+      <h2>Mediums & Density Preview (max-Z projection)</h2>
+      <div class="media-grid" id="mediaGrid"></div>
+    </section>
+    <section class="card">
+      <h2>Chunk Grid</h2>
+      <div class="chunk-grid" id="chunkGrid"></div>
+      <div class="legend">
+        <span><i class="swatch" style="background:#3b2f1f"></i>computed</span>
+        <span><i class="swatch" style="background:#193a2b"></i>cached</span>
+        <span><i class="swatch" style="background:#4a2029"></i>failed</span>
+        <span><i class="swatch" style="background:#101923"></i>not in frame</span>
+      </div>
+      <div class="small" id="commitSeq" style="margin-top:8px"></div>
+    </section>
+  </div>
+
+  <div class="grid cols2" style="margin-top:12px">
+    <section class="card">
+      <h2>Exact Invalidation List</h2>
+      <div class="scroll"><table><thead><tr><th>medium</th><th>chunk</th><th>reason</th><th>sources</th></tr></thead>
+      <tbody id="invBody"></tbody></table></div>
+    </section>
+    <section class="card">
+      <h2>Budget Queue / Wait Detail</h2>
+      <div class="scroll"><table><thead><tr><th>worker</th><th>chunk</th><th>wait</th><th>need</th><th>reason</th></tr></thead>
+      <tbody id="budgetBody"></tbody></table></div>
+    </section>
+  </div>
+
+  <div class="grid cols2" style="margin-top:12px">
+    <section class="card">
+      <h2>Edit & Incremental Recompute</h2>
+      <div class="formgrid">
+        <label>medium<select id="editMedia"></select></label>
+        <label>x<input id="editX" type="number" value="0"></label>
+        <label>y<input id="editY" type="number" value="0"></label>
+        <label>z<input id="editZ" type="number" value="0"></label>
+        <label>density 0..255<input id="editValue" type="number" value="200"></label>
+        <label>scattering (float)<input id="editScatter" type="number" step="0.001" value="0.280"></label>
+        <div style="display:flex;align-items:end"><button id="btnVoxel">Edit voxel + recompute</button></div>
+        <div style="display:flex;align-items:end"><button id="btnScatter">Edit scatter + recompute</button></div>
+      </div>
+      <div class="small" style="margin-top:8px">Editing commits only affected chunks; unaffected chunks must report cache hits.</div>
+    </section>
+    <section class="card">
+      <h2>Operation Output</h2>
+      <pre id="output" style="min-height:150px">No operation yet.</pre>
+      <h2 style="margin-top:12px">Dependency Graph</h2>
+      <div class="small" id="graphStats"></div>
+    </section>
+  </div>
+</div>
+<script>
+let state = null;
+let busy = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = (v, n=6) => (typeof v === "number" && isFinite(v)) ? v.toFixed(n) : "–";
+const color = (arr) => {
+  if (!arr) return "#101923";
+  const c = x => Math.max(0, Math.min(255, Math.round(Math.pow(Math.max(0,x), .55) * 255)));
+  return `rgb(${c(arr[0])},${c(arr[1])},${c(arr[2])})`;
+};
+
+async function api(path, body=null) {
+  const opt = body === null ? {} : {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)};
+  const res = await fetch(path, opt);
+  let data;
+  try { data = await res.json(); } catch (e) { throw new Error(`HTTP ${res.status}`); }
+  if (!res.ok || data.ok === false) {
+    const err = data.error || data.report || data;
+    throw Object.assign(new Error(typeof err === "string" ? err : JSON.stringify(err)), {payload:data});
+  }
+  return data;
+}
+
+async function refresh() {
+  try {
+    const data = await api("/api/state");
+    state = data.state;
+    render();
+  } catch (e) {
+    $("status").textContent = "state error: " + e.message;
+  }
+}
+
+function setBusy(v, label="") {
+  busy = v;
+  document.querySelectorAll("button").forEach(b => b.disabled = v);
+  if (label) $("status").textContent = label;
+}
+
+async function run(path, body, label) {
+  setBusy(true, label + " …");
+  try {
+    const data = await api(path, body || {});
+    $("output").textContent = JSON.stringify(data, null, 2);
+    $("status").innerHTML = `<span class="ok">${esc(label)} complete</span>`;
+  } catch (e) {
+    $("output").textContent = JSON.stringify(e.payload || {error:e.message}, null, 2);
+    $("status").innerHTML = `<span class="badtext">${esc(label)} failed:</span> ${esc(e.message)}`;
+  } finally {
+    setBusy(false);
+    await refresh();
+  }
+}
+
+function render() {
+  if (!state) return;
+  $("versions").textContent = `seed ${state.seed} · scene ${state.scene_version.slice(0,19)}… · camera ${state.camera_version.slice(0,15)}… · ${state.db_backend}`;
+  $("mChunks").textContent = state.last_frame?.stats?.total_chunks ?? "–";
+  $("mHits").textContent = state.last_frame?.stats?.cache_hits ?? "–";
+  $("mRecompute").textContent = state.last_frame?.stats?.computed_chunks ?? "–";
+  $("mInvalid").textContent = state.last_frame?.stats?.invalidated_chunks ?? "–";
+  $("mShadowPeak").textContent = state.last_frame ? `${state.last_frame.budget.peak}/${state.last_frame.budget.capacity}` : "–";
+  $("mWaits").textContent = state.last_frame?.budget?.wait_count ?? "–";
+  const f = state.last_frame;
+  if (f) {
+    const processed = (f.stats.computed_chunks||0) + (f.stats.cache_hits||0) + (f.stats.failed_chunks||0);
+    const pct = f.stats.total_chunks ? Math.min(100, 100*processed/f.stats.total_chunks) : 0;
+    $("progressBar").style.width = pct.toFixed(1) + "%";
+    const lat = f.latency_limit_ms ? ` · latency ${fmt(f.elapsed_ms,1)}ms / cap ${f.latency_limit_ms}ms` : "";
+    $("frameMeta").textContent = `mode ${f.mode} · progress ${processed}/${f.stats.total_chunks} · steps ${f.stats.steps_used} · shadow ${f.stats.shadow_samples_used} · commits ${f.stats.commits_written}${lat} · ${f.reason || ""}`;
+    $("commitSeq").textContent = `commit sequence: ${f.committed_sequence?.join(", ") || "none"}`;
+  } else {
+    $("frameMeta").textContent = "No frame yet. Run Preview or Exact.";
+    $("commitSeq").textContent = "";
+  }
+  if (state.preview_exact_error) {
+    $("status").innerHTML = `<span class="badtext">E_DIVERGE</span> ${esc(state.preview_exact_error.message || "")}`;
+  }
+  renderMedia();
+  renderChunks();
+  renderInvalidations();
+  renderBudget();
+  $("graphStats").textContent = `nodes ${state.graph.nodes} · edges ${state.graph.edges} · rays ${state.graph.rays} · chunks ${state.graph.chunks} · truth ${state.truth_available ? "available" : "stale/unavailable"}`;
+  const sel = $("editMedia");
+  if (sel.options.length !== state.media.length) {
+    sel.innerHTML = state.media.map(m => `<option value="${esc(m.id)}">${esc(m.id)}</option>`).join("");
+  }
+}
+
+function renderMedia() {
+  const host = $("mediaGrid");
+  host.innerHTML = "";
+  for (const m of state.media) {
+    const div = document.createElement("div");
+    div.className = "media";
+    div.innerHTML = `<div class="media-head"><b>${esc(m.id)}</b><span class="pill">${m.density_res.join("×")}</span></div>
+      <canvas class="density"></canvas>
+      <div class="small" style="margin-top:6px">abs ${fmt(m.absorption_q/1e6,3)} · scat ${fmt(m.scattering_q/1e6,3)} · g ${fmt(m.anisotropy_q/1e6,3)}</div>`;
+    host.appendChild(div);
+    drawDensity(m, div.querySelector("canvas"));
+  }
+}
+
+function drawDensity(m, canvas) {
+  const rx=m.density_res[0], ry=m.density_res[1], rz=m.density_res[2];
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const w = Math.max(220, canvas.clientWidth || 260), h = 150;
+  canvas.width = Math.floor(w*dpr); canvas.height = Math.floor(h*dpr);
+  const ctx = canvas.getContext("2d"); ctx.scale(dpr,dpr);
+  ctx.fillStyle = "#070b10"; ctx.fillRect(0,0,w,h);
+  const cw = w/rx, ch = h/ry;
+  for (let y=0; y<ry; y++) for (let x=0; x<rx; x++) {
+    let maxd=0;
+    for (let z=0; z<rz; z++) maxd = Math.max(maxd, m.density[(z*ry+y)*rx+x] || 0);
+    const t = maxd/255;
+    const r = Math.round(15 + 240*Math.pow(t,1.35));
+    const g = Math.round(40 + 140*Math.pow(t,1.7));
+    const b = Math.round(70 + 120*(1-t));
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(x*cw, h-(y+1)*ch, Math.ceil(cw), Math.ceil(ch));
+  }
+}
+
+function renderChunks() {
+  const host = $("chunkGrid");
+  host.innerHTML = "";
+  const f = state.last_frame;
+  if (!f) { host.innerHTML = `<div class="chunk pending">run a frame</div>`; return; }
+  const cols = Math.max(...f.chunks.map(c=>c.chunk_x)) + 1;
+  host.style.gridTemplateColumns = `repeat(${cols}, minmax(48px,1fr))`;
+  for (const c of f.chunks) {
+    const el = document.createElement("div");
+    el.className = `chunk ${c.status}`;
+    el.style.background = color(c.center_color);
+    el.title = `chunk (${c.chunk_x},${c.chunk_y})\nstatus ${c.status}\nT ${c.center_transmittance}\nscattering ${c.center_scattering}\nsteps ${c.steps_used} shadow ${c.shadow_samples_used}\ncache ${c.cache_key}`;
+    el.innerHTML = `<span>${c.chunk_x},${c.chunk_y}<br>${esc(c.status)}</span>`;
+    host.appendChild(el);
+  }
+}
+
+function renderInvalidations() {
+  const body = $("invBody");
+  body.innerHTML = state.invalidations?.length
+    ? state.invalidations.map(i => `<tr><td>${esc(i.media_id)}</td><td>(${i.chunk.x},${i.chunk.y})</td><td>${esc(i.reason)}</td><td class="small">${esc((i.sources||[]).join(", "))}</td></tr>`).join("")
+    : `<tr><td colspan="4" class="small">No invalidation recorded.</td></tr>`;
+}
+
+function renderBudget() {
+  const body = $("budgetBody");
+  const waits = state.last_frame?.budget?.wait_events || [];
+  body.innerHTML = waits.length
+    ? waits.slice(-30).reverse().map(w => `<tr><td>${w.worker}</td><td>(${w.chunk.x},${w.chunk.y})</td><td>${fmt(w.waited_us/1000,3)} ms</td><td>${w.needed}</td><td>${esc(w.reason)}</td></tr>`).join("")
+    : `<tr><td colspan="5" class="small">No budget wait in the last frame.</td></tr>`;
+}
+
+$("btnPreview").onclick = () => run("/api/render/preview", {}, "Preview");
+$("btnExact").onclick = () => run("/api/render/exact", {}, "Exact render");
+$("btnResume").onclick = () => run("/api/render/resume", {}, "Resume render");
+$("btnCompare").onclick = () => run("/api/compare", {}, "Three-path comparison");
+$("btnTruth").onclick = () => run("/api/truth", {}, "Truth validation");
+$("btnDecode").onclick = () => run("/api/fault", {kind:"decode"}, "E_DECODE injection");
+$("btnOrder").onclick = () => run("/api/fault", {kind:"order"}, "E_ORDER injection");
+$("btnDens").onclick = () => run("/api/fault", {kind:"dens"}, "E_DENS injection");
+$("btnBlock").onclick = () => run("/api/fault", {kind:"block", cx:0, cy:0}, "E_BLOCK injection + retry");
+$("btnVoxel").onclick = () => run("/api/edit", {
+  kind:"voxel", media_id:$("editMedia").value,
+  x:Number($("editX").value), y:Number($("editY").value), z:Number($("editZ").value),
+  value:Number($("editValue").value)
+}, "Voxel edit");
+$("btnScatter").onclick = () => run("/api/edit", {
+  kind:"scattering", media_id:$("editMedia").value,
+  value_q:Math.round(Number($("editScatter").value)*1e6)
+}, "Scattering edit");
+
+refresh();
+setInterval(() => { if (!busy) refresh(); }, 4000);
+</script>
+</body>
+</html>

@@ -1,3 +1,31 @@
+## 实现交付
+
+本仓库已实现一个零第三方 Go 依赖的透明介质体积雾分块积分内核与本地诊断工作台。
+
+快速开始：
+
+```bash
+go version                       # 本地实测 go1.22.12
+go test ./...
+CGO_ENABLED=0 go test ./...
+go test -race ./...
+go vet ./...
+go run ./cmd/validate -out artifacts/validation
+go run ./cmd/workbench           # 浏览器打开 http://127.0.0.1:8099
+```
+
+设计、定点/重叠规则、预算语义、缓存键、SQLite 事务、错误码、HTTP API 和已记录验收结果见
+[`docs/DESIGN.md`](docs/DESIGN.md)。本地实测汇总见
+[`artifacts/validation/validation-summary.txt`](artifacts/validation/validation-summary.txt)，
+完整机器可读结果见
+[`artifacts/validation/validation-report.json`](artifacts/validation/validation-report.json)。
+
+默认样本：固定种子 `1592598566`，3 个 AABB 介质体，32×16 视口，8×8 屏幕块，
+8 个分块，SQLite 3.46.1。cgo 构建直接绑定系统 SQLite ABI；无 cgo 或系统 SQLite
+不可用时自动退化为标准库原子文件后端，接口与测试保持一致。
+
+---
+
 图形小组在接入正式渲染管线之前，需要先把实时对战场景的透明介质体积雾分块积分渲染这条链路独立做成可验收内核。工作区是一个刚创建的空 Go 模块目录，除 Go 工具链外没有源码、样本或既有约定。交付物既是可集成的 Go 领域组件，也带一个可通过本地页面操作与诊断的桌面工作台。全部场景与解析真值由实现自行编写的确定性生成器按固定种子产出：若干轴对齐包围盒描述的介质体，各自声明吸收系数、散射系数、各向异性参数与以整型体素表达的密度场；一组按逻辑时间排列、带位置朝向与视锥参数的相机采样轨迹；一份积分配方，含步进次数、相位函数类型、阴影采样数与透射率截断阈值。生成器同时记录解析真值，含若干采样射线的逐段透射率与累积散射辐亮度、屏幕分块中心像素的期望颜色与透射率，真值只来自生成器的解析构造，是精度观测的唯一来源。
 
 任务环境与准备：
