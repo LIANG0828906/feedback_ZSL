@@ -18,3 +18,15 @@
 
 验收：
 用固定种子样本验证三版本装载、逐帧反弹求解、分块快照续算与三路径一致及注入异常码。
+
+## 实现快速入口
+
+完整设计、字段口径与实测结果见 `docs/IMPLEMENTATION.md`。
+
+```bash
+go test ./... -count=1
+go run ./cmd/ballisticgrid verify --dir artifacts/run
+go run ./cmd/ballisticgrid serve --addr 127.0.0.1:8088 --dir artifacts/run
+```
+
+固定种子为 `20261127`；验证产物写入 `artifacts/run/`，包括三版本 schema、请求/真值、`tiles.db`、`summary.json` 与 `restart.json`。
