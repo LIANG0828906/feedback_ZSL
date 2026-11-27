@@ -1,0 +1,160 @@
+{
+  "cues": [
+    {
+      "end_us": 400000,
+      "fixture": "F1",
+      "from_level_myriad": 2000,
+      "id": "cue-fade-f1",
+      "kind": "fade",
+      "start_us": 0,
+      "to_level_myriad": 4000
+    },
+    {
+      "end_us": 200000,
+      "fixture": "F2",
+      "from_pan_urad": -174533,
+      "from_tilt_urad": -1535890,
+      "id": "cue-sweep-f2",
+      "kind": "sweep",
+      "start_us": 0,
+      "to_pan_urad": 174533,
+      "to_tilt_urad": -1535890
+    },
+    {
+      "end_us": 400000,
+      "fixture": "F3",
+      "from_color_hex": "#FF3333",
+      "id": "cue-color-f3",
+      "kind": "color",
+      "start_us": 200000,
+      "to_color_hex": "#3333FF"
+    }
+  ],
+  "fixtures": [
+    {
+      "aim": {
+        "pan_urad": -34907,
+        "tilt_urad": -1535890
+      },
+      "beam": {
+        "inner_half_urad": 139626,
+        "outer_half_urad": 349066
+      },
+      "cct_kelvin": 5880,
+      "color_hex": "#FFCC99",
+      "level_myriad": 5500,
+      "position_mm": [
+        -900,
+        0,
+        5000
+      ],
+      "uid": "F1"
+    },
+    {
+      "aim": {
+        "pan_urad": 0,
+        "tilt_urad": -1535890
+      },
+      "beam": {
+        "inner_half_urad": 174533,
+        "outer_half_urad": 418879
+      },
+      "cct_kelvin": 7920,
+      "color_hex": "#3399FF",
+      "level_myriad": 5000,
+      "position_mm": [
+        900,
+        0,
+        5000
+      ],
+      "uid": "F2"
+    },
+    {
+      "aim": {
+        "pan_urad": 1570796,
+        "tilt_urad": -1535890
+      },
+      "beam": {
+        "inner_half_urad": 104720,
+        "outer_half_urad": 244346
+      },
+      "cct_kelvin": 5880,
+      "color_hex": "#CC66FF",
+      "level_myriad": 6000,
+      "position_mm": [
+        0,
+        -1400,
+        4500
+      ],
+      "uid": "F3"
+    },
+    {
+      "aim": {
+        "pan_urad": 4712389,
+        "tilt_urad": -1535890
+      },
+      "beam": {
+        "inner_half_urad": 209440,
+        "outer_half_urad": 488692
+      },
+      "cct_kelvin": 7920,
+      "color_hex": "#FFFFFF",
+      "level_myriad": 5500,
+      "position_mm": [
+        0,
+        1400,
+        4500
+      ],
+      "uid": "F4"
+    }
+  ],
+  "parameter_version": "params-v1",
+  "project_id": "stage-demo",
+  "schema": "stage-project/2",
+  "seed": 42,
+  "timeline": {
+    "duration_us": 400000,
+    "windows": [
+      {
+        "end_us": 75000,
+        "number": 1,
+        "samples_us": [
+          0
+        ],
+        "start_us": 0
+      },
+      {
+        "end_us": 175000,
+        "number": 2,
+        "samples_us": [
+          100000
+        ],
+        "start_us": 100000
+      },
+      {
+        "end_us": 275000,
+        "number": 3,
+        "samples_us": [
+          200000
+        ],
+        "start_us": 200000
+      },
+      {
+        "end_us": 375000,
+        "number": 4,
+        "samples_us": [
+          300000
+        ],
+        "start_us": 300000
+      },
+      {
+        "end_us": 400000,
+        "number": 5,
+        "samples_us": [
+          400000
+        ],
+        "start_us": 400000
+      }
+    ]
+  }
+}

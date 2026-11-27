@@ -1,0 +1,73 @@
+{
+  "format": "stage-sample-bundle.v1",
+  "seed": 42,
+  "project_id": "stage-demo",
+  "parameter_version": "params-v1",
+  "algorithm_version": "cone-kernel-v1",
+  "schema_files": {
+    "stage-project/2": "v2.json",
+    "stage.project.v1": "v1.json",
+    "stage.project/3": "v3.json"
+  },
+  "sha256": {
+    "truth.json": "a58eb0e4e464d892183f2d349b722359136074ddf01112fd2d248c136c7337f8",
+    "v1.json": "f40fb5eb75291e06c662510f62fd301cc97cee1a2462553594675461b1928dda",
+    "v2.json": "3a9bf8c78523162ba220e9a9d52272d2cfcae03b6f0e60d5f726d1894234a269",
+    "v3.json": "e7a504922a86e7f4c0b8379abee213be42f29ecc8d247f4034346f804a50f102"
+  },
+  "truth_file": "truth.json",
+  "truth_sha256": "a58eb0e4e464d892183f2d349b722359136074ddf01112fd2d248c136c7337f8",
+  "fixture_count": 4,
+  "window_count": 5,
+  "schema_losses": {
+    "stage-project/2": [
+      {
+        "code": "E_LOSSY",
+        "field": "groups.main.key",
+        "source_version": "stage.internal/1",
+        "target_version": "stage-project/2",
+        "reason": "target schema has no grouped fixture array",
+        "disposition": "flattened into a flat fixture list; IDs and all optical fields are preserved",
+        "original": "main/key",
+        "exported": "fixtures[]"
+      },
+      {
+        "code": "E_LOSSY",
+        "field": "groups.main.wash",
+        "source_version": "stage.internal/1",
+        "target_version": "stage-project/2",
+        "reason": "target schema has no grouped fixture array",
+        "disposition": "flattened into a flat fixture list; IDs and all optical fields are preserved",
+        "original": "main/wash",
+        "exported": "fixtures[]"
+      }
+    ],
+    "stage.project.v1": [
+      {
+        "code": "E_LOSSY",
+        "field": "groups.main.key",
+        "source_version": "stage.internal/1",
+        "target_version": "stage.project.v1",
+        "reason": "target schema has no grouped fixture array",
+        "disposition": "flattened into a flat fixture list; IDs and all optical fields are preserved",
+        "original": "main/key",
+        "exported": "fixtures[]"
+      },
+      {
+        "code": "E_LOSSY",
+        "field": "groups.main.wash",
+        "source_version": "stage.internal/1",
+        "target_version": "stage.project.v1",
+        "reason": "target schema has no grouped fixture array",
+        "disposition": "flattened into a flat fixture list; IDs and all optical fields are preserved",
+        "original": "main/wash",
+        "exported": "fixtures[]"
+      }
+    ]
+  },
+  "notes": [
+    "v1 omits the outer cone angle where it equals the declared 2.5x inner default.",
+    "v1/v2 flatten v3 rig/group organization; every such downgrade is reported as E_LOSSY.",
+    "Truth is generated from the canonical internal project with exact sampling."
+  ]
+}

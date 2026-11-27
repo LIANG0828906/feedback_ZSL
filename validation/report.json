@@ -1,0 +1,89 @@
+{
+  "ok": true,
+  "samples": "samples",
+  "runtime": "runtime/verify",
+  "seed": 42,
+  "schema_loads": [
+    {
+      "version": "stage.project.v1",
+      "file": "v1.json",
+      "fixtures": 4,
+      "conversion_traces": 62,
+      "defaults": 1,
+      "source_sha256": "f40fb5eb75291e06c662510f62fd301cc97cee1a2462553594675461b1928dda"
+    },
+    {
+      "version": "stage-project/2",
+      "file": "v2.json",
+      "fixtures": 4,
+      "conversion_traces": 62,
+      "defaults": 0,
+      "source_sha256": "3a9bf8c78523162ba220e9a9d52272d2cfcae03b6f0e60d5f726d1894234a269"
+    },
+    {
+      "version": "stage.project/3",
+      "file": "v3.json",
+      "fixtures": 4,
+      "conversion_traces": 51,
+      "defaults": 0,
+      "source_sha256": "e7a504922a86e7f4c0b8379abee213be42f29ecc8d247f4034346f804a50f102"
+    }
+  ],
+  "truth": {
+    "algorithm": "cone-kernel-v1",
+    "points": 1960,
+    "uncertain": 1440,
+    "windows": 5
+  },
+  "preview": {
+    "accumulation_bits": 12,
+    "budget_ms": 250,
+    "compared_points": 1000,
+    "density": 2,
+    "elapsed_ms": 0,
+    "ok": true,
+    "within_budget": true
+  },
+  "three_paths": {
+    "ok": true,
+    "paths": [
+      {
+        "name": "live",
+        "windows": 5,
+        "commit_sequence": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "result_hash": "cb45f0adcdd0406094780a33901df5b07469269bee481c1ce66b1f674425a6e7"
+      },
+      {
+        "name": "resume",
+        "windows": 5,
+        "commit_sequence": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "result_hash": "cb45f0adcdd0406094780a33901df5b07469269bee481c1ce66b1f674425a6e7"
+      },
+      {
+        "name": "full",
+        "windows": 5,
+        "commit_sequence": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "result_hash": "cb45f0adcdd0406094780a33901df5b07469269bee481c1ce66b1f674425a6e7"
+      }
+    ]
+  },
+  "elapsed_ms": 99
+}

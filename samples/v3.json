@@ -1,0 +1,193 @@
+{
+  "cues": [
+    {
+      "end_ms": 400,
+      "fixture": "F1",
+      "from_level_myriad": 2000,
+      "id": "cue-fade-f1",
+      "kind": "fade",
+      "start_ms": 0,
+      "to_level_myriad": 4000
+    },
+    {
+      "end_ms": 200,
+      "fixture": "F2",
+      "from_pan_mdeg": -10000,
+      "from_tilt_mdeg": -88000,
+      "id": "cue-sweep-f2",
+      "kind": "sweep",
+      "start_ms": 0,
+      "to_pan_mdeg": 10000,
+      "to_tilt_mdeg": -88000
+    },
+    {
+      "end_ms": 400,
+      "fixture": "F3",
+      "from_rgb_myriad": [
+        10000,
+        2000,
+        2000
+      ],
+      "id": "cue-color-f3",
+      "kind": "color",
+      "start_ms": 200,
+      "to_rgb_myriad": [
+        2000,
+        2000,
+        10000
+      ]
+    }
+  ],
+  "parameter_version": "params-v1",
+  "project_id": "stage-demo",
+  "rigs": [
+    {
+      "groups": [
+        {
+          "fixtures": [
+            {
+              "cct_myriad": 4000,
+              "cone": {
+                "inner_half_mdeg": 8000,
+                "outer_half_mdeg": 20000
+              },
+              "id": "F1",
+              "level_myriad": 5500,
+              "pan_mdeg": -2000,
+              "position_mm": [
+                -900,
+                0,
+                5000
+              ],
+              "rgb_myriad": [
+                10000,
+                8000,
+                6000
+              ],
+              "tilt_mdeg": -88000
+            },
+            {
+              "cct_myriad": 6000,
+              "cone": {
+                "inner_half_mdeg": 10000,
+                "outer_half_mdeg": 24000
+              },
+              "id": "F2",
+              "level_myriad": 5000,
+              "pan_mdeg": 0,
+              "position_mm": [
+                900,
+                0,
+                5000
+              ],
+              "rgb_myriad": [
+                2000,
+                6000,
+                10000
+              ],
+              "tilt_mdeg": -88000
+            }
+          ],
+          "label": "主灯位",
+          "name": "key"
+        },
+        {
+          "fixtures": [
+            {
+              "cct_myriad": 4000,
+              "cone": {
+                "inner_half_mdeg": 6000,
+                "outer_half_mdeg": 14000
+              },
+              "id": "F3",
+              "level_myriad": 6000,
+              "pan_mdeg": 90000,
+              "position_mm": [
+                0,
+                -1400,
+                4500
+              ],
+              "rgb_myriad": [
+                8000,
+                4000,
+                10000
+              ],
+              "tilt_mdeg": -88000
+            },
+            {
+              "cct_myriad": 6000,
+              "cone": {
+                "inner_half_mdeg": 12000,
+                "outer_half_mdeg": 28000
+              },
+              "id": "F4",
+              "level_myriad": 5500,
+              "pan_mdeg": 270000,
+              "position_mm": [
+                0,
+                1400,
+                4500
+              ],
+              "rgb_myriad": [
+                10000,
+                10000,
+                10000
+              ],
+              "tilt_mdeg": -88000
+            }
+          ],
+          "label": "染色灯位",
+          "name": "wash"
+        }
+      ],
+      "name": "main"
+    }
+  ],
+  "schema": "stage.project/3",
+  "seed": 42,
+  "timeline": {
+    "duration_ms": 400,
+    "windows": [
+      {
+        "end_ms": 75,
+        "number": 1,
+        "samples_ms": [
+          0
+        ],
+        "start_ms": 0
+      },
+      {
+        "end_ms": 175,
+        "number": 2,
+        "samples_ms": [
+          100
+        ],
+        "start_ms": 100
+      },
+      {
+        "end_ms": 275,
+        "number": 3,
+        "samples_ms": [
+          200
+        ],
+        "start_ms": 200
+      },
+      {
+        "end_ms": 375,
+        "number": 4,
+        "samples_ms": [
+          300
+        ],
+        "start_ms": 300
+      },
+      {
+        "end_ms": 400,
+        "number": 5,
+        "samples_ms": [
+          400
+        ],
+        "start_ms": 400
+      }
+    ]
+  }
+}
